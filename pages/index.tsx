@@ -29,16 +29,17 @@ export default function Home() {
 	}
 
 	return (
-		<div className="w-screen h-screen  bg-red-300 flex justify-center">
+		<div className="w-screen min-h-screen  bg-red-300 flex justify-center">
 			<NextSeo
 				title="$10^9 Tier List"
 				description="CNR APP description"
 				openGraph={{ title: "CNR APP", description: "CNR APP description" }}
 			/>
 
-			<main className="pt-20">
-				<p className="text-2xl mb-20 text-center">How good is yr fav billionaire actually?</p>
-
+			<main className="py-20">
+				<article className="prose">
+					<h2 className="mb-20 text-center ">How good is yr fav billionaire actually?</h2>
+				</article>
 				<div className="flex">
 					<Sorter
 						selected={

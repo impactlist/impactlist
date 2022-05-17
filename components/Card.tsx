@@ -1,8 +1,11 @@
 import { Billionaire } from "../lib/data";
-
+import { motion } from "framer-motion";
 export default function Card({ billi }: { billi: Billionaire }) {
 	return (
-		<div className="bg-white border-black shadow-black shadow-md w-[400px] p-4 m-4">
+		<motion.div
+			layout
+			className="bg-white border-black shadow-red-800 shadow-md w-[400px] p-4 m-4"
+		>
 			<div className="flex">
 				<div className="flex-1">
 					<h1 className="text-2xl">{billi.name}</h1>
@@ -13,6 +16,6 @@ export default function Card({ billi }: { billi: Billionaire }) {
 				</div>
 			</div>
 			<div className="mt-2">{billi.bio}</div>
-		</div>
+		</motion.div>
 	);
 }

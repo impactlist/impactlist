@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^0.1.5",
     "framer-motion": "^6.3.3",
     "next": "^12.1.4",
     "next-seo": "^5.1.0",

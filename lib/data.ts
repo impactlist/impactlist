@@ -6,11 +6,22 @@ export type Billionaire = {
 };
 
 export const billionaires: Billionaire[] = [
-	{ name: "Bill Gates", bio: "Microsoft", grade: "A", wealth: 133_000_000_000 },
-	{ name: "Bernard Arnault", bio: "LVMH", grade: "D", wealth: 158_000_000_000 },
-	{ name: "Elon Musk", bio: "SpaceX", grade: "B", wealth: 274_000_000_000 },
-	{ name: "Elon dMusk", bio: "SpaceX", grade: "B", wealth: 274_000_000_000 },
-	{ name: "Elon Mfusk", bio: "SpaceX", grade: "B", wealth: 274_000_000_000 },
-	{ name: "Elon Muwsk", bio: "SpaceX", grade: "B", wealth: 274_000_000_000 },
-	{ name: "Elon Musak", bio: "SpaceX", grade: "B", wealth: 274_000_000_000 },
+	{
+		name: "Bill Gates",
+		bio: "Microsoft Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		grade: "A",
+		wealth: 133_000_000_000,
+	},
+	{
+		name: "Bernard Arnault",
+		bio: "LVMH Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		grade: "D",
+		wealth: 158_000_000_000,
+	},
+	{
+		name: "Elon Musk",
+		bio: "SpaceX Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		grade: "B",
+		wealth: 274_000_000_000,
+	},
 ];

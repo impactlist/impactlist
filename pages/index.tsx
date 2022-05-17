@@ -36,11 +36,27 @@ export default function Home() {
 				openGraph={{ title: "CNR APP", description: "CNR APP description" }}
 			/>
 
-			<main className="py-20">
-				<article className="prose">
-					<h2 className="mb-20 text-center ">How good is yr fav billionaire actually?</h2>
+			<main className="py-20 px-4">
+				<article className="prose mb-12">
+					<h1 className="text-center ">Billionaire Impact Ranking</h1>
+					<p className="text-center">
+						Many billionaires give massive sums to charity. However, some charities can
+						be 1,000X as effective as others. Donating $5,000 to an effective charity
+						could save a life while donating that amount to most charities will have
+						negligible impact.
+					</p>
+
+					<p className="text-center">
+						This site grades billionaires by the positive impact of their giving. If you
+						would like to learn more about making an impact with your money you might
+						be an{" "}
+						<a href="https://www.effectivealtruism.org/articles/introduction-to-effective-altruism">
+							effective altruist
+						</a>
+						!
+					</p>
 				</article>
-				<div className="flex">
+				<div className="flex justify-center">
 					<Sorter
 						selected={
 							order === "wealth:high" ? "down" : order === "wealth:low" ? "up" : "naw"
@@ -62,9 +78,11 @@ export default function Home() {
 						Impact
 					</Sorter>
 				</div>
-				{sortedBillionaires.map((b) => (
-					<Card billi={b} key={b.name} />
-				))}
+				<div className="flex flex-col items-center">
+					{sortedBillionaires.map((b) => (
+						<Card billi={b} key={b.name} />
+					))}
+				</div>
 			</main>
 		</div>
 	);

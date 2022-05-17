@@ -7,8 +7,9 @@
 
 export default function Faq() {
 	return (
-		<div className="w-screen min-h-screen  bg-green-300 flex justify-center pt-16">
+		<div className="w-screen min-h-screen  bg-green-300 flex justify-center pt-20 ">
 			<article className="prose">
+				<h1>Frequently Asked Questions</h1>
 				<h2>How are people ranked?</h2>
 				<p>This way</p>
 				<h2>Who is included?</h2>

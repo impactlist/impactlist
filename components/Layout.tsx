@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 							<span className={`${pathname === "/" ? "font-bold" : "font-normal"}`}>
 								HOME
 							</span>
-							<div className="w-full bg-black h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300" />
+							<div className="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300" />
 						</a>
 					</Link>
 					<Link href="/faq">
@@ -24,12 +24,12 @@ export default function Layout({ children }: { children: ReactNode }) {
 							>
 								FAQ
 							</span>
-							<div className="w-full bg-black h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300" />
+							<div className="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300" />
 						</a>
 					</Link>
 					<a className="mx-12 group" href="https://github.com/ideopunk/billionaires">
 						<span>CODE</span>
-						<div className="w-full bg-black h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300" />
+						<div className="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300" />
 					</a>
 				</div>
 			</div>

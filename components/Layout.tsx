@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 		<div>
 			{children}
 			<div className="fixed bottom-0 w-full flex justify-center">
-				<div className="bg-white  border-2 border-black border-b-0 px-4 py-2 flex justify-between">
+				<div className="bg-white  shadow-black shadow-md border-black border-b-0 px-4 py-2 flex justify-between">
 					<Link href="/">
 						<a className="mx-12 group">
 							<span className={`${pathname === "/" ? "font-bold" : "font-normal"}`}>

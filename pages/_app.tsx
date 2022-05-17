@@ -1,11 +1,11 @@
 import "../public/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { withPasswordProtect } from "@storyofams/next-password-protect";
 import { DefaultSeo } from "next-seo";
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider } from "next-themes";
+import Layout from "../components/Layout";
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<ThemeProvider attribute="class">
 			<DefaultSeo
@@ -29,9 +29,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 					cardType: "summary_large_image",
 				}}
 			/>
-
-			<Component {...pageProps} />
+			<Layout>
+				<Component {...pageProps} />
+			</Layout>
 		</ThemeProvider>
 	);
 }
-export default process.env.NODE_ENV !== "production" ? withPasswordProtect(MyApp) : MyApp;

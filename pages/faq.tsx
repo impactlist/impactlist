@@ -16,6 +16,8 @@ export default function Faq() {
 				<p>{"The Forbes World's Billionaires List"}</p>
 				<h2>Who made this?</h2>
 				<p>Conor</p>
+				<h2>I disagree with how you ranked my favorite billionaire. Where can I tell you?</h2>
+				<p>Here</p>
 			</article>
 		</div>
 	);

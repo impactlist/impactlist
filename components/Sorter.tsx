@@ -14,7 +14,7 @@ export default function Sorter({
 		<button className="flex items-center group mx-4" onClick={onClick}>
 			<span className="font-bold mr-1">{children}</span>
 			<div
-				className={`relative top-[1px] transition-all group-hover:rotate-12 ${
+				className={`relative top-[1px] transition-all group-hover:rotate-45 ${
 					selected === "naw"
 						? "opacity-0 group-hover:opacity-25 group-hover:rotate-0"
 						: ""

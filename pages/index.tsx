@@ -9,25 +9,24 @@ export default function Home() {
 	const [order, setOrder] = useState<"wealth:high" | "wealth:low" | "impact:high" | "impact:low">(
 		"wealth:high"
 	);
-	const [compact, setCompact] = useState(false);
+	// const [compact, setCompact] = useState(false);
 
-	let sortedBillionaires: Billionaire[] = [];
+	// let sortedBillionaires: Billionaire[] = [];
 	switch (order) {
 		case "wealth:high":
-			sortedBillionaires = billionaires.sort((a, b) => b.wealth - a.wealth);
+			billionaires.sort((a, b) => b.wealth - a.wealth);
 			break;
 		case "wealth:low":
-			sortedBillionaires = billionaires.sort((a, b) => a.wealth - b.wealth);
+			// 	billionaires.sort((a, b) =>
+			// 	a.grade > b.grade ? 1 : a.grade < b.grade ? -1 : 0
+			// ).reverse()
+			billionaires.sort((a, b) => a.wealth - b.wealth);
 			break;
 		case "impact:high":
-			sortedBillionaires = billionaires.sort((a, b) =>
-				a.grade > b.grade ? 1 : a.grade < b.grade ? -1 : 0
-			);
+			billionaires.sort((a, b) => (a.grade > b.grade ? 1 : a.grade < b.grade ? -1 : 0));
 			break;
 		default: // impact:low
-			sortedBillionaires = billionaires.sort((a, b) =>
-				a.grade > b.grade ? -1 : a.grade < b.grade ? 1 : 0
-			);
+			billionaires.sort((a, b) => (a.grade > b.grade ? -1 : a.grade < b.grade ? 1 : 0));
 	}
 
 	return (
@@ -37,7 +36,9 @@ export default function Home() {
 				description="CNR APP description"
 				openGraph={{ title: "CNR APP", description: "CNR APP description" }}
 			/>
-
+			{/* <p className="absolute top-0 left-0">
+				order: {order}, compact: {String(compact)}
+			</p> */}
 			<main className="py-20 px-4 flex flex-col">
 				<article className="prose mb-12">
 					<h1 className="text-center ">Billionaire Impact Ranking</h1>
@@ -58,7 +59,8 @@ export default function Home() {
 						!
 					</p>
 				</article>
-				<div className="flex justify-between w-3/4 items-center self-center">
+				<div className="flex justify-center w-3/4 items-center self-center">
+				{/* <div className="flex justify-between w-3/4 items-center self-center"> */}
 					<div className="flex justify-center items-center">
 						<Sorter
 							selected={
@@ -72,7 +74,7 @@ export default function Home() {
 								setOrder(order === "wealth:high" ? "wealth:low" : "wealth:high")
 							}
 						>
-							Wealth
+							Cost
 						</Sorter>
 						<Sorter
 							selected={
@@ -89,7 +91,7 @@ export default function Home() {
 							Impact
 						</Sorter>
 					</div>
-					<label className="font-bold cursor-pointer flex items-center group">
+					{/* <label className="font-bold cursor-pointer flex items-center group">
 						Compact
 						<Checkbox.Root
 							checked={compact}
@@ -105,11 +107,12 @@ export default function Home() {
 								</span>
 							</div>
 						</Checkbox.Root>
-					</label>
+					</label> */}
 				</div>
 				<div className="flex flex-col items-center">
-					{sortedBillionaires.map((b) => (
-						<Card billi={b} key={b.name} compact={compact} />
+					{billionaires.map((b) => (
+						<Card billi={b} key={b.name} compact={false} />
+						// <Card billi={b} key={b.name} compact={compact} />
 					))}
 				</div>
 			</main>

@@ -116,7 +116,7 @@
   dependencies:
     tiny-glob "^0.2.9"
 
-"@sveltejs/adapter-vercel@1.0.0-next.53":
+"@sveltejs/adapter-vercel@1.0.0-next.53", "@sveltejs/adapter-vercel@^1.0.0-next.53":
   version "1.0.0-next.53"
   resolved "https://registry.yarnpkg.com/@sveltejs/adapter-vercel/-/adapter-vercel-1.0.0-next.53.tgz#0c0894e413edc819ba254cc524d18ac276174277"
   integrity sha512-MmeQxvUYP9UeNuVPd50ZeskzvIqIasyo1Ooa0SUPqoQ41IH+dnkT0+oGJplpX7Ii3gmTbJgleYkV6X6huWQESg==

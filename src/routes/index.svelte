@@ -65,7 +65,7 @@
 				order: {order}, compact: {String(compact)}
 			</p> */} -->
 	<main class="pt-10 pb-20 px-4 flex flex-col">
-		<article class="prose mb-12">
+		<article class="prose prose-sm md:prose-base mx-4 md:mx-0 mb-12">
 			<h1 class="text-center ">Billionaire Impact Ranking</h1>
 			<p class="text-center">
 				Many billionaires give massive sums to charity. However, some charities can be

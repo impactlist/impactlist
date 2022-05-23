@@ -2,7 +2,6 @@
 	import Sorter from "../lib/components/Sorter.svelte";
 	import Card from "../lib/components/Card.svelte";
 	import { billionaires } from "../lib/data";
-	import type { Billionaire } from "../lib/data";
 	let sortedBillionaires = billionaires;
 
 	type Orders = "wealth:high" | "wealth:low" | "impact:high" | "impact:low";
@@ -61,9 +60,6 @@
 </script>
 
 <div class="w-screen min-h-screen  flex justify-center">
-	<!-- {/* <p class="absolute top-0 left-0">
-				order: {order}, compact: {String(compact)}
-			</p> */} -->
 	<main class="pt-10 pb-20 px-4 flex flex-col">
 		<article class="prose prose-sm md:prose-base mx-4 md:mx-0 mb-12">
 			<h1 class="text-center ">Billionaire Impact Ranking</h1>
@@ -84,7 +80,6 @@
 			</p>
 		</article>
 		<div class="flex justify-center w-3/4 items-center self-center">
-			<!-- {/* <div class="flex justify-between w-3/4 items-center self-center"> */} -->
 			<div class="flex justify-center items-center">
 				<Sorter
 					selected={order === "wealth:high"
@@ -95,9 +90,8 @@
 					on:message={() =>
 						handleClick(order === "wealth:high" ? "wealth:low" : "wealth:high")}
 				>
-					Cost
+					Wealth
 				</Sorter>
-				<!-- handleClick(order === "wealth:high" ? "wealth:low" : "wealth:high")} -->
 
 				<Sorter
 					selected={order === "impact:high"

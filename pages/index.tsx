@@ -33,8 +33,8 @@ export default function Home() {
 		<div className="w-screen min-h-screen  bg-red-300 flex justify-center">
 			<NextSeo
 				title="$10^9 Tier List"
-				description="CNR APP description"
-				openGraph={{ title: "CNR APP", description: "CNR APP description" }}
+				description="Billionaires ranked by effective giving"
+				openGraph={{ title: "CNR APP", description: "Billionaires ranked by effective giving" }}
 			/>
 			{/* <p className="absolute top-0 left-0">
 				order: {order}, compact: {String(compact)}

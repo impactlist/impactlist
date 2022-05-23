@@ -12,8 +12,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 				openGraph={{
 					type: "website",
 					locale: "en_US",
-					url: "https://www.url.com/",
-					site_name: "SiteName",
+					url: "https://billionaires-alpha.vercel.app/",
+					site_name: "Billionaire Tier List",
 					images: [
 						{
 							url: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Tom_Thomson_-_The_Jack_Pine_1916.jpg",
@@ -24,8 +24,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 					],
 				}}
 				twitter={{
-					handle: "@handle",
-					site: "@site",
+					handle: "@ideopunk",
+					site: "@ideopunk",
 					cardType: "summary_large_image",
 				}}
 			/>

@@ -10,3 +10,4 @@ todo.txt
 .next
 .vscode
 .svelte-kit
+.vercel_build_output

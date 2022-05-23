@@ -60,9 +60,7 @@
 	});
 </script>
 
-
 <div class="w-screen min-h-screen  bg-red-300 flex justify-center">
-
 	<!-- {/* <p class="absolute top-0 left-0">
 				order: {order}, compact: {String(compact)}
 			</p> */} -->
@@ -135,9 +133,9 @@
 		<div class="flex flex-col items-center">
 			{#each sortedBillionaires as b (b.name)}
 				<div
-					animate:flip={{ duration: 1000 }}
-					in:receive={{ key: b.name }}
-					out:send={{ key: b.name }}
+					animate:flip={{ duration: 300 }}
+					in:receive|local={{ key: b.name }}
+					out:send|local={{ key: b.name }}
 				>
 					<Card billi={b} compact={false} />
 				</div>

@@ -9,3 +9,4 @@ build
 todo.txt
 .next
 .vscode
+.svelte-kit

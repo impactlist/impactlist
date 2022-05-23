@@ -6,10 +6,9 @@
 </script>
 
 <div
-	
 	class={`bg-white border-black shadow-red-800 shadow-md w-[500px] max-w-full p-4 m-3 overflow-none h-80`}
 >
-<!-- animate={{ height: compact ? 80 : 320 }}
+	<!-- animate={{ height: compact ? 80 : 320 }}
 	transition={{ type: "tween" }} -->
 	<div class="h-80">
 		<!-- animate={{ height: compact ? 80 : 320 }} 	transition={{ type: "tween" }}  -->
@@ -21,8 +20,6 @@
 			</div>
 			<p
 				class={`font-mono font-bold text-7xl h-0 transition-transform duration-[400ms] ${
-					compact ? "scale-50 translate-y-2" : "scale-100 -translate-x-4"
-				} ${
 					grade === "A"
 						? "text-green-400"
 						: grade === "B"

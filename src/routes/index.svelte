@@ -36,14 +36,33 @@
 	function handleClick(o: Orders) {
 		order = o;
 	}
+
+	import { quintOut } from "svelte/easing";
+	import { crossfade } from "svelte/transition";
+	import { flip } from "svelte/animate";
+
+	const [send, receive] = crossfade({
+		duration: (d) => Math.sqrt(d * 200),
+
+		fallback(node, params) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === "none" ? "" : style.transform;
+
+			return {
+				duration: 600,
+				easing: quintOut,
+				css: (t) => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`,
+			};
+		},
+	});
 </script>
 
+
 <div class="w-screen min-h-screen  bg-red-300 flex justify-center">
-	<!-- <NextSeo
-				title="$10^9 Tier List"
-				description="Billionaires ranked by effective giving"
-				openGraph={{ title: "CNR APP", description: "Billionaires ranked by effective giving" }}
-			/> -->
+
 	<!-- {/* <p class="absolute top-0 left-0">
 				order: {order}, compact: {String(compact)}
 			</p> */} -->
@@ -114,8 +133,14 @@
 					</label> */} -->
 		</div>
 		<div class="flex flex-col items-center">
-			{#each sortedBillionaires as b}
-				<Card billi={b} compact={false} />
+			{#each sortedBillionaires as b (b.name)}
+				<div
+					animate:flip={{ duration: 1000 }}
+					in:receive={{ key: b.name }}
+					out:send={{ key: b.name }}
+				>
+					<Card billi={b} compact={false} />
+				</div>
 			{/each}
 		</div>
 	</main>

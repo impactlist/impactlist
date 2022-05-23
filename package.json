@@ -14,6 +14,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-static": "^1.0.0-next.31",
 		"@sveltejs/kit": "next",
 		"@tailwindcss/typography": "^0.5.2",
 		"@typescript-eslint/eslint-plugin": "^5.10.1",
@@ -32,5 +33,6 @@
 		"tslib": "^2.3.1",
 		"typescript": "~4.6.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {}
 }

@@ -1,11 +1,32 @@
 <script>
 	import "../app.css";
-	import { getStores, navigating, page, session, updated } from "$app/stores";
-	let pathname = $page.url.pathname;
+	import { page } from "$app/stores";
+
+	$: pathname = $page.url.pathname;
 </script>
 
-<!-- export default function Layout({ children }: { children: ReactNode }) {
-	const { pathname } = useRouter(); -->
+<svelte:head>
+	<title>$10^9 Tier List</title>
+	<meta name="title" content="$10^9 Tier List" />
+	<meta name="description" content="Billionaires ranked by effective giving" />
+
+	<meta name="og:title" content="$10^9 Tier List" />
+	<meta name="og:description" content="Billionaires ranked by effective giving" />
+	<meta name="og:url" content="https://billionaires-alpha.vercel.app/" />
+	<meta name="og:type" content="website" />
+
+	<meta
+		name="og:image"
+		content="https://upload.wikimedia.org/wikipedia/commons/e/e6/Tom_Thomson_-_The_Jack_Pine_1916.jpg"
+	/>
+	<meta name="og:image:alt" content="Image description" />
+	<meta name="og:image:width" content="2604" />
+	<meta name="og:image:height" content="2380" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@ideopunk" />
+</svelte:head>
+
 <div>
 	<slot />
 

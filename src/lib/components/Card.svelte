@@ -19,7 +19,7 @@
 			</div>
 			<div class="flex-1 h-[72px]">
 				<h1 class="text-2xl">{billi.name}</h1>
-				<p class="text-xs italic">${billi.billions.toLocaleString()}B</p>
+				<p class="text-base font-bold italic">${billi.billions.toLocaleString()}B</p>
 			</div>
 			<div class="flex mr-2">
 				<p

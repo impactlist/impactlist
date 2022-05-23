@@ -60,7 +60,7 @@
 	});
 </script>
 
-<div class="w-screen min-h-screen  bg-red-300 flex justify-center">
+<div class="w-screen min-h-screen  flex justify-center">
 	<!-- {/* <p class="absolute top-0 left-0">
 				order: {order}, compact: {String(compact)}
 			</p> */} -->

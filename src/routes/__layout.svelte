@@ -1,7 +1,7 @@
 <script>
 	import "../app.css";
 	import { page } from "$app/stores";
-
+	import { fly } from "svelte/transition";
 	$: pathname = $page.url.pathname;
 </script>
 
@@ -27,26 +27,28 @@
 	<meta name="twitter:site" content="@ideopunk" />
 </svelte:head>
 
-<div class={`${pathname === "/" ? "bg-red-300" : "bg-green-300"} w-full flex justify-center`}>
-	<div class="w-min flex mt-8">
-		<a href="/" class="mx-12 group">
-			<span class={`${pathname === "/" ? "font-bold" : "font-normal"}`}> HOME </span>
-			<div
-				class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
-			/>
-		</a>
-		<a href="/faq" class="mx-12 group">
-			<span class={`${pathname === "/faq" ? "font-bold" : "font-normal"}`}> FAQ </span>
-			<div
-				class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
-			/>
-		</a>
-		<a class="mx-12 group" href="https://github.com/ideopunk/billionaires">
-			<span>CODE</span>
-			<div
-				class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
-			/>
-		</a>
+<div class={`${pathname === "/" ? "bg-red-300" : "bg-green-300"} transition-colors `}>
+	<div class="flex justify-center w-full">
+		<div class="w-min flex mt-8">
+			<a href="/" class="mx-12 group">
+				<span class={`${pathname === "/" ? "font-bold" : "font-normal"}`}> HOME </span>
+				<div
+					class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
+				/>
+			</a>
+			<a href="/faq" class="mx-12 group">
+				<span class={`${pathname === "/faq" ? "font-bold" : "font-normal"}`}> FAQ </span>
+				<div
+					class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
+				/>
+			</a>
+			<a class="mx-12 group" href="https://github.com/ideopunk/billionaires">
+				<span>CODE</span>
+				<div
+					class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
+				/>
+			</a>
+		</div>
 	</div>
+	<slot />
 </div>
-<slot />

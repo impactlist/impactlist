@@ -11,13 +11,13 @@
 	$: {
 		switch (order) {
 			case "wealth:high":
-				sortedBillionaires = billionaires.sort((a, b) => b.wealth - a.wealth);
+				sortedBillionaires = billionaires.sort((a, b) => b.billions - a.billions);
 				break;
 			case "wealth:low":
 				// 	billionaires.sort((a, b) =>
 				// 	a.grade > b.grade ? 1 : a.grade < b.grade ? -1 : 0
 				// ).reverse()
-				sortedBillionaires = billionaires.sort((a, b) => a.wealth - b.wealth);
+				sortedBillionaires = billionaires.sort((a, b) => a.billions - b.billions);
 				break;
 			case "impact:high":
 				sortedBillionaires = billionaires.sort((a, b) =>
@@ -64,7 +64,7 @@
 	<!-- {/* <p class="absolute top-0 left-0">
 				order: {order}, compact: {String(compact)}
 			</p> */} -->
-	<main class="py-20 px-4 flex flex-col">
+	<main class="pt-10 pb-20 px-4 flex flex-col">
 		<article class="prose mb-12">
 			<h1 class="text-center ">Billionaire Impact Ranking</h1>
 			<p class="text-center">
@@ -79,9 +79,8 @@
 				<a
 					href="https://www.effectivealtruism.org/articles/introduction-to-effective-altruism"
 				>
-					effective altruist
-				</a>
-				!
+					effective altruist</a
+				>!
 			</p>
 		</article>
 		<div class="flex justify-center w-3/4 items-center self-center">

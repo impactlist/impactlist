@@ -14,25 +14,30 @@
 		<!-- animate={{ height: compact ? 80 : 320 }} 	transition={{ type: "tween" }}  -->
 
 		<div class="flex">
+			<div class="object-cover overflow-hidden w-16 h-16 rounded-full mr-2">
+				<img src={billi.image} alt={`Picture of ${billi.name}`} class="mt-0" />
+			</div>
 			<div class="flex-1 h-[72px]">
 				<h1 class="text-2xl">{billi.name}</h1>
-				<p class="text-xs italic">${billi.wealth.toLocaleString()}</p>
+				<p class="text-xs italic">${billi.billions.toLocaleString()}B</p>
 			</div>
-			<p
-				class={`font-mono font-bold text-7xl h-0 transition-transform duration-[400ms] ${
-					grade === "A"
-						? "text-green-400"
-						: grade === "B"
-						? "text-blue-500"
-						: grade === "C"
-						? "text-yellow-400"
-						: grade === "D"
-						? "text-orange-500"
-						: "text-red-500"
-				}`}
-			>
-				{billi.grade}
-			</p>
+			<div class="flex mr-2">
+				<p
+					class={`font-mono font-bold text-7xl h-0 transition-transform duration-[400ms] ${
+						grade === "A"
+							? "text-green-400"
+							: grade === "B"
+							? "text-blue-500"
+							: grade === "C"
+							? "text-yellow-400"
+							: grade === "D"
+							? "text-orange-500"
+							: "text-red-500"
+					}`}
+				>
+					{billi.grade}
+				</p>
+			</div>
 		</div>
 		<div
 			class={`mt-2 ${

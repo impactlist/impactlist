@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class={`bg-white border-black shadow-red-800 shadow-md my-3 sm:w-[500px] max-w-full p-4 mx-3 ${
+	class={`bg-white border-black shadow-red-400 shadow-md my-3 sm:w-[500px] max-w-full p-4 mx-3 ${
 		compact ? "h-24" : "h-80"
 	} my-3 overflow-hidden transition-all`}
 >

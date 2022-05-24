@@ -27,7 +27,7 @@
 	<meta name="twitter:site" content="@ideopunk" />
 </svelte:head>
 
-<div class={`${pathname === "/" ? "bg-red-300" : "bg-green-300"} transition-colors min-h-screen `}>
+<div class={`${pathname === "/" ? " bg-red-100 " : "bg-green-100"} transition-all min-h-screen`}>
 	<div class="flex justify-center w-full">
 		<div class="w-min flex mt-8">
 			<a href="/" class="mx-12 group">

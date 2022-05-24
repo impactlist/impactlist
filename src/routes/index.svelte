@@ -77,7 +77,7 @@
 			</p>
 		</article>
 		<div class="flex justify-between w-3/4 items-center self-center">
-			<div class="flex justify-center items-center">
+			<div class="flex items-center">
 				<Sorter
 					selected={order === "wealth:high"
 						? "down"

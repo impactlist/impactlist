@@ -12,7 +12,7 @@
 	}
 </script>
 
-<button class="flex items-center group mx-4" on:click={onClick}>
+<button class="flex items-center group mr-4" on:click={onClick}>
 	<span class="font-bold mr-1"><slot /></span>
 	<div
 		class={`relative top-[1px] transition-all group-hover:rotate-45 ${

@@ -30,19 +30,19 @@
 <div class={`${pathname === "/" ? " bg-red-100 " : "bg-green-100"} transition-all min-h-screen`}>
 	<div class="flex justify-center w-full">
 		<div class="w-min flex mt-8">
-			<a href="/" class="mx-12 group">
+			<a href="/" class="mx-12 group w-[4ch]">
 				<span class={`${pathname === "/" ? "font-bold" : "font-normal"}`}> HOME </span>
 				<div
 					class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
 				/>
 			</a>
-			<a href="/faq" class="mx-12 group">
+			<a href="/faq" class="mx-12 group w-[3ch]">
 				<span class={`${pathname === "/faq" ? "font-bold" : "font-normal"}`}> FAQ </span>
 				<div
 					class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"
 				/>
 			</a>
-			<a class="mx-12 group" href="https://github.com/ideopunk/billionaires">
+			<a class="mx-12 group w-[4ch]" href="https://github.com/ideopunk/billionaires">
 				<span>CODE</span>
 				<div
 					class="w-full bg-black h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-500 group-hover:duration-300"

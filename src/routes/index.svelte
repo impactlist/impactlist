@@ -10,7 +10,7 @@
 	);
 
 	type Orders = "wealth:high" | "wealth:low" | "impact:high" | "impact:low";
-	let order: Orders = "wealth:high";
+	let order: Orders = "impact:high";
 	let compact = false;
 	$: {
 		switch (order) {
@@ -38,27 +38,28 @@
 		order = o;
 	}
 
-	import { quintOut } from "svelte/easing";
-	import { crossfade } from "svelte/transition";
+	// import { quintOut } from "svelte/easing";
+	import { crossfade, fly } from "svelte/transition";
 	import { flip } from "svelte/animate";
+	import { tick } from "svelte";
 
-	const [send, receive] = crossfade({
-		duration: (d) => Math.sqrt(d * 200),
+	// const [send, receive] = crossfade({
+	// 	duration: (d) => Math.sqrt(d * 200),
 
-		fallback(node, params) {
-			const style = getComputedStyle(node);
-			const transform = style.transform === "none" ? "" : style.transform;
+	// 	fallback(node, params) {
+	// 		const style = getComputedStyle(node);
+	// 		const transform = style.transform === "none" ? "" : style.transform;
 
-			return {
-				duration: 600,
-				easing: quintOut,
-				css: (t) => `
-					transform: ${transform} scale(${t});
-					opacity: ${t}
-				`,
-			};
-		},
-	});
+	// 		return {
+	// 			duration: 600,
+	// 			easing: quintOut,
+	// 			css: (t) => `
+	// 				transform: ${transform} scaleY(${t});
+	// 				opacity: ${t}
+	// 			`,
+	// 		};
+	// 	},
+	// });
 </script>
 
 <div class="w-screen min-h-[200vh]  flex justify-center">
@@ -81,25 +82,14 @@
 				>!
 			</p>
 		</article>
-		<div class="flex justify-between  items-center self-center ">
-			<input
-				bind:value={compar}
-				class="bg-transparent outline-none border-b-2 border-b-black mr-6"
-				placeholder="Filter"
-			/>
-			<div class="flex items-center">
-				<Sorter
-					selected={order === "wealth:high"
-						? "down"
-						: order === "wealth:low"
-						? "up"
-						: "naw"}
-					on:message={() =>
-						handleClick(order === "wealth:high" ? "wealth:low" : "wealth:high")}
-				>
-					Wealth
-				</Sorter>
+		<input
+			bind:value={compar}
+			class="bg-transparent py-1 outline-none border-b-2 w-3/4 self-center mb-4 border-b-black text-xl"
+			placeholder="Filter"
+		/>
 
+		<div class="flex justify-between w-3/4  items-center self-center ">
+			<div class="flex items-center">
 				<Sorter
 					selected={order === "impact:high"
 						? "down"
@@ -110,6 +100,17 @@
 						handleClick(order === "impact:high" ? "impact:low" : "impact:high")}
 				>
 					Impact
+				</Sorter>
+				<Sorter
+					selected={order === "wealth:high"
+						? "down"
+						: order === "wealth:low"
+						? "up"
+						: "naw"}
+					on:message={() =>
+						handleClick(order === "wealth:high" ? "wealth:low" : "wealth:high")}
+				>
+					Wealth
 				</Sorter>
 			</div>
 			<label class="font-bold cursor-pointer flex items-center group">
@@ -131,10 +132,13 @@
 		<div class="flex flex-col items-center ">
 			{#each filteredBillionaires as b (b.name)}
 				<div
-					animate:flip={{ duration: 300 }}
-					in:receive|local={{ key: b.name }}
-					out:send|local={{ key: b.name }}
+					class="origin-top"
+					animate:flip|local={{ duration: 300 }}
 				>
+				<!-- in:fly={{ y: -25, duration: 300 }} -->
+
+					<!-- in:receive|local={{ key: b.name }}
+				out:send|local={{ key: b.name }} -->
 					<Card billi={b} {compact} />
 				</div>
 			{/each}

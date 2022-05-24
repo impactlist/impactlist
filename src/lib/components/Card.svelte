@@ -39,7 +39,7 @@
 	<div
 		class={`mt-2 ${
 			compact && "scale-y-0 duration-200"
-		} transition-transform origin-top duration-[400ms] border-t-2 pt-4  text-sm`}
+		} transition-transform origin-top duration-[300ms] border-t-2 pt-4  text-sm`}
 	>
 		{billi.bio}
 	</div>

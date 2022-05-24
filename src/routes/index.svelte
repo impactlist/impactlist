@@ -13,9 +13,6 @@
 				sortedBillionaires = billionaires.sort((a, b) => b.billions - a.billions);
 				break;
 			case "wealth:low":
-				// 	billionaires.sort((a, b) =>
-				// 	a.grade > b.grade ? 1 : a.grade < b.grade ? -1 : 0
-				// ).reverse()
 				sortedBillionaires = billionaires.sort((a, b) => a.billions - b.billions);
 				break;
 			case "impact:high":
@@ -79,7 +76,7 @@
 				>!
 			</p>
 		</article>
-		<div class="flex justify-center w-3/4 items-center self-center">
+		<div class="flex justify-between w-3/4 items-center self-center">
 			<div class="flex justify-center items-center">
 				<Sorter
 					selected={order === "wealth:high"
@@ -105,23 +102,21 @@
 					Impact
 				</Sorter>
 			</div>
-			<!-- {/* <label class="font-bold cursor-pointer flex items-center group">
-						Compact
-						<Checkbox.Root
-							checked={compact}
-							onCheckedChange={() => setCompact((c) => !c)}
-						>
-							<div class="border-2 border-black rounded-md w-4 h-4 flex items-center justify-center ml-2">
-								<span
-									class={`${
-										compact ? "opacity-100" : "opacity-0 group-hover:opacity-50"
-									} transition-opacity text-3xl relative left-0.5 -top-0.5`}
-								>
-									✓
-								</span>
-							</div>
-						</Checkbox.Root>
-					</label> */} -->
+			<label class="font-bold cursor-pointer flex items-center group">
+				Compact
+				<input type="checkbox" bind:checked={compact} class="hidden" />
+				<div
+					class="border-2 border-black rounded-md w-4 h-4 flex items-center justify-center ml-2"
+				>
+					<span
+						class={`${
+							compact ? "opacity-100" : "opacity-0 group-hover:opacity-50"
+						} transition-opacity text-3xl relative left-0.5 -top-0.5`}
+					>
+						✓
+					</span>
+				</div>
+			</label>
 		</div>
 		<div class="flex flex-col items-center">
 			{#each sortedBillionaires as b (b.name)}
@@ -130,7 +125,7 @@
 					in:receive|local={{ key: b.name }}
 					out:send|local={{ key: b.name }}
 				>
-					<Card billi={b} compact={false} />
+					<Card billi={b} {compact} />
 				</div>
 			{/each}
 		</div>

@@ -6,45 +6,41 @@
 </script>
 
 <div
-	class={`bg-white border-black shadow-red-800 shadow-md sm:w-[500px] max-w-full p-4 m-3 overflow-none sm:h-80`}
+	class={`bg-white border-black shadow-red-800 shadow-md my-3 sm:w-[500px] max-w-full p-4 mx-3 ${
+		compact ? "h-24" : "h-80"
+	} my-3 overflow-hidden transition-all`}
 >
-	<!-- animate={{ height: compact ? 80 : 320 }}
-	transition={{ type: "tween" }} -->
-	<div class="h-80">
-		<!-- animate={{ height: compact ? 80 : 320 }} 	transition={{ type: "tween" }}  -->
-
-		<div class="flex">
-			<div class="object-cover overflow-hidden w-16 h-16 rounded-full mr-2">
-				<img src={billi.image} alt={`Picture of ${billi.name}`} class="mt-0" />
-			</div>
-			<div class="flex-1 h-[72px]">
-				<h1 class="text-2xl">{billi.name}</h1>
-				<p class="text-base font-bold italic">${billi.billions.toLocaleString()}B</p>
-			</div>
-			<div class="flex mr-2">
-				<p
-					class={`font-mono font-bold text-7xl h-0 transition-transform duration-[400ms] ${
-						grade === "A"
-							? "text-green-400"
-							: grade === "B"
-							? "text-blue-500"
-							: grade === "C"
-							? "text-yellow-400"
-							: grade === "D"
-							? "text-orange-500"
-							: "text-red-500"
-					}`}
-				>
-					{billi.grade}
-				</p>
-			</div>
+	<div class="flex">
+		<div class="object-cover overflow-hidden w-16 h-16 rounded-full mr-2">
+			<img src={billi.image} loading="lazy" alt={`Picture of ${billi.name}`} class="mt-0" />
 		</div>
-		<div
-			class={`mt-2 ${
-				compact && "scale-y-0 duration-200"
-			} transition-transform origin-top duration-[400ms] border-t-2 pt-4`}
-		>
-			{billi.bio}
+		<div class="flex-1 h-[72px]">
+			<h1 class="text-2xl">{billi.name}</h1>
+			<p class="text-base font-bold italic">${billi.billions.toLocaleString()}B</p>
 		</div>
+		<div class="flex mr-2">
+			<p
+				class={`font-mono font-bold text-7xl h-0 transition-transform duration-[320ms] ${
+					grade === "A"
+						? "text-green-400"
+						: grade === "B"
+						? "text-blue-500"
+						: grade === "C"
+						? "text-yellow-400"
+						: grade === "D"
+						? "text-orange-500"
+						: "text-red-500"
+				}`}
+			>
+				{billi.grade}
+			</p>
+		</div>
+	</div>
+	<div
+		class={`mt-2 ${
+			compact && "scale-y-0 duration-200"
+		} transition-transform origin-top duration-[400ms] border-t-2 pt-4`}
+	>
+		{billi.bio}
 	</div>
 </div>

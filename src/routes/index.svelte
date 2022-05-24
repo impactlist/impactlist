@@ -4,6 +4,11 @@
 	import { billionaires } from "../lib/data";
 	let sortedBillionaires = billionaires;
 
+	let compar = "";
+	$: filteredBillionaires = sortedBillionaires.filter((b) =>
+		compar ? b.name.toLowerCase().includes(compar) : true
+	);
+
 	type Orders = "wealth:high" | "wealth:low" | "impact:high" | "impact:low";
 	let order: Orders = "wealth:high";
 	let compact = false;
@@ -56,8 +61,8 @@
 	});
 </script>
 
-<div class="w-screen min-h-screen  flex justify-center">
-	<main class="pt-10 pb-20 px-4 flex flex-col">
+<div class="w-screen min-h-[200vh]  flex justify-center">
+	<main class="pt-10 pb-20 px-4 flex flex-col ">
 		<article class="prose prose-sm md:prose-base mx-4 md:mx-0 mb-12">
 			<h1 class="text-center ">Billionaire Impact Ranking</h1>
 			<p class="text-center">
@@ -76,7 +81,12 @@
 				>!
 			</p>
 		</article>
-		<div class="flex justify-between w-3/4 items-center self-center">
+		<div class="flex justify-between  items-center self-center ">
+			<input
+				bind:value={compar}
+				class="bg-transparent outline-none border-b-2 border-b-black mr-6"
+				placeholder="Filter"
+			/>
 			<div class="flex items-center">
 				<Sorter
 					selected={order === "wealth:high"
@@ -118,8 +128,8 @@
 				</div>
 			</label>
 		</div>
-		<div class="flex flex-col items-center">
-			{#each sortedBillionaires as b (b.name)}
+		<div class="flex flex-col items-center ">
+			{#each filteredBillionaires as b (b.name)}
 				<div
 					animate:flip={{ duration: 300 }}
 					in:receive|local={{ key: b.name }}

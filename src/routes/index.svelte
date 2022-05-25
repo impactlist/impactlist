@@ -130,7 +130,7 @@
 				</div>
 			</label>
 		</div>
-		<div class="flex justify-end w-3/4 self-center">
+		<div class="flex justify-end w-3/4 self-center mt-3">
 			<label class="font-bold cursor-pointer flex items-center group">
 				Consider Longtermism
 				<input type="checkbox" bind:checked={longtermist} class="hidden" />

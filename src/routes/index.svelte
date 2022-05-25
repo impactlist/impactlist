@@ -4,6 +4,7 @@
 	import { billionaires } from "../lib/data";
 	let sortedBillionaires = billionaires;
 
+	let longtermist = false;
 	let compar = "";
 	$: filteredBillionaires = sortedBillionaires.filter((b) =>
 		compar ? b.name.toLowerCase().includes(compar) : true
@@ -84,7 +85,7 @@
 		</article>
 		<input
 			bind:value={compar}
-			class="bg-transparent py-1 outline-none border-b-2 w-3/4 self-center mb-4 border-b-black text-xl"
+			class="bg-transparent  py-1 outline-none border-b-2 w-3/4 self-center mb-4 border-b-black text-xl placeholder-slate-500"
 			placeholder="Filter"
 		/>
 
@@ -129,17 +130,30 @@
 				</div>
 			</label>
 		</div>
+		<div class="flex justify-end w-3/4 self-center">
+			<label class="font-bold cursor-pointer flex items-center group">
+				Consider Longtermism
+				<input type="checkbox" bind:checked={longtermist} class="hidden" />
+				<div
+					class="border-2 border-black rounded-md w-4 h-4 flex items-center justify-center ml-2"
+				>
+					<span
+						class={`${
+							longtermist ? "opacity-100" : "opacity-0 group-hover:opacity-50"
+						} transition-opacity text-3xl relative left-0.5 -top-0.5`}
+					>
+						✓
+					</span>
+				</div>
+			</label>
+		</div>
 		<div class="flex flex-col items-center ">
 			{#each filteredBillionaires as b (b.name)}
-				<div
-					class="origin-top"
-					animate:flip|local={{ duration: 300 }}
-				>
-				<!-- in:fly={{ y: -25, duration: 300 }} -->
-
+				<div class="origin-top" animate:flip={{ duration: 100 }}>
 					<!-- in:receive|local={{ key: b.name }}
 				out:send|local={{ key: b.name }} -->
-					<Card billi={b} {compact} />
+
+					<Card billi={b} {longtermist} {compact} />
 				</div>
 			{/each}
 		</div>

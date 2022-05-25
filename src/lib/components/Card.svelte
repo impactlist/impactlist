@@ -2,7 +2,10 @@
 	import type { Billionaire } from "../data";
 	export let compact: boolean;
 	export let billi: Billionaire;
+	export let longtermist: boolean;
 	let grade = billi.grade;
+	$: gradeToUse = longtermist ? billi.esotericGrade : billi.grade;
+	$: bioToUse = longtermist ? billi.esotericBio : billi.bio;
 </script>
 
 <div
@@ -21,7 +24,7 @@
 		<div class="flex mr-2">
 			<p
 				class={`font-mono font-bold text-7xl h-0 transition-transform duration-[320ms] ${
-					grade === "A"
+					gradeToUse === "A"
 						? "text-green-400"
 						: grade === "B"
 						? "text-blue-500"
@@ -32,7 +35,7 @@
 						: "text-red-500"
 				}`}
 			>
-				{billi.grade}
+				{gradeToUse}
 			</p>
 		</div>
 	</div>
@@ -41,6 +44,6 @@
 			compact && "scale-y-0 duration-200"
 		} transition-transform origin-top duration-[300ms] border-t-2 pt-4  text-sm`}
 	>
-		{billi.bio}
+		{bioToUse}
 	</div>
 </div>

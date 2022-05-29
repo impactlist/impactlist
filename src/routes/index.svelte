@@ -77,6 +77,7 @@
 				This site grades billionaires by the positive impact of their giving. If you would
 				like to learn more about making an impact with your money you might be an{" "}
 				<a
+					class="hover:text-red-700 transition-colors"
 					href="https://www.effectivealtruism.org/articles/introduction-to-effective-altruism"
 				>
 					effective altruist</a

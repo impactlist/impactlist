@@ -9,7 +9,7 @@
 </script>
 
 <div
-	class={`bg-white border-black shadow-red-400 shadow-md my-3 sm:w-[500px] max-w-full p-4 mx-3 ${
+	class={`bg-white border-red-300 border-2 my-3 sm:w-[500px] max-w-full p-4 mx-3 ${
 		compact ? "h-24" : "h-80"
 	} my-3 overflow-hidden transition-all`}
 >
@@ -42,7 +42,7 @@
 	<div
 		class={`mt-2 ${
 			compact && "scale-y-0 duration-200"
-		} transition-transform origin-top duration-[300ms] border-t-2 pt-4  text-sm`}
+		} transition-transform origin-top duration-[300ms] border-t-2 border-t-red-100 pt-4  text-sm`}
 	>
 		{bioToUse}
 	</div>

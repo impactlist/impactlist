@@ -7,6 +7,7 @@ export type Billionaire = {
 	esotericBio: string;
 	billions: number;
 	image: string;
+	fullImage?: string;
 };
 
 // export const billionaires: Billionaire[] = [
@@ -40,6 +41,8 @@ export const billionaires: Billionaire[] = [
 			"Microsoft Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 		billions: 133,
 		image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg",
+		fullImage:
+			"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/563px-Bill_Gates_2017_%28cropped%29.jpg",
 	},
 	{
 		name: "Bernard Arnault",

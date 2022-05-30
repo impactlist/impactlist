@@ -1,7 +1,6 @@
 <script>
 	import "../app.css";
 	import { page } from "$app/stores";
-	import { fly } from "svelte/transition";
 	$: pathname = $page.url.pathname;
 </script>
 

@@ -25,3 +25,12 @@ body::-webkit-scrollbar-button {
 .test {
 	border: 1px solid red;
 }
+
+@layer base {
+	@font-face {
+		font-family: "gotham";
+		src: local("gotham"), local("Gotham"), url("/fonts/gotham_rounded_regular.otf");
+		font-weight: normal;
+		font-display: swap;
+	}
+}

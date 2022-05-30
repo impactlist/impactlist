@@ -10,7 +10,6 @@ const config = {
 			postcss: true,
 		}),
 	],
-
 	kit: { adapter: adapter(), prerender: { default: true } },
 };
 

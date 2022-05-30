@@ -63,7 +63,7 @@
 	// });
 </script>
 
-<div class="w-screen min-h-[200vh]  flex justify-center">
+<div class={`w-screen ${compact ? "min-h-[200vh]" : "min-h-[200vh]"}  flex justify-center`}>
 	<main class="pt-10 pb-20 px-4 flex flex-col ">
 		<article class="prose prose-sm md:prose-base mx-4 md:mx-0 mb-12">
 			<h1 class="text-center ">Billionaire Impact Ranking</h1>
@@ -84,12 +84,13 @@
 				>!
 			</p>
 		</article>
-		<input
-			bind:value={compar}
-			class="bg-transparent  py-1 outline-none border-b-2 w-3/4 self-center mb-4 border-b-black text-xl placeholder-slate-500"
-			placeholder="Filter"
-		/>
-
+		<div class="flex h-16 self-center w-3/4 mb-4   py-1">
+			<input
+				bind:value={compar}
+				class="bg-transparent outline-none border-b-2 focus:border-b-4 focus:pt-2 transition-all w-full border-b-black text-xl placeholder-slate-500"
+				placeholder="Filter"
+			/>
+		</div>
 		<div class="flex justify-between w-3/4  items-center self-center ">
 			<div class="flex items-center">
 				<Sorter
@@ -148,7 +149,7 @@
 				</div>
 			</label>
 		</div>
-		<div class="flex flex-col items-center ">
+		<div class="flex flex-col items-center mt-8">
 			{#each filteredBillionaires as b (b.name)}
 				<div class="origin-top" animate:flip={{ duration: 100 }}>
 					<!-- in:receive|local={{ key: b.name }}

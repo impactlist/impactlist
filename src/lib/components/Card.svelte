@@ -24,27 +24,34 @@
 		</div>
 		<div
 			class="absolute top-0 w-full h-full  z-10 flex flex-col justify-end"
-			style="background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0) 70%, rgba(0,0,0,0.75) 90%);"
+			style="background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0) 65%, rgba(0,0,0,0.8) 80%);"
 		>
 			<div class="m-2">
-				<div class="border-b-white border-b mb-2 flex justify-between">
-					<p class="text-white text-4xl">
-						{billi.name}
-					</p>
-					<span
-						class={`text-4xl
+				<div class="border-b-white border-b mb-2 flex items-center">
+					<div class="">
+						<p class="text-white text-4xl">
+							{billi.name}
+						</p>
+						<p class="text-white">${billi.billions}B</p>
+					</div>
+					<div
+						class="absolute right-0 top-0 flex items-center justify-center rounded-full w-[100px] h-[100px] m-4 bg-slate-700 bg-opacity-40 pt-2"
+					>
+						<span
+							class={`text-7xl font-mono font-bold
 					${
 						gradeToUse === "A"
 							? "text-green-400"
 							: grade === "B"
-							? "text-blue-500"
+							? "text-blue-400"
 							: grade === "C"
 							? "text-yellow-400"
 							: grade === "D"
-							? "text-orange-500"
-							: "text-red-500"
+							? "text-orange-400"
+							: "text-red-400"
 					}`}>{gradeToUse}</span
-					>
+						>
+					</div>
 				</div>
 				<p class="text-white text-xs">
 					{bioToUse}

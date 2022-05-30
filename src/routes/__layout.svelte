@@ -26,7 +26,11 @@
 	<meta name="twitter:site" content="@ideopunk" />
 </svelte:head>
 
-<div class={`${pathname === "/" ? " bg-red-50 " : "bg-green-50"} transition-all min-h-screen`}>
+<div
+	class={`${
+		pathname === "/" ? " bg-red-50 " : pathname === "/faq" ? "bg-green-50" : "bg-yellow-50"
+	} transition-all min-h-screen`}
+>
 	<div class="flex justify-center w-full">
 		<div class="flex justify-between mt-8 w-[350px]">
 			<a href="/" class="group w-[100px]">

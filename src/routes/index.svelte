@@ -25,10 +25,10 @@
 	$: {
 		switch (order) {
 			case "wealth:high":
-				sortedBillionaires = billionaires.sort((a, b) => b.billions - a.billions);
+				sortedBillionaires = billionaires.sort((a, b) => b.wealth - a.wealth);
 				break;
 			case "wealth:low":
-				sortedBillionaires = billionaires.sort((a, b) => a.billions - b.billions);
+				sortedBillionaires = billionaires.sort((a, b) => a.wealth - b.wealth);
 				break;
 			case "impact:high":
 				sortedBillionaires = billionaires.sort((a, b) =>
@@ -54,7 +54,7 @@
 <div class={`w-screen ${compact ? "min-h-[200vh]" : "min-h-[200vh]"}  flex justify-center`}>
 	<main class="pt-10 pb-20 max-w-full px-4 flex flex-col ">
 		<article class="prose prose-sm self-center md:prose-base mx-4 md:mx-0 mb-12">
-			<h1 class="text-center ">Billionaire Impact Ranking</h1>
+			<h1 class="text-center ">Billionaire Impact Ranking (in progress)</h1>
 			<p class="text-center">
 				Many billionaires give massive sums to charity. However, some charities can be
 				1,000X as effective as others. Donating $5,000 to an effective charity could save a
@@ -123,7 +123,7 @@
 			</div>
 		</div>
 
-		<div class={`flex flex-col md:flex-row  md:flex-wrap items-center  justify-center m-8 `}>
+		<div class={`flex flex-col md:flex-row  md:flex-wrap items-center justify-center m-8 `}>
 			{#if width}
 				{#each filteredBillionaires as b (b.name)}
 					<div class="origin-top" animate:flip={{ duration: 100 }}>

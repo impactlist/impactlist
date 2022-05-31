@@ -21,7 +21,7 @@
 
 <div
 	class={`bg-red-100  relative sm:w-[400px] max-w-full mx-3 ${
-		compact ? "bg-white h-12" : "bg-black sm:h-[520px] "
+		compact ? "bg-white h-12" : "bg-black sm:h-[450px] "
 	} my-2 overflow-hidden transition-all`}
 >
 	<div
@@ -29,29 +29,35 @@
 			compact ? "opacity-0" : "opacity-100"
 		} transition-opacity`}
 	>
-		<img src={billi.fullImage} loading="lazy" alt={`Picture of ${billi.name}`} />
+		<img src={billi.image} loading="lazy" alt={`Picture of ${billi.name}`} />
 	</div>
 	{#if !compact}
-		<!-- <div class="object-cover relative overflow-hidden w-full">
-			<img
-				src={billi.fullImage}
-				loading="lazy"
-				alt={`Picture of ${billi.name}`}
-			/>
-		</div> -->
 		<div
 			in:send={{ key: "content" }}
 			out:receive={{ key: "content" }}
 			class="absolute top-0 w-full h-full  z-10 flex flex-col justify-end"
-			style="background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0) 55%, rgba(0,0,0,0.8) 70%);"
+			style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0) 10%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.8) 70%);"
 		>
+			<!-- <div class="p-2">
+				<p class="text-white text-3xl w-full text-center">
+					Effectiveness Ranking: {billi.impactRank}
+				</p>
+			</div> -->
 			<div class="m-2">
 				<div class="border-b-white border-b mb-2 flex items-center">
-					<div class="">
-						<p class="text-white text-4xl relative -left-0.5">{billi.name}</p>
-						<p class="text-white">${billi.billions}B</p>
+					<div class="w-full">
+						<p class="text-white text-4xl relative -left-0.5">
+							{billi.impactRank}. {billi.name}
+						</p>
+						<p class="text-white w-full flex justify-between">
+							<span>${billi.wealth}B Wealth</span>
+							<span>|</span>
+							<span>{billi.pledged} Pledged</span>
+							<span>|</span>
+							<span class="text-right">${billi.donated}B Donated</span>
+						</p>
 					</div>
-					<div
+					<!-- <div
 						class="absolute right-0 top-0 flex items-center justify-center rounded-full w-[90px] h-[90px] m-4 bg-slate-700 bg-opacity-40 pt-2"
 					>
 						{#key gradeToUse}
@@ -73,11 +79,34 @@
 								{gradeToUse}
 							</p>
 						{/key}
-					</div>
+					</div> -->
 				</div>
-				<p class="text-white text-xs">
+				<!-- <p class="text-white text-xs">
 					{bioToUse}
-				</p>
+				</p> -->
+				<ul class="text-white text-base h-20">
+					{#each billi.donations as donation}
+						<li class="my-1 ">
+							<span>{donation.recipient}:{" "}</span>
+							<span>{donation.amount}M</span>
+							<span
+								class={`text-bold text-lg ml-2 relative top-[1px]
+								${
+									donation.effectiveness === "A"
+										? "text-green-400"
+										: donation.effectiveness === "B"
+										? "text-blue-400"
+										: donation.effectiveness === "C"
+										? "text-yellow-400"
+										: donation.effectiveness === "D"
+										? "text-orange-400"
+										: "text-red-400"
+								}
+								`}>{donation.effectiveness}</span
+							>
+						</li>
+					{/each}
+				</ul>
 			</div>
 		</div>
 	{:else}
@@ -88,7 +117,7 @@
 		>
 			<h1 class="sm:text-2xl w-3/5 leading-none">{billi.name}</h1>
 			<p class="sm:text-2xl font-bold italic leading-none">
-				${billi.billions.toLocaleString()}B
+				${billi.wealth.toLocaleString()}B
 			</p>
 			<div class="w-4 sm:w-10 h-full justify-center items-center text-center flex">
 				{#key gradeToUse}

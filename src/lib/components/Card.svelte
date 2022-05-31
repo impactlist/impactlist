@@ -20,8 +20,8 @@
 </script>
 
 <div
-	class={`bg-white border-red-300 relative sm:w-[400px] max-w-full mx-3 ${
-		compact ? "h-12" : " h-[520px] "
+	class={`bg-red-100  relative sm:w-[400px] max-w-full mx-3 ${
+		compact ? "bg-white h-12" : "bg-black sm:h-[520px] "
 	} my-2 overflow-hidden transition-all`}
 >
 	<div
@@ -82,17 +82,19 @@
 		</div>
 	{:else}
 		<div
-			class="flex items-center absolute top-0 w-full  z-10  h-full justify-between px-4"
+			class="flex items-center absolute top-0 w-full  z-10  h-full justify-between px-2 sm:px-4"
 			in:send={{ key: "content" }}
 			out:receive={{ key: "content" }}
 		>
-			<h1 class="text-2xl w-3/5 ">{billi.name}</h1>
-			<p class="text-2xl font-bold italic">${billi.billions.toLocaleString()}B</p>
-			<div class="relative top-0.5 w-10 h-full justify-center items-center text-center flex">
+			<h1 class="sm:text-2xl w-3/5 leading-none">{billi.name}</h1>
+			<p class="sm:text-2xl font-bold italic leading-none">
+				${billi.billions.toLocaleString()}B
+			</p>
+			<div class="w-4 sm:w-10 h-full justify-center items-center text-center flex">
 				{#key gradeToUse}
 					<p
 						transition:fade|local={{ duration: 200 }}
-						class={`font-mono transition-colors absolute text-center font-bold  text-4xl  ${
+						class={`font-mono transition-colors absolute text-center  leading-none font-bold  text-xl sm:text-4xl  ${
 							gradeToUse === "A"
 								? "text-green-400"
 								: grade === "B"

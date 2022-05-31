@@ -8,7 +8,7 @@
 	<span
 		class={`${
 			selected ? "opacity-100 group-hover:opacity-75" : "opacity-0 group-hover:opacity-30"
-		} transition-opacity text-3xl relative left-0.5 -top-0.5`}
+		} transition-opacity text-xl sm:text-3xl relative left-0.5 -top-0.5`}
 	>
 		✓
 	</span>

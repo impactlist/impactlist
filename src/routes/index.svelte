@@ -14,7 +14,14 @@
 
 	type Orders = "wealth:high" | "wealth:low" | "impact:high" | "impact:low";
 	let order: Orders = "impact:high";
-	let compact = false;
+	let width = 0;
+	let compact = width > 676 ? false : true;
+	$: if (width > 676) {
+		compact = false;
+	} else {
+		compact = true;
+	}
+
 	$: {
 		switch (order) {
 			case "wealth:high":
@@ -42,8 +49,10 @@
 	}
 </script>
 
+<svelte:window bind:innerWidth={width} />
+
 <div class={`w-screen ${compact ? "min-h-[200vh]" : "min-h-[200vh]"}  flex justify-center`}>
-	<main class="pt-10 pb-20 px-4 flex flex-col ">
+	<main class="pt-10 pb-20 max-w-full px-4 flex flex-col ">
 		<article class="prose prose-sm self-center md:prose-base mx-4 md:mx-0 mb-12">
 			<h1 class="text-center ">Billionaire Impact Ranking</h1>
 			<p class="text-center">
@@ -63,11 +72,11 @@
 				>!
 			</p>
 		</article>
-		<div class="self-center w-[392px]">
+		<div class="self-center max-w-full w-[392px]">
 			<div class="flex h-16 self-center w-full mb-4   py-1">
 				<input
 					bind:value={compar}
-					class="bg-transparent outline-none border-b-2 focus:border-b-4 focus:pt-2 transition-all w-full border-b-black text-xl placeholder-slate-500"
+					class="bg-transparent appearance-none rounded-none outline-none border-b-2 focus:border-b-4 focus:pt-2 transition-all w-full border-b-black text-xl placeholder-slate-500"
 					placeholder="Filter"
 				/>
 			</div>
@@ -96,13 +105,16 @@
 						Wealth
 					</Sorter>
 				</div>
-				<label class="font-bold cursor-pointer select-none flex items-center group group">
+				<label
+					class="font-bold hidden cursor-pointer select-none sm:flex items-center group group"
+				>
 					Compact
 					<input type="checkbox" bind:checked={compact} class="peer w-0 h-0" />
-					<Checkbox selected={compact} />
+					<Checkbox selected={compact && !!width} />
+					<!-- hack to prevent flash of checkbox -->
 				</label>
 			</div>
-			<div class="flex justify-end w-full self-center mt-3">
+			<div class="flex md:justify-end w-full self-center mt-3">
 				<label class="font-bold cursor-pointer select-none flex items-center group">
 					Consider Longtermism
 					<input type="checkbox" bind:checked={longtermist} class="peer w-0 h-0" />
@@ -112,14 +124,16 @@
 		</div>
 
 		<div class={`flex flex-col md:flex-row  md:flex-wrap items-center  justify-center m-8 `}>
-			{#each filteredBillionaires as b (b.name)}
-				<div class="origin-top" animate:flip={{ duration: 100 }}>
-					<!-- in:receive|local={{ key: b.name }}
+			{#if width}
+				{#each filteredBillionaires as b (b.name)}
+					<div class="origin-top" animate:flip={{ duration: 100 }}>
+						<!-- in:receive|local={{ key: b.name }}
 				out:send|local={{ key: b.name }} -->
 
-					<Card billi={b} {longtermist} {compact} />
-				</div>
-			{/each}
+						<Card billi={b} {longtermist} {compact} />
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</main>
 </div>

@@ -1,4 +1,4 @@
-<div class="w-screen min-h-screen flex justify-center py-10 ">
+<div class="w-screen min-h-screen flex justify-center py-10 px-8 ">
 	<article class="prose text-center prose-sm md:prose-base">
 		<h1>Frequently Asked Questions</h1>
 		<h2>How are people ranked?</h2>

@@ -20,7 +20,7 @@
 	$: dNw = ((billi.donated / billi.wealth) * 100).toFixed(2);
 
 	// state
-	let row = false;
+	let row = true;
 
 	function onClick() {
 		row = !row;

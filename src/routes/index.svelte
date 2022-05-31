@@ -1,7 +1,9 @@
 <script lang="ts">
+	import fsm from "svelte-fsm";
+
 	import { flip } from "svelte/animate";
 	import Sorter from "../lib/components/Sorter.svelte";
-	import Card from "../lib/components/Card.svelte";
+	import Row from "../lib/components/Row.svelte";
 	import { billionaires } from "../lib/data";
 	import Checkbox from "$lib/Checkbox.svelte";
 	let sortedBillionaires = billionaires;
@@ -12,46 +14,109 @@
 		compar ? b.name.toLowerCase().includes(compar) : true
 	);
 
-	type Orders = "wealth:high" | "wealth:low" | "impact:high" | "impact:low";
-	let order: Orders = "impact:high";
 	let width = 0;
-	let compact = width > 676 ? false : true;
-	$: if (width > 676) {
-		compact = false;
-	} else {
-		compact = true;
-	}
 
-	$: {
-		switch (order) {
-			case "wealth:high":
-				sortedBillionaires = billionaires.sort((a, b) => b.wealth - a.wealth);
-				break;
-			case "wealth:low":
-				sortedBillionaires = billionaires.sort((a, b) => a.wealth - b.wealth);
-				break;
-			case "impact:high":
+	const sorting = fsm("impact_high", {
+		name_high: {
+			_enter() {
+				sortedBillionaires = billionaires.sort((a, b) =>
+					a.name > b.name ? 1 : a.name < b.name ? -1 : 0
+				);
+				sortedBillionaires = sortedBillionaires;
+			},
+			name: "name_low",
+		},
+		name_low: {
+			_enter() {
+				sortedBillionaires = billionaires.sort((a, b) =>
+					a.name < b.name ? 1 : a.name > b.name ? -1 : 0
+				);
+				sortedBillionaires = sortedBillionaires;
+			},
+			name: "name_high",
+		},
+		impact_high: {
+			_enter() {
 				sortedBillionaires = billionaires.sort((a, b) =>
 					a.grade > b.grade ? 1 : a.grade < b.grade ? -1 : 0
 				);
-				break;
-			default: // impact:low
+				sortedBillionaires = sortedBillionaires;
+			},
+			impact: "impact_low",
+		},
+		impact_low: {
+			_enter() {
 				sortedBillionaires = billionaires.sort((a, b) =>
 					a.grade > b.grade ? -1 : a.grade < b.grade ? 1 : 0
 				);
-		}
-
-		sortedBillionaires = sortedBillionaires;
-	}
-
-	function handleClick(o: Orders) {
-		order = o;
-	}
+				sortedBillionaires = sortedBillionaires;
+			},
+		},
+		wealth_high: {
+			_enter() {
+				sortedBillionaires = billionaires.sort((a, b) => b.wealth - a.wealth);
+				sortedBillionaires = sortedBillionaires;
+			},
+			wealth: "wealth_low",
+		},
+		wealth_low: {
+			_enter() {
+				sortedBillionaires = billionaires.sort((a, b) => a.wealth - b.wealth);
+				sortedBillionaires = sortedBillionaires;
+			},
+		},
+		donated_high: {
+			_enter() {
+				sortedBillionaires = billionaires.sort((a, b) => b.donated - a.donated);
+				sortedBillionaires = sortedBillionaires;
+			},
+			donated: "donated_low",
+		},
+		donated_low: {
+			_enter() {
+				sortedBillionaires = billionaires.sort((a, b) => a.donated - b.donated);
+				sortedBillionaires = sortedBillionaires;
+			},
+		},
+		// pledged_high: {
+		// 	_enter() {
+		// 		sortedBillionaires = billionaires.sort((a, b) => b.pl - a.donated);
+		// 		sortedBillionaires = sortedBillionaires;
+		// 	},
+		// 	pledged: "pledged_low",
+		// },
+		// pledged_low: {},
+		ratio_high: {
+			_enter() {
+				sortedBillionaires = billionaires.sort(
+					(a, b) => b.donated / b.wealth - a.donated / a.wealth
+				);
+				sortedBillionaires = sortedBillionaires;
+			},
+			ratio: "ratio_low",
+		},
+		ratio_low: {
+			_enter() {
+				sortedBillionaires = billionaires.sort(
+					(a, b) => a.donated / a.wealth - b.donated / b.wealth
+				);
+				sortedBillionaires = sortedBillionaires;
+			},
+		},
+		"*": {
+			name: "name_high",
+			impact: "impact_high",
+			wealth: "wealth_high",
+			donated: "donated_high",
+			pledged: "pledged_high",
+			ratio: "ratio_high",
+		},
+	});
 </script>
 
 <svelte:window bind:innerWidth={width} />
 
-<div class={`w-screen ${compact ? "min-h-[200vh]" : "min-h-[200vh]"}  flex justify-center`}>
+<div class={`w-screen min-h-[200vh]  flex justify-center`}>
 	<main class="pt-10 pb-20 max-w-full px-4 flex flex-col ">
 		<article class="prose prose-sm self-center md:prose-base mx-4 md:mx-0 mb-12">
 			<h1 class="text-center ">Billionaire Impact Ranking (in progress)</h1>
@@ -72,7 +137,7 @@
 				>!
 			</p>
 		</article>
-		<div class="self-center max-w-full w-[392px]">
+		<div class="self-center max-w-full w-[1000px]">
 			<div class="flex h-16 self-center w-full mb-4   py-1">
 				<input
 					bind:value={compar}
@@ -80,57 +145,77 @@
 					placeholder="Filter"
 				/>
 			</div>
-			<div class="flex justify-between w-full  items-center self-center ">
-				<div class="flex items-center">
+			<div class="flex justify-between w-full items-center self-center ">
+				<div class="flex items-center justify-between w-full">
 					<Sorter
-						selected={order === "impact:high"
+						selected={$sorting === "name_high"
 							? "down"
-							: order === "impact:low"
+							: $sorting === "name_low"
 							? "up"
 							: "naw"}
-						on:message={() =>
-							handleClick(order === "impact:high" ? "impact:low" : "impact:high")}
+						on:message={sorting.name}
+					>
+						Name
+					</Sorter>
+					<Sorter
+						selected={$sorting === "impact_high"
+							? "down"
+							: $sorting === "impact_low"
+							? "up"
+							: "naw"}
+						on:message={sorting.impact}
 					>
 						Impact
 					</Sorter>
 					<Sorter
-						selected={order === "wealth:high"
+						selected={$sorting === "donated_high"
 							? "down"
-							: order === "wealth:low"
+							: $sorting === "donated_low"
 							? "up"
 							: "naw"}
-						on:message={() =>
-							handleClick(order === "wealth:high" ? "wealth:low" : "wealth:high")}
+						on:message={sorting.donated}
 					>
-						Wealth
+						Donated
+					</Sorter>
+					<Sorter
+						selected={$sorting === "wealth_high"
+							? "down"
+							: $sorting === "wealth_low"
+							? "up"
+							: "naw"}
+						on:message={sorting.wealth}
+					>
+						Net Worth
+					</Sorter>
+					<Sorter
+						selected={$sorting === "ratio_high"
+							? "down"
+							: $sorting === "ratio_low"
+							? "up"
+							: "naw"}
+						on:message={sorting.ratio}
+					>
+						D / NW
 					</Sorter>
 				</div>
-				<label
-					class="font-bold hidden cursor-pointer select-none sm:flex items-center group group"
-				>
-					Compact
-					<input type="checkbox" bind:checked={compact} class="peer w-0 h-0" />
-					<Checkbox selected={compact && !!width} />
-					<!-- hack to prevent flash of checkbox -->
-				</label>
 			</div>
-			<div class="flex md:justify-end w-full self-center mt-3">
+			<!-- <div class="flex md:justify-end w-full self-center mt-3">
 				<label class="font-bold cursor-pointer select-none flex items-center group">
 					Consider Longtermism
 					<input type="checkbox" bind:checked={longtermist} class="peer w-0 h-0" />
 					<Checkbox selected={longtermist} />
 				</label>
-			</div>
+			</div> -->
 		</div>
 
-		<div class={`flex flex-col md:flex-row  md:flex-wrap items-center justify-center m-8 `}>
+		<div class={`flex flex-col items-center justify-center m-8 `}>
 			{#if width}
 				{#each filteredBillionaires as b (b.name)}
 					<div class="origin-top" animate:flip={{ duration: 100 }}>
 						<!-- in:receive|local={{ key: b.name }}
 				out:send|local={{ key: b.name }} -->
 
-						<Card billi={b} {longtermist} {compact} />
+						<Row billi={b} {longtermist} />
 					</div>
 				{/each}
 			{/if}

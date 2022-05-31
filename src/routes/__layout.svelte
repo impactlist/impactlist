@@ -28,7 +28,7 @@
 
 <div
 	class={`${
-		pathname === "/" ? " bg-red-50 " : pathname === "/faq" ? "bg-green-50" : "bg-yellow-50"
+		pathname === "/" ? " bg-white " : pathname === "/faq" ? "bg-green-50" : "bg-yellow-50"
 	} transition-all min-h-screen`}
 >
 	<div class="flex justify-center w-full">

@@ -35,5 +35,7 @@
 		"typescript": "~4.6.2"
 	},
 	"type": "module",
-	"dependencies": {}
+	"dependencies": {
+		"svelte-fsm": "^1.1.2"
+	}
 }

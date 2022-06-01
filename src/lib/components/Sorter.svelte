@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Caret from "./Caret.svelte";
 
+	export let first = false;
 	export let selected: "naw" | "up" | "down" | undefined = undefined;
 
 	import { createEventDispatcher } from "svelte";
@@ -12,7 +13,7 @@
 	}
 </script>
 
-<button class="flex items-center pl-2 w-1/5 group" on:click={onClick}>
+<button class={`flex items-center ${first ? "w-1/3 pl-9" : "w-1/6"} group`} on:click={onClick}>
 	<span class="font-bold mr-1"><slot /></span>
 	<div
 		class={`relative top-[1px] transition-all sm:group-hover:rotate-45 ${

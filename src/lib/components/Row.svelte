@@ -1,21 +1,8 @@
 <script lang="ts">
-	import { fly, fade } from "svelte/transition";
-	import { quintOut } from "svelte/easing";
-	import { crossfade } from "svelte/transition";
 	import type { Billionaire } from "../data";
 
 	// props
 	export let billi: Billionaire;
-	export let longtermist: boolean;
-	let grade = billi.grade;
-
-	$: gradeToUse = longtermist ? billi.esotericGrade : billi.grade;
-	$: bioToUse = longtermist ? billi.esotericBio : billi.bio;
-
-	const [send, receive] = crossfade({
-		duration: 100,
-		easing: quintOut,
-	});
 
 	$: dNw = ((billi.donated / billi.wealth) * 100).toFixed(2);
 
@@ -34,27 +21,30 @@
 >
 	<button
 		on:click={() => (row = !row)}
-		class="flex bg-blue-200  pl-3 text-left items-center w-full h-12 "
+		class="flex bg-blue-200  pl-4 text-left items-center w-full h-12 "
 	>
-		<h1 class=" text-left sm:text-xl w-1/5  leading-none font-bold">
-			{billi.impactRank}. {billi.name}
+		<h1 class="text-left sm:text-xl w-1/3  leading-none font-bold">
+			<span class="w-8 inline-block">{billi.impactRank}.{" "}</span>
+			<span>{billi.name}</span>
 		</h1>
-		<p class="sm:text-xl w-1/5  italic leading-none">
+		<p class="sm:text-xl w-1/6  italic leading-none">
 			${billi.impact.toLocaleString()}B
 		</p>
-		<p class="sm:text-xl w-1/5  italic leading-none">
+		<p class="sm:text-xl w-1/6  italic leading-none">
 			${billi.donated.toLocaleString()}B
 		</p>
-		<p class="sm:text-xl w-1/5  italic leading-none">
+		<p class="sm:text-xl w-1/6  italic leading-none">
 			${billi.wealth.toLocaleString()}B
 		</p>
-		<p class="sm:text-xl w-1/5  italic leading-none">
+		<p class="sm:text-xl w-1/6  italic leading-none">
 			{dNw}
 		</p>
 	</button>
 	{#if !row}
 		<div class=" bg-blue-100 w-full h-full flex flex-col items-center  pt-6">
-			<div class={`  object-cover relative overflow-hidden w-48 h-48 rounded-full`}>
+			<div
+				class={`  object-cover relative bg-blue-200 overflow-hidden w-48 h-48 rounded-full`}
+			>
 				<img
 					src={billi.image}
 					alt={`Picture of ${billi.name}`}

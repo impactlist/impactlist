@@ -5,32 +5,34 @@
 	import Sorter from "../lib/components/Sorter.svelte";
 	import Row from "../lib/components/Row.svelte";
 	import { billionaires } from "../lib/data";
-	import Checkbox from "$lib/Checkbox.svelte";
 	let sortedBillionaires = billionaires;
 
-	let longtermist = false;
 	let compar = "";
 	$: filteredBillionaires = sortedBillionaires.filter((b) =>
 		compar ? b.name.toLowerCase().includes(compar) : true
 	);
 
-	let width = 0;
-
 	const sorting = fsm("impact_high", {
 		name_high: {
 			_enter() {
-				sortedBillionaires = billionaires.sort((a, b) =>
-					a.name > b.name ? 1 : a.name < b.name ? -1 : 0
-				);
+				sortedBillionaires = billionaires.sort((a, b) => {
+					let AreverseName = a.lastName + " " + a.firstName;
+					let BreverseName = b.lastName + " " + b.firstName;
+
+					return AreverseName > BreverseName ? 1 : AreverseName < BreverseName ? -1 : 0;
+				});
 				sortedBillionaires = sortedBillionaires;
 			},
 			name: "name_low",
 		},
 		name_low: {
 			_enter() {
-				sortedBillionaires = billionaires.sort((a, b) =>
-					a.name < b.name ? 1 : a.name > b.name ? -1 : 0
-				);
+				sortedBillionaires = billionaires.sort((a, b) => {
+					let AreverseName = a.lastName + " " + a.firstName;
+					let BreverseName = b.lastName + " " + b.firstName;
+
+					return AreverseName < BreverseName ? 1 : AreverseName > BreverseName ? -1 : 0;
+				});
 				sortedBillionaires = sortedBillionaires;
 			},
 			name: "name_high",
@@ -114,8 +116,6 @@
 	});
 </script>
 
-<svelte:window bind:innerWidth={width} />
-
 <div class={`w-screen min-h-[200vh]  flex justify-center`}>
 	<main class="pt-10 pb-20 max-w-full px-4 flex flex-col ">
 		<article class="prose prose-sm self-center md:prose-base mx-4 md:mx-0 mb-12">
@@ -146,13 +146,14 @@
 				/>
 			</div>
 			<div class="flex justify-between w-full items-center self-center ">
-				<div class="flex items-center justify-between w-full">
+				<div class="flex items-center justify-between w-full pl-4">
 					<Sorter
 						selected={$sorting === "name_high"
 							? "down"
 							: $sorting === "name_low"
 							? "up"
 							: "naw"}
+						first
 						on:message={sorting.name}
 					>
 						Name
@@ -199,26 +200,14 @@
 					</Sorter>
 				</div>
 			</div>
-			<!-- <div class="flex md:justify-end w-full self-center mt-3">
-				<label class="font-bold cursor-pointer select-none flex items-center group">
-					Consider Longtermism
-					<input type="checkbox" bind:checked={longtermist} class="peer w-0 h-0" />
-					<Checkbox selected={longtermist} />
-				</label>
-			</div> -->
 		</div>
 
 		<div class={`flex flex-col items-center justify-center m-8 `}>
-			{#if width}
-				{#each filteredBillionaires as b (b.name)}
-					<div class="origin-top" animate:flip={{ duration: 100 }}>
-						<!-- in:receive|local={{ key: b.name }}
-				out:send|local={{ key: b.name }} -->
-
-						<Row billi={b} {longtermist} />
-					</div>
-				{/each}
-			{/if}
+			{#each filteredBillionaires as b (b.name)}
+				<div class="origin-top" animate:flip={{ duration: 100 }}>
+					<Row billi={b} />
+				</div>
+			{/each}
 		</div>
 	</main>
 </div>

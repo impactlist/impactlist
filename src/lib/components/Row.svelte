@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Billionaire } from "../data";
+	import type { Billionaire } from "../billionaire";
 
 	// props
 	export let billi: Billionaire;
@@ -23,21 +23,25 @@
 		on:click={() => (row = !row)}
 		class="flex bg-blue-200  pl-4 text-left items-center w-full h-12 "
 	>
-		<h1 class="text-left sm:text-xl w-1/3  leading-none font-bold">
-			<span class="w-8 inline-block">{billi.impactRank}.{" "}</span>
+		<h1 class="text-left sm:text-base w-1/4  leading-none font-bold">
+			<!-- <span class="w-8 inline-block">{billi.impactRank}.{" "}</span> -->
 			<span>{billi.name}</span>
 		</h1>
-		<p class="sm:text-xl w-1/6  italic leading-none">
-			${billi.impact.toLocaleString()}B
+		<p class="sm:text-base flex-1   italic leading-none">
+			{billi.livesImpact.toLocaleString()}K
 		</p>
-		<p class="sm:text-xl w-1/6  italic leading-none">
+		<p class="sm:text-base flex-1   italic leading-none">
 			${billi.donated.toLocaleString()}B
 		</p>
-		<p class="sm:text-xl w-1/6  italic leading-none">
+		<p class="sm:text-base flex-1   italic leading-none">
+			${billi.donatedLivesSavedQuotient.toLocaleString()}
+		</p>
+		<p class="sm:text-base flex-1   italic leading-none">
 			${billi.wealth.toLocaleString()}B
 		</p>
-		<p class="sm:text-xl w-1/6  italic leading-none">
-			{dNw}
+
+		<p class="sm:text-base flex-1   italic leading-none">
+			{billi.donatedWealthQuotient.toLocaleString()}
 		</p>
 	</button>
 	{#if !row}
@@ -49,14 +53,14 @@
 					src={billi.image}
 					alt={`Picture of ${billi.name}`}
 					loading="lazy"
-					class="rounded-full object-cover  "
+					class="rounded-full object-cover  hidden"
 				/>
 			</div>
 			<p class="mx-20 text-center mt-6">{billi.bio}</p>
 			<!-- {#key gradeToUse}
 				<p
 					transition:fade|local={{ duration: 200 }}
-					class={`font-mono transition-colors absolute text-center  leading-none font-bold  text-xl sm:text-4xl  ${
+					class={`font-mono transition-colors absolute text-center  leading-none font-bold  text-base sm:text-4xl  ${
 						gradeToUse === "A"
 							? "text-green-400"
 							: grade === "B"

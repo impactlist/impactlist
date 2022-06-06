@@ -4,7 +4,7 @@
 	import { flip } from "svelte/animate";
 	import Sorter from "../lib/components/Sorter.svelte";
 	import Row from "../lib/components/Row.svelte";
-	import { billionaires } from "../lib/data";
+	import { billionaires } from "../lib/billionaire";
 	let sortedBillionaires = billionaires;
 
 	let compar = "";
@@ -40,7 +40,7 @@
 		impact_high: {
 			_enter() {
 				sortedBillionaires = billionaires.sort((a, b) =>
-					a.grade > b.grade ? 1 : a.grade < b.grade ? -1 : 0
+					a.livesImpact > b.livesImpact ? 1 : a.livesImpact < b.livesImpact ? -1 : 0
 				);
 				sortedBillionaires = sortedBillionaires;
 			},
@@ -49,7 +49,7 @@
 		impact_low: {
 			_enter() {
 				sortedBillionaires = billionaires.sort((a, b) =>
-					a.grade > b.grade ? -1 : a.grade < b.grade ? 1 : 0
+					a.livesImpact > b.livesImpact ? -1 : a.livesImpact < b.livesImpact ? 1 : 0
 				);
 				sortedBillionaires = sortedBillionaires;
 			},
@@ -88,19 +88,37 @@
 		// 	pledged: "pledged_low",
 		// },
 		// pledged_low: {},
-		ratio_high: {
+		generosity_ratio_high: {
 			_enter() {
 				sortedBillionaires = billionaires.sort(
-					(a, b) => b.donated / b.wealth - a.donated / a.wealth
+					(a, b) => b.donatedWealthQuotient - a.donatedWealthQuotient
 				);
 				sortedBillionaires = sortedBillionaires;
 			},
-			ratio: "ratio_low",
+			generosityratio: "generosity_ratio_low",
 		},
-		ratio_low: {
+		generosity_ratio_low: {
 			_enter() {
 				sortedBillionaires = billionaires.sort(
-					(a, b) => a.donated / a.wealth - b.donated / b.wealth
+					(a, b) => a.donatedWealthQuotient - b.donatedWealthQuotient
+				);
+				sortedBillionaires = sortedBillionaires;
+			},
+		},
+
+		impact_ratio_high: {
+			_enter() {
+				sortedBillionaires = billionaires.sort(
+					(a, b) => b.donatedLivesSavedQuotient - a.donatedLivesSavedQuotient
+				);
+				sortedBillionaires = sortedBillionaires;
+			},
+			impactratio: "impact_ratio_low",
+		},
+		impact_ratio_low: {
+			_enter() {
+				sortedBillionaires = billionaires.sort(
+					(a, b) => a.donatedLivesSavedQuotient - b.donatedLivesSavedQuotient
 				);
 				sortedBillionaires = sortedBillionaires;
 			},
@@ -111,7 +129,8 @@
 			wealth: "wealth_high",
 			donated: "donated_high",
 			pledged: "pledged_high",
-			ratio: "ratio_high",
+			impactratio: "impact_ratio_high",
+			generosityratio: "generosity_ratio_high",
 		},
 	});
 </script>
@@ -158,6 +177,7 @@
 					>
 						Name
 					</Sorter>
+
 					<Sorter
 						selected={$sorting === "impact_high"
 							? "down"
@@ -166,7 +186,7 @@
 							: "naw"}
 						on:message={sorting.impact}
 					>
-						Impact
+						Impact (Lives)
 					</Sorter>
 					<Sorter
 						selected={$sorting === "donated_high"
@@ -179,6 +199,17 @@
 						Donated
 					</Sorter>
 					<Sorter
+						selected={$sorting === "impact_ratio_high"
+							? "down"
+							: $sorting === "impact_ratio_low"
+							? "up"
+							: "naw"}
+						on:message={sorting.impactratio}
+					>
+						D / Lives
+					</Sorter>
+
+					<Sorter
 						selected={$sorting === "wealth_high"
 							? "down"
 							: $sorting === "wealth_low"
@@ -189,12 +220,12 @@
 						Net Worth
 					</Sorter>
 					<Sorter
-						selected={$sorting === "ratio_high"
+						selected={$sorting === "generosity_ratio_high"
 							? "down"
-							: $sorting === "ratio_low"
+							: $sorting === "generosity_ratio_low"
 							? "up"
 							: "naw"}
-						on:message={sorting.ratio}
+						on:message={sorting.generosityratio}
 					>
 						D / NW
 					</Sorter>
@@ -204,7 +235,7 @@
 
 		<div class={`flex flex-col items-center justify-center m-8 `}>
 			{#each filteredBillionaires as b (b.name)}
-				<div class="origin-top" animate:flip={{ duration: 100 }}>
+				<div class="origin-top" animate:flip={{ duration: 400 }}>
 					<Row billi={b} />
 				</div>
 			{/each}

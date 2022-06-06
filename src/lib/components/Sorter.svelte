@@ -13,10 +13,10 @@
 	}
 </script>
 
-<button class={`flex items-center ${first ? "w-1/3 pl-9" : "w-1/6"} group`} on:click={onClick}>
-	<span class="font-bold mr-1"><slot /></span>
+<button class={`flex items-center ${first ? "w-1/4" : "flex-1"} group`} on:click={onClick}>
+	<span class="font-bold text-sm"><slot /></span>
 	<div
-		class={`relative top-[1px] transition-all sm:group-hover:rotate-45 ${
+		class={`relative top-[1px] transition-all sm:group-hover:rotate-45 ml-1 ${
 			selected === "naw" ? "opacity-0 group-hover:opacity-25 group-hover:rotate-0" : ""
 		}`}
 	>

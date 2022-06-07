@@ -40,7 +40,7 @@
 		impact_high: {
 			_enter() {
 				sortedBillionaires = billionaires.sort((a, b) =>
-					a.livesImpact > b.livesImpact ? 1 : a.livesImpact < b.livesImpact ? -1 : 0
+					a.livesImpact < b.livesImpact ? 1 : a.livesImpact > b.livesImpact ? -1 : 0
 				);
 				sortedBillionaires = sortedBillionaires;
 			},
@@ -49,7 +49,7 @@
 		impact_low: {
 			_enter() {
 				sortedBillionaires = billionaires.sort((a, b) =>
-					a.livesImpact > b.livesImpact ? -1 : a.livesImpact < b.livesImpact ? 1 : 0
+					a.livesImpact < b.livesImpact ? -1 : a.livesImpact > b.livesImpact ? 1 : 0
 				);
 				sortedBillionaires = sortedBillionaires;
 			},
@@ -137,8 +137,9 @@
 
 <div class={`w-screen min-h-[200vh]  flex justify-center`}>
 	<main class="pt-10 pb-20 max-w-full px-4 flex flex-col ">
-		<article class="prose prose-sm self-center md:prose-base mx-4 md:mx-0 mb-12">
-			<h1 class="text-center ">Billionaire Impact Ranking (in progress)</h1>
+		<h1 class="text-center font-bold text-5xl">Billionaire Impact Ranking</h1>
+		<span class="text-center text-4xl mb-10">(in progress)</span>
+		<article class="prose prose-sm md:prose-base self-center  mx-4 md:mx-0 mb-12">
 			<p class="text-center">
 				Many billionaires give massive sums to charity. However, some charities can be
 				1,000X as effective as others. Donating $5,000 to an effective charity could save a
@@ -206,7 +207,7 @@
 							: "naw"}
 						on:message={sorting.impactratio}
 					>
-						D / Lives
+						Cost per Life
 					</Sorter>
 
 					<Sorter
@@ -219,7 +220,7 @@
 					>
 						Net Worth
 					</Sorter>
-					<Sorter
+					<!-- <Sorter
 						selected={$sorting === "generosity_ratio_high"
 							? "down"
 							: $sorting === "generosity_ratio_low"
@@ -228,7 +229,7 @@
 						on:message={sorting.generosityratio}
 					>
 						D / NW
-					</Sorter>
+					</Sorter> -->
 				</div>
 			</div>
 		</div>

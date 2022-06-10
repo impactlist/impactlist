@@ -36,7 +36,7 @@ export class Billionaire {
 	}
 
 	get donatedLivesSavedQuotient() {
-		return (this.donated * 1_000_000) / this.livesImpact;
+		return Math.round((this.donated * 1_000_000) / this.livesImpact);
 	}
 }
 

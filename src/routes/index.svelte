@@ -136,9 +136,9 @@
 </script>
 
 <div class={`w-screen min-h-[200vh]  flex justify-center`}>
-	<main class="pt-10 pb-20 max-w-full px-4 flex flex-col ">
-		<h1 class="text-center font-bold text-5xl">Billionaire Impact Ranking</h1>
-		<span class="text-center text-4xl mb-10">(in progress)</span>
+	<main class="pt-10 pb-20 max-w-full px-2 md:px-8 flex flex-col ">
+		<h1 class="text-center font-bold text-3xl md:text-5xl">Billionaire Impact Ranking</h1>
+		<span class="text-center text-2xl md:text-4xl mb-10">(in progress)</span>
 		<article class="prose prose-sm md:prose-base self-center  mx-4 md:mx-0 mb-12">
 			<p class="text-center">
 				Many billionaires give massive sums to charity. However, some charities can be
@@ -157,8 +157,8 @@
 				>!
 			</p>
 		</article>
-		<div class="self-center max-w-full w-[1000px]">
-			<div class="flex h-16 self-center w-full mb-4   py-1">
+		<div class="self-center max-w-full w-full md:w-[1000px]">
+			<div class="flex h-16 self-center w-full mb-4   py-1 px-4 md:px-0">
 				<input
 					bind:value={compar}
 					class="bg-transparent appearance-none rounded-none outline-none border-b-2 focus:border-b-4 focus:pt-2 transition-all w-full border-b-black text-xl placeholder-slate-500"
@@ -234,9 +234,9 @@
 			</div>
 		</div>
 
-		<div class={`flex flex-col items-center justify-center m-8 `}>
+		<div class={`flex flex-col items-center justify-center `}>
 			{#each filteredBillionaires as b (b.name)}
-				<div class="origin-top" animate:flip={{ duration: 400 }}>
+				<div class="origin-top w-full" animate:flip={{ duration: 400 }}>
 					<Row billi={b} />
 				</div>
 			{/each}

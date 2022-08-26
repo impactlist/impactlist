@@ -53,7 +53,7 @@
 			</a>
 			<a
 				class="group w-[100px] flex justify-end "
-				href="https://github.com/ideopunk/billionaires"
+				href="https://github.com/impactlist/impactlist"
 			>
 				<div class="w-min">
 					<span>CODE</span>

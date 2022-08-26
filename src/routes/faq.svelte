@@ -7,7 +7,7 @@
 		<p>{"The Forbes World's Billionaires List"}</p>
 		<h2>Who made this?</h2>
 		<p>
-			<a href="https://github.com/ideopunk/">Ideopunk</a> made the website. ___ ranked the billionaires.
+			<a href="https://github.com/ideopunk/">Conor Barnes</a> made the website. ___ ranked the billionaires.
 		</p>
 		<h2>I disagree with how you ranked my favorite billionaire. Where can I tell you?</h2>
 		<p>Here</p>

@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	overflow: overlay;
+	overflow-x: hidden;
+	-ms-overflow-style: -ms-autohiding-scrollbar;
+	scrollbar-width: thin; /* "auto" or "thin" */
+	scrollbar-color: grey white; /* scroll thumb and track */
+}
+
+/* scrollbar itself */
+body::-webkit-scrollbar-thumb {
+	background-color: #babac0;
+	border-radius: 16px;
+	border: 0px solid #fff;
+}
+
+/* set button(top and bottom of the scrollbar) */
+body::-webkit-scrollbar-button {
+	display: none;
+}
+
+.test {
+	border: 1px solid red;
+}
+
+@layer base {
+	@font-face {
+		font-family: "gotham";
+		src: local("gotham"), local("Gotham"), url("/fonts/gotham_rounded_regular.otf");
+		font-weight: normal;
+		font-display: swap;
+	}
+}

@@ -1,0 +1,22 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+
+## Code Style Guidelines
+- Formatting: Use consistent indentation (2 spaces) and line endings
+- Naming: Use camelCase for variables/functions, PascalCase for classes
+- Imports: Group imports with standard library first, then third-party, then local
+- Types: Use strong typing where applicable
+- Error handling: Use try/catch blocks with informative error messages
+- Comments: Document complex logic and public interfaces
+
+## Development Workflow
+- Create feature branches from main
+- Write tests for new functionality
+- Update documentation as needed
+- Run linter before committing code
+
+## Notes
+- Please only use pure JavaScript, plus React, plus Tailwind, plus Vite. Don't introduce any other frameworks or languages or complexity unless you specifically ask. We want to keep the tech stack simple.
+- Please use best practices for all of these frameworks and languages. For instance when doing CSS stuff, do it the way that corresponds to best practices for Tailwind. Same for React, Vite, and JavaScript.

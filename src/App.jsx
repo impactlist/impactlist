@@ -61,20 +61,16 @@ function App() {
                     className={`transition-colors hover:bg-indigo-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}
                   >
                     <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <span className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold text-white">
-                          {donor.rank}
-                        </span>
-                      </div>
+                      <div className="text-sm text-slate-900">{donor.rank}</div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className="text-sm font-medium text-slate-900">{donor.name}</div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900 font-medium">{formatNumber(Math.round(donor.livesSaved))}</div>
+                      <div className="text-sm text-emerald-700">{formatNumber(Math.round(donor.livesSaved))}</div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-emerald-700 font-semibold">{formatCurrency(donor.totalDonated)}</div>
+                      <div className="text-sm text-slate-900">{formatCurrency(donor.totalDonated)}</div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className="text-sm text-slate-900">{formatCurrency(Math.round(donor.costPerLifeSaved))}</div>

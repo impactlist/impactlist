@@ -1,27 +1,27 @@
 // Charity focus areas with lives saved per million dollars
 export const effectivenessCategories = {
-  'ai_risk': { name: 'AI Existential Risk', effectiveness: 500 },          // 500 lives saved per $1M
-  'pandemics': { name: 'Pandemics', effectiveness: 450 },                  // 450 lives saved per $1M
-  'nuclear': { name: 'Nuclear', effectiveness: 400 },                      // 400 lives saved per $1M
-  'global_health': { name: 'Global Health', effectiveness: 350 },          // 350 lives saved per $1M
-  'global_development': { name: 'Global Development/Poverty', effectiveness: 300 }, // 300 lives saved per $1M
-  'animal_welfare': { name: 'Animal Welfare', effectiveness: 250 },        // 250 lives saved per $1M
-  'global_priorities': { name: 'Global Priorities Research', effectiveness: 220 }, // 220 lives saved per $1M
-  'meta_theory': { name: 'Meta and Theory', effectiveness: 200 },          // 200 lives saved per $1M
-  'decision_making': { name: 'Improving Decision Making', effectiveness: 180 }, // 180 lives saved per $1M
-  'climate_change': { name: 'Climate Change', effectiveness: 160 },        // 160 lives saved per $1M
-  'health_medicine': { name: 'Health/Medicine (Developed)', effectiveness: 140 }, // 140 lives saved per $1M
-  'education': { name: 'Education', effectiveness: 120 },                  // 120 lives saved per $1M
+  'ai_risk': { name: 'AI Existential Risk', effectiveness: 2000 },          // 500 lives saved per $1M
+  'pandemics': { name: 'Pandemics', effectiveness: 1000 },                  // 450 lives saved per $1M
+  'nuclear': { name: 'Nuclear', effectiveness: 500 },                      // 400 lives saved per $1M
+  'global_health': { name: 'Global Health', effectiveness: 200},           // 350 lives saved per $1M
+  'global_development': { name: 'Global Development/Poverty', effectiveness: 200 }, // 300 lives saved per $1M
+  'animal_welfare': { name: 'Animal Welfare', effectiveness: 50 },        // 250 lives saved per $1M
+  'global_priorities': { name: 'Global Priorities Research', effectiveness: 2000 }, // 220 lives saved per $1M
+  'meta_theory': { name: 'Meta and Theory', effectiveness: 2000 },          // 200 lives saved per $1M
+  'decision_making': { name: 'Improving Decision Making', effectiveness: 1000 }, // 180 lives saved per $1M
+  'climate_change': { name: 'Climate Change', effectiveness: 50 },        // 160 lives saved per $1M
+  'health_medicine': { name: 'Health/Medicine (Developed)', effectiveness: 200 }, // 140 lives saved per $1M
+  'education': { name: 'Education', effectiveness: 100 },                  // 120 lives saved per $1M
   'political': { name: 'Political Institutions', effectiveness: 100 },     // 100 lives saved per $1M
-  'science_tech': { name: 'Science and Tech', effectiveness: 90 },         // 90 lives saved per $1M
-  'local_community': { name: 'Local Community', effectiveness: 80 },       // 80 lives saved per $1M
-  'arts_culture': { name: 'Arts, Culture, Heritage', effectiveness: 70 },  // 70 lives saved per $1M
-  'religious': { name: 'Religious', effectiveness: 60 },                   // 60 lives saved per $1M
-  'environmental': { name: 'General Environmental', effectiveness: 50 },   // 50 lives saved per $1M
-  'disaster_relief': { name: 'Disaster Relief', effectiveness: 45 },       // 45 lives saved per $1M
-  'human_rights': { name: 'Human Rights and Justice', effectiveness: 40 }, // 40 lives saved per $1M
-  'housing': { name: 'Homelessness and Housing', effectiveness: 35 },      // 35 lives saved per $1M
-  'longevity': { name: 'Longevity', effectiveness: 30 },                  // 30 lives saved per $1M
+  'science_tech': { name: 'Science and Tech', effectiveness: 200 },         // 90 lives saved per $1M
+  'local_community': { name: 'Local Community', effectiveness: 50 },       // 80 lives saved per $1M
+  'arts_culture': { name: 'Arts, Culture, Heritage', effectiveness: 20 },  // 70 lives saved per $1M
+  'religious': { name: 'Religious', effectiveness: 20 },                   // 60 lives saved per $1M
+  'environmental': { name: 'General Environmental', effectiveness: 20 },   // 50 lives saved per $1M
+  'disaster_relief': { name: 'Disaster Relief', effectiveness: 100 },       // 45 lives saved per $1M
+  'human_rights': { name: 'Human Rights and Justice', effectiveness: 50 }, // 40 lives saved per $1M
+  'housing': { name: 'Homelessness and Housing', effectiveness: 50 },      // 35 lives saved per $1M
+  'longevity': { name: 'Longevity', effectiveness: 100 },                  // 30 lives saved per $1M
   'other': { name: 'Other', effectiveness: 20 }                           // 20 lives saved per $1M
 };
 
@@ -93,6 +93,7 @@ export const donations = [
   { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000, source: 'https://www.lvmh.com/houses/lvmh/bernard-arnault/' },
   
   // Bill Gates donations
+  // Gemini says "Through 2023, Bill Gates (and formerly Melinda French Gates) had personally contributed $59.5 billion to the Gates Foundation endowment.. the below is only 44.6B donated total 
   { date: '1991-10-07', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 12000000, source: 'https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/' },
   { date: '1992-01-01', donor: 'Bill Gates', charity: 'Stanford University', amount: 6000000, source: 'https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period' },
   { date: '1995-01-01', donor: 'Bill Gates', charity: 'University of Washington', amount: 10000000, source: 'https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/' },

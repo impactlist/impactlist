@@ -129,18 +129,18 @@ function RecipientDetail() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
-              <span className="text-3xl font-bold text-teal-600">{recipientInfo.categoryName}</span>
+              <span className="text-3xl font-bold text-slate-900">{recipientInfo.categoryName}</span>
               <span className="text-sm text-slate-500 mt-2">
                 {recipientInfo.effectivenessRate} lives saved per $1M
               </span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Total Received</span>
-              <span className="text-3xl font-bold text-emerald-600">{formatCurrency(recipientInfo.totalReceived)}</span>
+              <span className="text-3xl font-bold text-slate-900">{formatCurrency(recipientInfo.totalReceived)}</span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Total Lives Saved</span>
-              <span className="text-3xl font-bold text-teal-700">{formatNumber(Math.round(recipientInfo.totalLivesSaved))}</span>
+              <span className="text-3xl font-bold text-emerald-600">{formatNumber(Math.round(recipientInfo.totalLivesSaved))}</span>
             </div>
           </div>
         </div>

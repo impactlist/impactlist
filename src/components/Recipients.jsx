@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { calculateDonorStats, charities, donations, effectivenessCategories } from '../data/donationData';
+import { charities, donations, effectivenessCategories } from '../data/donationData';
 import SortableTable from './SortableTable';
 
-function Home() {
-  const [donorStats, setDonorStats] = useState([]);
+function Recipients() {
   const [charityStats, setCharityStats] = useState([]);
 
   useEffect(() => {
-    // Calculate donor statistics on component mount
-    const stats = calculateDonorStats();
-    setDonorStats(stats);
-    
     // Calculate charity statistics
     const recipientStats = charities.map(charity => {
       const charityDonations = donations.filter(d => d.charity === charity.name);
@@ -52,54 +47,13 @@ function Home() {
     }
   };
 
-  // Get category display name
-  const formatCategory = (categoryKey) => {
-    return effectivenessCategories[categoryKey].name;
-  };
-
-  // Donor table columns configuration
-  const donorColumns = [
+  // Charity table columns configuration
+  const charityColumns = [
     { 
       key: 'rank', 
       label: 'Rank',
-      render: (donor) => <div className="text-sm text-slate-900">{donor.rank}</div>
+      render: (charity) => <div className="text-sm text-slate-900">{charity.rank}</div>
     },
-    { 
-      key: 'name', 
-      label: 'Name',
-      render: (donor) => (
-        <Link 
-          to={`/donor/${encodeURIComponent(donor.name)}`}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
-          {donor.name}
-        </Link>
-      )
-    },
-    { 
-      key: 'livesSaved', 
-      label: 'Lives Saved',
-      render: (donor) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(donor.livesSaved))}</div>
-    },
-    { 
-      key: 'totalDonated', 
-      label: 'Donated',
-      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.totalDonated)}</div>
-    },
-    { 
-      key: 'costPerLifeSaved', 
-      label: 'Cost/Life',
-      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(Math.round(donor.costPerLifeSaved))}</div>
-    },
-    { 
-      key: 'netWorth', 
-      label: 'Net Worth',
-      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.netWorth)}</div>
-    }
-  ];
-
-  // Charity table columns configuration
-  const charityColumns = [
     { 
       key: 'name', 
       label: 'Organization',
@@ -136,38 +90,41 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center">
-      {/* Hero Header */}
+      {/* Header */}
       <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-10 mb-10 text-center shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Impact List</h1>
-          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranking of people by positive impact through donations</p>
+          <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Recipient Organizations</h1>
+          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranked by total lives saved through donations</p>
         </div>
       </div>
       
-      {/* Donors Table Container */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        <h2 className="text-2xl font-bold text-slate-800 mb-4">Top Donors</h2>
+      {/* Back Link */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+        <Link 
+          to="/" 
+          className="text-indigo-600 hover:text-indigo-800 hover:underline flex items-center"
+        >
+          ← Back to top donors
+        </Link>
+      </div>
+      
+      {/* Recipients Table Container */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
           <div className="overflow-x-auto">
             <SortableTable 
-              columns={donorColumns} 
-              data={donorStats} 
-              defaultSortColumn="livesSaved" 
+              columns={charityColumns} 
+              data={charityStats.map((charity, index) => ({
+                ...charity,
+                rank: index + 1,
+                costPerLife: Math.round(1000000 / charity.effectivenessRate)
+              }))} 
+              defaultSortColumn="totalLivesSaved" 
               defaultSortDirection="desc"
               rankKey="rank"
             />
           </div>
         </div>
-      </div>
-      
-      {/* Link to Recipients Page */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
-        <Link 
-          to="/recipients" 
-          className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
-        >
-          View list of recipient organizations →
-        </Link>
       </div>
       
       {/* Footer */}
@@ -178,4 +135,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Recipients;

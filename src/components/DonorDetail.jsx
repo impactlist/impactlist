@@ -130,7 +130,7 @@ function DonorDetail() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Impact Rank</span>
-              <span className="text-3xl font-bold text-indigo-600">#{donorStats.rank}</span>
+              <span className="text-3xl font-bold text-slate-900">#{donorStats.rank}</span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Lives Saved</span>
@@ -138,11 +138,11 @@ function DonorDetail() {
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Total Donated</span>
-              <span className="text-3xl font-bold text-purple-600">{formatCurrency(donorStats.totalDonated)}</span>
+              <span className="text-3xl font-bold text-slate-900">{formatCurrency(donorStats.totalDonated)}</span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
-              <span className="text-3xl font-bold text-amber-600">{formatCurrency(Math.round(donorStats.costPerLifeSaved))}</span>
+              <span className="text-3xl font-bold text-slate-900">{formatCurrency(Math.round(donorStats.costPerLifeSaved))}</span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Net Worth</span>

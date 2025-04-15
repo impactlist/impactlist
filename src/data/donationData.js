@@ -46,7 +46,11 @@ export const charities = [
   { name: 'Climate Works', category: 'climate_change' },
   { name: 'Wikimedia Foundation', category: 'science_tech' },
   { name: 'Habitat for Humanity', category: 'housing' },
-  { name: 'SENS Research Foundation', category: 'longevity' }
+  { name: 'SENS Research Foundation', category: 'longevity' },
+  { name: 'University of Washington (research)', category: 'science_tech' },
+  { name: 'University of Washington', category: 'education' },
+  { name: 'Stanford University', category: 'education' },
+  { name: 'Harvard University', category: 'education' },
 ];
 
 // Donor data with net worth
@@ -86,9 +90,21 @@ export const donations = [
   { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000, source: 'https://www.lvmh.com/houses/lvmh/bernard-arnault/' },
   
   // Bill Gates donations
-  { date: '2023-08-24', donor: 'Bill Gates', charity: 'GiveWell Maximum Impact Fund', amount: 750000000, source: 'https://www.gatesfoundation.org/ideas/articles/annual-letter-2023' },
-  { date: '2023-10-30', donor: 'Bill Gates', charity: 'Coalition for Epidemic Preparedness', amount: 500000000, source: 'https://www.gatesnotes.com/Health/Why-Prevent-Pandemics' },
-  { date: '2023-12-05', donor: 'Bill Gates', charity: 'Against Malaria Foundation', amount: 900000000, source: 'https://www.gatesfoundation.org/our-work/programs/global-health/malaria' },
+  { date: '1991-10-07', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 12000000, source: 'https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/' },
+  { date: '1992-01-01', donor: 'Bill Gates', charity: 'Stanford University', amount: 6000000, source: 'https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period' },
+  { date: '1995-01-01', donor: 'Bill Gates', charity: 'University of Washington', amount: 10000000, source: 'https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/' },
+  { date: '1996-09-01', donor: 'Bill Gates', charity: 'Harvard University', amount: 25000000, source: 'https://www.thecrimson.com/article/1996/10/30/gates-ballmer-donate-25-m-for' },
+  { date: '1996-01-01', donor: 'Bill Gates', charity: 'University of Washington', amount: 12000000, source: 'https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw' },
+  { date: '1997-07-23', donor: 'Bill Gates', charity: 'Gates Library Foundation', amount: 200000000, source: 'https://www.historylink.org/File/2027' },
+  { date: '1998-12-01', donor: 'Bill Gates', charity: 'Seattle Public Libraries', amount: 20000000, source: 'https://www.historylink.org/File/2027' },
+  { date: '1999-04-14', donor: 'Bill Gates', charity: 'MIT', amount: 20000000, source: 'https://news.mit.edu/1999/gates-0414' },
+  { date: '1999-01-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 15800000000, source: 'https://www.gatesfoundation.org/about/our-history', notes: 'Initial endowment' },
+  { date: '2000-01-24', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 5000000000, source: 'https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/gates-foundation-announces-5-billion-endowment' },
+  { date: '2003-04-24', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 70000000, source: 'https://www.seattletimes.com/seattle-news/gates-donates-70-million-to-uw-science-center/' },
+  { date: '2004-11-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 3300000000, source: 'https://money.cnn.com/2004/11/02/news/newsmakers/gates_dividend/', notes: 'From Microsoft special dividend' },
+  { date: '2004-01-01', donor: 'Bill Gates', charity: 'Carnegie Mellon University', amount: 20000000, source: 'https://www.cmu.edu/homepage/practical/2014/winter/gates-hillman-centers.shtml' },
+  { date: '2017-06-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 4600000000, source: 'https://www.wsj.com/articles/bill-gates-donates-4-6-billion-in-biggest-gift-since-2000-1502802333', notes: 'From Microsoft stock' },
+  { date: '2022-07-13', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 20000000000, source: 'https://www.reuters.com/business/healthcare-pharmaceuticals/bill-gates-donates-20-bln-foundation-plans-9-bln-annual-spending-2022-07-13/', notes: 'Cash/stock gift' },
   
   // Dustin Moskovitz donations
   { date: '2023-05-19', donor: 'Dustin Moskovitz', charity: 'Mercy For Animals', amount: 45000000, source: 'https://www.opensocietyfoundations.org/newsroom/dustin-moskovitz-donation' },

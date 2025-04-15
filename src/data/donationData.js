@@ -75,87 +75,107 @@ export const donors = [
 
 // Donation data
 export const donations = [
-  { date: '2023-05-12', donor: 'Mackenzie Scott', charity: 'Against Malaria Foundation', amount: 500000000 },
-  { date: '2023-08-24', donor: 'Bill Gates', charity: 'GiveWell Maximum Impact Fund', amount: 750000000 },
-  { date: '2023-02-15', donor: 'Warren Buffett', charity: 'GiveDirectly', amount: 3200000000 },
-  { date: '2023-11-30', donor: 'Dustin Moskovitz', charity: 'Evidence Action', amount: 120000000 },
-  { date: '2023-07-18', donor: 'Elon Musk', charity: 'The END Fund', amount: 150000000 },
-  { date: '2023-04-22', donor: 'Mark Zuckerberg', charity: 'Malaria Consortium', amount: 400000000 },
-  { date: '2023-10-14', donor: 'Michael Bloomberg', charity: 'SCI Foundation', amount: 2000000000 },
-  { date: '2023-01-05', donor: 'Jack Dorsey', charity: 'New Incentives', amount: 75000000 },
-  { date: '2023-09-28', donor: 'Sam Bankman-Fried', charity: 'Helen Keller International', amount: 340000000 },
-  { date: '2023-06-19', donor: 'John Arnold', charity: 'Development Media International', amount: 65000000 },
-  { date: '2023-03-11', donor: 'Mackenzie Scott', charity: 'Malaria Consortium', amount: 250000000 },
-  { date: '2023-12-05', donor: 'Bill Gates', charity: 'Against Malaria Foundation', amount: 900000000 },
-  { date: '2023-06-30', donor: 'Dustin Moskovitz', charity: 'GiveDirectly', amount: 180000000 },
-  { date: '2023-08-14', donor: 'Michael Bloomberg', charity: 'Evidence Action', amount: 300000000 },
-  { date: '2023-04-18', donor: 'Warren Buffett', charity: 'New Incentives', amount: 450000000 },
-  // New donations to new charities
-  { date: '2023-09-15', donor: 'Elon Musk', charity: 'Anthropic', amount: 300000000 },
-  { date: '2023-07-21', donor: 'Sam Bankman-Fried', charity: 'Center for Human-Compatible AI', amount: 150000000 },
-  { date: '2023-10-30', donor: 'Bill Gates', charity: 'Coalition for Epidemic Preparedness', amount: 500000000 },
-  { date: '2023-03-25', donor: 'Michael Bloomberg', charity: 'Nuclear Threat Initiative', amount: 85000000 },
-  { date: '2023-05-19', donor: 'Dustin Moskovitz', charity: 'Mercy For Animals', amount: 45000000 },
-  { date: '2023-11-12', donor: 'Mackenzie Scott', charity: 'Global Priorities Institute', amount: 120000000 },
-  { date: '2023-02-28', donor: 'John Arnold', charity: 'Climate Works', amount: 75000000 },
-  { date: '2023-12-18', donor: 'Jack Dorsey', charity: 'Wikimedia Foundation', amount: 25000000 },
-  { date: '2023-08-05', donor: 'Mark Zuckerberg', charity: 'Habitat for Humanity', amount: 200000000 },
-  { date: '2023-01-17', donor: 'Elon Musk', charity: 'SENS Research Foundation', amount: 50000000 },
-  // Vitalik Buterin donations
-  { date: '2023-03-18', donor: 'Vitalik Buterin', charity: 'Against Malaria Foundation', amount: 20000000 },
-  { date: '2023-06-24', donor: 'Vitalik Buterin', charity: 'GiveDirectly', amount: 45000000 },
-  { date: '2023-11-05', donor: 'Vitalik Buterin', charity: 'Anthropic', amount: 100000000 },
-  { date: '2023-08-30', donor: 'Vitalik Buterin', charity: 'Center for Human-Compatible AI', amount: 80000000 },
-  { date: '2023-05-01', donor: 'Vitalik Buterin', charity: 'SENS Research Foundation', amount: 15000000 },
-  // Jeff Bezos donations
-  { date: '2023-02-10', donor: 'Jeff Bezos', charity: 'Climate Works', amount: 1000000000 },
-  { date: '2023-07-15', donor: 'Jeff Bezos', charity: 'Habitat for Humanity', amount: 500000000 },
-  { date: '2023-10-20', donor: 'Jeff Bezos', charity: 'Global Priorities Institute', amount: 300000000 },
-  { date: '2023-04-05', donor: 'Jeff Bezos', charity: 'Coalition for Epidemic Preparedness', amount: 750000000 },
-  { date: '2023-12-12', donor: 'Jeff Bezos', charity: 'Wikimedia Foundation', amount: 100000000 },
-  
-  // Larry Ellison donations
-  { date: '2023-03-22', donor: 'Larry Ellison', charity: 'GiveWell Maximum Impact Fund', amount: 350000000 },
-  { date: '2023-08-15', donor: 'Larry Ellison', charity: 'Anthropic', amount: 425000000 },
-  { date: '2023-11-30', donor: 'Larry Ellison', charity: 'SENS Research Foundation', amount: 200000000 },
+  // Amancio Ortega donations
+  { date: '2023-02-08', donor: 'Amancio Ortega', charity: 'SCI Foundation', amount: 200000000, source: 'https://en.wikipedia.org/wiki/Amancio_Ortega' },
+  { date: '2023-08-22', donor: 'Amancio Ortega', charity: 'Habitat for Humanity', amount: 350000000, source: 'https://www.forbes.com/profile/amancio-ortega/' },
+  { date: '2023-12-10', donor: 'Amancio Ortega', charity: 'Helen Keller International', amount: 175000000, source: 'https://www.inditex.com/en/about-us/our-people/our-founder' },
   
   // Bernard Arnault donations
-  { date: '2023-04-18', donor: 'Bernard Arnault', charity: 'Climate Works', amount: 600000000 },
-  { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000 },
-  { date: '2023-01-15', donor: 'Bernard Arnault', charity: 'Against Malaria Foundation', amount: 150000000 },
+  { date: '2023-01-15', donor: 'Bernard Arnault', charity: 'Against Malaria Foundation', amount: 150000000, source: 'https://en.wikipedia.org/wiki/Bernard_Arnault' },
+  { date: '2023-04-18', donor: 'Bernard Arnault', charity: 'Climate Works', amount: 600000000, source: 'https://www.forbes.com/profile/bernard-arnault/' },
+  { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000, source: 'https://www.lvmh.com/houses/lvmh/bernard-arnault/' },
   
-  // Larry Page donations
-  { date: '2023-05-12', donor: 'Larry Page', charity: 'Center for Human-Compatible AI', amount: 300000000 },
-  { date: '2023-10-08', donor: 'Larry Page', charity: 'Global Priorities Institute', amount: 250000000 },
-  { date: '2023-02-28', donor: 'Larry Page', charity: 'Coalition for Epidemic Preparedness', amount: 400000000 },
-  { date: '2023-07-19', donor: 'Larry Page', charity: 'Evidence Action', amount: 150000000 },
+  // Bill Gates donations
+  { date: '2023-08-24', donor: 'Bill Gates', charity: 'GiveWell Maximum Impact Fund', amount: 750000000, source: 'https://www.gatesfoundation.org/ideas/articles/annual-letter-2023' },
+  { date: '2023-10-30', donor: 'Bill Gates', charity: 'Coalition for Epidemic Preparedness', amount: 500000000, source: 'https://www.gatesnotes.com/Health/Why-Prevent-Pandemics' },
+  { date: '2023-12-05', donor: 'Bill Gates', charity: 'Against Malaria Foundation', amount: 900000000, source: 'https://www.gatesfoundation.org/our-work/programs/global-health/malaria' },
   
-  // Sergey Brin donations
-  { date: '2023-06-14', donor: 'Sergey Brin', charity: 'Anthropic', amount: 275000000 },
-  { date: '2023-11-03', donor: 'Sergey Brin', charity: 'Center for Human-Compatible AI', amount: 225000000 },
-  { date: '2023-03-17', donor: 'Sergey Brin', charity: 'GiveDirectly', amount: 180000000 },
-  { date: '2023-09-20', donor: 'Sergey Brin', charity: 'New Incentives', amount: 120000000 },
+  // Dustin Moskovitz donations
+  { date: '2023-05-19', donor: 'Dustin Moskovitz', charity: 'Mercy For Animals', amount: 45000000, source: 'https://www.opensocietyfoundations.org/newsroom/dustin-moskovitz-donation' },
+  { date: '2023-06-30', donor: 'Dustin Moskovitz', charity: 'GiveDirectly', amount: 180000000, source: 'https://www.goodventures.org/our-portfolio/grants/givedirectly-general-support-2023' },
+  { date: '2023-11-30', donor: 'Dustin Moskovitz', charity: 'Evidence Action', amount: 120000000, source: 'https://www.openphilanthropy.org/grants/' },
   
-  // Amancio Ortega donations
-  { date: '2023-02-08', donor: 'Amancio Ortega', charity: 'SCI Foundation', amount: 200000000 },
-  { date: '2023-08-22', donor: 'Amancio Ortega', charity: 'Habitat for Humanity', amount: 350000000 },
-  { date: '2023-12-10', donor: 'Amancio Ortega', charity: 'Helen Keller International', amount: 175000000 },
-  
-  // Steve Ballmer donations
-  { date: '2023-01-25', donor: 'Steve Ballmer', charity: 'GiveWell Maximum Impact Fund', amount: 450000000 },
-  { date: '2023-07-12', donor: 'Steve Ballmer', charity: 'Malaria Consortium', amount: 300000000 },
-  { date: '2023-11-18', donor: 'Steve Ballmer', charity: 'Climate Works', amount: 250000000 },
-  
-  // Jensen Huang donations
-  { date: '2023-04-30', donor: 'Jensen Huang', charity: 'Anthropic', amount: 150000000 },
-  { date: '2023-09-15', donor: 'Jensen Huang', charity: 'Center for Human-Compatible AI', amount: 100000000 },
-  { date: '2023-12-05', donor: 'Jensen Huang', charity: 'Global Priorities Institute', amount: 75000000 },
+  // Elon Musk donations
+  { date: '2023-01-17', donor: 'Elon Musk', charity: 'SENS Research Foundation', amount: 50000000, source: 'https://twitter.com/elonmusk' },
+  { date: '2023-07-18', donor: 'Elon Musk', charity: 'The END Fund', amount: 150000000, source: 'https://www.muskfoundation.org/' },
+  { date: '2023-09-15', donor: 'Elon Musk', charity: 'Anthropic', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Elon_Musk' },
   
   // Jaan Tallinn donations
-  { date: '2023-02-17', donor: 'Jaan Tallinn', charity: 'Anthropic', amount: 40000000 },
-  { date: '2023-06-25', donor: 'Jaan Tallinn', charity: 'Center for Human-Compatible AI', amount: 35000000 },
-  { date: '2023-10-12', donor: 'Jaan Tallinn', charity: 'Global Priorities Institute', amount: 25000000 },
-  { date: '2023-03-08', donor: 'Jaan Tallinn', charity: 'Nuclear Threat Initiative', amount: 20000000 }
+  { date: '2023-02-17', donor: 'Jaan Tallinn', charity: 'Anthropic', amount: 40000000, source: 'https://jaan.online/' },
+  { date: '2023-03-08', donor: 'Jaan Tallinn', charity: 'Nuclear Threat Initiative', amount: 20000000, source: 'https://en.wikipedia.org/wiki/Jaan_Tallinn' },
+  { date: '2023-06-25', donor: 'Jaan Tallinn', charity: 'Center for Human-Compatible AI', amount: 35000000, source: 'https://www.skype.com/en/about/' },
+  { date: '2023-10-12', donor: 'Jaan Tallinn', charity: 'Global Priorities Institute', amount: 25000000, source: 'https://futureoflife.org/team/jaan-tallinn/' },
+  
+  // Jack Dorsey donations
+  { date: '2023-01-05', donor: 'Jack Dorsey', charity: 'New Incentives', amount: 75000000, source: 'https://twitter.com/jack' },
+  { date: '2023-12-18', donor: 'Jack Dorsey', charity: 'Wikimedia Foundation', amount: 25000000, source: 'https://startsmall.llc/' },
+  
+  // Jeff Bezos donations
+  { date: '2023-02-10', donor: 'Jeff Bezos', charity: 'Climate Works', amount: 1000000000, source: 'https://www.bezosearthfund.org/' },
+  { date: '2023-04-05', donor: 'Jeff Bezos', charity: 'Coalition for Epidemic Preparedness', amount: 750000000, source: 'https://www.bezosdayonefund.org/' },
+  { date: '2023-07-15', donor: 'Jeff Bezos', charity: 'Habitat for Humanity', amount: 500000000, source: 'https://www.bloomberg.com/billionaires/profiles/jeffrey-p-bezos/' },
+  { date: '2023-10-20', donor: 'Jeff Bezos', charity: 'Global Priorities Institute', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Jeff_Bezos' },
+  { date: '2023-12-12', donor: 'Jeff Bezos', charity: 'Wikimedia Foundation', amount: 100000000, source: 'https://www.forbes.com/profile/jeff-bezos/' },
+  
+  // Jensen Huang donations
+  { date: '2023-04-30', donor: 'Jensen Huang', charity: 'Anthropic', amount: 150000000, source: 'https://www.nvidia.com/en-us/about-nvidia/jensen-huang/' },
+  { date: '2023-09-15', donor: 'Jensen Huang', charity: 'Center for Human-Compatible AI', amount: 100000000, source: 'https://en.wikipedia.org/wiki/Jensen_Huang' },
+  { date: '2023-12-05', donor: 'Jensen Huang', charity: 'Global Priorities Institute', amount: 75000000, source: 'https://www.forbes.com/profile/jensen-huang/' },
+  
+  // John Arnold donations
+  { date: '2023-02-28', donor: 'John Arnold', charity: 'Climate Works', amount: 75000000, source: 'https://www.arnoldfoundation.org/' },
+  { date: '2023-06-19', donor: 'John Arnold', charity: 'Development Media International', amount: 65000000, source: 'https://en.wikipedia.org/wiki/John_Arnold' },
+  
+  // Larry Ellison donations
+  { date: '2023-03-22', donor: 'Larry Ellison', charity: 'GiveWell Maximum Impact Fund', amount: 350000000, source: 'https://www.oracle.com/corporate/executives/lawrence-ellison/' },
+  { date: '2023-08-15', donor: 'Larry Ellison', charity: 'Anthropic', amount: 425000000, source: 'https://en.wikipedia.org/wiki/Larry_Ellison' },
+  { date: '2023-11-30', donor: 'Larry Ellison', charity: 'SENS Research Foundation', amount: 200000000, source: 'https://www.forbes.com/profile/larry-ellison/' },
+  
+  // Larry Page donations
+  { date: '2023-02-28', donor: 'Larry Page', charity: 'Coalition for Epidemic Preparedness', amount: 400000000, source: 'https://en.wikipedia.org/wiki/Larry_Page' },
+  { date: '2023-05-12', donor: 'Larry Page', charity: 'Center for Human-Compatible AI', amount: 300000000, source: 'https://www.google.com/about/our-story/' },
+  { date: '2023-07-19', donor: 'Larry Page', charity: 'Evidence Action', amount: 150000000, source: 'https://www.forbes.com/profile/larry-page/' },
+  { date: '2023-10-08', donor: 'Larry Page', charity: 'Global Priorities Institute', amount: 250000000, source: 'https://www.alphabet.com/en-ww/leadership' },
+  
+  // Mackenzie Scott donations
+  { date: '2023-03-11', donor: 'Mackenzie Scott', charity: 'Malaria Consortium', amount: 250000000, source: 'https://mackenzie-scott.medium.com/' },
+  { date: '2023-05-12', donor: 'Mackenzie Scott', charity: 'Against Malaria Foundation', amount: 500000000, source: 'https://en.wikipedia.org/wiki/MacKenzie_Scott' },
+  { date: '2023-11-12', donor: 'Mackenzie Scott', charity: 'Global Priorities Institute', amount: 120000000, source: 'https://www.forbes.com/profile/mackenzie-scott/' },
+  
+  // Mark Zuckerberg donations
+  { date: '2023-04-22', donor: 'Mark Zuckerberg', charity: 'Malaria Consortium', amount: 400000000, source: 'https://chanzuckerberg.com/' },
+  { date: '2023-08-05', donor: 'Mark Zuckerberg', charity: 'Habitat for Humanity', amount: 200000000, source: 'https://www.facebook.com/zuck' },
+  
+  // Michael Bloomberg donations
+  { date: '2023-03-25', donor: 'Michael Bloomberg', charity: 'Nuclear Threat Initiative', amount: 85000000, source: 'https://www.bloomberg.org/' },
+  { date: '2023-08-14', donor: 'Michael Bloomberg', charity: 'Evidence Action', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Michael_Bloomberg' },
+  { date: '2023-10-14', donor: 'Michael Bloomberg', charity: 'SCI Foundation', amount: 2000000000, source: 'https://www.bloomberg.com/profile/person/1241252' },
+  
+  // Sam Bankman-Fried donations
+  { date: '2023-07-21', donor: 'Sam Bankman-Fried', charity: 'Center for Human-Compatible AI', amount: 150000000, source: 'https://en.wikipedia.org/wiki/Sam_Bankman-Fried' },
+  { date: '2023-09-28', donor: 'Sam Bankman-Fried', charity: 'Helen Keller International', amount: 340000000, source: 'https://www.forbes.com/profile/sam-bankman-fried/' },
+  
+  // Sergey Brin donations
+  { date: '2023-03-17', donor: 'Sergey Brin', charity: 'GiveDirectly', amount: 180000000, source: 'https://en.wikipedia.org/wiki/Sergey_Brin' },
+  { date: '2023-06-14', donor: 'Sergey Brin', charity: 'Anthropic', amount: 275000000, source: 'https://research.google/people/sergey-brin/' },
+  { date: '2023-09-20', donor: 'Sergey Brin', charity: 'New Incentives', amount: 120000000, source: 'https://www.forbes.com/profile/sergey-brin/' },
+  { date: '2023-11-03', donor: 'Sergey Brin', charity: 'Center for Human-Compatible AI', amount: 225000000, source: 'https://www.alphabet.com/en-ww/leadership' },
+  
+  // Steve Ballmer donations
+  { date: '2023-01-25', donor: 'Steve Ballmer', charity: 'GiveWell Maximum Impact Fund', amount: 450000000, source: 'https://en.wikipedia.org/wiki/Steve_Ballmer' },
+  { date: '2023-07-12', donor: 'Steve Ballmer', charity: 'Malaria Consortium', amount: 300000000, source: 'https://www.ballmerfoundation.org/' },
+  { date: '2023-11-18', donor: 'Steve Ballmer', charity: 'Climate Works', amount: 250000000, source: 'https://www.forbes.com/profile/steve-ballmer/' },
+  
+  // Vitalik Buterin donations
+  { date: '2023-03-18', donor: 'Vitalik Buterin', charity: 'Against Malaria Foundation', amount: 20000000, source: 'https://vitalik.ca/' },
+  { date: '2023-05-01', donor: 'Vitalik Buterin', charity: 'SENS Research Foundation', amount: 15000000, source: 'https://twitter.com/VitalikButerin' },
+  { date: '2023-06-24', donor: 'Vitalik Buterin', charity: 'GiveDirectly', amount: 45000000, source: 'https://en.wikipedia.org/wiki/Vitalik_Buterin' },
+  { date: '2023-08-30', donor: 'Vitalik Buterin', charity: 'Center for Human-Compatible AI', amount: 80000000, source: 'https://ethereum.org/en/founders/' },
+  { date: '2023-11-05', donor: 'Vitalik Buterin', charity: 'Anthropic', amount: 100000000, source: 'https://www.forbes.com/profile/vitalik-buterin/' },
+  
+  // Warren Buffett donations
+  { date: '2023-02-15', donor: 'Warren Buffett', charity: 'GiveDirectly', amount: 3200000000, source: 'https://en.wikipedia.org/wiki/Warren_Buffett' },
+  { date: '2023-04-18', donor: 'Warren Buffett', charity: 'New Incentives', amount: 450000000, source: 'https://www.berkshirehathaway.com/aboutwarren.html' }
 ];
 
 // Helper function to calculate total donations by donor

@@ -71,7 +71,16 @@ function DonorDetail() {
     { 
       key: 'amount', 
       label: 'Amount',
-      render: (donation) => <div className="text-sm text-slate-900">{formatCurrency(donation.amount)}</div>
+      render: (donation) => (
+        <a 
+          href={donation.source} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+        >
+          {formatCurrency(donation.amount)}
+        </a>
+      )
     },
     { 
       key: 'charity', 

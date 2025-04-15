@@ -140,7 +140,7 @@ function Home() {
       <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-10 mb-10 text-center shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Impact List</h1>
-          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranking of people by positive impact through donations</p>
+          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Rankings based on positive impact via donations</p>
         </div>
       </div>
       

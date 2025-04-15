@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import './App.css'
 import { calculateDonorStats } from './data/donationData'
 
 function App() {
@@ -28,49 +27,72 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-      <div className="impact-header">
-        <h1 className="text-3xl font-bold mb-1">Impact List</h1>
-        <p className="text-gray-100">Ranking of people by world impact through donations</p>
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center">
+      {/* Hero Header */}
+      <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-10 mb-10 text-center shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Impact List</h1>
+          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranking of people by world impact through donations</p>
+        </div>
       </div>
       
-      <div className="w-full max-w-6xl bg-white shadow-md rounded-lg overflow-hidden mx-4">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lives Saved</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donated</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost/Life</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Worth</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {donorStats.map((donor) => (
-              <tr key={donor.name} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium rank-cell">
-                  {donor.rank}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {donor.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatNumber(Math.round(donor.livesSaved))}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatCurrency(donor.totalDonated)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatCurrency(Math.round(donor.costPerLifeSaved))}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatCurrency(donor.netWorth)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Table Container */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-200">
+              {/* Table Header */}
+              <thead className="bg-slate-100">
+                <tr>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Rank</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Name</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives Saved</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Donated</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Cost/Life</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Net Worth</th>
+                </tr>
+              </thead>
+              
+              {/* Table Body */}
+              <tbody className="bg-white divide-y divide-slate-200">
+                {donorStats.map((donor, index) => (
+                  <tr 
+                    key={donor.name} 
+                    className={`transition-colors hover:bg-indigo-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}
+                  >
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <span className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold text-white">
+                          {donor.rank}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <div className="text-sm font-medium text-slate-900">{donor.name}</div>
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <div className="text-sm text-slate-900 font-medium">{formatNumber(Math.round(donor.livesSaved))}</div>
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <div className="text-sm text-emerald-700 font-semibold">{formatCurrency(donor.totalDonated)}</div>
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <div className="text-sm text-slate-900">{formatCurrency(Math.round(donor.costPerLifeSaved))}</div>
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap">
+                      <div className="text-sm text-slate-900">{formatCurrency(donor.netWorth)}</div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      {/* Footer */}
+      <div className="w-full py-6 bg-slate-800 text-center">
+        <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
       </div>
     </div>
   )

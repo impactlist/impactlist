@@ -137,7 +137,7 @@ function DonorDetail() {
                       {formatCurrency(donation.amount)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <Link to={`/recipient/${encodeURIComponent(donation.charity)}`} className="text-emerald-600 hover:text-emerald-800 hover:underline">
+                      <Link to={`/recipient/${encodeURIComponent(donation.charity)}`} className="text-indigo-600 hover:text-indigo-800 hover:underline">
                         {donation.charity}
                       </Link>
                     </td>

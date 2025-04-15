@@ -132,10 +132,10 @@ function Home() {
               <thead className="bg-slate-100">
                 <tr>
                   <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Organization</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Focus Area</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives/$1M</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Total Received</th>
                   <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives Saved</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Cost/Life</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Total Received</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Focus Area</th>
                 </tr>
               </thead>
               
@@ -155,16 +155,16 @@ function Home() {
                       </Link>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{formatCategory(charity.category)}</div>
+                      <div className="text-sm text-emerald-700">{formatNumber(Math.round(charity.totalLivesSaved))}</div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{charity.effectivenessRate} lives/$1M</div>
+                      <div className="text-sm text-slate-900">{formatCurrency(Math.round(1000000 / charity.effectivenessRate))}</div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className="text-sm text-slate-900">{formatCurrency(charity.totalReceived)}</div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-emerald-700">{formatNumber(Math.round(charity.totalLivesSaved))}</div>
+                      <div className="text-sm text-slate-900">{formatCategory(charity.category)}</div>
                     </td>
                   </tr>
                 ))}

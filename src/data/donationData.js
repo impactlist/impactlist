@@ -62,7 +62,15 @@ export const donors = [
   { name: 'Sam Bankman-Fried', netWorth: 24000000000 },
   { name: 'John Arnold', netWorth: 3500000000 },
   { name: 'Vitalik Buterin', netWorth: 1500000000 },
-  { name: 'Jeff Bezos', netWorth: 150000000000 }
+  { name: 'Jeff Bezos', netWorth: 150000000000 },
+  { name: 'Larry Ellison', netWorth: 145000000000 },
+  { name: 'Bernard Arnault', netWorth: 195000000000 },
+  { name: 'Larry Page', netWorth: 110000000000 },
+  { name: 'Sergey Brin', netWorth: 105000000000 },
+  { name: 'Amancio Ortega', netWorth: 85000000000 },
+  { name: 'Steve Ballmer', netWorth: 95000000000 },
+  { name: 'Jensen Huang', netWorth: 48000000000 },
+  { name: 'Jaan Tallinn', netWorth: 1000000000 }
 ];
 
 // Donation data
@@ -104,7 +112,50 @@ export const donations = [
   { date: '2023-07-15', donor: 'Jeff Bezos', charity: 'Habitat for Humanity', amount: 500000000 },
   { date: '2023-10-20', donor: 'Jeff Bezos', charity: 'Global Priorities Institute', amount: 300000000 },
   { date: '2023-04-05', donor: 'Jeff Bezos', charity: 'Coalition for Epidemic Preparedness', amount: 750000000 },
-  { date: '2023-12-12', donor: 'Jeff Bezos', charity: 'Wikimedia Foundation', amount: 100000000 }
+  { date: '2023-12-12', donor: 'Jeff Bezos', charity: 'Wikimedia Foundation', amount: 100000000 },
+  
+  // Larry Ellison donations
+  { date: '2023-03-22', donor: 'Larry Ellison', charity: 'GiveWell Maximum Impact Fund', amount: 350000000 },
+  { date: '2023-08-15', donor: 'Larry Ellison', charity: 'Anthropic', amount: 425000000 },
+  { date: '2023-11-30', donor: 'Larry Ellison', charity: 'SENS Research Foundation', amount: 200000000 },
+  
+  // Bernard Arnault donations
+  { date: '2023-04-18', donor: 'Bernard Arnault', charity: 'Climate Works', amount: 600000000 },
+  { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000 },
+  { date: '2023-01-15', donor: 'Bernard Arnault', charity: 'Against Malaria Foundation', amount: 150000000 },
+  
+  // Larry Page donations
+  { date: '2023-05-12', donor: 'Larry Page', charity: 'Center for Human-Compatible AI', amount: 300000000 },
+  { date: '2023-10-08', donor: 'Larry Page', charity: 'Global Priorities Institute', amount: 250000000 },
+  { date: '2023-02-28', donor: 'Larry Page', charity: 'Coalition for Epidemic Preparedness', amount: 400000000 },
+  { date: '2023-07-19', donor: 'Larry Page', charity: 'Evidence Action', amount: 150000000 },
+  
+  // Sergey Brin donations
+  { date: '2023-06-14', donor: 'Sergey Brin', charity: 'Anthropic', amount: 275000000 },
+  { date: '2023-11-03', donor: 'Sergey Brin', charity: 'Center for Human-Compatible AI', amount: 225000000 },
+  { date: '2023-03-17', donor: 'Sergey Brin', charity: 'GiveDirectly', amount: 180000000 },
+  { date: '2023-09-20', donor: 'Sergey Brin', charity: 'New Incentives', amount: 120000000 },
+  
+  // Amancio Ortega donations
+  { date: '2023-02-08', donor: 'Amancio Ortega', charity: 'SCI Foundation', amount: 200000000 },
+  { date: '2023-08-22', donor: 'Amancio Ortega', charity: 'Habitat for Humanity', amount: 350000000 },
+  { date: '2023-12-10', donor: 'Amancio Ortega', charity: 'Helen Keller International', amount: 175000000 },
+  
+  // Steve Ballmer donations
+  { date: '2023-01-25', donor: 'Steve Ballmer', charity: 'GiveWell Maximum Impact Fund', amount: 450000000 },
+  { date: '2023-07-12', donor: 'Steve Ballmer', charity: 'Malaria Consortium', amount: 300000000 },
+  { date: '2023-11-18', donor: 'Steve Ballmer', charity: 'Climate Works', amount: 250000000 },
+  
+  // Jensen Huang donations
+  { date: '2023-04-30', donor: 'Jensen Huang', charity: 'Anthropic', amount: 150000000 },
+  { date: '2023-09-15', donor: 'Jensen Huang', charity: 'Center for Human-Compatible AI', amount: 100000000 },
+  { date: '2023-12-05', donor: 'Jensen Huang', charity: 'Global Priorities Institute', amount: 75000000 },
+  
+  // Jaan Tallinn donations
+  { date: '2023-02-17', donor: 'Jaan Tallinn', charity: 'Anthropic', amount: 40000000 },
+  { date: '2023-06-25', donor: 'Jaan Tallinn', charity: 'Center for Human-Compatible AI', amount: 35000000 },
+  { date: '2023-10-12', donor: 'Jaan Tallinn', charity: 'Global Priorities Institute', amount: 25000000 },
+  { date: '2023-03-08', donor: 'Jaan Tallinn', charity: 'Nuclear Threat Initiative', amount: 20000000 }
 ];
 
 // Helper function to calculate total donations by donor

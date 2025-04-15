@@ -60,7 +60,9 @@ export const donors = [
   { name: 'Michael Bloomberg', netWorth: 60000000000 },
   { name: 'Jack Dorsey', netWorth: 5000000000 },
   { name: 'Sam Bankman-Fried', netWorth: 24000000000 },
-  { name: 'John Arnold', netWorth: 3500000000 }
+  { name: 'John Arnold', netWorth: 3500000000 },
+  { name: 'Vitalik Buterin', netWorth: 1500000000 },
+  { name: 'Jeff Bezos', netWorth: 150000000000 }
 ];
 
 // Donation data
@@ -90,7 +92,19 @@ export const donations = [
   { date: '2023-02-28', donor: 'John Arnold', charity: 'Climate Works', amount: 75000000 },
   { date: '2023-12-18', donor: 'Jack Dorsey', charity: 'Wikimedia Foundation', amount: 25000000 },
   { date: '2023-08-05', donor: 'Mark Zuckerberg', charity: 'Habitat for Humanity', amount: 200000000 },
-  { date: '2023-01-17', donor: 'Elon Musk', charity: 'SENS Research Foundation', amount: 50000000 }
+  { date: '2023-01-17', donor: 'Elon Musk', charity: 'SENS Research Foundation', amount: 50000000 },
+  // Vitalik Buterin donations
+  { date: '2023-03-18', donor: 'Vitalik Buterin', charity: 'Against Malaria Foundation', amount: 20000000 },
+  { date: '2023-06-24', donor: 'Vitalik Buterin', charity: 'GiveDirectly', amount: 45000000 },
+  { date: '2023-11-05', donor: 'Vitalik Buterin', charity: 'Anthropic', amount: 100000000 },
+  { date: '2023-08-30', donor: 'Vitalik Buterin', charity: 'Center for Human-Compatible AI', amount: 80000000 },
+  { date: '2023-05-01', donor: 'Vitalik Buterin', charity: 'SENS Research Foundation', amount: 15000000 },
+  // Jeff Bezos donations
+  { date: '2023-02-10', donor: 'Jeff Bezos', charity: 'Climate Works', amount: 1000000000 },
+  { date: '2023-07-15', donor: 'Jeff Bezos', charity: 'Habitat for Humanity', amount: 500000000 },
+  { date: '2023-10-20', donor: 'Jeff Bezos', charity: 'Global Priorities Institute', amount: 300000000 },
+  { date: '2023-04-05', donor: 'Jeff Bezos', charity: 'Coalition for Epidemic Preparedness', amount: 750000000 },
+  { date: '2023-12-12', donor: 'Jeff Bezos', charity: 'Wikimedia Foundation', amount: 100000000 }
 ];
 
 // Helper function to calculate total donations by donor

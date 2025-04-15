@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { donations, charities, effectivenessCategories } from '../data/donationData';
+import SortableTable from './SortableTable';
 
 function RecipientDetail() {
   const { recipientName } = useParams();
@@ -23,10 +24,11 @@ function RecipientDetail() {
           
           return {
             ...donation,
-            livesSaved
+            livesSaved,
+            dateObj: new Date(donation.date)
           };
         })
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
+        .sort((a, b) => b.dateObj - a.dateObj);
       
       // Calculate total received
       const totalReceived = charityDonations.reduce((sum, donation) => sum + donation.amount, 0);
@@ -60,10 +62,44 @@ function RecipientDetail() {
     }
   };
   
-  // Get category display name
-  const formatCategory = (categoryKey) => {
-    return effectivenessCategories[categoryKey].name;
-  };
+  // Donation table columns configuration
+  const donationColumns = [
+    { 
+      key: 'date', 
+      label: 'Date',
+      render: (donation) => (
+        <div className="text-sm text-slate-900">
+          {new Date(donation.date).toLocaleDateString('en-US', {
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric'
+          })}
+        </div>
+      )
+    },
+    { 
+      key: 'amount', 
+      label: 'Amount',
+      render: (donation) => <div className="text-sm text-slate-900">{formatCurrency(donation.amount)}</div>
+    },
+    { 
+      key: 'donor', 
+      label: 'Donor',
+      render: (donation) => (
+        <Link 
+          to={`/donor/${encodeURIComponent(donation.donor)}`}
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+        >
+          {donation.donor}
+        </Link>
+      )
+    },
+    { 
+      key: 'livesSaved', 
+      label: 'Lives Saved',
+      render: (donation) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(donation.livesSaved))}</div>
+    }
+  ];
 
   if (!recipientInfo) {
     return <div className="p-8 text-center">Loading...</div>;
@@ -115,41 +151,12 @@ function RecipientDetail() {
             <h2 className="text-xl font-semibold text-slate-800">Donation History</h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Date</th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Amount</th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Donor</th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives Saved</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-slate-200">
-                {recipientDonations.map((donation, index) => (
-                  <tr key={`${donation.date}-${donation.donor}`} 
-                      className={`transition-colors hover:bg-emerald-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                      {new Date(donation.date).toLocaleDateString('en-US', {
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric'
-                      })}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                      {formatCurrency(donation.amount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <Link to={`/donor/${encodeURIComponent(donation.donor)}`} className="text-indigo-600 hover:text-indigo-800 hover:underline">
-                        {donation.donor}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-emerald-700">
-                      {formatNumber(Math.round(donation.livesSaved))}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <SortableTable 
+              columns={donationColumns}
+              data={recipientDonations}
+              defaultSortColumn="date"
+              defaultSortDirection="desc"
+            />
           </div>
         </div>
       </div>

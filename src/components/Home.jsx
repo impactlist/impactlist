@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { calculateDonorStats, charities, donations, effectivenessCategories } from '../data/donationData';
+import SortableTable from './SortableTable';
 
 function Home() {
   const [donorStats, setDonorStats] = useState([]);
@@ -56,13 +57,90 @@ function Home() {
     return effectivenessCategories[categoryKey].name;
   };
 
+  // Donor table columns configuration
+  const donorColumns = [
+    { 
+      key: 'rank', 
+      label: 'Rank',
+      render: (donor) => <div className="text-sm text-slate-900">{donor.rank}</div>
+    },
+    { 
+      key: 'name', 
+      label: 'Name',
+      render: (donor) => (
+        <Link 
+          to={`/donor/${encodeURIComponent(donor.name)}`}
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+        >
+          {donor.name}
+        </Link>
+      )
+    },
+    { 
+      key: 'livesSaved', 
+      label: 'Lives Saved',
+      render: (donor) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(donor.livesSaved))}</div>
+    },
+    { 
+      key: 'totalDonated', 
+      label: 'Donated',
+      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.totalDonated)}</div>
+    },
+    { 
+      key: 'costPerLifeSaved', 
+      label: 'Cost/Life',
+      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(Math.round(donor.costPerLifeSaved))}</div>
+    },
+    { 
+      key: 'netWorth', 
+      label: 'Net Worth',
+      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.netWorth)}</div>
+    }
+  ];
+
+  // Charity table columns configuration
+  const charityColumns = [
+    { 
+      key: 'name', 
+      label: 'Organization',
+      render: (charity) => (
+        <Link 
+          to={`/recipient/${encodeURIComponent(charity.name)}`}
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+        >
+          {charity.name}
+        </Link>
+      )
+    },
+    { 
+      key: 'totalLivesSaved', 
+      label: 'Lives Saved',
+      render: (charity) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(charity.totalLivesSaved))}</div>
+    },
+    { 
+      key: 'costPerLife', 
+      label: 'Cost/Life',
+      render: (charity) => <div className="text-sm text-slate-900">{formatCurrency(Math.round(1000000 / charity.effectivenessRate))}</div>
+    },
+    { 
+      key: 'totalReceived', 
+      label: 'Total Received',
+      render: (charity) => <div className="text-sm text-slate-900">{formatCurrency(charity.totalReceived)}</div>
+    },
+    { 
+      key: 'categoryName', 
+      label: 'Focus Area',
+      render: (charity) => <div className="text-sm text-slate-900">{charity.categoryName}</div>
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center">
       {/* Hero Header */}
       <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-10 mb-10 text-center shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Impact List</h1>
-          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranking of people by world impact through donations</p>
+          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranking of people by positive impact through donations</p>
         </div>
       </div>
       
@@ -71,53 +149,13 @@ function Home() {
         <h2 className="text-2xl font-bold text-slate-800 mb-4">Top Donors</h2>
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              {/* Table Header */}
-              <thead className="bg-slate-100">
-                <tr>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Rank</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Name</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives Saved</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Donated</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Cost/Life</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Net Worth</th>
-                </tr>
-              </thead>
-              
-              {/* Table Body */}
-              <tbody className="bg-white divide-y divide-slate-200">
-                {donorStats.map((donor, index) => (
-                  <tr 
-                    key={donor.name} 
-                    className={`transition-colors hover:bg-indigo-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}
-                  >
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{donor.rank}</div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <Link 
-                        to={`/donor/${encodeURIComponent(donor.name)}`}
-                        className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-                      >
-                        {donor.name}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-emerald-700">{formatNumber(Math.round(donor.livesSaved))}</div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{formatCurrency(donor.totalDonated)}</div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{formatCurrency(Math.round(donor.costPerLifeSaved))}</div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{formatCurrency(donor.netWorth)}</div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <SortableTable 
+              columns={donorColumns} 
+              data={donorStats} 
+              defaultSortColumn="livesSaved" 
+              defaultSortDirection="desc"
+              rankKey="rank"
+            />
           </div>
         </div>
       </div>
@@ -127,49 +165,15 @@ function Home() {
         <h2 className="text-2xl font-bold text-slate-800 mb-4">Recipient Organizations</h2>
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              {/* Table Header */}
-              <thead className="bg-slate-100">
-                <tr>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Organization</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives Saved</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Cost/Life</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Total Received</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Focus Area</th>
-                </tr>
-              </thead>
-              
-              {/* Table Body */}
-              <tbody className="bg-white divide-y divide-slate-200">
-                {charityStats.map((charity, index) => (
-                  <tr 
-                    key={charity.name} 
-                    className={`transition-colors hover:bg-emerald-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}
-                  >
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <Link 
-                        to={`/recipient/${encodeURIComponent(charity.name)}`}
-                        className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-                      >
-                        {charity.name}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-emerald-700">{formatNumber(Math.round(charity.totalLivesSaved))}</div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{formatCurrency(Math.round(1000000 / charity.effectivenessRate))}</div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{formatCurrency(charity.totalReceived)}</div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{formatCategory(charity.category)}</div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <SortableTable 
+              columns={charityColumns} 
+              data={charityStats.map((charity, index) => ({
+                ...charity,
+                costPerLife: Math.round(1000000 / charity.effectivenessRate)
+              }))} 
+              defaultSortColumn="totalLivesSaved" 
+              defaultSortDirection="desc"
+            />
           </div>
         </div>
       </div>

@@ -18,13 +18,15 @@ function DonorDetail() {
       .filter(donation => donation.donor === donorName)
       .map(donation => {
         const charity = charities.find(c => c.name === donation.charity);
-        const effectivenessRate = effectivenessCategories[charity.category];
+        const categoryData = effectivenessCategories[charity.category];
+        const effectivenessRate = categoryData.effectiveness;
         const livesSaved = (donation.amount / 1000000) * effectivenessRate;
         const costPerLife = donation.amount / livesSaved;
         
         return {
           ...donation,
           category: charity.category,
+          categoryName: categoryData.name,
           livesSaved,
           costPerLife
         };
@@ -49,11 +51,9 @@ function DonorDetail() {
     }
   };
   
-  // Format category for display
-  const formatCategory = (category) => {
-    return category.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+  // Get category display name
+  const formatCategory = (categoryKey) => {
+    return effectivenessCategories[categoryKey].name;
   };
 
   if (!donorStats) {

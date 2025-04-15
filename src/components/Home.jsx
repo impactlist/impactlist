@@ -15,7 +15,8 @@ function Home() {
     const recipientStats = charities.map(charity => {
       const charityDonations = donations.filter(d => d.charity === charity.name);
       const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
-      const effectivenessRate = effectivenessCategories[charity.category];
+      const categoryData = effectivenessCategories[charity.category];
+      const effectivenessRate = categoryData.effectiveness;
       const totalLivesSaved = charityDonations.reduce(
         (sum, d) => sum + (d.amount / 1000000) * effectivenessRate, 
         0
@@ -24,11 +25,12 @@ function Home() {
       return {
         name: charity.name,
         category: charity.category,
+        categoryName: categoryData.name,
         totalReceived,
         effectivenessRate,
         totalLivesSaved
       };
-    }).sort((a, b) => b.totalReceived - a.totalReceived);
+    }).sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
     
     setCharityStats(recipientStats);
   }, []);
@@ -49,11 +51,9 @@ function Home() {
     }
   };
 
-  // Format category for display
-  const formatCategory = (category) => {
-    return category.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+  // Get category display name
+  const formatCategory = (categoryKey) => {
+    return effectivenessCategories[categoryKey].name;
   };
 
   return (
@@ -132,8 +132,8 @@ function Home() {
               <thead className="bg-slate-100">
                 <tr>
                   <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Organization</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Category</th>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Effectiveness</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Focus Area</th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives/$1M</th>
                   <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Total Received</th>
                   <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Lives Saved</th>
                 </tr>
@@ -149,7 +149,7 @@ function Home() {
                     <td className="px-6 py-5 whitespace-nowrap">
                       <Link 
                         to={`/recipient/${encodeURIComponent(charity.name)}`}
-                        className="text-sm font-medium text-emerald-600 hover:text-emerald-800 hover:underline"
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
                       >
                         {charity.name}
                       </Link>

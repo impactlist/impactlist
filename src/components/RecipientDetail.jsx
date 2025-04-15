@@ -12,7 +12,8 @@ function RecipientDetail() {
     const charity = charities.find(c => c.name === recipientName);
     
     if (charity) {
-      const effectivenessRate = effectivenessCategories[charity.category];
+      const categoryData = effectivenessCategories[charity.category];
+      const effectivenessRate = categoryData.effectiveness;
       
       // Filter donations for this charity
       const charityDonations = donations
@@ -34,6 +35,7 @@ function RecipientDetail() {
       setRecipientInfo({
         name: recipientName,
         category: charity.category,
+        categoryName: categoryData.name,
         effectivenessRate,
         totalReceived,
         totalLivesSaved
@@ -58,11 +60,9 @@ function RecipientDetail() {
     }
   };
   
-  // Format category for display
-  const formatCategory = (category) => {
-    return category.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+  // Get category display name
+  const formatCategory = (categoryKey) => {
+    return effectivenessCategories[categoryKey].name;
   };
 
   if (!recipientInfo) {
@@ -92,8 +92,8 @@ function RecipientDetail() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
-              <span className="text-sm text-slate-600 uppercase font-semibold">Category</span>
-              <span className="text-3xl font-bold text-teal-600">{formatCategory(recipientInfo.category)}</span>
+              <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
+              <span className="text-3xl font-bold text-teal-600">{recipientInfo.categoryName}</span>
               <span className="text-sm text-slate-500 mt-2">
                 {recipientInfo.effectivenessRate} lives saved per $1M
               </span>

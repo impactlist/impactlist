@@ -22,6 +22,7 @@ export const effectivenessCategories = {
   'human_rights': { name: 'Human Rights and Justice', costPerLife: 20000 }, // $20K per life saved
   'housing': { name: 'Homelessness and Housing', costPerLife: 20000 },     // $20K per life saved
   'longevity': { name: 'Longevity', costPerLife: 10000 },                  // $10K per life saved
+  'population': { name: 'Population', costPerLife: 5000 },                  // $10K per life saved
   'other': { name: 'Other', costPerLife: 50000 }                          // $50K per life saved
 };
 
@@ -68,14 +69,14 @@ export const charities = [
   { name: 'Arbor Day Foundation', category: 'environmental' },
   { name: 'Bayou La Batre Hurricane Response Center', category: 'disaster_relief' },
   { name: 'Soma City, Fukushima (tech)', category: 'science_tech' },
-  { name: 'Tesla Science Center at Wardenclyffe', category: 'arts_culture_heritage' },
+  { name: 'Tesla Science Center at Wardenclyffe', category: 'arts_culture' },
   { name: 'ACLU', category: 'human_rights' },
-  { name: 'Art of Elysium', category: 'arts_culture_heritage' },
+  { name: 'Art of Elysium', category: 'arts_culture' },
   { name: 'Flint Public Schools (Water Filtration)', category: 'health_medicine' },
   { name: 'Ad Astra School', category: 'education' },
   { name: 'Crossroads School', category: 'education' },
   { name: 'Windward School', category: 'education' },
-  { name: 'University of Texas Population Initiative', category: 'other' },
+  { name: 'University of Texas Population Initiative', category: 'population' },
   { name: 'Unknown', category: 'other' },
 ];
 

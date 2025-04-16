@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { charities, donations, effectivenessCategories } from '../data/donationData';
+import { charities, donations, effectivenessCategories, getCharityEffectiveness } from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function Recipients() {
@@ -12,7 +12,7 @@ function Recipients() {
       const charityDonations = donations.filter(d => d.charity === charity.name);
       const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
       const categoryData = effectivenessCategories[charity.category];
-      const effectivenessRate = categoryData.effectiveness;
+      const effectivenessRate = getCharityEffectiveness(charity);
       const totalLivesSaved = charityDonations.reduce(
         (sum, d) => sum + (d.amount / 1000000) * effectivenessRate, 
         0

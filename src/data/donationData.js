@@ -10,7 +10,7 @@ export const effectivenessCategories = {
   'meta_theory': { name: 'Meta and Theory', effectiveness: 2000 },          // 200 lives saved per $1M
   'decision_making': { name: 'Improving Decision Making', effectiveness: 1000 }, // 180 lives saved per $1M
   'climate_change': { name: 'Climate Change', effectiveness: 50 },        // 160 lives saved per $1M
-  'health_medicine': { name: 'Health/Medicine (Developed)', effectiveness: 200 }, // 140 lives saved per $1M
+  'health_medicine': { name: 'Health/Medicine', effectiveness: 200 },     // 140 lives saved per $1M  ... this is developed world health
   'education': { name: 'Education', effectiveness: 100 },                  // 120 lives saved per $1M
   'political': { name: 'Political Institutions', effectiveness: 100 },     // 100 lives saved per $1M
   'science_tech': { name: 'Science and Tech', effectiveness: 200 },         // 90 lives saved per $1M
@@ -37,7 +37,7 @@ export const charities = [
   { name: 'The END Fund', category: 'disaster_relief' },
   { name: 'New Incentives', category: 'global_health' },
   { name: 'Development Media International', category: 'education' },
-  { name: 'Anthropic', category: 'ai_risk' },
+  { name: 'Anthropic', category: 'ai_risk', multiplier: 0.5 },
   { name: 'Center for Human-Compatible AI', category: 'ai_risk' },
   { name: 'Coalition for Epidemic Preparedness', category: 'pandemics' },
   { name: 'Nuclear Threat Initiative', category: 'nuclear' },
@@ -55,6 +55,8 @@ export const charities = [
   { name: 'Seattle Public Libraries', category: 'education' },
   { name: 'Bill & Melinda Gates Foundation', category: 'global_health' },
   { name: 'United Negro College Fund', category: 'education' },
+  { name: 'Dementia Discovery Fund', category: 'health_medicine' },
+  { name: 'OpenAI', category: 'ai_risk', effectiveness: -20000},
 ];
 
 // Donor data with net worth
@@ -94,7 +96,7 @@ export const donations = [
   { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000, source: 'https://www.lvmh.com/houses/lvmh/bernard-arnault/' },
   
   // Bill Gates donations
-  // Gemini says "Through 2023, Bill Gates (and formerly Melinda French Gates) had personally contributed $59.5 billion to the Gates Foundation endowment.. the below is only 44.6B donated total 
+  // Gemini says "Through 2023, Bill Gates (and formerly Melinda French Gates) had personally contributed $59.5 billion to the Gates Foundation endowment.. the below is only 50.4 donated total 
   { date: '1991-10-07', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 12000000, source: 'https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/' },
   { date: '1992-01-01', donor: 'Bill Gates', charity: 'Stanford University', amount: 6000000, source: 'https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period' },
   { date: '1995-01-01', donor: 'Bill Gates', charity: 'University of Washington', amount: 10000000, source: 'https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/' },
@@ -107,7 +109,8 @@ export const donations = [
   { date: '2000-01-24', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 5000000000, source: 'https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion' },
   { date: '2003-04-24', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 70000000, source: 'https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw#:~:text=The%20Bill%20%26%20Melinda%20Gates,genome%20research' },
   { date: '2004-11-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 3300000000, source: 'https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife' },
-  { date: '2017-06-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 468000000, source: 'https://www.wsj.com/articles/bill-gates-donates-4-6-billion-in-biggest-gift-since-2000-1502802333', notes: 'From Microsoft stock' },
+  { date: '2017-06-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 4680000000, source: 'https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229', notes: 'From Microsoft stock' },
+  { date: '2017-11-01', donor: 'Bill Gates', charity: 'Dementia Discovery Fund', amount: 50000000, source: 'https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy'},
   { date: '2022-07-13', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 20000000000, source: 'https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions', notes: 'Cash/stock gift' },
   
   // Dustin Moskovitz donations
@@ -116,6 +119,7 @@ export const donations = [
   { date: '2023-11-30', donor: 'Dustin Moskovitz', charity: 'Evidence Action', amount: 120000000, source: 'https://www.openphilanthropy.org/grants/' },
   
   // Elon Musk donations
+  { date: '2017-01-01', donor: 'Elon Musk', charity: 'OpenAI', amount: 15000000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/'},
   { date: '2023-01-17', donor: 'Elon Musk', charity: 'SENS Research Foundation', amount: 50000000, source: 'https://twitter.com/elonmusk' },
   { date: '2023-07-18', donor: 'Elon Musk', charity: 'The END Fund', amount: 150000000, source: 'https://www.muskfoundation.org/' },
   { date: '2023-09-15', donor: 'Elon Musk', charity: 'Anthropic', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Elon_Musk' },
@@ -198,6 +202,23 @@ export const donations = [
   { date: '2023-04-18', donor: 'Warren Buffett', charity: 'New Incentives', amount: 450000000, source: 'https://www.berkshirehathaway.com/aboutwarren.html' }
 ];
 
+// Helper function to get a charity's effectiveness rate
+export const getCharityEffectiveness = (charity) => {
+  // First check for charity-specific effectiveness
+  if (charity.effectiveness !== undefined) {
+    return charity.effectiveness;
+  }
+  
+  // Then check for multiplier to scale category effectiveness
+  const categoryEffectiveness = effectivenessCategories[charity.category].effectiveness;
+  if (charity.multiplier !== undefined) {
+    return categoryEffectiveness * charity.multiplier;
+  }
+  
+  // Otherwise use plain category effectiveness
+  return categoryEffectiveness;
+};
+
 // Helper function to calculate total donations by donor
 export const calculateDonorStats = () => {
   const donorMap = new Map();
@@ -216,7 +237,7 @@ export const calculateDonorStats = () => {
   // Calculate total donations and lives saved
   donations.forEach(donation => {
     const charity = charities.find(c => c.name === donation.charity);
-    const effectivenessRate = effectivenessCategories[charity.category].effectiveness;
+    const effectivenessRate = getCharityEffectiveness(charity);
     const donorData = donorMap.get(donation.donor);
     
     const livesSaved = (donation.amount / 1000000) * effectivenessRate;

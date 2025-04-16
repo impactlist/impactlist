@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { calculateDonorStats, donations, charities, effectivenessCategories } from '../data/donationData';
+import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityEffectiveness } from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function DonorDetail() {
@@ -20,7 +20,7 @@ function DonorDetail() {
       .map(donation => {
         const charity = charities.find(c => c.name === donation.charity);
         const categoryData = effectivenessCategories[charity.category];
-        const effectivenessRate = categoryData.effectiveness;
+        const effectivenessRate = getCharityEffectiveness(charity);
         const livesSaved = (donation.amount / 1000000) * effectivenessRate;
         const costPerLife = donation.amount / livesSaved;
         

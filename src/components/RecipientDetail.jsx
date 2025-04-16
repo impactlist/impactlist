@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { donations, charities, effectivenessCategories } from '../data/donationData';
+import { donations, charities, effectivenessCategories, getCharityEffectiveness } from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function RecipientDetail() {
@@ -14,7 +14,7 @@ function RecipientDetail() {
     
     if (charity) {
       const categoryData = effectivenessCategories[charity.category];
-      const effectivenessRate = categoryData.effectiveness;
+      const effectivenessRate = getCharityEffectiveness(charity);
       
       // Filter donations for this charity
       const charityDonations = donations

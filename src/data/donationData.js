@@ -1,29 +1,30 @@
 // Charity focus areas with cost to save a life (in dollars)
 export const effectivenessCategories = {
-  'ai_risk': { name: 'AI Existential Risk', costPerLife: 50 },             // $50 per life saved
-  'pandemics': { name: 'Pandemics', costPerLife: 500 },                    // $500 per life saved
-  'nuclear': { name: 'Nuclear', costPerLife: 2000 },                       // $2K per life saved
-  'global_health': { name: 'Global Health', costPerLife: 5000},            // $5K per life saved
-  'global_development': { name: 'Global Development/Poverty', costPerLife: 5000 }, // $5K per life saved
-  'animal_welfare': { name: 'Animal Welfare', costPerLife: 20000 },        // $20K per life saved
-  'global_priorities': { name: 'Global Priorities Research', costPerLife: 500 }, // $500 per life saved
-  'meta_theory': { name: 'Meta and Theory', costPerLife: 500 },            // $500 per life saved
-  'decision_making': { name: 'Improving Decision Making', costPerLife: 1000 }, // $1K per life saved
-  'climate_change': { name: 'Climate Change', costPerLife: 20000 },        // $20K per life saved
-  'health_medicine': { name: 'Health/Medicine', costPerLife: 5000 },       // $5K per life saved (developed world health)
-  'education': { name: 'Education', costPerLife: 10000 },                  // $10K per life saved
-  'political': { name: 'Political Institutions', costPerLife: 10000 },     // $10K per life saved
-  'science_tech': { name: 'Science and Tech', costPerLife: 5000 },         // $5K per life saved
-  'local_community': { name: 'Local Community', costPerLife: 20000 },      // $20K per life saved
-  'arts_culture': { name: 'Arts, Culture, Heritage', costPerLife: 50000 }, // $50K per life saved
-  'religious': { name: 'Religious', costPerLife: 50000 },                  // $50K per life saved
-  'environmental': { name: 'General Environmental', costPerLife: 50000 },  // $50K per life saved
-  'disaster_relief': { name: 'Disaster Relief', costPerLife: 10000 },      // $10K per life saved
-  'human_rights': { name: 'Human Rights and Justice', costPerLife: 20000 }, // $20K per life saved
-  'housing': { name: 'Homelessness and Housing', costPerLife: 20000 },     // $20K per life saved
-  'longevity': { name: 'Longevity', costPerLife: 10000 },                  // $10K per life saved
-  'population': { name: 'Population', costPerLife: 5000 },                  // $10K per life saved
-  'other': { name: 'Other', costPerLife: 50000 }                          // $50K per life saved
+  'ai_risk': { name: 'AI Existential Risk', costPerLife: 50 },             
+  'pandemics': { name: 'Pandemics', costPerLife: 500 },                    
+  'nuclear': { name: 'Nuclear', costPerLife: 2000 },                      
+  'global_health': { name: 'Global Health', costPerLife: 5000},            
+  'global_development': { name: 'Global Development/Poverty', costPerLife: 5000 },
+  'animal_welfare': { name: 'Animal Welfare', costPerLife: 30000 },       
+  'global_priorities': { name: 'Global Priorities Research', costPerLife: 5000 },
+  'meta_theory': { name: 'Meta and Theory', costPerLife: 5000 },           
+  'decision_making': { name: 'Improving Decision Making', costPerLife: 1000 },
+  'climate_change': { name: 'Climate Change', costPerLife: 50000 },        
+  'health_medicine': { name: 'Health/Medicine', costPerLife: 20000 },       
+  'education': { name: 'Education', costPerLife: 20000 },                  
+  'political': { name: 'Political Institutions', costPerLife: 10000 },    
+  'science_tech': { name: 'Science and Tech', costPerLife: 20000 },         
+  'local_community': { name: 'Local Community', costPerLife: 50000 },     
+  'arts_culture': { name: 'Arts, Culture, Heritage', costPerLife: 100000 }, 
+  'religious': { name: 'Religious', costPerLife: 100000 },                  
+  'environmental': { name: 'General Environmental', costPerLife: 100000 },  
+  'disaster_relief': { name: 'Disaster Relief', costPerLife: 30000 },      
+  'human_rights': { name: 'Human Rights and Justice', costPerLife: 50000 }, 
+  'housing': { name: 'Homelessness and Housing', costPerLife: 50000 },     
+  'longevity': { name: 'Longevity', costPerLife: 10000 },                 
+  'population': { name: 'Population', costPerLife: 50000 },
+  'national_defense': { name: 'National Defense', costPerLife: 50000 },
+  'other': { name: 'Other', costPerLife: 100000 }
 };
 
 // Charity data with their focus area categories
@@ -38,7 +39,7 @@ export const charities = [
   { name: 'The END Fund', category: 'disaster_relief' },
   { name: 'New Incentives', category: 'global_health' },
   { name: 'Development Media International', category: 'education' },
-  { name: 'Anthropic', category: 'ai_risk', multiplier: 2 },
+  { name: 'Anthropic', category: 'ai_risk', costPerLife: -50 },
   { name: 'Center for Human-Compatible AI', category: 'ai_risk' },
   { name: 'Coalition for Epidemic Preparedness', category: 'pandemics' },
   { name: 'Nuclear Threat Initiative', category: 'nuclear' },
@@ -80,30 +81,55 @@ export const charities = [
   { name: 'MIT', category: 'education'},
   { name: 'Unknown', category: 'other' },
   { name: 'Starlink in Ukraine', category: 'disaster_relief' },
+  { name: 'Museum of History & Industry (Seattle)', category: 'arts_culture' },
+  { name: 'Princeton University (science)', category: 'science_tech' },
+  { name: 'Washington United for Marriage (Referendum 74 campaign)', category: 'human_rights' },
+  { name: 'Reporters Committee for Freedom of the Press', category: 'human_rights' },
+  { name: 'TheDream.US', category: 'education' },
+  { name: 'With Honor Fund', category: 'political' },
+  { name: 'Bezos Day One Fund', category: 'housing' },
+  { name: 'Bezos Earth Fund', category: 'climate_change' },
+  { name: 'Feeding America (COVID-19 Response Fund)', category: 'disaster_relief' },
+  { name: 'All In Washington (COVID-19 relief effort)', category: 'disaster_relief' },
+  { name: 'Smithsonian Institution', category: 'arts_culture' },
+  { name: 'Van Jones (Bezos Courage & Civility Award)', category: 'other' },
+  { name: 'José Andrés (Bezos Courage & Civility Award)', category: 'other' },
+  { name: 'Obama Foundation', category: 'political' },
+  { name: 'Dolly Parton (Bezos Courage & Civility Award)', category: 'other' },
+  { name: 'Eva Longoria (Bezos Courage & Civility Award)', category: 'other' },
+  { name: 'Bill McRaven (Bezos Courage & Civility Award)', category: 'other' },
+  { name: 'University of California, Davis (Medicine)', category: 'health_medicine' },
+  { name: 'Ellison Medical Foundation', category: 'health_medicine' },
+  { name: 'Sderot Community Center (Israel)', category: 'local_community' },
+  { name: 'Global Polio Eradication Initiative', category: 'global_health' },
+  { name: 'Friends of the Israel Defense Forces', category: 'national_defense' },
+  { name: 'University of Southern California (Medicine)', category: 'health_medicine' },
+  { name: 'University of Oxford (Science)', category: 'science_tech' },
 ];
 
 // Donor data with net worth
 export const donors = [
-  { name: 'Mackenzie Scott', netWorth: 35000000000 },
-  { name: 'Bill Gates', netWorth: 108000000000 },
-  { name: 'Warren Buffett', netWorth: 95000000000 },
-  { name: 'Dustin Moskovitz', netWorth: 14000000000 },
-  { name: 'Elon Musk', netWorth: 180000000000 },
-  { name: 'Mark Zuckerberg', netWorth: 75000000000 },
-  { name: 'Michael Bloomberg', netWorth: 60000000000 },
-  { name: 'Jack Dorsey', netWorth: 5000000000 },
-  { name: 'Sam Bankman-Fried', netWorth: 24000000000 },
-  { name: 'John Arnold', netWorth: 3500000000 },
-  { name: 'Vitalik Buterin', netWorth: 1500000000 },
-  { name: 'Jeff Bezos', netWorth: 150000000000 },
-  { name: 'Larry Ellison', netWorth: 145000000000 },
-  { name: 'Bernard Arnault', netWorth: 195000000000 },
-  { name: 'Larry Page', netWorth: 110000000000 },
-  { name: 'Sergey Brin', netWorth: 105000000000 },
-  { name: 'Amancio Ortega', netWorth: 85000000000 },
-  { name: 'Steve Ballmer', netWorth: 95000000000 },
-  { name: 'Jensen Huang', netWorth: 48000000000 },
-  { name: 'Jaan Tallinn', netWorth: 1000000000 }
+  { name: 'Mackenzie Scott', netWorth: 2.5e10 },
+  { name: 'Bill Gates', netWorth: 1.08e11 },
+  { name: 'Warren Buffett', netWorth: 1.61e11 },
+  { name: 'Dustin Moskovitz', netWorth: 1.4e10 },
+  { name: 'Elon Musk', netWorth: 3.64e11 },
+  { name: 'Mark Zuckerberg', netWorth: 1.7e11 },
+  { name: 'Michael Bloomberg', netWorth: 1.1e11 },
+  { name: 'Jack Dorsey', netWorth: 3.6e9 },
+  { name: 'Sam Bankman-Fried', netWorth: 0 },
+  { name: 'Jack Ma', netWorth: 2.6e10 },
+  { name: 'Vitalik Buterin', netWorth: 6e8 },
+  { name: 'Jeff Bezos', netWorth: 1.91e11 },
+  { name: 'Larry Ellison', netWorth: 1.63e11 },
+  { name: 'Bernard Arnault', netWorth: 1.45e11 },
+  // Larry allegedly donated 800 million
+  { name: 'Larry Page', netWorth: 1.28e11 },
+  { name: 'Sergey Brin', netWorth: 1.23e11 },
+  { name: 'Amancio Ortega', netWorth: 1.21e11 },
+  { name: 'Steve Ballmer', netWorth: 1.13e11 },
+  { name: 'Jensen Huang', netWorth: 9.2e10 },
+  { name: 'Jaan Tallinn', netWorth: 1.0e9 }
 ];
 
 // Donation data
@@ -179,25 +205,45 @@ export const donations = [
   { date: '2023-12-18', donor: 'Jack Dorsey', charity: 'Wikimedia Foundation', amount: 25000000, source: 'https://startsmall.llc/' },
   
   // Jeff Bezos donations
-  { date: '2023-02-10', donor: 'Jeff Bezos', charity: 'Climate Works', amount: 1000000000, source: 'https://www.bezosearthfund.org/' },
-  { date: '2023-04-05', donor: 'Jeff Bezos', charity: 'Coalition for Epidemic Preparedness', amount: 750000000, source: 'https://www.bezosdayonefund.org/' },
-  { date: '2023-07-15', donor: 'Jeff Bezos', charity: 'Habitat for Humanity', amount: 500000000, source: 'https://www.bloomberg.com/billionaires/profiles/jeffrey-p-bezos/' },
-  { date: '2023-10-20', donor: 'Jeff Bezos', charity: 'Global Priorities Institute', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Jeff_Bezos' },
-  { date: '2023-12-12', donor: 'Jeff Bezos', charity: 'Wikimedia Foundation', amount: 100000000, source: 'https://www.forbes.com/profile/jeff-bezos/' },
+  { date: '2011-08-17', donor: 'Jeff Bezos', charity: 'Museum of History & Industry (Seattle)', amount: 10000000, source: 'https://www.seattlepi.com/local/article/Jeff-Bezos-gives-MOHAI-10-million-for-2077208.php' },
+  { date: '2011-12-13', donor: 'Jeff Bezos', charity: 'Princeton University (science)', amount: 15000000, source: 'https://www.princeton.edu/news/2011/12/13/jeff-and-mackenzie-bezos-donate-15-million-create-center-princeton-neuroscience' },
+  { date: '2012-07-28', donor: 'Jeff Bezos', charity: 'Washington United for Marriage (Referendum 74 campaign)', amount: 2500000, source: 'https://www.reuters.com/article/lifestyle/amazons-jeff-bezos-wife-make-25-million-donation-for-gay-marriage-idUSBRE86R014/' },
+  { date: '2017-05-23', donor: 'Jeff Bezos', charity: 'Reporters Committee for Freedom of the Press', amount: 1000000, source: 'https://www.rcfp.org/awards2017/' },
+  { date: '2018-01-12', donor: 'Jeff Bezos', charity: 'TheDream.US', amount: 33000000, source: 'https://www.reuters.com/article/world/us/jeff-bezos-contributes-33-million-to-dreamers-scholarship-program-idUSKBN1F124Z/' },
+  { date: '2018-09-05', donor: 'Jeff Bezos', charity: 'With Honor Fund', amount: 10000000, source: 'https://www.geekwire.com/2018/amazon-ceo-jeff-bezos-donates-10m-honors-effort-elect-veterans-congress/' },
+  { date: '2018-09-13', donor: 'Jeff Bezos', charity: 'Bezos Day One Fund', amount: 2000000000, source: 'https://www.geekwire.com/2018/jeff-bezos-unveils-2b-day-one-fund-focusing-homeless-families-preschool-education/' },
+  { date: '2020-02-17', donor: 'Jeff Bezos', charity: 'Bezos Earth Fund', amount: 10000000000, source: 'https://www.reuters.com/article/world/amazons-bezos-pledges-10-billion-to-climate-change-fight-idUSKBN20B1XJ/' },
+  { date: '2020-04-02', donor: 'Jeff Bezos', charity: 'Feeding America (COVID-19 Response Fund)', amount: 100000000, source: 'https://www.feedingamerica.org/about-us/press-room/jeff-bezos-support-food-banks' },
+  { date: '2020-06-24', donor: 'Jeff Bezos', charity: 'All In Washington (COVID-19 relief effort)', amount: 25000000, source: 'https://www.geekwire.com/2020/jeff-bezos-pledges-25m-wa-help-group-provide-covid-19-relief-across-state/' },
+  { date: '2020-12-21', donor: 'Jeff Bezos', charity: 'All In Washington (COVID-19 relief effort)', amount: 25000000, source: 'https://www.kentreporter.com/business/bezos-pledges-an-additional-25-million-to-support-covid-19-relief-efforts/' },
+  { date: '2021-07-14', donor: 'Jeff Bezos', charity: 'Smithsonian Institution', amount: 200000000, source: 'https://www.reuters.com/world/us/amazon-chair-jeff-bezos-donating-200-million-smithsonian-2021-07-14/' },
+  { date: '2021-07-20', donor: 'Jeff Bezos', charity: 'Van Jones (Bezos Courage & Civility Award)', amount: 100000000, source: 'https://www.axios.com/2021/07/20/bezos-unveils-million-dollar-awards-van-jones-jose-andres' },
+  { date: '2021-07-20', donor: 'Jeff Bezos', charity: 'José Andrés (Bezos Courage & Civility Award)', amount: 100000000, source: 'https://www.axios.com/2021/07/20/bezos-unveils-million-dollar-awards-van-jones-jose-andres' },
+  { date: '2021-11-22', donor: 'Jeff Bezos', charity: 'Obama Foundation', amount: 100000000, source: 'https://www.reuters.com/world/us/bezos-donates-100-mln-obama-foundation-honor-congressman-john-lewis-2021-11-22/' },
+  { date: '2022-11-12', donor: 'Jeff Bezos', charity: 'Dolly Parton (Bezos Courage & Civility Award)', amount: 100000000, source: 'https://www.reuters.com/lifestyle/dolly-parton-receives-100-million-award-jeff-bezos-2022-11-13/' },
+  { date: '2024-03-15', donor: 'Jeff Bezos', charity: 'Eva Longoria (Bezos Courage & Civility Award)', amount: 50000000, source: 'https://people.com/eva-longoria-receives-usd50m-award-from-jeff-bezos-lauren-sanchez-to-spend-on-philanthropy-8609792' },
+  { date: '2024-03-15', donor: 'Jeff Bezos', charity: 'Bill McRaven (Bezos Courage & Civility Award)', amount: 50000000, source: 'https://people.com/eva-longoria-receives-usd50m-award-from-jeff-bezos-lauren-sanchez-to-spend-on-philanthropy-8609792' },
   
   // Jensen Huang donations
   { date: '2023-04-30', donor: 'Jensen Huang', charity: 'Anthropic', amount: 150000000, source: 'https://www.nvidia.com/en-us/about-nvidia/jensen-huang/' },
   { date: '2023-09-15', donor: 'Jensen Huang', charity: 'Center for Human-Compatible AI', amount: 100000000, source: 'https://en.wikipedia.org/wiki/Jensen_Huang' },
   { date: '2023-12-05', donor: 'Jensen Huang', charity: 'Global Priorities Institute', amount: 75000000, source: 'https://www.forbes.com/profile/jensen-huang/' },
   
-  // John Arnold donations
-  { date: '2023-02-28', donor: 'John Arnold', charity: 'Climate Works', amount: 75000000, source: 'https://www.arnoldfoundation.org/' },
-  { date: '2023-06-19', donor: 'John Arnold', charity: 'Development Media International', amount: 65000000, source: 'https://en.wikipedia.org/wiki/John_Arnold' },
+  // Jack Ma donations
+  { date: '2023-02-28', donor: 'Jack Ma', charity: 'Climate Works', amount: 75000000, source: 'https://www.arnoldfoundation.org/' },
+  { date: '2023-06-19', donor: 'Jack Ma', charity: 'Development Media International', amount: 65000000, source: 'https://en.wikipedia.org/wiki/John_Arnold' },
   
   // Larry Ellison donations
-  { date: '2023-03-22', donor: 'Larry Ellison', charity: 'GiveWell Maximum Impact Fund', amount: 350000000, source: 'https://www.oracle.com/corporate/executives/lawrence-ellison/' },
-  { date: '2023-08-15', donor: 'Larry Ellison', charity: 'Anthropic', amount: 425000000, source: 'https://en.wikipedia.org/wiki/Larry_Ellison' },
-  { date: '2023-11-30', donor: 'Larry Ellison', charity: 'SENS Research Foundation', amount: 200000000, source: 'https://www.forbes.com/profile/larry-ellison/' },
+  // He backed out of his 115m pledge to Harvard
+  { date: '1995-09-13', donor: 'Larry Ellison', charity: 'University of California, Davis (Medicine)', amount: 5000000, source: 'https://www.ucdavis.edu/news/private-gifts-uc-davis-hit-all-time-high' },
+  { date: '2006-06-27', donor: 'Larry Ellison', charity: 'Ellison Medical Foundation', amount: 100000000, source: 'https://www.thecrimson.com/article/2006/6/28/ellison-pulls-plug-on-115-million/' },
+  { date: '2007-08-09', donor: 'Larry Ellison', charity: 'Sderot Community Center (Israel)', amount: 500000, source: 'https://www.jta.org/2007/08/09/default/oracle-ceo-donating-to-sderot' },
+  { date: '2014-02-08', donor: 'Larry Ellison', charity: 'Global Polio Eradication Initiative', amount: 100000000, source: 'https://polioeradication.org/news/lawrence-ellison-foundation-joins-global-effort-to-end-polio-with-100-million-donation/' },
+  { date: '2014-11-06', donor: 'Larry Ellison', charity: 'Friends of the Israel Defense Forces', amount: 10000000, source: 'https://www.timesofisrael.com/hollywood-gala-raises-a-record-33-million-for-idf/' },
+  { date: '2016-05-11', donor: 'Larry Ellison', charity: 'University of Southern California (Medicine)', amount: 200000000, source: 'https://news.usc.edu/100495/200-million-gift-launches-lawrence-j-ellison-institute-for-transformative-medicine-of-usc/' },
+  { date: '2017-11-02', donor: 'Larry Ellison', charity: 'Friends of the Israel Defense Forces', amount: 16600000, source: 'https://www.timesofisrael.com/record-53-8-million-raised-for-idf-soldiers-at-beverly-hills-gala/' },
+  { date: '2024-12-03', donor: 'Larry Ellison', charity: 'University of Oxford (Science)', amount: 165000000, source: 'https://www.ox.ac.uk/news/2024-12-03-university-oxford-and-ellison-institute-technology-join-forces-transformative', notes: 'only a pledge' },
+
   
   // Larry Page donations
   { date: '2023-02-28', donor: 'Larry Page', charity: 'Coalition for Epidemic Preparedness', amount: 400000000, source: 'https://en.wikipedia.org/wiki/Larry_Page' },

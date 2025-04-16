@@ -1,6 +1,13 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { donations, charities, effectivenessCategories, getCharityEffectiveness } from '../data/donationData';
+import { 
+  donations, 
+  charities, 
+  effectivenessCategories, 
+  getCharityEffectiveness, 
+  getCategoryEffectiveness,
+  getEffectivenessMultiplier 
+} from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function RecipientDetail() {
@@ -34,11 +41,17 @@ function RecipientDetail() {
       const totalReceived = charityDonations.reduce((sum, donation) => sum + donation.amount, 0);
       const totalLivesSaved = charityDonations.reduce((sum, donation) => sum + donation.livesSaved, 0);
       
+      // Get effectiveness multiplier compared to category average
+      const categoryEffectiveness = getCategoryEffectiveness(charity);
+      const effectivenessMultiplier = getEffectivenessMultiplier(charity);
+      
       setRecipientInfo({
         name: recipientName,
         category: charity.category,
         categoryName: categoryData.name,
         effectivenessRate,
+        categoryEffectiveness,
+        effectivenessMultiplier,
         totalReceived,
         totalLivesSaved
       });
@@ -52,8 +65,10 @@ function RecipientDetail() {
     return num.toLocaleString('en-US');
   };
 
-  const formatCurrency = (amount) => {
-    if (amount >= 1000000000) {
+  const formatCurrency = (amount, effectivenessRate = null) => {
+    if (effectivenessRate === 0) {
+      return '∞';
+    } else if (amount >= 1000000000) {
       return `$${(amount / 1000000000).toFixed(1)}B`;
     } else if (amount >= 1000000) {
       return `$${(amount / 1000000).toFixed(1)}M`;
@@ -106,7 +121,11 @@ function RecipientDetail() {
     { 
       key: 'livesSaved', 
       label: 'Lives Saved',
-      render: (donation) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(donation.livesSaved))}</div>
+      render: (donation) => (
+        <div className={`text-sm ${donation.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(donation.livesSaved))}
+        </div>
+      )
     }
   ];
 
@@ -136,12 +155,18 @@ function RecipientDetail() {
         
         {/* Recipient stats card */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
               <span className="text-3xl font-bold text-slate-900">{recipientInfo.categoryName}</span>
-              <span className="text-sm text-slate-500 mt-2">
-                {formatCurrency(1000000 / recipientInfo.effectivenessRate)} per life saved
+            </div>
+            <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
+              <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
+              <span className="text-3xl font-bold text-slate-900">
+                {recipientInfo.effectivenessRate === 0 ? <span className="text-6xl">∞</span> : `$${formatNumber(Math.round(1000000 / recipientInfo.effectivenessRate))}`}
+              </span>
+              <span className="text-sm mt-2 text-slate-500">
+                Category avg: {recipientInfo.categoryEffectiveness === 0 ? <span className="text-xl">∞</span> : `$${formatNumber(Math.round(1000000 / recipientInfo.categoryEffectiveness))}`}
               </span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
@@ -150,7 +175,9 @@ function RecipientDetail() {
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Total Lives Saved</span>
-              <span className="text-3xl font-bold text-emerald-600">{formatNumber(Math.round(recipientInfo.totalLivesSaved))}</span>
+              <span className={`text-3xl font-bold ${recipientInfo.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                {formatNumber(Math.round(recipientInfo.totalLivesSaved))}
+              </span>
             </div>
           </div>
         </div>

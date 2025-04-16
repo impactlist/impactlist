@@ -43,8 +43,10 @@ function DonorDetail() {
     return num.toLocaleString('en-US');
   };
 
-  const formatCurrency = (amount) => {
-    if (amount >= 1000000000) {
+  const formatCurrency = (amount, effectivenessRate = null) => {
+    if (effectivenessRate === 0) {
+      return '∞';
+    } else if (amount >= 1000000000) {
       return `$${(amount / 1000000000).toFixed(1)}B`;
     } else if (amount >= 1000000) {
       return `$${(amount / 1000000).toFixed(1)}M`;
@@ -102,12 +104,20 @@ function DonorDetail() {
     { 
       key: 'livesSaved', 
       label: 'Lives Saved',
-      render: (donation) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(donation.livesSaved))}</div>
+      render: (donation) => (
+        <div className={`text-sm ${donation.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(donation.livesSaved))}
+        </div>
+      )
     },
     { 
       key: 'costPerLife', 
       label: 'Cost/Life',
-      render: (donation) => <div className="text-sm text-slate-900">{formatCurrency(Math.round(donation.costPerLife))}</div>
+      render: (donation) => (
+        <div className="text-sm text-slate-900">
+          {donation.livesSaved === 0 ? <span className="text-2xl">∞</span> : `$${formatNumber(Math.round(donation.costPerLife))}`}
+        </div>
+      )
     }
   ];
 
@@ -144,7 +154,9 @@ function DonorDetail() {
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Lives Saved</span>
-              <span className="text-3xl font-bold text-emerald-600">{formatNumber(Math.round(donorStats.livesSaved))}</span>
+              <span className={`text-3xl font-bold ${donorStats.livesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                {formatNumber(Math.round(donorStats.livesSaved))}
+              </span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Total Donated</span>
@@ -152,7 +164,9 @@ function DonorDetail() {
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
-              <span className="text-3xl font-bold text-slate-900">{formatCurrency(Math.round(donorStats.costPerLifeSaved))}</span>
+              <span className="text-3xl font-bold text-slate-900">
+                {donorStats.livesSaved === 0 ? <span className="text-6xl">∞</span> : `$${formatNumber(Math.round(donorStats.costPerLifeSaved))}`}
+              </span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Net Worth</span>

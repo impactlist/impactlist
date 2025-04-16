@@ -219,6 +219,18 @@ export const getCharityEffectiveness = (charity) => {
   return categoryEffectiveness;
 };
 
+// Get category base effectiveness
+export const getCategoryEffectiveness = (charity) => {
+  return effectivenessCategories[charity.category].effectiveness;
+};
+
+// Get effectiveness multiplier compared to category (how many times more/less effective)
+export const getEffectivenessMultiplier = (charity) => {
+  const charityEffectiveness = getCharityEffectiveness(charity);
+  const categoryEffectiveness = getCategoryEffectiveness(charity);
+  return charityEffectiveness / categoryEffectiveness;
+};
+
 // Helper function to calculate total donations by donor
 export const calculateDonorStats = () => {
   const donorMap = new Map();

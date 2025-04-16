@@ -69,12 +69,23 @@ function Recipients() {
     { 
       key: 'totalLivesSaved', 
       label: 'Lives Saved',
-      render: (charity) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(charity.totalLivesSaved))}</div>
+      render: (charity) => (
+        <div className={`text-sm ${charity.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(charity.totalLivesSaved))}
+        </div>
+      )
     },
     { 
       key: 'costPerLife', 
       label: 'Cost/Life',
-      render: (charity) => <div className="text-sm text-slate-900">{formatCurrency(Math.round(1000000 / charity.effectivenessRate))}</div>
+      render: (charity) => {
+        const costPerLife = 1000000 / charity.effectivenessRate;
+        return (
+          <div className="text-sm text-slate-900">
+            {formatCurrency(Math.round(costPerLife))}
+          </div>
+        );
+      }
     },
     { 
       key: 'totalReceived', 

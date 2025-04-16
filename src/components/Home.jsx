@@ -79,7 +79,11 @@ function Home() {
     { 
       key: 'livesSaved', 
       label: 'Lives Saved',
-      render: (donor) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(donor.livesSaved))}</div>
+      render: (donor) => (
+        <div className={`text-sm ${donor.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(donor.livesSaved))}
+        </div>
+      )
     },
     { 
       key: 'totalDonated', 
@@ -89,7 +93,11 @@ function Home() {
     { 
       key: 'costPerLifeSaved', 
       label: 'Cost/Life',
-      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(Math.round(donor.costPerLifeSaved))}</div>
+      render: (donor) => (
+        <div className="text-sm text-slate-900">
+          {formatCurrency(Math.round(donor.costPerLifeSaved))}
+        </div>
+      )
     },
     { 
       key: 'netWorth', 
@@ -115,12 +123,23 @@ function Home() {
     { 
       key: 'totalLivesSaved', 
       label: 'Lives Saved',
-      render: (charity) => <div className="text-sm text-emerald-700">{formatNumber(Math.round(charity.totalLivesSaved))}</div>
+      render: (charity) => (
+        <div className={`text-sm ${charity.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(charity.totalLivesSaved))}
+        </div>
+      )
     },
     { 
       key: 'costPerLife', 
       label: 'Cost/Life',
-      render: (charity) => <div className="text-sm text-slate-900">{formatCurrency(Math.round(1000000 / charity.effectivenessRate))}</div>
+      render: (charity) => {
+        const costPerLife = 1000000 / charity.effectivenessRate;
+        return (
+          <div className="text-sm text-slate-900">
+            {formatCurrency(Math.round(costPerLife))}
+          </div>
+        );
+      }
     },
     { 
       key: 'totalReceived', 

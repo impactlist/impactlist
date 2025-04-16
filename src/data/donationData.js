@@ -57,6 +57,8 @@ export const charities = [
   { name: 'United Negro College Fund', category: 'education' },
   { name: 'Dementia Discovery Fund', category: 'health_medicine' },
   { name: 'OpenAI', category: 'ai_risk', costPerLife: -5},
+  { name: 'Sierra Club', category: 'environmental'},
+  { name: 'Future of Life Institute', category: 'ai_risk'},
 ];
 
 // Donor data with net worth
@@ -119,7 +121,9 @@ export const donations = [
   { date: '2023-11-30', donor: 'Dustin Moskovitz', charity: 'Evidence Action', amount: 120000000, source: 'https://www.openphilanthropy.org/grants/' },
   
   // Elon Musk donations
+  { date: '2015-01-16', donor: 'Elon Musk', charity: 'Future of Life Institute', amount: 10000000, source: 'https://www.theguardian.com/technology/2015/jan/16/elon-musk-donates-10m-to-artificial-intelligence-research#:~:text=Elon%20Musk%20has%20put%20his,keeping%20AI%20beneficial%20to%20humanity'},
   { date: '2017-01-01', donor: 'Elon Musk', charity: 'OpenAI', amount: 15000000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/'},
+  { date: '2018-01-01', donor: 'Elon Musk', charity: 'Sierra Club', amount: 6000000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/'},  
   { date: '2023-01-17', donor: 'Elon Musk', charity: 'SENS Research Foundation', amount: 50000000, source: 'https://twitter.com/elonmusk' },
   { date: '2023-07-18', donor: 'Elon Musk', charity: 'The END Fund', amount: 150000000, source: 'https://www.muskfoundation.org/' },
   { date: '2023-09-15', donor: 'Elon Musk', charity: 'Anthropic', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Elon_Musk' },

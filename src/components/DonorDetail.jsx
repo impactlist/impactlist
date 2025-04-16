@@ -118,22 +118,23 @@ function DonorDetail() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header with back button */}
-      <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-8 mb-10">
+      <div className="w-full bg-indigo-700 py-8 mb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center">
             <Link to="/" className="text-indigo-100 hover:text-white flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
               </svg>
               Back to Impact List
             </Link>
-            <h1 className="text-3xl font-bold text-white">{donorStats.name}</h1>
-            <div></div> {/* Empty div for flex alignment */}
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Donor name */}
+        <h1 className="text-4xl font-bold text-slate-900 mb-6 text-center">{donorStats.name}</h1>
+        
         {/* Donor stats card */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6">

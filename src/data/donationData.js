@@ -1,7 +1,7 @@
 // Charity focus areas with lives saved per million dollars
 export const effectivenessCategories = {
-  'ai_risk': { name: 'AI Existential Risk', effectiveness: 2000 },          // 500 lives saved per $1M
-  'pandemics': { name: 'Pandemics', effectiveness: 1000 },                  // 450 lives saved per $1M
+  'ai_risk': { name: 'AI Existential Risk', effectiveness: 20000 },          // 500 lives saved per $1M
+  'pandemics': { name: 'Pandemics', effectiveness: 2000 },                  // 450 lives saved per $1M
   'nuclear': { name: 'Nuclear', effectiveness: 500 },                      // 400 lives saved per $1M
   'global_health': { name: 'Global Health', effectiveness: 200},           // 350 lives saved per $1M
   'global_development': { name: 'Global Development/Poverty', effectiveness: 200 }, // 300 lives saved per $1M
@@ -54,12 +54,13 @@ export const charities = [
   { name: 'Gates Library Foundation', category: 'education' },
   { name: 'Seattle Public Libraries', category: 'education' },
   { name: 'Bill & Melinda Gates Foundation', category: 'global_health' },
+  { name: 'United Negro College Fund', category: 'education' },
 ];
 
 // Donor data with net worth
 export const donors = [
   { name: 'Mackenzie Scott', netWorth: 35000000000 },
-  { name: 'Bill Gates', netWorth: 120000000000 },
+  { name: 'Bill Gates', netWorth: 108000000000 },
   { name: 'Warren Buffett', netWorth: 95000000000 },
   { name: 'Dustin Moskovitz', netWorth: 14000000000 },
   { name: 'Elon Musk', netWorth: 180000000000 },
@@ -102,6 +103,7 @@ export const donations = [
   { date: '1997-07-23', donor: 'Bill Gates', charity: 'Gates Library Foundation', amount: 200000000, source: 'https://www.historylink.org/File/2907' },
   { date: '1998-12-01', donor: 'Bill Gates', charity: 'Seattle Public Libraries', amount: 20000000, source: 'https://www.historylink.org/File/2907#:~:text=gifts%20of%20%24133%20million%20for,program%20approved%20the%20previous%20month' },
   { date: '1999-01-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 15800000000, source: 'https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it', notes: 'Initial endowment' },
+  { date: '1999-01-01', donor: 'Bill Gates', charity: 'United Negro College Fund', amount: 1265000000, source: 'https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/'},
   { date: '2000-01-24', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 5000000000, source: 'https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion' },
   { date: '2003-04-24', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 70000000, source: 'https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw#:~:text=The%20Bill%20%26%20Melinda%20Gates,genome%20research' },
   { date: '2004-11-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 3300000000, source: 'https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife' },

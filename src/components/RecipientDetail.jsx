@@ -117,22 +117,23 @@ function RecipientDetail() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header with back button */}
-      <div className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 py-8 mb-10">
+      <div className="w-full bg-indigo-700 py-8 mb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="text-emerald-100 hover:text-white flex items-center">
+          <div className="flex items-center">
+            <Link to="/" className="text-indigo-100 hover:text-white flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
               </svg>
               Back to Impact List
             </Link>
-            <h1 className="text-3xl font-bold text-white">{recipientInfo.name}</h1>
-            <div></div> {/* Empty div for flex alignment */}
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Recipient name */}
+        <h1 className="text-4xl font-bold text-slate-900 mb-6 text-center">{recipientInfo.name}</h1>
+        
         {/* Recipient stats card */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -140,7 +141,7 @@ function RecipientDetail() {
               <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
               <span className="text-3xl font-bold text-slate-900">{recipientInfo.categoryName}</span>
               <span className="text-sm text-slate-500 mt-2">
-                {recipientInfo.effectivenessRate} lives saved per $1M
+                {formatCurrency(1000000 / recipientInfo.effectivenessRate)} per life saved
               </span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">

@@ -59,6 +59,24 @@ export const charities = [
   { name: 'OpenAI', category: 'ai_risk', costPerLife: -5},
   { name: 'Sierra Club', category: 'environmental'},
   { name: 'Future of Life Institute', category: 'ai_risk'},
+  { name: 'California Covid Response', category: 'disaster_relief'},
+  { name: 'XPrize, Climate Change', category: 'climate_change'},
+  { name: 'Cameron County Schools, TX', category: 'education'},
+  { name: 'City of Brownsville, TX', category: 'local_community'},
+  { name: 'St. Jude Children\'s Hospital', category: 'health_medicine'},
+  { name: 'Khan Academy', category: 'education', multiplier: 10 },
+  { name: 'Arbor Day Foundation', category: 'environmental' },
+  { name: 'Bayou La Batre Hurricane Response Center', category: 'disaster_relief' },
+  { name: 'Soma City, Fukushima (tech)', category: 'science_tech' },
+  { name: 'Tesla Science Center at Wardenclyffe', category: 'arts_culture_heritage' },
+  { name: 'ACLU', category: 'human_rights' },
+  { name: 'Art of Elysium', category: 'arts_culture_heritage' },
+  { name: 'Flint Public Schools (Water Filtration)', category: 'health_medicine' },
+  { name: 'Ad Astra School', category: 'education' },
+  { name: 'Crossroads School', category: 'education' },
+  { name: 'Windward School', category: 'education' },
+  { name: 'University of Texas Population Initiative', category: 'other' },
+  { name: 'Unknown', category: 'other' },
 ];
 
 // Donor data with net worth
@@ -99,6 +117,7 @@ export const donations = [
   
   // Bill Gates donations
   // Gemini says "Through 2023, Bill Gates (and formerly Melinda French Gates) had personally contributed $59.5 billion to the Gates Foundation endowment.. the below is only 50.4 donated total 
+  // We won't count the donations of the Gates Foundation fund as his, since warren also donates to it, and it does mostly the same kind of thing.
   { date: '1991-10-07', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 12000000, source: 'https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/' },
   { date: '1992-01-01', donor: 'Bill Gates', charity: 'Stanford University', amount: 6000000, source: 'https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period' },
   { date: '1995-01-01', donor: 'Bill Gates', charity: 'University of Washington', amount: 10000000, source: 'https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/' },
@@ -121,13 +140,29 @@ export const donations = [
   { date: '2023-11-30', donor: 'Dustin Moskovitz', charity: 'Evidence Action', amount: 120000000, source: 'https://www.openphilanthropy.org/grants/' },
   
   // Elon Musk donations
-  { date: '2015-01-16', donor: 'Elon Musk', charity: 'Future of Life Institute', amount: 10000000, source: 'https://www.theguardian.com/technology/2015/jan/16/elon-musk-donates-10m-to-artificial-intelligence-research#:~:text=Elon%20Musk%20has%20put%20his,keeping%20AI%20beneficial%20to%20humanity'},
-  { date: '2017-01-01', donor: 'Elon Musk', charity: 'OpenAI', amount: 15000000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/'},
-  { date: '2018-01-01', donor: 'Elon Musk', charity: 'Sierra Club', amount: 6000000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/'},  
-  { date: '2023-01-17', donor: 'Elon Musk', charity: 'SENS Research Foundation', amount: 50000000, source: 'https://twitter.com/elonmusk' },
-  { date: '2023-07-18', donor: 'Elon Musk', charity: 'The END Fund', amount: 150000000, source: 'https://www.muskfoundation.org/' },
-  { date: '2023-09-15', donor: 'Elon Musk', charity: 'Anthropic', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Elon_Musk' },
-  
+  // Count donations from Musk Foundation as his, since it's basically a one man show
+  { date: '2010-12-01', donor: 'Elon Musk', charity: 'Bayou La Batre Hurricane Response Center', amount: 250000, source: 'https://cleantechnica.com/2011/12/29/tesla-and-solarcity-install-solar-on-disaster-relief-center-in-alabama/' },
+  { date: '2011-07-01', donor: 'Elon Musk', charity: 'Soma City, Fukushima (tech)', amount: 250000, source: 'https://www.japantimes.co.jp/news/2011/07/27/national/elon-musk-helps-build-solar-power-plant-in-tsunami-hit-area/' },
+  { date: '2014-07-10', donor: 'Elon Musk', charity: 'Tesla Science Center at Wardenclyffe', amount: 1000000, source: 'https://www.engadget.com/2014-07-10-elon-musk-donates-1-million-to-tesla-museum.html' },
+  { date: '2015-01-15', donor: 'Elon Musk', charity: 'Future of Life Institute', amount: 10000000, source: 'https://www.theguardian.com/technology/2015/jan/16/elon-musk-donates-10m-to-artificial-intelligence-research' },
+  { date: '2016-01-01', donor: 'Elon Musk', charity: 'OpenAI', amount: 15000000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/' },
+  { date: '2018-01-01', donor: 'Elon Musk', charity: 'Sierra Club', amount: 6000000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/' },
+  { date: '2018-01-01', donor: 'Elon Musk', charity: 'ACLU', amount: 500000, source: 'https://www.nytimes.com/2022/04/28/style/elon-musk-amber-heard-johnny-depp-trial.html' },
+  { date: '2018-01-01', donor: 'Elon Musk', charity: 'Art of Elysium', amount: 250000, source: 'https://www.latimes.com/entertainment-arts/story/2022-05-17/amber-heard-aclu-elon-musk-art-of-elysium-charity' },
+  { date: '2018-10-01', donor: 'Elon Musk', charity: 'Flint Public Schools (Water Filtration)', amount: 480000, source: 'https://www.theverge.com/2018/10/5/17941938/elon-musk-flint-water-crisis-donation-school-filtration' },
+  { date: '2019-10-29', donor: 'Elon Musk', charity: 'Arbor Day Foundation', amount: 1000000, source: 'https://globalnews.ca/news/6101569/elon-musk-teamtrees-planting/' },
+  { date: '2020-03-24', donor: 'Elon Musk', charity: 'California Covid Response', amount: 30000000, source: 'https://www.reuters.com/article/business/healthcare-pharmaceuticals/tesla-ceo-says-bought-ventilators-in-china-for-us-idUSKBN21B19P', notes: 'Ventilator donation. Amount is an estimate from Claude 3.7' },
+  { date: '2020-06-01', donor: 'Elon Musk', charity: 'Ad Astra School', amount: 60000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/' },
+  { date: '2020-06-01', donor: 'Elon Musk', charity: 'Crossroads School', amount: 25000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/' },
+  { date: '2020-06-01', donor: 'Elon Musk', charity: 'Windward School', amount: 25000, source: 'https://techcrunch.com/2023/05/17/elon-musk-used-to-say-he-put-100m-in-openai-but-now-its-50m-here-are-the-receipts/' },
+  { date: '2021-01-12', donor: 'Elon Musk', charity: 'Khan Academy', amount: 5000000, source: 'https://www.teslarati.com/tesla-elon-musk-donates-5-million-khan-academy/' },
+  { date: '2021-02-08', donor: 'Elon Musk', charity: 'XPrize, Climate Change', amount: 100000000, source: 'https://www.npr.org/2021/02/08/965372754/elon-musk-funds-100-million-xprize-for-pursuit-of-new-carbon-removal-ideas' },
+  { date: '2021-03-30', donor: 'Elon Musk', charity: 'Cameron County Schools, TX', amount: 20000000, source: 'https://www.kristv.com/news/texas-news/elon-musk-announces-30m-donation-to-rgv-county-asks-people-to-move-to-starbase' },
+  { date: '2021-03-30', donor: 'Elon Musk', charity: 'City of Brownsville, TX', amount: 10000000, source: 'https://www.kristv.com/news/texas-news/elon-musk-announces-30m-donation-to-rgv-county-asks-people-to-move-to-starbase' },
+  { date: '2021-09-18', donor: 'Elon Musk', charity: 'St. Jude Children\'s Hospital', amount: 50000000, source: 'https://www.space.com/spacex-inspiration4-elon-musk-st-jude-donation' },
+  { date: '2022-07-01', donor: 'Elon Musk', charity: 'University of Texas Population Initiative', amount: 10000000, source: 'https://www.insidehighered.com/news/2023/03/22/elon-musk-gave-10m-ut-austin-population-research' },
+  { date: '2023-12-01', donor: 'Elon Musk', charity: 'Unknown', amount: 108200000, source: 'https://www.reuters.com/business/musk-donated-108-million-tesla-shares-unnamed-charities-filing-shows-2025-01-02' },
+
   // Jaan Tallinn donations
   { date: '2023-02-17', donor: 'Jaan Tallinn', charity: 'Anthropic', amount: 40000000, source: 'https://jaan.online/' },
   { date: '2023-03-08', donor: 'Jaan Tallinn', charity: 'Nuclear Threat Initiative', amount: 20000000, source: 'https://en.wikipedia.org/wiki/Jaan_Tallinn' },

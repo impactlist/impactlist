@@ -77,7 +77,9 @@ export const charities = [
   { name: 'Crossroads School', category: 'education' },
   { name: 'Windward School', category: 'education' },
   { name: 'University of Texas Population Initiative', category: 'population' },
+  { name: 'MIT', category: 'education'},
   { name: 'Unknown', category: 'other' },
+  { name: 'Starlink in Ukraine', category: 'disaster_relief' },
 ];
 
 // Donor data with net worth
@@ -126,6 +128,7 @@ export const donations = [
   { date: '1996-01-01', donor: 'Bill Gates', charity: 'University of Washington', amount: 12000000, source: 'https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw' },
   { date: '1997-07-23', donor: 'Bill Gates', charity: 'Gates Library Foundation', amount: 200000000, source: 'https://www.historylink.org/File/2907' },
   { date: '1998-12-01', donor: 'Bill Gates', charity: 'Seattle Public Libraries', amount: 20000000, source: 'https://www.historylink.org/File/2907#:~:text=gifts%20of%20%24133%20million%20for,program%20approved%20the%20previous%20month' },
+  { date: '1999-04-14', donor: 'Bill Gates', charity: 'MIT', amount: 20000000, source: 'https://news.mit.edu/1999/gates1-0414#:~:text=April%2014%2C%201999' },
   { date: '1999-01-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 15800000000, source: 'https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it', notes: 'Initial endowment' },
   { date: '1999-01-01', donor: 'Bill Gates', charity: 'United Negro College Fund', amount: 1265000000, source: 'https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/'},
   { date: '2000-01-24', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 5000000000, source: 'https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion' },
@@ -161,6 +164,7 @@ export const donations = [
   { date: '2021-03-30', donor: 'Elon Musk', charity: 'Cameron County Schools, TX', amount: 20000000, source: 'https://www.kristv.com/news/texas-news/elon-musk-announces-30m-donation-to-rgv-county-asks-people-to-move-to-starbase' },
   { date: '2021-03-30', donor: 'Elon Musk', charity: 'City of Brownsville, TX', amount: 10000000, source: 'https://www.kristv.com/news/texas-news/elon-musk-announces-30m-donation-to-rgv-county-asks-people-to-move-to-starbase' },
   { date: '2021-09-18', donor: 'Elon Musk', charity: 'St. Jude Children\'s Hospital', amount: 50000000, source: 'https://www.space.com/spacex-inspiration4-elon-musk-st-jude-donation' },
+  { date: '2022-02-26', donor: 'Elon Musk', charity: 'Starlink in Ukraine', amount: 20000000, source: 'https://en.wikipedia.org/wiki/Starlink_in_the_Russian-Ukrainian_War', notes: 'Musk claims he paid at least 100m' },
   { date: '2022-07-01', donor: 'Elon Musk', charity: 'University of Texas Population Initiative', amount: 10000000, source: 'https://www.insidehighered.com/news/2023/03/22/elon-musk-gave-10m-ut-austin-population-research' },
   { date: '2023-12-01', donor: 'Elon Musk', charity: 'Unknown', amount: 108200000, source: 'https://www.reuters.com/business/musk-donated-108-million-tesla-shares-unnamed-charities-filing-shows-2025-01-02' },
 
@@ -271,8 +275,45 @@ export const getCostPerLifeMultiplier = (charity) => {
   return categoryCostPerLife / charityCostPerLife; // Higher multiplier means better (lower cost)
 };
 
+// Helper function to validate data integrity
+export const validateDataIntegrity = () => {
+  const errors = [];
+  
+  // Check if all charities have valid categories
+  charities.forEach(charity => {
+    if (!effectivenessCategories[charity.category]) {
+      errors.push(`Invalid category "${charity.category}" for charity "${charity.name}"`);
+    }
+  });
+  
+  // Check if all donations reference existing charities
+  donations.forEach(donation => {
+    const charity = charities.find(c => c.name === donation.charity);
+    if (!charity) {
+      errors.push(`Donation references non-existent charity "${donation.charity}" from donor "${donation.donor}"`);
+    }
+  });
+  
+  // Check if all donations reference existing donors
+  donations.forEach(donation => {
+    const donor = donors.find(d => d.name === donation.donor);
+    if (!donor) {
+      errors.push(`Donation references non-existent donor "${donation.donor}" to charity "${donation.charity}"`);
+    }
+  });
+  
+  return errors;
+};
+
 // Helper function to calculate total donations by donor
 export const calculateDonorStats = () => {
+  // First validate data integrity
+  const validationErrors = validateDataIntegrity();
+  if (validationErrors.length > 0) {
+    console.error('Data validation errors:', validationErrors);
+    throw new Error(`Data validation failed: ${validationErrors[0]}`);
+  }
+  
   const donorMap = new Map();
   
   // Initialize with donor data

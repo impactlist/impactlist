@@ -44,9 +44,11 @@ function Recipients() {
   // Format dollar amounts
   const formatCurrency = (amount) => {
     if (amount >= 1000000000) {
-      return `$${(amount / 1000000000).toFixed(1)}B`;
+      const value = amount / 1000000000;
+      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
     } else if (amount >= 1000000) {
-      return `$${(amount / 1000000).toFixed(1)}M`;
+      const value = amount / 1000000;
+      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
     } else {
       return `$${formatNumber(amount)}`;
     }

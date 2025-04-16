@@ -1,28 +1,28 @@
-// Charity focus areas with lives saved per million dollars
+// Charity focus areas with cost to save a life (in dollars)
 export const effectivenessCategories = {
-  'ai_risk': { name: 'AI Existential Risk', effectiveness: 20000 },          // 500 lives saved per $1M
-  'pandemics': { name: 'Pandemics', effectiveness: 2000 },                  // 450 lives saved per $1M
-  'nuclear': { name: 'Nuclear', effectiveness: 500 },                      // 400 lives saved per $1M
-  'global_health': { name: 'Global Health', effectiveness: 200},           // 350 lives saved per $1M
-  'global_development': { name: 'Global Development/Poverty', effectiveness: 200 }, // 300 lives saved per $1M
-  'animal_welfare': { name: 'Animal Welfare', effectiveness: 50 },        // 250 lives saved per $1M
-  'global_priorities': { name: 'Global Priorities Research', effectiveness: 2000 }, // 220 lives saved per $1M
-  'meta_theory': { name: 'Meta and Theory', effectiveness: 2000 },          // 200 lives saved per $1M
-  'decision_making': { name: 'Improving Decision Making', effectiveness: 1000 }, // 180 lives saved per $1M
-  'climate_change': { name: 'Climate Change', effectiveness: 50 },        // 160 lives saved per $1M
-  'health_medicine': { name: 'Health/Medicine', effectiveness: 200 },     // 140 lives saved per $1M  ... this is developed world health
-  'education': { name: 'Education', effectiveness: 100 },                  // 120 lives saved per $1M
-  'political': { name: 'Political Institutions', effectiveness: 100 },     // 100 lives saved per $1M
-  'science_tech': { name: 'Science and Tech', effectiveness: 200 },         // 90 lives saved per $1M
-  'local_community': { name: 'Local Community', effectiveness: 50 },       // 80 lives saved per $1M
-  'arts_culture': { name: 'Arts, Culture, Heritage', effectiveness: 20 },  // 70 lives saved per $1M
-  'religious': { name: 'Religious', effectiveness: 20 },                   // 60 lives saved per $1M
-  'environmental': { name: 'General Environmental', effectiveness: 20 },   // 50 lives saved per $1M
-  'disaster_relief': { name: 'Disaster Relief', effectiveness: 100 },       // 45 lives saved per $1M
-  'human_rights': { name: 'Human Rights and Justice', effectiveness: 50 }, // 40 lives saved per $1M
-  'housing': { name: 'Homelessness and Housing', effectiveness: 50 },      // 35 lives saved per $1M
-  'longevity': { name: 'Longevity', effectiveness: 100 },                  // 30 lives saved per $1M
-  'other': { name: 'Other', effectiveness: 20 }                           // 20 lives saved per $1M
+  'ai_risk': { name: 'AI Existential Risk', costPerLife: 50 },             // $50 per life saved
+  'pandemics': { name: 'Pandemics', costPerLife: 500 },                    // $500 per life saved
+  'nuclear': { name: 'Nuclear', costPerLife: 2000 },                       // $2K per life saved
+  'global_health': { name: 'Global Health', costPerLife: 5000},            // $5K per life saved
+  'global_development': { name: 'Global Development/Poverty', costPerLife: 5000 }, // $5K per life saved
+  'animal_welfare': { name: 'Animal Welfare', costPerLife: 20000 },        // $20K per life saved
+  'global_priorities': { name: 'Global Priorities Research', costPerLife: 500 }, // $500 per life saved
+  'meta_theory': { name: 'Meta and Theory', costPerLife: 500 },            // $500 per life saved
+  'decision_making': { name: 'Improving Decision Making', costPerLife: 1000 }, // $1K per life saved
+  'climate_change': { name: 'Climate Change', costPerLife: 20000 },        // $20K per life saved
+  'health_medicine': { name: 'Health/Medicine', costPerLife: 5000 },       // $5K per life saved (developed world health)
+  'education': { name: 'Education', costPerLife: 10000 },                  // $10K per life saved
+  'political': { name: 'Political Institutions', costPerLife: 10000 },     // $10K per life saved
+  'science_tech': { name: 'Science and Tech', costPerLife: 5000 },         // $5K per life saved
+  'local_community': { name: 'Local Community', costPerLife: 20000 },      // $20K per life saved
+  'arts_culture': { name: 'Arts, Culture, Heritage', costPerLife: 50000 }, // $50K per life saved
+  'religious': { name: 'Religious', costPerLife: 50000 },                  // $50K per life saved
+  'environmental': { name: 'General Environmental', costPerLife: 50000 },  // $50K per life saved
+  'disaster_relief': { name: 'Disaster Relief', costPerLife: 10000 },      // $10K per life saved
+  'human_rights': { name: 'Human Rights and Justice', costPerLife: 20000 }, // $20K per life saved
+  'housing': { name: 'Homelessness and Housing', costPerLife: 20000 },     // $20K per life saved
+  'longevity': { name: 'Longevity', costPerLife: 10000 },                  // $10K per life saved
+  'other': { name: 'Other', costPerLife: 50000 }                          // $50K per life saved
 };
 
 // Charity data with their focus area categories
@@ -37,7 +37,7 @@ export const charities = [
   { name: 'The END Fund', category: 'disaster_relief' },
   { name: 'New Incentives', category: 'global_health' },
   { name: 'Development Media International', category: 'education' },
-  { name: 'Anthropic', category: 'ai_risk', multiplier: 0.5 },
+  { name: 'Anthropic', category: 'ai_risk', multiplier: 2 },
   { name: 'Center for Human-Compatible AI', category: 'ai_risk' },
   { name: 'Coalition for Epidemic Preparedness', category: 'pandemics' },
   { name: 'Nuclear Threat Initiative', category: 'nuclear' },
@@ -56,7 +56,7 @@ export const charities = [
   { name: 'Bill & Melinda Gates Foundation', category: 'global_health' },
   { name: 'United Negro College Fund', category: 'education' },
   { name: 'Dementia Discovery Fund', category: 'health_medicine' },
-  { name: 'OpenAI', category: 'ai_risk', effectiveness: -20000},
+  { name: 'OpenAI', category: 'ai_risk', costPerLife: -5},
 ];
 
 // Donor data with net worth
@@ -202,33 +202,33 @@ export const donations = [
   { date: '2023-04-18', donor: 'Warren Buffett', charity: 'New Incentives', amount: 450000000, source: 'https://www.berkshirehathaway.com/aboutwarren.html' }
 ];
 
-// Helper function to get a charity's effectiveness rate
-export const getCharityEffectiveness = (charity) => {
-  // First check for charity-specific effectiveness
-  if (charity.effectiveness !== undefined) {
-    return charity.effectiveness;
+// Helper function to get a charity's cost per life
+export const getCharityCostPerLife = (charity) => {
+  // First check for charity-specific costPerLife
+  if (charity.costPerLife !== undefined) {
+    return charity.costPerLife;
   }
   
-  // Then check for multiplier to scale category effectiveness
-  const categoryEffectiveness = effectivenessCategories[charity.category].effectiveness;
+  // Then check for multiplier to scale category costPerLife
+  const categoryCostPerLife = effectivenessCategories[charity.category].costPerLife;
   if (charity.multiplier !== undefined) {
-    return categoryEffectiveness * charity.multiplier;
+    return categoryCostPerLife / charity.multiplier; // Lower multiplier means higher cost
   }
   
-  // Otherwise use plain category effectiveness
-  return categoryEffectiveness;
+  // Otherwise use plain category costPerLife
+  return categoryCostPerLife;
 };
 
-// Get category base effectiveness
-export const getCategoryEffectiveness = (charity) => {
-  return effectivenessCategories[charity.category].effectiveness;
+// Get category base costPerLife
+export const getCategoryCostPerLife = (charity) => {
+  return effectivenessCategories[charity.category].costPerLife;
 };
 
-// Get effectiveness multiplier compared to category (how many times more/less effective)
-export const getEffectivenessMultiplier = (charity) => {
-  const charityEffectiveness = getCharityEffectiveness(charity);
-  const categoryEffectiveness = getCategoryEffectiveness(charity);
-  return charityEffectiveness / categoryEffectiveness;
+// Get costPerLife multiplier compared to category (how many times more/less effective)
+export const getCostPerLifeMultiplier = (charity) => {
+  const charityCostPerLife = getCharityCostPerLife(charity);
+  const categoryCostPerLife = getCategoryCostPerLife(charity);
+  return categoryCostPerLife / charityCostPerLife; // Higher multiplier means better (lower cost)
 };
 
 // Helper function to calculate total donations by donor
@@ -249,10 +249,13 @@ export const calculateDonorStats = () => {
   // Calculate total donations and lives saved
   donations.forEach(donation => {
     const charity = charities.find(c => c.name === donation.charity);
-    const effectivenessRate = getCharityEffectiveness(charity);
+    const costPerLife = getCharityCostPerLife(charity);
     const donorData = donorMap.get(donation.donor);
     
-    const livesSaved = (donation.amount / 1000000) * effectivenessRate;
+    // Negative cost means lives lost per dollar
+    const livesSaved = costPerLife < 0 ? 
+      (donation.amount / (costPerLife * -1)) * -1 : // Lives lost case
+      donation.amount / costPerLife; // Normal case
     
     donorMap.set(donation.donor, {
       ...donorData,
@@ -265,7 +268,8 @@ export const calculateDonorStats = () => {
   donorMap.forEach((data, name) => {
     donorMap.set(name, {
       ...data,
-      costPerLifeSaved: data.livesSaved > 0 ? data.totalDonated / data.livesSaved : 0
+      costPerLifeSaved: data.livesSaved > 0 ? data.totalDonated / data.livesSaved : 
+                       (data.livesSaved < 0 ? data.totalDonated / Math.abs(data.livesSaved) * -1 : 0)
     });
   });
   

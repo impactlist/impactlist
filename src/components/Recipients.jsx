@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { charities, donations, effectivenessCategories, getCharityEffectiveness } from '../data/donationData';
+import { charities, donations, effectivenessCategories, getCharityCostPerLife } from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function Recipients() {
@@ -12,9 +12,14 @@ function Recipients() {
       const charityDonations = donations.filter(d => d.charity === charity.name);
       const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
       const categoryData = effectivenessCategories[charity.category];
-      const effectivenessRate = getCharityEffectiveness(charity);
+      const costPerLife = getCharityCostPerLife(charity);
       const totalLivesSaved = charityDonations.reduce(
-        (sum, d) => sum + (d.amount / 1000000) * effectivenessRate, 
+        (sum, d) => {
+          const livesSaved = costPerLife < 0 ? 
+            (d.amount / (costPerLife * -1)) * -1 : // Lives lost case
+            d.amount / costPerLife; // Normal case
+          return sum + livesSaved;
+        }, 
         0
       );
       
@@ -23,7 +28,7 @@ function Recipients() {
         category: charity.category,
         categoryName: categoryData.name,
         totalReceived,
-        effectivenessRate,
+        costPerLife,
         totalLivesSaved
       };
     }).sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
@@ -79,10 +84,9 @@ function Recipients() {
       key: 'costPerLife', 
       label: 'Cost/Life',
       render: (charity) => {
-        const costPerLife = 1000000 / charity.effectivenessRate;
         return (
           <div className="text-sm text-slate-900">
-            {formatCurrency(Math.round(costPerLife))}
+            {charity.costPerLife === 0 ? '∞' : formatCurrency(Math.round(charity.costPerLife))}
           </div>
         );
       }
@@ -127,8 +131,7 @@ function Recipients() {
               columns={charityColumns} 
               data={charityStats.map((charity, index) => ({
                 ...charity,
-                rank: index + 1,
-                costPerLife: Math.round(1000000 / charity.effectivenessRate)
+                rank: index + 1
               }))} 
               defaultSortColumn="totalLivesSaved" 
               defaultSortDirection="desc"

@@ -4,9 +4,9 @@ import {
   donations, 
   charities, 
   effectivenessCategories, 
-  getCharityEffectiveness, 
-  getCategoryEffectiveness,
-  getEffectivenessMultiplier 
+  getCharityCostPerLife, 
+  getCategoryCostPerLife,
+  getCostPerLifeMultiplier 
 } from '../data/donationData';
 import SortableTable from './SortableTable';
 
@@ -21,13 +21,15 @@ function RecipientDetail() {
     
     if (charity) {
       const categoryData = effectivenessCategories[charity.category];
-      const effectivenessRate = getCharityEffectiveness(charity);
+      const costPerLife = getCharityCostPerLife(charity);
       
       // Filter donations for this charity
       const charityDonations = donations
         .filter(donation => donation.charity === recipientName)
         .map(donation => {
-          const livesSaved = (donation.amount / 1000000) * effectivenessRate;
+          const livesSaved = costPerLife < 0 ? 
+            (donation.amount / (costPerLife * -1)) * -1 : // Lives lost case
+            donation.amount / costPerLife; // Normal case
           
           return {
             ...donation,
@@ -41,17 +43,17 @@ function RecipientDetail() {
       const totalReceived = charityDonations.reduce((sum, donation) => sum + donation.amount, 0);
       const totalLivesSaved = charityDonations.reduce((sum, donation) => sum + donation.livesSaved, 0);
       
-      // Get effectiveness multiplier compared to category average
-      const categoryEffectiveness = getCategoryEffectiveness(charity);
-      const effectivenessMultiplier = getEffectivenessMultiplier(charity);
+      // Get costPerLife multiplier compared to category average
+      const categoryCostPerLife = getCategoryCostPerLife(charity);
+      const costPerLifeMultiplier = getCostPerLifeMultiplier(charity);
       
       setRecipientInfo({
         name: recipientName,
         category: charity.category,
         categoryName: categoryData.name,
-        effectivenessRate,
-        categoryEffectiveness,
-        effectivenessMultiplier,
+        costPerLife,
+        categoryCostPerLife,
+        costPerLifeMultiplier,
         totalReceived,
         totalLivesSaved
       });
@@ -163,10 +165,10 @@ function RecipientDetail() {
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
               <span className="text-3xl font-bold text-slate-900">
-                {recipientInfo.effectivenessRate === 0 ? <span className="text-6xl">∞</span> : `$${formatNumber(Math.round(1000000 / recipientInfo.effectivenessRate))}`}
+                {recipientInfo.costPerLife === 0 ? <span className="text-6xl">∞</span> : `$${formatNumber(Math.round(recipientInfo.costPerLife))}`}
               </span>
               <span className="text-sm mt-2 text-slate-500">
-                Category avg: {recipientInfo.categoryEffectiveness === 0 ? <span className="text-xl">∞</span> : `$${formatNumber(Math.round(1000000 / recipientInfo.categoryEffectiveness))}`}
+                Category avg: {recipientInfo.categoryCostPerLife === 0 ? <span className="text-xl">∞</span> : `$${formatNumber(Math.round(recipientInfo.categoryCostPerLife))}`}
               </span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">

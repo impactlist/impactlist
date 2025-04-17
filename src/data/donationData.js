@@ -56,10 +56,14 @@ export const charities = [
   { name: 'Gates Library Foundation', categories: { education: { fraction: 1.0 } } },
   { name: 'Seattle Public Libraries', categories: { education: { fraction: 1.0 } } },
   { name: 'Bill & Melinda Gates Foundation', categories: { 
-    global_health: { fraction: 0.75 },
-    education: { fraction: 0.15 },
-    global_development: { fraction: 0.10 } } 
-  },
+      global_health: { fraction: 0.4 },
+      global_development: { fraction: 0.30 }, 
+      climate_change: { fraction: 0.07 },
+      education: { fraction: 0.08 },
+      pandemics: { fraction: 0.07 },
+      science_tech: { fraction: 0.05 },
+      human_rights: { fraction: 0.03 },
+      } },
   { name: 'United Negro College Fund', categories: { education: { fraction: 1.0 } } },
   { name: 'Dementia Discovery Fund', categories: { health_medicine: { fraction: 1.0 } } },
   { name: 'OpenAI', categories: { ai_risk: { fraction: 1.0, costPerLife: -5 } } },
@@ -91,7 +95,9 @@ export const charities = [
   { name: 'Reporters Committee for Freedom of the Press', categories: { human_rights: { fraction: 1.0 } } },
   { name: 'TheDream.US', categories: { education: { fraction: 1.0 } } },
   { name: 'With Honor Fund', categories: { political: { fraction: 1.0 } } },
-  { name: 'Bezos Day One Fund', categories: { housing: { fraction: 1.0, multiplier: 200 } } },
+  { name: 'Bezos Day One Fund', categories: { 
+      housing: { fraction: 0.5 }, 
+      education: {fraction: 0.5} } },
   { name: 'Bezos Earth Fund', categories: { climate_change: { fraction: 1.0 } } },
   { name: 'Feeding America (COVID-19 Response Fund)', categories: { disaster_relief: { fraction: 1.0 } } },
   { name: 'All In Washington (COVID-19 relief effort)', categories: { disaster_relief: { fraction: 1.0 } } },
@@ -220,7 +226,9 @@ export const donations = [
   { date: '2017-05-23', donor: 'Jeff Bezos', charity: 'Reporters Committee for Freedom of the Press', amount: 1000000, source: 'https://www.rcfp.org/awards2017/' },
   { date: '2018-01-12', donor: 'Jeff Bezos', charity: 'TheDream.US', amount: 33000000, source: 'https://www.reuters.com/article/world/us/jeff-bezos-contributes-33-million-to-dreamers-scholarship-program-idUSKBN1F124Z/' },
   { date: '2018-09-05', donor: 'Jeff Bezos', charity: 'With Honor Fund', amount: 10000000, source: 'https://www.geekwire.com/2018/amazon-ceo-jeff-bezos-donates-10m-honors-effort-elect-veterans-congress/' },
+  // Also only a pledge.. only half disbursed??
   { date: '2018-09-13', donor: 'Jeff Bezos', charity: 'Bezos Day One Fund', amount: 2000000000, source: 'https://www.geekwire.com/2018/jeff-bezos-unveils-2b-day-one-fund-focusing-homeless-families-preschool-education/' },
+  // This is only a pledge.. OpenAI o3 says only 2.3 billion has been disbursed
   { date: '2020-02-17', donor: 'Jeff Bezos', charity: 'Bezos Earth Fund', amount: 10000000000, source: 'https://www.reuters.com/article/world/amazons-bezos-pledges-10-billion-to-climate-change-fight-idUSKBN20B1XJ/' },
   { date: '2020-04-02', donor: 'Jeff Bezos', charity: 'Feeding America (COVID-19 Response Fund)', amount: 100000000, source: 'https://www.feedingamerica.org/about-us/press-room/jeff-bezos-support-food-banks' },
   { date: '2020-06-24', donor: 'Jeff Bezos', charity: 'All In Washington (COVID-19 relief effort)', amount: 25000000, source: 'https://www.geekwire.com/2020/jeff-bezos-pledges-25m-wa-help-group-provide-covid-19-relief-across-state/' },

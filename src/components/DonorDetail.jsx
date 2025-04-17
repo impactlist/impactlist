@@ -21,12 +21,17 @@ function DonorDetail() {
         const charity = charities.find(c => c.name === donation.charity);
         const categoryData = effectivenessCategories[charity.category];
         const costPerLife = getCharityCostPerLife(charity);
+        
+        // Apply credit multiplier if it exists
+        const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+        
         const livesSaved = costPerLife < 0 ? 
-          (donation.amount / (costPerLife * -1)) * -1 : // Lives lost case
-          donation.amount / costPerLife; // Normal case
+          (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
+          creditedAmount / costPerLife; // Normal case
         
         return {
           ...donation,
+          creditedAmount,
           category: charity.category,
           categoryName: categoryData.name,
           livesSaved,
@@ -123,7 +128,7 @@ function DonorDetail() {
           rel="noopener noreferrer" 
           className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
         >
-          {formatCurrency(donation.amount)}
+          {formatCurrency(donation.creditedAmount || donation.amount)}
         </a>
       )
     },
@@ -133,12 +138,19 @@ function DonorDetail() {
       render: (donation) => (
         donation.isUnknown ? 
         <span className="text-sm text-slate-500">Unknown</span> :
-        <Link 
-          to={`/recipient/${encodeURIComponent(donation.charity)}`}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
-          {donation.charity}
-        </Link>
+        <div>
+          <Link 
+            to={`/recipient/${encodeURIComponent(donation.charity)}`}
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            {donation.charity}
+          </Link>
+          {donation.credit !== undefined && (
+            <div className="text-xs text-gray-500 mt-1">
+              via intermediary, {Math.round(donation.credit * 100)}% credit
+            </div>
+          )}
+        </div>
       )
     },
     { 

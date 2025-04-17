@@ -15,9 +15,12 @@ function Recipients() {
       const costPerLife = getCharityCostPerLife(charity);
       const totalLivesSaved = charityDonations.reduce(
         (sum, d) => {
+          // Apply credit multiplier if it exists
+          const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
+          
           const livesSaved = costPerLife < 0 ? 
-            (d.amount / (costPerLife * -1)) * -1 : // Lives lost case
-            d.amount / costPerLife; // Normal case
+            (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
+            creditedAmount / costPerLife; // Normal case
           return sum + livesSaved;
         }, 
         0

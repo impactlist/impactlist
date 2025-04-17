@@ -27,12 +27,16 @@ function RecipientDetail() {
       const charityDonations = donations
         .filter(donation => donation.charity === recipientName)
         .map(donation => {
+          // Apply credit multiplier if it exists
+          const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+          
           const livesSaved = costPerLife < 0 ? 
-            (donation.amount / (costPerLife * -1)) * -1 : // Lives lost case
-            donation.amount / costPerLife; // Normal case
+            (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
+            creditedAmount / costPerLife; // Normal case
           
           return {
             ...donation,
+            creditedAmount,
             livesSaved,
             dateObj: new Date(donation.date)
           };
@@ -106,7 +110,7 @@ function RecipientDetail() {
           rel="noopener noreferrer" 
           className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
         >
-          {formatCurrency(donation.amount)}
+          {formatCurrency(donation.creditedAmount || donation.amount)}
         </a>
       )
     },
@@ -114,12 +118,19 @@ function RecipientDetail() {
       key: 'donor', 
       label: 'Donor',
       render: (donation) => (
-        <Link 
-          to={`/donor/${encodeURIComponent(donation.donor)}`}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
-          {donation.donor}
-        </Link>
+        <div>
+          <Link 
+            to={`/donor/${encodeURIComponent(donation.donor)}`}
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            {donation.donor}
+          </Link>
+          {donation.credit !== undefined && (
+            <div className="text-xs text-gray-500 mt-1">
+              via intermediary, {Math.round(donation.credit * 100)}% credit
+            </div>
+          )}
+        </div>
       )
     },
     { 

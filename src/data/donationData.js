@@ -105,6 +105,7 @@ export const charities = [
   { name: 'Friends of the Israel Defense Forces', category: 'national_defense' },
   { name: 'University of Southern California (Medicine)', category: 'health_medicine' },
   { name: 'University of Oxford (Science)', category: 'science_tech' },
+  { name: 'GAVI Alliance (The Vaccine Fund)', category: 'global_health' },
 ];
 
 // Donor data with net worth
@@ -157,6 +158,7 @@ export const donations = [
   { date: '1999-04-14', donor: 'Bill Gates', charity: 'MIT', amount: 20000000, source: 'https://news.mit.edu/1999/gates1-0414#:~:text=April%2014%2C%201999' },
   { date: '1999-01-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 15800000000, source: 'https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it', notes: 'Initial endowment' },
   { date: '1999-01-01', donor: 'Bill Gates', charity: 'United Negro College Fund', amount: 1265000000, source: 'https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/'},
+  { date: '1999-11-01', donor: 'Bill Gates', charity: 'GAVI Alliance (The Vaccine Fund)', amount: 750000000, credit: 0.5, source: 'https://www.gatesfoundation.org/ideas/media-center/press-releases/2001/06/global-alliance-for-vaccines-and-immunization' },
   { date: '2000-01-24', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 5000000000, source: 'https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion' },
   { date: '2003-04-24', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 70000000, source: 'https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw#:~:text=The%20Bill%20%26%20Melinda%20Gates,genome%20research' },
   { date: '2004-11-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 3300000000, source: 'https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife' },
@@ -333,7 +335,7 @@ export const validateDataIntegrity = () => {
   });
   
   // Check if all donations reference existing charities
-  donations.forEach(donation => {
+  donations.forEach((donation, index) => {
     const charity = charities.find(c => c.name === donation.charity);
     if (!charity) {
       errors.push(`Donation references non-existent charity "${donation.charity}" from donor "${donation.donor}"`);
@@ -381,14 +383,17 @@ export const calculateDonorStats = () => {
     const costPerLife = getCharityCostPerLife(charity);
     const donorData = donorMap.get(donation.donor);
     
+    // Apply credit multiplier if it exists
+    const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+    
     // Negative cost means lives lost per dollar
     const livesSaved = costPerLife < 0 ? 
-      (donation.amount / (costPerLife * -1)) * -1 : // Lives lost case
-      donation.amount / costPerLife; // Normal case
+      (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
+      creditedAmount / costPerLife; // Normal case
     
     donorMap.set(donation.donor, {
       ...donorData,
-      totalDonated: donorData.totalDonated + donation.amount,
+      totalDonated: donorData.totalDonated + creditedAmount,
       livesSaved: donorData.livesSaved + livesSaved
     });
   });

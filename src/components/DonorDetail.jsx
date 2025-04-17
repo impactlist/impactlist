@@ -132,8 +132,23 @@ function DonorDetail(props) {
       Object.entries(charity.categories).forEach(([categoryId, categoryData]) => {
         const fraction = categoryData.fraction;
         const categoryName = effectivenessCategories[categoryId].name;
-        const costPerLife = categoryData.costPerLife !== undefined ? 
-          categoryData.costPerLife : effectivenessCategories[categoryId].costPerLife;
+        
+        // Get the costPerLife with multiplier properly applied
+        let costPerLife;
+        if (categoryData.costPerLife !== undefined) {
+          // Use the explicit costPerLife if provided
+          costPerLife = categoryData.costPerLife;
+        } else {
+          // Get base cost from effectivenessCategories
+          const baseCostPerLife = effectivenessCategories[categoryId].costPerLife;
+          
+          // Apply multiplier if it exists
+          if (categoryData.multiplier !== undefined) {
+            costPerLife = baseCostPerLife / categoryData.multiplier; // Lower cost with higher multiplier
+          } else {
+            costPerLife = baseCostPerLife;
+          }
+        }
         
         // Calculate category-specific amount and lives saved
         const categoryAmount = donation.amount * fraction;
@@ -164,7 +179,10 @@ function DonorDetail(props) {
             name: categoryName,
             value: 0,
             category: categoryId,
-            costPerLife: costPerLife
+            costPerLife: costPerLife,
+            // Store multiplier info for the tooltip
+            hasMultiplier: categoryData.multiplier !== undefined,
+            multiplier: categoryData.multiplier
           };
         }
         
@@ -198,7 +216,9 @@ function DonorDetail(props) {
         donationPercentage: (donationEntry.value / chartDonationsTotal * 100).toFixed(1),
         livesSavedPercentage: chartLivesSavedTotal !== 0 ? 
           (Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal) * 100).toFixed(1) : 0,
-        costPerLife: category ? effectivenessCategories[category]?.costPerLife || 0 : 0
+        costPerLife: livesSavedEntry.costPerLife || (category ? effectivenessCategories[category]?.costPerLife || 0 : 0),
+        hasMultiplier: livesSavedEntry.hasMultiplier,
+        multiplier: livesSavedEntry.multiplier
       };
     });
     
@@ -259,7 +279,9 @@ function DonorDetail(props) {
       category: item.category,
       donationPercentage: item.donationPercentage,
       livesSavedPercentage: item.livesSavedPercentage,
-      costPerLife: item.costPerLife
+      costPerLife: item.costPerLife,
+      hasMultiplier: item.hasMultiplier,
+      multiplier: item.multiplier
     }));
     
     setChartData(initialChartData);

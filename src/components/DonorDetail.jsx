@@ -6,7 +6,7 @@ import SortableTable from './SortableTable';
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 // Animation speed constant (in milliseconds)
-const ANIMATION_DURATION = 400;
+const ANIMATION_DURATION = 600;
 
 function DonorDetail(props) {
   const { donorName } = useParams();
@@ -200,15 +200,23 @@ function DonorDetail(props) {
     setRawChartData(unifiedData);
   }, [donorName]);
 
-  // Transform data when view changes to ensure animation
+  // Prepare the initial sorted data once
   useEffect(() => {
     if (rawChartData.length === 0) return;
     
-    // Create a new array for the current view to trigger animations
-    const newChartData = rawChartData.map(item => ({
+    // Sort the raw data by donation amount (largest first) for consistent positioning
+    const sortedData = [...rawChartData].sort((a, b) => {
+      // Always put "Other Categories" at the bottom
+      if (a.name === 'Other Categories') return 1;
+      if (b.name === 'Other Categories') return -1;
+      return b.donationValue - a.donationValue;
+    });
+    
+    // Initialize with lives saved values to match the default view
+    const initialChartData = sortedData.map(item => ({
       name: item.name,
-      value: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
-      // Keep all the original properties for tooltip access
+      value: item.livesSavedValue, // Start with lives saved values to match default view
+      valueTarget: item.livesSavedValue, // Target is initially the same
       donationValue: item.donationValue,
       livesSavedValue: item.livesSavedValue,
       category: item.category,
@@ -217,8 +225,21 @@ function DonorDetail(props) {
       costPerLife: item.costPerLife
     }));
     
+    setChartData(initialChartData);
+  }, [rawChartData]);
+  
+  // When the view changes, update the target values
+  useEffect(() => {
+    if (chartData.length === 0) return;
+    
+    // Create a new array with the target values based on the current view
+    const newChartData = chartData.map(item => ({
+      ...item,
+      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+    }));
+    
     setChartData(newChartData);
-  }, [chartView, rawChartData]);
+  }, [chartView]);
   
   // Separate effect to handle animation timing
   useEffect(() => {
@@ -239,7 +260,9 @@ function DonorDetail(props) {
   };
 
   const formatCurrency = (amount, effectivenessRate = null) => {
-    if (!amount || effectivenessRate === 0) {
+    if (amount === 0) {
+      return '$0';
+    } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
       return '∞';
     } else if (amount >= 1000000000) {
       const value = amount / 1000000000;
@@ -262,7 +285,7 @@ function DonorDetail(props) {
       if (!data || !data.payload) return null;
       
       const entry = data.payload;
-      const value = entry.value; // Current displayed value
+      const value = entry.valueTarget; // Current displayed value
       const percentage = chartView === 'donations' ? entry.donationPercentage : entry.livesSavedPercentage;
       
       return (
@@ -538,21 +561,41 @@ function DonorDetail(props) {
                     data={chartData}
                     layout="vertical"
                     margin={{ top: 20, right: 180, left: 90, bottom: 5 }}
-                    animationDuration={shouldAnimate ? ANIMATION_DURATION : 0}
-                    animationEasing="ease-in-out"
+                    animationDuration={ANIMATION_DURATION}
+                    animationEasing="ease-out"
                     barGap={0}
                     barCategoryGap={8}
                   >
                     <XAxis 
                       type="number" 
-                      tickFormatter={(value) => 
-                        chartView === 'donations' ? formatCurrency(value) : formatNumber(Math.round(value))
-                      } 
+                      tickFormatter={(value) => {
+                        if (value === 0) return "0";
+                        
+                        if (chartView === 'donations') {
+                          return formatCurrency(value);
+                        } else {
+                          // Handle both positive and negative large numbers
+                          const absValue = Math.abs(value);
+                          let formattedValue;
+                          
+                          if (absValue >= 1000000) {
+                            formattedValue = `${(absValue / 1000000).toFixed(1)}M`;
+                          } else if (absValue >= 1000) {
+                            formattedValue = `${(absValue / 1000).toFixed(1)}K`;
+                          } else {
+                            formattedValue = formatNumber(Math.round(absValue));
+                          }
+                          
+                          // Add negative sign back if needed
+                          return value < 0 ? `-${formattedValue}` : formattedValue;
+                        }
+                      }}
                       axisLine={true}
                       tickLine={true}
-                      domain={chartView === 'livesSaved' ? ['dataMin', 'dataMax'] : [0, 'auto']}
-                      animationDuration={shouldAnimate ? ANIMATION_DURATION : 0}
-                      animationEasing="ease-in-out"
+                      domain={chartView === 'livesSaved' && chartData.some(item => item.value < 0) ? 
+                        ['dataMin', 'dataMax'] : [0, 'auto']}
+                      animationDuration={ANIMATION_DURATION}
+                      animationEasing="ease-out"
                       allowDataOverflow={true}
                     />
                     <YAxis 
@@ -567,12 +610,12 @@ function DonorDetail(props) {
                       chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'
                     } />
                     <Bar 
-                      dataKey="value" 
+                      dataKey="valueTarget" 
                       name={chartView === 'donations' ? 'Donation Amount' : 'Lives Saved'}
                       radius={[0, 4, 4, 0]}
-                      animationDuration={shouldAnimate ? ANIMATION_DURATION : 0}
-                      animationEasing="ease-in-out"
-                      isAnimationActive={shouldAnimate}
+                      animationDuration={ANIMATION_DURATION}
+                      animationEasing="ease-out"
+                      isAnimationActive={true}
                       animationBegin={0}
                       background={{ fill: 'transparent' }}
                       label={{ 
@@ -585,8 +628,8 @@ function DonorDetail(props) {
                             : entry.livesSavedPercentage;
                           
                           return chartView === 'donations'
-                            ? `${formatCurrency(value)} (${percentage}%)`
-                            : `${formatNumber(Math.round(value))} (${percentage}%)`;
+                            ? `${formatCurrency(entry.donationValue)} (${percentage}%)`
+                            : `${formatNumber(Math.round(entry.livesSavedValue))} (${percentage}%)`;
                         },
                         fontSize: 11,
                         fill: '#64748b',
@@ -601,7 +644,7 @@ function DonorDetail(props) {
                         
                         return (
                           <Cell 
-                            key={`cell-${index}`} 
+                            key={`cell-${entry.name}`} 
                             fill={baseColor}
                             // Create a custom style for hover states - slightly lighter version of the same color
                             style={{

@@ -762,10 +762,11 @@ function DonorDetail(props) {
                       }}
                       axisLine={true}
                       tick={{ 
-                        fill: transitionStage !== 'none' ? 'transparent' : '#1e293b', // Darker text (slate-800)
+                        fill: transitionStage !== 'none' ? 'transparent' : '#1e293b', // Hide text during transition
                         fontSize: 14, // Increased font size
                       }}
-                      tickLine={true}
+                      // Hide tick lines during transition
+                      tickLine={transitionStage === 'none'}
                       // Dynamically set domain based on current data values
                       domain={(() => {
                         // If we're in lives saved view or transitioning to it, and there are negative values
@@ -782,8 +783,8 @@ function DonorDetail(props) {
                                   Math.max(...chartData.map(d => d.valueTarget))];
                         }
                       })()}
-                      // Make axis line transparent during transition, dark during normal state
-                      stroke={transitionStage !== 'none' ? 'transparent' : '#1e293b'} // Darker line (slate-800)
+                      // Keep axis line visible at all times
+                      stroke="#1e293b" // Darker line (slate-800)
                       animationDuration={ANIMATION_DURATION}
                       animationEasing="ease-out"
                       allowDataOverflow={true}

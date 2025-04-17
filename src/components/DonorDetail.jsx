@@ -4,11 +4,17 @@ import { calculateDonorStats, donations, charities, effectivenessCategories, get
 import SortableTable from './SortableTable';
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
+// Animation speed constant (in milliseconds)
+const ANIMATION_DURATION = 400;
+
 function DonorDetail() {
   const { donorName } = useParams();
   const [donorStats, setDonorStats] = useState(null);
   const [donorDonations, setDonorDonations] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
+  const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
+  const [chartData, setChartData] = useState([]); // This will change format based on view
+  const [chartView, setChartView] = useState('donations'); // 'donations' or 'livesSaved'
+  const [shouldAnimate, setShouldAnimate] = useState(false); // Only animate when user toggles view
   
   // Colors for the chart segments - extended palette with more variety
   const COLORS = [
@@ -94,16 +100,20 @@ function DonorDetail() {
     
     setDonorDonations(donorDonationsList);
     
-    // Prepare category data for the pie chart
-    // Group donations by category and sum amounts
+    // Prepare category data for both donation amounts and lives saved
+    // Group donations by category
     const categoryAmounts = {};
+    const categoryLivesSaved = {};
     let chartDonationsTotal = 0;
+    let chartLivesSavedTotal = 0;
     
     donorDonationsList.forEach(donation => {
       // Skip unknown donations for the chart
       if (donation.isUnknown) return;
       
       const category = donation.categoryName;
+      
+      // Initialize category objects if they don't exist
       if (!categoryAmounts[category]) {
         categoryAmounts[category] = {
           name: category,
@@ -111,40 +121,116 @@ function DonorDetail() {
           category: donation.category
         };
       }
+      
+      if (!categoryLivesSaved[category]) {
+        categoryLivesSaved[category] = {
+          name: category,
+          value: 0,
+          category: donation.category,
+          costPerLife: effectivenessCategories[donation.category]?.costPerLife || 0
+        };
+      }
+      
+      // Sum donation amounts
       categoryAmounts[category].value += donation.amount;
       chartDonationsTotal += donation.amount;
+      
+      // Sum lives saved
+      categoryLivesSaved[category].value += donation.livesSaved;
+      chartLivesSavedTotal += donation.livesSaved;
     });
     
-    // Transform object into array for Recharts and add percentage of known total
-    const categoryChartData = Object.values(categoryAmounts).map(category => ({
-      ...category,
-      percentage: (category.value / chartDonationsTotal * 100).toFixed(1)
-    }));
+    // Get the complete set of category names from both datasets
+    const allCategoryNames = new Set([
+      ...Object.keys(categoryAmounts),
+      ...Object.keys(categoryLivesSaved)
+    ]);
     
-    // Sort by donation amount (largest first)
-    categoryChartData.sort((a, b) => b.value - a.value);
+    // Create a unified dataset with both values
+    let unifiedData = Array.from(allCategoryNames).map(name => {
+      const donationEntry = categoryAmounts[name] || { name, value: 0, category: categoryLivesSaved[name]?.category };
+      const livesSavedEntry = categoryLivesSaved[name] || { name, value: 0, category: categoryAmounts[name]?.category };
+      const category = donationEntry.category || livesSavedEntry.category;
+      
+      return {
+        name,
+        donationValue: donationEntry.value,
+        livesSavedValue: livesSavedEntry.value,
+        category,
+        donationPercentage: (donationEntry.value / chartDonationsTotal * 100).toFixed(1),
+        livesSavedPercentage: chartLivesSavedTotal !== 0 ? 
+          (Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal) * 100).toFixed(1) : 0,
+        costPerLife: category ? effectivenessCategories[category]?.costPerLife || 0 : 0
+      };
+    });
     
-    // Limit to top categories and combine small ones into "Other" if there are many
-    if (categoryChartData.length > 12) {
-      const topCategories = categoryChartData.slice(0, 11);
-      const otherCategories = categoryChartData.slice(11);
+    // Always sort by donation amount (largest first)
+    unifiedData.sort((a, b) => b.donationValue - a.donationValue);
+    
+    // Limit to top categories if needed
+    if (unifiedData.length > 12) {
+      // Get top 11 categories
+      const topCategories = unifiedData.slice(0, 11);
+      const otherCategories = unifiedData.slice(11);
       
-      const otherTotal = otherCategories.reduce((total, item) => total + item.value, 0);
-      const otherPercentage = (otherTotal / chartDonationsTotal * 100).toFixed(1);
+      // Calculate totals for "Other" category
+      const otherDonationTotal = otherCategories.reduce((total, item) => total + item.donationValue, 0);
+      const otherLivesSavedTotal = otherCategories.reduce((total, item) => total + item.livesSavedValue, 0);
       
-      if (otherTotal > 0) {
+      const otherDonationPercentage = (otherDonationTotal / chartDonationsTotal * 100).toFixed(1);
+      const otherLivesSavedPercentage = chartLivesSavedTotal !== 0 ? 
+        (Math.abs(otherLivesSavedTotal) / Math.abs(chartLivesSavedTotal) * 100).toFixed(1) : 0;
+      
+      // Add "Other" category
+      if (otherDonationTotal > 0 || otherLivesSavedTotal !== 0) {
         topCategories.push({
           name: 'Other Categories',
-          value: otherTotal,
-          percentage: otherPercentage
+          donationValue: otherDonationTotal,
+          livesSavedValue: otherLivesSavedTotal,
+          donationPercentage: otherDonationPercentage,
+          livesSavedPercentage: otherLivesSavedPercentage
         });
       }
       
-      setCategoryData(topCategories);
-    } else {
-      setCategoryData(categoryChartData);
+      unifiedData = topCategories;
     }
+    
+    // Store the raw data with both values
+    setRawChartData(unifiedData);
   }, [donorName]);
+
+  // Transform data when view changes to ensure animation
+  useEffect(() => {
+    if (rawChartData.length === 0) return;
+    
+    // Create a new array for the current view to trigger animations
+    const newChartData = rawChartData.map(item => ({
+      name: item.name,
+      value: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+      // Keep all the original properties for tooltip access
+      donationValue: item.donationValue,
+      livesSavedValue: item.livesSavedValue,
+      category: item.category,
+      donationPercentage: item.donationPercentage,
+      livesSavedPercentage: item.livesSavedPercentage,
+      costPerLife: item.costPerLife
+    }));
+    
+    setChartData(newChartData);
+  }, [chartView, rawChartData]);
+  
+  // Separate effect to handle animation timing
+  useEffect(() => {
+    // When data is updated, delay turning off animation
+    // to ensure it completes
+    if (shouldAnimate) {
+      const timer = setTimeout(() => {
+        setShouldAnimate(false);
+      }, ANIMATION_DURATION + 50); // Add a small buffer
+      
+      return () => clearTimeout(timer);
+    }
+  }, [chartData, shouldAnimate]);
 
   // Format functions
   const formatNumber = (num) => {
@@ -168,25 +254,55 @@ function DonorDetail() {
     }
   };
   
-  // Custom pie chart tooltip
+  // Custom chart tooltip
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length && donorStats) {
       const data = payload[0];
       if (!data || !data.payload) return null;
       
+      const entry = data.payload;
+      const value = entry.value; // Current displayed value
+      const percentage = chartView === 'donations' ? entry.donationPercentage : entry.livesSavedPercentage;
+      
       return (
         <div className="bg-white p-3 shadow-md rounded-md border border-slate-200">
-          <p className="font-semibold text-sm">{data.name}</p>
-          <p className="text-sm">{formatCurrency(data.value)}</p>
-          <p className="text-xs text-slate-500">
-            {data.payload.percentage ? `${data.payload.percentage}% of known donations` : ''}
-          </p>
-          {data.name !== 'Other Categories' && data.payload.category && (
-            <div className="mt-1 pt-1 border-t border-slate-100">
-              <p className="text-xs text-slate-600">
-                Cost per life: {formatCurrency(effectivenessCategories[data.payload.category]?.costPerLife || 0)}
+          <p className="font-semibold text-sm">{entry.name}</p>
+          {chartView === 'donations' ? (
+            <>
+              <p className="text-sm">{formatCurrency(value)}</p>
+              <p className="text-xs text-slate-500">
+                {`${percentage}% of known donations`}
               </p>
-            </div>
+              {entry.name !== 'Other Categories' && entry.category && (
+                <div className="mt-1 pt-1 border-t border-slate-100">
+                  <p className="text-xs text-slate-600">
+                    Cost per life: {formatCurrency(entry.costPerLife || 0)}
+                  </p>
+                  <p className="text-xs text-slate-600">
+                    Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}
+                  </p>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <p className={`text-sm ${value < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                {formatNumber(Math.round(value))} lives {value < 0 ? 'lost' : 'saved'}
+              </p>
+              <p className="text-xs text-slate-500">
+                {`${percentage}% of total impact`}
+              </p>
+              {entry.name !== 'Other Categories' && entry.category && (
+                <div className="mt-1 pt-1 border-t border-slate-100">
+                  <p className="text-xs text-slate-600">
+                    Cost per life: {formatCurrency(entry.costPerLife || 0)}
+                  </p>
+                  <p className="text-xs text-slate-600">
+                    Donation amount: {formatCurrency(entry.donationValue)}
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       );
@@ -342,23 +458,83 @@ function DonorDetail() {
         {/* Donation categories visualization */}
         <div className="bg-white rounded-xl shadow-lg mb-8 border border-slate-200">
           <div className="px-6 py-4 border-b border-slate-200">
-            <h2 className="text-xl font-semibold text-slate-800">Donation Categories by Amount</h2>
-            <p className="text-sm text-slate-500 mt-1">Showing distribution of known donations by category</p>
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-800">
+                  Donation Categories by {chartView === 'donations' ? 'Amount' : 'Lives Saved'}
+                </h2>
+                <p className="text-sm text-slate-500 mt-1">
+                  {chartView === 'donations' 
+                    ? 'Showing distribution of known donations by category'
+                    : 'Showing comparative impact (lives saved) by category'}
+                </p>
+              </div>
+              
+              {/* Toggle switch */}
+              <div className="flex items-center">
+                <div className="p-0.5 bg-slate-100 rounded-lg flex text-xs sm:text-sm shadow-inner">
+                  <button
+                    onClick={() => {
+                      setShouldAnimate(true);
+                      setChartView('donations');
+                    }}
+                    className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
+                      chartView === 'donations'
+                        ? 'bg-indigo-600 text-white shadow-sm'
+                        : 'text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    <span className="hidden md:inline">Show</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
+                    </svg>
+                    <span>Donations</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShouldAnimate(true);
+                      setChartView('livesSaved');
+                    }}
+                    className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
+                      chartView === 'livesSaved'
+                        ? 'bg-indigo-600 text-white shadow-sm'
+                        : 'text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    <span className="hidden md:inline">Show</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                    <span>Lives Saved</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="py-4 px-2">
+          
+          <div className="py-4 px-2 relative overflow-hidden">
             <div className="h-96 w-full">
-              {categoryData.length > 0 ? (
+              {chartData.length > 0 ? (
                 <ResponsiveContainer width="98%" height="100%">
                   <BarChart
-                    data={categoryData} 
+                    data={chartData}
                     layout="vertical"
-                    margin={{ top: 20, right: 150, left: 90, bottom: 5 }}
+                    margin={{ top: 20, right: 180, left: 90, bottom: 5 }}
+                    animationDuration={shouldAnimate ? ANIMATION_DURATION : 0}
+                    animationEasing="ease-in-out"
                   >
                     <XAxis 
                       type="number" 
-                      tickFormatter={(value) => formatCurrency(value)} 
+                      tickFormatter={(value) => 
+                        chartView === 'donations' ? formatCurrency(value) : formatNumber(Math.round(value))
+                      } 
                       axisLine={true}
                       tickLine={true}
+                      domain={[0, 'auto']}
+                      animationDuration={shouldAnimate ? ANIMATION_DURATION : 0}
+                      animationEasing="ease-in-out"
+                      allowDataOverflow={true}
                     />
                     <YAxis 
                       type="category" 
@@ -368,25 +544,48 @@ function DonorDetail() {
                       axisLine={true}
                     />
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend formatter={(value) => `${value} (By Category)`} />
+                    <Legend formatter={() => 
+                      chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'
+                    } />
                     <Bar 
                       dataKey="value" 
-                      name="Donation Amount" 
+                      name={chartView === 'donations' ? 'Donation Amount' : 'Lives Saved'}
                       radius={[0, 4, 4, 0]}
+                      animationDuration={shouldAnimate ? ANIMATION_DURATION : 0}
+                      animationEasing="ease-in-out"
+                      isAnimationActive={shouldAnimate}
+                      animationBegin={0}
                       label={{ 
                         position: "right",
                         formatter: (value, entry) => {
-                          if (!entry || !entry.percentage) return formatCurrency(value);
-                          return `${formatCurrency(value)} (${entry.percentage}%)`;
+                          if (!entry) return '';
+                          
+                          const percentage = chartView === 'donations' 
+                            ? entry.donationPercentage 
+                            : entry.livesSavedPercentage;
+                          
+                          return chartView === 'donations'
+                            ? `${formatCurrency(value)} (${percentage}%)`
+                            : `${formatNumber(Math.round(value))} (${percentage}%)`;
                         },
                         fontSize: 11,
                         fill: '#64748b',
                         offset: 5
                       }}
                     >
-                      {categoryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
+                      {chartData.map((entry, index) => {
+                        // Use the index for colors (consistent ordering)
+                        return (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={
+                              chartView === 'livesSaved' && entry.value < 0 
+                                ? '#ef4444' 
+                                : COLORS[index % COLORS.length]
+                            } 
+                          />
+                        );
+                      })}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>

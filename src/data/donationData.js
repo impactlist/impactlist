@@ -117,6 +117,7 @@ export const charities = [
   { name: 'University of Oxford (Science)', categories: { science_tech: { fraction: 1.0 } } },
   { name: 'GAVI Alliance (The Vaccine Fund)', categories: { global_health: { fraction: 1.0 } } },
   { name: 'PATH', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'The Foundation (Musk)', categories: { education: { fraction: 1.0, multiplier: 10.0 } } },
 ];
 
 // Donor data with net worth
@@ -208,6 +209,7 @@ export const donations = [
   { date: '2022-02-26', donor: 'Elon Musk', charity: 'Starlink in Ukraine', amount: 20000000, source: 'https://en.wikipedia.org/wiki/Starlink_in_the_Russian-Ukrainian_War', notes: 'Musk claims he paid at least 100m' },
   { date: '2022-07-01', donor: 'Elon Musk', charity: 'University of Texas Population Initiative', amount: 10000000, source: 'https://www.insidehighered.com/news/2023/03/22/elon-musk-gave-10m-ut-austin-population-research' },
   { date: '2023-12-01', donor: 'Elon Musk', charity: 'Unknown', amount: 108200000, source: 'https://www.reuters.com/business/musk-donated-108-million-tesla-shares-unnamed-charities-filing-shows-2025-01-02' },
+  { date: '2024-12-20', donor: 'Elon Musk', charity: 'The Foundation (Musk)', amount: 137e6, credit: 1, source: 'https://www.cheddar.com/media/big-business-this-week-rage-over-rate-cuts/' },
 
   // Jaan Tallinn donations
   { date: '2023-02-17', donor: 'Jaan Tallinn', charity: 'Anthropic', amount: 40000000, source: 'https://jaan.online/' },

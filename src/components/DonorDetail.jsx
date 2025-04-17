@@ -18,6 +18,13 @@ function DonorDetail(props) {
   const [shouldAnimate, setShouldAnimate] = useState(false); // Only animate when user toggles view
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   
+  // Calculate chart height based on number of categories (used later)
+  const calculateChartHeight = (categories) => {
+    // Allocate about 55px per category with a minimum height of 384px (corresponds to ~8-9 categories)
+    // Each additional category beyond that adds more height
+    return Math.max(384, categories.length * 55);
+  };
+  
   // Colors for the chart segments - extended palette with more variety
   const COLORS = [
     // Blues and purples
@@ -711,7 +718,10 @@ function DonorDetail(props) {
           </div>
           
           <div className="py-4 px-2 relative overflow-hidden">
-            <div className="h-96 w-full">
+            <div 
+              className="w-full overflow-visible"
+              style={{ height: chartData.length > 0 ? `${calculateChartHeight(chartData)}px` : '384px' }}
+            >
               {chartData.length > 0 ? (
                 <ResponsiveContainer width="98%" height="100%">
                   <BarChart
@@ -721,7 +731,7 @@ function DonorDetail(props) {
                     animationDuration={ANIMATION_DURATION}
                     animationEasing="ease-out"
                     barGap={0}
-                    barCategoryGap={8}
+                    barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
                   >
                     <XAxis 
                       type="number" 
@@ -797,10 +807,12 @@ function DonorDetail(props) {
                       width={100}
                       tick={{ 
                         fontSize: 14, 
-                        fill: '#1e293b' // Darker text (slate-800)
+                        fill: '#1e293b', // Darker text (slate-800)
+                        dy: 0 // Ensures proper vertical positioning
                       }}
                       axisLine={true}
                       stroke="#1e293b" // Darker line (slate-800)
+                      interval={0} // Force all ticks to be shown
                     />
                     <Tooltip content={<CustomTooltip />} cursor={false} />
                     <Legend formatter={() => 

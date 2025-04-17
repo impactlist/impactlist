@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { charities, donations, effectivenessCategories, getCharityCostPerLife } from '../data/donationData';
 import SortableTable from './SortableTable';
 
-function Recipients() {
+function Recipients(props) {
   const [charityStats, setCharityStats] = useState([]);
 
   useEffect(() => {
@@ -109,27 +110,47 @@ function Recipients() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center">
-      {/* Header */}
-      <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-10 mb-10 text-center shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Recipient Organizations</h1>
-          <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranked by total lives saved through donations</p>
+    <motion.div 
+      className="min-h-screen bg-slate-50 flex flex-col items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {/* Header - Hidden when using App layout */}
+      {!props.hideHeader && (
+        <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-10 mb-10 text-center shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Recipient Organizations</h1>
+            <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranked by total lives saved through donations</p>
+          </div>
         </div>
-      </div>
+      )}
+      {/* Spacer when using App layout */}
+      {props.hideHeader && <div className="h-10"></div>}
       
       {/* Back Link */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+      <motion.div 
+        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6"
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.3 }}
+      >
         <Link 
           to="/" 
           className="text-indigo-600 hover:text-indigo-800 hover:underline flex items-center"
         >
           ← Back to top donors
         </Link>
-      </div>
+      </motion.div>
       
       {/* Recipients Table Container */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+      <motion.div 
+        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.4 }}
+      >
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
           <div className="overflow-x-auto">
             <SortableTable 
@@ -144,13 +165,15 @@ function Recipients() {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
       
-      {/* Footer */}
-      <div className="w-full py-6 bg-slate-800 text-center">
-        <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
-      </div>
-    </div>
+      {/* Footer - Hidden when using App layout */}
+      {!props.hideHeader && (
+        <div className="w-full py-6 bg-slate-800 text-center">
+          <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
+        </div>
+      )}
+    </motion.div>
   );
 }
 

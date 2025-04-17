@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors } from '../data/donationData';
 import SortableTable from './SortableTable';
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
@@ -7,7 +8,7 @@ import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, 
 // Animation speed constant (in milliseconds)
 const ANIMATION_DURATION = 400;
 
-function DonorDetail() {
+function DonorDetail(props) {
   const { donorName } = useParams();
   const [donorStats, setDonorStats] = useState(null);
   const [donorDonations, setDonorDonations] = useState([]);
@@ -399,27 +400,47 @@ function DonorDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header with back button */}
-      <div className="w-full bg-indigo-700 py-8 mb-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center">
-            <Link to="/" className="text-indigo-100 hover:text-white flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-              </svg>
-              Back to Impact List
-            </Link>
+    <motion.div 
+      className="min-h-screen bg-slate-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {/* Header with back button - Hidden when using App layout */}
+      {!props.hideHeader && (
+        <div className="w-full bg-indigo-700 py-8 mb-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center">
+              <Link to="/" className="text-indigo-100 hover:text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+                Back to Impact List
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      {/* Spacer when using App layout */}
+      {props.hideHeader && <div className="h-10"></div>}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div 
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
         {/* Donor name */}
         <h1 className="text-4xl font-bold text-slate-900 mb-6 text-center">{donorStats.name}</h1>
         
         {/* Donor stats card */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
+        <motion.div 
+          className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200"
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+        >
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Impact Rank</span>
@@ -453,10 +474,15 @@ function DonorDetail() {
               <span className="text-3xl font-bold text-slate-700">{formatCurrency(donorStats.netWorth)}</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Donation categories visualization */}
-        <div className="bg-white rounded-xl shadow-lg mb-8 border border-slate-200">
+        <motion.div 
+          className="bg-white rounded-xl shadow-lg mb-8 border border-slate-200"
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
           <div className="px-6 py-4 border-b border-slate-200">
             <div className="flex justify-between items-center">
               <div>
@@ -605,10 +631,15 @@ function DonorDetail() {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Donations list */}
-        <div className="bg-white rounded-xl shadow-lg mb-16 border border-slate-200">
+        <motion.div 
+          className="bg-white rounded-xl shadow-lg mb-16 border border-slate-200"
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+        >
           <div className="px-6 py-4 border-b border-slate-200">
             <h2 className="text-xl font-semibold text-slate-800">Donation History</h2>
           </div>
@@ -620,14 +651,16 @@ function DonorDetail() {
               defaultSortDirection="desc"
             />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      {/* Footer */}
-      <div className="w-full py-6 bg-slate-800 text-center">
-        <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
-      </div>
-    </div>
+      {/* Footer - Hidden when using App layout */}
+      {!props.hideHeader && (
+        <div className="w-full py-6 bg-slate-800 text-center">
+          <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
+        </div>
+      )}
+    </motion.div>
   );
 }
 

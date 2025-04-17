@@ -126,6 +126,17 @@ const Header = ({ isHome, isRecipients }) => {
   );
 };
 
+// Scroll to top component that runs on route changes
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  
+  return null;
+};
+
 // Content wrapper with router
 const AppContent = () => {
   const location = useLocation();
@@ -134,6 +145,7 @@ const AppContent = () => {
   
   return (
     <>
+      <ScrollToTop />
       <Header isHome={isHome} isRecipients={isRecipients} />
       <div className="page-content bg-slate-50 min-h-[calc(100vh-160px)]">
         <AnimatePresence mode="wait">

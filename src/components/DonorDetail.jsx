@@ -762,8 +762,8 @@ function DonorDetail(props) {
                       }}
                       axisLine={true}
                       tick={{ 
-                        fill: transitionStage !== 'none' ? 'transparent' : undefined,
-                        fontSize: 12
+                        fill: transitionStage !== 'none' ? 'transparent' : '#1e293b', // Darker text (slate-800)
+                        fontSize: 14, // Increased font size
                       }}
                       tickLine={true}
                       // Dynamically set domain based on current data values
@@ -782,8 +782,8 @@ function DonorDetail(props) {
                                   Math.max(...chartData.map(d => d.valueTarget))];
                         }
                       })()}
-                      // Make axis line transparent during transition
-                      stroke={transitionStage !== 'none' ? 'transparent' : '#666'}
+                      // Make axis line transparent during transition, dark during normal state
+                      stroke={transitionStage !== 'none' ? 'transparent' : '#1e293b'} // Darker line (slate-800)
                       animationDuration={ANIMATION_DURATION}
                       animationEasing="ease-out"
                       allowDataOverflow={true}
@@ -794,8 +794,12 @@ function DonorDetail(props) {
                       type="category" 
                       dataKey="name" 
                       width={100}
-                      tick={{ fontSize: 12 }}
+                      tick={{ 
+                        fontSize: 14, 
+                        fill: '#1e293b' // Darker text (slate-800)
+                      }}
                       axisLine={true}
+                      stroke="#1e293b" // Darker line (slate-800)
                     />
                     <Tooltip content={<CustomTooltip />} cursor={false} />
                     <Legend formatter={() => 

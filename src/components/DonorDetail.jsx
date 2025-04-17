@@ -2,11 +2,26 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors } from '../data/donationData';
 import SortableTable from './SortableTable';
+import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 function DonorDetail() {
   const { donorName } = useParams();
   const [donorStats, setDonorStats] = useState(null);
   const [donorDonations, setDonorDonations] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  
+  // Colors for the chart segments - extended palette with more variety
+  const COLORS = [
+    // Blues and purples
+    '#4f46e5', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#818cf8',
+    // Greens and teals
+    '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#22c55e', '#84cc16', '#34d399',
+    // Yellows, oranges, reds
+    '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
+    // Pinks and additional colors
+    '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#450a0a', '#3f3f46',
+    '#78350f', '#1e3a8a', '#064e3b', '#701a75', '#0c4a6e', '#7c2d12', '#134e4a'
+  ];
 
   useEffect(() => {
     // Get full donor statistics
@@ -78,6 +93,57 @@ function DonorDetail() {
     }
     
     setDonorDonations(donorDonationsList);
+    
+    // Prepare category data for the pie chart
+    // Group donations by category and sum amounts
+    const categoryAmounts = {};
+    let chartDonationsTotal = 0;
+    
+    donorDonationsList.forEach(donation => {
+      // Skip unknown donations for the chart
+      if (donation.isUnknown) return;
+      
+      const category = donation.categoryName;
+      if (!categoryAmounts[category]) {
+        categoryAmounts[category] = {
+          name: category,
+          value: 0,
+          category: donation.category
+        };
+      }
+      categoryAmounts[category].value += donation.amount;
+      chartDonationsTotal += donation.amount;
+    });
+    
+    // Transform object into array for Recharts and add percentage of known total
+    const categoryChartData = Object.values(categoryAmounts).map(category => ({
+      ...category,
+      percentage: (category.value / chartDonationsTotal * 100).toFixed(1)
+    }));
+    
+    // Sort by donation amount (largest first)
+    categoryChartData.sort((a, b) => b.value - a.value);
+    
+    // Limit to top categories and combine small ones into "Other" if there are many
+    if (categoryChartData.length > 12) {
+      const topCategories = categoryChartData.slice(0, 11);
+      const otherCategories = categoryChartData.slice(11);
+      
+      const otherTotal = otherCategories.reduce((total, item) => total + item.value, 0);
+      const otherPercentage = (otherTotal / chartDonationsTotal * 100).toFixed(1);
+      
+      if (otherTotal > 0) {
+        topCategories.push({
+          name: 'Other Categories',
+          value: otherTotal,
+          percentage: otherPercentage
+        });
+      }
+      
+      setCategoryData(topCategories);
+    } else {
+      setCategoryData(categoryChartData);
+    }
   }, [donorName]);
 
   // Format functions
@@ -86,7 +152,7 @@ function DonorDetail() {
   };
 
   const formatCurrency = (amount, effectivenessRate = null) => {
-    if (effectivenessRate === 0) {
+    if (!amount || effectivenessRate === 0) {
       return '∞';
     } else if (amount >= 1000000000) {
       const value = amount / 1000000000;
@@ -94,9 +160,38 @@ function DonorDetail() {
     } else if (amount >= 1000000) {
       const value = amount / 1000000;
       return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
+    } else if (amount >= 1000) {
+      const value = amount / 1000;
+      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}K`;
     } else {
       return `$${formatNumber(amount)}`;
     }
+  };
+  
+  // Custom pie chart tooltip
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length && donorStats) {
+      const data = payload[0];
+      if (!data || !data.payload) return null;
+      
+      return (
+        <div className="bg-white p-3 shadow-md rounded-md border border-slate-200">
+          <p className="font-semibold text-sm">{data.name}</p>
+          <p className="text-sm">{formatCurrency(data.value)}</p>
+          <p className="text-xs text-slate-500">
+            {data.payload.percentage ? `${data.payload.percentage}% of known donations` : ''}
+          </p>
+          {data.name !== 'Other Categories' && data.payload.category && (
+            <div className="mt-1 pt-1 border-t border-slate-100">
+              <p className="text-xs text-slate-600">
+                Cost per life: {formatCurrency(effectivenessCategories[data.payload.category]?.costPerLife || 0)}
+              </p>
+            </div>
+          )}
+        </div>
+      );
+    }
+    return null;
   };
   
   // Donation table columns configuration
@@ -240,6 +335,66 @@ function DonorDetail() {
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Net Worth</span>
               <span className="text-3xl font-bold text-slate-700">{formatCurrency(donorStats.netWorth)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Donation categories visualization */}
+        <div className="bg-white rounded-xl shadow-lg mb-8 border border-slate-200">
+          <div className="px-6 py-4 border-b border-slate-200">
+            <h2 className="text-xl font-semibold text-slate-800">Donation Categories by Amount</h2>
+            <p className="text-sm text-slate-500 mt-1">Showing distribution of known donations by category</p>
+          </div>
+          <div className="py-4 px-2">
+            <div className="h-96 w-full">
+              {categoryData.length > 0 ? (
+                <ResponsiveContainer width="98%" height="100%">
+                  <BarChart
+                    data={categoryData} 
+                    layout="vertical"
+                    margin={{ top: 20, right: 150, left: 90, bottom: 5 }}
+                  >
+                    <XAxis 
+                      type="number" 
+                      tickFormatter={(value) => formatCurrency(value)} 
+                      axisLine={true}
+                      tickLine={true}
+                    />
+                    <YAxis 
+                      type="category" 
+                      dataKey="name" 
+                      width={100}
+                      tick={{ fontSize: 12 }}
+                      axisLine={true}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend formatter={(value) => `${value} (By Category)`} />
+                    <Bar 
+                      dataKey="value" 
+                      name="Donation Amount" 
+                      radius={[0, 4, 4, 0]}
+                      label={{ 
+                        position: "right",
+                        formatter: (value, entry) => {
+                          if (!entry || !entry.percentage) return formatCurrency(value);
+                          return `${formatCurrency(value)} (${entry.percentage}%)`;
+                        },
+                        fontSize: 11,
+                        fill: '#64748b',
+                        offset: 5
+                      }}
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex h-full items-center justify-center">
+                  <p className="text-slate-500">No donation data available</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { charities, donations, effectivenessCategories, getCharityCostPerLife } from '../data/donationData';
+import { charities, donations, effectivenessCategories, getCharityCostPerLife, getPrimaryCategory, getCategoryBreakdown } from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function Recipients(props) {
@@ -12,8 +12,13 @@ function Recipients(props) {
     const recipientStats = charities.map(charity => {
       const charityDonations = donations.filter(d => d.charity === charity.name);
       const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
-      const categoryData = effectivenessCategories[charity.category];
       const costPerLife = getCharityCostPerLife(charity);
+      
+      // Get the primary category and all categories for display
+      const primaryCategory = getPrimaryCategory(charity);
+      const categoryBreakdown = getCategoryBreakdown(charity);
+      const categoryNames = categoryBreakdown.map(category => category.name);
+      
       const totalLivesSaved = charityDonations.reduce(
         (sum, d) => {
           // Apply credit multiplier if it exists
@@ -29,8 +34,9 @@ function Recipients(props) {
       
       return {
         name: charity.name,
-        category: charity.category,
-        categoryName: categoryData.name,
+        primaryCategoryId: primaryCategory.id,
+        primaryCategoryName: primaryCategory.name,
+        categoryNames,
         totalReceived,
         costPerLife,
         totalLivesSaved
@@ -103,9 +109,24 @@ function Recipients(props) {
       render: (charity) => <div className="text-sm text-slate-900">{formatCurrency(charity.totalReceived)}</div>
     },
     { 
-      key: 'categoryName', 
+      key: 'primaryCategoryName', 
       label: 'Focus Area',
-      render: (charity) => <div className="text-sm text-slate-900">{charity.categoryName}</div>
+      render: (charity) => (
+        <div className="text-sm text-slate-900">
+          {charity.categoryNames.length === 1 ? (
+            charity.primaryCategoryName
+          ) : (
+            <div>
+              <div>{charity.primaryCategoryName}</div>
+              {charity.categoryNames.length > 1 && (
+                <div className="text-xs text-gray-500 mt-1">
+                  +{charity.categoryNames.length - 1} more
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )
     }
   ];
 

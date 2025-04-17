@@ -7,7 +7,9 @@ import {
   effectivenessCategories, 
   getCharityCostPerLife, 
   getCategoryCostPerLife,
-  getCostPerLifeMultiplier 
+  getCostPerLifeMultiplier,
+  getPrimaryCategory,
+  getCategoryBreakdown
 } from '../data/donationData';
 import SortableTable from './SortableTable';
 
@@ -21,8 +23,13 @@ function RecipientDetail(props) {
     const charity = charities.find(c => c.name === recipientName);
     
     if (charity) {
-      const categoryData = effectivenessCategories[charity.category];
       const costPerLife = getCharityCostPerLife(charity);
+      const categoryCostPerLife = getCategoryCostPerLife(charity);
+      const costPerLifeMultiplier = getCostPerLifeMultiplier(charity);
+      
+      // Get primary category and category breakdown
+      const primaryCategory = getPrimaryCategory(charity);
+      const categoryBreakdown = getCategoryBreakdown(charity);
       
       // Filter donations for this charity
       const charityDonations = donations
@@ -48,14 +55,11 @@ function RecipientDetail(props) {
       const totalReceived = charityDonations.reduce((sum, donation) => sum + donation.amount, 0);
       const totalLivesSaved = charityDonations.reduce((sum, donation) => sum + donation.livesSaved, 0);
       
-      // Get costPerLife multiplier compared to category average
-      const categoryCostPerLife = getCategoryCostPerLife(charity);
-      const costPerLifeMultiplier = getCostPerLifeMultiplier(charity);
-      
       setRecipientInfo({
         name: recipientName,
-        category: charity.category,
-        categoryName: categoryData.name,
+        categoryId: primaryCategory.id,
+        categoryName: primaryCategory.name,
+        categoryBreakdown,
         costPerLife,
         categoryCostPerLife,
         costPerLifeMultiplier,
@@ -192,9 +196,16 @@ function RecipientDetail(props) {
           transition={{ delay: 0.1, duration: 0.4 }}
         >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
-              <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
-              <span className="text-3xl font-bold text-slate-900">{recipientInfo.categoryName}</span>
+            <div className="flex flex-col p-4 bg-slate-50 rounded-lg">
+              <span className="text-sm text-slate-600 uppercase font-semibold text-center mb-2">Focus Areas</span>
+              <div className="space-y-2">
+                {recipientInfo.categoryBreakdown.map((category) => (
+                  <div key={category.id} className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-slate-900">{category.name}</span>
+                    <span className="text-sm font-semibold text-slate-700">{category.percentage}%</span>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>

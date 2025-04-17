@@ -29,84 +29,88 @@ export const effectivenessCategories = {
 
 // Charity data with their focus area categories
 export const charities = [
-  { name: 'Against Malaria Foundation', category: 'global_health' },
-  { name: 'GiveDirectly', category: 'global_development' },
-  { name: 'Malaria Consortium', category: 'global_health' },
-  { name: 'GiveWell Maximum Impact Fund', category: 'meta_theory' },
-  { name: 'Evidence Action', category: 'global_health' },
-  { name: 'Helen Keller International', category: 'global_health' },
-  { name: 'SCI Foundation', category: 'health_medicine' },
-  { name: 'The END Fund', category: 'disaster_relief' },
-  { name: 'New Incentives', category: 'global_health' },
-  { name: 'Development Media International', category: 'education' },
-  { name: 'Anthropic', category: 'ai_risk', costPerLife: -50 },
-  { name: 'Center for Human-Compatible AI', category: 'ai_risk' },
-  { name: 'Coalition for Epidemic Preparedness', category: 'pandemics' },
-  { name: 'Nuclear Threat Initiative', category: 'nuclear' },
-  { name: 'Mercy For Animals', category: 'animal_welfare' },
-  { name: 'Global Priorities Institute', category: 'global_priorities' },
-  { name: 'Climate Works', category: 'climate_change' },
-  { name: 'Wikimedia Foundation', category: 'science_tech' },
-  { name: 'Habitat for Humanity', category: 'housing' },
-  { name: 'SENS Research Foundation', category: 'longevity' },
-  { name: 'University of Washington (research)', category: 'science_tech' },
-  { name: 'University of Washington', category: 'education' },
-  { name: 'Stanford University', category: 'education' },
-  { name: 'Harvard University', category: 'education' },
-  { name: 'Gates Library Foundation', category: 'education' },
-  { name: 'Seattle Public Libraries', category: 'education' },
-  { name: 'Bill & Melinda Gates Foundation', category: 'global_health' },
-  { name: 'United Negro College Fund', category: 'education' },
-  { name: 'Dementia Discovery Fund', category: 'health_medicine' },
-  { name: 'OpenAI', category: 'ai_risk', costPerLife: -5},
-  { name: 'Sierra Club', category: 'environmental'},
-  { name: 'Future of Life Institute', category: 'ai_risk'},
-  { name: 'California Covid Response', category: 'disaster_relief'},
-  { name: 'XPrize, Climate Change', category: 'climate_change'},
-  { name: 'Cameron County Schools, TX', category: 'education'},
-  { name: 'City of Brownsville, TX', category: 'local_community'},
-  { name: 'St. Jude Children\'s Hospital', category: 'health_medicine'},
-  { name: 'Khan Academy', category: 'education', multiplier: 10 },
-  { name: 'Arbor Day Foundation', category: 'environmental' },
-  { name: 'Bayou La Batre Hurricane Response Center', category: 'disaster_relief' },
-  { name: 'Soma City, Fukushima (tech)', category: 'science_tech' },
-  { name: 'Tesla Science Center at Wardenclyffe', category: 'arts_culture' },
-  { name: 'ACLU', category: 'human_rights' },
-  { name: 'Art of Elysium', category: 'arts_culture' },
-  { name: 'Flint Public Schools (Water Filtration)', category: 'health_medicine' },
-  { name: 'Ad Astra School', category: 'education' },
-  { name: 'Crossroads School', category: 'education' },
-  { name: 'Windward School', category: 'education' },
-  { name: 'University of Texas Population Initiative', category: 'population' },
-  { name: 'MIT', category: 'education'},
-  { name: 'Unknown', category: 'other' },
-  { name: 'Starlink in Ukraine', category: 'disaster_relief' },
-  { name: 'Museum of History & Industry (Seattle)', category: 'arts_culture' },
-  { name: 'Princeton University (science)', category: 'science_tech' },
-  { name: 'Washington United for Marriage (Referendum 74 campaign)', category: 'human_rights' },
-  { name: 'Reporters Committee for Freedom of the Press', category: 'human_rights' },
-  { name: 'TheDream.US', category: 'education' },
-  { name: 'With Honor Fund', category: 'political' },
-  { name: 'Bezos Day One Fund', category: 'housing' },
-  { name: 'Bezos Earth Fund', category: 'climate_change' },
-  { name: 'Feeding America (COVID-19 Response Fund)', category: 'disaster_relief' },
-  { name: 'All In Washington (COVID-19 relief effort)', category: 'disaster_relief' },
-  { name: 'Smithsonian Institution', category: 'arts_culture' },
-  { name: 'Van Jones (Bezos Courage & Civility Award)', category: 'other' },
-  { name: 'José Andrés (Bezos Courage & Civility Award)', category: 'other' },
-  { name: 'Obama Foundation', category: 'political' },
-  { name: 'Dolly Parton (Bezos Courage & Civility Award)', category: 'other' },
-  { name: 'Eva Longoria (Bezos Courage & Civility Award)', category: 'other' },
-  { name: 'Bill McRaven (Bezos Courage & Civility Award)', category: 'other' },
-  { name: 'University of California, Davis (Medicine)', category: 'health_medicine' },
-  { name: 'Ellison Medical Foundation', category: 'health_medicine' },
-  { name: 'Sderot Community Center (Israel)', category: 'local_community' },
-  { name: 'Global Polio Eradication Initiative', category: 'global_health' },
-  { name: 'Friends of the Israel Defense Forces', category: 'national_defense' },
-  { name: 'University of Southern California (Medicine)', category: 'health_medicine' },
-  { name: 'University of Oxford (Science)', category: 'science_tech' },
-  { name: 'GAVI Alliance (The Vaccine Fund)', category: 'global_health' },
-  { name: 'PATH', category: 'global_health' },
+  { name: 'Against Malaria Foundation', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'GiveDirectly', categories: { global_development: { fraction: 1.0 } } },
+  { name: 'Malaria Consortium', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'GiveWell Maximum Impact Fund', categories: { meta_theory: { fraction: 1.0 } } },
+  { name: 'Evidence Action', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'Helen Keller International', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'SCI Foundation', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'The END Fund', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'New Incentives', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'Development Media International', categories: { education: { fraction: 1.0 } } },
+  { name: 'Anthropic', categories: { ai_risk: { fraction: 1.0, costPerLife: -50 } } },
+  { name: 'Center for Human-Compatible AI', categories: { ai_risk: { fraction: 1.0 } } },
+  { name: 'Coalition for Epidemic Preparedness', categories: { pandemics: { fraction: 1.0 } } },
+  { name: 'Nuclear Threat Initiative', categories: { nuclear: { fraction: 1.0 } } },
+  { name: 'Mercy For Animals', categories: { animal_welfare: { fraction: 1.0 } } },
+  { name: 'Global Priorities Institute', categories: { global_priorities: { fraction: 1.0 } } },
+  { name: 'Climate Works', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'Wikimedia Foundation', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'Habitat for Humanity', categories: { housing: { fraction: 1.0 } } },
+  { name: 'SENS Research Foundation', categories: { longevity: { fraction: 1.0 } } },
+  { name: 'University of Washington (research)', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'University of Washington', categories: { education: { fraction: 1.0 } } },
+  { name: 'Stanford University', categories: { education: { fraction: 1.0 } } },
+  { name: 'Harvard University', categories: { education: { fraction: 1.0 } } },
+  { name: 'Gates Library Foundation', categories: { education: { fraction: 1.0 } } },
+  { name: 'Seattle Public Libraries', categories: { education: { fraction: 1.0 } } },
+  { name: 'Bill & Melinda Gates Foundation', categories: { 
+    global_health: { fraction: 0.65, multiplier: 1.2 },
+    education: { fraction: 0.25, costPerLife: 9000 },
+    global_development: { fraction: 0.10 } } 
+  },
+  { name: 'United Negro College Fund', categories: { education: { fraction: 1.0 } } },
+  { name: 'Dementia Discovery Fund', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'OpenAI', categories: { ai_risk: { fraction: 1.0, costPerLife: -5 } } },
+  { name: 'Sierra Club', categories: { environmental: { fraction: 1.0 } } },
+  { name: 'Future of Life Institute', categories: { ai_risk: { fraction: 1.0 } } },
+  { name: 'California Covid Response', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'XPrize, Climate Change', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'Cameron County Schools, TX', categories: { education: { fraction: 1.0 } } },
+  { name: 'City of Brownsville, TX', categories: { local_community: { fraction: 1.0 } } },
+  { name: 'St. Jude Children\'s Hospital', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Khan Academy', categories: { education: { fraction: 1.0, multiplier: 10 } } },
+  { name: 'Arbor Day Foundation', categories: { environmental: { fraction: 1.0 } } },
+  { name: 'Bayou La Batre Hurricane Response Center', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'Soma City, Fukushima (tech)', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'Tesla Science Center at Wardenclyffe', categories: { arts_culture: { fraction: 1.0 } } },
+  { name: 'ACLU', categories: { human_rights: { fraction: 1.0 } } },
+  { name: 'Art of Elysium', categories: { arts_culture: { fraction: 1.0 } } },
+  { name: 'Flint Public Schools (Water Filtration)', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Ad Astra School', categories: { education: { fraction: 1.0 } } },
+  { name: 'Crossroads School', categories: { education: { fraction: 1.0 } } },
+  { name: 'Windward School', categories: { education: { fraction: 1.0 } } },
+  { name: 'University of Texas Population Initiative', categories: { population: { fraction: 1.0 } } },
+  { name: 'MIT', categories: { education: { fraction: 1.0 } } },
+  { name: 'Unknown', categories: { other: { fraction: 1.0 } } },
+  { name: 'Starlink in Ukraine', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'Museum of History & Industry (Seattle)', categories: { arts_culture: { fraction: 1.0 } } },
+  { name: 'Princeton University (science)', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'Washington United for Marriage (Referendum 74 campaign)', categories: { human_rights: { fraction: 1.0 } } },
+  { name: 'Reporters Committee for Freedom of the Press', categories: { human_rights: { fraction: 1.0 } } },
+  { name: 'TheDream.US', categories: { education: { fraction: 1.0 } } },
+  { name: 'With Honor Fund', categories: { political: { fraction: 1.0 } } },
+  { name: 'Bezos Day One Fund', categories: { housing: { fraction: 1.0 } } },
+  { name: 'Bezos Earth Fund', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'Feeding America (COVID-19 Response Fund)', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'All In Washington (COVID-19 relief effort)', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'Smithsonian Institution', categories: { arts_culture: { fraction: 1.0 } } },
+  { name: 'Van Jones (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
+  { name: 'José Andrés (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
+  { name: 'Obama Foundation', categories: { political: { fraction: 1.0 } } },
+  { name: 'Dolly Parton (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
+  { name: 'Eva Longoria (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
+  { name: 'Bill McRaven (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
+  { name: 'University of California, Davis (Medicine)', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Ellison Medical Foundation', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Sderot Community Center (Israel)', categories: { local_community: { fraction: 1.0 } } },
+  { name: 'Global Polio Eradication Initiative', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'Friends of the Israel Defense Forces', categories: { national_defense: { fraction: 1.0 } } },
+  { name: 'University of Southern California (Medicine)', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'University of Oxford (Science)', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'GAVI Alliance (The Vaccine Fund)', categories: { global_health: { fraction: 1.0 } } },
+  { name: 'PATH', categories: { global_health: { fraction: 1.0 } } },
 ];
 
 // Donor data with net worth
@@ -299,24 +303,48 @@ export const donations = [
 
 // Helper function to get a charity's cost per life
 export const getCharityCostPerLife = (charity) => {
-  // First check for charity-specific costPerLife
-  if (charity.costPerLife !== undefined) {
-    return charity.costPerLife;
-  }
+  // Calculate weighted average cost per life across all categories
+  const categories = Object.entries(charity.categories);
+  let weightedCostPerLife = 0;
   
-  // Then check for multiplier to scale category costPerLife
-  const categoryCostPerLife = effectivenessCategories[charity.category].costPerLife;
-  if (charity.multiplier !== undefined) {
-    return categoryCostPerLife / charity.multiplier; // Lower multiplier means higher cost
-  }
+  categories.forEach(([categoryId, categoryData]) => {
+    const fraction = categoryData.fraction;
+    let costPerLife;
+    
+    // First check for category-specific costPerLife
+    if (categoryData.costPerLife !== undefined) {
+      costPerLife = categoryData.costPerLife;
+    } else {
+      // Get base cost from effectivenessCategories
+      const baseCostPerLife = effectivenessCategories[categoryId].costPerLife;
+      
+      // Check for multiplier to scale category costPerLife
+      if (categoryData.multiplier !== undefined) {
+        costPerLife = baseCostPerLife / categoryData.multiplier;
+      } else {
+        costPerLife = baseCostPerLife;
+      }
+    }
+    
+    weightedCostPerLife += costPerLife * fraction;
+  });
   
-  // Otherwise use plain category costPerLife
-  return categoryCostPerLife;
+  return weightedCostPerLife;
 };
 
 // Get category base costPerLife
 export const getCategoryCostPerLife = (charity) => {
-  return effectivenessCategories[charity.category].costPerLife;
+  // Calculate weighted average base cost per life across all categories
+  const categories = Object.entries(charity.categories);
+  let weightedBaseCostPerLife = 0;
+  
+  categories.forEach(([categoryId, categoryData]) => {
+    const fraction = categoryData.fraction;
+    const baseCostPerLife = effectivenessCategories[categoryId].costPerLife;
+    weightedBaseCostPerLife += baseCostPerLife * fraction;
+  });
+  
+  return weightedBaseCostPerLife;
 };
 
 // Get costPerLife multiplier compared to category (how many times more/less effective)
@@ -326,14 +354,60 @@ export const getCostPerLifeMultiplier = (charity) => {
   return categoryCostPerLife / charityCostPerLife; // Higher multiplier means better (lower cost)
 };
 
+// Helper function to get the primary category of a charity (with highest fraction)
+export const getPrimaryCategory = (charity) => {
+  const categoriesEntries = Object.entries(charity.categories);
+  categoriesEntries.sort((a, b) => b[1].fraction - a[1].fraction);
+  const primaryCategoryId = categoriesEntries[0][0];
+  const primaryCategoryData = effectivenessCategories[primaryCategoryId];
+  
+  return {
+    id: primaryCategoryId,
+    name: primaryCategoryData.name,
+    fraction: categoriesEntries[0][1].fraction
+  };
+};
+
+// Helper function to get all categories of a charity with percentages
+export const getCategoryBreakdown = (charity) => {
+  const categoriesEntries = Object.entries(charity.categories);
+  
+  return categoriesEntries.map(([categoryId, data]) => ({
+    id: categoryId,
+    name: effectivenessCategories[categoryId].name,
+    fraction: data.fraction,
+    percentage: Math.round(data.fraction * 100)
+  })).sort((a, b) => b.fraction - a.fraction);
+};
+
 // Helper function to validate data integrity
 export const validateDataIntegrity = () => {
   const errors = [];
   
   // Check if all charities have valid categories
   charities.forEach(charity => {
-    if (!effectivenessCategories[charity.category]) {
-      errors.push(`Invalid category "${charity.category}" for charity "${charity.name}"`);
+    if (!charity.categories || Object.keys(charity.categories).length === 0) {
+      errors.push(`Charity "${charity.name}" has no categories`);
+      return;
+    }
+    
+    // Validate each category and fraction sum
+    let fractionSum = 0;
+    Object.entries(charity.categories).forEach(([categoryId, categoryData]) => {
+      if (!effectivenessCategories[categoryId]) {
+        errors.push(`Invalid category "${categoryId}" for charity "${charity.name}"`);
+      }
+      
+      if (categoryData.fraction === undefined) {
+        errors.push(`Missing fraction for category "${categoryId}" in charity "${charity.name}"`);
+      } else {
+        fractionSum += categoryData.fraction;
+      }
+    });
+    
+    // Check if fractions sum to approximately 1.0 (allowing for small floating point errors)
+    if (Math.abs(fractionSum - 1.0) > 0.001) {
+      errors.push(`Category fractions for charity "${charity.name}" sum to ${fractionSum}, should be 1.0`);
     }
   });
   

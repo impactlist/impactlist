@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors } from '../data/donationData';
+import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors, getPrimaryCategory } from '../data/donationData';
 import SortableTable from './SortableTable';
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
@@ -41,8 +41,10 @@ function DonorDetail(props) {
       .filter(donation => donation.donor === donorName)
       .map(donation => {
         const charity = charities.find(c => c.name === donation.charity);
-        const categoryData = effectivenessCategories[charity.category];
         const costPerLife = getCharityCostPerLife(charity);
+        
+        // Get the primary category for this charity
+        const primaryCategory = getPrimaryCategory(charity);
         
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
@@ -54,8 +56,8 @@ function DonorDetail(props) {
         return {
           ...donation,
           creditedAmount,
-          category: charity.category,
-          categoryName: categoryData.name,
+          category: primaryCategory.id, // Use primary category ID
+          categoryName: primaryCategory.name,
           livesSaved,
           costPerLife,
           dateObj: new Date(donation.date)

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { calculateDonorStats, charities, donations, effectivenessCategories, getCharityCostPerLife } from '../data/donationData';
+import { calculateDonorStats, charities, donations, effectivenessCategories, getCharityCostPerLife, getPrimaryCategory } from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function Home(props) {
@@ -17,8 +17,11 @@ function Home(props) {
     const recipientStats = charities.map(charity => {
       const charityDonations = donations.filter(d => d.charity === charity.name);
       const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
-      const categoryData = effectivenessCategories[charity.category];
       const costPerLife = getCharityCostPerLife(charity);
+      
+      // Get the primary category for display
+      const primaryCategory = getPrimaryCategory(charity);
+      
       const totalLivesSaved = charityDonations.reduce(
         (sum, d) => {
           // Apply credit multiplier if it exists
@@ -34,8 +37,8 @@ function Home(props) {
       
       return {
         name: charity.name,
-        category: charity.category,
-        categoryName: categoryData.name,
+        primaryCategoryId: primaryCategory.id,
+        categoryName: primaryCategory.name,
         totalReceived,
         costPerLife,
         totalLivesSaved
@@ -65,7 +68,8 @@ function Home(props) {
 
   // Get category display name
   const formatCategory = (categoryKey) => {
-    return effectivenessCategories[categoryKey].name;
+    return categoryKey && effectivenessCategories[categoryKey] ? 
+      effectivenessCategories[categoryKey].name : 'Multiple Categories';
   };
 
   // Donor table columns configuration

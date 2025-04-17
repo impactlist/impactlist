@@ -91,20 +91,30 @@ function DonorDetail(props) {
         donor: donorName,
         charity: 'Unknown',
         amount: unknownAmount,
-        category: 'other',
-        categoryName: 'Unknown',
+        category: 'other', // Use 'other' as the primary category ID
+        categoryName: 'Unknown', // Use 'Unknown' as the primary category name
         livesSaved: unknownLivesSaved,
         costPerLife: avgCostPerLife,
         dateObj: new Date(0), // Oldest date to sort at the end
         source: '',
         isUnknown: true
       });
+      
+      // Also create a dummy charity for the 'Unknown' entry to avoid errors
+      if (!charities.some(c => c.name === 'Unknown')) {
+        charities.push({
+          name: 'Unknown',
+          categories: {
+            other: { fraction: 1.0 }
+          }
+        });
+      }
     }
     
     setDonorDonations(donorDonationsList);
     
     // Prepare category data for both donation amounts and lives saved
-    // Group donations by category
+    // Group donations by category, accounting for category fractions
     const categoryAmounts = {};
     const categoryLivesSaved = {};
     let chartDonationsTotal = 0;
@@ -114,33 +124,58 @@ function DonorDetail(props) {
       // Skip unknown donations for the chart
       if (donation.isUnknown) return;
       
-      const category = donation.categoryName;
+      // Get the charity and its categories
+      const charity = charities.find(c => c.name === donation.charity);
+      if (!charity) return;
       
-      // Initialize category objects if they don't exist
-      if (!categoryAmounts[category]) {
-        categoryAmounts[category] = {
-          name: category,
-          value: 0,
-          category: donation.category
-        };
-      }
-      
-      if (!categoryLivesSaved[category]) {
-        categoryLivesSaved[category] = {
-          name: category,
-          value: 0,
-          category: donation.category,
-          costPerLife: effectivenessCategories[donation.category]?.costPerLife || 0
-        };
-      }
-      
-      // Sum donation amounts
-      categoryAmounts[category].value += donation.amount;
-      chartDonationsTotal += donation.amount;
-      
-      // Sum lives saved
-      categoryLivesSaved[category].value += donation.livesSaved;
-      chartLivesSavedTotal += donation.livesSaved;
+      // Process each category this charity belongs to
+      Object.entries(charity.categories).forEach(([categoryId, categoryData]) => {
+        const fraction = categoryData.fraction;
+        const categoryName = effectivenessCategories[categoryId].name;
+        const costPerLife = categoryData.costPerLife !== undefined ? 
+          categoryData.costPerLife : effectivenessCategories[categoryId].costPerLife;
+        
+        // Calculate category-specific amount and lives saved
+        const categoryAmount = donation.amount * fraction;
+        let livesSavedForCategory;
+        
+        // Apply credit multiplier if it exists
+        const creditedAmount = donation.credit !== undefined ? 
+          categoryAmount * donation.credit : categoryAmount;
+        
+        // Calculate lives saved for this specific category
+        if (costPerLife < 0) {
+          livesSavedForCategory = (creditedAmount / (costPerLife * -1)) * -1; // Lives lost case
+        } else {
+          livesSavedForCategory = costPerLife !== 0 ? creditedAmount / costPerLife : 0; // Normal case
+        }
+        
+        // Initialize category objects if they don't exist
+        if (!categoryAmounts[categoryName]) {
+          categoryAmounts[categoryName] = {
+            name: categoryName,
+            value: 0,
+            category: categoryId
+          };
+        }
+        
+        if (!categoryLivesSaved[categoryName]) {
+          categoryLivesSaved[categoryName] = {
+            name: categoryName,
+            value: 0,
+            category: categoryId,
+            costPerLife: costPerLife
+          };
+        }
+        
+        // Sum donation amounts
+        categoryAmounts[categoryName].value += categoryAmount;
+        chartDonationsTotal += categoryAmount;
+        
+        // Sum lives saved
+        categoryLivesSaved[categoryName].value += livesSavedForCategory;
+        chartLivesSavedTotal += livesSavedForCategory;
+      });
     });
     
     // Get the complete set of category names from both datasets
@@ -393,11 +428,41 @@ function DonorDetail(props) {
     { 
       key: 'categoryName', 
       label: 'Category',
-      render: (donation) => (
-        <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 'text-slate-900'}`}>
-          {donation.categoryName}
-        </div>
-      )
+      render: (donation) => {
+        // Skip this for unknown donations
+        if (donation.isUnknown) {
+          return (
+            <div className="text-sm text-slate-500">
+              {donation.categoryName}
+            </div>
+          );
+        }
+        
+        // Get the charity to check if it has multiple categories
+        const charity = charities.find(c => c.name === donation.charity);
+        if (!charity) {
+          return (
+            <div className="text-sm text-slate-900">
+              {donation.categoryName}
+            </div>
+          );
+        }
+        
+        // Count categories
+        const categoryCount = Object.keys(charity.categories).length;
+        const hasMultipleCategories = categoryCount > 1;
+        
+        return (
+          <div className="text-sm text-slate-900">
+            {donation.categoryName}
+            {hasMultipleCategories && (
+              <span className="text-xs text-slate-500 ml-1">
+                (+{categoryCount - 1})
+              </span>
+            )}
+          </div>
+        );
+      }
     },
     { 
       key: 'livesSaved', 

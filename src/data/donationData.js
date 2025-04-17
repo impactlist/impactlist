@@ -56,8 +56,8 @@ export const charities = [
   { name: 'Gates Library Foundation', categories: { education: { fraction: 1.0 } } },
   { name: 'Seattle Public Libraries', categories: { education: { fraction: 1.0 } } },
   { name: 'Bill & Melinda Gates Foundation', categories: { 
-    global_health: { fraction: 0.65, multiplier: 1.2 },
-    education: { fraction: 0.25, costPerLife: 9000 },
+    global_health: { fraction: 0.75 },
+    education: { fraction: 0.15 },
     global_development: { fraction: 0.10 } } 
   },
   { name: 'United Negro College Fund', categories: { education: { fraction: 1.0 } } },
@@ -91,7 +91,7 @@ export const charities = [
   { name: 'Reporters Committee for Freedom of the Press', categories: { human_rights: { fraction: 1.0 } } },
   { name: 'TheDream.US', categories: { education: { fraction: 1.0 } } },
   { name: 'With Honor Fund', categories: { political: { fraction: 1.0 } } },
-  { name: 'Bezos Day One Fund', categories: { housing: { fraction: 1.0 } } },
+  { name: 'Bezos Day One Fund', categories: { housing: { fraction: 1.0, multiplier: 20 } } },
   { name: 'Bezos Earth Fund', categories: { climate_change: { fraction: 1.0 } } },
   { name: 'Feeding America (COVID-19 Response Fund)', categories: { disaster_relief: { fraction: 1.0 } } },
   { name: 'All In Washington (COVID-19 relief effort)', categories: { disaster_relief: { fraction: 1.0 } } },

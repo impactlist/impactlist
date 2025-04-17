@@ -106,6 +106,7 @@ export const charities = [
   { name: 'University of Southern California (Medicine)', category: 'health_medicine' },
   { name: 'University of Oxford (Science)', category: 'science_tech' },
   { name: 'GAVI Alliance (The Vaccine Fund)', category: 'global_health' },
+  { name: 'PATH', category: 'global_health' },
 ];
 
 // Donor data with net worth
@@ -147,6 +148,7 @@ export const donations = [
   
   // Bill Gates donations
   // Gemini says "Through 2023, Bill Gates (and formerly Melinda French Gates) had personally contributed $59.5 billion to the Gates Foundation endowment.. the below is only 50.4 donated total 
+  // Don't count donations to his foundation... try to explode them.
   // Buffett started donating to the Gates foundation in 2006.. so give Bill 100% credit for everything before that, 50% after
   { date: '1991-10-07', donor: 'Bill Gates', charity: 'University of Washington (research)', amount: 12000000, source: 'https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/' },
   { date: '1992-01-01', donor: 'Bill Gates', charity: 'Stanford University', amount: 6000000, source: 'https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period' },
@@ -155,6 +157,7 @@ export const donations = [
   { date: '1996-01-01', donor: 'Bill Gates', charity: 'University of Washington', amount: 12000000, source: 'https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw' },
   { date: '1997-07-23', donor: 'Bill Gates', charity: 'Gates Library Foundation', amount: 200000000, source: 'https://www.historylink.org/File/2907' },
   { date: '1998-12-01', donor: 'Bill Gates', charity: 'Seattle Public Libraries', amount: 20000000, source: 'https://www.historylink.org/File/2907#:~:text=gifts%20of%20%24133%20million%20for,program%20approved%20the%20previous%20month' },
+  { date: '1998-12-01', donor: 'Bill Gates', charity: 'PATH', amount: 100000000, credit: 1, source: 'https://www.washingtonpost.com/archive/politics/1998/12/02/gates-giving-100-million-to-help-immunize-children-in-3rd-world/11648ec3-4e48-4dee-82c6-7c323f1b19cf/' },
   { date: '1999-04-14', donor: 'Bill Gates', charity: 'MIT', amount: 20000000, source: 'https://news.mit.edu/1999/gates1-0414#:~:text=April%2014%2C%201999' },
   { date: '1999-01-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 15800000000, source: 'https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it', notes: 'Initial endowment' },
   { date: '1999-01-01', donor: 'Bill Gates', charity: 'United Negro College Fund', amount: 1265000000, source: 'https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/'},

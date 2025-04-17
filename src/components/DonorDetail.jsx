@@ -550,7 +550,7 @@ function DonorDetail(props) {
                       } 
                       axisLine={true}
                       tickLine={true}
-                      domain={[0, 'auto']}
+                      domain={chartView === 'livesSaved' ? ['dataMin', 'dataMax'] : [0, 'auto']}
                       animationDuration={shouldAnimate ? ANIMATION_DURATION : 0}
                       animationEasing="ease-in-out"
                       allowDataOverflow={true}

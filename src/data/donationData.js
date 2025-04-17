@@ -110,7 +110,7 @@ export const charities = [
 // Donor data with net worth
 export const donors = [
   { name: 'Mackenzie Scott', netWorth: 2.5e10 },
-  { name: 'Bill Gates', netWorth: 1.08e11 },
+  { name: 'Bill Gates', netWorth: 1.08e11, totalDonated: 5.9e10 },
   { name: 'Warren Buffett', netWorth: 1.61e11 },
   { name: 'Dustin Moskovitz', netWorth: 1.4e10 },
   { name: 'Elon Musk', netWorth: 3.64e11 },
@@ -369,7 +369,9 @@ export const calculateDonorStats = () => {
       netWorth: donor.netWorth,
       totalDonated: 0,
       livesSaved: 0,
-      costPerLifeSaved: 0
+      costPerLifeSaved: 0,
+      // Store the totalDonated field separately if it exists
+      totalDonatedField: donor.totalDonated || null
     });
   });
   
@@ -391,12 +393,35 @@ export const calculateDonorStats = () => {
     });
   });
   
-  // Calculate cost per life saved
+  // Calculate cost per life saved and handle totalDonated field
   donorMap.forEach((data, name) => {
+    // For donors with totalDonatedField, calculate additional lives saved using same efficiency
+    let totalLivesSaved = data.livesSaved;
+    let displayTotalDonated = data.totalDonated;
+    let knownDonations = data.totalDonated; // Store known donations separately
+    
+    if (data.totalDonatedField && data.totalDonatedField > data.totalDonated) {
+      // If they have a totalDonatedField and it's greater than known donations
+      const unknownAmount = data.totalDonatedField - data.totalDonated;
+      
+      // Only calculate additional lives if they've saved some lives already
+      if (data.livesSaved !== 0) {
+        const avgCostPerLife = data.totalDonated / data.livesSaved;
+        const additionalLives = avgCostPerLife !== 0 ? unknownAmount / avgCostPerLife : 0;
+        totalLivesSaved += additionalLives;
+      }
+      
+      // Use the totalDonatedField as the display value
+      displayTotalDonated = data.totalDonatedField;
+    }
+    
     donorMap.set(name, {
       ...data,
-      costPerLifeSaved: data.livesSaved > 0 ? data.totalDonated / data.livesSaved : 
-                       (data.livesSaved < 0 ? data.totalDonated / Math.abs(data.livesSaved) * -1 : 0)
+      totalDonated: displayTotalDonated, // This is now the full amount including unknown
+      knownDonations: knownDonations, // Store just the known donations
+      livesSaved: totalLivesSaved,
+      costPerLifeSaved: totalLivesSaved > 0 ? displayTotalDonated / totalLivesSaved : 
+                       (totalLivesSaved < 0 ? displayTotalDonated / Math.abs(totalLivesSaved) * -1 : 0)
     });
   });
   

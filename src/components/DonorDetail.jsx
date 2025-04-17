@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife } from '../data/donationData';
+import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors } from '../data/donationData';
 import SortableTable from './SortableTable';
 
 function DonorDetail() {
@@ -36,6 +36,42 @@ function DonorDetail() {
       })
       .sort((a, b) => b.dateObj - a.dateObj);
     
+    // Find the donor with the totalDonated field in the donors array
+    const donorData = donors.find(donor => donor.name === donorName);
+    
+    // Keep track of the sum of known donations for reference
+    const knownDonationsTotal = donorDonationsList.reduce((total, donation) => total + donation.amount, 0);
+    
+    // If donor has totalDonated field and it's greater than the sum of known donations
+    if (donorData?.totalDonated && donorData.totalDonated > knownDonationsTotal) {
+      // Calculate the unknown amount
+      const unknownAmount = donorData.totalDonated - knownDonationsTotal;
+      
+      // Calculate the average cost per life for all known donations
+      const totalLivesSaved = donorDonationsList.reduce((total, donation) => total + donation.livesSaved, 0);
+      
+      // Only calculate avg cost if there are lives saved (avoid division by zero)
+      const avgCostPerLife = totalLivesSaved !== 0 ? knownDonationsTotal / totalLivesSaved : 0;
+      
+      // Calculate lives saved for the unknown amount using the same cost per life
+      const unknownLivesSaved = avgCostPerLife !== 0 ? unknownAmount / avgCostPerLife : 0;
+      
+      // Add the unknown donation to the list
+      donorDonationsList.unshift({
+        date: 'Unknown',
+        donor: donorName,
+        charity: 'Unknown',
+        amount: unknownAmount,
+        category: 'other',
+        categoryName: 'Unknown',
+        livesSaved: unknownLivesSaved,
+        costPerLife: avgCostPerLife,
+        dateObj: new Date(0), // Oldest date to sort at the end
+        source: '',
+        isUnknown: true
+      });
+    }
+    
     setDonorDonations(donorDonationsList);
   }, [donorName]);
 
@@ -65,11 +101,13 @@ function DonorDetail() {
       label: 'Date',
       render: (donation) => (
         <div className="text-sm text-slate-900">
-          {new Date(donation.date).toLocaleDateString('en-US', {
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric'
-          })}
+          {donation.isUnknown ? 
+            <span className="text-slate-500">Unknown</span> : 
+            new Date(donation.date).toLocaleDateString('en-US', {
+              year: 'numeric', 
+              month: 'short', 
+              day: 'numeric'
+            })}
         </div>
       )
     },
@@ -77,6 +115,8 @@ function DonorDetail() {
       key: 'amount', 
       label: 'Amount',
       render: (donation) => (
+        donation.isUnknown ? 
+        <span className="text-sm text-slate-500">{formatCurrency(donation.amount)}</span> :
         <a 
           href={donation.source} 
           target="_blank" 
@@ -91,6 +131,8 @@ function DonorDetail() {
       key: 'charity', 
       label: 'Recipient',
       render: (donation) => (
+        donation.isUnknown ? 
+        <span className="text-sm text-slate-500">Unknown</span> :
         <Link 
           to={`/recipient/${encodeURIComponent(donation.charity)}`}
           className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
@@ -102,13 +144,18 @@ function DonorDetail() {
     { 
       key: 'categoryName', 
       label: 'Category',
-      render: (donation) => <div className="text-sm text-slate-900">{donation.categoryName}</div>
+      render: (donation) => (
+        <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 'text-slate-900'}`}>
+          {donation.categoryName}
+        </div>
+      )
     },
     { 
       key: 'livesSaved', 
       label: 'Lives Saved',
       render: (donation) => (
-        <div className={`text-sm ${donation.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+        <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 
+          (donation.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700')}`}>
           {formatNumber(Math.round(donation.livesSaved))}
         </div>
       )
@@ -117,7 +164,7 @@ function DonorDetail() {
       key: 'costPerLife', 
       label: 'Cost/Life',
       render: (donation) => (
-        <div className="text-sm text-slate-900">
+        <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 'text-slate-900'}`}>
           {donation.livesSaved === 0 ? <span className="text-2xl">∞</span> : `$${formatNumber(Math.round(donation.costPerLife))}`}
         </div>
       )
@@ -163,7 +210,14 @@ function DonorDetail() {
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Total Donated</span>
-              <span className="text-3xl font-bold text-slate-900">{formatCurrency(donorStats.totalDonated)}</span>
+              <span className="text-3xl font-bold text-slate-900">
+                {formatCurrency(donorStats.totalDonatedField || donorStats.totalDonated)}
+              </span>
+              {donorStats.totalDonatedField && (
+                <span className="text-xs text-slate-500 mt-1">
+                  {formatCurrency(donorStats.knownDonations)} known
+                </span>
+              )}
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>

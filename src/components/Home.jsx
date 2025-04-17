@@ -214,6 +214,7 @@ function Home(props) {
         <Link 
           to="/recipients" 
           className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
+          onClick={() => window.scrollTo(0, 0)}
         >
           View list of recipient organizations →
         </Link>

@@ -57,7 +57,7 @@ class ErrorBoundary extends React.Component {
 const Header = ({ isHome, isRecipients }) => {
   return (
     <motion.div
-      className={`w-full bg-indigo-700 ${isHome ? 'py-10' : 'py-8'} shadow-lg`}
+      className="w-full bg-indigo-700 py-9 shadow-lg"
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}

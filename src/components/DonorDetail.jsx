@@ -16,6 +16,7 @@ function DonorDetail(props) {
   const [chartData, setChartData] = useState([]); // This will change format based on view
   const [chartView, setChartView] = useState('livesSaved'); // 'donations' or 'livesSaved'
   const [shouldAnimate, setShouldAnimate] = useState(false); // Only animate when user toggles view
+  const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   
   // Colors for the chart segments - extended palette with more variety
   const COLORS = [
@@ -287,18 +288,81 @@ function DonorDetail(props) {
     setChartData(initialChartData);
   }, [rawChartData]);
   
-  // When the view changes, update the target values
+  // Handle shrinking transition phase
   useEffect(() => {
-    if (chartData.length === 0) return;
+    if (chartData.length === 0 || transitionStage !== 'shrinking') return;
     
-    // Create a new array with the target values based on the current view
-    const newChartData = chartData.map(item => ({
+    let needsIntermediateStep = false;
+    
+    // If switching from lives saved to donations, shrink negative bars to zero
+    if (chartView === 'donations') {
+      needsIntermediateStep = chartData.some(item => item.livesSavedValue < 0);
+      
+      if (needsIntermediateStep) {
+        // Create intermediate data where negative values are set to zero
+        const intermediateData = chartData.map(item => ({
+          ...item,
+          valueTarget: item.livesSavedValue < 0 ? 0 : item.livesSavedValue,
+        }));
+        
+        setChartData(intermediateData);
+      }
+    } 
+    // If switching from donations to lives saved, shrink positive bars that will become negative
+    else if (chartView === 'livesSaved') {
+      needsIntermediateStep = chartData.some(item => item.livesSavedValue < 0);
+      
+      if (needsIntermediateStep) {
+        // First animate values to zero if they will become negative
+        const intermediateData = chartData.map(item => ({
+          ...item,
+          valueTarget: item.livesSavedValue < 0 ? 0 : item.donationValue,
+        }));
+        
+        setChartData(intermediateData);
+      }
+    }
+    
+    // Schedule next stage
+    const timer = setTimeout(() => {
+      setTransitionStage('growing');
+    }, needsIntermediateStep ? ANIMATION_DURATION : 50);
+    
+    return () => clearTimeout(timer);
+  }, [transitionStage, chartView]); // Remove chartData dependency
+  
+  // Handle growing transition phase
+  useEffect(() => {
+    if (chartData.length === 0 || transitionStage !== 'growing') return;
+    
+    // Second stage: Grow bars to their final values
+    const finalData = chartData.map(item => ({
       ...item,
       valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
     }));
     
-    setChartData(newChartData);
-  }, [chartView]);
+    setChartData(finalData);
+    
+    // Reset transition state after animation completes
+    const timer = setTimeout(() => {
+      setTransitionStage('none');
+    }, ANIMATION_DURATION);
+    
+    return () => clearTimeout(timer);
+  }, [transitionStage, chartView]); // Remove chartData dependency
+  
+  // Initialize chart view on rawChartData load
+  useEffect(() => {
+    if (chartData.length === 0 || !chartView) return;
+    
+    // Only runs on initial load
+    const initialData = chartData.map(item => ({
+      ...item,
+      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+    }));
+    
+    setChartData(initialData);
+  }, [rawChartData]); // Only depend on rawChartData for initialization
   
   // Separate effect to handle animation timing
   useEffect(() => {
@@ -614,6 +678,7 @@ function DonorDetail(props) {
                   <button
                     onClick={() => {
                       setShouldAnimate(true);
+                      setTransitionStage('shrinking');
                       setChartView('donations');
                     }}
                     className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
@@ -621,12 +686,14 @@ function DonorDetail(props) {
                         ? 'bg-indigo-600 text-white shadow-sm'
                         : 'text-slate-600 hover:bg-slate-200'
                     }`}
+                    disabled={transitionStage !== 'none'}
                   >
                     <span>Donations</span>
                   </button>
                   <button
                     onClick={() => {
                       setShouldAnimate(true);
+                      setTransitionStage('shrinking');
                       setChartView('livesSaved');
                     }}
                     className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
@@ -634,6 +701,7 @@ function DonorDetail(props) {
                         ? 'bg-indigo-600 text-white shadow-sm'
                         : 'text-slate-600 hover:bg-slate-200'
                     }`}
+                    disabled={transitionStage !== 'none'}
                   >
                     <span>Lives Saved</span>
                   </button>
@@ -658,6 +726,19 @@ function DonorDetail(props) {
                     <XAxis 
                       type="number" 
                       tickFormatter={(value) => {
+                        // Create placeholder space during transition
+                        // This preserves vertical layout but makes text invisible
+                        if (transitionStage !== 'none') {
+                          // Use a transparent placeholder with consistent width
+                          // For donations view, we use dollar amounts which need more space
+                          if (chartView === 'donations') {
+                            return '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'; // Non-breaking spaces
+                          } else {
+                            // For lives saved view
+                            return '\u00A0\u00A0\u00A0\u00A0\u00A0'; // Non-breaking spaces
+                          }
+                        }
+                        
                         if (value === 0) return "0";
                         
                         if (chartView === 'donations') {
@@ -680,12 +761,34 @@ function DonorDetail(props) {
                         }
                       }}
                       axisLine={true}
+                      tick={{ 
+                        fill: transitionStage !== 'none' ? 'transparent' : undefined,
+                        fontSize: 12
+                      }}
                       tickLine={true}
-                      domain={chartView === 'livesSaved' && chartData.some(item => item.value < 0) ? 
-                        ['dataMin', 'dataMax'] : [0, 'auto']}
+                      // Dynamically set domain based on current data values
+                      domain={(() => {
+                        // If we're in lives saved view or transitioning to it, and there are negative values
+                        const hasNegativeValues = chartData.some(item => item.valueTarget < 0);
+                        
+                        if (hasNegativeValues) {
+                          return ['dataMin', 'dataMax'];
+                        } else if (chartView === 'donations' || 
+                                  (chartView === 'livesSaved' && !chartData.some(item => item.livesSavedValue < 0))) {
+                          return [0, 'auto'];
+                        } else {
+                          // During transition from negative lives saved to donations
+                          return [Math.min(0, ...chartData.map(d => d.valueTarget)), 
+                                  Math.max(...chartData.map(d => d.valueTarget))];
+                        }
+                      })()}
+                      // Make axis line transparent during transition
+                      stroke={transitionStage !== 'none' ? 'transparent' : '#666'}
                       animationDuration={ANIMATION_DURATION}
                       animationEasing="ease-out"
                       allowDataOverflow={true}
+                      // Keep space for labels by setting height
+                      height={30}
                     />
                     <YAxis 
                       type="category" 

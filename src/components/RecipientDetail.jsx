@@ -305,6 +305,7 @@ function RecipientDetail(props) {
                         padding: '0.5rem 0.75rem',
                         boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' 
                       }}
+                      cursor={false}
                     />
                     <Bar 
                       dataKey="percentage" 
@@ -321,6 +322,19 @@ function RecipientDetail(props) {
                         <Cell 
                           key={`cell-${entry.id}`} 
                           fill={COLORS[index % COLORS.length]}
+                          // Create a custom style for hover states - slightly lighter version
+                          style={{
+                            filter: 'brightness(1)',
+                            transition: 'filter 0.2s ease-in-out',
+                            cursor: 'pointer'
+                          }}
+                          // Event handlers for hover effect
+                          onMouseEnter={(e) => {
+                            e.target.style.filter = 'brightness(1.15)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.filter = 'brightness(1)';
+                          }}
                         />
                       ))}
                     </Bar>

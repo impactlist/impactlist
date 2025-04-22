@@ -10,7 +10,7 @@ export const effectivenessCategories = {
   'meta_theory': { name: 'Meta and Theory', costPerLife: 5000 },           
   'decision_making': { name: 'Improving Decision Making', costPerLife: 1000 },
   'climate_change': { name: 'Climate Change', costPerLife: 50000 },        
-  'health_medicine': { name: 'Health/Medicine', costPerLife: 20000 },       
+  'health_medicine': { name: 'Health / Medicine', costPerLife: 20000 },       
   'education': { name: 'Education', costPerLife: 20000 },                  
   'political': { name: 'Political Institutions', costPerLife: 10000 },    
   'science_tech': { name: 'Science and Tech', costPerLife: 20000 },         

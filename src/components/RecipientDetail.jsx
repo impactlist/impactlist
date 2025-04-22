@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip
 } from 'recharts';
 import { 
   donations, 
@@ -28,6 +28,45 @@ function RecipientDetail(props) {
     '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
     '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#3f3f46'
   ];
+
+  // Custom chart tooltip
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      if (!data) return null;
+      
+      // Get category-specific cost per life
+      const charity = charities.find(c => c.name === recipientName);
+      const categoryData = charity?.categories[data.id];
+      let costPerLife;
+      
+      if (categoryData) {
+        if (categoryData.costPerLife !== undefined) {
+          // Use explicit costPerLife if provided
+          costPerLife = categoryData.costPerLife;
+        } else {
+          // Get base cost from effectivenessCategories
+          const baseCostPerLife = effectivenessCategories[data.id].costPerLife;
+          
+          // Apply multiplier if it exists
+          costPerLife = categoryData.multiplier ? 
+            baseCostPerLife / categoryData.multiplier : 
+            baseCostPerLife;
+        }
+      }
+      
+      return (
+        <div className="bg-white p-3 shadow-md rounded-md border border-slate-200">
+          <p className="font-semibold text-sm">{data.name}</p>
+          <p className="text-sm">{formatCurrency(costPerLife)} per life</p>
+          <p className="text-xs text-slate-500">
+            {`${data.percentage}% of focus`}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   useEffect(() => {
     // Get charity info
@@ -295,6 +334,12 @@ function RecipientDetail(props) {
                       stroke="#1e293b"
                       interval={0}
                     />
+                    
+                    <Tooltip 
+                      content={<CustomTooltip />}
+                      cursor={false}
+                    />
+                    
                     <Bar 
                       dataKey="percentage" 
                       name="Percentage"

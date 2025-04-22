@@ -2,6 +2,9 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
+  BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip
+} from 'recharts';
+import { 
   donations, 
   charities, 
   effectivenessCategories, 
@@ -17,6 +20,14 @@ function RecipientDetail(props) {
   const { recipientName } = useParams();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
+  
+  // Colors for the chart bars
+  const COLORS = [
+    '#4f46e5', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#818cf8',
+    '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#22c55e', '#84cc16', '#34d399',
+    '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
+    '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#3f3f46'
+  ];
 
   useEffect(() => {
     // Get charity info
@@ -196,17 +207,19 @@ function RecipientDetail(props) {
           transition={{ delay: 0.1, duration: 0.4 }}
         >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="flex flex-col p-4 bg-slate-50 rounded-lg">
-              <span className="text-sm text-slate-600 uppercase font-semibold text-center mb-2">Focus Areas</span>
-              <div className="space-y-2">
-                {recipientInfo.categoryBreakdown.map((category) => (
-                  <div key={category.id} className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-slate-900">{category.name}</span>
-                    <span className="text-sm font-semibold text-slate-700">{category.percentage}%</span>
-                  </div>
-                ))}
+            {recipientInfo.categoryBreakdown.length === 1 && (
+              <div className="flex flex-col p-4 bg-slate-50 rounded-lg">
+                <span className="text-sm text-slate-600 uppercase font-semibold text-center mb-2">Focus Area</span>
+                <div className="space-y-2">
+                  {recipientInfo.categoryBreakdown.map((category) => (
+                    <div key={category.id} className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-slate-900">{category.name}</span>
+                      <span className="text-sm font-semibold text-slate-700">{category.percentage}%</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
               <span className="text-3xl font-bold text-slate-900">
@@ -228,6 +241,95 @@ function RecipientDetail(props) {
             </div>
           </div>
         </motion.div>
+
+        {/* Focus Areas Bar Chart - Only show if multiple focus areas */}
+        {recipientInfo.categoryBreakdown.length > 1 && (
+          <motion.div 
+            className="bg-white rounded-xl shadow-lg mb-8 border border-slate-200"
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.15, duration: 0.4 }}
+          >
+            <div className="px-6 py-4 border-b border-slate-200">
+              <h2 className="text-xl font-semibold text-slate-800">Focus Areas</h2>
+              <p className="text-sm text-slate-500 mt-1">
+                Distribution of focus areas by percentage
+              </p>
+            </div>
+            
+            <div className="py-4 px-2 relative overflow-hidden">
+              <div 
+                className="w-full overflow-visible"
+                style={{ height: `${Math.max(200, recipientInfo.categoryBreakdown.length * 40)}px` }}
+              >
+                <ResponsiveContainer width="98%" height="100%">
+                  <BarChart
+                    data={recipientInfo.categoryBreakdown}
+                    layout="vertical"
+                    margin={{ top: 20, right: 100, left: 120, bottom: 5 }}
+                    barGap={0}
+                    barCategoryGap={8}
+                  >
+                    <XAxis 
+                      type="number" 
+                      tickFormatter={(value) => `${value}%`}
+                      domain={[0, 100]}
+                      axisLine={true}
+                      tick={{ 
+                        fill: '#1e293b',
+                        fontSize: 14,
+                      }}
+                      tickLine={true}
+                      stroke="#1e293b"
+                    />
+                    <YAxis 
+                      type="category" 
+                      dataKey="name" 
+                      width={120}
+                      tick={{ 
+                        fontSize: 14, 
+                        fill: '#1e293b',
+                        dy: 0
+                      }}
+                      axisLine={true}
+                      stroke="#1e293b"
+                      interval={0}
+                    />
+                    <Tooltip 
+                      formatter={(value) => `${value}%`}
+                      labelStyle={{ fontWeight: 'bold', color: '#1e293b' }}
+                      contentStyle={{ 
+                        backgroundColor: 'white', 
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '0.375rem',
+                        padding: '0.5rem 0.75rem',
+                        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' 
+                      }}
+                    />
+                    <Bar 
+                      dataKey="percentage" 
+                      name="Percentage"
+                      radius={[0, 4, 4, 0]}
+                      label={{ 
+                        position: "right",
+                        formatter: (value) => `${value}%`,
+                        fontSize: 12,
+                        fill: '#64748b'
+                      }}
+                    >
+                      {recipientInfo.categoryBreakdown.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${entry.id}`} 
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Donations list */}
         <motion.div 

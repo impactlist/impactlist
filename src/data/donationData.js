@@ -19,11 +19,12 @@ export const effectivenessCategories = {
   'religious': { name: 'Religious', costPerLife: 100000 },                  
   'environmental': { name: 'General Environmental', costPerLife: 100000 },  
   'disaster_relief': { name: 'Disaster Relief', costPerLife: 30000 },      
-  'human_rights': { name: 'Human Rights and Justice', costPerLife: 50000 }, 
+  'human_rights': { name: 'Human Rights and Justice', costPerLife: 50000 },
+  'social_justice': { name: 'Social Justice', costPerLife: 500000 },
   'housing': { name: 'Homelessness and Housing', costPerLife: 50000 },     
   'longevity': { name: 'Longevity', costPerLife: 10000 },                 
   'population': { name: 'Population', costPerLife: 50000 },
-  'national_defense': { name: 'National Defense', costPerLife: 50000 },
+  'conflict_mitigation': { name: 'Conflict Mitigation', costPerLife: 50000 },
   'other': { name: 'Other', costPerLife: 100000 }
 };
 
@@ -112,12 +113,40 @@ export const charities = [
   { name: 'Ellison Medical Foundation', categories: { health_medicine: { fraction: 1.0 } } },
   { name: 'Sderot Community Center (Israel)', categories: { local_community: { fraction: 1.0 } } },
   { name: 'Global Polio Eradication Initiative', categories: { global_health: { fraction: 1.0 } } },
-  { name: 'Friends of the Israel Defense Forces', categories: { national_defense: { fraction: 1.0 } } },
+  { name: 'Friends of the Israel Defense Forces', categories: { conflict_mitigation: { fraction: 1.0 } } },
   { name: 'University of Southern California (Medicine)', categories: { health_medicine: { fraction: 1.0 } } },
   { name: 'University of Oxford (Science)', categories: { science_tech: { fraction: 1.0 } } },
   { name: 'GAVI Alliance (The Vaccine Fund)', categories: { global_health: { fraction: 1.0 } } },
   { name: 'PATH', categories: { global_health: { fraction: 1.0 } } },
   { name: 'The Foundation (Musk)', categories: { education: { fraction: 1.0, multiplier: 10.0 } } },
+  { name: 'IAEA Nuclear Fuel Bank', categories: { nuclear: { fraction: 1.0 } } },
+  { name: 'Susan Thompson Buffett Foundation', categories: { 
+      health_medicine: { fraction: 0.65 },
+      global_health: { fraction: 0.15 },
+      education: { fraction: 0.10 },
+      social_justice: { fraction: 0.05 },
+      human_rights: { fraction: 0.05 } } },
+  { name: 'Howard G. Buffett Foundation', categories: { 
+      conflict_mitigation: { fraction: 0.25 },
+      human_rights: { fraction: 0.15 },
+      global_development: { fraction: 0.6 } } },
+  { name: 'Sherwood Foundation', categories: { 
+      education: { fraction: 0.5 },
+      social_justice: { fraction: 0.25 },
+      housing: { fraction: 0.05 },
+      health_medicine: { fraction: 0.05 },
+      local_community: { fraction: 0.15 } } },
+  { name: 'NoVo Foundation', categories: { 
+      human_rights: { fraction: 0.15 }, 
+      education: { fraction: 0.1 },
+      local_community: { fraction: 0.1 },
+      environmental: { fraction: 0.05 },
+      social_justice: { fraction: 0.6 } } },
+  { name: 'GLIDE Foundation', categories: { 
+      local_community: { fraction: 0.2 },
+      housing: { fraction: 0.4 },  
+      health_medicine: { fraction: 0.1 },
+      social_justice: { fraction: 0.3 } } },
 ];
 
 // Donor data with net worth
@@ -130,7 +159,6 @@ export const donors = [
   { name: 'Mark Zuckerberg', netWorth: 1.7e11 },
   { name: 'Michael Bloomberg', netWorth: 1.1e11 },
   { name: 'Jack Dorsey', netWorth: 3.6e9 },
-  { name: 'Sam Bankman-Fried', netWorth: 0 },
   { name: 'Jack Ma', netWorth: 2.6e10 },
   { name: 'Vitalik Buterin', netWorth: 6e8 },
   { name: 'Jeff Bezos', netWorth: 1.91e11 },
@@ -284,9 +312,6 @@ export const donations = [
   { date: '2023-08-14', donor: 'Michael Bloomberg', charity: 'Evidence Action', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Michael_Bloomberg' },
   { date: '2023-10-14', donor: 'Michael Bloomberg', charity: 'SCI Foundation', amount: 2000000000, source: 'https://www.bloomberg.com/profile/person/1241252' },
   
-  // Sam Bankman-Fried donations
-  { date: '2023-07-21', donor: 'Sam Bankman-Fried', charity: 'Center for Human-Compatible AI', amount: 150000000, source: 'https://en.wikipedia.org/wiki/Sam_Bankman-Fried' },
-  { date: '2023-09-28', donor: 'Sam Bankman-Fried', charity: 'Helen Keller International', amount: 340000000, source: 'https://www.forbes.com/profile/sam-bankman-fried/' },
   
   // Sergey Brin donations
   { date: '2023-03-17', donor: 'Sergey Brin', charity: 'GiveDirectly', amount: 180000000, source: 'https://en.wikipedia.org/wiki/Sergey_Brin' },
@@ -307,8 +332,13 @@ export const donations = [
   { date: '2023-11-05', donor: 'Vitalik Buterin', charity: 'Anthropic', amount: 100000000, source: 'https://www.forbes.com/profile/vitalik-buterin/' },
   
   // Warren Buffett donations
-  { date: '2023-02-15', donor: 'Warren Buffett', charity: 'GiveDirectly', amount: 3200000000, source: 'https://en.wikipedia.org/wiki/Warren_Buffett' },
-  { date: '2023-04-18', donor: 'Warren Buffett', charity: 'New Incentives', amount: 450000000, source: 'https://www.berkshirehathaway.com/aboutwarren.html' }
+  { date: '2006-09-19', donor: 'Warren Buffett', charity: 'IAEA Nuclear Fuel Bank', amount: 50e6, source: 'https://www.nti.org/news/nti-commits-50-million-iaea-nuclear-fuel-bank/' },
+  { date: '2006-11-25', donor: 'Warren Buffett', charity: 'Bill & Melinda Gates Foundation', amount: 43e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
+  { date: '2006-11-25', donor: 'Warren Buffett', charity: 'Susan Thompson Buffett Foundation', amount: 5.8e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
+  { date: '2006-11-25', donor: 'Warren Buffett', charity: 'Howard G. Buffett Foundation', amount: 2.6e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
+  { date: '2006-11-25', donor: 'Warren Buffett', charity: 'Sherwood Foundation', amount: 2.6e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
+  { date: '2006-11-25', donor: 'Warren Buffett', charity: 'NoVo Foundation', amount: 2.6e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
+  { date: '2006-11-25', donor: 'Warren Buffett', charity: 'GLIDE Foundation', amount: 53e6, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
 ];
 
 // Helper function to get a charity's cost per life

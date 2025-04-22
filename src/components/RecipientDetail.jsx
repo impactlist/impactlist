@@ -206,20 +206,15 @@ function RecipientDetail(props) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {recipientInfo.categoryBreakdown.length === 1 && (
-              <div className="flex flex-col p-4 bg-slate-50 rounded-lg">
-                <span className="text-sm text-slate-600 uppercase font-semibold text-center mb-2">Focus Area</span>
-                <div className="space-y-2">
-                  {recipientInfo.categoryBreakdown.map((category) => (
-                    <div key={category.id} className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-slate-900">{category.name}</span>
-                      <span className="text-sm font-semibold text-slate-700">{category.percentage}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div className={`grid grid-cols-1 ${recipientInfo.categoryBreakdown.length === 1 ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-6`}>
+            {/* Total Lives Saved - Always first */}
+            <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
+              <span className="text-sm text-slate-600 uppercase font-semibold">Total Lives Saved</span>
+              <span className={`text-3xl font-bold ${recipientInfo.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                {formatNumber(Math.round(recipientInfo.totalLivesSaved))}
+              </span>
+            </div>
+            
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
               <span className="text-3xl font-bold text-slate-900">
@@ -229,16 +224,21 @@ function RecipientDetail(props) {
                 Category avg: {recipientInfo.categoryCostPerLife === 0 ? <span className="text-xl">∞</span> : `$${formatNumber(Math.round(recipientInfo.categoryCostPerLife))}`}
               </span>
             </div>
+            
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Total Received</span>
               <span className="text-3xl font-bold text-slate-900">{formatCurrency(recipientInfo.totalReceived)}</span>
             </div>
-            <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
-              <span className="text-sm text-slate-600 uppercase font-semibold">Total Lives Saved</span>
-              <span className={`text-3xl font-bold ${recipientInfo.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
-                {formatNumber(Math.round(recipientInfo.totalLivesSaved))}
-              </span>
-            </div>
+            
+            {/* Focus Area - Always last (when shown) */}
+            {recipientInfo.categoryBreakdown.length === 1 && (
+              <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
+                <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
+                <span className="text-3xl font-bold text-slate-900">
+                  {recipientInfo.categoryBreakdown[0].name}
+                </span>
+              </div>
+            )}
           </div>
         </motion.div>
 

@@ -296,12 +296,12 @@ function RecipientDetail(props) {
               </p>
             </div>
             
-            <div className="py-4 px-2 relative overflow-hidden">
+            <div className="py-4 px-2 relative overflow-x-auto">
               <div 
                 className="w-full overflow-visible"
                 style={{ height: `${Math.max(200, recipientInfo.categoryBreakdown.length * 40)}px` }}
               >
-                <ResponsiveContainer width="98%" height="100%">
+                <ResponsiveContainer width="98%" height="100%" minWidth={500}>
                   <BarChart
                     data={recipientInfo.categoryBreakdown}
                     layout="vertical"

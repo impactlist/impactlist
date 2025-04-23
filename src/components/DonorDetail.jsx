@@ -717,13 +717,13 @@ function DonorDetail(props) {
             </div>
           </div>
           
-          <div className="py-4 px-2 relative overflow-hidden">
+          <div className="py-4 px-2 relative overflow-x-auto">
             <div 
               className="w-full overflow-visible"
               style={{ height: chartData.length > 0 ? `${calculateChartHeight(chartData)}px` : '384px' }}
             >
               {chartData.length > 0 ? (
-                <ResponsiveContainer width="98%" height="100%">
+                <ResponsiveContainer width="98%" height="100%" minWidth={600}>
                   <BarChart
                     data={chartData}
                     layout="vertical"

@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors, getPrimaryCategory } from '../data/donationData';
 import SortableTable from './SortableTable';
@@ -17,12 +17,41 @@ function DonorDetail(props) {
   const [chartView, setChartView] = useState('livesSaved'); // 'donations' or 'livesSaved'
   const [shouldAnimate, setShouldAnimate] = useState(false); // Only animate when user toggles view
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
+  const [chartContainerWidth, setChartContainerWidth] = useState(800); // Default to a reasonable width
+  const chartContainerRef = useRef(null);
   
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
     // Allocate about 55px per category with a minimum height of 384px (corresponds to ~8-9 categories)
     // Each additional category beyond that adds more height
     return Math.max(384, categories.length * 55);
+  };
+  
+  // Calculate responsive margins based on available width
+  const calculateChartMargins = (containerWidth) => {
+    // Default margins for larger screens
+    const defaultMargins = { top: 20, right: 180, left: 90, bottom: 5 };
+    
+    // Minimum margins before scroll is needed
+    const minMargins = { top: 20, right: 25, left: 20, bottom: 5 };
+    
+    // Linearly reduce margins as width decreases
+    if (containerWidth >= 800) {
+      // Full margins for wider screens
+      return defaultMargins;
+    } else if (containerWidth <= 400) {
+      // Minimum margins for very narrow screens
+      return minMargins;
+    } else {
+      // Proportional margins for in-between widths
+      const ratio = (containerWidth - 400) / 400; // 0 to 1
+      return {
+        top: defaultMargins.top,
+        right: Math.round(minMargins.right + (defaultMargins.right - minMargins.right) * ratio),
+        left: Math.round(minMargins.left + (defaultMargins.left - minMargins.left) * ratio),
+        bottom: defaultMargins.bottom,
+      };
+    }
   };
   
   // Colors for the chart segments - extended palette with more variety
@@ -383,6 +412,27 @@ function DonorDetail(props) {
       return () => clearTimeout(timer);
     }
   }, [chartData, shouldAnimate]);
+  
+  // Effect to handle chart container resizing
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (chartContainerRef.current) {
+        const width = chartContainerRef.current.clientWidth;
+        setChartContainerWidth(width);
+      }
+    };
+    
+    // Initial update
+    updateContainerWidth();
+    
+    // Add resize listener
+    window.addEventListener('resize', updateContainerWidth);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', updateContainerWidth);
+    };
+  }, []);
 
   // Format functions
   const formatNumber = (num) => {
@@ -717,17 +767,18 @@ function DonorDetail(props) {
             </div>
           </div>
           
-          <div className="py-4 px-2 relative overflow-x-auto">
+          <div className={`py-4 px-2 relative ${chartContainerWidth < 500 ? 'overflow-x-auto' : 'overflow-hidden'}`}>
             <div 
+              ref={chartContainerRef}
               className="w-full overflow-visible"
               style={{ height: chartData.length > 0 ? `${calculateChartHeight(chartData)}px` : '384px' }}
             >
               {chartData.length > 0 ? (
-                <ResponsiveContainer width="98%" height="100%" minWidth={600}>
+                <ResponsiveContainer width="98%" height="100%" minWidth={chartContainerWidth < 500 ? 600 : undefined}>
                   <BarChart
                     data={chartData}
                     layout="vertical"
-                    margin={{ top: 20, right: 180, left: 90, bottom: 5 }}
+                    margin={calculateChartMargins(chartContainerWidth)}
                     animationDuration={ANIMATION_DURATION}
                     animationEasing="ease-out"
                     barGap={0}

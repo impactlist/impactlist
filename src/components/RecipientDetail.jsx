@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip
@@ -20,6 +20,8 @@ function RecipientDetail(props) {
   const { recipientName } = useParams();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
+  const [chartContainerWidth, setChartContainerWidth] = useState(800); // Default to a reasonable width
+  const chartContainerRef = useRef(null);
   
   // Colors for the chart bars
   const COLORS = [
@@ -28,6 +30,33 @@ function RecipientDetail(props) {
     '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
     '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#3f3f46'
   ];
+  
+  // Calculate responsive margins based on available width
+  const calculateChartMargins = (containerWidth) => {
+    // Default margins for larger screens
+    const defaultMargins = { top: 20, right: 100, left: 120, bottom: 5 };
+    
+    // Minimum margins before scroll is needed
+    const minMargins = { top: 20, right: 20, left: 25, bottom: 5 };
+    
+    // Linearly reduce margins as width decreases
+    if (containerWidth >= 800) {
+      // Full margins for wider screens
+      return defaultMargins;
+    } else if (containerWidth <= 400) {
+      // Minimum margins for very narrow screens
+      return minMargins;
+    } else {
+      // Proportional margins for in-between widths
+      const ratio = (containerWidth - 400) / 400; // 0 to 1
+      return {
+        top: defaultMargins.top,
+        right: Math.round(minMargins.right + (defaultMargins.right - minMargins.right) * ratio),
+        left: Math.round(minMargins.left + (defaultMargins.left - minMargins.left) * ratio),
+        bottom: defaultMargins.bottom,
+      };
+    }
+  };
 
   // Custom chart tooltip
   const CustomTooltip = ({ active, payload }) => {
@@ -67,6 +96,27 @@ function RecipientDetail(props) {
     }
     return null;
   };
+
+  // Effect to handle chart container resizing
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (chartContainerRef.current) {
+        const width = chartContainerRef.current.clientWidth;
+        setChartContainerWidth(width);
+      }
+    };
+    
+    // Initial update
+    updateContainerWidth();
+    
+    // Add resize listener
+    window.addEventListener('resize', updateContainerWidth);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', updateContainerWidth);
+    };
+  }, []);
 
   useEffect(() => {
     // Get charity info
@@ -296,16 +346,17 @@ function RecipientDetail(props) {
               </p>
             </div>
             
-            <div className="py-4 px-2 relative overflow-x-auto">
+            <div className={`py-4 px-2 relative ${chartContainerWidth < 500 ? 'overflow-x-auto' : 'overflow-hidden'}`}>
               <div 
+                ref={chartContainerRef}
                 className="w-full overflow-visible"
                 style={{ height: `${Math.max(200, recipientInfo.categoryBreakdown.length * 40)}px` }}
               >
-                <ResponsiveContainer width="98%" height="100%" minWidth={500}>
+                <ResponsiveContainer width="98%" height="100%" minWidth={chartContainerWidth < 500 ? 500 : undefined}>
                   <BarChart
                     data={recipientInfo.categoryBreakdown}
                     layout="vertical"
-                    margin={{ top: 20, right: 100, left: 120, bottom: 5 }}
+                    margin={calculateChartMargins(chartContainerWidth)}
                     barGap={0}
                     barCategoryGap={8}
                   >

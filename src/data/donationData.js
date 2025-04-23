@@ -4,15 +4,16 @@ export const effectivenessCategories = {
   'pandemics': { name: 'Pandemics', costPerLife: 500 },                    
   'nuclear': { name: 'Nuclear', costPerLife: 2000 },                      
   'global_health': { name: 'Global Health', costPerLife: 5000},            
-  'global_development': { name: 'Global Development/Poverty', costPerLife: 5000 },
+  'global_development': { name: 'Global Development / Poverty', costPerLife: 5000 },
   'animal_welfare': { name: 'Animal Welfare', costPerLife: 30000 },       
   'global_priorities': { name: 'Global Priorities Research', costPerLife: 5000 },
   'meta_theory': { name: 'Meta and Theory', costPerLife: 5000 },           
   'decision_making': { name: 'Improving Decision Making', costPerLife: 1000 },
+  'institutions': { name: 'Improving Institutions', costPerLife: 50000 },
   'climate_change': { name: 'Climate Change', costPerLife: 50000 },        
   'health_medicine': { name: 'Health / Medicine', costPerLife: 20000 },       
   'education': { name: 'Education', costPerLife: 20000 },                  
-  'political': { name: 'Political Institutions', costPerLife: 10000 },    
+  'political': { name: 'Political', costPerLife: 10000 },    
   'science_tech': { name: 'Science and Tech', costPerLife: 20000 },         
   'local_community': { name: 'Local Community', costPerLife: 50000 },     
   'arts_culture': { name: 'Arts, Culture, Heritage', costPerLife: 100000 }, 
@@ -28,6 +29,7 @@ export const effectivenessCategories = {
   'other': { name: 'Other', costPerLife: 100000 }
 };
 
+// Charity data with their focus area categories
 // Charity data with their focus area categories
 export const charities = [
   { name: 'Against Malaria Foundation', categories: { global_health: { fraction: 1.0 } } },
@@ -56,9 +58,9 @@ export const charities = [
   { name: 'Harvard University', categories: { education: { fraction: 1.0 } } },
   { name: 'Gates Library Foundation', categories: { education: { fraction: 1.0 } } },
   { name: 'Seattle Public Libraries', categories: { education: { fraction: 1.0 } } },
-  { name: 'Bill & Melinda Gates Foundation', categories: { 
+  { name: 'Bill & Melinda Gates Foundation', categories: {
       global_health: { fraction: 0.4 },
-      global_development: { fraction: 0.30 }, 
+      global_development: { fraction: 0.30 },
       climate_change: { fraction: 0.07 },
       education: { fraction: 0.08 },
       pandemics: { fraction: 0.07 },
@@ -96,8 +98,8 @@ export const charities = [
   { name: 'Reporters Committee for Freedom of the Press', categories: { human_rights: { fraction: 1.0 } } },
   { name: 'TheDream.US', categories: { education: { fraction: 1.0 } } },
   { name: 'With Honor Fund', categories: { political: { fraction: 1.0 } } },
-  { name: 'Bezos Day One Fund', categories: { 
-      housing: { fraction: 0.5 }, 
+  { name: 'Bezos Day One Fund', categories: {
+      housing: { fraction: 0.5 },
       education: {fraction: 0.5} } },
   { name: 'Bezos Earth Fund', categories: { climate_change: { fraction: 1.0 } } },
   { name: 'Feeding America (COVID-19 Response Fund)', categories: { disaster_relief: { fraction: 1.0 } } },
@@ -105,7 +107,9 @@ export const charities = [
   { name: 'Smithsonian Institution', categories: { arts_culture: { fraction: 1.0 } } },
   { name: 'Van Jones (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
   { name: 'José Andrés (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
-  { name: 'Obama Foundation', categories: { political: { fraction: 1.0 } } },
+  { name: 'Obama Foundation', categories: { 
+      local_community: { fraction: 0.5 },
+      social_justice: { fraction: 0.5 } } },
   { name: 'Dolly Parton (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
   { name: 'Eva Longoria (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
   { name: 'Bill McRaven (Bezos Courage & Civility Award)', categories: { other: { fraction: 1.0 } } },
@@ -120,71 +124,105 @@ export const charities = [
   { name: 'PATH', categories: { global_health: { fraction: 1.0 } } },
   { name: 'The Foundation (Musk)', categories: { education: { fraction: 1.0, multiplier: 10.0 } } },
   { name: 'IAEA Nuclear Fuel Bank', categories: { nuclear: { fraction: 1.0 } } },
-  { name: 'Susan Thompson Buffett Foundation', categories: { 
+  { name: 'Susan Thompson Buffett Foundation', categories: {
       health_medicine: { fraction: 0.65 },
       global_health: { fraction: 0.15 },
       education: { fraction: 0.10 },
       social_justice: { fraction: 0.05 },
       human_rights: { fraction: 0.05 } } },
-  { name: 'Howard G. Buffett Foundation', categories: { 
+  { name: 'Howard G. Buffett Foundation', categories: {
       conflict_mitigation: { fraction: 0.25 },
       human_rights: { fraction: 0.15 },
       global_development: { fraction: 0.6 } } },
-  { name: 'Sherwood Foundation', categories: { 
+  { name: 'Sherwood Foundation', categories: {
       education: { fraction: 0.5 },
       social_justice: { fraction: 0.25 },
       housing: { fraction: 0.05 },
       health_medicine: { fraction: 0.05 },
       local_community: { fraction: 0.15 } } },
-  { name: 'NoVo Foundation', categories: { 
-      human_rights: { fraction: 0.15 }, 
+  { name: 'NoVo Foundation', categories: {
+      human_rights: { fraction: 0.15 },
       education: { fraction: 0.1 },
       local_community: { fraction: 0.1 },
       environmental: { fraction: 0.05 },
       social_justice: { fraction: 0.6 } } },
-  { name: 'GLIDE Foundation', categories: { 
+  { name: 'GLIDE Foundation', categories: {
       local_community: { fraction: 0.2 },
-      housing: { fraction: 0.4 },  
+      housing: { fraction: 0.4 },
       health_medicine: { fraction: 0.1 },
       social_justice: { fraction: 0.3 } } },
+  // --- Added Charities Below ---
+  { name: 'Californians for Clean Alternative Energy', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'No on Proposition 8 Campaign', categories: { social_justice: { fraction: 1.0 } } },
+  { name: 'President Barack Obama Inaugural Committee', categories: { political: { fraction: 1.0 } } },
+  { name: 'Ebola Relief Efforts', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'Shoo the Flu', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Oakland Unified School District (Flu Shots)', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Regents of the University of California (vaccine delivery study)', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Oakland Unified School District (flu study)', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'New Venture Fund', categories: { social_justice: { fraction: 1.0 } } },
+  { name: 'American Cancer Society', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Stichting European Climate Foundation', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'RF Catalytic Capital Inc (community project)', categories: { local_community: { fraction: 1.0 } } },
+  { name: 'Instituto Clima e Sociedade', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'World Resources Institute', categories: { environmental: { fraction: 1.0 } } },
+  { name: 'The Energy Foundation', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'Global Fishing Watch', categories: { environmental: { fraction: 1.0 } } },
+  { name: 'The Tides Center', categories: { social_justice: { fraction: 1.0 } } },
+  { name: 'People\'s Courage International Inc', categories: { human_rights: { fraction: 1.0 } } },
+  { name: 'University Of California Berkeley Foundation (science)', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'Upstream USA', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Think Of Us', categories: { social_justice: { fraction: 1.0 } } },
+  { name: 'Sierra Club (climate change)', categories: { climate_change: { fraction: 1.0 } } },
+  { name: 'Johns Hopkins University (science)', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'Johns Hopkins University (education)', categories: { education: { fraction: 1.0 } } },
+  { name: 'Bloomberg Philanthropies', categories: { 
+      health_medicine: { fraction: 0.2 },
+      global_health: { fraction: 0.2 },
+      education: { fraction: 0.15 },
+      climate_change: { fraction: 0.15 },
+      local_community: { fraction: 0.07 },
+      arts_culture: { fraction: 0.08 },
+      institutions: { fraction: 0.05 },
+      pandemics: { fraction: 0.03 },
+      science_tech: { fraction: 0.02 },
+      global_development: { fraction: 0.05 } } },
 ];
 
 // Donor data with net worth
 export const donors = [
-  { name: 'Mackenzie Scott', netWorth: 2.5e10 },
+//  { name: 'Amancio Ortega', netWorth: 1.21e11 },
   { name: 'Bill Gates', netWorth: 1.08e11, totalDonated: 5.9e10 },
-  { name: 'Warren Buffett', netWorth: 1.61e11 },
-  { name: 'Dustin Moskovitz', netWorth: 1.4e10 },
+//  { name: 'Bernard Arnault', netWorth: 1.45e11 },
+//  { name: 'Dustin Moskovitz', netWorth: 1.4e10 },
   { name: 'Elon Musk', netWorth: 3.64e11 },
-  { name: 'Mark Zuckerberg', netWorth: 1.7e11 },
-  { name: 'Michael Bloomberg', netWorth: 1.1e11 },
-  { name: 'Jack Dorsey', netWorth: 3.6e9 },
-  { name: 'Jack Ma', netWorth: 2.6e10 },
-  { name: 'Vitalik Buterin', netWorth: 6e8 },
+//  { name: 'Jaan Tallinn', netWorth: 1.0e9 },
+//  { name: 'Jack Dorsey', netWorth: 3.6e9 },
+//  { name: 'Jack Ma', netWorth: 2.6e10 },
   { name: 'Jeff Bezos', netWorth: 1.91e11 },
-  { name: 'Larry Ellison', netWorth: 1.63e11 },
-  { name: 'Bernard Arnault', netWorth: 1.45e11 },
+//  { name: 'Jensen Huang', netWorth: 9.2e10 },
+//  { name: 'Larry Ellison', netWorth: 1.63e11 },
+  { name: 'Larry Page', netWorth: 1.28e11, totalDonated: 1.6e9 },
+//  { name: 'Mackenzie Scott', netWorth: 2.5e10 },
+//  { name: 'Mark Zuckerberg', netWorth: 1.7e11 },
+  { name: 'Michael Bloomberg', netWorth: 1.1e11 },
   // Larry allegedly donated 800 million
-  { name: 'Larry Page', netWorth: 1.28e11 },
-  { name: 'Sergey Brin', netWorth: 1.23e11 },
-  { name: 'Amancio Ortega', netWorth: 1.21e11 },
-  { name: 'Steve Ballmer', netWorth: 1.13e11 },
-  { name: 'Jensen Huang', netWorth: 9.2e10 },
-  { name: 'Jaan Tallinn', netWorth: 1.0e9 }
+//  { name: 'Sergey Brin', netWorth: 1.23e11 },
+//  { name: 'Steve Ballmer', netWorth: 1.13e11 },
+//  { name: 'Vitalik Buterin', netWorth: 6e8 },
+  { name: 'Warren Buffett', netWorth: 1.61e11 },
 ];
 
 // Donation data
 export const donations = [
-  // Amancio Ortega donations
-  { date: '2023-02-08', donor: 'Amancio Ortega', charity: 'SCI Foundation', amount: 200000000, source: 'https://en.wikipedia.org/wiki/Amancio_Ortega' },
-  { date: '2023-08-22', donor: 'Amancio Ortega', charity: 'Habitat for Humanity', amount: 350000000, source: 'https://www.forbes.com/profile/amancio-ortega/' },
-  { date: '2023-12-10', donor: 'Amancio Ortega', charity: 'Helen Keller International', amount: 175000000, source: 'https://www.inditex.com/en/about-us/our-people/our-founder' },
   
+  /*
   // Bernard Arnault donations
   { date: '2023-01-15', donor: 'Bernard Arnault', charity: 'Against Malaria Foundation', amount: 150000000, source: 'https://en.wikipedia.org/wiki/Bernard_Arnault' },
   { date: '2023-04-18', donor: 'Bernard Arnault', charity: 'Climate Works', amount: 600000000, source: 'https://www.forbes.com/profile/bernard-arnault/' },
   { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000, source: 'https://www.lvmh.com/houses/lvmh/bernard-arnault/' },
-  
+  */
+
   // Bill Gates donations
   // Gemini says "Through 2023, Bill Gates (and formerly Melinda French Gates) had personally contributed $59.5 billion to the Gates Foundation endowment.. the below is only 50.4 donated total 
   // Don't count donations to his foundation... try to explode them.
@@ -207,12 +245,12 @@ export const donations = [
   { date: '2017-06-01', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 4680000000, source: 'https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229', notes: 'From Microsoft stock' },
   { date: '2017-11-01', donor: 'Bill Gates', charity: 'Dementia Discovery Fund', amount: 50000000, source: 'https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy'},
   { date: '2022-07-13', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 20000000000, source: 'https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions', notes: 'Cash/stock gift' },
-  
+  /*
   // Dustin Moskovitz donations
   { date: '2023-05-19', donor: 'Dustin Moskovitz', charity: 'Mercy For Animals', amount: 45000000, source: 'https://www.opensocietyfoundations.org/newsroom/dustin-moskovitz-donation' },
   { date: '2023-06-30', donor: 'Dustin Moskovitz', charity: 'GiveDirectly', amount: 180000000, source: 'https://www.goodventures.org/our-portfolio/grants/givedirectly-general-support-2023' },
   { date: '2023-11-30', donor: 'Dustin Moskovitz', charity: 'Evidence Action', amount: 120000000, source: 'https://www.openphilanthropy.org/grants/' },
-  
+  */
   // Elon Musk donations
   // Count donations from Musk Foundation as his, since it's basically a one man show
   { date: '2010-12-01', donor: 'Elon Musk', charity: 'Bayou La Batre Hurricane Response Center', amount: 250000, source: 'https://cleantechnica.com/2011/12/29/tesla-and-solarcity-install-solar-on-disaster-relief-center-in-alabama/' },
@@ -238,7 +276,7 @@ export const donations = [
   { date: '2022-07-01', donor: 'Elon Musk', charity: 'University of Texas Population Initiative', amount: 10000000, source: 'https://www.insidehighered.com/news/2023/03/22/elon-musk-gave-10m-ut-austin-population-research' },
   { date: '2023-12-01', donor: 'Elon Musk', charity: 'Unknown', amount: 108200000, source: 'https://www.reuters.com/business/musk-donated-108-million-tesla-shares-unnamed-charities-filing-shows-2025-01-02' },
   { date: '2024-12-20', donor: 'Elon Musk', charity: 'The Foundation (Musk)', amount: 137e6, credit: 1, source: 'https://www.cheddar.com/media/big-business-this-week-rage-over-rate-cuts/' },
-
+/*
   // Jaan Tallinn donations
   { date: '2023-02-17', donor: 'Jaan Tallinn', charity: 'Anthropic', amount: 40000000, source: 'https://jaan.online/' },
   { date: '2023-03-08', donor: 'Jaan Tallinn', charity: 'Nuclear Threat Initiative', amount: 20000000, source: 'https://en.wikipedia.org/wiki/Jaan_Tallinn' },
@@ -248,7 +286,7 @@ export const donations = [
   // Jack Dorsey donations
   { date: '2023-01-05', donor: 'Jack Dorsey', charity: 'New Incentives', amount: 75000000, source: 'https://twitter.com/jack' },
   { date: '2023-12-18', donor: 'Jack Dorsey', charity: 'Wikimedia Foundation', amount: 25000000, source: 'https://startsmall.llc/' },
-  
+  */
   // Jeff Bezos donations
   { date: '2011-08-17', donor: 'Jeff Bezos', charity: 'Museum of History & Industry (Seattle)', amount: 10000000, source: 'https://www.seattlepi.com/local/article/Jeff-Bezos-gives-MOHAI-10-million-for-2077208.php' },
   { date: '2011-12-13', donor: 'Jeff Bezos', charity: 'Princeton University (science)', amount: 15000000, source: 'https://www.princeton.edu/news/2011/12/13/jeff-and-mackenzie-bezos-donate-15-million-create-center-princeton-neuroscience' },
@@ -270,7 +308,7 @@ export const donations = [
   { date: '2022-11-12', donor: 'Jeff Bezos', charity: 'Dolly Parton (Bezos Courage & Civility Award)', amount: 100000000, source: 'https://www.reuters.com/lifestyle/dolly-parton-receives-100-million-award-jeff-bezos-2022-11-13/' },
   { date: '2024-03-15', donor: 'Jeff Bezos', charity: 'Eva Longoria (Bezos Courage & Civility Award)', amount: 50000000, source: 'https://people.com/eva-longoria-receives-usd50m-award-from-jeff-bezos-lauren-sanchez-to-spend-on-philanthropy-8609792' },
   { date: '2024-03-15', donor: 'Jeff Bezos', charity: 'Bill McRaven (Bezos Courage & Civility Award)', amount: 50000000, source: 'https://people.com/eva-longoria-receives-usd50m-award-from-jeff-bezos-lauren-sanchez-to-spend-on-philanthropy-8609792' },
-  
+  /*
   // Jensen Huang donations
   { date: '2023-04-30', donor: 'Jensen Huang', charity: 'Anthropic', amount: 150000000, source: 'https://www.nvidia.com/en-us/about-nvidia/jensen-huang/' },
   { date: '2023-09-15', donor: 'Jensen Huang', charity: 'Center for Human-Compatible AI', amount: 100000000, source: 'https://en.wikipedia.org/wiki/Jensen_Huang' },
@@ -290,14 +328,37 @@ export const donations = [
   { date: '2016-05-11', donor: 'Larry Ellison', charity: 'University of Southern California (Medicine)', amount: 200000000, source: 'https://news.usc.edu/100495/200-million-gift-launches-lawrence-j-ellison-institute-for-transformative-medicine-of-usc/' },
   { date: '2017-11-02', donor: 'Larry Ellison', charity: 'Friends of the Israel Defense Forces', amount: 16600000, source: 'https://www.timesofisrael.com/record-53-8-million-raised-for-idf-soldiers-at-beverly-hills-gala/' },
   { date: '2024-12-03', donor: 'Larry Ellison', charity: 'University of Oxford (Science)', amount: 165000000, source: 'https://www.ox.ac.uk/news/2024-12-03-university-oxford-and-ellison-institute-technology-join-forces-transformative', notes: 'only a pledge' },
-
+*/
   
   // Larry Page donations
-  { date: '2023-02-28', donor: 'Larry Page', charity: 'Coalition for Epidemic Preparedness', amount: 400000000, source: 'https://en.wikipedia.org/wiki/Larry_Page' },
-  { date: '2023-05-12', donor: 'Larry Page', charity: 'Center for Human-Compatible AI', amount: 300000000, source: 'https://www.google.com/about/our-story/' },
-  { date: '2023-07-19', donor: 'Larry Page', charity: 'Evidence Action', amount: 150000000, source: 'https://www.forbes.com/profile/larry-page/' },
-  { date: '2023-10-08', donor: 'Larry Page', charity: 'Global Priorities Institute', amount: 250000000, source: 'https://www.alphabet.com/en-ww/leadership' },
-  
+  { date: '2006-11-01', donor: 'Larry Page', charity: 'Californians for Clean Alternative Energy', amount: 1000000, source: 'https://www.influencewatch.org/person/larry-page/' },
+  { date: '2008-11-01', donor: 'Larry Page', charity: 'No on Proposition 8 Campaign', amount: 400000, source: 'https://www.influencewatch.org/person/larry-page/' },
+  { date: '2008-12-31', donor: 'Larry Page', charity: 'President Barack Obama Inaugural Committee', amount: 25000, source: 'https://www.influencewatch.org/person/larry-page/' },
+  { date: '2014-11-10', donor: 'Larry Page', charity: 'Ebola Relief Efforts', amount: 15000000, source: 'https://philanthropynewsdigest.org/news/google-larry-page-pledge-30-million-for-ebola-relief-efforts' },
+  { date: '2015-05-31', donor: 'Larry Page', charity: 'Shoo the Flu', amount: 88000, source: 'https://techcrunch.com/2019/12/11/larry-pages-secret-war-on-the-flu/' },
+  { date: '2017-05-31', donor: 'Larry Page', charity: 'Shoo the Flu', amount: 4100000, source: 'https://techcrunch.com/2019/12/11/larry-pages-secret-war-on-the-flu/' },
+  { date: '2017-12-31', donor: 'Larry Page', charity: 'Oakland Unified School District (Flu Shots)', amount: 800000, source: 'https://nonprofitquarterly.org/larry-page-makes-a-good-case-for-the-regulation-of-donor-advised-funds/' },
+  { date: '2017-12-31', donor: 'Larry Page', charity: 'Regents of the University of California (vaccine delivery study)', amount: 303000, source: 'https://observer.com/2023/05/larry-page-foundation-donor-advised-funds-6-7-billion/' },
+  { date: '2017-12-31', donor: 'Larry Page', charity: 'Oakland Unified School District (flu study)', amount: 162000, source: 'https://observer.com/2023/05/larry-page-foundation-donor-advised-funds-6-7-billion/' },
+  { date: '2017-12-31', donor: 'Larry Page', charity: 'New Venture Fund', amount: 100000, source: 'https://nonprofitquarterly.org/larry-page-makes-a-good-case-for-the-regulation-of-donor-advised-funds/' },
+  { date: '2017-12-31', donor: 'Larry Page', charity: 'American Cancer Society', amount: 1000, source: 'https://nonprofitquarterly.org/larry-page-makes-a-good-case-for-the-regulation-of-donor-advised-funds/' },
+  { date: '2021-12-31', donor: 'Larry Page', charity: 'New Venture Fund', amount: 200000, source: 'https://www.insidephilanthropy.com/home/2023/5/10/larry-pages-foundation-doubled-in-size-to-hit-67-billion-in-assets-98-of-giving-goes-to-dafs' },
+  { date: '2021-12-31', donor: 'Larry Page', charity: 'Shoo the Flu', amount: 38894, source: 'https://observer.com/2023/05/larry-page-foundation-donor-advised-funds-6-7-billion/' },
+  { date: '2022-12-31', donor: 'Larry Page', charity: 'American Cancer Society', amount: 1000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'Stichting European Climate Foundation', amount: 20000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'RF Catalytic Capital Inc (community project)', amount: 15000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'Instituto Clima e Sociedade', amount: 10000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'World Resources Institute', amount: 4750000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'The Energy Foundation', amount: 4000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'Stichting European Climate Foundation', amount: 3000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'Global Fishing Watch', amount: 3000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'The Tides Center', amount: 2000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'People\'s Courage International Inc', amount: 2000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'New Venture Fund', amount: 1000000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'University Of California Berkeley Foundation (science)', amount: 750000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'Upstream USA', amount: 500000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+  { date: '2023-12-31', donor: 'Larry Page', charity: 'Think Of Us', amount: 500000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
+/*
   // Mackenzie Scott donations
   { date: '2023-03-11', donor: 'Mackenzie Scott', charity: 'Malaria Consortium', amount: 250000000, source: 'https://mackenzie-scott.medium.com/' },
   { date: '2023-05-12', donor: 'Mackenzie Scott', charity: 'Against Malaria Foundation', amount: 500000000, source: 'https://en.wikipedia.org/wiki/MacKenzie_Scott' },
@@ -306,13 +367,13 @@ export const donations = [
   // Mark Zuckerberg donations
   { date: '2023-04-22', donor: 'Mark Zuckerberg', charity: 'Malaria Consortium', amount: 400000000, source: 'https://chanzuckerberg.com/' },
   { date: '2023-08-05', donor: 'Mark Zuckerberg', charity: 'Habitat for Humanity', amount: 200000000, source: 'https://www.facebook.com/zuck' },
-  
+  */
   // Michael Bloomberg donations
-  { date: '2023-03-25', donor: 'Michael Bloomberg', charity: 'Nuclear Threat Initiative', amount: 85000000, source: 'https://www.bloomberg.org/' },
-  { date: '2023-08-14', donor: 'Michael Bloomberg', charity: 'Evidence Action', amount: 300000000, source: 'https://en.wikipedia.org/wiki/Michael_Bloomberg' },
-  { date: '2023-10-14', donor: 'Michael Bloomberg', charity: 'SCI Foundation', amount: 2000000000, source: 'https://www.bloomberg.com/profile/person/1241252' },
-  
-  
+  { date: '2010-01-01', donor: 'Michael Bloomberg', charity: 'Sierra Club (climate change)', amount: 50000000, source: 'https://observer.com/2023/09/michael-bloomberg-donates-500m-eradicate-coal-plants/' },
+  { date: '2016-01-01', donor: 'Michael Bloomberg', charity: 'Johns Hopkins University (science)', amount: 50000000, source: 'https://www.bbhub.io/dotorg/sites/2/2017/05/Bloomberg-Philanthropies-Annual-Report.pdf' },
+  { date: '2018-11-18', donor: 'Michael Bloomberg', charity: 'Johns Hopkins University (education)', amount: 1800000000, source: 'https://www.prnewswire.com/news-releases/michael-bloomberg-makes-largest-ever-contribution-to-any-education-institution-in-the-united-states-300752633.html' },
+  { date: '2024-12-31', donor: 'Michael Bloomberg', charity: 'Bloomberg Philanthropies', amount: 21e9, source: 'https://gist.github.com/elliotolds/5eb6c5c59c7d0e3dd5b37ef62e4003cd#file-michael_bloomberg_donations-md' },
+/*
   // Sergey Brin donations
   { date: '2023-03-17', donor: 'Sergey Brin', charity: 'GiveDirectly', amount: 180000000, source: 'https://en.wikipedia.org/wiki/Sergey_Brin' },
   { date: '2023-06-14', donor: 'Sergey Brin', charity: 'Anthropic', amount: 275000000, source: 'https://research.google/people/sergey-brin/' },
@@ -330,7 +391,7 @@ export const donations = [
   { date: '2023-06-24', donor: 'Vitalik Buterin', charity: 'GiveDirectly', amount: 45000000, source: 'https://en.wikipedia.org/wiki/Vitalik_Buterin' },
   { date: '2023-08-30', donor: 'Vitalik Buterin', charity: 'Center for Human-Compatible AI', amount: 80000000, source: 'https://ethereum.org/en/founders/' },
   { date: '2023-11-05', donor: 'Vitalik Buterin', charity: 'Anthropic', amount: 100000000, source: 'https://www.forbes.com/profile/vitalik-buterin/' },
-  
+  */
   // Warren Buffett donations
   { date: '2006-09-19', donor: 'Warren Buffett', charity: 'IAEA Nuclear Fuel Bank', amount: 50e6, source: 'https://www.nti.org/news/nti-commits-50-million-iaea-nuclear-fuel-bank/' },
   { date: '2006-11-25', donor: 'Warren Buffett', charity: 'Bill & Melinda Gates Foundation', amount: 43e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },

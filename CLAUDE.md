@@ -14,9 +14,3 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Types: Use strong typing where applicable
 - Error handling: Use try/catch blocks with informative error messages
 - Comments: Document complex logic and public interfaces
-
-## Development Workflow
-- Create feature branches from main
-- Write tests for new functionality
-- Update documentation as needed
-- Run linter before committing code

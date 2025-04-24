@@ -363,7 +363,7 @@ function RecipientDetail(props) {
                     <XAxis 
                       type="number" 
                       tickFormatter={(value) => `${value}%`}
-                      domain={[0, 100]}
+                      domain={[0, Math.ceil(Math.max(...recipientInfo.categoryBreakdown.map(item => item.percentage)))]}
                       axisLine={true}
                       tick={{ 
                         fill: '#1e293b',

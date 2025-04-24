@@ -44,11 +44,11 @@ export const donors = [
   //  { name: 'Larry Ellison', netWorth: 1.63e11 },
     { name: 'Larry Page', netWorth: 1.28e11, totalDonated: 1.6e9 },
     { name: 'Mackenzie Scott', netWorth: 2.5e10 },
-  //  { name: 'Mark Zuckerberg', netWorth: 1.7e11 },
+    { name: 'Mark Zuckerberg', netWorth: 1.7e11 },
     { name: 'Michael Bloomberg', netWorth: 1.1e11 },
   //  { name: 'Sergey Brin', netWorth: 1.23e11 },
   //  { name: 'Steve Ballmer', netWorth: 1.13e11 },
-  //  { name: 'Vitalik Buterin', netWorth: 6e8 },
+    { name: 'Vitalik Buterin', netWorth: 6e8 },
     { name: 'Warren Buffett', netWorth: 1.61e11 },
   ];
 
@@ -78,6 +78,7 @@ export const charities = [
   { name: 'University of Washington', categories: { education: { fraction: 1.0 } } },
   { name: 'Stanford University', categories: { education: { fraction: 1.0 } } },
   { name: 'Harvard University', categories: { education: { fraction: 1.0 } } },
+  { name: 'Harvard University (tech research)', categories: { science_tech: { fraction: 1.0 } } },
   { name: 'Gates Library Foundation', categories: { education: { fraction: 1.0 } } },
   { name: 'Seattle Public Libraries', categories: { education: { fraction: 1.0 } } },
   { name: 'Bill & Melinda Gates Foundation', categories: {
@@ -278,6 +279,43 @@ export const charities = [
   { name: 'Haydn Belfield', categories: { ai_risk: { fraction: 1.0 } } },
   { name: 'Zvi Mowshowitz', categories: { ai_risk: { fraction: 1.0 } } },
   { name: 'Erik Brynjolfsson', categories: { meta_theory: { fraction: 1.0 } } },
+  { name: 'Internet Archive', categories: { science_tech: { fraction: 1.0, costPerLife: 30000 } } },
+  { name: 'India COVID-Crypto Relief Fund', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'Gitcoin', categories: { institutions: { fraction: 1.0 } } },
+  { name: 'Methuselah Foundation', categories: { longevity: { fraction: 1.0 } } },
+  { name: 'GiveWell', categories: { meta_theory: { fraction: 1.0 } } },
+  { name: 'Aid For Ukraine', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'Unchain Fund', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'Patient-Led Research Collaborative', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Dogecoin Foundation', categories: { science_tech: { fraction: 1.0 } } },
+  { name: 'UNSW Kirby Institute', categories: { pandemics: { fraction: 1.0 } } },
+  { name: 'Long Covid Research Initiative', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'University of Maryland, School of Public Health', categories: { pandemics: { fraction: 1.0 } } },
+  { name: 'University of California San Diego (Airborne Institute)', categories: { pandemics: { fraction: 1.0 } } },
+  { name: 'Tornado Cash Devs Legal Fund', categories: { human_rights: { fraction: 1.0 } } },
+  { name: 'Coin Center', categories: { institutions: { fraction: 1.0 } } },
+  { name: 'Khao Kheow Open Zoo', categories: { animal_welfare: { fraction: 1.0 } } },
+  { name: 'Kanro', categories: { pandemics: { fraction: 1.0 } } },
+  { name: 'Balvi Philanthropic Fund', categories: { pandemics: { fraction: 1.0 } } },
+  { name: 'EA Animal Welfare Fund', categories: { animal_welfare: { fraction: 1.0 } } },
+  { name: 'Zuitzerland Project', categories: { institutions: { fraction: 1.0 } } },
+  { name: 'Newark Public Schools', categories: { education: { fraction: 1.0 } } },
+  { name: 'Bay Area Public Schools', categories: { education: { fraction: 1.0 } } },
+  { name: 'CDC Foundation (Ebola Response)', categories: { disaster_relief: { fraction: 1.0 } } },
+  { name: 'San Francisco General Hospital Foundation', categories: { health_medicine: { fraction: 1.0 } } },
+  { name: 'Chan Zuckerberg Initiative', categories: {
+      health_medicine: { fraction: 0.40 },
+      education: { fraction: 0.26 },
+      science_tech: { fraction: 0.10 },
+      housing: { fraction: 0.08 },
+      human_rights: { fraction: 0.05 },
+      global_health: { fraction: 0.05 },
+      pandemics: { fraction: 0.03 },
+      social_justice: { fraction: 0.03 }
+    } },
+  { name: 'Center for Tech and Civic Life', categories: { institutions: { fraction: 1.0 } } },
+  { name: 'Center for Election Innovation and Research', categories: { institutions: { fraction: 1.0 } } },
+  { name: 'Multiple Jewish Community Organizations', categories: { local_community: { fraction: 1.0 } } },
 ];
 
 
@@ -541,11 +579,28 @@ export const donations = [
 
   // Mackenzie Scott donations
   { date: '2024-11-31', donor: 'Mackenzie Scott', charity: 'Yield Giving', amount: 19.25e9, source: 'https://gist.github.com/elliotolds/4eefa459f946fda43b0dc53c99ab532a#file-mackenzie_scott_donations-md' },
-/*  
+  
   // Mark Zuckerberg donations
-  { date: '2023-04-22', donor: 'Mark Zuckerberg', charity: 'Malaria Consortium', amount: 400000000, source: 'https://chanzuckerberg.com/' },
-  { date: '2023-08-05', donor: 'Mark Zuckerberg', charity: 'Habitat for Humanity', amount: 200000000, source: 'https://www.facebook.com/zuck' },
-  */
+  { date: '2010-09-24', donor: 'Mark Zuckerberg', charity: 'Newark Public Schools', amount: 100000000, source: 'http://www.reuters.com/article/us-facebook-donation-idUSTRE68N54E20100924' },
+  { date: '2014-05-30', donor: 'Mark Zuckerberg', charity: 'Bay Area Public Schools', amount: 120000000, source: 'https://www.sfgate.com/education/article/mark-zuckerberg-wife-donate-120-million-to-bay-5515342.php' },
+  { date: '2014-10-14', donor: 'Mark Zuckerberg', charity: 'CDC Foundation (Ebola Response)', amount: 25000000, source: 'https://www.cdcfoundation.org/pr/cdc-foundation-receives-25-million-donation-mark-zuckerberg-and-priscilla-chan-ebola-response' },
+  { date: '2015-02-06', donor: 'Mark Zuckerberg', charity: 'San Francisco General Hospital Foundation', amount: 75000000, source: 'https://www.latimes.com/local/lanow/la-me-ln-zuckerberg-donation-20150206-story.html' },
+  // The 45 billion below is just a pledge, so don't count it
+  //{ date: '2015-12-01', donor: 'Mark Zuckerberg', charity: 'Chan Zuckerberg Initiative', amount: 45e9, source: 'https://www.theguardian.com/technology/2015/dec/01/mark-zuckerberg-and-priscilla-chan-announce-new-baby-and-massive-charity-initiative' },
+  { date: '2016-09-01', donor: 'Mark Zuckerberg', charity: 'Chan Zuckerberg Initiative', amount: 85000000, source: 'https://philanthropynewsdigest.org/news/zuckerberg-chan-sell-facebook-shares-worth-another-95-million' },
+  { date: '2017-11-07', donor: 'Mark Zuckerberg', charity: 'Chan Zuckerberg Initiative', amount: 1856575000, source: 'https://www.sfchronicle.com/business/networth/article/Charitable-giving-topped-400-billion-for-first-12988732.php' },
+  { date: '2020-09-01', donor: 'Mark Zuckerberg', charity: 'Center for Tech and Civic Life', amount: 250000000, source: 'https://www.businessinsider.com/mark-zuckerberg-priscilla-chan-donate-300-million-2020-election-2020-9' },
+  { date: '2020-09-01', donor: 'Mark Zuckerberg', charity: 'Center for Election Innovation and Research', amount: 50000000, source: 'https://www.businessinsider.com/mark-zuckerberg-priscilla-chan-donate-300-million-2020-election-2020-9' },
+  { date: '2020-10-13', donor: 'Mark Zuckerberg', charity: 'Center for Tech and Civic Life', amount: 100000000, source: 'https://apnews.com/article/virus-outbreak-election-2020-technology-local-elections-elections-c2dcfde7fc750b7dd64243b0cf7fbb69' },
+  { date: '2020-10-01', donor: 'Mark Zuckerberg', charity: 'Center for Election Innovation and Research', amount: 19500000, source: 'https://electioninnovation.org/press/chan-zuckerberg-increase-2020-election-support/' },
+  { date: '2021-09-20', donor: 'Mark Zuckerberg', charity: 'Multiple Jewish Community Organizations', amount: 1300000, source: 'https://ejewishphilanthropy.com/your-daily-phil-mark-zuckerberg-and-priscilla-chan-donate-1-3-million-to-jewish-groups/' },
+  // This seems to be from the CZI
+  //{ date: '2021-12-07', donor: 'Mark Zuckerberg', charity: 'Harvard University (tech research)', amount: 500000000, source: 'https://www.harvardmagazine.com/2021/12/chan-zuckerberg-natural-and-artificial-intelligence' },
+  { date: '2024-12-31', donor: 'Mark Zuckerberg', charity: 'Chan Zuckerberg Initiative', amount: 1110000000, source: 'https://www.philanthropy.com/package/newsrelease-phil50-2024donors-030425' },
+  { date: '2025-04-24', donor: 'Mark Zuckerberg', charity: 'Chan Zuckerberg Initiative', amount: 3.915e9, source: 'https://gist.github.com/elliotolds/9e6773b7b357f8ff30d3396b431c258e#file-mark_zuckerberg_donations-md' },
+  
+// 
+
   // Michael Bloomberg donations
   { date: '2010-01-01', donor: 'Michael Bloomberg', charity: 'Sierra Club (climate change)', amount: 50000000, source: 'https://observer.com/2023/09/michael-bloomberg-donates-500m-eradicate-coal-plants/' },
   { date: '2016-01-01', donor: 'Michael Bloomberg', charity: 'Johns Hopkins University (science)', amount: 50000000, source: 'https://www.bbhub.io/dotorg/sites/2/2017/05/Bloomberg-Philanthropies-Annual-Report.pdf' },
@@ -562,14 +617,38 @@ export const donations = [
   { date: '2023-01-25', donor: 'Steve Ballmer', charity: 'GiveWell Maximum Impact Fund', amount: 450000000, source: 'https://en.wikipedia.org/wiki/Steve_Ballmer' },
   { date: '2023-07-12', donor: 'Steve Ballmer', charity: 'Malaria Consortium', amount: 300000000, source: 'https://www.ballmerfoundation.org/' },
   { date: '2023-11-18', donor: 'Steve Ballmer', charity: 'Climate Works', amount: 250000000, source: 'https://www.forbes.com/profile/steve-ballmer/' },
-  
+ */ 
   // Vitalik Buterin donations
-  { date: '2023-03-18', donor: 'Vitalik Buterin', charity: 'Against Malaria Foundation', amount: 20000000, source: 'https://vitalik.ca/' },
-  { date: '2023-05-01', donor: 'Vitalik Buterin', charity: 'SENS Research Foundation', amount: 15000000, source: 'https://twitter.com/VitalikButerin' },
-  { date: '2023-06-24', donor: 'Vitalik Buterin', charity: 'GiveDirectly', amount: 45000000, source: 'https://en.wikipedia.org/wiki/Vitalik_Buterin' },
-  { date: '2023-08-30', donor: 'Vitalik Buterin', charity: 'Center for Human-Compatible AI', amount: 80000000, source: 'https://ethereum.org/en/founders/' },
-  { date: '2023-11-05', donor: 'Vitalik Buterin', charity: 'Anthropic', amount: 100000000, source: 'https://www.forbes.com/profile/vitalik-buterin/' },
-  */
+  { date: '2017-12-14', donor: 'Vitalik Buterin', charity: 'SENS Research Foundation', amount: 2400000, source: 'https://cointelegraph.com/news/vitalik-buterin-donates-24-million-in-ether-to-anti-aging-research' },
+  { date: '2017-12-31', donor: 'Vitalik Buterin', charity: 'Machine Intelligence Research Institute', amount: 763970, source: 'https://coinspeaker.com/vitalik-buterin-eth-holdings/' },
+  { date: '2018-02-12', donor: 'Vitalik Buterin', charity: 'Internet Archive', amount: 93469, source: 'https://coinexplorers.com/insights/the-internet-archive-sees-large-donations-from-vitalik-buterin-7ylg6i' },
+  { date: '2018-03-27', donor: 'Vitalik Buterin', charity: 'GiveDirectly', amount: 1000000, source: 'https://cointelegraph.com/news/omisego-and-vitalik-buterin-donate-1-million-in-crypto-to-charity-for-ugandan-refugees' },
+  { date: '2018-12-31', donor: 'Vitalik Buterin', charity: 'SENS Research Foundation', amount: 350000, source: 'https://sens.org/vitaliks-350000-donation/' },
+  { date: '2021-05-12', donor: 'Vitalik Buterin', charity: 'India COVID-Crypto Relief Fund', amount: 4e6, source: 'https://www.indiatoday.in/technology/news/story/vitalik-donates-1-billion-worth-shiba-inu-and-ethereum-to-india-covid-19-relief-fund-1802009-2021-05-13' },
+  { date: '2021-05-12', donor: 'Vitalik Buterin', charity: 'Gitcoin', amount: 5e6, source: 'https://www.gitcoin.co/blog/announcement-gitcoin-community-receives-generous-gift-from-vitalik-buterin' },
+  { date: '2021-05-12', donor: 'Vitalik Buterin', charity: 'Methuselah Foundation', amount: 4.3e6, source: 'https://www.fightaging.org/archives/2021/05/vitalik-buterin-donates-more-than-2-million-to-the-methuselah-foundation/' },
+  { date: '2021-05-12', donor: 'Vitalik Buterin', charity: 'GiveWell', amount: 50e6, source: 'https://cryptonews.com.au/news/vitalik-buterin-donates-60-million-to-charity-after-dumping-shiba-inu-90686/' },
+  { date: '2021-05-12', donor: 'Vitalik Buterin', charity: 'Machine Intelligence Research Institute', amount: 4378159, source: 'https://intelligence.org/2021/05/13/two-major-donations/' },
+  { date: '2021-05-12', donor: 'Vitalik Buterin', charity: 'Charter Cities Institute', amount: 2080000, source: 'https://www.newsbtc.com/news/ethereum/vitalik-buterin-dumps-shib-price-tanks/' },
+  { date: '2022-04-04', donor: 'Vitalik Buterin', charity: 'Aid For Ukraine', amount: 2500000, source: 'https://cointelegraph.com/news/vitalik-buterin-quietly-donates-5m-eth-to-aid-ukraine-as-total-tracked-crypto-donations-reach-133m' },
+  { date: '2022-04-04', donor: 'Vitalik Buterin', charity: 'Unchain Fund', amount: 2500000, source: 'https://cointelegraph.com/news/vitalik-buterin-quietly-donates-5m-eth-to-aid-ukraine-as-total-tracked-crypto-donations-reach-133m' },
+  { date: '2022-04-22', donor: 'Vitalik Buterin', charity: 'Patient-Led Research Collaborative', amount: 3000000, source: 'https://patientresearchcovid19.com/balvi-press-release/' },
+  { date: '2022-05-12', donor: 'Vitalik Buterin', charity: 'Dogecoin Foundation', amount: 1000000, source: 'https://www.forbesindia.com/article/crypto-made-easy/vitalik-buterin-donates-1-billion-in-eth-to-dogecoin-foundation/76361/1' },
+  { date: '2022-05-13', donor: 'Vitalik Buterin', charity: 'UNSW Kirby Institute', amount: 4000000, source: 'https://www.kirby.unsw.edu.au/news/major-crypto-gift-fund-kirby-institute-open-source-artificial-intelligence-tool-prevent' },
+  { date: '2022-06-13', donor: 'Vitalik Buterin', charity: 'Balvi Philanthropic Fund', amount: 10e6, source: 'https://observer.com/2023/06/ethereum-vitalik-buterin-donation-crypto-covid/' },
+  { date: '2022-09-07', donor: 'Vitalik Buterin', charity: 'Long Covid Research Initiative', amount: 15000000, source: 'https://techcrunch.com/2022/09/07/new-uk-nonprofit-startup-battles-long-covid-with-the-backing-of-ethereum-co-creator-vitalik-buterin/' },
+  { date: '2022-11-01', donor: 'Vitalik Buterin', charity: 'University of Maryland, School of Public Health', amount: 9400000, source: 'https://today.umd.edu/record-breaking-9-4m-crypto-gift-to-fund-study-of-air-disinfection-to-prevent-future-pademics' },
+  { date: '2023-03-07', donor: 'Vitalik Buterin', charity: 'University of California San Diego (Airborne Institute)', amount: 15000000, source: 'https://today.ucsd.edu/story/uc-san-diego-receives-15m-cryptocurrency-donation-largest-for-research-on-airborne-pathogens' },
+  { date: '2023-11-01', donor: 'Vitalik Buterin', charity: 'Long Covid Research Initiative', amount: 15000000, source: 'https://www.biospace.com/article/releases/polybio-research-foundation-receives-15m-for-extended-long-covid-research-and-clinical-trials/' },
+  { date: '2023-12-31', donor: 'Vitalik Buterin', charity: 'Tornado Cash Devs Legal Fund', amount: 170000, source: 'https://cointelegraph.com/news/vitalik-buterin-donates-tornado-cash-developers-alexey-pertsev-roman-storm' },
+  { date: '2024-08-14', donor: 'Vitalik Buterin', charity: 'EA Animal Welfare Fund', amount: 532398, source: 'https://cointelegraph.com/news/vitalik-buterin-donates-eth-animal-charity' },
+  { date: '2024-10-05', donor: 'Vitalik Buterin', charity: 'Tornado Cash Devs Legal Fund', amount: 240000, source: 'https://cointelegraph.com/news/vitalik-buterin-donates-100-eth-roman-storm-defense-fund' },
+  { date: '2024-11-26', donor: 'Vitalik Buterin', charity: 'Coin Center', amount: 1000000, source: 'https://www.coindesk.com/policy/2024/11/27/vitalik-buterin-donated-1-m-in-ether-to-coin-center-hours-after-tornado-cash-victory/' },
+  { date: '2024-12-15', donor: 'Vitalik Buterin', charity: 'Khao Kheow Open Zoo', amount: 150000, source: 'https://beincrypto.com/vitalik-buterin-meme-coins-charity/' },
+  { date: '2025-01-06', donor: 'Vitalik Buterin', charity: 'Kanro', amount: 984000, source: 'https://beincrypto.com/vitalik-buterin-meme-coins-charity/' },
+  { date: '2025-04-01', donor: 'Vitalik Buterin', charity: 'Zuitzerland Project', amount: 500000, source: 'https://thecryptobasic.com/2025/04/01/ethereum-founder-donates-274-eth-to-swiss-project-zuitzerland/' },
+  
+  
   // Warren Buffett donations
   { date: '2006-09-19', donor: 'Warren Buffett', charity: 'IAEA Nuclear Fuel Bank', amount: 50e6, source: 'https://www.nti.org/news/nti-commits-50-million-iaea-nuclear-fuel-bank/' },
   { date: '2006-11-25', donor: 'Warren Buffett', charity: 'Bill & Melinda Gates Foundation', amount: 43e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },

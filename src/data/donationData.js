@@ -151,7 +151,6 @@ export const charities = [
       housing: { fraction: 0.4 },
       health_medicine: { fraction: 0.1 },
       social_justice: { fraction: 0.3 } } },
-  // --- Added Charities Below ---
   { name: 'Californians for Clean Alternative Energy', categories: { climate_change: { fraction: 1.0 } } },
   { name: 'No on Proposition 8 Campaign', categories: { social_justice: { fraction: 1.0 } } },
   { name: 'President Barack Obama Inaugural Committee', categories: { political: { fraction: 1.0 } } },
@@ -187,6 +186,18 @@ export const charities = [
       pandemics: { fraction: 0.03 },
       science_tech: { fraction: 0.02 },
       global_development: { fraction: 0.05 } } },
+  { name: 'Yield Giving', categories: { 
+      social_justice: { fraction: 0.4 },
+      health_medicine: { fraction: 0.09 },
+      education: { fraction: 0.11 },
+      climate_change: { fraction: 0.04 },
+      local_community: { fraction: 0.06 },
+      arts_culture: { fraction: 0.04 },
+      housing: { fraction: 0.05 },
+      global_health: { fraction: 0.04 },
+      human_rights: {fraction: 0.05 },
+      environmental: { fraction: 0.05 },
+      global_development: { fraction: 0.07 } } }
 ];
 
 // Donor data with net worth
@@ -203,7 +214,7 @@ export const donors = [
 //  { name: 'Jensen Huang', netWorth: 9.2e10 },
 //  { name: 'Larry Ellison', netWorth: 1.63e11 },
   { name: 'Larry Page', netWorth: 1.28e11, totalDonated: 1.6e9 },
-//  { name: 'Mackenzie Scott', netWorth: 2.5e10 },
+  { name: 'Mackenzie Scott', netWorth: 2.5e10 },
 //  { name: 'Mark Zuckerberg', netWorth: 1.7e11 },
   { name: 'Michael Bloomberg', netWorth: 1.1e11 },
   // Larry allegedly donated 800 million
@@ -358,12 +369,10 @@ export const donations = [
   { date: '2023-12-31', donor: 'Larry Page', charity: 'University Of California Berkeley Foundation (science)', amount: 750000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
   { date: '2023-12-31', donor: 'Larry Page', charity: 'Upstream USA', amount: 500000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
   { date: '2023-12-31', donor: 'Larry Page', charity: 'Think Of Us', amount: 500000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
-/*
+
   // Mackenzie Scott donations
-  { date: '2023-03-11', donor: 'Mackenzie Scott', charity: 'Malaria Consortium', amount: 250000000, source: 'https://mackenzie-scott.medium.com/' },
-  { date: '2023-05-12', donor: 'Mackenzie Scott', charity: 'Against Malaria Foundation', amount: 500000000, source: 'https://en.wikipedia.org/wiki/MacKenzie_Scott' },
-  { date: '2023-11-12', donor: 'Mackenzie Scott', charity: 'Global Priorities Institute', amount: 120000000, source: 'https://www.forbes.com/profile/mackenzie-scott/' },
-  
+  { date: '2024-11-31', donor: 'Mackenzie Scott', charity: 'Yield Giving', amount: 19.25e9, source: 'https://gist.github.com/elliotolds/4eefa459f946fda43b0dc53c99ab532a#file-mackenzie_scott_donations-md' },
+/*  
   // Mark Zuckerberg donations
   { date: '2023-04-22', donor: 'Mark Zuckerberg', charity: 'Malaria Consortium', amount: 400000000, source: 'https://chanzuckerberg.com/' },
   { date: '2023-08-05', donor: 'Mark Zuckerberg', charity: 'Habitat for Humanity', amount: 200000000, source: 'https://www.facebook.com/zuck' },

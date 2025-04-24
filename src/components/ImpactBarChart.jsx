@@ -1,0 +1,182 @@
+import { useState, useEffect, useRef } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+
+const ImpactBarChart = ({ 
+  data, 
+  layout = 'vertical',
+  colors = [
+    '#4f46e5', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#818cf8',
+    '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#22c55e', '#84cc16', '#34d399',
+    '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
+    '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#3f3f46'
+  ],
+  formatValue = (value) => value,
+  formatXAxisTick = (value) => `${value}%`,
+  dataKey = 'percentage',
+  nameKey = 'name',
+  tooltipContent,
+  xAxisDomain,
+  barGap = 0,
+  barCategoryGap = 8,
+  labelFormatter = (value) => `${value}%`,
+  heightCalculator = (dataLength) => Math.max(200, dataLength * 40),
+  isAnimationActive = false,
+  animationDuration = 0,
+  animationBegin = 0,
+  animationEasing = "ease-out",
+  showLegend = false,
+  legendFormatter = () => "Value"
+}) => {
+  const [containerWidth, setContainerWidth] = useState(800);
+  const chartContainerRef = useRef(null);
+
+  // Calculate responsive margins based on available width
+  const calculateChartMargins = (width) => {
+    // Default margins for larger screens
+    const defaultMargins = { top: 20, right: 100, left: 120, bottom: 5 };
+    
+    // Minimum margins before scroll is needed
+    const minMargins = { top: 20, right: 20, left: 25, bottom: 5 };
+    
+    // Linearly reduce margins as width decreases
+    if (width >= 800) {
+      // Full margins for wider screens
+      return defaultMargins;
+    } else if (width <= 400) {
+      // Minimum margins for very narrow screens
+      return minMargins;
+    } else {
+      // Proportional margins for in-between widths
+      const ratio = (width - 400) / 400; // 0 to 1
+      return {
+        top: defaultMargins.top,
+        right: Math.round(minMargins.right + (defaultMargins.right - minMargins.right) * ratio),
+        left: Math.round(minMargins.left + (defaultMargins.left - minMargins.left) * ratio),
+        bottom: defaultMargins.bottom,
+      };
+    }
+  };
+
+  // Effect to handle chart container resizing
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (chartContainerRef.current) {
+        const width = chartContainerRef.current.clientWidth;
+        setContainerWidth(width);
+      }
+    };
+    
+    // Initial update
+    updateContainerWidth();
+    
+    // Add resize listener
+    window.addEventListener('resize', updateContainerWidth);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', updateContainerWidth);
+    };
+  }, []);
+
+  // Handle case where some values might be negative
+  const domain = xAxisDomain || (() => {
+    const values = data.map(item => item[dataKey]);
+    const hasNegativeValues = values.some(val => val < 0);
+    if (hasNegativeValues) {
+      return [Math.floor(Math.min(...values)), Math.ceil(Math.max(...values))];
+    } else {
+      return [0, Math.ceil(Math.max(...values))];
+    }
+  })();
+
+  return (
+    <div className={`py-4 px-2 relative ${containerWidth < 500 ? 'overflow-x-auto' : 'overflow-hidden'}`}>
+      <div 
+        ref={chartContainerRef}
+        className="w-full overflow-visible"
+        style={{ height: `${heightCalculator(data.length)}px` }}
+      >
+        <ResponsiveContainer width="98%" height="100%" minWidth={containerWidth < 500 ? 500 : undefined}>
+          <BarChart
+            data={data}
+            layout={layout}
+            margin={calculateChartMargins(containerWidth)}
+            barGap={barGap}
+            barCategoryGap={barCategoryGap}
+          >
+            <XAxis 
+              type="number" 
+              tickFormatter={formatXAxisTick}
+              domain={domain}
+              axisLine={true}
+              tick={{ 
+                fill: '#1e293b',
+                fontSize: 14,
+              }}
+              tickLine={true}
+              stroke="#1e293b"
+            />
+            <YAxis 
+              type="category" 
+              dataKey={nameKey} 
+              width={120}
+              tick={{ 
+                fontSize: 14, 
+                fill: '#1e293b',
+                dy: 0
+              }}
+              axisLine={true}
+              stroke="#1e293b"
+              interval={0}
+            />
+            
+            {tooltipContent && (
+              <Tooltip 
+                content={tooltipContent}
+                cursor={false}
+              />
+            )}
+            
+            {showLegend && <Legend formatter={legendFormatter} />}
+            
+            <Bar 
+              dataKey={dataKey} 
+              name="Value"
+              radius={[0, 4, 4, 0]}
+              label={{ 
+                position: "right",
+                formatter: labelFormatter,
+                fontSize: 12,
+                fill: '#64748b'
+              }}
+              isAnimationActive={isAnimationActive}
+              animationDuration={animationDuration}
+              animationBegin={animationBegin}
+              animationEasing={animationEasing}
+            >
+              {data.map((entry, index) => (
+                <Cell 
+                  key={`cell-${entry.id || index}`} 
+                  fill={colors[index % colors.length]}
+                  style={{
+                    filter: 'brightness(1)',
+                    transition: 'filter 0.2s ease-in-out',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.filter = 'brightness(1.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.filter = 'brightness(1)';
+                  }}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
+export default ImpactBarChart;

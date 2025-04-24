@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors, getPrimaryCategory } from '../data/donationData';
 import SortableTable from './SortableTable';
-import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import ImpactBarChart from './ImpactBarChart';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 // Animation speed constant (in milliseconds)
 const ANIMATION_DURATION = 600;
@@ -27,32 +28,6 @@ function DonorDetail(props) {
     return Math.max(384, categories.length * 55);
   };
   
-  // Calculate responsive margins based on available width
-  const calculateChartMargins = (containerWidth) => {
-    // Default margins for larger screens
-    const defaultMargins = { top: 20, right: 180, left: 90, bottom: 5 };
-    
-    // Minimum margins before scroll is needed
-    const minMargins = { top: 20, right: 25, left: 20, bottom: 5 };
-    
-    // Linearly reduce margins as width decreases
-    if (containerWidth >= 800) {
-      // Full margins for wider screens
-      return defaultMargins;
-    } else if (containerWidth <= 400) {
-      // Minimum margins for very narrow screens
-      return minMargins;
-    } else {
-      // Proportional margins for in-between widths
-      const ratio = (containerWidth - 400) / 400; // 0 to 1
-      return {
-        top: defaultMargins.top,
-        right: Math.round(minMargins.right + (defaultMargins.right - minMargins.right) * ratio),
-        left: Math.round(minMargins.left + (defaultMargins.left - minMargins.left) * ratio),
-        bottom: defaultMargins.bottom,
-      };
-    }
-  };
   
   // Colors for the chart segments - extended palette with more variety
   const COLORS = [
@@ -774,159 +749,80 @@ function DonorDetail(props) {
               style={{ height: chartData.length > 0 ? `${calculateChartHeight(chartData)}px` : '384px' }}
             >
               {chartData.length > 0 ? (
-                <ResponsiveContainer width="98%" height="100%" minWidth={chartContainerWidth < 500 ? 600 : undefined}>
-                  <BarChart
-                    data={chartData}
-                    layout="vertical"
-                    margin={calculateChartMargins(chartContainerWidth)}
-                    animationDuration={ANIMATION_DURATION}
-                    animationEasing="ease-out"
-                    barGap={0}
-                    barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
-                  >
-                    <XAxis 
-                      type="number" 
-                      tickFormatter={(value) => {
-                        // Create placeholder space during transition
-                        // This preserves vertical layout but makes text invisible
-                        if (transitionStage !== 'none') {
-                          // Use a transparent placeholder with consistent width
-                          // For donations view, we use dollar amounts which need more space
-                          if (chartView === 'donations') {
-                            return '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'; // Non-breaking spaces
-                          } else {
-                            // For lives saved view
-                            return '\u00A0\u00A0\u00A0\u00A0\u00A0'; // Non-breaking spaces
-                          }
-                        }
-                        
-                        if (value === 0) return "0";
-                        
-                        if (chartView === 'donations') {
-                          return formatCurrency(value);
-                        } else {
-                          // Handle both positive and negative large numbers
-                          const absValue = Math.abs(value);
-                          let formattedValue;
-                          
-                          if (absValue >= 1000000) {
-                            formattedValue = `${(absValue / 1000000).toFixed(1)}M`;
-                          } else if (absValue >= 1000) {
-                            formattedValue = `${(absValue / 1000).toFixed(1)}K`;
-                          } else {
-                            formattedValue = formatNumber(Math.round(absValue));
-                          }
-                          
-                          // Add negative sign back if needed
-                          return value < 0 ? `-${formattedValue}` : formattedValue;
-                        }
-                      }}
-                      axisLine={true}
-                      tick={{ 
-                        fill: transitionStage !== 'none' ? 'transparent' : '#1e293b', // Hide text during transition
-                        fontSize: 14, // Increased font size
-                      }}
-                      // Hide tick lines during transition
-                      tickLine={transitionStage === 'none'}
-                      // Dynamically set domain based on current data values
-                      domain={(() => {
-                        // If we're in lives saved view or transitioning to it, and there are negative values
-                        const hasNegativeValues = chartData.some(item => item.valueTarget < 0);
-                        
-                        if (hasNegativeValues) {
-                          return ['dataMin', 'dataMax'];
-                        } else if (chartView === 'donations' || 
-                                  (chartView === 'livesSaved' && !chartData.some(item => item.livesSavedValue < 0))) {
-                          return [0, 'auto'];
-                        } else {
-                          // During transition from negative lives saved to donations
-                          return [Math.min(0, ...chartData.map(d => d.valueTarget)), 
-                                  Math.max(...chartData.map(d => d.valueTarget))];
-                        }
-                      })()}
-                      // Keep axis line visible at all times
-                      stroke="#1e293b" // Darker line (slate-800)
-                      animationDuration={ANIMATION_DURATION}
-                      animationEasing="ease-out"
-                      allowDataOverflow={true}
-                      // Keep space for labels by setting height
-                      height={30}
-                    />
-                    <YAxis 
-                      type="category" 
-                      dataKey="name" 
-                      width={100}
-                      tick={{ 
-                        fontSize: 14, 
-                        fill: '#1e293b', // Darker text (slate-800)
-                        dy: 0 // Ensures proper vertical positioning
-                      }}
-                      axisLine={true}
-                      stroke="#1e293b" // Darker line (slate-800)
-                      interval={0} // Force all ticks to be shown
-                    />
-                    <Tooltip content={<CustomTooltip />} cursor={false} />
-                    <Legend formatter={() => 
-                      chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'
-                    } />
-                    <Bar 
-                      dataKey="valueTarget" 
-                      name={chartView === 'donations' ? 'Donation Amount' : 'Lives Saved'}
-                      radius={[0, 4, 4, 0]}
-                      animationDuration={ANIMATION_DURATION}
-                      animationEasing="ease-out"
-                      isAnimationActive={true}
-                      animationBegin={0}
-                      background={{ fill: 'transparent' }}
-                      label={{ 
-                        position: "right",
-                        formatter: (value, entry) => {
-                          if (!entry) return '';
-                          
-                          const percentage = chartView === 'donations' 
-                            ? entry.donationPercentage 
-                            : entry.livesSavedPercentage;
-                          
-                          return chartView === 'donations'
-                            ? `${formatCurrency(entry.donationValue)} (${percentage}%)`
-                            : `${formatNumber(Math.round(entry.livesSavedValue))} (${percentage}%)`;
-                        },
-                        fontSize: 11,
-                        fill: '#64748b',
-                        offset: 5
-                      }}
-                    >
-                      {chartData.map((entry, index) => {
-                        // Determine the base color for this bar
-                        const baseColor = chartView === 'livesSaved' && entry.value < 0 
-                          ? '#ef4444' 
-                          : COLORS[index % COLORS.length];
-                        
-                        return (
-                          <Cell 
-                            key={`cell-${entry.name}`} 
-                            fill={baseColor}
-                            // Create a custom style for hover states - slightly lighter version of the same color
-                            style={{
-                              filter: 'brightness(1)',
-                              transition: 'filter 0.2s ease-in-out',
-                              ':hover': {
-                                filter: 'brightness(1.15)'
-                              }
-                            }}
-                            // Add event handlers for hover effect
-                            onMouseEnter={(e) => {
-                              e.target.style.filter = 'brightness(1.15)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.filter = 'brightness(1)';
-                            }}
-                          />
-                        );
-                      })}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                <ImpactBarChart 
+                  data={chartData}
+                  dataKey="valueTarget"
+                  nameKey="name"
+                  colors={COLORS.map((color, index) => {
+                    // Use red for negative values in lives saved view
+                    const entry = chartData[index];
+                    return (chartView === 'livesSaved' && entry && entry.value < 0) ? '#ef4444' : color;
+                  })}
+                  tooltipContent={<CustomTooltip />}
+                  formatXAxisTick={(value) => {
+                    // Create placeholder space during transition
+                    if (transitionStage !== 'none') {
+                      return chartView === 'donations' ? 
+                        '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0' : 
+                        '\u00A0\u00A0\u00A0\u00A0\u00A0';
+                    }
+                    
+                    if (value === 0) return "0";
+                    
+                    if (chartView === 'donations') {
+                      return formatCurrency(value);
+                    } else {
+                      // Handle both positive and negative large numbers
+                      const absValue = Math.abs(value);
+                      let formattedValue;
+                      
+                      if (absValue >= 1000000) {
+                        formattedValue = `${(absValue / 1000000).toFixed(1)}M`;
+                      } else if (absValue >= 1000) {
+                        formattedValue = `${(absValue / 1000).toFixed(1)}K`;
+                      } else {
+                        formattedValue = formatNumber(Math.round(absValue));
+                      }
+                      
+                      // Add negative sign back if needed
+                      return value < 0 ? `-${formattedValue}` : formattedValue;
+                    }
+                  }}
+                  xAxisDomain={(() => {
+                    // If we're in lives saved view or transitioning to it, and there are negative values
+                    const hasNegativeValues = chartData.some(item => item.valueTarget < 0);
+                    
+                    if (hasNegativeValues) {
+                      return ['dataMin', 'dataMax'];
+                    } else if (chartView === 'donations' || 
+                              (chartView === 'livesSaved' && !chartData.some(item => item.livesSavedValue < 0))) {
+                      return [0, 'auto'];
+                    } else {
+                      // During transition from negative lives saved to donations
+                      return [Math.min(0, ...chartData.map(d => d.valueTarget)), 
+                              Math.max(...chartData.map(d => d.valueTarget))];
+                    }
+                  })()}
+                  labelFormatter={(value, entry) => {
+                    if (!entry) return '';
+                    
+                    const percentage = chartView === 'donations' 
+                      ? entry.donationPercentage 
+                      : entry.livesSavedPercentage;
+                    
+                    return chartView === 'donations'
+                      ? `${formatCurrency(entry.donationValue)} (${percentage}%)`
+                      : `${formatNumber(Math.round(entry.livesSavedValue))} (${percentage}%)`;
+                  }}
+                  barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
+                  heightCalculator={(dataLength) => Math.max(384, dataLength * 55)}
+                  isAnimationActive={true}
+                  animationDuration={ANIMATION_DURATION}
+                  animationBegin={0}
+                  animationEasing="ease-out"
+                  showLegend={true}
+                  legendFormatter={() => chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'}
+                />
               ) : (
                 <div className="flex h-full items-center justify-center">
                   <p className="text-slate-500">No donation data available</p>

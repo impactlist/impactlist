@@ -2,9 +2,6 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip
-} from 'recharts';
-import { 
   donations, 
   charities, 
   effectivenessCategories, 
@@ -15,14 +12,12 @@ import {
   getCategoryBreakdown
 } from '../data/donationData';
 import SortableTable from './SortableTable';
+import ImpactBarChart from './ImpactBarChart';
 
 function RecipientDetail(props) {
   const { recipientName } = useParams();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
-  const [chartContainerWidth, setChartContainerWidth] = useState(800); // Default to a reasonable width
-  const chartContainerRef = useRef(null);
-  
   // Colors for the chart bars
   const COLORS = [
     '#4f46e5', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#818cf8',
@@ -30,33 +25,6 @@ function RecipientDetail(props) {
     '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
     '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#3f3f46'
   ];
-  
-  // Calculate responsive margins based on available width
-  const calculateChartMargins = (containerWidth) => {
-    // Default margins for larger screens
-    const defaultMargins = { top: 20, right: 100, left: 120, bottom: 5 };
-    
-    // Minimum margins before scroll is needed
-    const minMargins = { top: 20, right: 20, left: 25, bottom: 5 };
-    
-    // Linearly reduce margins as width decreases
-    if (containerWidth >= 800) {
-      // Full margins for wider screens
-      return defaultMargins;
-    } else if (containerWidth <= 400) {
-      // Minimum margins for very narrow screens
-      return minMargins;
-    } else {
-      // Proportional margins for in-between widths
-      const ratio = (containerWidth - 400) / 400; // 0 to 1
-      return {
-        top: defaultMargins.top,
-        right: Math.round(minMargins.right + (defaultMargins.right - minMargins.right) * ratio),
-        left: Math.round(minMargins.left + (defaultMargins.left - minMargins.left) * ratio),
-        bottom: defaultMargins.bottom,
-      };
-    }
-  };
 
   // Custom chart tooltip
   const CustomTooltip = ({ active, payload }) => {
@@ -97,26 +65,6 @@ function RecipientDetail(props) {
     return null;
   };
 
-  // Effect to handle chart container resizing
-  useEffect(() => {
-    const updateContainerWidth = () => {
-      if (chartContainerRef.current) {
-        const width = chartContainerRef.current.clientWidth;
-        setChartContainerWidth(width);
-      }
-    };
-    
-    // Initial update
-    updateContainerWidth();
-    
-    // Add resize listener
-    window.addEventListener('resize', updateContainerWidth);
-    
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', updateContainerWidth);
-    };
-  }, []);
 
   useEffect(() => {
     // Get charity info
@@ -346,86 +294,16 @@ function RecipientDetail(props) {
               </p>
             </div>
             
-            <div className={`py-4 px-2 relative ${chartContainerWidth < 500 ? 'overflow-x-auto' : 'overflow-hidden'}`}>
-              <div 
-                ref={chartContainerRef}
-                className="w-full overflow-visible"
-                style={{ height: `${Math.max(200, recipientInfo.categoryBreakdown.length * 40)}px` }}
-              >
-                <ResponsiveContainer width="98%" height="100%" minWidth={chartContainerWidth < 500 ? 500 : undefined}>
-                  <BarChart
-                    data={recipientInfo.categoryBreakdown}
-                    layout="vertical"
-                    margin={calculateChartMargins(chartContainerWidth)}
-                    barGap={0}
-                    barCategoryGap={8}
-                  >
-                    <XAxis 
-                      type="number" 
-                      tickFormatter={(value) => `${value}%`}
-                      domain={[0, Math.ceil(Math.max(...recipientInfo.categoryBreakdown.map(item => item.percentage)))]}
-                      axisLine={true}
-                      tick={{ 
-                        fill: '#1e293b',
-                        fontSize: 14,
-                      }}
-                      tickLine={true}
-                      stroke="#1e293b"
-                    />
-                    <YAxis 
-                      type="category" 
-                      dataKey="name" 
-                      width={120}
-                      tick={{ 
-                        fontSize: 14, 
-                        fill: '#1e293b',
-                        dy: 0
-                      }}
-                      axisLine={true}
-                      stroke="#1e293b"
-                      interval={0}
-                    />
-                    
-                    <Tooltip 
-                      content={<CustomTooltip />}
-                      cursor={false}
-                    />
-                    
-                    <Bar 
-                      dataKey="percentage" 
-                      name="Percentage"
-                      radius={[0, 4, 4, 0]}
-                      label={{ 
-                        position: "right",
-                        formatter: (value) => `${value}%`,
-                        fontSize: 12,
-                        fill: '#64748b'
-                      }}
-                    >
-                      {recipientInfo.categoryBreakdown.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${entry.id}`} 
-                          fill={COLORS[index % COLORS.length]}
-                          // Create a custom style for hover states - slightly lighter version
-                          style={{
-                            filter: 'brightness(1)',
-                            transition: 'filter 0.2s ease-in-out',
-                            cursor: 'pointer'
-                          }}
-                          // Event handlers for hover effect
-                          onMouseEnter={(e) => {
-                            e.target.style.filter = 'brightness(1.15)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.filter = 'brightness(1)';
-                          }}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+            <ImpactBarChart 
+              data={recipientInfo.categoryBreakdown}
+              dataKey="percentage"
+              nameKey="name"
+              colors={COLORS}
+              tooltipContent={<CustomTooltip />}
+              labelFormatter={(value) => `${value}%`}
+              formatXAxisTick={(value) => `${value}%`}
+              heightCalculator={(dataLength) => Math.max(200, dataLength * 40)}
+            />
           </motion.div>
         )}
 

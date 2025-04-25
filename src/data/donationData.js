@@ -171,8 +171,8 @@ export const getCategoryBreakdown = (charity) => {
       id: categoryId,
       key: categoryId,
       name: effectivenessCategories[categoryId].name,
-      fraction: categoryDatafraction,
-      percentage: Math.round(fraction * 100),
+      fraction: categoryData.fraction,
+      percentage: Math.round(categoryData.fraction * 100),
       multiplier: categoryData.multiplier
     });
   }

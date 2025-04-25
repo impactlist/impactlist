@@ -153,9 +153,9 @@ const CostPerLifeEditor = () => {
             </div>
           </div>
           
-          <div className="overflow-y-auto p-6 flex-grow">
+          <div className="overflow-y-auto p-3 flex-grow">
             <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 {Object.entries(effectivenessCategories)
                   .sort((a, b) => a[1].name.localeCompare(b[1].name))
                   .map(([key, category]) => {
@@ -171,12 +171,23 @@ const CostPerLifeEditor = () => {
                       : '';
                     
                     return (
-                      <div key={key} className={`p-4 rounded-lg border ${isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'}`}>
-                        <label className="block mb-2 font-medium text-gray-700">
-                          {category.name}
-                        </label>
-                        <div className="flex items-center">
-                          <span className="mr-2 text-gray-600">$</span>
+                      <div key={key} className={`py-1.5 px-2 rounded border ${isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'}`}>
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium text-gray-700 truncate pr-2" title={category.name}>
+                            {category.name}
+                          </label>
+                          {isCustom && (
+                            <button 
+                              type="button"
+                              className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                              onClick={() => handleInputChange(key, defaultValue)}
+                            >
+                              Reset
+                            </button>
+                          )}
+                        </div>
+                        <div className="flex items-center mt-0.5">
+                          <span className="mr-1 text-gray-600 text-sm">$</span>
                           <input
                             type="text"
                             inputMode="numeric"
@@ -214,19 +225,12 @@ const CostPerLifeEditor = () => {
                                 e.target.value = formattedValue;
                               }
                             }}
-                            className={`w-full p-2 border rounded ${isCustom ? 'border-indigo-300' : 'border-gray-300'}`}
+                            className={`w-full py-1 px-1.5 text-sm border rounded ${isCustom ? 'border-indigo-300' : 'border-gray-300'}`}
                           />
                         </div>
                         {isCustom && (
-                          <div className="mt-1 text-xs flex justify-between">
-                            <span className="text-gray-500">Default: ${defaultValue.toLocaleString()}</span>
-                            <button 
-                              type="button"
-                              className="text-indigo-600 hover:text-indigo-800 font-medium"
-                              onClick={() => handleInputChange(key, defaultValue)}
-                            >
-                              Reset
-                            </button>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            Default: ${defaultValue.toLocaleString()}
                           </div>
                         )}
                       </div>

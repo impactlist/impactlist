@@ -679,7 +679,6 @@ function DonorDetail(props) {
               <span className={`text-3xl font-bold ${donorStats.costPerLifeSaved < 0 ? 'text-red-600' : 'text-slate-900'}`}>
                 {donorStats.livesSaved === 0 ? <span className="text-6xl">∞</span> : formatCurrency(donorStats.costPerLifeSaved)}
               </span>
-              {donorStats.costPerLifeSaved < 0 && <span className="text-xs text-red-600 block mt-1">(Negative impact)</span>}
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Net Worth</span>

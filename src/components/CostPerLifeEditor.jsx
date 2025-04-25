@@ -32,9 +32,21 @@ const CostPerLifeEditor = () => {
   
   // Handle input change
   const handleInputChange = (key, value) => {
+    // Remove commas for processing
+    const processedValue = value === '' || value === '-' || value === '0.' || value === '-0.' || value === '0' || value === '-0'
+      ? value 
+      : value.toString().replace(/,/g, '');
+    
+    // For special intermediate states, keep the string value
+    const isIntermediateInput = processedValue === '' || 
+                               processedValue === '-' || 
+                               processedValue === '0.' || 
+                               processedValue === '-0.' ||
+                               (processedValue.includes('.') && processedValue.endsWith('.'));
+    
     setFormValues(prev => ({
       ...prev,
-      [key]: value === '' ? '' : Number(value)
+      [key]: isIntermediateInput ? processedValue : Number(processedValue)
     }));
   };
   
@@ -43,16 +55,27 @@ const CostPerLifeEditor = () => {
     e.preventDefault();
     
     // Filter out unchanged values to only store custom ones
-    const defaults = {};
     const customized = {};
     
     Object.entries(formValues).forEach(([key, value]) => {
       const defaultValue = effectivenessCategories[key].costPerLife;
       
-      // Only consider valid number inputs
-      if (value !== '' && !isNaN(value)) {
-        if (value !== defaultValue) {
-          customized[key] = Number(value);
+      // Process the value - string or number
+      let processedValue = value;
+      if (typeof value === 'string') {
+        // Handle partially entered numbers
+        if (value === '' || value === '-' || value === '0.' || value === '-0.') {
+          return; // Skip this entry
+        }
+        
+        // Convert string to number, removing commas
+        processedValue = Number(value.replace(/,/g, ''));
+      }
+      
+      // Only consider valid number inputs that are not exactly zero
+      if (!isNaN(processedValue) && processedValue !== 0) {
+        if (processedValue !== defaultValue) {
+          customized[key] = Number(processedValue);
         }
       }
     });
@@ -103,56 +126,14 @@ const CostPerLifeEditor = () => {
             <p className="text-gray-600 mt-2">
               Customize the cost per life values for different charity categories. These values represent the estimated cost in dollars to save one life.
             </p>
-            {isUsingCustomValues && (
-              <div className="mt-2 text-sm text-indigo-600 font-medium">
-                You are currently using custom values
-              </div>
-            )}
-          </div>
-          
-          <div className="overflow-y-auto p-6 flex-grow">
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.entries(effectivenessCategories).map(([key, category]) => {
-                  const defaultValue = category.costPerLife;
-                  const currentValue = formValues[key];
-                  const isCustom = currentValue !== defaultValue;
-                  
-                  return (
-                    <div key={key} className={`p-4 rounded-lg border ${isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'}`}>
-                      <label className="block mb-2 font-medium text-gray-700">
-                        {category.name}
-                      </label>
-                      <div className="flex items-center">
-                        <span className="mr-2 text-gray-600">$</span>
-                        <input
-                          type="number"
-                          min="0"
-                          value={currentValue || ''}
-                          onChange={(e) => handleInputChange(key, e.target.value)}
-                          className={`w-full p-2 border rounded ${isCustom ? 'border-indigo-300' : 'border-gray-300'}`}
-                        />
-                      </div>
-                      <div className="mt-1 text-xs text-gray-500 flex justify-between">
-                        <span>Default: ${defaultValue.toLocaleString()}</span>
-                        {isCustom && (
-                          <span className="text-indigo-600">
-                            Custom value
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              
-              <div className="mt-8 flex justify-end space-x-4">
+            <div className="mt-4 flex items-center justify-end">
+              <div className="flex space-x-4">
                 <button
                   type="button"
                   onClick={handleReset}
                   className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  Reset to Defaults
+                  Reset All
                 </button>
                 <button
                   type="button"
@@ -162,12 +143,97 @@ const CostPerLifeEditor = () => {
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleSubmit}
                   className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  Save Changes
+                  Save
                 </button>
               </div>
+            </div>
+          </div>
+          
+          <div className="overflow-y-auto p-6 flex-grow">
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Object.entries(effectivenessCategories)
+                  .sort((a, b) => a[1].name.localeCompare(b[1].name))
+                  .map(([key, category]) => {
+                    const defaultValue = category.costPerLife;
+                    const currentValue = formValues[key];
+                    const isCustom = currentValue !== defaultValue;
+                    
+                    // Format the display value with commas if it's a number
+                    const displayValue = (currentValue !== '' && !isNaN(currentValue))
+                      ? typeof currentValue === 'number' && Math.abs(currentValue) >= 1000 
+                          ? currentValue.toLocaleString('en-US')
+                          : currentValue
+                      : '';
+                    
+                    return (
+                      <div key={key} className={`p-4 rounded-lg border ${isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'}`}>
+                        <label className="block mb-2 font-medium text-gray-700">
+                          {category.name}
+                        </label>
+                        <div className="flex items-center">
+                          <span className="mr-2 text-gray-600">$</span>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            value={displayValue}
+                            onChange={(e) => {
+                              // Remove commas from input when user is typing
+                              const rawValue = e.target.value.replace(/,/g, '');
+                              
+                              // Allow any input that's valid for number formation including decimal, negative signs, and leading zeros
+                              if (rawValue === '' || 
+                                  rawValue === '-' || 
+                                  rawValue === '0' || 
+                                  rawValue === '-0' || 
+                                  rawValue === '0.' || 
+                                  rawValue === '-0.' || 
+                                  /^-?\d*\.?\d*$/.test(rawValue)) {
+                                handleInputChange(key, rawValue);
+                              }
+                            }}
+                            onBlur={(e) => {
+                              // Format with commas on blur if it's a valid number and not exactly zero
+                              const value = e.target.value;
+                              // Keep the field as-is if it's still being edited (contains just a decimal point, negative sign, etc.)
+                              if (value === '' || value === '-' || value === '0.' || value === '-0.') {
+                                return;
+                              }
+                              
+                              const numValue = Number(value);
+                              if (!isNaN(numValue)) {
+                                // Format with commas but preserve exactly as entered for precision
+                                const formattedValue = numValue.toLocaleString('en-US', {
+                                  useGrouping: true,
+                                  maximumFractionDigits: 20
+                                });
+                                e.target.value = formattedValue;
+                              }
+                            }}
+                            className={`w-full p-2 border rounded ${isCustom ? 'border-indigo-300' : 'border-gray-300'}`}
+                          />
+                        </div>
+                        {isCustom && (
+                          <div className="mt-1 text-xs flex justify-between">
+                            <span className="text-gray-500">Default: ${defaultValue.toLocaleString()}</span>
+                            <button 
+                              type="button"
+                              className="text-indigo-600 hover:text-indigo-800 font-medium"
+                              onClick={() => handleInputChange(key, defaultValue)}
+                            >
+                              Reset
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
+              
             </form>
           </div>
         </motion.div>

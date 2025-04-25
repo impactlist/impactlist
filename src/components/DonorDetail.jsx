@@ -5,6 +5,8 @@ import { calculateDonorStats, donations, charities, effectivenessCategories, get
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { useCostPerLife } from './CostPerLifeContext';
+import CustomValuesIndicator from './CustomValuesIndicator';
 
 // Animation speed constant (in milliseconds)
 const ANIMATION_DURATION = 600;
@@ -20,6 +22,7 @@ function DonorDetail(props) {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [chartContainerWidth, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
+  const { customValues, openModal } = useCostPerLife();
   
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -44,7 +47,7 @@ function DonorDetail(props) {
 
   useEffect(() => {
     // Get full donor statistics
-    const stats = calculateDonorStats();
+    const stats = calculateDonorStats(customValues);
     const currentDonor = stats.find(donor => donor.name === donorName);
     setDonorStats(currentDonor);
 
@@ -53,7 +56,13 @@ function DonorDetail(props) {
       .filter(donation => donation.donor === donorName)
       .map(donation => {
         const charity = charities.find(c => c.name === donation.charity);
-        const costPerLife = getCharityCostPerLife(charity);
+        
+        // Throw error if charity doesn't exist in our database
+        if (!charity) {
+          throw new Error(`Charity not found: ${donation.charity} for donor ${donorName}. This charity needs to be added to the charities array.`);
+        }
+        
+        const costPerLife = getCharityCostPerLife(charity, customValues);
         
         // Get the primary category for this charity
         const primaryCategory = getPrimaryCategory(charity);
@@ -68,7 +77,7 @@ function DonorDetail(props) {
         return {
           ...donation,
           creditedAmount,
-          category: primaryCategory.id, // Use primary category ID
+          category: primaryCategory.id, // Use primary category ID 
           categoryName: primaryCategory.name,
           livesSaved,
           costPerLife,
@@ -152,7 +161,8 @@ function DonorDetail(props) {
           costPerLife = categoryData.costPerLife;
         } else {
           // Get base cost from effectivenessCategories
-          const baseCostPerLife = effectivenessCategories[categoryId].costPerLife;
+          const baseCostPerLife = customValues && customValues[categoryId] !== undefined ? 
+          customValues[categoryId] : effectivenessCategories[categoryId].costPerLife;
           
           // Apply multiplier if it exists
           if (categoryData.multiplier !== undefined) {
@@ -267,7 +277,7 @@ function DonorDetail(props) {
     
     // Store the raw data with both values
     setRawChartData(unifiedData);
-  }, [donorName]);
+  }, [donorName, customValues]);
 
   // Prepare the initial sorted data once
   useEffect(() => {
@@ -360,7 +370,7 @@ function DonorDetail(props) {
     }, ANIMATION_DURATION);
     
     return () => clearTimeout(timer);
-  }, [transitionStage, chartView]); // Remove chartData dependency
+  }, [transitionStage, chartView, customValues]); // Add customValues dependency
   
   // Initialize chart view on rawChartData load
   useEffect(() => {
@@ -373,7 +383,7 @@ function DonorDetail(props) {
     }));
     
     setChartData(initialData);
-  }, [rawChartData]); // Only depend on rawChartData for initialization
+  }, [rawChartData, customValues]); // Add customValues dependency
   
   // Separate effect to handle animation timing
   useEffect(() => {
@@ -419,18 +429,26 @@ function DonorDetail(props) {
       return '$0';
     } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
       return '∞';
-    } else if (amount >= 1000000000) {
-      const value = amount / 1000000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
-    } else if (amount >= 1000000) {
-      const value = amount / 1000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
-    } else if (amount >= 1000) {
-      const value = amount / 1000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}K`;
-    } else {
-      return `$${formatNumber(amount)}`;
     }
+    
+    const isNegative = amount < 0;
+    const absAmount = Math.abs(amount);
+    
+    let formattedValue;
+    if (absAmount >= 1000000000) {
+      const value = absAmount / 1000000000;
+      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
+    } else if (absAmount >= 1000000) {
+      const value = absAmount / 1000000;
+      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
+    } else if (absAmount >= 1000) {
+      const value = absAmount / 1000;
+      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}K`;
+    } else {
+      formattedValue = `$${formatNumber(absAmount)}`;
+    }
+    
+    return isNegative ? `-${formattedValue}` : formattedValue;
   };
   
   // Custom chart tooltip
@@ -649,6 +667,20 @@ function DonorDetail(props) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
+          <div className="flex justify-end mb-2">
+            <div className="flex items-center space-x-3">
+              <CustomValuesIndicator />
+              <button 
+                onClick={openModal}
+                className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 bg-white rounded-md text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                </svg>
+                Adjust Assumptions
+              </button>
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Impact Rank</span>
@@ -673,9 +705,10 @@ function DonorDetail(props) {
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
-              <span className="text-3xl font-bold text-slate-900">
-                {donorStats.livesSaved === 0 ? <span className="text-6xl">∞</span> : `$${formatNumber(Math.round(donorStats.costPerLifeSaved))}`}
+              <span className={`text-3xl font-bold ${donorStats.costPerLifeSaved < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+                {donorStats.livesSaved === 0 ? <span className="text-6xl">∞</span> : formatCurrency(donorStats.costPerLifeSaved)}
               </span>
+              {donorStats.costPerLifeSaved < 0 && <span className="text-xs text-red-600 block mt-1">(Negative impact)</span>}
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Net Worth</span>

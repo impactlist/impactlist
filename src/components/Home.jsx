@@ -3,21 +3,24 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { calculateDonorStats, charities, donations, effectivenessCategories, getCharityCostPerLife, getPrimaryCategory } from '../data/donationData';
 import SortableTable from './SortableTable';
+import { useCostPerLife } from './CostPerLifeContext';
+import CustomValuesIndicator from './CustomValuesIndicator';
 
 function Home(props) {
   const [donorStats, setDonorStats] = useState([]);
   const [charityStats, setCharityStats] = useState([]);
+  const { customValues, openModal } = useCostPerLife();
 
   useEffect(() => {
     // Calculate donor statistics on component mount
-    const stats = calculateDonorStats();
+    const stats = calculateDonorStats(customValues);
     setDonorStats(stats);
     
     // Calculate charity statistics
     const recipientStats = charities.map(charity => {
       const charityDonations = donations.filter(d => d.charity === charity.name);
       const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
-      const costPerLife = getCharityCostPerLife(charity);
+      const costPerLife = getCharityCostPerLife(charity, customValues);
       
       // Get the primary category for display
       const primaryCategory = getPrimaryCategory(charity);
@@ -46,7 +49,7 @@ function Home(props) {
     }).sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
     
     setCharityStats(recipientStats);
-  }, []);
+  }, [customValues]);
 
   // Format large numbers with commas
   const formatNumber = (num) => {
@@ -55,15 +58,21 @@ function Home(props) {
 
   // Format dollar amounts
   const formatCurrency = (amount) => {
-    if (amount >= 1000000000) {
-      const value = amount / 1000000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
-    } else if (amount >= 1000000) {
-      const value = amount / 1000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
+    const isNegative = amount < 0;
+    const absAmount = Math.abs(amount);
+    
+    let formattedValue;
+    if (absAmount >= 1000000000) {
+      const value = absAmount / 1000000000;
+      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
+    } else if (absAmount >= 1000000) {
+      const value = absAmount / 1000000;
+      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
     } else {
-      return `$${formatNumber(amount)}`;
+      formattedValue = `$${formatNumber(absAmount)}`;
     }
+    
+    return isNegative ? `-${formattedValue}` : formattedValue;
   };
 
   // Get category display name
@@ -109,8 +118,8 @@ function Home(props) {
       key: 'costPerLifeSaved', 
       label: 'Cost/Life',
       render: (donor) => (
-        <div className="text-sm text-slate-900">
-          {formatCurrency(Math.round(donor.costPerLifeSaved))}
+        <div className={`text-sm ${donor.costPerLifeSaved < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+          {donor.livesSaved === 0 ? '∞' : formatCurrency(donor.costPerLifeSaved)}
         </div>
       )
     },
@@ -194,7 +203,21 @@ function Home(props) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.4 }}
       >
-        <h2 className="text-2xl font-bold text-slate-800 mb-4">Top Donors</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-slate-800">Top Donors</h2>
+          <div className="flex items-center space-x-3">
+            <CustomValuesIndicator />
+            <button 
+              onClick={openModal}
+              className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 bg-white rounded-md text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+              </svg>
+              Adjust Assumptions
+            </button>
+          </div>
+        </div>
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
           <div className="overflow-x-auto">
             <SortableTable 

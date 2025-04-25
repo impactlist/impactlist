@@ -29,6 +29,260 @@ export const effectivenessCategories = {
   'other': { name: 'Other', costPerLife: 100000 }
 };
 
+// Get the effective costPerLife for a given category, considering custom values if they exist
+export const getEffectiveCostPerLife = (categoryKey, customValues = null) => {
+  // If we have custom values for this category, use them
+  if (customValues && customValues[categoryKey] !== undefined) {
+    return customValues[categoryKey];
+  }
+  
+  // Use default category values if available
+  if (effectivenessCategories[categoryKey]) {
+    return effectivenessCategories[categoryKey].costPerLife;
+  }
+  
+  // Throw an error for invalid category keys to make debugging easier
+  throw new Error(`Invalid category key: "${categoryKey}". This category does not exist in effectivenessCategories.`);
+};
+
+// Calculate weighted average cost per life for a charity
+export const getCharityCostPerLife = (charity, customValues = null) => {
+  if (!charity || !charity.categories) throw new Error(`Invalid charity.`); 
+
+  // First check if charity has a direct costPerLife property
+  if (charity.costPerLife !== undefined) return charity.costPerLife;
+  
+  // Also check if costPerLife is directly in the categories object (special case)
+  if (charity.categories.costPerLife !== undefined) return charity.categories.costPerLife;
+  
+  // If no direct costPerLife, calculate from categories
+  if (Object.keys(charity.categories).length === 0) throw new Error(`Charity has no categories.`); 
+  
+  let totalWeight = 0;
+  let weightedCost = 0;
+  
+  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
+    // Skip non-category properties (like costPerLife)
+    if (!effectivenessCategories[categoryId]) throw new Error(`Found non-existant category.`);
+    
+    const weight = categoryData.fraction;
+    totalWeight += weight;
+    
+    // If the charity category has a specific costPerLife, use that directly
+    let categoryCost;
+    if (categoryData.costPerLife !== undefined) {
+      categoryCost = categoryData.costPerLife;
+    } else {
+      // Otherwise calculate it from the base category value with multiplier
+      const baseCostPerLife = getEffectiveCostPerLife(categoryId, customValues);
+      const multiplier = categoryData.multiplier !== undefined ? categoryData.multiplier : 1;
+      categoryCost = baseCostPerLife / multiplier;
+    }
+    
+    weightedCost += categoryCost * weight;
+  }
+  
+  // If no valid categories were processed, return default
+  if (totalWeight === 0) throw new Error(`No categories were processed.`);
+  
+  return weightedCost / totalWeight;
+};
+
+// Calculate weighted average of base category costs (without multipliers)
+export const getCategoryCostPerLife = (charity, customValues = null) => {
+  if (!charity || !charity.categories) throw new Error(`Invalid charity.`); // Default for invalid charities
+  
+  // If costPerLife is directly in the categories object (special case), use it as the base
+  if (charity.categories.costPerLife !== undefined) return charity.categories.costPerLife;
+  
+  // If no categories, return default
+  if (Object.keys(charity.categories).length === 0) throw new Error(`Charity has no categories.`);
+  
+  let totalWeight = 0;
+  let weightedCost = 0;
+  
+  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
+    // Skip non-category properties (like costPerLife)
+    if (!effectivenessCategories[categoryId]) throw new Error(`Found non-existant category.`);
+    
+    const weight = categoryData.fraction;
+    totalWeight += weight;
+    
+    // If the charity category has a specific costPerLife, use that directly
+    if (categoryData.costPerLife !== undefined) {
+      weightedCost += categoryData.costPerLife * weight;
+    } else {
+      // Otherwise use the category default
+      weightedCost += getEffectiveCostPerLife(categoryId, customValues) * weight;
+    }
+  }
+  
+  // If no valid categories were processed, return default
+  if (totalWeight === 0) throw new Error(`No categories were processed.`);
+  
+  return weightedCost / totalWeight;
+};
+
+// Calculate how much more/less effective a charity is compared to the base category
+export const getCostPerLifeMultiplier = (charity, customValues = null) => {
+  const categoryCostPerLife = getCategoryCostPerLife(charity, customValues);
+  const charityCostPerLife = getCharityCostPerLife(charity, customValues);
+  
+  if (charityCostPerLife === 0) return 0;
+  return categoryCostPerLife / charityCostPerLife;
+};
+
+// Get the primary category for a charity based on weighting
+export const getPrimaryCategory = (charity) => {
+  if (!charity.categories || Object.keys(charity.categories).length === 0) {
+    throw new Error(`Charity has no categories.`);
+  }
+  
+  let maxWeight = 0;
+  let primaryCategoryId = null;
+  
+  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
+    const weight = categoryData.fraction;
+    if (weight > maxWeight) {
+      maxWeight = weight;
+      primaryCategoryId = categoryId;
+    }
+  }
+  
+  return { 
+    id: primaryCategoryId, 
+    name: effectivenessCategories[primaryCategoryId].name
+  };
+};
+
+// Get a breakdown of all categories for a charity
+export const getCategoryBreakdown = (charity) => {
+  if (!charity.categories || Object.keys(charity.categories).length === 0) {
+    throw new Error(`Charity has no categories.`);
+  }
+  
+  const breakdownList = [];
+  let totalFraction = 0;
+  
+  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
+    totalFraction += categoryData.fraction;
+    
+    breakdownList.push({
+      id: categoryId,
+      key: categoryId,
+      name: effectivenessCategories[categoryId].name,
+      fraction: categoryDatafraction,
+      percentage: Math.round(fraction * 100),
+      multiplier: categoryData.multiplier
+    });
+  }
+  
+  if (Math.abs(totalFraction - 1) > 0.00001) 
+    throw new Error(`Category fractions for charity "${charity.name}" sum to ${totalFraction}, should be 1.0`);
+  
+  // Sort by percentage (highest first)
+  return breakdownList.sort((a, b) => b.percentage - a.percentage);
+};
+
+// Calculate donor statistics, including donations and lives saved
+export const calculateDonorStats = (customValues = null) => {
+  // Group donations by donor
+  const donorDonations = {};
+  
+  for (const donation of donations) {
+    if (!donorDonations[donation.donor]) {
+      donorDonations[donation.donor] = [];
+    }
+    donorDonations[donation.donor].push(donation);
+  }
+  
+  // Calculate stats for each donor
+  const donorStats = donors.map(donor => {
+    const donorName = donor.name;
+    const donorData = donorDonations[donorName] || [];
+    
+    let totalDonated = 0;
+    let totalLivesSaved = 0;
+    let knownDonations = 0;
+    
+    // Calculate totals based on actual donations
+    for (const donation of donorData) {
+      // Find charity for this donation
+      const charity = charities.find(c => c.name === donation.charity);
+      if (!charity) continue;
+      
+      const donationAmount = donation.amount;
+      totalDonated += donationAmount;
+      knownDonations += donationAmount;
+      
+      // Calculate cost per life for this charity
+      const costPerLife = getCharityCostPerLife(charity, customValues);
+      
+      // Apply credit multiplier if it exists
+      const creditedAmount = donation.credit !== undefined ? 
+        donationAmount * donation.credit : donationAmount;
+      
+      // Calculate lives saved
+      let livesSaved;
+      if (costPerLife === 0) {
+        // Handle zero cost (infinite lives)
+        livesSaved = 0;
+      } else {
+        // Normal case
+        livesSaved = creditedAmount / costPerLife;
+      }
+      
+      totalLivesSaved += livesSaved;
+    }
+    
+    // Handle known totalDonated field if available
+    let totalDonatedField = null;
+    let unknownLivesSaved = 0;
+    
+    if (donor.totalDonated && donor.totalDonated > knownDonations) {
+      totalDonatedField = donor.totalDonated;
+      
+      // Calculate unknown amount
+      const unknownAmount = donor.totalDonated - knownDonations;
+      
+      // Estimate lives saved for unknown donations if there are known donations
+      if (knownDonations > 0 && totalLivesSaved !== 0) {
+        const avgCostPerLife = knownDonations / totalLivesSaved;
+        unknownLivesSaved = unknownAmount / avgCostPerLife;
+        totalLivesSaved += unknownLivesSaved;
+      }
+      
+      // Add unknown amount to total
+      totalDonated = donor.totalDonated;
+    }
+    
+    // Calculate cost per life saved
+    const costPerLifeSaved = totalLivesSaved !== 0 ? totalDonated / totalLivesSaved : Infinity;
+    
+    return {
+      name: donorName,
+      netWorth: donor.netWorth,
+      totalDonated,
+      knownDonations,
+      totalDonatedField,
+      livesSaved: totalLivesSaved,
+      unknownLivesSaved,
+      costPerLifeSaved: costPerLifeSaved
+    };
+  });
+  
+  // Filter out donors with no donations and sort by lives saved
+  const filteredStats = donorStats
+    .filter(donor => donor.totalDonated > 0)
+    .sort((a, b) => b.livesSaved - a.livesSaved);
+  
+  // Add rank
+  return filteredStats.map((donor, index) => ({
+    ...donor,
+    rank: index + 1
+  }));
+};
+
 // Donor data with net worth
 export const donors = [
   //  { name: 'Amancio Ortega', netWorth: 1.21e11 },
@@ -51,8 +305,8 @@ export const donors = [
     { name: 'Vitalik Buterin', netWorth: 6e8 },
     { name: 'Warren Buffett', netWorth: 1.61e11 },
   ];
-
-// Charity data with their focus area categories
+  
+// Charity and organization data with categories and effectiveness multipliers
 export const charities = [
   { name: 'Against Malaria Foundation', categories: { global_health: { fraction: 1.0 } } },
   { name: 'GiveDirectly', categories: { global_development: { fraction: 1.0 } } },
@@ -319,7 +573,6 @@ export const charities = [
 ];
 
 
-// Donation data
 export const donations = [
   
   /*
@@ -658,218 +911,3 @@ export const donations = [
   { date: '2006-11-25', donor: 'Warren Buffett', charity: 'NoVo Foundation', amount: 2.6e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
   { date: '2006-11-25', donor: 'Warren Buffett', charity: 'GLIDE Foundation', amount: 53e6, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
 ];
-
-// Helper function to get a charity's cost per life
-export const getCharityCostPerLife = (charity) => {
-  // Calculate weighted average cost per life across all categories
-  const categories = Object.entries(charity.categories);
-  let weightedCostPerLife = 0;
-  
-  categories.forEach(([categoryId, categoryData]) => {
-    const fraction = categoryData.fraction;
-    let costPerLife;
-    
-    // First check for category-specific costPerLife
-    if (categoryData.costPerLife !== undefined) {
-      costPerLife = categoryData.costPerLife;
-    } else {
-      // Get base cost from effectivenessCategories
-      const baseCostPerLife = effectivenessCategories[categoryId].costPerLife;
-      
-      // Check for multiplier to scale category costPerLife
-      if (categoryData.multiplier !== undefined) {
-        costPerLife = baseCostPerLife / categoryData.multiplier;
-      } else {
-        costPerLife = baseCostPerLife;
-      }
-    }
-    
-    weightedCostPerLife += costPerLife * fraction;
-  });
-  
-  return weightedCostPerLife;
-};
-
-// Get category base costPerLife
-export const getCategoryCostPerLife = (charity) => {
-  // Calculate weighted average base cost per life across all categories
-  const categories = Object.entries(charity.categories);
-  let weightedBaseCostPerLife = 0;
-  
-  categories.forEach(([categoryId, categoryData]) => {
-    const fraction = categoryData.fraction;
-    const baseCostPerLife = effectivenessCategories[categoryId].costPerLife;
-    weightedBaseCostPerLife += baseCostPerLife * fraction;
-  });
-  
-  return weightedBaseCostPerLife;
-};
-
-// Get costPerLife multiplier compared to category (how many times more/less effective)
-export const getCostPerLifeMultiplier = (charity) => {
-  const charityCostPerLife = getCharityCostPerLife(charity);
-  const categoryCostPerLife = getCategoryCostPerLife(charity);
-  return categoryCostPerLife / charityCostPerLife; // Higher multiplier means better (lower cost)
-};
-
-// Helper function to get the primary category of a charity (with highest fraction)
-export const getPrimaryCategory = (charity) => {
-  const categoriesEntries = Object.entries(charity.categories);
-  categoriesEntries.sort((a, b) => b[1].fraction - a[1].fraction);
-  const primaryCategoryId = categoriesEntries[0][0];
-  const primaryCategoryData = effectivenessCategories[primaryCategoryId];
-  
-  return {
-    id: primaryCategoryId,
-    name: primaryCategoryData.name,
-    fraction: categoriesEntries[0][1].fraction
-  };
-};
-
-// Helper function to get all categories of a charity with percentages
-export const getCategoryBreakdown = (charity) => {
-  const categoriesEntries = Object.entries(charity.categories);
-  
-  return categoriesEntries.map(([categoryId, data]) => ({
-    id: categoryId,
-    name: effectivenessCategories[categoryId].name,
-    fraction: data.fraction,
-    percentage: Math.round(data.fraction * 100)
-  })).sort((a, b) => b.fraction - a.fraction);
-};
-
-// Helper function to validate data integrity
-export const validateDataIntegrity = () => {
-  const errors = [];
-  
-  // Check if all charities have valid categories
-  charities.forEach(charity => {
-    if (!charity.categories || Object.keys(charity.categories).length === 0) {
-      errors.push(`Charity "${charity.name}" has no categories`);
-      return;
-    }
-    
-    // Validate each category and fraction sum
-    let fractionSum = 0;
-    Object.entries(charity.categories).forEach(([categoryId, categoryData]) => {
-      if (!effectivenessCategories[categoryId]) {
-        errors.push(`Invalid category "${categoryId}" for charity "${charity.name}"`);
-      }
-      
-      if (categoryData.fraction === undefined) {
-        errors.push(`Missing fraction for category "${categoryId}" in charity "${charity.name}"`);
-      } else {
-        fractionSum += categoryData.fraction;
-      }
-    });
-    
-    // Check if fractions sum to approximately 1.0 (allowing for small floating point errors)
-    if (Math.abs(fractionSum - 1.0) > 0.001) {
-      errors.push(`Category fractions for charity "${charity.name}" sum to ${fractionSum}, should be 1.0`);
-    }
-  });
-  
-  // Check if all donations reference existing charities
-  donations.forEach((donation, index) => {
-    const charity = charities.find(c => c.name === donation.charity);
-    if (!charity) {
-      errors.push(`Donation references non-existent charity "${donation.charity}" from donor "${donation.donor}"`);
-    }
-  });
-  
-  // Check if all donations reference existing donors
-  donations.forEach(donation => {
-    const donor = donors.find(d => d.name === donation.donor);
-    if (!donor) {
-      errors.push(`Donation references non-existent donor "${donation.donor}" to charity "${donation.charity}"`);
-    }
-  });
-  
-  return errors;
-};
-
-// Helper function to calculate total donations by donor
-export const calculateDonorStats = () => {
-  // First validate data integrity
-  const validationErrors = validateDataIntegrity();
-  if (validationErrors.length > 0) {
-    console.error('Data validation errors:', validationErrors);
-    throw new Error(`Data validation failed: ${validationErrors[0]}`);
-  }
-  
-  const donorMap = new Map();
-  
-  // Initialize with donor data
-  donors.forEach(donor => {
-    donorMap.set(donor.name, {
-      name: donor.name,
-      netWorth: donor.netWorth,
-      totalDonated: 0,
-      livesSaved: 0,
-      costPerLifeSaved: 0,
-      // Store the totalDonated field separately if it exists
-      totalDonatedField: donor.totalDonated || null
-    });
-  });
-  
-  // Calculate total donations and lives saved
-  donations.forEach(donation => {
-    const charity = charities.find(c => c.name === donation.charity);
-    const costPerLife = getCharityCostPerLife(charity);
-    const donorData = donorMap.get(donation.donor);
-    
-    // Apply credit multiplier if it exists
-    const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-    
-    // Negative cost means lives lost per dollar
-    const livesSaved = costPerLife < 0 ? 
-      (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
-      creditedAmount / costPerLife; // Normal case
-    
-    donorMap.set(donation.donor, {
-      ...donorData,
-      totalDonated: donorData.totalDonated + creditedAmount,
-      livesSaved: donorData.livesSaved + livesSaved
-    });
-  });
-  
-  // Calculate cost per life saved and handle totalDonated field
-  donorMap.forEach((data, name) => {
-    // For donors with totalDonatedField, calculate additional lives saved using same efficiency
-    let totalLivesSaved = data.livesSaved;
-    let displayTotalDonated = data.totalDonated;
-    let knownDonations = data.totalDonated; // Store known donations separately
-    
-    if (data.totalDonatedField && data.totalDonatedField > data.totalDonated) {
-      // If they have a totalDonatedField and it's greater than known donations
-      const unknownAmount = data.totalDonatedField - data.totalDonated;
-      
-      // Only calculate additional lives if they've saved some lives already
-      if (data.livesSaved !== 0) {
-        const avgCostPerLife = data.totalDonated / data.livesSaved;
-        const additionalLives = avgCostPerLife !== 0 ? unknownAmount / avgCostPerLife : 0;
-        totalLivesSaved += additionalLives;
-      }
-      
-      // Use the totalDonatedField as the display value
-      displayTotalDonated = data.totalDonatedField;
-    }
-    
-    donorMap.set(name, {
-      ...data,
-      totalDonated: displayTotalDonated, // This is now the full amount including unknown
-      knownDonations: knownDonations, // Store just the known donations
-      livesSaved: totalLivesSaved,
-      costPerLifeSaved: totalLivesSaved > 0 ? displayTotalDonated / totalLivesSaved : 
-                       (totalLivesSaved < 0 ? displayTotalDonated / Math.abs(totalLivesSaved) * -1 : 0)
-    });
-  });
-  
-  // Convert to array and sort by lives saved
-  return Array.from(donorMap.values())
-    .sort((a, b) => b.livesSaved - a.livesSaved)
-    .map((donor, index) => ({
-      ...donor,
-      rank: index + 1
-    }));
-};

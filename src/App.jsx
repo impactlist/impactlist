@@ -6,6 +6,8 @@ import Home from './components/Home';
 import DonorDetail from './components/DonorDetail';
 import RecipientDetail from './components/RecipientDetail';
 import Recipients from './components/Recipients';
+import { CostPerLifeProvider } from './components/CostPerLifeContext';
+import CostPerLifeEditor from './components/CostPerLifeEditor';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -211,9 +213,12 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router>
-        <AppContent />
-      </Router>
+      <CostPerLifeProvider>
+        <Router>
+          <AppContent />
+          <CostPerLifeEditor />
+        </Router>
+      </CostPerLifeProvider>
     </ErrorBoundary>
   );
 }

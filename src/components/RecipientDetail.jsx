@@ -13,11 +13,14 @@ import {
 } from '../data/donationData';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
+import { useCostPerLife } from './CostPerLifeContext';
+import CustomValuesIndicator from './CustomValuesIndicator';
 
 function RecipientDetail(props) {
   const { recipientName } = useParams();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
+  const { customValues, openModal } = useCostPerLife();
   // Colors for the chart bars
   const COLORS = [
     '#4f46e5', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#818cf8',
@@ -42,8 +45,9 @@ function RecipientDetail(props) {
           // Use explicit costPerLife if provided
           costPerLife = categoryData.costPerLife;
         } else {
-          // Get base cost from effectivenessCategories
-          const baseCostPerLife = effectivenessCategories[data.id].costPerLife;
+          // Get base cost from effectivenessCategories (with custom values if available)
+          const baseCostPerLife = customValues && customValues[data.id] !== undefined ? 
+            customValues[data.id] : effectivenessCategories[data.id].costPerLife;
           
           // Apply multiplier if it exists
           costPerLife = categoryData.multiplier ? 
@@ -71,9 +75,9 @@ function RecipientDetail(props) {
     const charity = charities.find(c => c.name === recipientName);
     
     if (charity) {
-      const costPerLife = getCharityCostPerLife(charity);
-      const categoryCostPerLife = getCategoryCostPerLife(charity);
-      const costPerLifeMultiplier = getCostPerLifeMultiplier(charity);
+      const costPerLife = getCharityCostPerLife(charity, customValues);
+      const categoryCostPerLife = getCategoryCostPerLife(charity, customValues);
+      const costPerLifeMultiplier = getCostPerLifeMultiplier(charity, customValues);
       
       // Get primary category and category breakdown
       const primaryCategory = getPrimaryCategory(charity);
@@ -117,7 +121,7 @@ function RecipientDetail(props) {
       
       setRecipientDonations(charityDonations);
     }
-  }, [recipientName]);
+  }, [recipientName, customValues]);
 
   // Format functions
   const formatNumber = (num) => {
@@ -125,17 +129,27 @@ function RecipientDetail(props) {
   };
 
   const formatCurrency = (amount, effectivenessRate = null) => {
-    if (effectivenessRate === 0) {
+    if (amount === 0) {
+      return '$0';
+    } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
       return '∞';
-    } else if (amount >= 1000000000) {
-      const value = amount / 1000000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
-    } else if (amount >= 1000000) {
-      const value = amount / 1000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
-    } else {
-      return `$${formatNumber(amount)}`;
     }
+    
+    const isNegative = amount < 0;
+    const absAmount = Math.abs(amount);
+    
+    let formattedValue;
+    if (absAmount >= 1000000000) {
+      const value = absAmount / 1000000000;
+      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
+    } else if (absAmount >= 1000000) {
+      const value = absAmount / 1000000;
+      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
+    } else {
+      formattedValue = `$${formatNumber(absAmount)}`;
+    }
+    
+    return isNegative ? `-${formattedValue}` : formattedValue;
   };
   
   // Donation table columns configuration
@@ -243,6 +257,20 @@ function RecipientDetail(props) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
+          <div className="flex justify-end mb-2">
+            <div className="flex items-center space-x-3">
+              <CustomValuesIndicator />
+              <button 
+                onClick={openModal}
+                className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 bg-white rounded-md text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                </svg>
+                Adjust Assumptions
+              </button>
+            </div>
+          </div>
           <div className={`grid grid-cols-1 ${recipientInfo.categoryBreakdown.length === 1 ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-6`}>
             {/* Total Lives Saved - Always first */}
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
@@ -254,11 +282,11 @@ function RecipientDetail(props) {
             
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
-              <span className="text-3xl font-bold text-slate-900">
-                {recipientInfo.costPerLife === 0 ? <span className="text-6xl">∞</span> : `$${formatNumber(Math.round(recipientInfo.costPerLife))}`}
+              <span className={`text-3xl font-bold ${recipientInfo.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+                {recipientInfo.costPerLife === 0 ? <span className="text-6xl">∞</span> : formatCurrency(recipientInfo.costPerLife)}
               </span>
               <span className="text-sm mt-2 text-slate-500">
-                Category avg: {recipientInfo.categoryCostPerLife === 0 ? <span className="text-xl">∞</span> : `$${formatNumber(Math.round(recipientInfo.categoryCostPerLife))}`}
+                Category avg: {recipientInfo.categoryCostPerLife === 0 ? <span className="text-xl">∞</span> : formatCurrency(recipientInfo.categoryCostPerLife)}
               </span>
             </div>
             

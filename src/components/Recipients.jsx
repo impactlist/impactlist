@@ -5,6 +5,7 @@ import { charities, donations, effectivenessCategories, getCharityCostPerLife, g
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
+import { formatNumber, formatCurrency } from '../utils/formatters';
 
 function Recipients(props) {
   const [charityStats, setCharityStats] = useState([]);
@@ -49,23 +50,7 @@ function Recipients(props) {
     setCharityStats(recipientStats);
   }, [customValues]);
 
-  // Format large numbers with commas
-  const formatNumber = (num) => {
-    return num.toLocaleString('en-US');
-  };
-
-  // Format dollar amounts
-  const formatCurrency = (amount) => {
-    if (amount >= 1000000000) {
-      const value = amount / 1000000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
-    } else if (amount >= 1000000) {
-      const value = amount / 1000000;
-      return `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
-    } else {
-      return `$${formatNumber(amount)}`;
-    }
-  };
+  // Using imported formatNumber and formatCurrency functions from utils/formatters.js
 
   // Charity table columns configuration
   const charityColumns = [

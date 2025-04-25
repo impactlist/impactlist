@@ -7,6 +7,7 @@ import ImpactBarChart from './ImpactBarChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
+import { formatNumber, formatCurrency } from '../utils/formatters';
 
 // Animation speed constant (in milliseconds)
 const ANIMATION_DURATION = 600;
@@ -419,37 +420,7 @@ function DonorDetail(props) {
     };
   }, []);
 
-  // Format functions
-  const formatNumber = (num) => {
-    return num.toLocaleString('en-US');
-  };
-
-  const formatCurrency = (amount, effectivenessRate = null) => {
-    if (amount === 0) {
-      return '$0';
-    } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
-      return '∞';
-    }
-    
-    const isNegative = amount < 0;
-    const absAmount = Math.abs(amount);
-    
-    let formattedValue;
-    if (absAmount >= 1000000000) {
-      const value = absAmount / 1000000000;
-      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
-    } else if (absAmount >= 1000000) {
-      const value = absAmount / 1000000;
-      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
-    } else if (absAmount >= 1000) {
-      const value = absAmount / 1000;
-      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}K`;
-    } else {
-      formattedValue = `$${formatNumber(absAmount)}`;
-    }
-    
-    return isNegative ? `-${formattedValue}` : formattedValue;
-  };
+  // Using imported formatNumber and formatCurrency functions from utils/formatters.js
   
   // Custom chart tooltip
   const CustomTooltip = ({ active, payload }) => {

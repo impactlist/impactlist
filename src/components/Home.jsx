@@ -5,6 +5,7 @@ import { calculateDonorStats, charities, donations, effectivenessCategories, get
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
+import { formatNumber, formatCurrency } from '../utils/formatters';
 
 function Home(props) {
   const [donorStats, setDonorStats] = useState([]);
@@ -51,29 +52,7 @@ function Home(props) {
     setCharityStats(recipientStats);
   }, [customValues]);
 
-  // Format large numbers with commas
-  const formatNumber = (num) => {
-    return num.toLocaleString('en-US');
-  };
-
-  // Format dollar amounts
-  const formatCurrency = (amount) => {
-    const isNegative = amount < 0;
-    const absAmount = Math.abs(amount);
-    
-    let formattedValue;
-    if (absAmount >= 1000000000) {
-      const value = absAmount / 1000000000;
-      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
-    } else if (absAmount >= 1000000) {
-      const value = absAmount / 1000000;
-      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
-    } else {
-      formattedValue = `$${formatNumber(absAmount)}`;
-    }
-    
-    return isNegative ? `-${formattedValue}` : formattedValue;
-  };
+  // Using imported formatNumber and formatCurrency functions from utils/formatters.js
 
   // Get category display name
   const formatCategory = (categoryKey) => {

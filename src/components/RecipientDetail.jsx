@@ -15,6 +15,7 @@ import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
+import { formatNumber, formatCurrency } from '../utils/formatters';
 
 function RecipientDetail(props) {
   const { recipientName } = useParams();
@@ -123,34 +124,7 @@ function RecipientDetail(props) {
     }
   }, [recipientName, customValues]);
 
-  // Format functions
-  const formatNumber = (num) => {
-    return num.toLocaleString('en-US');
-  };
-
-  const formatCurrency = (amount, effectivenessRate = null) => {
-    if (amount === 0) {
-      return '$0';
-    } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
-      return '∞';
-    }
-    
-    const isNegative = amount < 0;
-    const absAmount = Math.abs(amount);
-    
-    let formattedValue;
-    if (absAmount >= 1000000000) {
-      const value = absAmount / 1000000000;
-      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
-    } else if (absAmount >= 1000000) {
-      const value = absAmount / 1000000;
-      formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
-    } else {
-      formattedValue = `$${formatNumber(absAmount)}`;
-    }
-    
-    return isNegative ? `-${formattedValue}` : formattedValue;
-  };
+  // Using imported formatNumber and formatCurrency functions from utils/formatters.js
   
   // Donation table columns configuration
   const donationColumns = [

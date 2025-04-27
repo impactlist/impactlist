@@ -91,9 +91,7 @@ function RecipientDetail(props) {
           // Apply credit multiplier if it exists
           const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
           
-          const livesSaved = costPerLife < 0 ? 
-            (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
-            creditedAmount / costPerLife; // Normal case
+          const livesSaved = costPerLife !== 0 ? creditedAmount / costPerLife : 0; 
           
           return {
             ...donation,

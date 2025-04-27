@@ -31,9 +31,7 @@ function Home(props) {
           // Apply credit multiplier if it exists
           const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
           
-          const livesSaved = costPerLife < 0 ? 
-            (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
-            creditedAmount / costPerLife; // Normal case
+          const livesSaved = costPerLife !== 0 ? creditedAmount / costPerLife : 0; // Normal case
           return sum + livesSaved;
         }, 
         0

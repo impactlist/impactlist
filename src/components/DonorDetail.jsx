@@ -71,9 +71,7 @@ function DonorDetail(props) {
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
         
-        const livesSaved = costPerLife < 0 ? 
-          (creditedAmount / (costPerLife * -1)) * -1 : // Lives lost case
-          creditedAmount / costPerLife; // Normal case
+        const livesSaved = costPerLife !== 0 ? creditedAmount / costPerLife : 0; 
         
         return {
           ...donation,
@@ -181,12 +179,7 @@ function DonorDetail(props) {
         const creditedAmount = donation.credit !== undefined ? 
           categoryAmount * donation.credit : categoryAmount;
         
-        // Calculate lives saved for this specific category
-        if (costPerLife < 0) {
-          livesSavedForCategory = (creditedAmount / (costPerLife * -1)) * -1; // Lives lost case
-        } else {
-          livesSavedForCategory = costPerLife !== 0 ? creditedAmount / costPerLife : 0; // Normal case
-        }
+        livesSavedForCategory = costPerLife !== 0 ? creditedAmount / costPerLife : 0; // Normal case
         
         // Initialize category objects if they don't exist
         if (!categoryAmounts[categoryName]) {

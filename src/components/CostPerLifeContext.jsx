@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { effectivenessCategories } from '../data/donationData';
 
 // Create context
 const CostPerLifeContext = createContext();

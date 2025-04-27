@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { charities, donations, effectivenessCategories, getCharityCostPerLife, getPrimaryCategory, getCategoryBreakdown } from '../data/donationData';
+import { charities, donations } from '../data/donationData';
+import { getCharityCostPerLife, getPrimaryCategory, getCategoryBreakdown } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';

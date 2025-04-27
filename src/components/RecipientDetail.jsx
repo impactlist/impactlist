@@ -1,16 +1,14 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { donations, charities, effectivenessCategories } from '../data/donationData';
 import { 
-  donations, 
-  charities, 
-  effectivenessCategories, 
   getCharityCostPerLife, 
   getCategoryCostPerLife,
   getCostPerLifeMultiplier,
   getPrimaryCategory,
   getCategoryBreakdown
-} from '../data/donationData';
+} from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';

@@ -1,7 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { calculateDonorStats, donations, charities, effectivenessCategories, getCharityCostPerLife, donors, getPrimaryCategory } from '../data/donationData';
+import { donations, charities, effectivenessCategories, donors } from '../data/donationData';
+import { calculateDonorStats, getCharityCostPerLife, getPrimaryCategory, getEffectiveCostPerLife } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
@@ -159,9 +160,7 @@ function DonorDetail(props) {
           // Use the explicit costPerLife if provided
           costPerLife = categoryData.costPerLife;
         } else {
-          // Get base cost from effectivenessCategories
-          const baseCostPerLife = customValues && customValues[categoryId] !== undefined ? 
-          customValues[categoryId] : effectivenessCategories[categoryId].costPerLife;
+          const baseCostPerLife = getEffectiveCostPerLife(categoryId, customValues);
           
           // Apply multiplier if it exists
           if (categoryData.multiplier !== undefined) {

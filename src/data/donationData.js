@@ -1,3 +1,13 @@
+// Import helper functions from utils
+import {
+  getEffectiveCostPerLife,
+  getCharityCostPerLife,
+  getCategoryCostPerLife,
+  getCostPerLifeMultiplier,
+  getPrimaryCategory,
+  getCategoryBreakdown
+} from '../utils/donationDataHelpers.js';
+
 // Charity focus areas with cost to save a life (in dollars)
 export const effectivenessCategories = {
   'ai_risk': { name: 'AI Existential Risk', costPerLife: 50 },             
@@ -27,260 +37,6 @@ export const effectivenessCategories = {
   'population': { name: 'Population', costPerLife: 50000 },
   'conflict_mitigation': { name: 'Conflict Mitigation', costPerLife: 50000 },
   'other': { name: 'Other', costPerLife: 100000 }
-};
-
-// Get the effective costPerLife for a given category, considering custom values if they exist
-export const getEffectiveCostPerLife = (categoryKey, customValues = null) => {
-  // If we have custom values for this category, use them
-  if (customValues && customValues[categoryKey] !== undefined) {
-    return customValues[categoryKey];
-  }
-  
-  // Use default category values if available
-  if (effectivenessCategories[categoryKey]) {
-    return effectivenessCategories[categoryKey].costPerLife;
-  }
-  
-  // Throw an error for invalid category keys to make debugging easier
-  throw new Error(`Invalid category key: "${categoryKey}". This category does not exist in effectivenessCategories.`);
-};
-
-// Calculate weighted average cost per life for a charity
-export const getCharityCostPerLife = (charity, customValues = null) => {
-  if (!charity || !charity.categories) throw new Error(`Invalid charity.`); 
-
-  // First check if charity has a direct costPerLife property
-  if (charity.costPerLife !== undefined) return charity.costPerLife;
-  
-  // Also check if costPerLife is directly in the categories object (special case)
-  if (charity.categories.costPerLife !== undefined) return charity.categories.costPerLife;
-  
-  // If no direct costPerLife, calculate from categories
-  if (Object.keys(charity.categories).length === 0) throw new Error(`Charity has no categories.`); 
-  
-  let totalWeight = 0;
-  let weightedCost = 0;
-  
-  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
-    // Skip non-category properties (like costPerLife)
-    if (!effectivenessCategories[categoryId]) throw new Error(`Found non-existant category.`);
-    
-    const weight = categoryData.fraction;
-    totalWeight += weight;
-    
-    // If the charity category has a specific costPerLife, use that directly
-    let categoryCost;
-    if (categoryData.costPerLife !== undefined) {
-      categoryCost = categoryData.costPerLife;
-    } else {
-      // Otherwise calculate it from the base category value with multiplier
-      const baseCostPerLife = getEffectiveCostPerLife(categoryId, customValues);
-      const multiplier = categoryData.multiplier !== undefined ? categoryData.multiplier : 1;
-      categoryCost = baseCostPerLife / multiplier;
-    }
-    
-    weightedCost += categoryCost * weight;
-  }
-  
-  // If no valid categories were processed, return default
-  if (totalWeight === 0) throw new Error(`No categories were processed.`);
-  
-  return weightedCost / totalWeight;
-};
-
-// Calculate weighted average of base category costs (without multipliers)
-export const getCategoryCostPerLife = (charity, customValues = null) => {
-  if (!charity || !charity.categories) throw new Error(`Invalid charity.`); // Default for invalid charities
-  
-  // If costPerLife is directly in the categories object (special case), use it as the base
-  if (charity.categories.costPerLife !== undefined) return charity.categories.costPerLife;
-  
-  // If no categories, return default
-  if (Object.keys(charity.categories).length === 0) throw new Error(`Charity has no categories.`);
-  
-  let totalWeight = 0;
-  let weightedCost = 0;
-  
-  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
-    // Skip non-category properties (like costPerLife)
-    if (!effectivenessCategories[categoryId]) throw new Error(`Found non-existant category.`);
-    
-    const weight = categoryData.fraction;
-    totalWeight += weight;
-    
-    // If the charity category has a specific costPerLife, use that directly
-    if (categoryData.costPerLife !== undefined) {
-      weightedCost += categoryData.costPerLife * weight;
-    } else {
-      // Otherwise use the category default
-      weightedCost += getEffectiveCostPerLife(categoryId, customValues) * weight;
-    }
-  }
-  
-  // If no valid categories were processed, return default
-  if (totalWeight === 0) throw new Error(`No categories were processed.`);
-  
-  return weightedCost / totalWeight;
-};
-
-// Calculate how much more/less effective a charity is compared to the base category
-export const getCostPerLifeMultiplier = (charity, customValues = null) => {
-  const categoryCostPerLife = getCategoryCostPerLife(charity, customValues);
-  const charityCostPerLife = getCharityCostPerLife(charity, customValues);
-  
-  if (charityCostPerLife === 0) return 0;
-  return categoryCostPerLife / charityCostPerLife;
-};
-
-// Get the primary category for a charity based on weighting
-export const getPrimaryCategory = (charity) => {
-  if (!charity.categories || Object.keys(charity.categories).length === 0) {
-    throw new Error(`Charity has no categories.`);
-  }
-  
-  let maxWeight = 0;
-  let primaryCategoryId = null;
-  
-  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
-    const weight = categoryData.fraction;
-    if (weight > maxWeight) {
-      maxWeight = weight;
-      primaryCategoryId = categoryId;
-    }
-  }
-  
-  return { 
-    id: primaryCategoryId, 
-    name: effectivenessCategories[primaryCategoryId].name
-  };
-};
-
-// Get a breakdown of all categories for a charity
-export const getCategoryBreakdown = (charity) => {
-  if (!charity.categories || Object.keys(charity.categories).length === 0) {
-    throw new Error(`Charity has no categories.`);
-  }
-  
-  const breakdownList = [];
-  let totalFraction = 0;
-  
-  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
-    totalFraction += categoryData.fraction;
-    
-    breakdownList.push({
-      id: categoryId,
-      key: categoryId,
-      name: effectivenessCategories[categoryId].name,
-      fraction: categoryData.fraction,
-      percentage: Math.round(categoryData.fraction * 100),
-      multiplier: categoryData.multiplier
-    });
-  }
-  
-  if (Math.abs(totalFraction - 1) > 0.00001) 
-    throw new Error(`Category fractions for charity "${charity.name}" sum to ${totalFraction}, should be 1.0`);
-  
-  // Sort by percentage (highest first)
-  return breakdownList.sort((a, b) => b.percentage - a.percentage);
-};
-
-// Calculate donor statistics, including donations and lives saved
-export const calculateDonorStats = (customValues = null) => {
-  // Group donations by donor
-  const donorDonations = {};
-  
-  for (const donation of donations) {
-    if (!donorDonations[donation.donor]) {
-      donorDonations[donation.donor] = [];
-    }
-    donorDonations[donation.donor].push(donation);
-  }
-  
-  // Calculate stats for each donor
-  const donorStats = donors.map(donor => {
-    const donorName = donor.name;
-    const donorData = donorDonations[donorName] || [];
-    
-    let totalDonated = 0;
-    let totalLivesSaved = 0;
-    let knownDonations = 0;
-    
-    // Calculate totals based on actual donations
-    for (const donation of donorData) {
-      // Find charity for this donation
-      const charity = charities.find(c => c.name === donation.charity);
-      if (!charity) continue;
-      
-      const donationAmount = donation.amount;
-      totalDonated += donationAmount;
-      knownDonations += donationAmount;
-      
-      // Calculate cost per life for this charity
-      const costPerLife = getCharityCostPerLife(charity, customValues);
-      
-      // Apply credit multiplier if it exists
-      const creditedAmount = donation.credit !== undefined ? 
-        donationAmount * donation.credit : donationAmount;
-      
-      // Calculate lives saved
-      let livesSaved;
-      if (costPerLife === 0) {
-        // Handle zero cost (infinite lives)
-        livesSaved = 0;
-      } else {
-        // Normal case
-        livesSaved = creditedAmount / costPerLife;
-      }
-      
-      totalLivesSaved += livesSaved;
-    }
-    
-    // Handle known totalDonated field if available
-    let totalDonatedField = null;
-    let unknownLivesSaved = 0;
-    
-    if (donor.totalDonated && donor.totalDonated > knownDonations) {
-      totalDonatedField = donor.totalDonated;
-      
-      // Calculate unknown amount
-      const unknownAmount = donor.totalDonated - knownDonations;
-      
-      // Estimate lives saved for unknown donations if there are known donations
-      if (knownDonations > 0 && totalLivesSaved !== 0) {
-        const avgCostPerLife = knownDonations / totalLivesSaved;
-        unknownLivesSaved = unknownAmount / avgCostPerLife;
-        totalLivesSaved += unknownLivesSaved;
-      }
-      
-      // Add unknown amount to total
-      totalDonated = donor.totalDonated;
-    }
-    
-    // Calculate cost per life saved
-    const costPerLifeSaved = totalLivesSaved !== 0 ? totalDonated / totalLivesSaved : Infinity;
-    
-    return {
-      name: donorName,
-      netWorth: donor.netWorth,
-      totalDonated,
-      knownDonations,
-      totalDonatedField,
-      livesSaved: totalLivesSaved,
-      unknownLivesSaved,
-      costPerLifeSaved: costPerLifeSaved
-    };
-  });
-  
-  // Filter out donors with no donations and sort by lives saved
-  const filteredStats = donorStats
-    .filter(donor => donor.totalDonated > 0)
-    .sort((a, b) => b.livesSaved - a.livesSaved);
-  
-  // Add rank
-  return filteredStats.map((donor, index) => ({
-    ...donor,
-    rank: index + 1
-  }));
 };
 
 // Donor data with net worth
@@ -577,9 +333,6 @@ export const donations = [
   
   /*
   // Bernard Arnault donations
-  { date: '2023-01-15', donor: 'Bernard Arnault', charity: 'Against Malaria Foundation', amount: 150000000, source: 'https://en.wikipedia.org/wiki/Bernard_Arnault' },
-  { date: '2023-04-18', donor: 'Bernard Arnault', charity: 'Climate Works', amount: 600000000, source: 'https://www.forbes.com/profile/bernard-arnault/' },
-  { date: '2023-09-25', donor: 'Bernard Arnault', charity: 'Wikimedia Foundation', amount: 350000000, source: 'https://www.lvmh.com/houses/lvmh/bernard-arnault/' },
   */
 
   // Bill Gates donations
@@ -606,9 +359,6 @@ export const donations = [
   { date: '2022-07-13', donor: 'Bill Gates', charity: 'Bill & Melinda Gates Foundation', amount: 20000000000, source: 'https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions', notes: 'Cash/stock gift' },
   /*
   // Dustin Moskovitz donations
-  { date: '2023-05-19', donor: 'Dustin Moskovitz', charity: 'Mercy For Animals', amount: 45000000, source: 'https://www.opensocietyfoundations.org/newsroom/dustin-moskovitz-donation' },
-  { date: '2023-06-30', donor: 'Dustin Moskovitz', charity: 'GiveDirectly', amount: 180000000, source: 'https://www.goodventures.org/our-portfolio/grants/givedirectly-general-support-2023' },
-  { date: '2023-11-30', donor: 'Dustin Moskovitz', charity: 'Evidence Action', amount: 120000000, source: 'https://www.openphilanthropy.org/grants/' },
   */
   // Elon Musk donations
   // Count donations from Musk Foundation as his, since it's basically a one man show
@@ -755,8 +505,6 @@ export const donations = [
   { date: '2024-01-01', donor: 'Jaan Tallinn', charity: 'Center for Applied Rationality', amount: 100000, source: 'https://survivalandflourishing.fund/initiative-committee' },
  /* 
   // Jack Dorsey donations
-  { date: '2023-01-05', donor: 'Jack Dorsey', charity: 'New Incentives', amount: 75000000, source: 'https://twitter.com/jack' },
-  { date: '2023-12-18', donor: 'Jack Dorsey', charity: 'Wikimedia Foundation', amount: 25000000, source: 'https://startsmall.llc/' },
   */
   // Jeff Bezos donations
   { date: '2011-08-17', donor: 'Jeff Bezos', charity: 'Museum of History & Industry (Seattle)', amount: 10000000, source: 'https://www.seattlepi.com/local/article/Jeff-Bezos-gives-MOHAI-10-million-for-2077208.php' },
@@ -781,24 +529,11 @@ export const donations = [
   { date: '2024-03-15', donor: 'Jeff Bezos', charity: 'Bill McRaven (Bezos Courage & Civility Award)', amount: 50000000, source: 'https://people.com/eva-longoria-receives-usd50m-award-from-jeff-bezos-lauren-sanchez-to-spend-on-philanthropy-8609792' },
   /*
   // Jensen Huang donations
-  { date: '2023-04-30', donor: 'Jensen Huang', charity: 'Anthropic', amount: 150000000, source: 'https://www.nvidia.com/en-us/about-nvidia/jensen-huang/' },
-  { date: '2023-09-15', donor: 'Jensen Huang', charity: 'Center for Human-Compatible AI', amount: 100000000, source: 'https://en.wikipedia.org/wiki/Jensen_Huang' },
-  { date: '2023-12-05', donor: 'Jensen Huang', charity: 'Global Priorities Institute', amount: 75000000, source: 'https://www.forbes.com/profile/jensen-huang/' },
   
   // Jack Ma donations
-  { date: '2023-02-28', donor: 'Jack Ma', charity: 'Climate Works', amount: 75000000, source: 'https://www.arnoldfoundation.org/' },
-  { date: '2023-06-19', donor: 'Jack Ma', charity: 'Development Media International', amount: 65000000, source: 'https://en.wikipedia.org/wiki/John_Arnold' },
   
   // Larry Ellison donations
   // He backed out of his 115m pledge to Harvard
-  { date: '1995-09-13', donor: 'Larry Ellison', charity: 'University of California, Davis (Medicine)', amount: 5000000, source: 'https://www.ucdavis.edu/news/private-gifts-uc-davis-hit-all-time-high' },
-  { date: '2006-06-27', donor: 'Larry Ellison', charity: 'Ellison Medical Foundation', amount: 100000000, source: 'https://www.thecrimson.com/article/2006/6/28/ellison-pulls-plug-on-115-million/' },
-  { date: '2007-08-09', donor: 'Larry Ellison', charity: 'Sderot Community Center (Israel)', amount: 500000, source: 'https://www.jta.org/2007/08/09/default/oracle-ceo-donating-to-sderot' },
-  { date: '2014-02-08', donor: 'Larry Ellison', charity: 'Global Polio Eradication Initiative', amount: 100000000, source: 'https://polioeradication.org/news/lawrence-ellison-foundation-joins-global-effort-to-end-polio-with-100-million-donation/' },
-  { date: '2014-11-06', donor: 'Larry Ellison', charity: 'Friends of the Israel Defense Forces', amount: 10000000, source: 'https://www.timesofisrael.com/hollywood-gala-raises-a-record-33-million-for-idf/' },
-  { date: '2016-05-11', donor: 'Larry Ellison', charity: 'University of Southern California (Medicine)', amount: 200000000, source: 'https://news.usc.edu/100495/200-million-gift-launches-lawrence-j-ellison-institute-for-transformative-medicine-of-usc/' },
-  { date: '2017-11-02', donor: 'Larry Ellison', charity: 'Friends of the Israel Defense Forces', amount: 16600000, source: 'https://www.timesofisrael.com/record-53-8-million-raised-for-idf-soldiers-at-beverly-hills-gala/' },
-  { date: '2024-12-03', donor: 'Larry Ellison', charity: 'University of Oxford (Science)', amount: 165000000, source: 'https://www.ox.ac.uk/news/2024-12-03-university-oxford-and-ellison-institute-technology-join-forces-transformative', notes: 'only a pledge' },
 */
   
   // Larry Page donations
@@ -861,15 +596,8 @@ export const donations = [
   { date: '2024-12-31', donor: 'Michael Bloomberg', charity: 'Bloomberg Philanthropies', amount: 21e9, source: 'https://gist.github.com/elliotolds/5eb6c5c59c7d0e3dd5b37ef62e4003cd#file-michael_bloomberg_donations-md' },
 /*
   // Sergey Brin donations
-  { date: '2023-03-17', donor: 'Sergey Brin', charity: 'GiveDirectly', amount: 180000000, source: 'https://en.wikipedia.org/wiki/Sergey_Brin' },
-  { date: '2023-06-14', donor: 'Sergey Brin', charity: 'Anthropic', amount: 275000000, source: 'https://research.google/people/sergey-brin/' },
-  { date: '2023-09-20', donor: 'Sergey Brin', charity: 'New Incentives', amount: 120000000, source: 'https://www.forbes.com/profile/sergey-brin/' },
-  { date: '2023-11-03', donor: 'Sergey Brin', charity: 'Center for Human-Compatible AI', amount: 225000000, source: 'https://www.alphabet.com/en-ww/leadership' },
   
   // Steve Ballmer donations
-  { date: '2023-01-25', donor: 'Steve Ballmer', charity: 'GiveWell Maximum Impact Fund', amount: 450000000, source: 'https://en.wikipedia.org/wiki/Steve_Ballmer' },
-  { date: '2023-07-12', donor: 'Steve Ballmer', charity: 'Malaria Consortium', amount: 300000000, source: 'https://www.ballmerfoundation.org/' },
-  { date: '2023-11-18', donor: 'Steve Ballmer', charity: 'Climate Works', amount: 250000000, source: 'https://www.forbes.com/profile/steve-ballmer/' },
  */ 
   // Vitalik Buterin donations
   { date: '2017-12-14', donor: 'Vitalik Buterin', charity: 'SENS Research Foundation', amount: 2400000, source: 'https://cointelegraph.com/news/vitalik-buterin-donates-24-million-in-ether-to-anti-aging-research' },

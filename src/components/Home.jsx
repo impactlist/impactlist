@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { calculateDonorStats, charities, donations, effectivenessCategories, getCharityCostPerLife, getPrimaryCategory } from '../data/donationData';
+import { charities, donations } from '../data/donationData';
+import { calculateDonorStats, getCharityCostPerLife, getPrimaryCategory } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -50,13 +51,6 @@ function Home(props) {
     setCharityStats(recipientStats);
   }, [customValues]);
 
-  // Using imported formatNumber and formatCurrency functions from utils/formatters.js
-
-  // Get category display name
-  const formatCategory = (categoryKey) => {
-    return categoryKey && effectivenessCategories[categoryKey] ? 
-      effectivenessCategories[categoryKey].name : 'Multiple Categories';
-  };
 
   // Donor table columns configuration
   const donorColumns = [

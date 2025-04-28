@@ -2,10 +2,10 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { donations, charities, effectivenessCategories, donors } from '../data/donationData';
-import { calculateDonorStats, getCostPerLifeForCharity, getPrimaryCategory, getCostPerLifeForCategory } from '../utils/donationDataHelpers';
+import { calculateDonorStats, getCostPerLifeForCharity, getPrimaryCategoryId, 
+  getCostPerLifeForCategory } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
@@ -67,7 +67,7 @@ function DonorDetail(props) {
         const costPerLife = getCostPerLifeForCharity(charity, customValues);
         
         // Get the primary category for this charity
-        const primaryCategory = getPrimaryCategory(charity);
+        const primaryCategory = getPrimaryCategoryId(charity);
         
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;

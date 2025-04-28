@@ -5,7 +5,7 @@ import { donations, charities, effectivenessCategories } from '../data/donationD
 import { 
   getCostPerLifeForCharity, 
   getCategoryCostPerLifeWithinCharity,
-  getPrimaryCategory,
+  getPrimaryCategoryId,
   getCategoryBreakdown
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
@@ -35,7 +35,8 @@ function RecipientDetail(props) {
       
       // Get category-specific cost per life
       const charity = charities.find(c => c.name === recipientName);
-      const categoryData = charity?.categories[data.id];
+      const categoryId = data.categoryId || data.id;
+      const categoryData = charity?.categories[categoryId];
       let costPerLife;
       
       if (categoryData) {
@@ -44,8 +45,8 @@ function RecipientDetail(props) {
           costPerLife = categoryData.costPerLife;
         } else {
           // Get base cost from effectivenessCategories (with custom values if available)
-          const baseCostPerLife = customValues && customValues[data.id] !== undefined ? 
-            customValues[data.id] : effectivenessCategories[data.id].costPerLife;
+          const baseCostPerLife = customValues && customValues[categoryId] !== undefined ? 
+            customValues[categoryId] : effectivenessCategories[categoryId].costPerLife;
           
           // Apply multiplier if it exists
           costPerLife = categoryData.multiplier ? 
@@ -74,11 +75,21 @@ function RecipientDetail(props) {
     
     if (charity) {
       const costPerLife = getCostPerLifeForCharity(charity, customValues);
-      const categoryCostPerLife = getCategoryCostPerLifeWithinCharity(charity, customValues);
       
       // Get primary category and category breakdown
-      const primaryCategory = getPrimaryCategory(charity);
-      const categoryBreakdown = getCategoryBreakdown(charity);
+      const primaryCategoryId = getPrimaryCategoryId(charity);
+      const primaryCategoryName = effectivenessCategories[primaryCategoryId].name;
+      
+      // Get cost per life for the primary category
+      const categoryCostPerLife = getCostPerLifeForCategory(primaryCategoryId, customValues);
+      
+      // Get formatted breakdown for bar chart with required properties
+      const categoryBreakdown = getCategoryBreakdown(charity).map(category => ({
+        ...category,
+        id: category.categoryId,
+        name: effectivenessCategories[category.categoryId].name,
+        percentage: Math.round(category.fraction * 100)
+      }));
       
       // Filter donations for this charity
       const charityDonations = donations
@@ -104,8 +115,8 @@ function RecipientDetail(props) {
       
       setRecipientInfo({
         name: recipientName,
-        categoryId: primaryCategory.id,
-        categoryName: primaryCategory.name,
+        categoryId: primaryCategoryId,
+        categoryName: primaryCategoryName,
         categoryBreakdown,
         costPerLife,
         categoryCostPerLife,
@@ -267,7 +278,7 @@ function RecipientDetail(props) {
               <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
                 <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
                 <span className="text-3xl font-bold text-slate-900">
-                  {recipientInfo.categoryBreakdown[0].name}
+                  {effectivenessCategories[recipientInfo.categoryBreakdown[0].categoryId].name}
                 </span>
               </div>
             )}

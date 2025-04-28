@@ -80,11 +80,11 @@ export const getCategoryCostPerLifeWithinCharity = (charity, customValues = null
 };
 
 // Get the primary (highest weight) category for a charity
-export const getPrimaryCategory = (charity) => {
+export const getPrimaryCategoryId = (charity) => {
   if (!charity || !charity.categories) return null;
   
   let maxWeight = -1;
-  let primaryCategory = null;
+  let primaryCategoryId = null;
   
   // Find the category with the highest weight
   for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
@@ -92,11 +92,13 @@ export const getPrimaryCategory = (charity) => {
     
     if (weight > maxWeight) {
       maxWeight = weight;
-      primaryCategory = categoryId;
+      primaryCategoryId = categoryId;
     }
   }
   
-  return primaryCategory;
+  if (primaryCategoryId === null) throw new Error(`No primary category found for charity ${charity.name}.`);
+
+  return primaryCategoryId;
 };
 
 // Get a breakdown of categories for a charity

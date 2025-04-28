@@ -1,13 +1,3 @@
-// Import helper functions from utils
-import {
-  getEffectiveCostPerLife,
-  getCharityCostPerLife,
-  getCategoryCostPerLife,
-  getCostPerLifeMultiplier,
-  getPrimaryCategory,
-  getCategoryBreakdown
-} from '../utils/donationDataHelpers.js';
-
 // Charity focus areas with cost to save a life (in dollars)
 export const effectivenessCategories = {
   'ai_risk': { name: 'AI Existential Risk', costPerLife: 50 },             

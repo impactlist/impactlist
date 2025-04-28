@@ -3,9 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { donations, charities, effectivenessCategories } from '../data/donationData';
 import { 
-  getCharityCostPerLife, 
-  getCategoryCostPerLife,
-  getCostPerLifeMultiplier,
+  getCostPerLifeForCharity, 
+  getCategoryCostPerLifeWithinCharity,
   getPrimaryCategory,
   getCategoryBreakdown
 } from '../utils/donationDataHelpers';
@@ -74,9 +73,8 @@ function RecipientDetail(props) {
     const charity = charities.find(c => c.name === recipientName);
     
     if (charity) {
-      const costPerLife = getCharityCostPerLife(charity, customValues);
-      const categoryCostPerLife = getCategoryCostPerLife(charity, customValues);
-      const costPerLifeMultiplier = getCostPerLifeMultiplier(charity, customValues);
+      const costPerLife = getCostPerLifeForCharity(charity, customValues);
+      const categoryCostPerLife = getCategoryCostPerLifeWithinCharity(charity, customValues);
       
       // Get primary category and category breakdown
       const primaryCategory = getPrimaryCategory(charity);
@@ -111,7 +109,6 @@ function RecipientDetail(props) {
         categoryBreakdown,
         costPerLife,
         categoryCostPerLife,
-        costPerLifeMultiplier,
         totalReceived,
         totalLivesSaved
       });

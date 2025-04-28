@@ -2,7 +2,7 @@
 import { effectivenessCategories,donations, donors, charities } from '../data/donationData';
 
 // Get the effective costPerLife for a given category, considering custom values if they exist
-export const getEffectiveCostPerLife = (categoryKey, customValues = null) => {
+export const getCostPerLifeForCategory = (categoryKey, customValues = null) => {
   // If we have custom values for this category, use them
   if (customValues && customValues[categoryKey] !== undefined) {
     return customValues[categoryKey];
@@ -18,7 +18,7 @@ export const getEffectiveCostPerLife = (categoryKey, customValues = null) => {
 };
 
 // Calculate weighted average cost per life for a charity
-export const getCharityCostPerLife = (charity, customValues = null) => {
+export const getCostPerLifeForCharity = (charity, customValues = null) => {
   if (!charity || !charity.categories) throw new Error(`Invalid charity.`);
   
   let totalWeight = 0;
@@ -35,7 +35,7 @@ export const getCharityCostPerLife = (charity, customValues = null) => {
     
     // If weight is 0, skip this category to avoid NaN issues
     if (weight > 0) {
-      const baseCostPerLife = getEffectiveCostPerLife(categoryId, customValues);
+      const baseCostPerLife = getCostPerLifeForCategory(categoryId, customValues);
       const multiplier = categoryData.multiplier !== undefined ? categoryData.multiplier : 1;
       weightedSum += (baseCostPerLife * multiplier) * weight;
     }
@@ -55,7 +55,7 @@ export const getCharityCostPerLife = (charity, customValues = null) => {
 };
 
 // Get the cost per life for a specific category in a charity
-export const getCategoryCostPerLife = (charity, customValues = null) => {
+export const getCategoryCostPerLifeWithinCharity = (charity, customValues = null) => {
   if (!charity || !charity.categories) throw new Error(`Invalid charity.`);
   
   const result = {};
@@ -70,21 +70,13 @@ export const getCategoryCostPerLife = (charity, customValues = null) => {
     
     // Only include categories with some weight
     if (weight > 0) {
-      const baseCostPerLife = getEffectiveCostPerLife(categoryId, customValues);
+      const baseCostPerLife = getCostPerLifeForCategory(categoryId, customValues);
       const multiplier = categoryData.multiplier !== undefined ? categoryData.multiplier : 1;
       result[categoryId] = baseCostPerLife * multiplier;
     }
   }
   
   return result;
-};
-
-// Calculate how much more/less effective this charity is compared to a direct human life-saving intervention
-export const getCostPerLifeMultiplier = (charity, customValues = null) => {
-  //const categoryCostPerLife = getCategoryCostPerLife(charity, customValues, effectivenessCategories); wtf is this?
-  const charityCostPerLife = getCharityCostPerLife(charity, customValues);
-  
-  return charityCostPerLife ? charityCostPerLife / 5000 : null; // 5000 is the benchmark global health cost per life // wtf is this
 };
 
 // Get the primary (highest weight) category for a charity
@@ -155,7 +147,7 @@ export const calculateDonorStats = (customValues = null) => {
       knownDonations += donationAmount;
       
       // Calculate cost per life for this charity
-      const costPerLife = getCharityCostPerLife(charity, customValues);
+      const costPerLife = getCostPerLifeForCharity(charity, customValues);
       
       // Apply credit multiplier if it exists
       const creditedAmount = donation.credit !== undefined ? 

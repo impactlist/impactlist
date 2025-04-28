@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { charities, donations } from '../data/donationData';
-import { calculateDonorStats, getCharityCostPerLife, getPrimaryCategory } from '../utils/donationDataHelpers';
+import { calculateDonorStats, getCostPerLifeForCharity, getPrimaryCategory } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -22,7 +22,7 @@ function Home(props) {
     const recipientStats = charities.map(charity => {
       const charityDonations = donations.filter(d => d.charity === charity.name);
       const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
-      const costPerLife = getCharityCostPerLife(charity, customValues);
+      const costPerLife = getCostPerLifeForCharity(charity, customValues);
       
       // Get the primary category for display
       const primaryCategory = getPrimaryCategory(charity);

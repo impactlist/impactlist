@@ -23,6 +23,9 @@ export const getCostPerLifeForCharity = (charity, customValues = null) => {
   
   let totalWeight = 0;
   let weightedSum = 0;
+
+  const spendingTotal = 1e9; // simulate spending a billion dollars to get the cost per life
+  let totalLivesSaved = 0;
   
   // Go through each category and calculate weighted costs
   for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
@@ -37,21 +40,22 @@ export const getCostPerLifeForCharity = (charity, customValues = null) => {
     if (weight > 0) {
       const baseCostPerLife = getCostPerLifeForCategory(categoryId, customValues);
       const multiplier = categoryData.multiplier !== undefined ? categoryData.multiplier : 1;
+      totalLivesSaved += (spendingTotal * weight) / (baseCostPerLife * multiplier);;
       weightedSum += (baseCostPerLife * multiplier) * weight;
     }
   }
   
   // Ensure total weight is normalized
   if (Math.abs(totalWeight - 1) > 0.01) {
-    console.warn(`Warning: Category weights for charity "${charity.name}" do not sum to 1 (total: ${totalWeight}).`);
+    throw new Error(`Warning: Category weights for charity "${charity.name}" do not sum to 1 (total: ${totalWeight}).`);
   }
   
   // If no valid weights found, return null or a default
   if (totalWeight === 0) {
-    return null;
+    throw new Error(`No valid weights found for charity ${charity.name}.`);
   }
   
-  return weightedSum / totalWeight;
+  return spendingTotal / totalLivesSaved;
 };
 
 // Get the cost per life for a specific category in a charity

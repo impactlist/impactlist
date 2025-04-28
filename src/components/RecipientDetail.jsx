@@ -6,7 +6,8 @@ import {
   getCostPerLifeForCharity, 
   getCategoryCostPerLifeWithinCharity,
   getPrimaryCategoryId,
-  getCategoryBreakdown
+  getCategoryBreakdown,
+  getCostPerLifeForCategory
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';

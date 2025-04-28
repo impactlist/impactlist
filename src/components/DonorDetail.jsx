@@ -66,8 +66,8 @@ function DonorDetail(props) {
         
         const costPerLife = getCostPerLifeForCharity(charity, customValues);
         
-        // Get the primary category for this charity
-        const primaryCategory = getPrimaryCategoryId(charity);
+        // Get the primary category ID for this charity
+        const primaryCategoryId = getPrimaryCategoryId(charity);
         
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
@@ -77,8 +77,8 @@ function DonorDetail(props) {
         return {
           ...donation,
           creditedAmount,
-          category: primaryCategory.id, // Use primary category ID 
-          categoryName: primaryCategory.name,
+          category: primaryCategoryId, // Use primary category ID 
+          categoryName: effectivenessCategories[primaryCategoryId].name, // Get the name from effectivenessCategories
           livesSaved,
           costPerLife,
           dateObj: new Date(donation.date)

@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { donations, charities, effectivenessCategories } from '../data/donationData';
 import { 
   getCostPerLifeForCharity, 
-  getCategoryCostPerLifeWithinCharity,
+  getAllCategoryCostsPerLifeWithinCharity,
   getPrimaryCategoryId,
   getCategoryBreakdown,
-  getCostPerLifeForCategory
+  getDefaultCostPerLifeForCategory
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
@@ -82,7 +82,7 @@ function RecipientDetail(props) {
       const primaryCategoryName = effectivenessCategories[primaryCategoryId].name;
       
       // Get cost per life for the primary category
-      const categoryCostPerLife = getCostPerLifeForCategory(primaryCategoryId, customValues);
+      const categoryCostPerLife = getDefaultCostPerLifeForCategory(primaryCategoryId, customValues);
       
       // Get formatted breakdown for bar chart with required properties
       const categoryBreakdown = getCategoryBreakdown(charity).map(category => ({

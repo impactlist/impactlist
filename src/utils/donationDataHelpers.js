@@ -1,8 +1,26 @@
 // Helper functions for donation and impact calculations
 import { effectivenessCategories,donations, donors, charities } from '../data/donationData';
 
+// From the category data within a charity, get the actual cost per life, taking into account custom values if they exist
+const getActualCostPerLifeForCategoryData = (categoryId, categoryData, customValues = null) => {
+  if (!categoryData || typeof categoryData.fraction !== 'number') {
+    throw new Error(`Invalid category data for ${categoryId}.`);
+  }
+  let baseCostPerLife = 0;
+  let multiplier = 1;
+  if (categoryData.costPerLife !== undefined) {
+    baseCostPerLife = categoryData.costPerLife;
+  } else {
+    baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+    if (categoryData.multiplier !== undefined) {
+      multiplier = categoryData.multiplier;
+    }
+  }
+  return baseCostPerLife * multiplier;
+}
+
 // Get the effective costPerLife for a given category, considering custom values if they exist
-export const getCostPerLifeForCategory = (categoryKey, customValues = null) => {
+export const getDefaultCostPerLifeForCategory = (categoryKey, customValues = null) => {
   // If we have custom values for this category, use them
   if (customValues && customValues[categoryKey] !== undefined) {
     return customValues[categoryKey];
@@ -22,7 +40,6 @@ export const getCostPerLifeForCharity = (charity, customValues = null) => {
   if (!charity || !charity.categories) throw new Error(`Invalid charity.`);
   
   let totalWeight = 0;
-  let weightedSum = 0;
 
   const spendingTotal = 1e9; // simulate spending a billion dollars to get the cost per life
   let totalLivesSaved = 0;
@@ -36,13 +53,11 @@ export const getCostPerLifeForCharity = (charity, customValues = null) => {
     const weight = categoryData.fraction;
     totalWeight += weight;
     
-    // If weight is 0, skip this category to avoid NaN issues
-    if (weight > 0) {
-      const baseCostPerLife = getCostPerLifeForCategory(categoryId, customValues);
-      const multiplier = categoryData.multiplier !== undefined ? categoryData.multiplier : 1;
-      totalLivesSaved += (spendingTotal * weight) / (baseCostPerLife * multiplier);;
-      weightedSum += (baseCostPerLife * multiplier) * weight;
-    }
+    if (weight <= 0) throw new Error(`Weight for category ${categoryId} in charity ${charity.name} is not positive. This should not happen.`);
+
+    const costPerLife = getActualCostPerLifeForCategoryData(categoryId, categoryData, customValues);
+
+    totalLivesSaved += (spendingTotal * weight) / (costPerLife);
   }
   
   // Ensure total weight is normalized
@@ -58,8 +73,8 @@ export const getCostPerLifeForCharity = (charity, customValues = null) => {
   return spendingTotal / totalLivesSaved;
 };
 
-// Get the cost per life for a specific category in a charity
-export const getCategoryCostPerLifeWithinCharity = (charity, customValues = null) => {
+// Get the cost per life for all categories in a charity
+export const getAllCategoryCostsPerLifeWithinCharity = (charity, customValues = null) => {
   if (!charity || !charity.categories) throw new Error(`Invalid charity.`);
   
   const result = {};
@@ -69,15 +84,8 @@ export const getCategoryCostPerLifeWithinCharity = (charity, customValues = null
     if (!categoryData || typeof categoryData.fraction !== 'number') {
       throw new Error(`Invalid category data for ${categoryId} in charity ${charity.name}.`);
     }
-    
-    const weight = categoryData.fraction;
-    
-    // Only include categories with some weight
-    if (weight > 0) {
-      const baseCostPerLife = getCostPerLifeForCategory(categoryId, customValues);
-      const multiplier = categoryData.multiplier !== undefined ? categoryData.multiplier : 1;
-      result[categoryId] = baseCostPerLife * multiplier;
-    }
+ 
+    result[categoryId] = getActualCostPerLifeForCategoryData(categoryId, categoryData, customValues);
   }
   
   return result;
@@ -146,7 +154,7 @@ export const calculateDonorStats = (customValues = null) => {
     for (const donation of donorData) {
       // Find charity for this donation
       const charity = charities.find(c => c.name === donation.charity);
-      if (!charity) continue;
+      if (!charity) throw new Error(`Charity not found: ${donation.charity} for donor ${donorName}. This charity needs to be added to the charities array.`);
       
       const donationAmount = donation.amount;
       totalDonated += donationAmount;

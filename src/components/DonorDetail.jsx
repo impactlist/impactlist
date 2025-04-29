@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { donations, charities, effectivenessCategories, donors } from '../data/donationData';
 import { calculateDonorStats, getCostPerLifeForCharity, getPrimaryCategoryId, 
-  getCostPerLifeForCategory } from '../utils/donationDataHelpers';
+  getDefaultCostPerLifeForCategory } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';
@@ -160,7 +160,7 @@ function DonorDetail(props) {
           // Use the explicit costPerLife if provided
           costPerLife = categoryData.costPerLife;
         } else {
-          const baseCostPerLife = getCostPerLifeForCategory(categoryId, customValues);
+          const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
           
           // Apply multiplier if it exists
           if (categoryData.multiplier !== undefined) {
@@ -767,20 +767,8 @@ function DonorDetail(props) {
                     if (chartView === 'donations') {
                       return formatCurrency(value);
                     } else {
-                      // Handle both positive and negative large numbers
-                      const absValue = Math.abs(value);
-                      let formattedValue;
-                      
-                      if (absValue >= 1000000) {
-                        formattedValue = `${(absValue / 1000000).toFixed(1)}M`;
-                      } else if (absValue >= 1000) {
-                        formattedValue = `${(absValue / 1000).toFixed(1)}K`;
-                      } else {
-                        formattedValue = formatNumber(Math.round(absValue));
-                      }
-                      
-                      // Add negative sign back if needed
-                      return value < 0 ? `-${formattedValue}` : formattedValue;
+                      // Use formatNumber for lives saved values
+                      return formatNumber(Math.round(value));
                     }
                   }}
                   xAxisDomain={(() => {

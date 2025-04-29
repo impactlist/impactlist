@@ -86,7 +86,6 @@ function Recipients(props) {
         return (
           <div className={`text-sm ${charity.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
             {charity.costPerLife === 0 ? '∞' : 
-             charity.costPerLife < 0 ? `-${formatCurrency(Math.abs(Math.round(charity.costPerLife)))}` : 
              formatCurrency(Math.round(charity.costPerLife))}
           </div>
         );

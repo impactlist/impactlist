@@ -9,16 +9,34 @@ import {
   getDefaultCostPerLifeForCategory
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
-import ImpactBarChart from './ImpactBarChart';
+import ImpactBarChart, { ImpactChartToggle } from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
+
+// Animation speed constant (in milliseconds)
+const ANIMATION_DURATION = 600;
 
 function RecipientDetail(props) {
   const { recipientName } = useParams();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
+  const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
+  const [chartData, setChartData] = useState([]); // This will change format based on view
+  const [chartView, setChartView] = useState('livesSaved'); // 'donations' or 'livesSaved'
+  const [shouldAnimate, setShouldAnimate] = useState(false); // Only animate when user toggles view
+  const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
+  const [chartContainerWidth, setChartContainerWidth] = useState(800); // Default to a reasonable width
+  const chartContainerRef = useRef(null);
   const { customValues, openModal } = useCostPerLife();
+  
+  // Calculate chart height based on number of categories (used later)
+  const calculateChartHeight = (categories) => {
+    // Allocate about 55px per category with a minimum height of 384px (corresponds to ~8-9 categories)
+    // Each additional category beyond that adds more height
+    return Math.max(384, categories.length * 55);
+  };
+  
   // Colors for the chart bars
   const COLORS = [
     '#4f46e5', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#818cf8',
@@ -29,13 +47,17 @@ function RecipientDetail(props) {
 
   // Custom chart tooltip
   const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      if (!data) return null;
+    if (active && payload && payload.length && recipientInfo) {
+      const data = payload[0];
+      if (!data || !data.payload) return null;
+      
+      const entry = data.payload;
+      const value = entry.valueTarget; // Current displayed value
+      const percentage = chartView === 'donations' ? entry.donationPercentage : entry.livesSavedPercentage;
+      const categoryId = entry.categoryId || entry.id;
       
       // Get category-specific cost per life
       const recipient = recipients.find(r => r.name === recipientName);
-      const categoryId = data.categoryId || data.id;
       const categoryData = recipient?.categories[categoryId];
       let costPerLife;
       
@@ -57,17 +79,45 @@ function RecipientDetail(props) {
       
       return (
         <div className="bg-white p-3 shadow-md rounded-md border border-slate-200">
-          <p className="font-semibold text-sm">{data.name}</p>
-          <p className="text-sm">{formatCurrency(costPerLife)} per life</p>
-          <p className="text-xs text-slate-500">
-            {`${data.percentage}% of focus`}
-          </p>
+          <p className="font-semibold text-sm">{entry.name}</p>
+          {chartView === 'donations' ? (
+            <>
+              <p className="text-sm">{formatCurrency(value)}</p>
+              <p className="text-xs text-slate-500">
+                {`${percentage}% of total donations`}
+              </p>
+              <div className="mt-1 pt-1 border-t border-slate-100">
+                <p className="text-xs text-slate-600">
+                  Cost per life: {formatCurrency(costPerLife || 0)}
+                </p>
+                <p className="text-xs text-slate-600">
+                  Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className={`text-sm ${value < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                {formatNumber(Math.round(value))} lives {value < 0 ? 'lost' : 'saved'}
+              </p>
+              <p className="text-xs text-slate-500">
+                {`${percentage}% of total impact`}
+              </p>
+              <div className="mt-1 pt-1 border-t border-slate-100">
+                <p className="text-xs text-slate-600">
+                  Cost per life: {formatCurrency(costPerLife || 0)}
+                </p>
+                <p className="text-xs text-slate-600">
+                  Donation amount: {formatCurrency(entry.donationValue)}
+                </p>
+              </div>
+            </>
+          )}
         </div>
       );
     }
     return null;
   };
-
 
   useEffect(() => {
     // Get recipient info
@@ -113,6 +163,93 @@ function RecipientDetail(props) {
       const totalReceived = recipientDonations.reduce((sum, donation) => sum + donation.amount, 0);
       const totalLivesSaved = recipientDonations.reduce((sum, donation) => sum + donation.livesSaved, 0);
       
+      // Prepare data for the two chart views
+      // Create donations by category data
+      const categoryDonations = {};
+      const categoryLivesSaved = {};
+      let chartDonationsTotal = 0;
+      let chartLivesSavedTotal = 0;
+      
+      recipientDonations.forEach(donation => {
+        // Process each category this donation belongs to
+        Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
+          const fraction = categoryData.fraction;
+          const categoryName = effectivenessCategories[categoryId].name;
+          
+          // Get category-specific cost per life
+          let catCostPerLife;
+          if (categoryData.costPerLife !== undefined) {
+            catCostPerLife = categoryData.costPerLife;
+          } else {
+            const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+            catCostPerLife = categoryData.multiplier ? 
+              baseCostPerLife / categoryData.multiplier : 
+              baseCostPerLife;
+          }
+          
+          // Calculate donation amount and lives saved for this category
+          const categoryAmount = donation.amount * fraction;
+          const creditedAmount = donation.credit !== undefined ? 
+            categoryAmount * donation.credit : categoryAmount;
+          
+          const livesSaved = catCostPerLife !== 0 ? creditedAmount / catCostPerLife : 0;
+          
+          // Initialize category objects if they don't exist
+          if (!categoryDonations[categoryName]) {
+            categoryDonations[categoryName] = {
+              name: categoryName,
+              value: 0,
+              categoryId: categoryId
+            };
+          }
+          
+          if (!categoryLivesSaved[categoryName]) {
+            categoryLivesSaved[categoryName] = {
+              name: categoryName,
+              value: 0,
+              categoryId: categoryId
+            };
+          }
+          
+          // Sum donation amounts
+          categoryDonations[categoryName].value += categoryAmount;
+          chartDonationsTotal += categoryAmount;
+          
+          // Sum lives saved
+          categoryLivesSaved[categoryName].value += livesSaved;
+          chartLivesSavedTotal += livesSaved;
+        });
+      });
+      
+      // Get the complete set of category names from both datasets
+      const allCategoryNames = new Set([
+        ...Object.keys(categoryDonations),
+        ...Object.keys(categoryLivesSaved)
+      ]);
+      
+      // Create a unified dataset with both values
+      let unifiedData = Array.from(allCategoryNames).map(name => {
+        const donationEntry = categoryDonations[name] || { name, value: 0, categoryId: categoryLivesSaved[name]?.categoryId };
+        const livesSavedEntry = categoryLivesSaved[name] || { name, value: 0, categoryId: categoryDonations[name]?.categoryId };
+        const categoryId = donationEntry.categoryId || livesSavedEntry.categoryId;
+        
+        return {
+          name,
+          donationValue: donationEntry.value,
+          livesSavedValue: livesSavedEntry.value,
+          categoryId,
+          donationPercentage: (donationEntry.value / chartDonationsTotal * 100).toFixed(1),
+          livesSavedPercentage: chartLivesSavedTotal !== 0 ? 
+            (Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal) * 100).toFixed(1) : 0
+        };
+      });
+      
+      // Sort by donation amount (largest first)
+      unifiedData.sort((a, b) => b.donationValue - a.donationValue);
+      
+      // Prepare chart data
+      setRawChartData(unifiedData);
+      
       setRecipientInfo({
         name: recipientName,
         categoryId: primaryCategoryId,
@@ -127,6 +264,135 @@ function RecipientDetail(props) {
       setRecipientDonations(recipientDonations);
     }
   }, [recipientName, customValues]);
+
+  // Prepare the initial sorted data once
+  useEffect(() => {
+    if (rawChartData.length === 0) return;
+    
+    // Sort the raw data by donation amount (largest first) for consistent positioning
+    const sortedData = [...rawChartData].sort((a, b) => {
+      return b.donationValue - a.donationValue;
+    });
+    
+    // Initialize with lives saved values to match the default view
+    const initialChartData = sortedData.map(item => ({
+      ...item,
+      value: item.livesSavedValue, // Start with lives saved values to match default view
+      valueTarget: item.livesSavedValue, // Target is initially the same
+    }));
+    
+    setChartData(initialChartData);
+  }, [rawChartData]);
+
+  // Handle shrinking transition phase
+  useEffect(() => {
+    if (chartData.length === 0 || transitionStage !== 'shrinking') return;
+    
+    let needsIntermediateStep = false;
+    
+    // If switching from lives saved to donations, shrink negative bars to zero
+    if (chartView === 'donations') {
+      needsIntermediateStep = chartData.some(item => item.livesSavedValue < 0);
+      
+      if (needsIntermediateStep) {
+        // Create intermediate data where negative values are set to zero
+        const intermediateData = chartData.map(item => ({
+          ...item,
+          valueTarget: item.livesSavedValue < 0 ? 0 : item.livesSavedValue,
+        }));
+        
+        setChartData(intermediateData);
+      }
+    } 
+    // If switching from donations to lives saved, shrink positive bars that will become negative
+    else if (chartView === 'livesSaved') {
+      needsIntermediateStep = chartData.some(item => item.livesSavedValue < 0);
+      
+      if (needsIntermediateStep) {
+        // First animate values to zero if they will become negative
+        const intermediateData = chartData.map(item => ({
+          ...item,
+          valueTarget: item.livesSavedValue < 0 ? 0 : item.donationValue,
+        }));
+        
+        setChartData(intermediateData);
+      }
+    }
+    
+    // Schedule next stage
+    const timer = setTimeout(() => {
+      setTransitionStage('growing');
+    }, needsIntermediateStep ? ANIMATION_DURATION : 50);
+    
+    return () => clearTimeout(timer);
+  }, [transitionStage, chartView]);
+  
+  // Handle growing transition phase
+  useEffect(() => {
+    if (chartData.length === 0 || transitionStage !== 'growing') return;
+    
+    // Second stage: Grow bars to their final values
+    const finalData = chartData.map(item => ({
+      ...item,
+      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+    }));
+    
+    setChartData(finalData);
+    
+    // Reset transition state after animation completes
+    const timer = setTimeout(() => {
+      setTransitionStage('none');
+    }, ANIMATION_DURATION);
+    
+    return () => clearTimeout(timer);
+  }, [transitionStage, chartView, customValues]);
+
+  // Initialize chart view on rawChartData load
+  useEffect(() => {
+    if (chartData.length === 0 || !chartView) return;
+    
+    // Only runs on initial load
+    const initialData = chartData.map(item => ({
+      ...item,
+      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+    }));
+    
+    setChartData(initialData);
+  }, [rawChartData, customValues]);
+  
+  // Separate effect to handle animation timing
+  useEffect(() => {
+    // When data is updated, delay turning off animation
+    // to ensure it completes
+    if (shouldAnimate) {
+      const timer = setTimeout(() => {
+        setShouldAnimate(false);
+      }, ANIMATION_DURATION + 50); // Add a small buffer
+      
+      return () => clearTimeout(timer);
+    }
+  }, [chartData, shouldAnimate]);
+  
+  // Effect to handle chart container resizing
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (chartContainerRef.current) {
+        const width = chartContainerRef.current.clientWidth;
+        setChartContainerWidth(width);
+      }
+    };
+    
+    // Initial update
+    updateContainerWidth();
+    
+    // Add resize listener
+    window.addEventListener('resize', updateContainerWidth);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', updateContainerWidth);
+    };
+  }, []);
 
   // Using imported formatNumber and formatCurrency functions from utils/formatters.js
   
@@ -285,7 +551,7 @@ function RecipientDetail(props) {
           </div>
         </motion.div>
 
-        {/* Focus Areas Bar Chart - Only show if multiple focus areas */}
+        {/* Focus Areas chart with toggle */}
         {recipientInfo.categoryBreakdown.length > 1 && (
           <motion.div 
             className="bg-white rounded-xl shadow-lg mb-8 border border-slate-200"
@@ -294,22 +560,107 @@ function RecipientDetail(props) {
             transition={{ delay: 0.15, duration: 0.4 }}
           >
             <div className="px-6 py-4 border-b border-slate-200">
-              <h2 className="text-xl font-semibold text-slate-800">Focus Areas</h2>
-              <p className="text-sm text-slate-500 mt-1">
-                Distribution of focus areas by percentage
-              </p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-semibold text-slate-800">
+                    Focus Areas by {chartView === 'donations' ? 'Donation Amount' : 'Lives Saved'}
+                  </h2>
+                  <p className="text-sm text-slate-500 mt-1">
+                    {chartView === 'donations' 
+                      ? 'Distribution of donations across focus areas'
+                      : 'Distribution of impact (lives saved) across focus areas'}
+                  </p>
+                </div>
+                
+                {/* Toggle switch */}
+                <ImpactChartToggle
+                  chartView={chartView}
+                  onToggle={(view) => {
+                    setShouldAnimate(true);
+                    setTransitionStage('shrinking');
+                    setChartView(view);
+                  }}
+                  disabled={transitionStage !== 'none'}
+                />
+              </div>
             </div>
             
-            <ImpactBarChart 
-              data={recipientInfo.categoryBreakdown}
-              dataKey="percentage"
-              nameKey="name"
-              colors={COLORS}
-              tooltipContent={<CustomTooltip />}
-              labelFormatter={(value) => `${value}%`}
-              formatXAxisTick={(value) => `${value}%`}
-              heightCalculator={(dataLength) => Math.max(200, dataLength * 40)}
-            />
+            <div className={`py-4 px-2 relative ${chartContainerWidth < 500 ? 'overflow-x-auto' : 'overflow-hidden'}`}>
+              <div 
+                ref={chartContainerRef}
+                className="w-full overflow-visible"
+                style={{ height: chartData.length > 0 ? `${calculateChartHeight(chartData)}px` : '384px' }}
+              >
+                {chartData.length > 0 ? (
+                  <ImpactBarChart 
+                    data={chartData}
+                    dataKey="valueTarget"
+                    nameKey="name"
+                    colors={COLORS.map((color, index) => {
+                      // Use red for negative values in lives saved view
+                      const entry = chartData[index];
+                      return (chartView === 'livesSaved' && entry && entry.value < 0) ? '#ef4444' : color;
+                    })}
+                    tooltipContent={<CustomTooltip />}
+                    formatXAxisTick={(value) => {
+                      // Create placeholder space during transition
+                      if (transitionStage !== 'none') {
+                        return chartView === 'donations' ? 
+                          '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0' : 
+                          '\u00A0\u00A0\u00A0\u00A0\u00A0';
+                      }
+                      
+                      if (value === 0) return "0";
+                      
+                      if (chartView === 'donations') {
+                        return formatCurrency(value);
+                      } else {
+                        // Use formatNumber for lives saved values
+                        return formatNumber(Math.round(value));
+                      }
+                    }}
+                    xAxisDomain={(() => {
+                      // If we're in lives saved view or transitioning to it, and there are negative values
+                      const hasNegativeValues = chartData.some(item => item.valueTarget < 0);
+                      
+                      if (hasNegativeValues) {
+                        return ['dataMin', 'dataMax'];
+                      } else if (chartView === 'donations' || 
+                                (chartView === 'livesSaved' && !chartData.some(item => item.livesSavedValue < 0))) {
+                        return [0, 'auto'];
+                      } else {
+                        // During transition from negative lives saved to donations
+                        return [Math.min(0, ...chartData.map(d => d.valueTarget)), 
+                                Math.max(...chartData.map(d => d.valueTarget))];
+                      }
+                    })()}
+                    labelFormatter={(value, entry) => {
+                      if (!entry) return '';
+                      
+                      const percentage = chartView === 'donations' 
+                        ? entry.donationPercentage 
+                        : entry.livesSavedPercentage;
+                      
+                      return chartView === 'donations'
+                        ? `${formatCurrency(entry.donationValue)} (${percentage}%)`
+                        : `${formatNumber(Math.round(entry.livesSavedValue))} (${percentage}%)`;
+                    }}
+                    barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
+                    heightCalculator={(dataLength) => Math.max(384, dataLength * 55)}
+                    isAnimationActive={true}
+                    animationDuration={ANIMATION_DURATION}
+                    animationBegin={0}
+                    animationEasing="ease-out"
+                    showLegend={true}
+                    legendFormatter={() => chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'}
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <p className="text-slate-500">No donation data available</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </motion.div>
         )}
 

@@ -1,6 +1,42 @@
 import { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
+// Optional chart toggle component that both DonorDetail and RecipientDetail can use
+export const ImpactChartToggle = ({ 
+  chartView, 
+  onToggle, 
+  disabled 
+}) => {
+  return (
+    <div className="flex items-center">
+      <div className="p-0.5 bg-slate-100 rounded-lg flex text-xs sm:text-sm shadow-inner">
+        <button
+          onClick={() => onToggle('donations')}
+          className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
+            chartView === 'donations'
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-200'
+          }`}
+          disabled={disabled}
+        >
+          <span>Donations</span>
+        </button>
+        <button
+          onClick={() => onToggle('livesSaved')}
+          className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
+            chartView === 'livesSaved'
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-200'
+          }`}
+          disabled={disabled}
+        >
+          <span>Lives Saved</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ImpactBarChart = ({ 
   data, 
   layout = 'vertical',

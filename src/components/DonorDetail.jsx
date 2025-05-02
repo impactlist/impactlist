@@ -5,7 +5,7 @@ import { donations, recipients, effectivenessCategories, donors } from '../data/
 import { calculateDonorStats, getCostPerLifeForRecipient, getPrimaryCategoryId, 
   getDefaultCostPerLifeForCategory } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
-import ImpactBarChart from './ImpactBarChart';
+import ImpactBarChart, { ImpactChartToggle } from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
@@ -700,40 +700,15 @@ function DonorDetail(props) {
               </div>
               
               {/* Toggle switch */}
-              <div className="flex items-center">
-                <div className="p-0.5 bg-slate-100 rounded-lg flex text-xs sm:text-sm shadow-inner">
-                  <button
-                    onClick={() => {
-                      setShouldAnimate(true);
-                      setTransitionStage('shrinking');
-                      setChartView('donations');
-                    }}
-                    className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
-                      chartView === 'donations'
-                        ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'text-slate-600 hover:bg-slate-200'
-                    }`}
-                    disabled={transitionStage !== 'none'}
-                  >
-                    <span>Donations</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShouldAnimate(true);
-                      setTransitionStage('shrinking');
-                      setChartView('livesSaved');
-                    }}
-                    className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
-                      chartView === 'livesSaved'
-                        ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'text-slate-600 hover:bg-slate-200'
-                    }`}
-                    disabled={transitionStage !== 'none'}
-                  >
-                    <span>Lives Saved</span>
-                  </button>
-                </div>
-              </div>
+              <ImpactChartToggle
+                chartView={chartView}
+                onToggle={(view) => {
+                  setShouldAnimate(true);
+                  setTransitionStage('shrinking');
+                  setChartView(view);
+                }}
+                disabled={transitionStage !== 'none'}
+              />
             </div>
           </div>
           

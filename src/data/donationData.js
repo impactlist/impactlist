@@ -34,7 +34,7 @@ export const donors = [
   //  { name: 'Amancio Ortega', netWorth: 1.21e11 },
     { name: 'Bill Gates', netWorth: 1.08e11, totalDonated: 5.9e10 },
   //  { name: 'Bernard Arnault', netWorth: 1.45e11 },
-  //  { name: 'Dustin Moskovitz', netWorth: 1.4e10 },
+    { name: 'Dustin Moskovitz & Cari Tuna', netWorth: 1.4e10 },
     { name: 'Elon Musk', netWorth: 3.64e11 },
     { name: 'Jaan Tallinn', netWorth: 1.0e9 },
   //  { name: 'Jack Dorsey', netWorth: 3.6e9 },
@@ -316,6 +316,20 @@ export const recipients = [
   { name: 'Center for Tech and Civic Life', categories: { institutions: { fraction: 1.0 } } },
   { name: 'Center for Election Innovation and Research', categories: { institutions: { fraction: 1.0 } } },
   { name: 'Multiple Jewish Community Organizations', categories: { local_community: { fraction: 1.0 } } },
+  { name: 'Good Ventures', categories: {
+      climate_change: { fraction: 0.02 },
+      political: { fraction: 0.02 },
+      institutions: { fraction: 0.02 },
+      meta_theory: { fraction: 0.03 },
+      science_tech: { fraction: 0.05 },
+      human_rights: { fraction: 0.04 },
+      animal_welfare: { fraction: 0.08 },
+      global_development: { fraction: 0.22 },
+      global_health: { fraction: 0.3 },
+      pandemics: { fraction: 0.10 },
+      ai_risk: { fraction: 0.12 }
+  } },
+  { name: 'Democratic Political Organizations', categories: { political: { fraction: 1.0 } } },
 ];
 
 
@@ -347,9 +361,21 @@ export const donations = [
   { date: '2017-06-01', donor: 'Bill Gates', recipient: 'Bill & Melinda Gates Foundation', amount: 4680000000, source: 'https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229', notes: 'From Microsoft stock' },
   { date: '2017-11-01', donor: 'Bill Gates', recipient: 'Dementia Discovery Fund', amount: 50000000, source: 'https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy'},
   { date: '2022-07-13', donor: 'Bill Gates', recipient: 'Bill & Melinda Gates Foundation', amount: 20000000000, source: 'https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions', notes: 'Cash/stock gift' },
-  /*
-  // Dustin Moskovitz donations
-  */
+  
+  // Dustin Moskovitz & Cari Tuna donations
+  { date: '2013-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 28599982, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2014-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 224868989, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2015-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 226124175, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2016-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 252806176, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2016-09-08', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Democratic Political Organizations', amount: 20000000, source: 'https://medium.com/@moskov/compelled-to-act-1413930041ee' },
+  { date: '2017-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 279174388, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2018-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 403279018, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2019-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 552209978, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2020-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 1017208584, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2021-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 269722092, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2022-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 170486513, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  { date: '2023-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 1911407931, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
+  
   // Elon Musk donations
   // Count donations from Musk Foundation as his, since it's basically a one man show
   { date: '2010-12-01', donor: 'Elon Musk', recipient: 'Bayou La Batre Hurricane Response Center', amount: 250000, source: 'https://cleantechnica.com/2011/12/29/tesla-and-solarcity-install-solar-on-disaster-relief-center-in-alabama/' },

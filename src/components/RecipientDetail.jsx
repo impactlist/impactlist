@@ -6,7 +6,8 @@ import {
   getCostPerLifeForRecipient, 
   getPrimaryCategoryId,
   getCategoryBreakdown,
-  getDefaultCostPerLifeForCategory
+  getDefaultCostPerLifeForCategory,
+  getActualCostPerLifeForCategoryData
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart, { ImpactChartToggle } from './ImpactBarChart';
@@ -62,19 +63,8 @@ function RecipientDetail(props) {
       let costPerLife;
       
       if (categoryData) {
-        if (categoryData.costPerLife !== undefined) {
-          // Use explicit costPerLife if provided
-          costPerLife = categoryData.costPerLife;
-        } else {
-          // Get base cost from effectivenessCategories (with custom values if available)
-          const baseCostPerLife = customValues && customValues[categoryId] !== undefined ? 
-            customValues[categoryId] : effectivenessCategories[categoryId].costPerLife;
-          
-          // Apply multiplier if it exists
-          costPerLife = categoryData.multiplier ? 
-            baseCostPerLife / categoryData.multiplier : 
-            baseCostPerLife;
-        }
+        // Use our helper function to calculate the cost per life
+        costPerLife = getActualCostPerLifeForCategoryData(recipientName, categoryId, categoryData, customValues);
       }
       
       return (
@@ -177,15 +167,7 @@ function RecipientDetail(props) {
           const categoryName = effectivenessCategories[categoryId].name;
           
           // Get category-specific cost per life
-          let catCostPerLife;
-          if (categoryData.costPerLife !== undefined) {
-            catCostPerLife = categoryData.costPerLife;
-          } else {
-            const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-            catCostPerLife = categoryData.multiplier ? 
-              baseCostPerLife / categoryData.multiplier : 
-              baseCostPerLife;
-          }
+          const catCostPerLife = getActualCostPerLifeForCategoryData(recipientName, categoryId, categoryData, customValues);
           
           // Calculate donation amount and lives saved for this category
           const categoryAmount = donation.amount * fraction;

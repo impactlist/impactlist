@@ -49,10 +49,106 @@ export const CostPerLifeProvider = ({ children }) => {
       }
     });
   };
+  
+  // Update a recipient's override values - type can be 'multiplier' or 'costPerLife'
+  const updateRecipientValue = (recipientName, categoryId, type, value) => {
+    if (!recipientName) {
+      throw new Error("Required parameter 'recipientName' is missing");
+    }
+    if (!categoryId) {
+      throw new Error("Required parameter 'categoryId' is missing");
+    }
+    if (!type) {
+      throw new Error("Required parameter 'type' is missing");
+    }
+    if (type !== 'multiplier' && type !== 'costPerLife') {
+      throw new Error(`Invalid type '${type}'. Must be 'multiplier' or 'costPerLife'`);
+    }
+    
+    setCustomValues(prev => {
+      const newValues = prev ? { ...prev } : {};
+      
+      // Initialize the recipients field if it doesn't exist
+      if (!newValues.recipients) {
+        newValues.recipients = {};
+      }
+      
+      // Initialize the recipient entry if it doesn't exist
+      if (!newValues.recipients[recipientName]) {
+        newValues.recipients[recipientName] = {};
+      }
+      
+      // Initialize the category entry if it doesn't exist
+      if (!newValues.recipients[recipientName][categoryId]) {
+        newValues.recipients[recipientName][categoryId] = {};
+      }
+      
+      // Handle special cases for valid inputs in intermediate states
+      const isIntermediateState = value === '-' || value === '.' || value.endsWith('.');
+      
+      // Update values
+      if (value === '') {
+        // If both values are being cleared, remove the category
+        if (type === 'multiplier' && !newValues.recipients[recipientName][categoryId].costPerLife) {
+          delete newValues.recipients[recipientName][categoryId];
+        } else if (type === 'costPerLife' && !newValues.recipients[recipientName][categoryId].multiplier) {
+          delete newValues.recipients[recipientName][categoryId];
+        } else {
+          // Just clear this specific value
+          delete newValues.recipients[recipientName][categoryId][type];
+        }
+        
+        // Clean up empty objects - using safe checks
+        if (newValues.recipients?.[recipientName]?.[categoryId] &&
+            Object.keys(newValues.recipients[recipientName][categoryId]).length === 0) {
+          delete newValues.recipients[recipientName][categoryId];
+        }
+        if (newValues.recipients?.[recipientName] && 
+            Object.keys(newValues.recipients[recipientName]).length === 0) {
+          delete newValues.recipients[recipientName];
+        }
+        if (newValues.recipients && 
+            Object.keys(newValues.recipients).length === 0) {
+          delete newValues.recipients;
+        }
+      } else if (isIntermediateState) {
+        // For intermediate states, store the string value temporarily
+        // These won't be used in calculations until they're valid numbers
+        newValues.recipients[recipientName][categoryId][type] = value;
+      } else if (!isNaN(Number(value))) {
+        // Only clear the other field if we're setting a valid number
+        // When setting a multiplier, clear costPerLife and vice versa
+        if (type === 'multiplier') {
+          delete newValues.recipients[recipientName][categoryId].costPerLife;
+        } else if (type === 'costPerLife') {
+          delete newValues.recipients[recipientName][categoryId].multiplier;
+        }
+        
+        // Store numeric value
+        newValues.recipients[recipientName][categoryId][type] = Number(value);
+      }
+      
+      // Return updated object
+      return Object.keys(newValues).length > 0 ? newValues : null;
+    });
+  };
 
   // Update multiple values at once
   const updateValues = (newValues) => {
     setCustomValues(newValues);
+  };
+
+  // Get recipient custom value
+  const getRecipientValue = (recipientName, categoryId, type) => {
+    if (!customValues || 
+        !customValues.recipients || 
+        !customValues.recipients[recipientName] || 
+        !customValues.recipients[recipientName][categoryId] ||
+        customValues.recipients[recipientName][categoryId][type] === undefined) {
+      return null;
+    }
+    
+    return customValues.recipients[recipientName][categoryId][type];
   };
 
   // Determine if custom values are being used
@@ -68,7 +164,9 @@ export const CostPerLifeProvider = ({ children }) => {
     isUsingCustomValues,
     resetToDefaults,
     updateCategoryValue,
+    updateRecipientValue,
     updateValues,
+    getRecipientValue,
     isModalOpen,
     openModal,
     closeModal,

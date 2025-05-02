@@ -2,12 +2,62 @@
 import { effectivenessCategories,donations, donors, recipients } from '../data/donationData';
 
 // From the category data within a recipient, get the actual cost per life, taking into account custom values if they exist
-const getActualCostPerLifeForCategoryData = (categoryId, categoryData, customValues = null) => {
+export const getActualCostPerLifeForCategoryData = (recipientName, categoryId, categoryData, customValues = null) => {
   if (!categoryData || typeof categoryData.fraction !== 'number') {
     throw new Error(`Invalid category data for ${categoryId}.`);
   }
+  
+  // First check if we have custom values for this specific recipient and category
+  if (customValues && 
+      customValues.recipients && 
+      customValues.recipients[recipientName] && 
+      customValues.recipients[recipientName][categoryId]) {
+    
+    const recipientCustomData = customValues.recipients[recipientName][categoryId];
+    
+    // If there's a custom costPerLife value, use that directly
+    if (recipientCustomData.costPerLife !== undefined) {
+      // Check if it's a valid number (not in intermediate state)
+      const costPerLife = recipientCustomData.costPerLife;
+      if (typeof costPerLife === 'string') {
+        // Ignore intermediate inputs like '-', '.', or '3.'
+        if (costPerLife === '-' || costPerLife === '.' || costPerLife.endsWith('.')) {
+          // Fall back to default behavior
+        } else if (!isNaN(Number(costPerLife))) {
+          return Number(costPerLife);
+        }
+      } else if (typeof costPerLife === 'number') {
+        return costPerLife;
+      }
+    }
+    
+    // If there's a custom multiplier value, apply it to the base cost
+    if (recipientCustomData.multiplier !== undefined) {
+      // Check if it's a valid number (not in intermediate state)
+      const multiplier = recipientCustomData.multiplier;
+      if (typeof multiplier === 'string') {
+        // Ignore intermediate inputs like '-', '.', or '3.'
+        if (multiplier === '-' || multiplier === '.' || multiplier.endsWith('.')) {
+          // Fall back to default behavior
+        } else if (!isNaN(Number(multiplier))) {
+          // Get the appropriate base cost per life
+          const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+          // Note: Higher multiplier means more lives saved per dollar, so it DIVIDES the cost
+          return baseCostPerLife / Number(multiplier);
+        }
+      } else if (typeof multiplier === 'number') {
+        // Get the appropriate base cost per life
+        const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+        // Note: Higher multiplier means more lives saved per dollar, so it DIVIDES the cost
+        return baseCostPerLife / multiplier;
+      }
+    }
+  }
+  
+  // Otherwise fall back to the original logic
   let baseCostPerLife = 0;
   let multiplier = 1;
+  
   if (categoryData.costPerLife !== undefined) {
     baseCostPerLife = categoryData.costPerLife;
   } else {
@@ -16,7 +66,10 @@ const getActualCostPerLifeForCategoryData = (categoryId, categoryData, customVal
       multiplier = categoryData.multiplier;
     }
   }
-  return baseCostPerLife * multiplier;
+  
+  // Since multiplier increases effectiveness, we divide the cost per life
+  const result = baseCostPerLife / multiplier;
+  return result;
 }
 
 // Get the effective costPerLife for a given category, considering custom values if they exist
@@ -55,7 +108,7 @@ export const getCostPerLifeForRecipient = (recipient, customValues = null) => {
     
     if (weight <= 0) throw new Error(`Weight for category ${categoryId} in recipient ${recipient.name} is not positive. This should not happen.`);
 
-    const costPerLife = getActualCostPerLifeForCategoryData(categoryId, categoryData, customValues);
+    const costPerLife = getActualCostPerLifeForCategoryData(recipient.name, categoryId, categoryData, customValues);
 
     totalLivesSaved += (spendingTotal * weight) / (costPerLife);
   }
@@ -85,7 +138,7 @@ export const getAllCategoryCostsPerLifeWithinRecipient = (recipient, customValue
       throw new Error(`Invalid category data for ${categoryId} in recipient ${recipient.name}.`);
     }
  
-    result[categoryId] = getActualCostPerLifeForCategoryData(categoryId, categoryData, customValues);
+    result[categoryId] = getActualCostPerLifeForCategoryData(recipient.name, categoryId, categoryData, customValues);
   }
   
   return result;

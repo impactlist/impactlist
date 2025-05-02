@@ -1,8 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { donations, charities, effectivenessCategories, donors } from '../data/donationData';
-import { calculateDonorStats, getCostPerLifeForCharity, getPrimaryCategoryId, 
+import { donations, recipients, effectivenessCategories, donors } from '../data/donationData';
+import { calculateDonorStats, getCostPerLifeForRecipient, getPrimaryCategoryId, 
   getDefaultCostPerLifeForCategory } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart from './ImpactBarChart';
@@ -57,17 +57,17 @@ function DonorDetail(props) {
     const donorDonationsList = donations
       .filter(donation => donation.donor === donorName)
       .map(donation => {
-        const charity = charities.find(c => c.name === donation.charity);
+        const recipient = recipients.find(r => r.name === donation.recipient);
         
-        // Throw error if charity doesn't exist in our database
-        if (!charity) {
-          throw new Error(`Charity not found: ${donation.charity} for donor ${donorName}. This charity needs to be added to the charities array.`);
+        // Throw error if recipient doesn't exist in our database
+        if (!recipient) {
+          throw new Error(`Recipient not found: ${donation.recipient} for donor ${donorName}. This recipient needs to be added to the recipients array.`);
         }
         
-        const costPerLife = getCostPerLifeForCharity(charity, customValues);
+        const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
         
-        // Get the primary category ID for this charity
-        const primaryCategoryId = getPrimaryCategoryId(charity);
+        // Get the primary category ID for this recipient
+        const primaryCategoryId = getPrimaryCategoryId(recipient);
         
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
@@ -110,7 +110,7 @@ function DonorDetail(props) {
       donorDonationsList.unshift({
         date: 'Unknown',
         donor: donorName,
-        charity: 'Unknown',
+        recipient: 'Unknown',
         amount: unknownAmount,
         category: 'other', // Use 'other' as the primary category ID
         categoryName: 'Unknown', // Use 'Unknown' as the primary category name
@@ -121,9 +121,9 @@ function DonorDetail(props) {
         isUnknown: true
       });
       
-      // Also create a dummy charity for the 'Unknown' entry to avoid errors
-      if (!charities.some(c => c.name === 'Unknown')) {
-        charities.push({
+      // Also create a dummy recipient for the 'Unknown' entry to avoid errors
+      if (!recipients.some(r => r.name === 'Unknown')) {
+        recipients.push({
           name: 'Unknown',
           categories: {
             other: { fraction: 1.0 }
@@ -145,12 +145,12 @@ function DonorDetail(props) {
       // Skip unknown donations for the chart
       if (donation.isUnknown) return;
       
-      // Get the charity and its categories
-      const charity = charities.find(c => c.name === donation.charity);
-      if (!charity) return;
+      // Get the recipient and its categories
+      const recipient = recipients.find(r => r.name === donation.recipient);
+      if (!recipient) return;
       
-      // Process each category this charity belongs to
-      Object.entries(charity.categories).forEach(([categoryId, categoryData]) => {
+      // Process each category this recipient belongs to
+      Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
         const fraction = categoryData.fraction;
         const categoryName = effectivenessCategories[categoryId].name;
         
@@ -504,17 +504,17 @@ function DonorDetail(props) {
       )
     },
     { 
-      key: 'charity', 
+      key: 'recipient', 
       label: 'Recipient',
       render: (donation) => (
         donation.isUnknown ? 
         <span className="text-sm text-slate-500">Unknown</span> :
         <div>
           <Link 
-            to={`/recipient/${encodeURIComponent(donation.charity)}`}
+            to={`/recipient/${encodeURIComponent(donation.recipient)}`}
             className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
           >
-            {donation.charity}
+            {donation.recipient}
           </Link>
           {donation.credit !== undefined && (
             <div className="text-xs text-gray-500 mt-1">
@@ -537,9 +537,9 @@ function DonorDetail(props) {
           );
         }
         
-        // Get the charity to check if it has multiple categories
-        const charity = charities.find(c => c.name === donation.charity);
-        if (!charity) {
+        // Get the recipient to check if it has multiple categories
+        const recipient = recipients.find(r => r.name === donation.recipient);
+        if (!recipient) {
           return (
             <div className="text-sm text-slate-900">
               {donation.categoryName}
@@ -548,7 +548,7 @@ function DonorDetail(props) {
         }
         
         // Count categories
-        const categoryCount = Object.keys(charity.categories).length;
+        const categoryCount = Object.keys(recipient.categories).length;
         const hasMultipleCategories = categoryCount > 1;
         
         return (

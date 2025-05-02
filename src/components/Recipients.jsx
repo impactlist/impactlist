@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { charities, donations } from '../data/donationData';
-import { getCostPerLifeForCharity, getPrimaryCategoryId, getCategoryBreakdown } from '../utils/donationDataHelpers';
+import { recipients, donations } from '../data/donationData';
+import { getCostPerLifeForRecipient, getPrimaryCategoryId, getCategoryBreakdown } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 
 function Recipients(props) {
-  const [charityStats, setCharityStats] = useState([]);
+  const [recipientStats, setRecipientStats] = useState([]);
   const { customValues, openModal } = useCostPerLife();
 
   useEffect(() => {
-    // Calculate charity statistics
-    const recipientStats = charities.map(charity => {
-      const charityDonations = donations.filter(d => d.charity === charity.name);
-      const totalReceived = charityDonations.reduce((sum, d) => sum + d.amount, 0);
-      const costPerLife = getCostPerLifeForCharity(charity, customValues);
-      
+    // Calculate recipient statistics
+    const recipientStats = recipients.map(recipient => {
+      const recipientDonations = donations.filter(d => d.recipient === recipient.name);
+      const totalReceived = recipientDonations.reduce((sum, d) => sum + d.amount, 0);
+      const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
+
       // Get the primary category and all categories for display
-      const primaryCategory = getPrimaryCategoryId(charity);
-      const categoryBreakdown = getCategoryBreakdown(charity);
+      const primaryCategory = getPrimaryCategoryId(recipient);
+      const categoryBreakdown = getCategoryBreakdown(recipient);
       const categoryNames = categoryBreakdown.map(category => category.name);
       
-      const totalLivesSaved = charityDonations.reduce(
+      const totalLivesSaved = recipientDonations.reduce(
         (sum, d) => {
           // Apply credit multiplier if it exists
           const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
@@ -36,7 +36,7 @@ function Recipients(props) {
       );
       
       return {
-        name: charity.name,
+        name: recipient.name,
         primaryCategoryId: primaryCategory.id,
         primaryCategoryName: primaryCategory.name,
         categoryNames,
@@ -46,47 +46,47 @@ function Recipients(props) {
       };
     }).sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
     
-    setCharityStats(recipientStats);
+    setRecipientStats(recipientStats);
   }, [customValues]);
 
   // Using imported formatNumber and formatCurrency functions from utils/formatters.js
 
-  // Charity table columns configuration
-  const charityColumns = [
+  // Recipient table columns configuration
+  const recipientColumns = [
     { 
       key: 'rank', 
       label: 'Rank',
-      render: (charity) => <div className="text-sm text-slate-900">{charity.rank}</div>
+      render: (recipient) => <div className="text-sm text-slate-900">{recipient.rank}</div>
     },
     { 
       key: 'name', 
       label: 'Organization',
-      render: (charity) => (
+      render: (recipient) => (
         <Link 
-          to={`/recipient/${encodeURIComponent(charity.name)}`}
+          to={`/recipient/${encodeURIComponent(recipient.name)}`}
           className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
         >
-          {charity.name}
+          {recipient.name}
         </Link>
       )
     },
     { 
       key: 'totalLivesSaved', 
       label: 'Lives Saved',
-      render: (charity) => (
-        <div className={`text-sm ${charity.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-          {formatNumber(Math.round(charity.totalLivesSaved))}
+      render: (recipient) => (
+        <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(recipient.totalLivesSaved))}
         </div>
       )
     },
     { 
       key: 'costPerLife', 
       label: 'Cost/Life',
-      render: (charity) => {
+      render: (recipient) => {
         return (
-          <div className={`text-sm ${charity.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
-            {charity.costPerLife === 0 ? '∞' : 
-             formatCurrency(Math.round(charity.costPerLife))}
+          <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+            {recipient.costPerLife === 0 ? '∞' : 
+             formatCurrency(Math.round(recipient.costPerLife))}
           </div>
         );
       }
@@ -94,21 +94,21 @@ function Recipients(props) {
     { 
       key: 'totalReceived', 
       label: 'Total Received',
-      render: (charity) => <div className="text-sm text-slate-900">{formatCurrency(charity.totalReceived)}</div>
+      render: (recipient) => <div className="text-sm text-slate-900">{formatCurrency(recipient.totalReceived)}</div>
     },
     { 
       key: 'primaryCategoryName', 
       label: 'Focus Area',
-      render: (charity) => (
+      render: (recipient) => (
         <div className="text-sm text-slate-900">
-          {charity.categoryNames.length === 1 ? (
-            charity.primaryCategoryName
+          {recipient.categoryNames.length === 1 ? (
+            recipient.primaryCategoryName
           ) : (
             <div>
-              <div>{charity.primaryCategoryName}</div>
-              {charity.categoryNames.length > 1 && (
+              <div>{recipient.primaryCategoryName}</div>
+              {recipient.categoryNames.length > 1 && (
                 <div className="text-xs text-gray-500 mt-1">
-                  +{charity.categoryNames.length - 1} more
+                  +{recipient.categoryNames.length - 1} more
                 </div>
               )}
             </div>
@@ -178,9 +178,9 @@ function Recipients(props) {
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
           <div className="overflow-x-auto">
             <SortableTable 
-              columns={charityColumns} 
-              data={charityStats.map((charity, index) => ({
-                ...charity,
+              columns={recipientColumns} 
+              data={recipientStats.map((recipient, index) => ({
+                ...recipient,
                 rank: index + 1
               }))} 
               defaultSortColumn="totalLivesSaved" 

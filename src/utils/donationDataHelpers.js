@@ -1,7 +1,7 @@
 // Helper functions for donation and impact calculations
-import { effectivenessCategories,donations, donors, charities } from '../data/donationData';
+import { effectivenessCategories,donations, donors, recipients } from '../data/donationData';
 
-// From the category data within a charity, get the actual cost per life, taking into account custom values if they exist
+// From the category data within a recipient, get the actual cost per life, taking into account custom values if they exist
 const getActualCostPerLifeForCategoryData = (categoryId, categoryData, customValues = null) => {
   if (!categoryData || typeof categoryData.fraction !== 'number') {
     throw new Error(`Invalid category data for ${categoryId}.`);
@@ -35,9 +35,9 @@ export const getDefaultCostPerLifeForCategory = (categoryKey, customValues = nul
   throw new Error(`Invalid category key: "${categoryKey}". This category does not exist in effectivenessCategories.`);
 };
 
-// Calculate weighted average cost per life for a charity
-export const getCostPerLifeForCharity = (charity, customValues = null) => {
-  if (!charity || !charity.categories) throw new Error(`Invalid charity.`);
+// Calculate weighted average cost per life for a recipient
+export const getCostPerLifeForRecipient = (recipient, customValues = null) => {
+  if (!recipient || !recipient.categories) throw new Error(`Invalid recipient.`);
   
   let totalWeight = 0;
 
@@ -45,15 +45,15 @@ export const getCostPerLifeForCharity = (charity, customValues = null) => {
   let totalLivesSaved = 0;
   
   // Go through each category and calculate weighted costs
-  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
+  for (const [categoryId, categoryData] of Object.entries(recipient.categories)) {
     if (!categoryData || typeof categoryData.fraction !== 'number') {
-      throw new Error(`Invalid category data for ${categoryId} in charity ${charity.name}.`);
+      throw new Error(`Invalid category data for ${categoryId} in recipient ${recipient.name}.`);
     }
     
     const weight = categoryData.fraction;
     totalWeight += weight;
     
-    if (weight <= 0) throw new Error(`Weight for category ${categoryId} in charity ${charity.name} is not positive. This should not happen.`);
+    if (weight <= 0) throw new Error(`Weight for category ${categoryId} in recipient ${recipient.name} is not positive. This should not happen.`);
 
     const costPerLife = getActualCostPerLifeForCategoryData(categoryId, categoryData, customValues);
 
@@ -62,27 +62,27 @@ export const getCostPerLifeForCharity = (charity, customValues = null) => {
   
   // Ensure total weight is normalized
   if (Math.abs(totalWeight - 1) > 0.01) {
-    throw new Error(`Warning: Category weights for charity "${charity.name}" do not sum to 1 (total: ${totalWeight}).`);
+    throw new Error(`Warning: Category weights for recipient "${recipient.name}" do not sum to 1 (total: ${totalWeight}).`);
   }
-  
-  // If no valid weights found, return null or a default
-  if (totalWeight === 0) {
-    throw new Error(`No valid weights found for charity ${charity.name}.`);
+    
+    // If no valid weights found, return null or a default
+    if (totalWeight === 0) {
+      throw new Error(`No valid weights found for recipient ${recipient.name}.`);
   }
   
   return spendingTotal / totalLivesSaved;
 };
 
-// Get the cost per life for all categories in a charity
-export const getAllCategoryCostsPerLifeWithinCharity = (charity, customValues = null) => {
-  if (!charity || !charity.categories) throw new Error(`Invalid charity.`);
+// Get the cost per life for all categories in a recipient
+export const getAllCategoryCostsPerLifeWithinRecipient = (recipient, customValues = null) => {
+  if (!recipient || !recipient.categories) throw new Error(`Invalid recipient.`);
   
   const result = {};
   
   // Calculate cost per life for each category
-  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
+  for (const [categoryId, categoryData] of Object.entries(recipient.categories)) {
     if (!categoryData || typeof categoryData.fraction !== 'number') {
-      throw new Error(`Invalid category data for ${categoryId} in charity ${charity.name}.`);
+      throw new Error(`Invalid category data for ${categoryId} in recipient ${recipient.name}.`);
     }
  
     result[categoryId] = getActualCostPerLifeForCategoryData(categoryId, categoryData, customValues);
@@ -91,15 +91,15 @@ export const getAllCategoryCostsPerLifeWithinCharity = (charity, customValues = 
   return result;
 };
 
-// Get the primary (highest weight) category for a charity
-export const getPrimaryCategoryId = (charity) => {
-  if (!charity || !charity.categories) return null;
+// Get the primary (highest weight) category for a recipient
+export const getPrimaryCategoryId = (recipient) => {
+  if (!recipient || !recipient.categories) return null;
   
   let maxWeight = -1;
   let primaryCategoryId = null;
   
   // Find the category with the highest weight
-  for (const [categoryId, categoryData] of Object.entries(charity.categories)) {
+  for (const [categoryId, categoryData] of Object.entries(recipient.categories)) {
     const weight = categoryData.fraction;
     
     if (weight > maxWeight) {
@@ -108,17 +108,17 @@ export const getPrimaryCategoryId = (charity) => {
     }
   }
   
-  if (primaryCategoryId === null) throw new Error(`No primary category found for charity ${charity.name}.`);
+  if (primaryCategoryId === null) throw new Error(`No primary category found for recipient ${recipient.name}.`);
 
   return primaryCategoryId;
 };
 
-// Get a breakdown of categories for a charity
-export const getCategoryBreakdown = (charity) => {
-  if (!charity || !charity.categories) return [];
+// Get a breakdown of categories for a recipient
+export const getCategoryBreakdown = (recipient) => {
+  if (!recipient || !recipient.categories) return [];
   
   // Convert categories object to an array with categoryId included
-  const categories = Object.entries(charity.categories).map(([categoryId, categoryData]) => {
+  const categories = Object.entries(recipient.categories).map(([categoryId, categoryData]) => {
     return {
       categoryId,
       ...categoryData
@@ -152,16 +152,16 @@ export const calculateDonorStats = (customValues = null) => {
     
     // Calculate totals based on actual donations
     for (const donation of donorData) {
-      // Find charity for this donation
-      const charity = charities.find(c => c.name === donation.charity);
-      if (!charity) throw new Error(`Charity not found: ${donation.charity} for donor ${donorName}. This charity needs to be added to the charities array.`);
+      // Find recipient for this donation
+      const recipient = recipients.find(r => r.name === donation.recipient);
+      if (!recipient) throw new Error(`Recipient not found: ${donation.recipient} for donor ${donorName}. This recipient needs to be added to the recipients array.`);
       
       const donationAmount = donation.amount;
       totalDonated += donationAmount;
       knownDonations += donationAmount;
       
-      // Calculate cost per life for this charity
-      const costPerLife = getCostPerLifeForCharity(charity, customValues);
+      // Calculate cost per life for this recipient
+      const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
       
       // Apply credit multiplier if it exists
       const creditedAmount = donation.credit !== undefined ? 

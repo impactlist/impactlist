@@ -124,7 +124,7 @@ const CostPerLifeEditor = () => {
               </button>
             </div>
             <p className="text-gray-600 mt-2">
-              Customize the cost per life values for different charity categories. These values represent the estimated cost in dollars to save one life.
+              Customize the cost per life values for different recipient categories. These values represent the estimated cost in dollars to save one life.
             </p>
             <div className="mt-4 flex items-center justify-end">
               <div className="flex space-x-4">

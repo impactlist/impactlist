@@ -1,10 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { donations, charities, effectivenessCategories } from '../data/donationData';
+import { donations, recipients, effectivenessCategories } from '../data/donationData';
 import { 
-  getCostPerLifeForCharity, 
-  getAllCategoryCostsPerLifeWithinCharity,
+  getCostPerLifeForRecipient, 
   getPrimaryCategoryId,
   getCategoryBreakdown,
   getDefaultCostPerLifeForCategory
@@ -35,9 +34,9 @@ function RecipientDetail(props) {
       if (!data) return null;
       
       // Get category-specific cost per life
-      const charity = charities.find(c => c.name === recipientName);
+      const recipient = recipients.find(r => r.name === recipientName);
       const categoryId = data.categoryId || data.id;
-      const categoryData = charity?.categories[categoryId];
+      const categoryData = recipient?.categories[categoryId];
       let costPerLife;
       
       if (categoryData) {
@@ -71,30 +70,30 @@ function RecipientDetail(props) {
 
 
   useEffect(() => {
-    // Get charity info
-    const charity = charities.find(c => c.name === recipientName);
+    // Get recipient info
+    const recipient = recipients.find(r => r.name === recipientName);
     
-    if (charity) {
-      const costPerLife = getCostPerLifeForCharity(charity, customValues);
+    if (recipient) {
+      const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
       
       // Get primary category and category breakdown
-      const primaryCategoryId = getPrimaryCategoryId(charity);
+      const primaryCategoryId = getPrimaryCategoryId(recipient);
       const primaryCategoryName = effectivenessCategories[primaryCategoryId].name;
       
       // Get cost per life for the primary category
       const categoryCostPerLife = getDefaultCostPerLifeForCategory(primaryCategoryId, customValues);
       
       // Get formatted breakdown for bar chart with required properties
-      const categoryBreakdown = getCategoryBreakdown(charity).map(category => ({
+      const categoryBreakdown = getCategoryBreakdown(recipient).map(category => ({
         ...category,
         id: category.categoryId,
         name: effectivenessCategories[category.categoryId].name,
         percentage: Math.round(category.fraction * 100)
       }));
       
-      // Filter donations for this charity
-      const charityDonations = donations
-        .filter(donation => donation.charity === recipientName)
+      // Filter donations for this recipient
+      const recipientDonations = donations
+        .filter(donation => donation.recipient === recipientName)
         .map(donation => {
           // Apply credit multiplier if it exists
           const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
@@ -111,8 +110,8 @@ function RecipientDetail(props) {
         .sort((a, b) => b.dateObj - a.dateObj);
       
       // Calculate total received
-      const totalReceived = charityDonations.reduce((sum, donation) => sum + donation.amount, 0);
-      const totalLivesSaved = charityDonations.reduce((sum, donation) => sum + donation.livesSaved, 0);
+      const totalReceived = recipientDonations.reduce((sum, donation) => sum + donation.amount, 0);
+      const totalLivesSaved = recipientDonations.reduce((sum, donation) => sum + donation.livesSaved, 0);
       
       setRecipientInfo({
         name: recipientName,
@@ -125,7 +124,7 @@ function RecipientDetail(props) {
         totalLivesSaved
       });
       
-      setRecipientDonations(charityDonations);
+      setRecipientDonations(recipientDonations);
     }
   }, [recipientName, customValues]);
 

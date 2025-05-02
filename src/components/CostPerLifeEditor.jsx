@@ -13,8 +13,9 @@ const CostPerLifeEditor = () => {
     closeModal
   } = useCostPerLife();
   
-  // Local state for form values
+  // Local state for form values and errors
   const [formValues, setFormValues] = useState({});
+  const [errors, setErrors] = useState({});
   
   // Initialize form values when modal opens
   useEffect(() => {
@@ -27,32 +28,61 @@ const CostPerLifeEditor = () => {
           : category.costPerLife;
       });
       setFormValues(initialValues);
+      setErrors({});
     }
   }, [isModalOpen, customValues]);
   
-  // Handle input change
+  // Handle input change - allow any input
   const handleInputChange = (key, value) => {
-    // Remove commas for processing
-    const processedValue = value === '' || value === '-' || value === '0.' || value === '-0.' || value === '0' || value === '-0'
-      ? value 
-      : value.toString().replace(/,/g, '');
-    
-    // For special intermediate states, keep the string value
-    const isIntermediateInput = processedValue === '' || 
-                               processedValue === '-' || 
-                               processedValue === '0.' || 
-                               processedValue === '-0.' ||
-                               (processedValue.includes('.') && processedValue.endsWith('.'));
-    
     setFormValues(prev => ({
       ...prev,
-      [key]: isIntermediateInput ? processedValue : Number(processedValue)
+      [key]: value
     }));
+    
+    // Clear error when user starts typing again
+    if (errors[key]) {
+      setErrors(prev => ({
+        ...prev,
+        [key]: null
+      }));
+    }
+  };
+  
+  // Validate all values before submission
+  const validateValues = () => {
+    const newErrors = {};
+    let hasErrors = false;
+    
+    Object.entries(formValues).forEach(([key, value]) => {
+      const defaultValue = effectivenessCategories[key].costPerLife;
+      
+      // Skip validation if value is the same as default
+      if (value === defaultValue) return;
+      
+      // Convert to number if it's a string
+      const numValue = typeof value === 'string' 
+        ? (value.trim() === '' ? 0 : Number(value.replace(/,/g, '')))
+        : value;
+        
+      // Check if it's a valid number
+      if (isNaN(numValue)) {
+        newErrors[key] = 'Invalid number';
+        hasErrors = true;
+      }
+    });
+    
+    setErrors(newErrors);
+    return !hasErrors;
   };
   
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate all values
+    if (!validateValues()) {
+      return; // Stop if there are errors
+    }
     
     // Filter out unchanged values to only store custom ones
     const customized = {};
@@ -60,23 +90,14 @@ const CostPerLifeEditor = () => {
     Object.entries(formValues).forEach(([key, value]) => {
       const defaultValue = effectivenessCategories[key].costPerLife;
       
-      // Process the value - string or number
-      let processedValue = value;
-      if (typeof value === 'string') {
-        // Handle partially entered numbers
-        if (value === '' || value === '-' || value === '0.' || value === '-0.') {
-          return; // Skip this entry
-        }
-        
-        // Convert string to number, removing commas
-        processedValue = Number(value.replace(/,/g, ''));
-      }
+      // Process the value - convert string to number
+      let processedValue = typeof value === 'string'
+        ? (value.trim() === '' ? 0 : Number(value.replace(/,/g, '')))
+        : value;
       
-      // Only consider valid number inputs that are not exactly zero
-      if (!isNaN(processedValue) && processedValue !== 0) {
-        if (processedValue !== defaultValue) {
-          customized[key] = Number(processedValue);
-        }
+      // Only consider valid number inputs that are different from default
+      if (!isNaN(processedValue) && processedValue !== defaultValue) {
+        customized[key] = processedValue;
       }
     });
     
@@ -97,6 +118,7 @@ const CostPerLifeEditor = () => {
       defaultValues[key] = category.costPerLife;
     });
     setFormValues(defaultValues);
+    setErrors({});
   };
   
   if (!isModalOpen) return null;
@@ -161,17 +183,26 @@ const CostPerLifeEditor = () => {
                   .map(([key, category]) => {
                     const defaultValue = category.costPerLife;
                     const currentValue = formValues[key];
-                    const isCustom = currentValue !== defaultValue;
+                    const hasError = errors[key];
                     
-                    // Format the display value with commas if it's a number
-                    const displayValue = (currentValue !== '' && !isNaN(currentValue))
-                      ? typeof currentValue === 'number' && Math.abs(currentValue) >= 1000 
-                          ? currentValue.toLocaleString('en-US')
-                          : currentValue
-                      : '';
+                    // Check if value is custom (different from default)
+                    const isCustom = 
+                      currentValue !== defaultValue && 
+                      !(typeof currentValue === 'string' && 
+                        Number(currentValue.replace(/,/g, '')) === defaultValue);
+                    
+                    // Format display value (commas, etc.) but preserve user input
+                    let displayValue = currentValue;
+                    if (typeof currentValue === 'number' && !isNaN(currentValue) && Math.abs(currentValue) >= 1000) {
+                      displayValue = currentValue.toLocaleString('en-US');
+                    }
                     
                     return (
-                      <div key={key} className={`py-1.5 px-2 rounded border ${isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'}`}>
+                      <div key={key} className={`py-1.5 px-2 rounded border ${
+                        hasError ? 'border-red-300 bg-red-50' : 
+                        isCustom ? 'border-indigo-300 bg-indigo-50' : 
+                        'border-gray-200'
+                      }`}>
                         <div className="flex items-center justify-between">
                           <label className="text-sm font-medium text-gray-700 truncate pr-2" title={category.name}>
                             {category.name}
@@ -179,8 +210,10 @@ const CostPerLifeEditor = () => {
                           {isCustom && (
                             <button 
                               type="button"
-                              className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                              onClick={() => handleInputChange(key, defaultValue)}
+                              className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
+                              onClick={() => {
+                                handleInputChange(key, defaultValue);
+                              }}
                             >
                               Reset
                             </button>
@@ -190,45 +223,22 @@ const CostPerLifeEditor = () => {
                           <span className="mr-1 text-gray-600 text-sm">$</span>
                           <input
                             type="text"
-                            inputMode="numeric"
+                            inputMode="text"
                             value={displayValue}
-                            onChange={(e) => {
-                              // Remove commas from input when user is typing
-                              const rawValue = e.target.value.replace(/,/g, '');
-                              
-                              // Allow any input that's valid for number formation including decimal, negative signs, and leading zeros
-                              if (rawValue === '' || 
-                                  rawValue === '-' || 
-                                  rawValue === '0' || 
-                                  rawValue === '-0' || 
-                                  rawValue === '0.' || 
-                                  rawValue === '-0.' || 
-                                  /^-?\d*\.?\d*$/.test(rawValue)) {
-                                handleInputChange(key, rawValue);
-                              }
-                            }}
-                            onBlur={(e) => {
-                              // Format with commas on blur if it's a valid number and not exactly zero
-                              const value = e.target.value;
-                              // Keep the field as-is if it's still being edited (contains just a decimal point, negative sign, etc.)
-                              if (value === '' || value === '-' || value === '0.' || value === '-0.') {
-                                return;
-                              }
-                              
-                              const numValue = Number(value);
-                              if (!isNaN(numValue)) {
-                                // Format with commas but preserve exactly as entered for precision
-                                const formattedValue = numValue.toLocaleString('en-US', {
-                                  useGrouping: true,
-                                  maximumFractionDigits: 20
-                                });
-                                e.target.value = formattedValue;
-                              }
-                            }}
-                            className={`w-full py-1 px-1.5 text-sm border rounded ${isCustom ? 'border-indigo-300' : 'border-gray-300'}`}
+                            onChange={(e) => handleInputChange(key, e.target.value)}
+                            className={`w-full py-1 px-1.5 text-sm border rounded ${
+                              hasError ? 'border-red-300 text-red-700' : 
+                              isCustom ? 'border-indigo-300' : 
+                              'border-gray-300'
+                            }`}
                           />
                         </div>
-                        {isCustom && (
+                        {hasError && (
+                          <div className="text-xs text-red-600 mt-0.5">
+                            {errors[key]}
+                          </div>
+                        )}
+                        {isCustom && !hasError && (
                           <div className="text-xs text-gray-500 mt-0.5">
                             Default: ${defaultValue.toLocaleString()}
                           </div>
@@ -237,7 +247,6 @@ const CostPerLifeEditor = () => {
                     );
                   })}
               </div>
-              
             </form>
           </div>
         </motion.div>

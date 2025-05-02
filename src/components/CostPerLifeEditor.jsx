@@ -17,26 +17,41 @@ const CostPerLifeEditor = () => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
   
-  // Initialize form values when modal opens
-  useEffect(() => {
-    if (isModalOpen) {
-      const initialValues = {};
-      Object.entries(effectivenessCategories).forEach(([key, category]) => {
-        // If custom value exists, use it; otherwise use default
-        initialValues[key] = customValues && customValues[key] !== undefined 
-          ? customValues[key] 
-          : category.costPerLife;
-      });
-      setFormValues(initialValues);
-      setErrors({});
-    }
-  }, [isModalOpen, customValues]);
-  
   // Handle input change - allow any input
   const handleInputChange = (key, value) => {
+    // Store the raw value (without commas) internally
+    const rawValue = value.toString().replace(/,/g, '');
+    
+    // Check if it's a valid number and not in an intermediate state
+    const isValidNumber = rawValue !== '' && 
+                         rawValue !== '-' && 
+                         rawValue !== '.' && 
+                         !rawValue.endsWith('.') && 
+                         !isNaN(Number(rawValue));
+    
+    // Format with commas if it's a valid number and large enough
+    let displayValue = rawValue;
+    if (isValidNumber) {
+      const numValue = Number(rawValue);
+      if (Math.abs(numValue) >= 1000) {
+        // Split into integer and decimal parts to preserve decimal precision
+        const parts = rawValue.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+        
+        // Format integer part with commas
+        const integerWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        displayValue = integerWithCommas + decimalPart;
+      }
+    }
+    
+    // Store both the raw value (for calculations) and display value (for UI)
     setFormValues(prev => ({
       ...prev,
-      [key]: value
+      [key]: {
+        raw: rawValue,
+        display: displayValue
+      }
     }));
     
     // Clear error when user starts typing again
@@ -48,21 +63,44 @@ const CostPerLifeEditor = () => {
     }
   };
   
+  // Initialize form values when modal opens
+  useEffect(() => {
+    if (isModalOpen) {
+      const initialValues = {};
+      Object.entries(effectivenessCategories).forEach(([key, category]) => {
+        // If custom value exists, use it; otherwise use default
+        const value = customValues && customValues[key] !== undefined 
+          ? customValues[key] 
+          : category.costPerLife;
+        
+        // Format initial values
+        const formattedValue = value.toLocaleString();
+        
+        initialValues[key] = {
+          raw: value.toString(),
+          display: formattedValue
+        };
+      });
+      
+      setFormValues(initialValues);
+      setErrors({});
+    }
+  }, [isModalOpen, customValues]);
+  
   // Validate all values before submission
   const validateValues = () => {
     const newErrors = {};
     let hasErrors = false;
     
-    Object.entries(formValues).forEach(([key, value]) => {
+    Object.entries(formValues).forEach(([key, valueObj]) => {
       const defaultValue = effectivenessCategories[key].costPerLife;
+      const rawValue = valueObj.raw;
       
       // Skip validation if value is the same as default
-      if (value === defaultValue) return;
+      if (Number(rawValue) === defaultValue) return;
       
-      // Convert to number if it's a string
-      const numValue = typeof value === 'string' 
-        ? (value.trim() === '' ? 0 : Number(value.replace(/,/g, '')))
-        : value;
+      // Convert to number
+      const numValue = rawValue.trim() === '' ? 0 : Number(rawValue);
         
       // Check if it's a valid number
       if (isNaN(numValue)) {
@@ -87,13 +125,12 @@ const CostPerLifeEditor = () => {
     // Filter out unchanged values to only store custom ones
     const customized = {};
     
-    Object.entries(formValues).forEach(([key, value]) => {
+    Object.entries(formValues).forEach(([key, valueObj]) => {
       const defaultValue = effectivenessCategories[key].costPerLife;
+      const rawValue = valueObj.raw;
       
       // Process the value - convert string to number
-      let processedValue = typeof value === 'string'
-        ? (value.trim() === '' ? 0 : Number(value.replace(/,/g, '')))
-        : value;
+      const processedValue = rawValue.trim() === '' ? 0 : Number(rawValue);
       
       // Only consider valid number inputs that are different from default
       if (!isNaN(processedValue) && processedValue !== defaultValue) {
@@ -115,7 +152,15 @@ const CostPerLifeEditor = () => {
   const handleReset = () => {
     const defaultValues = {};
     Object.entries(effectivenessCategories).forEach(([key, category]) => {
-      defaultValues[key] = category.costPerLife;
+      const value = category.costPerLife;
+      const formattedValue = value >= 1000 
+        ? value.toLocaleString() 
+        : value.toString();
+      
+      defaultValues[key] = {
+        raw: value.toString(),
+        display: formattedValue
+      };
     });
     setFormValues(defaultValues);
     setErrors({});
@@ -182,20 +227,11 @@ const CostPerLifeEditor = () => {
                   .sort((a, b) => a[1].name.localeCompare(b[1].name))
                   .map(([key, category]) => {
                     const defaultValue = category.costPerLife;
-                    const currentValue = formValues[key];
+                    const valueObj = formValues[key] || { raw: '', display: '' };
                     const hasError = errors[key];
                     
                     // Check if value is custom (different from default)
-                    const isCustom = 
-                      currentValue !== defaultValue && 
-                      !(typeof currentValue === 'string' && 
-                        Number(currentValue.replace(/,/g, '')) === defaultValue);
-                    
-                    // Format display value (commas, etc.) but preserve user input
-                    let displayValue = currentValue;
-                    if (typeof currentValue === 'number' && !isNaN(currentValue) && Math.abs(currentValue) >= 1000) {
-                      displayValue = currentValue.toLocaleString('en-US');
-                    }
+                    const isCustom = Number(valueObj.raw) !== defaultValue;
                     
                     return (
                       <div key={key} className={`py-1.5 px-2 rounded border ${
@@ -212,7 +248,12 @@ const CostPerLifeEditor = () => {
                               type="button"
                               className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
                               onClick={() => {
-                                handleInputChange(key, defaultValue);
+                                const value = defaultValue;
+                                const formattedValue = value >= 1000 
+                                  ? value.toLocaleString() 
+                                  : value.toString();
+                                
+                                handleInputChange(key, formattedValue);
                               }}
                             >
                               Reset
@@ -224,7 +265,7 @@ const CostPerLifeEditor = () => {
                           <input
                             type="text"
                             inputMode="text"
-                            value={displayValue}
+                            value={valueObj.display}
                             onChange={(e) => handleInputChange(key, e.target.value)}
                             className={`w-full py-1 px-1.5 text-sm border rounded ${
                               hasError ? 'border-red-300 text-red-700' : 

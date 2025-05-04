@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
 import { effectivenessCategories, recipients } from '../data/donationData';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -978,6 +978,26 @@ const CostPerLifeEditor = () => {
     closeModal();
   }, [validateAllValues, customValues, categoryFormValues, recipientFormValues, updateValues, resetToDefaults, closeModal]);
   
+  // Set up state for list height to fix scrollbar issue
+  const [listContainerHeight, setListContainerHeight] = useState(500);
+  const listContainerRef = useRef(null);
+  
+  // Measure the available height for the list container
+  useEffect(() => {
+    if (activeTab === 'recipients' && isModalOpen && listContainerRef.current) {
+      const updateHeight = () => {
+        // Calculate available height
+        const containerHeight = listContainerRef.current.clientHeight;
+        // Subtract some padding to ensure it fits within the container
+        setListContainerHeight(containerHeight - 20);
+      };
+      
+      updateHeight();
+      window.addEventListener('resize', updateHeight);
+      return () => window.removeEventListener('resize', updateHeight);
+    }
+  }, [activeTab, isModalOpen]);
+  
   // Reset a specific form to default values
   const resetFormToDefaults = useCallback((formType) => {
     if (formType === 'categories') {
@@ -1279,7 +1299,7 @@ const CostPerLifeEditor = () => {
             </div>
           </div>
           
-          <div className="overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]">
+          <div className="p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px] flex flex-col">
             {activeTab === 'categories' ? (
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
@@ -1306,7 +1326,7 @@ const CostPerLifeEditor = () => {
                 </div>
               </form>
             ) : (
-              <div>
+              <div ref={listContainerRef} className="h-full flex flex-col">
                 <div className="mb-4 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4 sm:items-center">
                   <div className="relative flex-grow">
                     <input
@@ -1343,15 +1363,17 @@ const CostPerLifeEditor = () => {
                       : "No recipients with custom values found. Uncheck the filter or search for a specific recipient."}
                   </div>
                 ) : (
-                  <List
-                    height={500}
-                    width="100%"
-                    itemCount={filteredRecipients.length}
-                    itemSize={200}
-                    className="recipients-list"
-                  >
-                    {RecipientItem}
-                  </List>
+                  <div className="flex-grow">
+                    <List
+                      height={listContainerHeight}
+                      width="100%"
+                      itemCount={filteredRecipients.length}
+                      itemSize={130}
+                      className="recipients-list"
+                    >
+                      {RecipientItem}
+                    </List>
+                  </div>
                 )}
               </div>
             )}

@@ -20,8 +20,12 @@
     "recharts": "^2.15.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.26.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.18",
+    "eslint": "^9.26.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "vite": "^6.2.6"

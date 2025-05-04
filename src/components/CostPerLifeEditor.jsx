@@ -954,7 +954,7 @@ const CostPerLifeEditor = () => {
                                           // If the other field has a value, show "None" instead of default
                                           customMultiplier !== '' ? "None" :
                                           // Otherwise show default if it exists
-                                          defaultCostPerLife !== undefined ? defaultCostPerLife.toString() : "None"
+                                          defaultCostPerLife !== undefined ? (Math.abs(defaultCostPerLife) >= 1000 ? defaultCostPerLife.toLocaleString() : defaultCostPerLife.toString()) : "None"
                                         }
                                         value={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife)}
                                         onChange={(e) => {

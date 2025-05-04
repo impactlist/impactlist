@@ -904,6 +904,13 @@ const CostPerLifeEditor = () => {
                                       value={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier)}
                                       onChange={(e) => {
                                         const fieldKey = `${recipient.name}__${categoryId}__multiplier`;
+                                        // First clear the other field if this field has a value
+                                        if (e.target.value.trim() !== '') {
+                                          const otherFieldKey = `${recipient.name}__${categoryId}__costPerLife`;
+                                          // Set empty string in the other field instead of deleting it
+                                          handleNumberInputChange(otherFieldKey, '', setRecipientFormValues, clearRecipientError);
+                                        }
+                                        // Then update this field
                                         handleNumberInputChange(fieldKey, e.target.value, setRecipientFormValues, clearRecipientError);
                                       }}
                                       className={`w-full py-1 px-1.5 text-sm border rounded ${
@@ -952,6 +959,13 @@ const CostPerLifeEditor = () => {
                                         value={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife)}
                                         onChange={(e) => {
                                           const fieldKey = `${recipient.name}__${categoryId}__costPerLife`;
+                                          // First clear the other field if this field has a value
+                                          if (e.target.value.trim() !== '') {
+                                            const otherFieldKey = `${recipient.name}__${categoryId}__multiplier`;
+                                            // Set empty string in the other field instead of deleting it
+                                            handleNumberInputChange(otherFieldKey, '', setRecipientFormValues, clearRecipientError);
+                                          }
+                                          // Then update this field
                                           handleNumberInputChange(fieldKey, e.target.value, setRecipientFormValues, clearRecipientError);
                                         }}
                                         className={`w-full py-1 px-1.5 text-sm border rounded ${

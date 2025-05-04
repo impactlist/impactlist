@@ -18,6 +18,8 @@ const CostPerLifeEditor = () => {
   // Local state for form values and errors
   const [categoryFormValues, setCategoryFormValues] = useState({});
   const [categoryErrors, setCategoryErrors] = useState({});
+  const [recipientFormValues, setRecipientFormValues] = useState({});
+  const [recipientErrors, setRecipientErrors] = useState({});
   const [activeTab, setActiveTab] = useState('categories');
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRecipients, setFilteredRecipients] = useState([]);
@@ -130,16 +132,16 @@ const CostPerLifeEditor = () => {
     }
   };
   
-  // Handle input change for category values
-  const handleCategoryInputChange = (key, value) => {
+  // Generic function to handle number input changes
+  const handleNumberInputChange = (key, value, setFormValues, clearError) => {
     // Store the raw value (without commas) internally
     const rawValue = value.toString().replace(/,/g, '');
     
     // Format display value
-    let displayValue = formatWithCommas(rawValue);
+    const displayValue = formatWithCommas(rawValue);
     
     // Store both the raw value (for calculations) and display value (for UI)
-    setCategoryFormValues(prev => ({
+    setFormValues(prev => ({
       ...prev,
       [key]: {
         raw: rawValue,
@@ -147,7 +149,14 @@ const CostPerLifeEditor = () => {
       }
     }));
     
-    // Clear error when user starts typing again
+    // Clear error if needed
+    if (clearError) {
+      clearError(key);
+    }
+  };
+  
+  // Generic function to clear category errors
+  const clearCategoryError = (key) => {
     if (categoryErrors[key]) {
       setCategoryErrors(prev => ({
         ...prev,
@@ -155,22 +164,46 @@ const CostPerLifeEditor = () => {
       }));
     }
   };
-
-  // Handle input change for recipient fields (multiplier or costPerLife)
-  const handleRecipientValueChange = (recipientName, categoryId, type, value) => {
-    if (!recipientName || !categoryId || !type) {
-      throw new Error(`Missing required parameters: recipientName=${recipientName}, categoryId=${categoryId}, type=${type}`);
+  
+  // Generic function to clear recipient errors
+  const clearRecipientError = (fieldKey) => {
+    const [recipientName, categoryId, type] = fieldKey.split('__');
+    
+    if (recipientErrors[recipientName]?.[categoryId]?.[type]) {
+      setRecipientErrors(prev => {
+        const newErrors = {...prev};
+        if (newErrors[recipientName] && newErrors[recipientName][categoryId]) {
+          delete newErrors[recipientName][categoryId][type];
+          
+          // Clean up empty objects
+          if (Object.keys(newErrors[recipientName][categoryId]).length === 0) {
+            delete newErrors[recipientName][categoryId];
+          }
+          if (Object.keys(newErrors[recipientName]).length === 0) {
+            delete newErrors[recipientName];
+          }
+        }
+        return newErrors;
+      });
     }
-
-    // Store value locally for UI (like we do for category values)
-    // This allows any input (including intermediate states like "-", ".")
-    try {
-      // Don't attempt validation here - just store the input
-      // Call the context function to update the value only when "Save" is clicked
-      updateRecipientValue(recipientName, categoryId, type, value);
-    } catch (error) {
-      console.error("Error updating recipient value:", error);
+  };
+  
+  // Generic function to get form value with fallback
+  const getFormValue = (formValues, key, fallbackValue) => {
+    const formValue = formValues[key];
+    
+    // If we have a form value, return its display value
+    if (formValue) {
+      return formValue.display;
     }
+    
+    // Otherwise check if there's a fallback value
+    if (fallbackValue !== undefined && fallbackValue !== null && fallbackValue !== '') {
+      return formatWithCommas(fallbackValue);
+    }
+    
+    // Return empty string if no value found
+    return '';
   };
   
   // Initialize form values when modal opens
@@ -178,26 +211,55 @@ const CostPerLifeEditor = () => {
     if (isModalOpen) {
       // Only initialize form values if they haven't been set already
       if (Object.keys(categoryFormValues).length === 0) {
-        const initialValues = {};
-        Object.entries(effectivenessCategories).forEach(([key, category]) => {
+        const categoryEntries = Object.entries(effectivenessCategories).map(([key, category]) => {
           // If custom value exists, use it; otherwise use default
           const value = customValues && customValues[key] !== undefined 
             ? customValues[key] 
             : category.costPerLife;
-          
-          // Format initial values
-          const formattedValue = value.toLocaleString();
-          
-          initialValues[key] = {
-            raw: value.toString(),
-            display: formattedValue
-          };
+          return [key, value];
         });
         
-        setCategoryFormValues(initialValues);
+        const initialCategoryValues = initializeFormValues(
+          categoryEntries, 
+          value => value.toLocaleString()
+        );
+        
+        setCategoryFormValues(initialCategoryValues);
       }
       
       setCategoryErrors({});
+      
+      // Initialize recipient form values from customValues if they exist
+      if (customValues?.recipients && Object.keys(recipientFormValues).length === 0) {
+        const recipientEntries = [];
+        
+        Object.entries(customValues.recipients).forEach(([recipientName, recipientData]) => {
+          Object.entries(recipientData).forEach(([categoryId, categoryData]) => {
+            // Handle multiplier
+            if (categoryData.multiplier !== undefined) {
+              const fieldKey = `${recipientName}__${categoryId}__multiplier`;
+              recipientEntries.push([fieldKey, categoryData.multiplier]);
+            }
+            
+            // Handle costPerLife
+            if (categoryData.costPerLife !== undefined) {
+              const fieldKey = `${recipientName}__${categoryId}__costPerLife`;
+              recipientEntries.push([fieldKey, categoryData.costPerLife]);
+            }
+          });
+        });
+        
+        if (recipientEntries.length > 0) {
+          const initialRecipientValues = initializeFormValues(
+            recipientEntries,
+            value => typeof value === 'number' ? formatWithCommas(value) : value
+          );
+          
+          setRecipientFormValues(initialRecipientValues);
+        }
+      }
+      
+      setRecipientErrors({});
       
       // Initialize filtered recipients if we're on the recipients tab
       if (activeTab === 'recipients') {
@@ -223,9 +285,26 @@ const CostPerLifeEditor = () => {
     }
   }, [searchTerm, showOnlyCustom]);
   
-  // Track errors for recipient fields
-  const [recipientErrors, setRecipientErrors] = useState({});
-
+  // Get value for recipient form field
+  const getRecipientFormValue = (recipientName, categoryId, type) => {
+    const fieldKey = `${recipientName}__${categoryId}__${type}`;
+    const formValue = recipientFormValues[fieldKey];
+    
+    // If we have a form value, return its display value
+    if (formValue) {
+      return formValue.display;
+    }
+    
+    // Otherwise check if there's a custom value in context
+    const customValue = getCustomRecipientValueForUI(recipientName, categoryId, type);
+    if (customValue !== '' && customValue !== null && customValue !== undefined) {
+      return formatWithCommas(customValue);
+    }
+    
+    // Return empty string if no value found
+    return '';
+  };
+  
   // Validate all values before submission
   const validateAllValues = () => {
     // Validate category values
@@ -251,15 +330,41 @@ const CostPerLifeEditor = () => {
     
     setCategoryErrors(newCategoryErrors);
     
-    // Validate recipient values - skip if customValues doesn't exist or has no recipients
-    if (customValues && customValues.recipients && Object.keys(customValues.recipients).length > 0) {
-      const newRecipientErrors = {};
+    // Validate recipient form values
+    const newRecipientErrors = {};
+    
+    // Check recipientFormValues first (current form state)
+    Object.entries(recipientFormValues).forEach(([fieldKey, valueObj]) => {
+      const [recipientName, categoryId, type] = fieldKey.split('__');
+      const rawValue = valueObj.raw;
       
+      // Skip empty values
+      if (rawValue === '') return;
+      
+      // Check for intermediate states or invalid numbers
+      if (rawValue === '-' || rawValue === '.' || rawValue.endsWith('.') || isNaN(Number(rawValue))) {
+        if (!newRecipientErrors[recipientName]) {
+          newRecipientErrors[recipientName] = {};
+        }
+        if (!newRecipientErrors[recipientName][categoryId]) {
+          newRecipientErrors[recipientName][categoryId] = {};
+        }
+        newRecipientErrors[recipientName][categoryId][type] = 'Invalid number';
+        hasErrors = true;
+      }
+    });
+    
+    // Also check customValues.recipients for any values not in form
+    if (customValues && customValues.recipients && Object.keys(customValues.recipients).length > 0) {
       Object.entries(customValues.recipients).forEach(([recipientName, recipientData]) => {
         Object.entries(recipientData).forEach(([categoryId, categoryData]) => {
           // Check multiplier values
           if (categoryData.multiplier !== undefined) {
             const multiplier = categoryData.multiplier;
+            const fieldKey = `${recipientName}__${categoryId}__multiplier`;
+            
+            // Skip if already in form values
+            if (recipientFormValues[fieldKey]) return;
             
             // Skip intermediate values
             if (typeof multiplier === 'string' && 
@@ -278,6 +383,10 @@ const CostPerLifeEditor = () => {
           // Check costPerLife values
           if (categoryData.costPerLife !== undefined) {
             const costPerLife = categoryData.costPerLife;
+            const fieldKey = `${recipientName}__${categoryId}__costPerLife`;
+            
+            // Skip if already in form values
+            if (recipientFormValues[fieldKey]) return;
             
             // Skip intermediate values
             if (typeof costPerLife === 'string' && 
@@ -294,9 +403,9 @@ const CostPerLifeEditor = () => {
           }
         });
       });
-      
-      setRecipientErrors(newRecipientErrors);
     }
+    
+    setRecipientErrors(newRecipientErrors);
     
     return !hasErrors;
   };
@@ -329,117 +438,161 @@ const CostPerLifeEditor = () => {
       }
     });
     
-    // Merge category values with existing customized object
-    // But preserve the recipients data if it exists
-    const recipients = customized.recipients || null;
+    // Process recipient form values
+    if (recipientFormValues && Object.keys(recipientFormValues).length > 0) {
+      // Initialize recipients object if needed
+      if (!customized.recipients) {
+        customized.recipients = {};
+      }
+      
+      // Process each recipient form value
+      Object.entries(recipientFormValues).forEach(([fieldKey, valueObj]) => {
+        // Extract the parts from the field key
+        const [recipientName, categoryId, type] = fieldKey.split('__');
+        const rawValue = valueObj.raw;
+        
+        // Skip empty values
+        if (rawValue === '') return;
+        
+        // Process valid numbers
+        if (rawValue !== '-' && rawValue !== '.' && !rawValue.endsWith('.') && !isNaN(Number(rawValue))) {
+          // Initialize nested objects if needed
+          if (!customized.recipients[recipientName]) {
+            customized.recipients[recipientName] = {};
+          }
+          if (!customized.recipients[recipientName][categoryId]) {
+            customized.recipients[recipientName][categoryId] = {};
+          }
+          
+          // Store numeric value
+          const numValue = Number(rawValue);
+          customized.recipients[recipientName][categoryId][type] = numValue;
+          
+          // When setting multiplier, ensure costPerLife is cleared and vice versa
+          if (type === 'multiplier') {
+            delete customized.recipients[recipientName][categoryId].costPerLife;
+          } else if (type === 'costPerLife') {
+            delete customized.recipients[recipientName][categoryId].multiplier;
+          }
+        }
+      });
+    }
     
     // If there are any category customizations, update the object
     if (Object.keys(categoryOnlyCustomized).length > 0) {
       Object.assign(customized, categoryOnlyCustomized);
-      
-      // Make sure to preserve recipients data if it exists
-      if (recipients) {
-        customized.recipients = recipients;
-      }
-      
       updateValues(customized);
-    } else if (recipients) {
+    } else if (customized.recipients && Object.keys(customized.recipients).length > 0) {
       // If we have no category customizations but do have recipients, just keep recipients
-      updateValues({ recipients });
+      updateValues(customized);
     } else {
       // If no customizations at all, reset to defaults
-      // This is safe to call even if customValues is already null
       resetToDefaults();
-    }
-    
-    // Convert any string values to numbers for final storage
-    if (customized && customized.recipients) {
-      Object.entries(customized.recipients).forEach(([recipientName, recipientData]) => {
-        Object.entries(recipientData).forEach(([categoryId, categoryData]) => {
-          // Check and convert multiplier values
-          if (categoryData.multiplier !== undefined && typeof categoryData.multiplier === 'string') {
-            if (categoryData.multiplier !== '-' && 
-                categoryData.multiplier !== '.' && 
-                !categoryData.multiplier.endsWith('.') &&
-                !isNaN(Number(categoryData.multiplier))) {
-              categoryData.multiplier = Number(categoryData.multiplier);
-            }
-          }
-          
-          // Check and convert costPerLife values
-          if (categoryData.costPerLife !== undefined && typeof categoryData.costPerLife === 'string') {
-            if (categoryData.costPerLife !== '-' && 
-                categoryData.costPerLife !== '.' && 
-                !categoryData.costPerLife.endsWith('.') &&
-                !isNaN(Number(categoryData.costPerLife))) {
-              categoryData.costPerLife = Number(categoryData.costPerLife);
-            }
-          }
-        });
-      });
     }
     
     closeModal();
   };
   
+  // Reset a specific form to default values
+  const resetFormToDefaults = (formType) => {
+    if (formType === 'categories') {
+      const categoryEntries = Object.entries(effectivenessCategories).map(([key, category]) => {
+        return [key, category.costPerLife];
+      });
+      
+      const defaultCategoryValues = initializeFormValues(
+        categoryEntries, 
+        value => value >= 1000 ? value.toLocaleString() : value.toString()
+      );
+      
+      setCategoryFormValues(defaultCategoryValues);
+      setCategoryErrors({});
+    } else if (formType === 'recipients') {
+      // Just clear the form values for recipients
+      setRecipientFormValues({});
+      setRecipientErrors({});
+      
+      if (customValues) {
+        // Create a new customValues object without recipients
+        const newCustomValues = {...customValues};
+        delete newCustomValues.recipients;
+        
+        // Only update if there are remaining category customizations
+        if (Object.keys(newCustomValues).length > 0) {
+          updateValues(newCustomValues);
+        } else {
+          // If there were only recipient customizations, we'll need to reset to null
+          // but then immediately repopulate with any category values
+          resetToDefaults();
+          
+          // Check if we have custom category values in the form
+          const categoryCustomValues = {};
+          Object.entries(categoryFormValues).forEach(([key, valueObj]) => {
+            const defaultValue = effectivenessCategories[key].costPerLife;
+            const rawValue = valueObj.raw;
+            
+            // Skip if value is default
+            if (Number(rawValue) === defaultValue) return;
+            
+            // Only consider valid number inputs
+            const processedValue = Number(rawValue);
+            if (!isNaN(processedValue)) {
+              categoryCustomValues[key] = processedValue;
+            }
+          });
+          
+          // If we have category customizations, update with those
+          if (Object.keys(categoryCustomValues).length > 0) {
+            updateValues(categoryCustomValues);
+          }
+        }
+      }
+    }
+  };
+  
   // Handle reset button for categories
   const handleCategoryReset = () => {
-    const defaultValues = {};
-    Object.entries(effectivenessCategories).forEach(([key, category]) => {
-      const value = category.costPerLife;
-      const formattedValue = value >= 1000 
-        ? value.toLocaleString() 
-        : value.toString();
-      
-      defaultValues[key] = {
-        raw: value.toString(),
-        display: formattedValue
-      };
-    });
-    setCategoryFormValues(defaultValues);
-    setCategoryErrors({});
+    resetFormToDefaults('categories');
   };
   
   // Handle reset button for recipients - only resets recipient data, preserves category values
   const handleResetRecipients = () => {
-    if (customValues) {
-      // Create a new customValues object without recipients
-      const newCustomValues = {...customValues};
-      delete newCustomValues.recipients;
-      
-      // Only update if there are remaining category customizations
-      if (Object.keys(newCustomValues).length > 0) {
-        updateValues(newCustomValues);
-      } else {
-        // If there were only recipient customizations, we'll need to reset to null
-        // but then immediately repopulate with any category values
-        resetToDefaults();
-        
-        // Check if we have custom category values in the form
-        const categoryCustomValues = {};
-        Object.entries(categoryFormValues).forEach(([key, valueObj]) => {
-          const defaultValue = effectivenessCategories[key].costPerLife;
-          const rawValue = valueObj.raw;
-          
-          // Skip if value is default
-          if (Number(rawValue) === defaultValue) return;
-          
-          // Only consider valid number inputs
-          const processedValue = Number(rawValue);
-          if (!isNaN(processedValue)) {
-            categoryCustomValues[key] = processedValue;
-          }
-        });
-        
-        // If we have category customizations, update with those
-        if (Object.keys(categoryCustomValues).length > 0) {
-          updateValues(categoryCustomValues);
+    resetFormToDefaults('recipients');
+  };
+  
+  // Initialize form values from custom values or defaults
+  const initializeFormValues = (sourceValues, formatValue, createFormState = true) => {
+    const initialValues = {};
+    
+    if (Array.isArray(sourceValues)) {
+      // Convert array of [key, value] pairs
+      sourceValues.forEach(([key, value]) => {
+        if (createFormState) {
+          const formattedValue = formatValue(value);
+          initialValues[key] = {
+            raw: value.toString(),
+            display: formattedValue
+          };
+        } else {
+          initialValues[key] = value;
         }
-      }
+      });
+    } else if (typeof sourceValues === 'object' && sourceValues !== null) {
+      // Convert object of key: value pairs
+      Object.entries(sourceValues).forEach(([key, value]) => {
+        if (createFormState) {
+          const formattedValue = formatValue(value);
+          initialValues[key] = {
+            raw: value.toString(),
+            display: formattedValue
+          };
+        } else {
+          initialValues[key] = value;
+        }
+      });
     }
     
-    // Reset any recipient errors
-    setRecipientErrors({});
+    return initialValues;
   };
   
   // Get custom value for a recipient's category
@@ -572,7 +725,7 @@ const CostPerLifeEditor = () => {
                                     ? value.toLocaleString() 
                                     : value.toString();
                                   
-                                  handleCategoryInputChange(key, formattedValue);
+                                  handleNumberInputChange(key, formattedValue, setCategoryFormValues, clearCategoryError);
                                 }}
                               >
                                 Reset
@@ -584,8 +737,8 @@ const CostPerLifeEditor = () => {
                             <input
                               type="text"
                               inputMode="text"
-                              value={valueObj.display}
-                              onChange={(e) => handleCategoryInputChange(key, e.target.value)}
+                              value={getFormValue(categoryFormValues, key, defaultValue)}
+                              onChange={(e) => handleNumberInputChange(key, e.target.value, setCategoryFormValues, clearCategoryError)}
                               className={`w-full py-1 px-1.5 text-sm border rounded ${
                                 hasError ? 'border-red-300 text-red-700' : 
                                 isCustom ? 'border-indigo-300' : 
@@ -699,12 +852,15 @@ const CostPerLifeEditor = () => {
                                         // Otherwise show default if it exists
                                         defaultMultiplier !== undefined ? defaultMultiplier.toString() : "None"
                                       }
-                                      value={customMultiplier !== null && customMultiplier !== undefined ? formatWithCommas(customMultiplier) : ''}
-                                      onChange={(e) => handleRecipientValueChange(recipient.name, categoryId, 'multiplier', e.target.value)}
+                                      value={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier)}
+                                      onChange={(e) => {
+                                        const fieldKey = `${recipient.name}__${categoryId}__multiplier`;
+                                        handleNumberInputChange(fieldKey, e.target.value, setRecipientFormValues, clearRecipientError);
+                                      }}
                                       className={`w-full py-1 px-1.5 text-sm border rounded ${
                                         recipientErrors[recipient.name]?.[categoryId]?.multiplier 
                                           ? 'border-red-300 text-red-700 bg-red-50' 
-                                          : (customMultiplier !== undefined && customMultiplier !== '' && customMultiplier !== null)
+                                          : getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== ''
                                             ? 'border-indigo-300 bg-indigo-50' 
                                             : 'border-gray-300'
                                       }`}
@@ -718,10 +874,10 @@ const CostPerLifeEditor = () => {
                                        1. We have a custom value that's different from default, OR
                                        2. The other field has a value */}
                                     {defaultMultiplier !== undefined && 
-                                     ((customMultiplier !== '' && // Field has a custom value
-                                        !isNaN(Number(customMultiplier)) && 
-                                        Number(customMultiplier) !== Number(defaultMultiplier)) || 
-                                      customCostPerLife !== '') && // OR the other field has a value
+                                     ((getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== '' && // Field has a custom value
+                                        !isNaN(Number(recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.raw || '')) && 
+                                        Number(recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.raw || '') !== Number(defaultMultiplier)) || 
+                                      getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== '') && // OR the other field has a value
                                      (
                                       <div className="text-xs text-gray-500 mt-0.5">
                                         Default: {defaultMultiplier}
@@ -744,12 +900,15 @@ const CostPerLifeEditor = () => {
                                           // Otherwise show default if it exists
                                           defaultCostPerLife !== undefined ? defaultCostPerLife.toString() : "None"
                                         }
-                                        value={customCostPerLife !== null && customCostPerLife !== undefined ? formatWithCommas(customCostPerLife) : ''}
-                                        onChange={(e) => handleRecipientValueChange(recipient.name, categoryId, 'costPerLife', e.target.value)}
+                                        value={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife)}
+                                        onChange={(e) => {
+                                          const fieldKey = `${recipient.name}__${categoryId}__costPerLife`;
+                                          handleNumberInputChange(fieldKey, e.target.value, setRecipientFormValues, clearRecipientError);
+                                        }}
                                         className={`w-full py-1 px-1.5 text-sm border rounded ${
                                           recipientErrors[recipient.name]?.[categoryId]?.costPerLife 
                                             ? 'border-red-300 text-red-700 bg-red-50' 
-                                            : (customCostPerLife !== undefined && customCostPerLife !== '' && customCostPerLife !== null)
+                                            : getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== ''
                                               ? 'border-indigo-300 bg-indigo-50' 
                                               : 'border-gray-300'
                                         }`}
@@ -764,10 +923,10 @@ const CostPerLifeEditor = () => {
                                        1. We have a custom value that's different from default, OR
                                        2. The other field has a value */}
                                     {defaultCostPerLife !== undefined && 
-                                     ((customCostPerLife !== '' && // Field has a custom value
-                                        !isNaN(Number(customCostPerLife)) && 
-                                        Number(customCostPerLife) !== Number(defaultCostPerLife)) || 
-                                      customMultiplier !== '') && // OR the other field has a value
+                                     ((getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== '' && // Field has a custom value
+                                        !isNaN(Number(recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.raw || '')) && 
+                                        Number(recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.raw || '') !== Number(defaultCostPerLife)) || 
+                                      getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== '') && // OR the other field has a value
                                      (
                                       <div className="text-xs text-gray-500 mt-0.5">
                                         Default: ${defaultCostPerLife.toLocaleString()}

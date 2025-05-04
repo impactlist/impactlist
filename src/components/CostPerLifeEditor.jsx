@@ -845,12 +845,16 @@ const CostPerLifeEditor = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {filteredRecipients.map(recipient => {
+                    {filteredRecipients.map((recipient, index) => {
                       const recipientCategories = Object.entries(recipient.categories || {});
                       if (recipientCategories.length === 0) return null;
                       
+                      // Alternate between two background colors
+                      const isEven = index % 2 === 0;
+                      const bgColorClass = isEven ? 'bg-white' : 'bg-gray-100';
+                      
                       return (
-                        <div key={recipient.name} className="border border-gray-200 rounded-md p-3">
+                        <div key={recipient.name} className={`border border-gray-200 rounded-md p-3 ${bgColorClass}`}>
                           <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
                           <div className="space-y-3">
                             {recipientCategories.map(([categoryId, categoryData]) => {

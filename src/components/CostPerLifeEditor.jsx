@@ -137,6 +137,15 @@ const CostPerLifeEditor = () => {
     // Store the raw value (without commas) internally
     const rawValue = value.toString().replace(/,/g, '');
     
+    // Get the current cursor position from the active element
+    const input = document.activeElement;
+    let selectionStart = null;
+    
+    // Only track cursor position if the active element is an input
+    if (input && input.tagName === 'INPUT') {
+      selectionStart = input.selectionStart;
+    }
+    
     // Format display value
     const displayValue = formatWithCommas(rawValue);
     
@@ -148,6 +157,26 @@ const CostPerLifeEditor = () => {
         display: displayValue
       }
     }));
+    
+    // Restore cursor position in the next tick if we have a position to restore
+    if (selectionStart !== null) {
+      // Track how many commas were before the cursor position in the old value
+      const oldValue = value.toString();
+      const commasBefore = (oldValue.substring(0, selectionStart).match(/,/g) || []).length;
+      
+      // Calculate how many commas are before the cursor in the new value
+      const newCommasBefore = (displayValue.substring(0, selectionStart).match(/,/g) || []).length;
+      
+      // Adjust cursor position for added or removed commas
+      const newPosition = selectionStart + (newCommasBefore - commasBefore);
+      
+      // Use setTimeout to ensure the DOM has updated with the new value
+      setTimeout(() => {
+        if (input && input.tagName === 'INPUT') {
+          input.setSelectionRange(newPosition, newPosition);
+        }
+      }, 0);
+    }
     
     // Clear error if needed
     if (clearError) {

@@ -878,7 +878,7 @@ const CostPerLifeEditor = () => {
                               return (
                                 <div key={categoryId} className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-2 rounded">
                                   <div className="text-sm text-gray-700">
-                                    <span className="font-medium">{categoryName}</span> 
+                                    <span>{categoryName}</span> 
                                     <div className="text-xs text-gray-500">
                                       Category: ${baseCostPerLife.toLocaleString()}
                                     </div>

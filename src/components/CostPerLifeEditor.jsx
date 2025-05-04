@@ -176,23 +176,27 @@ const CostPerLifeEditor = () => {
   // Initialize form values when modal opens
   useEffect(() => {
     if (isModalOpen) {
-      const initialValues = {};
-      Object.entries(effectivenessCategories).forEach(([key, category]) => {
-        // If custom value exists, use it; otherwise use default
-        const value = customValues && customValues[key] !== undefined 
-          ? customValues[key] 
-          : category.costPerLife;
+      // Only initialize form values if they haven't been set already
+      if (Object.keys(categoryFormValues).length === 0) {
+        const initialValues = {};
+        Object.entries(effectivenessCategories).forEach(([key, category]) => {
+          // If custom value exists, use it; otherwise use default
+          const value = customValues && customValues[key] !== undefined 
+            ? customValues[key] 
+            : category.costPerLife;
+          
+          // Format initial values
+          const formattedValue = value.toLocaleString();
+          
+          initialValues[key] = {
+            raw: value.toString(),
+            display: formattedValue
+          };
+        });
         
-        // Format initial values
-        const formattedValue = value.toLocaleString();
-        
-        initialValues[key] = {
-          raw: value.toString(),
-          display: formattedValue
-        };
-      });
+        setCategoryFormValues(initialValues);
+      }
       
-      setCategoryFormValues(initialValues);
       setCategoryErrors({});
       
       // Initialize filtered recipients if we're on the recipients tab
@@ -201,7 +205,7 @@ const CostPerLifeEditor = () => {
       }
     }
     // Remove filterRecipients, searchTerm, showOnlyCustom from dependencies to avoid infinite loops
-  }, [isModalOpen, customValues, activeTab]);
+  }, [isModalOpen, customValues]);
   
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {

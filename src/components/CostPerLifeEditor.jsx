@@ -667,7 +667,10 @@ const CostPerLifeEditor = () => {
               </button>
             </div>
             <p className="text-gray-600 mt-2">
-              Customize the cost per life values for different recipient categories. These values represent the estimated cost in dollars to save one life.
+              {activeTab === 'categories' 
+                ? "Customize the cost per life values for different cause categories. These values represent the estimated cost in dollars to save one life."
+                : "Customize how specific recipients' cost per life values differ from their category defaults. You can set a multiplier or specify a direct cost per life value."
+              }
             </p>
             <div className="mt-4 flex items-center justify-between">
               <div className="flex space-x-4 border-b">

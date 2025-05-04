@@ -122,11 +122,8 @@ const NumberInputField = React.memo(({
 const CostPerLifeEditor = () => {
   const { 
     customValues, 
-    isUsingCustomValues, 
     resetToDefaults, 
     updateValues,
-    updateRecipientValue,
-    getRecipientValue,
     isModalOpen,
     closeModal
   } = useCostPerLife();

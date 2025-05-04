@@ -347,8 +347,15 @@ const CostPerLifeEditor = () => {
       // Skip validation if value is the same as default
       if (Number(rawValue) === defaultValue) return;
       
+      // Check if blank
+      if (rawValue.trim() === '') {
+        newCategoryErrors[key] = 'Invalid number';
+        hasErrors = true;
+        return;
+      }
+      
       // Convert to number
-      const numValue = rawValue.trim() === '' ? 0 : Number(rawValue);
+      const numValue = Number(rawValue);
         
       // Check if it's a valid number
       if (isNaN(numValue)) {
@@ -367,7 +374,7 @@ const CostPerLifeEditor = () => {
       const [recipientName, categoryId, type] = fieldKey.split('__');
       const rawValue = valueObj.raw;
       
-      // Skip empty values
+      // Skip empty values - for recipients, empty is allowed
       if (rawValue === '') return;
       
       // Check for intermediate states or invalid numbers
@@ -395,6 +402,9 @@ const CostPerLifeEditor = () => {
             // Skip if already in form values
             if (recipientFormValues[fieldKey]) return;
             
+            // Skip empty values
+            if (multiplier === '') return;
+            
             // Skip intermediate values
             if (typeof multiplier === 'string' && 
                 (multiplier === '-' || multiplier === '.' || multiplier.endsWith('.'))) {
@@ -416,6 +426,9 @@ const CostPerLifeEditor = () => {
             
             // Skip if already in form values
             if (recipientFormValues[fieldKey]) return;
+            
+            // Skip empty values
+            if (costPerLife === '') return;
             
             // Skip intermediate values
             if (typeof costPerLife === 'string' && 

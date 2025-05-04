@@ -958,12 +958,12 @@ const CostPerLifeEditor = () => {
                                               : 'border-gray-300'
                                         }`}
                                       />
-                                      {recipientErrors[recipient.name]?.[categoryId]?.costPerLife && (
-                                        <div className="text-xs text-red-600 mt-0.5">
-                                          {recipientErrors[recipient.name][categoryId].costPerLife}
-                                        </div>
-                                      )}
                                     </div>
+                                    {recipientErrors[recipient.name]?.[categoryId]?.costPerLife && (
+                                      <div className="text-xs text-red-600 mt-0.5">
+                                        {recipientErrors[recipient.name][categoryId].costPerLife}
+                                      </div>
+                                    )}
                                     {/* Show default label when:
                                        1. We have a custom value that's different from default, OR
                                        2. The other field has a value */}

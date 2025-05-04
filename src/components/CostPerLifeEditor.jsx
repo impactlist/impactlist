@@ -3,6 +3,122 @@ import { useCostPerLife } from './CostPerLifeContext';
 import { effectivenessCategories, recipients } from '../data/donationData';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Create a new component for number inputs with local state to reduce re-renders
+const NumberInputField = React.memo(({ 
+  initialValue, 
+  placeholder, 
+  onChange, 
+  onBlur,
+  hasError,
+  isCustom,
+  prefix
+}) => {
+  // Local state for this specific field
+  const [localValue, setLocalValue] = useState(initialValue || '');
+  
+  // Update local value when external value changes (like when reset is clicked)
+  useEffect(() => {
+    setLocalValue(initialValue || '');
+  }, [initialValue]);
+  
+  // Only update parent state on blur to prevent cascading re-renders
+  const handleBlur = () => {
+    if (onBlur) {
+      // Extract raw numeric value for calculations
+      const rawValue = localValue.toString().replace(/,/g, '');
+      onBlur(rawValue, localValue);
+    }
+  };
+  
+  // Format a number with commas for display
+  const formatWithCommas = (value) => {
+    if (value === null || value === undefined || value === '') return '';
+    
+    try {
+      const rawValue = value.toString().replace(/,/g, '');
+      
+      // Check if it's a valid number and not in an intermediate state
+      const isValidNumber = rawValue !== '' && 
+                           rawValue !== '-' && 
+                           rawValue !== '.' && 
+                           !rawValue.endsWith('.') && 
+                           !isNaN(Number(rawValue));
+      
+      // Format with commas if it's a valid number and large enough
+      let displayValue = rawValue;
+      if (isValidNumber) {
+        const numValue = Number(rawValue);
+        if (Math.abs(numValue) >= 1000) {
+          const parts = rawValue.split('.');
+          const integerPart = parts[0];
+          const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+          
+          const integerWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          displayValue = integerWithCommas + decimalPart;
+        }
+      }
+      
+      return displayValue;
+    } catch (error) {
+      console.error("Error in formatWithCommas:", error, "Value was:", value);
+      return '';
+    }
+  };
+  
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const rawValue = value.toString().replace(/,/g, '');
+    
+    // Track cursor position for proper restoration after formatting
+    const input = e.target;
+    const selectionStart = input.selectionStart;
+    const oldValue = localValue.toString();
+    const commasBefore = (oldValue.substring(0, selectionStart).match(/,/g) || []).length;
+    
+    // Update local state with formatted value
+    const formattedValue = formatWithCommas(rawValue);
+    setLocalValue(formattedValue);
+    
+    // Restore cursor position accounting for comma changes
+    const newCommasBefore = (formattedValue.substring(0, selectionStart).match(/,/g) || []).length;
+    const newPosition = selectionStart + (newCommasBefore - commasBefore);
+    
+    // Use setTimeout to ensure the DOM has updated
+    setTimeout(() => {
+      if (input) {
+        input.setSelectionRange(newPosition, newPosition);
+      }
+    }, 0);
+    
+    // Call parent onChange (for immediate validation or UI feedback)
+    if (onChange) {
+      onChange(rawValue, formattedValue);
+    }
+  };
+  
+  // Determine input class based on error state and custom state
+  const inputClass = `w-full py-1 px-1.5 text-sm border rounded ${
+    hasError ? 'border-red-300 text-red-700 bg-red-50' : 
+    isCustom ? 'border-indigo-300 bg-indigo-50' : 
+    'border-gray-300'
+  }`;
+  
+  return (
+    <div className="flex items-center">
+      {prefix && <span className="mr-1 text-gray-600 text-sm">{prefix}</span>}
+      <input
+        type="text"
+        inputMode="text"
+        placeholder={placeholder}
+        value={localValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className={inputClass}
+      />
+    </div>
+  );
+});
+
 const CostPerLifeEditor = () => {
   const { 
     customValues, 
@@ -332,6 +448,27 @@ const CostPerLifeEditor = () => {
     
     // Return empty string if no value found
     return '';
+  };
+  
+  // Function to handle number field blur - this updates parent state only on blur
+  const handleNumberFieldBlur = (key, rawValue, formValues, setFormValues) => {
+    // Update the form values on blur
+    setFormValues(prev => ({
+      ...prev,
+      [key]: {
+        raw: rawValue,
+        display: rawValue ? formatWithCommas(rawValue) : ''
+      }
+    }));
+    
+    // Clear error if needed
+    if (key.includes('__')) {
+      // For recipient fields
+      clearRecipientError(key);
+    } else {
+      // For category fields
+      clearCategoryError(key);
+    }
   };
   
   // Validate all values before submission
@@ -770,25 +907,23 @@ const CostPerLifeEditor = () => {
                                     ? value.toLocaleString() 
                                     : value.toString();
                                   
-                                  handleNumberInputChange(key, formattedValue, setCategoryFormValues, clearCategoryError);
+                                  handleNumberFieldBlur(key, value.toString(), categoryFormValues, setCategoryFormValues);
                                 }}
                               >
                                 Reset
                               </button>
                             )}
                           </div>
-                          <div className="flex items-center mt-0.5">
-                            <span className="mr-1 text-gray-600 text-sm">$</span>
-                            <input
-                              type="text"
-                              inputMode="text"
-                              value={getFormValue(categoryFormValues, key, defaultValue)}
-                              onChange={(e) => handleNumberInputChange(key, e.target.value, setCategoryFormValues, clearCategoryError)}
-                              className={`w-full py-1 px-1.5 text-sm border rounded ${
-                                hasError ? 'border-red-300 text-red-700' : 
-                                isCustom ? 'border-indigo-300' : 
-                                'border-gray-300'
-                              }`}
+                          <div className="mt-0.5">
+                            <NumberInputField
+                              initialValue={getFormValue(categoryFormValues, key, defaultValue)}
+                              placeholder=""
+                              onBlur={(rawValue) => 
+                                handleNumberFieldBlur(key, rawValue, categoryFormValues, setCategoryFormValues)
+                              }
+                              hasError={hasError}
+                              isCustom={isCustom}
+                              prefix="$"
                             />
                           </div>
                           {hasError && (
@@ -892,34 +1027,28 @@ const CostPerLifeEditor = () => {
                                     <label className="block text-xs font-medium text-gray-500 mb-1">
                                       Multiplier
                                     </label>
-                                    <input
-                                      type="text"
-                                      inputMode="text"
+                                    <NumberInputField
+                                      initialValue={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier)}
                                       placeholder={
                                         // If the cost per life field has a value, show "None" instead of default
                                         customCostPerLife !== '' || getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, '') !== '' ? "None" :
                                         // Otherwise show default if it exists
                                         defaultMultiplier !== undefined ? defaultMultiplier.toString() : "None"
                                       }
-                                      value={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier)}
-                                      onChange={(e) => {
+                                      onBlur={(rawValue) => {
                                         const fieldKey = `${recipient.name}__${categoryId}__multiplier`;
-                                        // First clear the other field if this field has a value
-                                        if (e.target.value.trim() !== '') {
+                                        
+                                        // Clear other field if this has a value
+                                        if (rawValue !== '') {
                                           const otherFieldKey = `${recipient.name}__${categoryId}__costPerLife`;
-                                          // Set empty string in the other field instead of deleting it
-                                          handleNumberInputChange(otherFieldKey, '', setRecipientFormValues, clearRecipientError);
+                                          handleNumberFieldBlur(otherFieldKey, '', recipientFormValues, setRecipientFormValues);
                                         }
-                                        // Then update this field
-                                        handleNumberInputChange(fieldKey, e.target.value, setRecipientFormValues, clearRecipientError);
+                                        
+                                        // Update this field
+                                        handleNumberFieldBlur(fieldKey, rawValue, recipientFormValues, setRecipientFormValues);
                                       }}
-                                      className={`w-full py-1 px-1.5 text-sm border rounded ${
-                                        recipientErrors[recipient.name]?.[categoryId]?.multiplier 
-                                          ? 'border-red-300 text-red-700 bg-red-50' 
-                                          : getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== ''
-                                            ? 'border-indigo-300 bg-indigo-50' 
-                                            : 'border-gray-300'
-                                      }`}
+                                      hasError={!!recipientErrors[recipient.name]?.[categoryId]?.multiplier}
+                                      isCustom={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== ''}
                                     />
                                     {recipientErrors[recipient.name]?.[categoryId]?.multiplier && (
                                       <div className="text-xs text-red-600 mt-0.5">
@@ -945,38 +1074,30 @@ const CostPerLifeEditor = () => {
                                     <label className="block text-xs font-medium text-gray-500 mb-1">
                                       Direct Cost Per Life
                                     </label>
-                                    <div className="flex items-center">
-                                      <span className="mr-1 text-gray-600 text-xs">$</span>
-                                      <input
-                                        type="text"
-                                        inputMode="text"
-                                        placeholder={
-                                          // If the other field has a value, show "None" instead of default
-                                          customMultiplier !== '' || getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, '') !== '' ? "None" :
-                                          // Otherwise show default if it exists
-                                          defaultCostPerLife !== undefined ? (Math.abs(defaultCostPerLife) >= 1000 ? defaultCostPerLife.toLocaleString() : defaultCostPerLife.toString()) : "None"
+                                    <NumberInputField
+                                      initialValue={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife)}
+                                      placeholder={
+                                        // If the other field has a value, show "None" instead of default
+                                        customMultiplier !== '' || getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, '') !== '' ? "None" :
+                                        // Otherwise show default if it exists
+                                        defaultCostPerLife !== undefined ? (Math.abs(defaultCostPerLife) >= 1000 ? defaultCostPerLife.toLocaleString() : defaultCostPerLife.toString()) : "None"
+                                      }
+                                      onBlur={(rawValue) => {
+                                        const fieldKey = `${recipient.name}__${categoryId}__costPerLife`;
+                                        
+                                        // Clear other field if this has a value
+                                        if (rawValue !== '') {
+                                          const otherFieldKey = `${recipient.name}__${categoryId}__multiplier`;
+                                          handleNumberFieldBlur(otherFieldKey, '', recipientFormValues, setRecipientFormValues);
                                         }
-                                        value={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife)}
-                                        onChange={(e) => {
-                                          const fieldKey = `${recipient.name}__${categoryId}__costPerLife`;
-                                          // First clear the other field if this field has a value
-                                          if (e.target.value.trim() !== '') {
-                                            const otherFieldKey = `${recipient.name}__${categoryId}__multiplier`;
-                                            // Set empty string in the other field instead of deleting it
-                                            handleNumberInputChange(otherFieldKey, '', setRecipientFormValues, clearRecipientError);
-                                          }
-                                          // Then update this field
-                                          handleNumberInputChange(fieldKey, e.target.value, setRecipientFormValues, clearRecipientError);
-                                        }}
-                                        className={`w-full py-1 px-1.5 text-sm border rounded ${
-                                          recipientErrors[recipient.name]?.[categoryId]?.costPerLife 
-                                            ? 'border-red-300 text-red-700 bg-red-50' 
-                                            : getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== ''
-                                              ? 'border-indigo-300 bg-indigo-50' 
-                                              : 'border-gray-300'
-                                        }`}
-                                      />
-                                    </div>
+                                        
+                                        // Update this field
+                                        handleNumberFieldBlur(fieldKey, rawValue, recipientFormValues, setRecipientFormValues);
+                                      }}
+                                      hasError={!!recipientErrors[recipient.name]?.[categoryId]?.costPerLife}
+                                      isCustom={getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== ''}
+                                      prefix="$"
+                                    />
                                     {recipientErrors[recipient.name]?.[categoryId]?.costPerLife && (
                                       <div className="text-xs text-red-600 mt-0.5">
                                         {recipientErrors[recipient.name][categoryId].costPerLife}
@@ -1014,4 +1135,5 @@ const CostPerLifeEditor = () => {
   );
 };
 
+// Export the component as default export
 export default CostPerLifeEditor;

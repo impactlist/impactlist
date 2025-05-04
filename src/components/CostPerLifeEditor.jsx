@@ -672,8 +672,8 @@ const CostPerLifeEditor = () => {
                 : "Customize how specific recipients' cost per life values differ from their category defaults. You can set a multiplier or specify a direct cost per life value."
               }
             </p>
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex space-x-4 border-b">
+            <div className="mt-4 flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
+              <div className="order-2 sm:order-1 flex space-x-4 border-b">
                 <button
                   type="button"
                   onClick={() => handleTabChange('categories')}
@@ -697,7 +697,7 @@ const CostPerLifeEditor = () => {
                   Recipients
                 </button>
               </div>
-              <div className="flex space-x-2">
+              <div className="order-1 sm:order-2 flex justify-end space-x-2">
                 <button
                   type="button"
                   onClick={activeTab === 'categories' ? handleCategoryReset : handleResetRecipients}

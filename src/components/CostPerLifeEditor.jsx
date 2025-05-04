@@ -534,7 +534,7 @@ const CostPerLifeEditor = () => {
             </div>
           </div>
           
-          <div className="overflow-y-auto p-3 flex-grow">
+          <div className="overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]">
             {activeTab === 'categories' ? (
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">

@@ -926,15 +926,15 @@ const CostPerLifeEditor = () => {
                                         {recipientErrors[recipient.name][categoryId].multiplier}
                                       </div>
                                     )}
-                                    {/* Show default label when:
-                                       1. We have a custom value that's different from default, OR
-                                       2. The other field has a value */}
-                                    {defaultMultiplier !== undefined && 
-                                     ((getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== '' && // Field has a custom value
-                                        !isNaN(Number(recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.raw || '')) && 
-                                        Number(recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.raw || '') !== Number(defaultMultiplier)) || 
-                                      getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== '') && // OR the other field has a value
-                                     (
+                                    {/* Show default label when the value is different from the default or the other field has a value */}
+                                    {defaultMultiplier !== undefined && (
+                                      // Check if either:
+                                      // 1. Current value exists and is different from default
+                                      (recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.raw && 
+                                       Number(recipientFormValues[`${recipient.name}__${categoryId}__multiplier`].raw) !== Number(defaultMultiplier)) ||
+                                      // 2. Other field has a value
+                                      getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== ''
+                                     ) && (
                                       <div className="text-xs text-gray-500 mt-0.5">
                                         Default: {defaultMultiplier}
                                       </div>
@@ -982,15 +982,15 @@ const CostPerLifeEditor = () => {
                                         {recipientErrors[recipient.name][categoryId].costPerLife}
                                       </div>
                                     )}
-                                    {/* Show default label when:
-                                       1. We have a custom value that's different from default, OR
-                                       2. The other field has a value */}
-                                    {defaultCostPerLife !== undefined && 
-                                     ((getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== '' && // Field has a custom value
-                                        !isNaN(Number(recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.raw || '')) && 
-                                        Number(recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.raw || '') !== Number(defaultCostPerLife)) || 
-                                      getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== '') && // OR the other field has a value
-                                     (
+                                    {/* Show default label when the value is different from the default or the other field has a value */}
+                                    {defaultCostPerLife !== undefined && (
+                                      // Check if either:
+                                      // 1. Current value exists and is different from default
+                                      (recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.raw && 
+                                       Number(recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`].raw) !== Number(defaultCostPerLife)) ||
+                                      // 2. Other field has a value
+                                      getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== ''
+                                     ) && (
                                       <div className="text-xs text-gray-500 mt-0.5">
                                         Default: ${defaultCostPerLife.toLocaleString()}
                                       </div>

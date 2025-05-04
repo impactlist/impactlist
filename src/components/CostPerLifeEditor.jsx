@@ -1,7 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
 import { effectivenessCategories, recipients } from '../data/donationData';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FixedSizeList as List } from 'react-window';
+
+// Custom debounce function
+const debounce = (fn, delay) => {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+};
 
 // Create a new component for number inputs with local state to reduce re-renders
 const NumberInputField = React.memo(({ 
@@ -22,16 +32,16 @@ const NumberInputField = React.memo(({
   }, [initialValue]);
   
   // Only update parent state on blur to prevent cascading re-renders
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     if (onBlur) {
       // Extract raw numeric value for calculations
       const rawValue = localValue.toString().replace(/,/g, '');
       onBlur(rawValue, localValue);
     }
-  };
+  }, [onBlur, localValue]);
   
   // Format a number with commas for display
-  const formatWithCommas = (value) => {
+  const formatWithCommas = useCallback((value) => {
     if (value === null || value === undefined || value === '') return '';
     
     try {
@@ -63,9 +73,19 @@ const NumberInputField = React.memo(({
       console.error("Error in formatWithCommas:", error, "Value was:", value);
       return '';
     }
-  };
+  }, []);
   
-  const handleChange = (e) => {
+  // Create debounced version of onChange
+  const debouncedOnChange = useCallback(
+    debounce((rawValue, formattedValue) => {
+      if (onChange) {
+        onChange(rawValue, formattedValue);
+      }
+    }, 300),
+    [onChange]
+  );
+  
+  const handleChange = useCallback((e) => {
     const value = e.target.value;
     const rawValue = value.toString().replace(/,/g, '');
     
@@ -90,11 +110,9 @@ const NumberInputField = React.memo(({
       }
     }, 0);
     
-    // Call parent onChange (for immediate validation or UI feedback)
-    if (onChange) {
-      onChange(rawValue, formattedValue);
-    }
-  };
+    // Call debounced onChange
+    debouncedOnChange(rawValue, formattedValue);
+  }, [localValue, formatWithCommas, debouncedOnChange]);
   
   // Determine input class based on error state and custom state
   const inputClass = `w-full py-1 px-1.5 text-sm border rounded ${
@@ -136,18 +154,25 @@ const CategoryInputField = React.memo(({
   const isCustom = currentValue && Number(currentValue.raw) !== defaultValue;
   
   // Handle field changes
-  const handleChange = (rawValue, formattedValue) => {
+  const handleChange = useCallback((rawValue, formattedValue) => {
     if (onUpdate) {
       onUpdate(categoryKey, rawValue, formattedValue);
     }
-  };
+  }, [onUpdate, categoryKey]);
   
   // Handle field blurs
-  const handleBlur = (rawValue) => {
+  const handleBlur = useCallback((rawValue) => {
     if (onUpdate) {
       onUpdate(categoryKey, rawValue, undefined, true);
     }
-  };
+  }, [onUpdate, categoryKey]);
+
+  // Handle reset
+  const handleReset = useCallback(() => {
+    if (onReset) {
+      onReset(categoryKey, defaultValue);
+    }
+  }, [onReset, categoryKey, defaultValue]);
 
   return (
     <div className={`py-1.5 px-2 rounded border ${
@@ -163,7 +188,7 @@ const CategoryInputField = React.memo(({
           <button 
             type="button"
             className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
-            onClick={() => onReset && onReset(categoryKey, defaultValue)}
+            onClick={handleReset}
           >
             Reset
           </button>
@@ -217,8 +242,8 @@ const RecipientInputPair = React.memo(({
     setCostPerLifeValue(costPerLifeFormValue || '');
   }, [multiplierFormValue, costPerLifeFormValue]);
   
-  // Handle change for multiplier field
-  const handleMultiplierChange = (rawValue, formattedValue) => {
+  // Handle change for multiplier field - memoized
+  const handleMultiplierChange = useCallback((rawValue, formattedValue) => {
     setMultiplierValue(formattedValue);
     
     // If this field has a value, clear the partner field
@@ -238,10 +263,10 @@ const RecipientInputPair = React.memo(({
         costPerLife: rawValue !== '' ? { raw: '', display: '' } : null // Only clear partner if this has value
       });
     }
-  };
+  }, [onValueChange, recipientName, categoryId]);
   
-  // Handle change for cost per life field
-  const handleCostPerLifeChange = (rawValue, formattedValue) => {
+  // Handle change for cost per life field - memoized
+  const handleCostPerLifeChange = useCallback((rawValue, formattedValue) => {
     setCostPerLifeValue(formattedValue);
     
     // If this field has a value, clear the partner field
@@ -261,10 +286,10 @@ const RecipientInputPair = React.memo(({
         multiplier: rawValue !== '' ? { raw: '', display: '' } : null // Only clear partner if this has value
       });
     }
-  };
+  }, [onValueChange, recipientName, categoryId]);
   
-  // Handle blur events for each field
-  const handleMultiplierBlur = (rawValue) => {
+  // Handle blur events for each field - memoized
+  const handleMultiplierBlur = useCallback((rawValue) => {
     const fieldKey = `${recipientName}__${categoryId}__multiplier`;
     
     if (onValueChange) {
@@ -279,9 +304,9 @@ const RecipientInputPair = React.memo(({
         fieldKey
       });
     }
-  };
+  }, [onValueChange, recipientName, categoryId, formatWithCommas]);
   
-  const handleCostPerLifeBlur = (rawValue) => {
+  const handleCostPerLifeBlur = useCallback((rawValue) => {
     const fieldKey = `${recipientName}__${categoryId}__costPerLife`;
     
     if (onValueChange) {
@@ -296,7 +321,7 @@ const RecipientInputPair = React.memo(({
         fieldKey
       });
     }
-  };
+  }, [onValueChange, recipientName, categoryId, formatWithCommas]);
   
   // Check if partner field has a value
   const multiplierHasValue = multiplierValue !== '';
@@ -412,16 +437,16 @@ const CostPerLifeEditor = () => {
   }, []);
   
   // Handle tab switching
-  const handleTabChange = (tab) => {
+  const handleTabChange = useCallback((tab) => {
     setActiveTab(tab);
     if (tab === 'recipients') {
       // Initialize filtered recipients based on current filter settings
       filterRecipients(searchTerm, showOnlyCustom);
     }
-  };
+  }, [searchTerm, showOnlyCustom]);
   
   // Filter recipients based on search term and showOnlyCustom flag
-  const filterRecipients = React.useCallback((term, onlyCustom) => {
+  const filterRecipients = useCallback((term, onlyCustom) => {
     let filtered = recipients;
     
     // Filter by search term if provided
@@ -452,22 +477,30 @@ const CostPerLifeEditor = () => {
     setFilteredRecipients(filtered);
   }, [customValues]); // Only include customValues in dependencies
   
+  // Handle search term changes with debounce
+  const debouncedFilterRecipients = useCallback(
+    debounce((term, onlyCustom) => {
+      filterRecipients(term, onlyCustom);
+    }, 300),
+    [filterRecipients]
+  );
+  
   // Handle search term changes
-  const handleSearchChange = (e) => {
+  const handleSearchChange = useCallback((e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    filterRecipients(term, showOnlyCustom);
-  };
+    debouncedFilterRecipients(term, showOnlyCustom);
+  }, [showOnlyCustom, debouncedFilterRecipients]);
   
   // Toggle showing only custom value recipients
-  const toggleShowOnlyCustom = () => {
+  const toggleShowOnlyCustom = useCallback(() => {
     const newValue = !showOnlyCustom;
     setShowOnlyCustom(newValue);
     filterRecipients(searchTerm, newValue);
-  };
+  }, [showOnlyCustom, searchTerm, filterRecipients]);
   
   // Format a number with commas
-  const formatWithCommas = (value) => {
+  const formatWithCommas = useCallback((value) => {
     // If value is null or undefined, return empty string
     if (value === null || value === undefined) return '';
     
@@ -505,62 +538,10 @@ const CostPerLifeEditor = () => {
       console.error("Error in formatWithCommas:", error, "Value was:", value);
       return '';
     }
-  };
-  
-  // Generic function to handle number input changes
-  const handleNumberInputChange = (key, value, setFormValues, clearError) => {
-    // Store the raw value (without commas) internally
-    const rawValue = value.toString().replace(/,/g, '');
-    
-    // Get the current cursor position from the active element
-    const input = document.activeElement;
-    let selectionStart = null;
-    
-    // Only track cursor position if the active element is an input
-    if (input && input.tagName === 'INPUT') {
-      selectionStart = input.selectionStart;
-    }
-    
-    // Format display value
-    const displayValue = formatWithCommas(rawValue);
-    
-    // Store both the raw value (for calculations) and display value (for UI)
-    setFormValues(prev => ({
-      ...prev,
-      [key]: {
-        raw: rawValue,
-        display: displayValue
-      }
-    }));
-    
-    // Restore cursor position in the next tick if we have a position to restore
-    if (selectionStart !== null) {
-      // Track how many commas were before the cursor position in the old value
-      const oldValue = value.toString();
-      const commasBefore = (oldValue.substring(0, selectionStart).match(/,/g) || []).length;
-      
-      // Calculate how many commas are before the cursor in the new value
-      const newCommasBefore = (displayValue.substring(0, selectionStart).match(/,/g) || []).length;
-      
-      // Adjust cursor position for added or removed commas
-      const newPosition = selectionStart + (newCommasBefore - commasBefore);
-      
-      // Use setTimeout to ensure the DOM has updated with the new value
-      setTimeout(() => {
-        if (input && input.tagName === 'INPUT') {
-          input.setSelectionRange(newPosition, newPosition);
-        }
-      }, 0);
-    }
-    
-    // Clear error if needed
-    if (clearError) {
-      clearError(key);
-    }
-  };
+  }, []);
   
   // Handle input change for fields with partner fields
-  const handleInputWithPartner = (changes) => {
+  const handleInputWithPartner = useCallback((changes) => {
     // If this is a blur event, handle it separately
     if (changes.blurEvent) {
       const { fieldKey, recipientName, categoryId } = changes;
@@ -633,20 +614,20 @@ const CostPerLifeEditor = () => {
         }
       }
     }
-  };
+  }, [recipientErrors]);
   
   // Generic function to clear category errors
-  const clearCategoryError = (key) => {
+  const clearCategoryError = useCallback((key) => {
     if (categoryErrors[key]) {
       setCategoryErrors(prev => ({
         ...prev,
         [key]: null
       }));
     }
-  };
+  }, [categoryErrors]);
   
   // Generic function to clear recipient errors
-  const clearRecipientError = (fieldKey) => {
+  const clearRecipientError = useCallback((fieldKey) => {
     const [recipientName, categoryId, type] = fieldKey.split('__');
     
     if (recipientErrors[recipientName]?.[categoryId]?.[type]) {
@@ -666,10 +647,10 @@ const CostPerLifeEditor = () => {
         return newErrors;
       });
     }
-  };
+  }, [recipientErrors]);
   
   // Generic function to get form value with fallback
-  const getFormValue = (formValues, key, fallbackValue) => {
+  const getFormValue = useCallback((formValues, key, fallbackValue) => {
     const formValue = formValues[key];
     
     // If we have a form value, return its display value
@@ -684,7 +665,7 @@ const CostPerLifeEditor = () => {
     
     // Return empty string if no value found
     return '';
-  };
+  }, [formatWithCommas]);
   
   // Initialize form values when modal opens
   useEffect(() => {
@@ -746,27 +727,17 @@ const CostPerLifeEditor = () => {
         filterRecipients(searchTerm, showOnlyCustom);
       }
     }
-    // Remove filterRecipients, searchTerm, showOnlyCustom from dependencies to avoid infinite loops
-  }, [isModalOpen, customValues]);
+  }, [isModalOpen, customValues, activeTab, filterRecipients, formatWithCommas, searchTerm, showOnlyCustom]);
   
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {
     if (activeTab === 'recipients') {
-      // Avoid excessive logging
-      // console.log("Filtering recipients with customValues");
       filterRecipients(searchTerm, showOnlyCustom);
     }
-  }, [customValues, activeTab]);
-  
-  // Separate effect for search and filter changes to avoid dependency loops
-  useEffect(() => {
-    if (activeTab === 'recipients') {
-      filterRecipients(searchTerm, showOnlyCustom);
-    }
-  }, [searchTerm, showOnlyCustom]);
+  }, [customValues, activeTab, filterRecipients, searchTerm, showOnlyCustom]);
   
   // Get value for recipient form field
-  const getRecipientFormValue = (recipientName, categoryId, type) => {
+  const getRecipientFormValue = useCallback((recipientName, categoryId, type) => {
     const fieldKey = `${recipientName}__${categoryId}__${type}`;
     const formValue = recipientFormValues[fieldKey];
     
@@ -783,10 +754,10 @@ const CostPerLifeEditor = () => {
     
     // Return empty string if no value found
     return '';
-  };
+  }, [recipientFormValues, formatWithCommas]);
   
   // Function to handle number field blur - this updates parent state only on blur
-  const handleNumberFieldBlur = (key, rawValue, formValues, setFormValues) => {
+  const handleNumberFieldBlur = useCallback((key, rawValue, formValues, setFormValues) => {
     // Update the form values on blur
     setFormValues(prev => ({
       ...prev,
@@ -804,10 +775,10 @@ const CostPerLifeEditor = () => {
       // For category fields
       clearCategoryError(key);
     }
-  };
+  }, [formatWithCommas, clearRecipientError, clearCategoryError]);
   
   // Validate all values before submission
-  const validateAllValues = () => {
+  const validateAllValues = useCallback(() => {
     // Validate category values
     const newCategoryErrors = {};
     let hasErrors = false;
@@ -922,10 +893,10 @@ const CostPerLifeEditor = () => {
     setRecipientErrors(newRecipientErrors);
     
     return !hasErrors;
-  };
+  }, [categoryFormValues, recipientFormValues, customValues]);
   
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     
     // Validate all values
@@ -1005,10 +976,10 @@ const CostPerLifeEditor = () => {
     }
     
     closeModal();
-  };
+  }, [validateAllValues, customValues, categoryFormValues, recipientFormValues, updateValues, resetToDefaults, closeModal]);
   
   // Reset a specific form to default values
-  const resetFormToDefaults = (formType) => {
+  const resetFormToDefaults = useCallback((formType) => {
     if (formType === 'categories') {
       const categoryEntries = Object.entries(effectivenessCategories).map(([key, category]) => {
         return [key, category.costPerLife];
@@ -1062,30 +1033,30 @@ const CostPerLifeEditor = () => {
         }
       }
     }
-  };
+  }, [updateValues, resetToDefaults, customValues, categoryFormValues]);
   
   // Handle reset for all categories
-  const handleResetAllCategories = () => {
+  const handleResetAllCategories = useCallback(() => {
     resetFormToDefaults('categories');
-  };
+  }, [resetFormToDefaults]);
   
   // Handle reset for a specific category field
-  const handleCategoryReset = (key, defaultValue) => {
+  const handleCategoryReset = useCallback((key, defaultValue) => {
     const value = defaultValue;
     const formattedValue = value >= 1000 
       ? value.toLocaleString() 
       : value.toString();
     
     handleNumberFieldBlur(key, value.toString(), categoryFormValues, setCategoryFormValues);
-  };
+  }, [handleNumberFieldBlur, categoryFormValues]);
   
   // Handle reset button for recipients
-  const handleResetRecipients = () => {
+  const handleResetRecipients = useCallback(() => {
     resetFormToDefaults('recipients');
-  };
+  }, [resetFormToDefaults]);
   
   // Initialize form values from custom values or defaults
-  const initializeFormValues = (sourceValues, formatValue, createFormState = true) => {
+  const initializeFormValues = useCallback((sourceValues, formatValue, createFormState = true) => {
     const initialValues = {};
     
     if (Array.isArray(sourceValues)) {
@@ -1117,10 +1088,10 @@ const CostPerLifeEditor = () => {
     }
     
     return initialValues;
-  };
+  }, []);
   
   // Get custom value for a recipient's category
-  const getCustomRecipientValueForUI = (recipientName, categoryId, type) => {
+  const getCustomRecipientValueForUI = useCallback((recipientName, categoryId, type) => {
     try {
       // Manual check to see if the value exists
       if (customValues && 
@@ -1135,10 +1106,10 @@ const CostPerLifeEditor = () => {
     }
     
     return '';
-  };
+  }, [customValues]);
   
   // Handle category input updates
-  const handleCategoryUpdate = (key, rawValue, formattedValue, isBlur = false) => {
+  const handleCategoryUpdate = useCallback((key, rawValue, formattedValue, isBlur = false) => {
     // If this is a blur event, use the blur handler
     if (isBlur) {
       handleNumberFieldBlur(key, rawValue, categoryFormValues, setCategoryFormValues);
@@ -1156,7 +1127,76 @@ const CostPerLifeEditor = () => {
     
     // Clear any errors
     clearCategoryError(key);
-  };
+  }, [handleNumberFieldBlur, categoryFormValues, formatWithCommas, clearCategoryError]);
+  
+  // Create a component for rendering each recipient item - for virtualization
+  const RecipientItem = useCallback(({ index, style }) => {
+    const recipient = filteredRecipients[index];
+    const recipientCategories = Object.entries(recipient.categories || {});
+    if (recipientCategories.length === 0) return null;
+    
+    // Alternate between two background colors
+    const isEven = index % 2 === 0;
+    const bgColorClass = isEven ? 'bg-white' : 'bg-gray-100';
+    
+    return (
+      <div style={style} className="px-3">
+        <div className={`border border-gray-200 rounded-md p-3 ${bgColorClass}`}>
+          <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
+          <div className="space-y-3">
+            {recipientCategories.map(([categoryId, categoryData]) => {
+              const categoryName = effectivenessCategories[categoryId]?.name || categoryId;
+              const baseCostPerLife = customValues && customValues[categoryId] !== undefined 
+                ? customValues[categoryId] 
+                : effectivenessCategories[categoryId]?.costPerLife || 0;
+                
+              // Get existing values (with null checks)
+              const defaultMultiplier = categoryData?.multiplier;
+              const defaultCostPerLife = categoryData?.costPerLife;
+              
+              // Get custom values if they exist
+              const customMultiplier = getCustomRecipientValueForUI(recipient.name, categoryId, 'multiplier');
+              const customCostPerLife = getCustomRecipientValueForUI(recipient.name, categoryId, 'costPerLife');
+              
+              // Determine if this category has any custom or default override values
+              const hasOverrides = defaultMultiplier !== undefined || 
+                              defaultCostPerLife !== undefined ||
+                              (customMultiplier !== undefined && customMultiplier !== '') ||
+                              (customCostPerLife !== undefined && customCostPerLife !== '');
+                             
+              if (!hasOverrides && showOnlyCustom) return null;
+              
+              return (
+                <div key={categoryId} className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-2 rounded">
+                  <div className="text-sm text-gray-700">
+                    <span>{categoryName}</span> 
+                    <div className="text-xs text-gray-500">
+                      Category: ${baseCostPerLife.toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <RecipientInputPair
+                      recipientName={recipient.name}
+                      categoryId={categoryId}
+                      defaultMultiplier={defaultMultiplier}
+                      defaultCostPerLife={defaultCostPerLife}
+                      multiplierFormValue={recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.display || getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, customMultiplier)}
+                      costPerLifeFormValue={recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.display || getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, customCostPerLife)}
+                      hasMultiplierError={!!recipientErrors[recipient.name]?.[categoryId]?.multiplier}
+                      hasCostPerLifeError={!!recipientErrors[recipient.name]?.[categoryId]?.costPerLife}
+                      onValueChange={handleInputWithPartner}
+                      formatWithCommas={formatWithCommas}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }, [filteredRecipients, customValues, recipientFormValues, recipientErrors, showOnlyCustom, getFormValue, handleInputWithPartner, formatWithCommas, getCustomRecipientValueForUI]);
   
   if (!isModalOpen) return null;
   
@@ -1303,72 +1343,15 @@ const CostPerLifeEditor = () => {
                       : "No recipients with custom values found. Uncheck the filter or search for a specific recipient."}
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {filteredRecipients.map((recipient, index) => {
-                      const recipientCategories = Object.entries(recipient.categories || {});
-                      if (recipientCategories.length === 0) return null;
-                      
-                      // Alternate between two background colors
-                      const isEven = index % 2 === 0;
-                      const bgColorClass = isEven ? 'bg-white' : 'bg-gray-100';
-                      
-                      return (
-                        <div key={recipient.name} className={`border border-gray-200 rounded-md p-3 ${bgColorClass}`}>
-                          <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
-                          <div className="space-y-3">
-                            {recipientCategories.map(([categoryId, categoryData]) => {
-                              const categoryName = effectivenessCategories[categoryId]?.name || categoryId;
-                              const baseCostPerLife = customValues && customValues[categoryId] !== undefined 
-                                ? customValues[categoryId] 
-                                : effectivenessCategories[categoryId]?.costPerLife || 0;
-                                
-                              // Get existing values (with null checks)
-                              const defaultMultiplier = categoryData?.multiplier;
-                              const defaultCostPerLife = categoryData?.costPerLife;
-                              
-                              // Get custom values if they exist
-                              const customMultiplier = getCustomRecipientValueForUI(recipient.name, categoryId, 'multiplier');
-                              const customCostPerLife = getCustomRecipientValueForUI(recipient.name, categoryId, 'costPerLife');
-                              
-                              // Determine if this category has any custom or default override values
-                              const hasOverrides = defaultMultiplier !== undefined || 
-                                                  defaultCostPerLife !== undefined ||
-                                                  (customMultiplier !== undefined && customMultiplier !== '') ||
-                                                  (customCostPerLife !== undefined && customCostPerLife !== '');
-                                                 
-                              if (!hasOverrides && showOnlyCustom) return null;
-                              
-                              return (
-                                <div key={categoryId} className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-2 rounded">
-                                  <div className="text-sm text-gray-700">
-                                    <span>{categoryName}</span> 
-                                    <div className="text-xs text-gray-500">
-                                      Category: ${baseCostPerLife.toLocaleString()}
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <RecipientInputPair
-                                      recipientName={recipient.name}
-                                      categoryId={categoryId}
-                                      defaultMultiplier={defaultMultiplier}
-                                      defaultCostPerLife={defaultCostPerLife}
-                                      multiplierFormValue={recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.display || getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, customMultiplier)}
-                                      costPerLifeFormValue={recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.display || getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, customCostPerLife)}
-                                      hasMultiplierError={!!recipientErrors[recipient.name]?.[categoryId]?.multiplier}
-                                      hasCostPerLifeError={!!recipientErrors[recipient.name]?.[categoryId]?.costPerLife}
-                                      onValueChange={handleInputWithPartner}
-                                      formatWithCommas={formatWithCommas}
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <List
+                    height={500}
+                    width="100%"
+                    itemCount={filteredRecipients.length}
+                    itemSize={200}
+                    className="recipients-list"
+                  >
+                    {RecipientItem}
+                  </List>
                 )}
               </div>
             )}

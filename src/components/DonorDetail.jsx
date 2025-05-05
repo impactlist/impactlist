@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { donations, recipients, effectivenessCategories, donors } from '../data/donationData';
 import { calculateDonorStats, getCostPerLifeForRecipient, getPrimaryCategoryId, 
-  getDefaultCostPerLifeForCategory } from '../utils/donationDataHelpers';
+  getDefaultCostPerLifeForCategory, getActualCostPerLifeForCategoryData } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart, { ImpactChartToggle } from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';
@@ -160,14 +160,8 @@ function DonorDetail(props) {
           // Use the explicit costPerLife if provided
           costPerLife = categoryData.costPerLife;
         } else {
-          const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-          
-          // Apply multiplier if it exists
-          if (categoryData.multiplier !== undefined) {
-            costPerLife = baseCostPerLife / categoryData.multiplier; // Lower cost with higher multiplier
-          } else {
-            costPerLife = baseCostPerLife;
-          }
+          // Important: Use getActualCostPerLifeForCategoryData instead to properly handle custom values
+          costPerLife = getActualCostPerLifeForCategoryData(donation.recipient, categoryId, categoryData, customValues);
         }
         
         // Calculate category-specific amount and lives saved
@@ -231,7 +225,8 @@ function DonorDetail(props) {
         donationPercentage: (donationEntry.value / chartDonationsTotal * 100).toFixed(1),
         livesSavedPercentage: chartLivesSavedTotal !== 0 ? 
           (Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal) * 100).toFixed(1) : 0,
-        costPerLife: livesSavedEntry.costPerLife || (category ? effectivenessCategories[category]?.costPerLife || 0 : 0),
+        costPerLife: livesSavedEntry.costPerLife || (category ? 
+          getDefaultCostPerLifeForCategory(category, customValues) || 0 : 0),
         hasMultiplier: livesSavedEntry.hasMultiplier,
         multiplier: livesSavedEntry.multiplier
       };
@@ -390,6 +385,15 @@ function DonorDetail(props) {
       return () => clearTimeout(timer);
     }
   }, [chartData, shouldAnimate]);
+  
+  // Force recalculation of chart data when customValues change
+  useEffect(() => {
+    if (donorName && rawChartData.length > 0) {
+      // This will trigger the useEffect that depends on donorName and customValues
+      const stats = calculateDonorStats(customValues);
+      setDonorStats(stats.find(donor => donor.name === donorName));
+    }
+  }, [customValues, donorName, rawChartData.length]);
   
   // Effect to handle chart container resizing
   useEffect(() => {

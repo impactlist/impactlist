@@ -566,19 +566,6 @@ const CostPerLifeEditor = () => {
         customized.recipients = {};
       }
       
-      // First, gather all field keys by recipient and category
-      const fieldsByRecipientAndCategory = {};
-      Object.keys(recipientFormValues).forEach(fieldKey => {
-        const [recipientName, categoryId, type] = fieldKey.split('__');
-        if (!fieldsByRecipientAndCategory[recipientName]) {
-          fieldsByRecipientAndCategory[recipientName] = {};
-        }
-        if (!fieldsByRecipientAndCategory[recipientName][categoryId]) {
-          fieldsByRecipientAndCategory[recipientName][categoryId] = [];
-        }
-        fieldsByRecipientAndCategory[recipientName][categoryId].push(type);
-      });
-      
       // Process each recipient form value
       Object.entries(recipientFormValues).forEach(([fieldKey, valueObj]) => {
         // Extract the parts from the field key
@@ -588,7 +575,7 @@ const CostPerLifeEditor = () => {
         // Check if this is an empty value
         if (rawValue === '') {
           // If there's already a saved value for this recipient+category+type, we need to explicitly remove it
-          if (customized.recipients && 
+          if (customized && customized.recipients && 
               customized.recipients[recipientName] && 
               customized.recipients[recipientName][categoryId] && 
               customized.recipients[recipientName][categoryId][type] !== undefined) {
@@ -627,7 +614,7 @@ const CostPerLifeEditor = () => {
           const numValue = Number(rawValue);
           if (defaultValue !== undefined && numValue === defaultValue) {
             // If there's already a saved value, we need to explicitly remove it
-            if (customized.recipients && 
+            if (customized && customized.recipients && 
                 customized.recipients[recipientName] && 
                 customized.recipients[recipientName][categoryId] && 
                 customized.recipients[recipientName][categoryId][type] !== undefined) {
@@ -646,6 +633,11 @@ const CostPerLifeEditor = () => {
               }
             }
             return;
+          }
+          
+          // Initialize recipients object if it doesn't exist anymore
+          if (!customized.recipients) {
+            customized.recipients = {};
           }
           
           // Initialize nested objects if needed

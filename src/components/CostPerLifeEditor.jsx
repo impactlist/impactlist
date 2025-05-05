@@ -74,6 +74,9 @@ const CostPerLifeEditor = () => {
       });
     }
     
+    // Sort recipients alphabetically by name
+    filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
+    
     setFilteredRecipients(filtered);
   }, [customValues]); // Only include customValues in dependencies
   
@@ -845,7 +848,9 @@ const CostPerLifeEditor = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {filteredRecipients.map((recipient, index) => {
+                    {filteredRecipients
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((recipient, index) => {
                       const recipientCategories = Object.entries(recipient.categories || {});
                       if (recipientCategories.length === 0) return null;
                       

@@ -827,30 +827,6 @@ const CostPerLifeEditor = () => {
               }
             </p>
             <div className="mt-4 flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
-              <div className="order-2 sm:order-1 flex space-x-4 border-b">
-                <button
-                  type="button"
-                  onClick={() => handleTabChange('categories')}
-                  className={`px-4 py-2 text-sm font-medium ${
-                    activeTab === 'categories' 
-                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Categories
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleTabChange('recipients')}
-                  className={`px-4 py-2 text-sm font-medium ${
-                    activeTab === 'recipients' 
-                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Recipients
-                </button>
-              </div>
               <div className="order-1 sm:order-2 flex justify-end space-x-2">
                 <button
                   type="button"
@@ -872,6 +848,30 @@ const CostPerLifeEditor = () => {
                   className="px-3 py-1.5 bg-indigo-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   Save
+                </button>
+              </div>
+              <div className="order-2 sm:order-1 flex space-x-4 border-b mt-3 sm:mt-0">
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('categories')}
+                  className={`px-4 py-2 text-sm font-medium ${
+                    activeTab === 'categories' 
+                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Categories
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('recipients')}
+                  className={`px-4 py-2 text-sm font-medium ${
+                    activeTab === 'recipients' 
+                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Recipients
                 </button>
               </div>
             </div>

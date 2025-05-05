@@ -1,10 +1,28 @@
 /**
- * Format numbers with commas
+ * Format numbers with commas and suffixes for large values
  * @param {number} num - The number to format
- * @returns {string} - Formatted number with commas
+ * @returns {string} - Formatted number with commas and optional suffixes
  */
 export const formatNumber = (num) => {
-  return num.toLocaleString('en-US');
+  const absNum = Math.abs(num);
+  const isNegative = num < 0;
+  let formattedValue;
+
+  // Handle extremely large numbers with B/T suffixes
+  if (absNum >= 1000000000000) {
+    // Trillions - use 2 significant digits
+    const value = absNum / 1000000000000;
+    formattedValue = `${Number.isInteger(value) ? value.toString() : value.toFixed(1)}T`;
+  } else if (absNum >= 1000000000) {
+    // Billions - use 2 significant digits
+    const value = absNum / 1000000000;
+    formattedValue = `${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
+  } else {
+    // For regular numbers, use standard comma formatting
+    formattedValue = absNum.toLocaleString('en-US');
+  }
+
+  return isNegative ? `-${formattedValue}` : formattedValue;
 };
 
 /**

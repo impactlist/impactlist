@@ -331,16 +331,30 @@ function RecipientDetail(props) {
 
   // Initialize chart view on rawChartData load
   useEffect(() => {
-    if (chartData.length === 0 || !chartView) return;
+    if (rawChartData.length === 0 || !chartView) return;
     
-    // Only runs on initial load
-    const initialData = chartData.map(item => ({
-      ...item,
-      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+    // Completely rebuild chart data from rawChartData
+    const initialData = rawChartData.map(item => ({
+      name: item.name,
+      // Copy all properties from rawChartData
+      donationValue: item.donationValue,
+      livesSavedValue: item.livesSavedValue,
+      categoryId: item.categoryId,
+      donationPercentage: item.donationPercentage,
+      livesSavedPercentage: item.livesSavedPercentage,
+      // Set current value and target based on view
+      value: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue
     }));
     
-    setChartData(initialData);
-  }, [rawChartData, customValues]);
+    // Sort the data consistently (similar to what you do elsewhere)
+    const sortedData = [...initialData].sort((a, b) => {
+      return b.donationValue - a.donationValue;
+    });
+    
+    console.log('Recalculated from rawChartData:', sortedData);
+    setChartData(sortedData);
+  }, [rawChartData, customValues, chartView]); // Add chartView dependency
   
   // Separate effect to handle animation timing
   useEffect(() => {

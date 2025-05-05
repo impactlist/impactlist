@@ -728,7 +728,6 @@ function DonorDetail(props) {
               className="w-full overflow-visible"
               style={{ height: chartData.length > 0 ? `${calculateChartHeight(chartData)}px` : '384px' }}
             >
-              {console.log('chart is rendering and chartData is: ', chartData)}
               {chartData.length > 0 ? (
                 <ImpactBarChart 
                   data={chartData}
@@ -828,8 +827,6 @@ function DonorDetail(props) {
           <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
         </div>
       )}
-
-      <pre>{JSON.stringify(chartData, null, 2)}</pre>
     </motion.div>
   );
 }

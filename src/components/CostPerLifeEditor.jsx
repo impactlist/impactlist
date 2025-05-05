@@ -331,6 +331,13 @@ const CostPerLifeEditor = () => {
     // Remove filterRecipients, searchTerm, showOnlyCustom from dependencies to avoid infinite loops
   }, [isModalOpen, customValues]);
   
+  // Reset search term when modal closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      setSearchTerm('');
+    }
+  }, [isModalOpen]);
+
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {
     if (activeTab === 'recipients') {

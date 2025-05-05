@@ -371,11 +371,11 @@ const CostPerLifeEditor = () => {
   }, [isModalOpen, customValues]);
   
   // Reset search term when modal closes
-  useEffect(() => {
+  /*useEffect(() => {
     if (!isModalOpen) {
       setSearchTerm('');
     }
-  }, [isModalOpen]);
+  }, [isModalOpen]);*/
 
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {

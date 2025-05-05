@@ -588,7 +588,7 @@ function DonorDetail(props) {
       label: 'Cost/Life',
       render: (donation) => (
         <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 'text-slate-900'}`}>
-          {donation.livesSaved === 0 ? <span className="text-2xl">∞</span> : `$${formatNumber(Math.round(donation.costPerLife))}`}
+          {donation.livesSaved === 0 ? <span className="text-2xl">∞</span> : formatCurrency(donation.costPerLife)}
         </div>
       )
     }

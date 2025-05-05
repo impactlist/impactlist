@@ -41,8 +41,12 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
   } else if (absAmount >= 10) {
     // For values ≥ 10, show only integer dollars
     formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;
+  } else if (absAmount < 0.0001) {
+    // For extremely small values, use scientific notation to avoid showing $0
+    // Format as $1.23e-4 for better readability
+    formattedValue = `$${absAmount.toExponential(2)}`;
   } else {
-    // For values < 10, show at most 2 significant digits
+    // For values < 10 but >= 0.0001, show at most 2 significant digits
     const significantDigits = absAmount < 1 ? 1 : 2;
     const multiplier = Math.pow(10, significantDigits - Math.floor(Math.log10(absAmount)) - 1);
     const roundedAmount = Math.round(absAmount * multiplier) / multiplier;

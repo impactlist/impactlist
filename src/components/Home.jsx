@@ -130,7 +130,7 @@ function Home(props) {
       render: (recipient) => {
         return (
           <div className="text-sm text-slate-900">
-            {recipient.costPerLife === 0 ? '∞' : formatCurrency(Math.round(recipient.costPerLife))}
+            {recipient.costPerLife === 0 ? '∞' : formatCurrency(recipient.costPerLife)}
           </div>
         );
       }

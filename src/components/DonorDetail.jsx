@@ -52,7 +52,7 @@ function DonorDetail(props) {
     const stats = calculateDonorStats(customValues);
     const currentDonor = stats.find(donor => donor.name === donorName);
     setDonorStats(currentDonor);
-
+    
     // Get donor donations and sort by date (most recent first)
     const donorDonationsList = donations
       .filter(donation => donation.donor === donorName)
@@ -155,14 +155,7 @@ function DonorDetail(props) {
         const categoryName = effectivenessCategories[categoryId].name;
         
         // Get the costPerLife with multiplier properly applied
-        let costPerLife;
-        if (categoryData.costPerLife !== undefined) {
-          // Use the explicit costPerLife if provided
-          costPerLife = categoryData.costPerLife;
-        } else {
-          // Important: Use getActualCostPerLifeForCategoryData instead to properly handle custom values
-          costPerLife = getActualCostPerLifeForCategoryData(donation.recipient, categoryId, categoryData, customValues);
-        }
+        const costPerLife = getActualCostPerLifeForCategoryData(donation.recipient, categoryId, categoryData, customValues);
         
         // Calculate category-specific amount and lives saved
         const categoryAmount = donation.amount * fraction;
@@ -295,7 +288,7 @@ function DonorDetail(props) {
     }));
     
     setChartData(initialChartData);
-  }, [rawChartData]);
+  }, [rawChartData, customValues]); // Include customValues in dependencies
   
   // Handle shrinking transition phase
   useEffect(() => {
@@ -338,7 +331,7 @@ function DonorDetail(props) {
     }, needsIntermediateStep ? ANIMATION_DURATION : 50);
     
     return () => clearTimeout(timer);
-  }, [transitionStage, chartView]); // Remove chartData dependency
+  }, [transitionStage, chartView, customValues]); // Include customValues in dependencies
   
   // Handle growing transition phase
   useEffect(() => {
@@ -360,18 +353,18 @@ function DonorDetail(props) {
     return () => clearTimeout(timer);
   }, [transitionStage, chartView, customValues]); // Add customValues dependency
   
-  // Initialize chart view on rawChartData load
+  // Update chart view whenever rawChartData or customValues change
   useEffect(() => {
     if (chartData.length === 0 || !chartView) return;
     
-    // Only runs on initial load
+    // Runs whenever rawChartData or customValues change
     const initialData = chartData.map(item => ({
       ...item,
       valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
     }));
     
     setChartData(initialData);
-  }, [rawChartData, customValues]); // Add customValues dependency
+  }, [rawChartData, customValues, chartView]); // Include chartView in dependencies
   
   // Separate effect to handle animation timing
   useEffect(() => {
@@ -386,14 +379,6 @@ function DonorDetail(props) {
     }
   }, [chartData, shouldAnimate]);
   
-  // Force recalculation of chart data when customValues change
-  useEffect(() => {
-    if (donorName && rawChartData.length > 0) {
-      // This will trigger the useEffect that depends on donorName and customValues
-      const stats = calculateDonorStats(customValues);
-      setDonorStats(stats.find(donor => donor.name === donorName));
-    }
-  }, [customValues, donorName, rawChartData.length]);
   
   // Effect to handle chart container resizing
   useEffect(() => {

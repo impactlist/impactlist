@@ -12,11 +12,23 @@ export const formatNumber = (num) => {
   if (absNum >= 1000000000000) {
     // Trillions - use 2 significant digits
     const value = absNum / 1000000000000;
-    formattedValue = `${Number.isInteger(value) ? value.toString() : value.toFixed(1)}T`;
+    // Format integer or decimal value
+    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    // Add commas for large prefix values (e.g., 1,234.5T)
+    if (value >= 1000) {
+      valueStr = Number(valueStr).toLocaleString('en-US');
+    }
+    formattedValue = `${valueStr}T`;
   } else if (absNum >= 1000000000) {
     // Billions - use 2 significant digits
     const value = absNum / 1000000000;
-    formattedValue = `${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
+    // Format integer or decimal value
+    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    // Add commas for large prefix values (e.g., 1,234.5B)
+    if (value >= 1000) {
+      valueStr = Number(valueStr).toLocaleString('en-US');
+    }
+    formattedValue = `${valueStr}B`;
   } else {
     // For regular numbers, use standard comma formatting
     formattedValue = absNum.toLocaleString('en-US');
@@ -47,12 +59,36 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
   const absAmount = Math.abs(amount);
   
   let formattedValue;
-  if (absAmount >= 1000000000) {
+  if (absAmount >= 1000000000000) {
+    // Trillions
+    const value = absAmount / 1000000000000;
+    // Format integer or decimal value
+    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    // Add commas for large prefix values (e.g., $1,234.5T)
+    if (value >= 1000) {
+      valueStr = Number(valueStr).toLocaleString('en-US');
+    }
+    formattedValue = `$${valueStr}T`;
+  } else if (absAmount >= 1000000000) {
+    // Billions
     const value = absAmount / 1000000000;
-    formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}B`;
+    // Format integer or decimal value
+    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    // Add commas for large prefix values (e.g., $1,234.5B)
+    if (value >= 1000) {
+      valueStr = Number(valueStr).toLocaleString('en-US');
+    }
+    formattedValue = `$${valueStr}B`;
   } else if (absAmount >= 1000000) {
+    // Millions
     const value = absAmount / 1000000;
-    formattedValue = `$${Number.isInteger(value) ? value.toString() : value.toFixed(1)}M`;
+    // Format integer or decimal value
+    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    // Add commas for large prefix values (e.g., $1,234.5M)
+    if (value >= 1000) {
+      valueStr = Number(valueStr).toLocaleString('en-US');
+    }
+    formattedValue = `$${valueStr}M`;
   } else if (absAmount >= 1000) {
     // For values ≥ 1,000, show with commas but without 'K' abbreviation
     formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;

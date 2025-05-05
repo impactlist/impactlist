@@ -55,10 +55,16 @@ const CostPerLifeEditor = () => {
       filtered = filtered.filter(recipient => 
         recipient.name.toLowerCase().includes(lowerTerm)
       );
-    }
-    
-    // Filter to only show recipients with custom values
-    if (onlyCustom) {
+      
+      // Sort alphabetically
+      filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
+      
+      // Limit to first 10 results when searching
+      if (filtered.length > 10) {
+        filtered = filtered.slice(0, 10);
+      }
+    } else if (onlyCustom) {
+      // When no search term, filter to only show recipients with custom values
       filtered = filtered.filter(recipient => {
         // Check if recipient has built-in overrides
         const hasBuiltInOverrides = Object.values(recipient.categories || {}).some(
@@ -72,10 +78,10 @@ const CostPerLifeEditor = () => {
         
         return hasBuiltInOverrides || hasCustomOverrides;
       });
+      
+      // Sort alphabetically
+      filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
     }
-    
-    // Sort recipients alphabetically by name
-    filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
     
     setFilteredRecipients(filtered);
   }, [customValues]); // Only include customValues in dependencies
@@ -84,15 +90,15 @@ const CostPerLifeEditor = () => {
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    filterRecipients(term, showOnlyCustom);
+    // Update showOnlyCustom based on whether search is empty
+    const shouldShowOnlyCustom = term === '';
+    setShowOnlyCustom(shouldShowOnlyCustom);
+    // Filter recipients accordingly
+    filterRecipients(term, shouldShowOnlyCustom);
   };
   
-  // Toggle showing only custom value recipients
-  const toggleShowOnlyCustom = () => {
-    const newValue = !showOnlyCustom;
-    setShowOnlyCustom(newValue);
-    filterRecipients(searchTerm, newValue);
-  };
+  // Note: showOnlyCustom state is still used but is now controlled by the searchTerm
+  // We set it to true when searchTerm is empty, false otherwise
   
   // Format a number with commas
   const formatWithCommas = (value) => {
@@ -295,7 +301,7 @@ const CostPerLifeEditor = () => {
       
       // Initialize filtered recipients if we're on the recipients tab
       if (activeTab === 'recipients') {
-        filterRecipients(searchTerm, showOnlyCustom);
+        filterRecipients(searchTerm, searchTerm === '');
       }
     }
     // Remove filterRecipients, searchTerm, showOnlyCustom from dependencies to avoid infinite loops
@@ -306,16 +312,16 @@ const CostPerLifeEditor = () => {
     if (activeTab === 'recipients') {
       // Avoid excessive logging
       // console.log("Filtering recipients with customValues");
-      filterRecipients(searchTerm, showOnlyCustom);
+      filterRecipients(searchTerm, searchTerm === '');
     }
   }, [customValues, activeTab]);
   
   // Separate effect for search and filter changes to avoid dependency loops
   useEffect(() => {
     if (activeTab === 'recipients') {
-      filterRecipients(searchTerm, showOnlyCustom);
+      filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [searchTerm, showOnlyCustom]);
+  }, [searchTerm]);
   
   // Get value for recipient form field
   const getRecipientFormValue = (recipientName, categoryId, type) => {
@@ -811,8 +817,8 @@ const CostPerLifeEditor = () => {
               </form>
             ) : (
               <div>
-                <div className="mb-4 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4 sm:items-center">
-                  <div className="relative flex-grow">
+                <div className="mb-4 flex flex-col space-y-2">
+                  <div className="relative">
                     <input
                       type="text"
                       placeholder="Search recipients..."
@@ -826,17 +832,13 @@ const CostPerLifeEditor = () => {
                       </svg>
                     </div>
                   </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="showOnlyCustom"
-                      checked={showOnlyCustom}
-                      onChange={toggleShowOnlyCustom}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="showOnlyCustom" className="ml-2 text-sm text-gray-600">
-                      Show only recipients with custom values
-                    </label>
+                  <div className="text-sm text-gray-600 italic">
+                    {searchTerm === '' ? 
+                      "Showing only recipients with custom values. Use search to find others." :
+                      filteredRecipients.length >= 10 ? 
+                        "Showing first 10 matching recipients." : 
+                        `Showing ${filteredRecipients.length} matching recipient${filteredRecipients.length === 1 ? '' : 's'}.`
+                    }
                   </div>
                 </div>
                 

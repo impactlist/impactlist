@@ -356,14 +356,35 @@ function DonorDetail(props) {
   // Update chart view whenever rawChartData or customValues change
   useEffect(() => {
     if (chartData.length === 0 || !chartView) return;
-    
-    // Runs whenever rawChartData or customValues change
-    const initialData = chartData.map(item => ({
-      ...item,
+
+    // Completely rebuild chart data from rawChartData
+    // This ensures all values (including donationValue and livesSavedValue) are current
+    const initialData = rawChartData.map(item => ({
+      name: item.name,
+      // Set the current value based on the view
+      value: chartView === 'donations' ? item.donationValue : item.livesSavedValue, 
+      // Set the target value for animations
       valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+      // Copy all raw data fields directly from rawChartData for the most current values
+      donationValue: item.donationValue,
+      livesSavedValue: item.livesSavedValue,
+      category: item.category,
+      donationPercentage: item.donationPercentage,
+      livesSavedPercentage: item.livesSavedPercentage,
+      costPerLife: item.costPerLife,
+      hasMultiplier: item.hasMultiplier,
+      multiplier: item.multiplier
     }));
+
+    // Sort data consistently (is this needed?)
+    const sortedData = [...initialData].sort((a, b) => {
+      // Always put "Other Categories" at the bottom
+      if (a.name === 'Other Categories') return 1;
+      if (b.name === 'Other Categories') return -1;
+      return b.donationValue - a.donationValue;
+    });
     
-    setChartData(initialData);
+    setChartData(sortedData);
   }, [rawChartData, customValues, chartView]); // Include chartView in dependencies
   
   // Separate effect to handle animation timing
@@ -707,6 +728,7 @@ function DonorDetail(props) {
               className="w-full overflow-visible"
               style={{ height: chartData.length > 0 ? `${calculateChartHeight(chartData)}px` : '384px' }}
             >
+              {console.log('chart is rendering and chartData is: ', chartData)}
               {chartData.length > 0 ? (
                 <ImpactBarChart 
                   data={chartData}
@@ -806,6 +828,8 @@ function DonorDetail(props) {
           <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
         </div>
       )}
+
+      <pre>{JSON.stringify(chartData, null, 2)}</pre>
     </motion.div>
   );
 }

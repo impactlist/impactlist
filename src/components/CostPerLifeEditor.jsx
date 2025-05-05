@@ -71,12 +71,36 @@ const CostPerLifeEditor = () => {
           cat => cat.multiplier !== undefined || cat.costPerLife !== undefined
         );
         
-        // Check if recipient has custom overrides
+        // Check if recipient has custom overrides from context
         const hasCustomOverrides = customValues && 
           customValues.recipients && 
           customValues.recipients[recipient.name] !== undefined;
         
-        return hasBuiltInOverrides || hasCustomOverrides;
+        // Check if recipient has custom values in the current form
+        const hasFormCustomValues = Object.keys(recipientFormValues).some(fieldKey => {
+          // Check if this field key belongs to this recipient
+          if (fieldKey.startsWith(`${recipient.name}__`)) {
+            const value = recipientFormValues[fieldKey];
+            if (value && value.raw !== '') {
+              // Get the parts from the field key
+              const [_, categoryId, type] = fieldKey.split('__');
+              
+              // Get default value from recipient data if it exists
+              let defaultValue;
+              if (recipient.categories && recipient.categories[categoryId] && recipient.categories[categoryId][type] !== undefined) {
+                defaultValue = recipient.categories[categoryId][type];
+              }
+              
+              // If there's no default value, or if the form value is different from the default
+              if (defaultValue === undefined || Number(value.raw) !== defaultValue) {
+                return true;
+              }
+            }
+          }
+          return false;
+        });
+        
+        return hasBuiltInOverrides || hasCustomOverrides || hasFormCustomValues;
       });
       
       // Sort alphabetically
@@ -84,7 +108,7 @@ const CostPerLifeEditor = () => {
     }
     
     setFilteredRecipients(filtered);
-  }, [customValues]); // Only include customValues in dependencies
+  }, [customValues, recipientFormValues]); // Include both customValues and recipientFormValues in dependencies
   
   // Handle search term changes
   const handleSearchChange = (e) => {
@@ -883,8 +907,13 @@ const CostPerLifeEditor = () => {
                                                   defaultCostPerLife !== undefined ||
                                                   (customMultiplier !== undefined && customMultiplier !== '') ||
                                                   (customCostPerLife !== undefined && customCostPerLife !== '');
+                              
+                              // Check for form values specific to this category
+                              const hasFormValues = recipientFormValues[`${recipient.name}__${categoryId}__multiplier`] !== undefined ||
+                                                   recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`] !== undefined;
                                                  
-                              if (!hasOverrides && showOnlyCustom) return null;
+                              // If we're showing only custom values, and this category has no overrides or form values, skip it
+                              if (!hasOverrides && !hasFormValues && showOnlyCustom) return null;
                               
                               return (
                                 <div key={categoryId} className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-2 rounded">

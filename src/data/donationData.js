@@ -339,7 +339,6 @@ export const donations = [
   // Bernard Arnault donations
   */
 
-  // Bill Gates donations
   // Gemini says "Through 2023, Bill Gates (and formerly Melinda French Gates) had personally contributed $59.5 billion to the Gates Foundation endowment.. the below is only 50.4 donated total 
   // Don't count donations to his foundation... try to explode them.
   // Buffett started donating to the Gates foundation in 2006.. so give Bill 100% credit for everything before that, 50% after
@@ -362,7 +361,6 @@ export const donations = [
   { date: '2017-11-01', donor: 'Bill Gates', recipient: 'Dementia Discovery Fund', amount: 50000000, source: 'https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy'},
   { date: '2022-07-13', donor: 'Bill Gates', recipient: 'Bill & Melinda Gates Foundation', amount: 20000000000, source: 'https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions', notes: 'Cash/stock gift' },
   
-  // Dustin Moskovitz & Cari Tuna donations
   { date: '2013-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 28599982, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
   { date: '2014-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 224868989, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
   { date: '2015-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 226124175, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
@@ -376,7 +374,6 @@ export const donations = [
   { date: '2022-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 170486513, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
   { date: '2023-06-30', donor: 'Dustin Moskovitz & Cari Tuna', recipient: 'Good Ventures', amount: 1911407931, source: 'https://projects.propublica.org/nonprofits/organizations/461008520' },
   
-  // Elon Musk donations
   // Count donations from Musk Foundation as his, since it's basically a one man show
   { date: '2010-12-01', donor: 'Elon Musk', recipient: 'Bayou La Batre Hurricane Response Center', amount: 250000, source: 'https://cleantechnica.com/2011/12/29/tesla-and-solarcity-install-solar-on-disaster-relief-center-in-alabama/' },
   { date: '2011-07-01', donor: 'Elon Musk', recipient: 'Soma City, Fukushima (tech)', amount: 250000, source: 'https://www.japantimes.co.jp/news/2011/07/27/national/elon-musk-helps-build-solar-power-plant-in-tsunami-hit-area/' },
@@ -402,7 +399,6 @@ export const donations = [
   { date: '2023-12-01', donor: 'Elon Musk', recipient: 'Unknown', amount: 108200000, source: 'https://www.reuters.com/business/musk-donated-108-million-tesla-shares-unnamed-charities-filing-shows-2025-01-02' },
   { date: '2024-12-20', donor: 'Elon Musk', recipient: 'The Foundation (Musk)', amount: 137e6, credit: 1, source: 'https://www.cheddar.com/media/big-business-this-week-rage-over-rate-cuts/' },
 
-  // Jaan Tallinn donations
   { date: '2012-01-01', donor: 'Jaan Tallinn', recipient: 'Machine Intelligence Research Institute', amount: 155000, source: 'https://web.archive.org/web/20120719220051/http://singularity.org:80/topdonors/' },
   { date: '2012-01-01', donor: 'Jaan Tallinn', recipient: 'Machine Intelligence Research Institute', amount: 109000, source: 'https://web.archive.org/web/20120918094656/http://singularity.org:80/topdonors/' },
   { date: '2012-01-01', donor: 'Jaan Tallinn', recipient: 'Centre for the Study of Existential Risk', amount: 200000, source: 'https://en.wikipedia.org/wiki/Jaan_Tallinn' },
@@ -522,7 +518,6 @@ export const donations = [
  /* 
   // Jack Dorsey donations
   */
-  // Jeff Bezos donations
   { date: '2011-08-17', donor: 'Jeff Bezos', recipient: 'Museum of History & Industry (Seattle)', amount: 10000000, source: 'https://www.seattlepi.com/local/article/Jeff-Bezos-gives-MOHAI-10-million-for-2077208.php' },
   { date: '2011-12-13', donor: 'Jeff Bezos', recipient: 'Princeton University (science)', amount: 15000000, source: 'https://www.princeton.edu/news/2011/12/13/jeff-and-mackenzie-bezos-donate-15-million-create-center-princeton-neuroscience' },
   { date: '2012-07-28', donor: 'Jeff Bezos', recipient: 'Washington United for Marriage (Referendum 74 campaign)', amount: 2500000, source: 'https://www.reuters.com/article/lifestyle/amazons-jeff-bezos-wife-make-25-million-donation-for-gay-marriage-idUSBRE86R014/' },
@@ -551,8 +546,6 @@ export const donations = [
   // Larry Ellison donations
   // He backed out of his 115m pledge to Harvard
 */
-  
-  // Larry Page donations
   { date: '2006-11-01', donor: 'Larry Page', recipient: 'Californians for Clean Alternative Energy', amount: 1000000, source: 'https://www.influencewatch.org/person/larry-page/' },
   { date: '2008-11-01', donor: 'Larry Page', recipient: 'No on Proposition 8 Campaign', amount: 400000, source: 'https://www.influencewatch.org/person/larry-page/' },
   { date: '2008-12-31', donor: 'Larry Page', recipient: 'President Barack Obama Inaugural Committee', amount: 25000, source: 'https://www.influencewatch.org/person/larry-page/' },
@@ -581,10 +574,8 @@ export const donations = [
   { date: '2023-12-31', donor: 'Larry Page', recipient: 'Upstream USA', amount: 500000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
   { date: '2023-12-31', donor: 'Larry Page', recipient: 'Think Of Us', amount: 500000, source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/' },
 
-  // Mackenzie Scott donations
   { date: '2024-11-31', donor: 'Mackenzie Scott', recipient: 'Yield Giving', amount: 19.25e9, source: 'https://gist.github.com/elliotolds/4eefa459f946fda43b0dc53c99ab532a#file-mackenzie_scott_donations-md' },
   
-  // Mark Zuckerberg donations
   { date: '2010-09-24', donor: 'Mark Zuckerberg', recipient: 'Newark Public Schools', amount: 100000000, source: 'http://www.reuters.com/article/us-facebook-donation-idUSTRE68N54E20100924' },
   { date: '2014-05-30', donor: 'Mark Zuckerberg', recipient: 'Bay Area Public Schools', amount: 120000000, source: 'https://www.sfgate.com/education/article/mark-zuckerberg-wife-donate-120-million-to-bay-5515342.php' },
   { date: '2014-10-14', donor: 'Mark Zuckerberg', recipient: 'CDC Foundation (Ebola Response)', amount: 25000000, source: 'https://www.cdcfoundation.org/pr/cdc-foundation-receives-25-million-donation-mark-zuckerberg-and-priscilla-chan-ebola-response' },
@@ -603,9 +594,6 @@ export const donations = [
   { date: '2024-12-31', donor: 'Mark Zuckerberg', recipient: 'Chan Zuckerberg Initiative', amount: 1110000000, source: 'https://www.philanthropy.com/package/newsrelease-phil50-2024donors-030425' },
   { date: '2025-04-24', donor: 'Mark Zuckerberg', recipient: 'Chan Zuckerberg Initiative', amount: 3.915e9, source: 'https://gist.github.com/elliotolds/9e6773b7b357f8ff30d3396b431c258e#file-mark_zuckerberg_donations-md' },
   
-// 
-
-  // Michael Bloomberg donations
   { date: '2010-01-01', donor: 'Michael Bloomberg', recipient: 'Sierra Club (climate change)', amount: 50000000, source: 'https://observer.com/2023/09/michael-bloomberg-donates-500m-eradicate-coal-plants/' },
   { date: '2016-01-01', donor: 'Michael Bloomberg', recipient: 'Johns Hopkins University (science)', amount: 50000000, source: 'https://www.bbhub.io/dotorg/sites/2/2017/05/Bloomberg-Philanthropies-Annual-Report.pdf' },
   { date: '2018-11-18', donor: 'Michael Bloomberg', recipient: 'Johns Hopkins University (education)', amount: 1800000000, source: 'https://www.prnewswire.com/news-releases/michael-bloomberg-makes-largest-ever-contribution-to-any-education-institution-in-the-united-states-300752633.html' },
@@ -615,7 +603,6 @@ export const donations = [
   
   // Steve Ballmer donations
  */ 
-  // Vitalik Buterin donations
   { date: '2017-12-14', donor: 'Vitalik Buterin', recipient: 'SENS Research Foundation', amount: 2400000, source: 'https://cointelegraph.com/news/vitalik-buterin-donates-24-million-in-ether-to-anti-aging-research' },
   { date: '2017-12-31', donor: 'Vitalik Buterin', recipient: 'Machine Intelligence Research Institute', amount: 763970, source: 'https://coinspeaker.com/vitalik-buterin-eth-holdings/' },
   { date: '2018-02-12', donor: 'Vitalik Buterin', recipient: 'Internet Archive', amount: 93469, source: 'https://coinexplorers.com/insights/the-internet-archive-sees-large-donations-from-vitalik-buterin-7ylg6i' },
@@ -645,8 +632,6 @@ export const donations = [
   { date: '2025-01-06', donor: 'Vitalik Buterin', recipient: 'Kanro', amount: 984000, source: 'https://beincrypto.com/vitalik-buterin-meme-coins-charity/' },
   { date: '2025-04-01', donor: 'Vitalik Buterin', recipient: 'Zuitzerland Project', amount: 500000, source: 'https://thecryptobasic.com/2025/04/01/ethereum-founder-donates-274-eth-to-swiss-project-zuitzerland/' },
   
-  
-  // Warren Buffett donations
   { date: '2006-09-19', donor: 'Warren Buffett', recipient: 'IAEA Nuclear Fuel Bank', amount: 50e6, source: 'https://www.nti.org/news/nti-commits-50-million-iaea-nuclear-fuel-bank/' },
   { date: '2006-11-25', donor: 'Warren Buffett', recipient: 'Bill & Melinda Gates Foundation', amount: 43e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },
   { date: '2006-11-25', donor: 'Warren Buffett', recipient: 'Susan Thompson Buffett Foundation', amount: 5.8e9, source: 'https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md' },

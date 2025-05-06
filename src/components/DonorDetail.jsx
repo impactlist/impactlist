@@ -290,102 +290,71 @@ function DonorDetail(props) {
     setChartData(initialChartData);
   }, [rawChartData, customValues]); // Include customValues in dependencies
   
-  // Handle shrinking transition phase
+  // Handle the transition between views
   useEffect(() => {
     if (chartData.length === 0 || transitionStage !== 'shrinking') return;
     
-    let needsIntermediateStep = false;
-    
-    // If switching from lives saved to donations, shrink negative bars to zero
-    if (chartView === 'donations') {
-      needsIntermediateStep = chartData.some(item => item.livesSavedValue < 0);
-      
-      if (needsIntermediateStep) {
-        // Create intermediate data where negative values are set to zero
-        const intermediateData = chartData.map(item => ({
-          ...item,
-          valueTarget: item.livesSavedValue < 0 ? 0 : item.livesSavedValue,
-        }));
-        
-        setChartData(intermediateData);
-      }
-    } 
-    // If switching from donations to lives saved, shrink positive bars that will become negative
-    else if (chartView === 'livesSaved') {
-      needsIntermediateStep = chartData.some(item => item.livesSavedValue < 0);
-      
-      if (needsIntermediateStep) {
-        // First animate values to zero if they will become negative
-        const intermediateData = chartData.map(item => ({
-          ...item,
-          valueTarget: item.livesSavedValue < 0 ? 0 : item.donationValue,
-        }));
-        
-        setChartData(intermediateData);
-      }
-    }
-    
-    // Schedule next stage
-    const timer = setTimeout(() => {
-      setTransitionStage('growing');
-    }, needsIntermediateStep ? ANIMATION_DURATION : 50);
-    
-    return () => clearTimeout(timer);
-  }, [transitionStage, chartView, customValues]); // Include customValues in dependencies
-  
-  // Handle growing transition phase
-  useEffect(() => {
-    if (chartData.length === 0 || transitionStage !== 'growing') return;
-    
-    // Second stage: Grow bars to their final values
-    const finalData = chartData.map(item => ({
+    // Create a deep copy of the current data to ensure React detects the change
+    // and properly animates between states
+    const initialData = chartData.map(item => ({
       ...item,
+      // Important: Keep the current value as is (this is what we're animating FROM)
+      value: item.valueTarget, 
+      // Update the valueTarget to the new view's value (this is what we're animating TO)
       valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
     }));
     
-    setChartData(finalData);
+    // Set the data to start the animation
+    setChartData(initialData);
     
-    // Reset transition state after animation completes
+    // Complete the transition after animation
     const timer = setTimeout(() => {
       setTransitionStage('none');
     }, ANIMATION_DURATION);
     
     return () => clearTimeout(timer);
-  }, [transitionStage, chartView, customValues]); // Add customValues dependency
+  }, [transitionStage, chartView, customValues]); // Include customValues in dependencies
+  
+  // Keep this as a placeholder to avoid changing too much code structure
+  // But we'll skip the growing phase by directly setting transitionStage to 'none' above
+
   
   // Update chart view whenever rawChartData or customValues change
   useEffect(() => {
     if (chartData.length === 0 || !chartView) return;
 
-    // Completely rebuild chart data from rawChartData
-    // This ensures all values (including donationValue and livesSavedValue) are current
-    const initialData = rawChartData.map(item => ({
-      name: item.name,
-      // Set the current value based on the view
-      value: chartView === 'donations' ? item.donationValue : item.livesSavedValue, 
-      // Set the target value for animations
-      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
-      // Copy all raw data fields directly from rawChartData for the most current values
-      donationValue: item.donationValue,
-      livesSavedValue: item.livesSavedValue,
-      category: item.category,
-      donationPercentage: item.donationPercentage,
-      livesSavedPercentage: item.livesSavedPercentage,
-      costPerLife: item.costPerLife,
-      hasMultiplier: item.hasMultiplier,
-      multiplier: item.multiplier
-    }));
+    // Only rebuild chart data when not in a transition (to avoid interrupting animations)
+    if (transitionStage === 'none' && !shouldAnimate) {
+      // Completely rebuild chart data from rawChartData
+      // This ensures all values (including donationValue and livesSavedValue) are current
+      const initialData = rawChartData.map(item => ({
+        name: item.name,
+        // Set the current value based on the view
+        value: chartView === 'donations' ? item.donationValue : item.livesSavedValue, 
+        // Set the target value for animations
+        valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
+        // Copy all raw data fields directly from rawChartData for the most current values
+        donationValue: item.donationValue,
+        livesSavedValue: item.livesSavedValue,
+        category: item.category,
+        donationPercentage: item.donationPercentage,
+        livesSavedPercentage: item.livesSavedPercentage,
+        costPerLife: item.costPerLife,
+        hasMultiplier: item.hasMultiplier,
+        multiplier: item.multiplier
+      }));
 
-    // Sort data consistently (is this needed?)
-    const sortedData = [...initialData].sort((a, b) => {
-      // Always put "Other Categories" at the bottom
-      if (a.name === 'Other Categories') return 1;
-      if (b.name === 'Other Categories') return -1;
-      return b.donationValue - a.donationValue;
-    });
-    
-    setChartData(sortedData);
-  }, [rawChartData, customValues, chartView]); // Include chartView in dependencies
+      // Sort data consistently (is this needed?)
+      const sortedData = [...initialData].sort((a, b) => {
+        // Always put "Other Categories" at the bottom
+        if (a.name === 'Other Categories') return 1;
+        if (b.name === 'Other Categories') return -1;
+        return b.donationValue - a.donationValue;
+      });
+      
+      setChartData(sortedData);
+    }
+  }, [rawChartData, customValues, chartView, transitionStage, shouldAnimate]); // Include all dependencies
   
   // Separate effect to handle animation timing
   useEffect(() => {
@@ -787,7 +756,7 @@ function DonorDetail(props) {
                   isAnimationActive={true}
                   animationDuration={ANIMATION_DURATION}
                   animationBegin={0}
-                  animationEasing="ease-out"
+                  animationEasing="ease-in-out"
                   showLegend={true}
                   legendFormatter={() => chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'}
                 />

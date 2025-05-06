@@ -391,14 +391,21 @@ function RecipientDetail(props) {
       key: 'amount', 
       label: 'Amount',
       render: (donation) => (
-        <a 
-          href={donation.source} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
-          {formatCurrency(donation.creditedAmount || donation.amount)}
-        </a>
+        <div>
+          <a 
+            href={donation.source} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            {formatCurrency(donation.creditedAmount || donation.amount)}
+          </a>
+          {donation.credit < 1 && (
+            <div className="text-xs text-gray-500 mt-1">
+              {Math.round(donation.credit * 100)}% credit
+            </div>
+          )}
+        </div>
       )
     },
     { 
@@ -412,11 +419,6 @@ function RecipientDetail(props) {
           >
             {donation.donor}
           </Link>
-          {donation.credit !== undefined && (
-            <div className="text-xs text-gray-500 mt-1">
-              via intermediary, {Math.round(donation.credit * 100)}% credit
-            </div>
-          )}
         </div>
       )
     },

@@ -4,8 +4,7 @@ donations:
     recipient: university-of-washington-research
     amount: 12_000_000
     credit:
-      bill-gates: 0.7
-      melinda-gates: 0.3
+      bill-gates: 1.0
     source: "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/"
 
   - date: 1992-01-01

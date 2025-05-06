@@ -162,8 +162,7 @@ export const donorsById = {
   },
   "bill-gates": {
     "name": "Bill Gates",
-    "netWorth": 108000000000,
-    "totalDonated": 39500000000
+    "netWorth": 108000000000
   }
 };
 
@@ -4726,19 +4725,9 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 12000000,
-    "credit": 0.7,
+    "credit": 1,
     "source": "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/",
     "donor": "Bill Gates",
-    "recipient": "University of Washington (research)"
-  },
-  {
-    "date": "1991-10-07",
-    "donorId": "melinda-gates",
-    "recipientId": "university-of-washington-research",
-    "amount": 12000000,
-    "credit": 0.3,
-    "source": "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/",
-    "donor": "Melinda French Gates",
     "recipient": "University of Washington (research)"
   }
 ];
@@ -4916,8 +4905,7 @@ export const donors = [
   {
     "id": "bill-gates",
     "name": "Bill Gates",
-    "netWorth": 108000000000,
-    "totalDonated": 39500000000
+    "netWorth": 108000000000
   }
 ];
 
@@ -9648,19 +9636,9 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 12000000,
-    "credit": 0.7,
+    "credit": 1,
     "source": "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/",
     "donor": "Bill Gates",
-    "recipient": "University of Washington (research)"
-  },
-  {
-    "date": "1991-10-07",
-    "donorId": "melinda-gates",
-    "recipientId": "university-of-washington-research",
-    "amount": 12000000,
-    "credit": 0.3,
-    "source": "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/",
-    "donor": "Melinda French Gates",
     "recipient": "University of Washington (research)"
   }
 ];

@@ -342,9 +342,9 @@ export const calculateDonorStats = (customValues = null) => {
     
     // Calculate totals based on actual donations
     for (const donation of donorData) {
-      const donationAmount = donation.amount;
-      totalDonated += donationAmount;
-      knownDonations += donationAmount;
+      const creditedAmount = donation.amount * donation.credit;
+      totalDonated += creditedAmount;
+      knownDonations += creditedAmount;
       
       const livesSaved = calculateLivesSavedForDonation(donation, customValues);
       totalLivesSaved += livesSaved;

@@ -163,7 +163,7 @@ export const donorsById = {
   "bill-gates": {
     "name": "Bill Gates",
     "netWorth": 108000000000,
-    "totalDonated": 59000000000
+    "totalDonated": 39500000000
   }
 };
 
@@ -260,6 +260,28 @@ export const recipientsById = {
     "categories": {
       "human-rights": {
         "fraction": 1
+      }
+    }
+  },
+  "vote-mama-foundation": {
+    "name": "Vote Mama Foundation",
+    "categories": {
+      "political": {
+        "fraction": 0.7
+      },
+      "social-justice": {
+        "fraction": 0.3
+      }
+    }
+  },
+  "various-organizations-advancing-womens-rights": {
+    "name": "Various Women's Righs Organizations",
+    "categories": {
+      "human-rights": {
+        "fraction": 0.5
+      },
+      "social-justice": {
+        "fraction": 0.5
       }
     }
   },
@@ -581,6 +603,17 @@ export const recipientsById = {
     "categories": {
       "ai-risk": {
         "fraction": 1
+      }
+    }
+  },
+  "rosalynn-carter-institute-for-caregivers": {
+    "name": "Rosalynn Carter Institute for Caregivers",
+    "categories": {
+      "local-community": {
+        "fraction": 0.7
+      },
+      "social-justice": {
+        "fraction": 0.3
       }
     }
   },
@@ -1786,6 +1819,28 @@ export const allDonations = [
     "recipient": "Khao Kheow Open Zoo"
   },
   {
+    "date": "2024-12-03",
+    "donorId": "melinda-gates",
+    "recipientId": "vote-mama-foundation",
+    "amount": 500000,
+    "credit": 1,
+    "source": "https://people.com/melinda-french-gates-teases-new-philanthropy-project-8752266",
+    "notes": "Announced as part of a $1 million match by Melinda French Gates's organization Pivotal Ventures for Giving Tuesday, supporting two organizations. This portion is for Vote Mama Foundation.",
+    "donor": "Melinda French Gates",
+    "recipient": "Vote Mama Foundation"
+  },
+  {
+    "date": "2024-12-03",
+    "donorId": "melinda-gates",
+    "recipientId": "rosalynn-carter-institute-for-caregivers",
+    "amount": 500000,
+    "credit": 1,
+    "source": "https://people.com/melinda-french-gates-teases-new-philanthropy-project-8752266",
+    "notes": "Announced as part of a $1 million match by Melinda French Gates's organization Pivotal Ventures for Giving Tuesday, supporting two organizations. This portion is for the Rosalynn Carter Institute for Caregivers.",
+    "donor": "Melinda French Gates",
+    "recipient": "Rosalynn Carter Institute for Caregivers"
+  },
+  {
     "date": "2024-12-01",
     "donorId": "mackenzie-scott",
     "recipientId": "yield-giving",
@@ -1824,6 +1879,17 @@ export const allDonations = [
     "source": "https://cointelegraph.com/news/vitalik-buterin-donates-eth-animal-charity",
     "donor": "Vitalik Buterin",
     "recipient": "EA Animal Welfare Fund"
+  },
+  {
+    "date": "2024-05-28",
+    "donorId": "melinda-gates",
+    "recipientId": "various-organizations-advancing-womens-rights",
+    "amount": 440000000,
+    "credit": 1,
+    "source": "https://www.nytimes.com/2024/05/28/business/melinda-french-gates-charity-women.html",
+    "notes": "Part of a $1 billion commitment announced by Melinda French Gates to advance women's causes. This $200 million tranche is for various organizations, including the National Women's Law Center, the National Domestic Workers Alliance, and the Center for Reproductive Rights.",
+    "donor": "Melinda French Gates",
+    "recipient": "Various Women's Righs Organizations"
   },
   {
     "date": "2024-03-15",
@@ -3840,9 +3906,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "dementia-discovery-fund",
     "amount": 50000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy",
     "donor": "Bill Gates",
+    "recipient": "Dementia Discovery Fund"
+  },
+  {
+    "date": "2017-11-01",
+    "donorId": "melinda-gates",
+    "recipientId": "dementia-discovery-fund",
+    "amount": 50000000,
+    "credit": 0.5,
+    "source": "https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy",
+    "donor": "Melinda French Gates",
     "recipient": "Dementia Discovery Fund"
   },
   {
@@ -3870,9 +3946,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 4680000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "2017-06-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 4680000000,
+    "credit": 0.5,
+    "source": "https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -4370,9 +4456,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 3300000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "2004-11-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 3300000000,
+    "credit": 0.5,
+    "source": "https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -4380,9 +4476,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 70000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw#:~:text=The%20Bill%20%26%20Melinda%20Gates,genome%20research",
     "donor": "Bill Gates",
+    "recipient": "University of Washington (research)"
+  },
+  {
+    "date": "2003-04-24",
+    "donorId": "melinda-gates",
+    "recipientId": "university-of-washington-research",
+    "amount": 70000000,
+    "credit": 0.5,
+    "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw#:~:text=The%20Bill%20%26%20Melinda%20Gates,genome%20research",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington (research)"
   },
   {
@@ -4390,9 +4496,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 5000000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "2000-01-24",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 5000000000,
+    "credit": 0.5,
+    "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -4400,9 +4516,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "gavi-alliance-the-vaccine-fund",
     "amount": 750000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2001/06/global-alliance-for-vaccines-and-immunization",
     "donor": "Bill Gates",
+    "recipient": "GAVI Alliance (The Vaccine Fund)"
+  },
+  {
+    "date": "1999-11-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gavi-alliance-the-vaccine-fund",
+    "amount": 750000000,
+    "credit": 0.5,
+    "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2001/06/global-alliance-for-vaccines-and-immunization",
+    "donor": "Melinda French Gates",
     "recipient": "GAVI Alliance (The Vaccine Fund)"
   },
   {
@@ -4410,9 +4536,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "mit",
     "amount": 20000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://news.mit.edu/1999/gates1-0414#:~:text=April%2014%2C%201999",
     "donor": "Bill Gates",
+    "recipient": "MIT"
+  },
+  {
+    "date": "1999-04-14",
+    "donorId": "melinda-gates",
+    "recipientId": "mit",
+    "amount": 20000000,
+    "credit": 0.5,
+    "source": "https://news.mit.edu/1999/gates1-0414#:~:text=April%2014%2C%201999",
+    "donor": "Melinda French Gates",
     "recipient": "MIT"
   },
   {
@@ -4420,9 +4556,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 15800000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "1999-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 15800000000,
+    "credit": 0.5,
+    "source": "https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -4430,9 +4576,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "united-negro-college-fund",
     "amount": 1265000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/",
     "donor": "Bill Gates",
+    "recipient": "United Negro College Fund"
+  },
+  {
+    "date": "1999-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "united-negro-college-fund",
+    "amount": 1265000000,
+    "credit": 0.5,
+    "source": "https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/",
+    "donor": "Melinda French Gates",
     "recipient": "United Negro College Fund"
   },
   {
@@ -4440,9 +4596,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "seattle-public-libraries",
     "amount": 20000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.historylink.org/File/2907#:~:text=gifts%20of%20%24133%20million%20for,program%20approved%20the%20previous%20month",
     "donor": "Bill Gates",
+    "recipient": "Seattle Public Libraries"
+  },
+  {
+    "date": "1998-12-01",
+    "donorId": "melinda-gates",
+    "recipientId": "seattle-public-libraries",
+    "amount": 20000000,
+    "credit": 0.5,
+    "source": "https://www.historylink.org/File/2907#:~:text=gifts%20of%20%24133%20million%20for,program%20approved%20the%20previous%20month",
+    "donor": "Melinda French Gates",
     "recipient": "Seattle Public Libraries"
   },
   {
@@ -4450,9 +4616,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "path",
     "amount": 100000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.washingtonpost.com/archive/politics/1998/12/02/gates-giving-100-million-to-help-immunize-children-in-3rd-world/11648ec3-4e48-4dee-82c6-7c323f1b19cf/",
     "donor": "Bill Gates",
+    "recipient": "PATH"
+  },
+  {
+    "date": "1998-12-01",
+    "donorId": "melinda-gates",
+    "recipientId": "path",
+    "amount": 100000000,
+    "credit": 0.5,
+    "source": "https://www.washingtonpost.com/archive/politics/1998/12/02/gates-giving-100-million-to-help-immunize-children-in-3rd-world/11648ec3-4e48-4dee-82c6-7c323f1b19cf/",
+    "donor": "Melinda French Gates",
     "recipient": "PATH"
   },
   {
@@ -4460,9 +4636,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "gates-library-foundation",
     "amount": 200000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.historylink.org/File/2907",
     "donor": "Bill Gates",
+    "recipient": "Gates Library Foundation"
+  },
+  {
+    "date": "1997-07-23",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-library-foundation",
+    "amount": 200000000,
+    "credit": 0.5,
+    "source": "https://www.historylink.org/File/2907",
+    "donor": "Melinda French Gates",
     "recipient": "Gates Library Foundation"
   },
   {
@@ -4470,9 +4656,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "harvard-university",
     "amount": 25000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.thecrimson.com/article/1996/10/30/gates-ballmer-donate-25-m-for",
     "donor": "Bill Gates",
+    "recipient": "Harvard University"
+  },
+  {
+    "date": "1996-09-01",
+    "donorId": "melinda-gates",
+    "recipientId": "harvard-university",
+    "amount": 25000000,
+    "credit": 0.5,
+    "source": "https://www.thecrimson.com/article/1996/10/30/gates-ballmer-donate-25-m-for",
+    "donor": "Melinda French Gates",
     "recipient": "Harvard University"
   },
   {
@@ -4480,9 +4676,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 12000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw",
     "donor": "Bill Gates",
+    "recipient": "University of Washington"
+  },
+  {
+    "date": "1996-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "university-of-washington",
+    "amount": 12000000,
+    "credit": 0.5,
+    "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington"
   },
   {
@@ -4490,9 +4696,19 @@ export const allDonations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 10000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/",
     "donor": "Bill Gates",
+    "recipient": "University of Washington"
+  },
+  {
+    "date": "1995-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "university-of-washington",
+    "amount": 10000000,
+    "credit": 0.5,
+    "source": "https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington"
   },
   {
@@ -4701,7 +4917,7 @@ export const donors = [
     "id": "bill-gates",
     "name": "Bill Gates",
     "netWorth": 108000000000,
-    "totalDonated": 59000000000
+    "totalDonated": 39500000000
   }
 ];
 
@@ -4805,6 +5021,30 @@ export const recipients = [
     "categories": {
       "human-rights": {
         "fraction": 1
+      }
+    }
+  },
+  {
+    "id": "vote-mama-foundation",
+    "name": "Vote Mama Foundation",
+    "categories": {
+      "political": {
+        "fraction": 0.7
+      },
+      "social-justice": {
+        "fraction": 0.3
+      }
+    }
+  },
+  {
+    "id": "various-organizations-advancing-womens-rights",
+    "name": "Various Women's Righs Organizations",
+    "categories": {
+      "human-rights": {
+        "fraction": 0.5
+      },
+      "social-justice": {
+        "fraction": 0.5
       }
     }
   },
@@ -5163,6 +5403,18 @@ export const recipients = [
     "categories": {
       "ai-risk": {
         "fraction": 1
+      }
+    }
+  },
+  {
+    "id": "rosalynn-carter-institute-for-caregivers",
+    "name": "Rosalynn Carter Institute for Caregivers",
+    "categories": {
+      "local-community": {
+        "fraction": 0.7
+      },
+      "social-justice": {
+        "fraction": 0.3
       }
     }
   },
@@ -6489,6 +6741,28 @@ export const donations = [
     "recipient": "Khao Kheow Open Zoo"
   },
   {
+    "date": "2024-12-03",
+    "donorId": "melinda-gates",
+    "recipientId": "vote-mama-foundation",
+    "amount": 500000,
+    "credit": 1,
+    "source": "https://people.com/melinda-french-gates-teases-new-philanthropy-project-8752266",
+    "notes": "Announced as part of a $1 million match by Melinda French Gates's organization Pivotal Ventures for Giving Tuesday, supporting two organizations. This portion is for Vote Mama Foundation.",
+    "donor": "Melinda French Gates",
+    "recipient": "Vote Mama Foundation"
+  },
+  {
+    "date": "2024-12-03",
+    "donorId": "melinda-gates",
+    "recipientId": "rosalynn-carter-institute-for-caregivers",
+    "amount": 500000,
+    "credit": 1,
+    "source": "https://people.com/melinda-french-gates-teases-new-philanthropy-project-8752266",
+    "notes": "Announced as part of a $1 million match by Melinda French Gates's organization Pivotal Ventures for Giving Tuesday, supporting two organizations. This portion is for the Rosalynn Carter Institute for Caregivers.",
+    "donor": "Melinda French Gates",
+    "recipient": "Rosalynn Carter Institute for Caregivers"
+  },
+  {
     "date": "2024-12-01",
     "donorId": "mackenzie-scott",
     "recipientId": "yield-giving",
@@ -6527,6 +6801,17 @@ export const donations = [
     "source": "https://cointelegraph.com/news/vitalik-buterin-donates-eth-animal-charity",
     "donor": "Vitalik Buterin",
     "recipient": "EA Animal Welfare Fund"
+  },
+  {
+    "date": "2024-05-28",
+    "donorId": "melinda-gates",
+    "recipientId": "various-organizations-advancing-womens-rights",
+    "amount": 440000000,
+    "credit": 1,
+    "source": "https://www.nytimes.com/2024/05/28/business/melinda-french-gates-charity-women.html",
+    "notes": "Part of a $1 billion commitment announced by Melinda French Gates to advance women's causes. This $200 million tranche is for various organizations, including the National Women's Law Center, the National Domestic Workers Alliance, and the Center for Reproductive Rights.",
+    "donor": "Melinda French Gates",
+    "recipient": "Various Women's Righs Organizations"
   },
   {
     "date": "2024-03-15",
@@ -8543,9 +8828,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "dementia-discovery-fund",
     "amount": 50000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy",
     "donor": "Bill Gates",
+    "recipient": "Dementia Discovery Fund"
+  },
+  {
+    "date": "2017-11-01",
+    "donorId": "melinda-gates",
+    "recipientId": "dementia-discovery-fund",
+    "amount": 50000000,
+    "credit": 0.5,
+    "source": "https://en.wikipedia.org/wiki/Bill_Gates#Philanthropy",
+    "donor": "Melinda French Gates",
     "recipient": "Dementia Discovery Fund"
   },
   {
@@ -8573,9 +8868,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 4680000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "2017-06-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 4680000000,
+    "credit": 0.5,
+    "source": "https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -9073,9 +9378,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 3300000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "2004-11-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 3300000000,
+    "credit": 0.5,
+    "source": "https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -9083,9 +9398,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 70000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw#:~:text=The%20Bill%20%26%20Melinda%20Gates,genome%20research",
     "donor": "Bill Gates",
+    "recipient": "University of Washington (research)"
+  },
+  {
+    "date": "2003-04-24",
+    "donorId": "melinda-gates",
+    "recipientId": "university-of-washington-research",
+    "amount": 70000000,
+    "credit": 0.5,
+    "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw#:~:text=The%20Bill%20%26%20Melinda%20Gates,genome%20research",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington (research)"
   },
   {
@@ -9093,9 +9418,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 5000000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "2000-01-24",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 5000000000,
+    "credit": 0.5,
+    "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -9103,9 +9438,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "gavi-alliance-the-vaccine-fund",
     "amount": 750000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2001/06/global-alliance-for-vaccines-and-immunization",
     "donor": "Bill Gates",
+    "recipient": "GAVI Alliance (The Vaccine Fund)"
+  },
+  {
+    "date": "1999-11-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gavi-alliance-the-vaccine-fund",
+    "amount": 750000000,
+    "credit": 0.5,
+    "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2001/06/global-alliance-for-vaccines-and-immunization",
+    "donor": "Melinda French Gates",
     "recipient": "GAVI Alliance (The Vaccine Fund)"
   },
   {
@@ -9113,9 +9458,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "mit",
     "amount": 20000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://news.mit.edu/1999/gates1-0414#:~:text=April%2014%2C%201999",
     "donor": "Bill Gates",
+    "recipient": "MIT"
+  },
+  {
+    "date": "1999-04-14",
+    "donorId": "melinda-gates",
+    "recipientId": "mit",
+    "amount": 20000000,
+    "credit": 0.5,
+    "source": "https://news.mit.edu/1999/gates1-0414#:~:text=April%2014%2C%201999",
+    "donor": "Melinda French Gates",
     "recipient": "MIT"
   },
   {
@@ -9123,9 +9478,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 15800000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it",
     "donor": "Bill Gates",
+    "recipient": "Bill & Melinda Gates Foundation"
+  },
+  {
+    "date": "1999-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-foundation",
+    "amount": 15800000000,
+    "credit": 0.5,
+    "source": "https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it",
+    "donor": "Melinda French Gates",
     "recipient": "Bill & Melinda Gates Foundation"
   },
   {
@@ -9133,9 +9498,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "united-negro-college-fund",
     "amount": 1265000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/",
     "donor": "Bill Gates",
+    "recipient": "United Negro College Fund"
+  },
+  {
+    "date": "1999-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "united-negro-college-fund",
+    "amount": 1265000000,
+    "credit": 0.5,
+    "source": "https://spearswms.com/impact-philanthropy/the-12-biggest-bill-gates-donations/",
+    "donor": "Melinda French Gates",
     "recipient": "United Negro College Fund"
   },
   {
@@ -9143,9 +9518,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "seattle-public-libraries",
     "amount": 20000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.historylink.org/File/2907#:~:text=gifts%20of%20%24133%20million%20for,program%20approved%20the%20previous%20month",
     "donor": "Bill Gates",
+    "recipient": "Seattle Public Libraries"
+  },
+  {
+    "date": "1998-12-01",
+    "donorId": "melinda-gates",
+    "recipientId": "seattle-public-libraries",
+    "amount": 20000000,
+    "credit": 0.5,
+    "source": "https://www.historylink.org/File/2907#:~:text=gifts%20of%20%24133%20million%20for,program%20approved%20the%20previous%20month",
+    "donor": "Melinda French Gates",
     "recipient": "Seattle Public Libraries"
   },
   {
@@ -9153,9 +9538,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "path",
     "amount": 100000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.washingtonpost.com/archive/politics/1998/12/02/gates-giving-100-million-to-help-immunize-children-in-3rd-world/11648ec3-4e48-4dee-82c6-7c323f1b19cf/",
     "donor": "Bill Gates",
+    "recipient": "PATH"
+  },
+  {
+    "date": "1998-12-01",
+    "donorId": "melinda-gates",
+    "recipientId": "path",
+    "amount": 100000000,
+    "credit": 0.5,
+    "source": "https://www.washingtonpost.com/archive/politics/1998/12/02/gates-giving-100-million-to-help-immunize-children-in-3rd-world/11648ec3-4e48-4dee-82c6-7c323f1b19cf/",
+    "donor": "Melinda French Gates",
     "recipient": "PATH"
   },
   {
@@ -9163,9 +9558,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "gates-library-foundation",
     "amount": 200000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.historylink.org/File/2907",
     "donor": "Bill Gates",
+    "recipient": "Gates Library Foundation"
+  },
+  {
+    "date": "1997-07-23",
+    "donorId": "melinda-gates",
+    "recipientId": "gates-library-foundation",
+    "amount": 200000000,
+    "credit": 0.5,
+    "source": "https://www.historylink.org/File/2907",
+    "donor": "Melinda French Gates",
     "recipient": "Gates Library Foundation"
   },
   {
@@ -9173,9 +9578,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "harvard-university",
     "amount": 25000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.thecrimson.com/article/1996/10/30/gates-ballmer-donate-25-m-for",
     "donor": "Bill Gates",
+    "recipient": "Harvard University"
+  },
+  {
+    "date": "1996-09-01",
+    "donorId": "melinda-gates",
+    "recipientId": "harvard-university",
+    "amount": 25000000,
+    "credit": 0.5,
+    "source": "https://www.thecrimson.com/article/1996/10/30/gates-ballmer-donate-25-m-for",
+    "donor": "Melinda French Gates",
     "recipient": "Harvard University"
   },
   {
@@ -9183,9 +9598,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 12000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw",
     "donor": "Bill Gates",
+    "recipient": "University of Washington"
+  },
+  {
+    "date": "1996-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "university-of-washington",
+    "amount": 12000000,
+    "credit": 0.5,
+    "source": "https://archive.seattletimes.com/archive/20030424/gatesgift24/gates-gives-70-million-for-genome-work-at-uw",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington"
   },
   {
@@ -9193,9 +9618,19 @@ export const donations = [
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 10000000,
-    "credit": 1,
+    "credit": 0.5,
     "source": "https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/",
     "donor": "Bill Gates",
+    "recipient": "University of Washington"
+  },
+  {
+    "date": "1995-01-01",
+    "donorId": "melinda-gates",
+    "recipientId": "university-of-washington",
+    "amount": 10000000,
+    "credit": 0.5,
+    "source": "https://www.washington.edu/news/1999/10/28/uw-awarded-10-million-from-bill-and-melinda-gates-foundation/",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington"
   },
   {

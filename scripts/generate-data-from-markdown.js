@@ -17,6 +17,12 @@ const recipientsDir = path.join(__dirname, '../content/recipients');
 const donationsDir = path.join(__dirname, '../content/donations');
 const outputFile = path.join(__dirname, '../src/data/generatedData.js');
 
+// Helper function to format date as YYYY-MM-DD
+function formatDateString(dateString) {
+  const date = new Date(dateString);
+  return date.toISOString().split('T')[0];
+}
+
 // Load all categories
 function loadCategories() {
   const categoryFiles = glob.sync(path.join(categoriesDir, '*.md'));
@@ -109,22 +115,29 @@ function loadDonations() {
     const { data } = matter(fileContent);
     
     if (!data.donations || !Array.isArray(data.donations)) {
-      console.warn(`Warning: File ${file} does not contain a donations array`);
-      return;
+      throw new Error(`Error: File ${file} is missing required 'donations' array property. Each donation file must contain a 'donations' array with donation objects.`);
     }
     
     data.donations.forEach(donation => {
       if (!donation.recipient || !donation.amount || !donation.date) {
-        console.warn(`Warning: Donation in ${file} is missing required fields`);
-        return;
+        throw new Error(
+          `Error: Donation in ${file} is missing required fields:\n` +
+          `  recipient: ${donation.recipient || 'MISSING'}\n` +
+          `  amount: ${donation.amount || 'MISSING'}\n` + 
+          `  date: ${donation.date || 'MISSING'}\n` +
+          `Full donation object: ${JSON.stringify(donation, null, 2)}`
+        );
       }
+      
+      // Format the date as YYYY-MM-DD
+      const formattedDate = formatDateString(donation.date);
       
       // Handle both old format (just a donor string) and new format (credit object)
       if (donation.credit) {
         // New format with credit object
         Object.entries(donation.credit).forEach(([donorId, creditAmount]) => {
           donations.push({
-            date: donation.date,
+            date: formattedDate,
             donorId,
             recipientId: donation.recipient,
             amount: donation.amount,
@@ -138,7 +151,7 @@ function loadDonations() {
         const donorId = path.basename(file, '.md');
         
         donations.push({
-          date: donation.date,
+          date: formattedDate,
           donorId,
           recipientId: donation.recipient,
           amount: donation.amount,

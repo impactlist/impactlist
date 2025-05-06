@@ -1968,7 +1968,7 @@ export const recipientsById = {
 // All donations
 export const allDonations = [
   {
-    "date": "2025-04-24T00:00:00.000Z",
+    "date": "2025-04-24",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 3915000000,
@@ -1978,7 +1978,7 @@ export const allDonations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2025-04-01T00:00:00.000Z",
+    "date": "2025-04-01",
     "donorId": "vitalik-buterin",
     "recipientId": "zuitzerland-project",
     "amount": 500000,
@@ -1988,7 +1988,7 @@ export const allDonations = [
     "recipient": "Zuitzerland Project"
   },
   {
-    "date": "2025-01-06T00:00:00.000Z",
+    "date": "2025-01-06",
     "donorId": "vitalik-buterin",
     "recipientId": "kanro",
     "amount": 984000,
@@ -1998,7 +1998,7 @@ export const allDonations = [
     "recipient": "Kanro"
   },
   {
-    "date": "2024-12-31T00:00:00.000Z",
+    "date": "2024-12-31",
     "donorId": "michael-bloomberg",
     "recipientId": "bloomberg-philanthropies",
     "amount": 21000000000,
@@ -2008,7 +2008,7 @@ export const allDonations = [
     "recipient": "Bloomberg Philanthropies"
   },
   {
-    "date": "2024-12-31T00:00:00.000Z",
+    "date": "2024-12-31",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 1110000000,
@@ -2018,7 +2018,7 @@ export const allDonations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2024-12-20T00:00:00.000Z",
+    "date": "2024-12-20",
     "donorId": "elon-musk",
     "recipientId": "the-foundation-musk",
     "amount": 137000000,
@@ -2028,7 +2028,7 @@ export const allDonations = [
     "recipient": "The Foundation (Musk)"
   },
   {
-    "date": "2024-12-15T00:00:00.000Z",
+    "date": "2024-12-15",
     "donorId": "vitalik-buterin",
     "recipientId": "khao-kheow-open-zoo",
     "amount": 150000,
@@ -2038,7 +2038,7 @@ export const allDonations = [
     "recipient": "Khao Kheow Open Zoo"
   },
   {
-    "date": "2024-12-01T00:00:00.000Z",
+    "date": "2024-12-01",
     "donorId": "mackenzie-scott",
     "recipientId": "yield-giving",
     "amount": 19250000000,
@@ -2048,7 +2048,7 @@ export const allDonations = [
     "recipient": "Yield Giving"
   },
   {
-    "date": "2024-11-26T00:00:00.000Z",
+    "date": "2024-11-26",
     "donorId": "vitalik-buterin",
     "recipientId": "coin-center",
     "amount": 1000000,
@@ -2058,7 +2058,7 @@ export const allDonations = [
     "recipient": "Coin Center"
   },
   {
-    "date": "2024-10-05T00:00:00.000Z",
+    "date": "2024-10-05",
     "donorId": "vitalik-buterin",
     "recipientId": "tornado-cash-devs-legal-fund",
     "amount": 240000,
@@ -2068,7 +2068,7 @@ export const allDonations = [
     "recipient": "Tornado Cash Devs Legal Fund"
   },
   {
-    "date": "2024-08-14T00:00:00.000Z",
+    "date": "2024-08-14",
     "donorId": "vitalik-buterin",
     "recipientId": "ea-animal-welfare-fund",
     "amount": 532398,
@@ -2078,7 +2078,7 @@ export const allDonations = [
     "recipient": "EA Animal Welfare Fund"
   },
   {
-    "date": "2024-03-15T00:00:00.000Z",
+    "date": "2024-03-15",
     "donorId": "jeff-bezos",
     "recipientId": "eva-longoria-bezos-courage-civility-award",
     "amount": 50000000,
@@ -2088,7 +2088,7 @@ export const allDonations = [
     "recipient": "Eva Longoria (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2024-03-15T00:00:00.000Z",
+    "date": "2024-03-15",
     "donorId": "jeff-bezos",
     "recipientId": "bill-mcraven-bezos-courage-civility-award",
     "amount": 50000000,
@@ -2098,7 +2098,7 @@ export const allDonations = [
     "recipient": "Bill McRaven (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "association-for-computing-machinery-acm-facct",
     "amount": 75000,
@@ -2108,7 +2108,7 @@ export const allDonations = [
     "recipient": "Association for Computing Machinery (ACM FAccT)"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "80000-hours",
     "amount": 200000,
@@ -2118,7 +2118,7 @@ export const allDonations = [
     "recipient": "80,000 Hours"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 100000,
@@ -2128,7 +2128,7 @@ export const allDonations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "hitrecord-ai-safety-project",
     "amount": 500000,
@@ -2138,7 +2138,7 @@ export const allDonations = [
     "recipient": "HitRecord AI Safety Project"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-ai-safety-action-fund",
     "amount": 1000000,
@@ -2148,7 +2148,7 @@ export const allDonations = [
     "recipient": "Center for AI Safety Action Fund"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "radicalxchange",
     "amount": 500000,
@@ -2158,7 +2158,7 @@ export const allDonations = [
     "recipient": "Radicalxchange"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-ai-safety",
     "amount": 1000000,
@@ -2168,7 +2168,7 @@ export const allDonations = [
     "recipient": "Center for AI Safety"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "mila",
     "amount": 4000000,
@@ -2178,7 +2178,7 @@ export const allDonations = [
     "recipient": "MILA"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "saturn-data",
     "amount": 500000,
@@ -2188,7 +2188,7 @@ export const allDonations = [
     "recipient": "Saturn Data"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "signal-technology-foundation",
     "amount": 1000000,
@@ -2198,7 +2198,7 @@ export const allDonations = [
     "recipient": "Signal Technology Foundation"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 1720000,
@@ -2208,7 +2208,7 @@ export const allDonations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 200000,
@@ -2218,7 +2218,7 @@ export const allDonations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "haydn-belfield",
     "amount": 16000,
@@ -2228,7 +2228,7 @@ export const allDonations = [
     "recipient": "Haydn Belfield"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "collective-intelligence-project",
     "amount": 500000,
@@ -2238,7 +2238,7 @@ export const allDonations = [
     "recipient": "Collective Intelligence Project"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 300000,
@@ -2248,7 +2248,7 @@ export const allDonations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "zvi-mowshowitz",
     "amount": 200000,
@@ -2258,7 +2258,7 @@ export const allDonations = [
     "recipient": "Zvi Mowshowitz"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "institute-for-security-and-technology",
     "amount": 400000,
@@ -2268,7 +2268,7 @@ export const allDonations = [
     "recipient": "Institute for Security and Technology"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "hitrecord-ai-safety-project",
     "amount": 700000,
@@ -2278,7 +2278,7 @@ export const allDonations = [
     "recipient": "HitRecord AI Safety Project"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-policy-institute",
     "amount": 300000,
@@ -2288,7 +2288,7 @@ export const allDonations = [
     "recipient": "AI Policy Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 100000,
@@ -2298,7 +2298,7 @@ export const allDonations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-ai-safety",
     "amount": 300000,
@@ -2308,7 +2308,7 @@ export const allDonations = [
     "recipient": "Center for AI Safety"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "epoch-ai",
     "amount": 600000,
@@ -2318,7 +2318,7 @@ export const allDonations = [
     "recipient": "Epoch AI"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "longview-philanthropy",
     "amount": 700000,
@@ -2328,7 +2328,7 @@ export const allDonations = [
     "recipient": "Longview Philanthropy"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "safe-artificial-intelligence-forum-institute",
     "amount": 500000,
@@ -2338,7 +2338,7 @@ export const allDonations = [
     "recipient": "Safe Artificial Intelligence Forum Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "our-world-in-data",
     "amount": 300000,
@@ -2348,7 +2348,7 @@ export const allDonations = [
     "recipient": "Our World in Data"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "rootclaim",
     "amount": 400000,
@@ -2358,7 +2358,7 @@ export const allDonations = [
     "recipient": "Rootclaim"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "erik-brynjolfsson",
     "amount": 400000,
@@ -2368,7 +2368,7 @@ export const allDonations = [
     "recipient": "Erik Brynjolfsson"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 100000,
@@ -2378,7 +2378,7 @@ export const allDonations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "vitalik-buterin",
     "recipientId": "tornado-cash-devs-legal-fund",
     "amount": 170000,
@@ -2388,7 +2388,7 @@ export const allDonations = [
     "recipient": "Tornado Cash Devs Legal Fund"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "stichting-european-climate-foundation",
     "amount": 20000000,
@@ -2398,7 +2398,7 @@ export const allDonations = [
     "recipient": "Stichting European Climate Foundation"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "rf-catalytic-capital-inc-community-project",
     "amount": 15000000,
@@ -2408,7 +2408,7 @@ export const allDonations = [
     "recipient": "RF Catalytic Capital Inc (community project)"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "instituto-clima-e-sociedade",
     "amount": 10000000,
@@ -2418,7 +2418,7 @@ export const allDonations = [
     "recipient": "Instituto Clima e Sociedade"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "world-resources-institute",
     "amount": 4750000,
@@ -2428,7 +2428,7 @@ export const allDonations = [
     "recipient": "World Resources Institute"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "the-energy-foundation",
     "amount": 4000000,
@@ -2438,7 +2438,7 @@ export const allDonations = [
     "recipient": "The Energy Foundation"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "stichting-european-climate-foundation",
     "amount": 3000000,
@@ -2448,7 +2448,7 @@ export const allDonations = [
     "recipient": "Stichting European Climate Foundation"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "global-fishing-watch",
     "amount": 3000000,
@@ -2458,7 +2458,7 @@ export const allDonations = [
     "recipient": "Global Fishing Watch"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "the-tides-center",
     "amount": 2000000,
@@ -2468,7 +2468,7 @@ export const allDonations = [
     "recipient": "The Tides Center"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "peoples-courage-international-inc",
     "amount": 2000000,
@@ -2478,7 +2478,7 @@ export const allDonations = [
     "recipient": "People's Courage International Inc"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "new-venture-fund",
     "amount": 1000000,
@@ -2488,7 +2488,7 @@ export const allDonations = [
     "recipient": "New Venture Fund"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "university-of-california-berkeley-foundation-science",
     "amount": 750000,
@@ -2498,7 +2498,7 @@ export const allDonations = [
     "recipient": "University Of California Berkeley Foundation (science)"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "upstream-usa",
     "amount": 500000,
@@ -2508,7 +2508,7 @@ export const allDonations = [
     "recipient": "Upstream USA"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "think-of-us",
     "amount": 500000,
@@ -2518,7 +2518,7 @@ export const allDonations = [
     "recipient": "Think Of Us"
   },
   {
-    "date": "2023-12-01T00:00:00.000Z",
+    "date": "2023-12-01",
     "donorId": "elon-musk",
     "recipientId": "unknown",
     "amount": 108200000,
@@ -2528,7 +2528,7 @@ export const allDonations = [
     "recipient": "Unknown"
   },
   {
-    "date": "2023-11-01T00:00:00.000Z",
+    "date": "2023-11-01",
     "donorId": "vitalik-buterin",
     "recipientId": "long-covid-research-initiative",
     "amount": 15000000,
@@ -2538,7 +2538,7 @@ export const allDonations = [
     "recipient": "Long Covid Research Initiative"
   },
   {
-    "date": "2023-10-01T00:00:00.000Z",
+    "date": "2023-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 179000,
@@ -2548,7 +2548,7 @@ export const allDonations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2023-06-30T00:00:00.000Z",
+    "date": "2023-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 1911407931,
@@ -2558,7 +2558,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2023-06-30T00:00:00.000Z",
+    "date": "2023-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 1911407931,
@@ -2568,7 +2568,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 1733000,
@@ -2578,7 +2578,7 @@ export const allDonations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 1159000,
@@ -2588,7 +2588,7 @@ export const allDonations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "charter-cities-institute",
     "amount": 315000,
@@ -2598,7 +2598,7 @@ export const allDonations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "alignment-research-center",
     "amount": 1846000,
@@ -2608,7 +2608,7 @@ export const allDonations = [
     "recipient": "Alignment Research Center"
   },
   {
-    "date": "2023-03-07T00:00:00.000Z",
+    "date": "2023-03-07",
     "donorId": "vitalik-buterin",
     "recipientId": "university-of-california-san-diego-airborne-institute",
     "amount": 15000000,
@@ -2618,7 +2618,7 @@ export const allDonations = [
     "recipient": "University of California San Diego (Airborne Institute)"
   },
   {
-    "date": "2023-02-16T00:00:00.000Z",
+    "date": "2023-02-16",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 427000,
@@ -2628,7 +2628,7 @@ export const allDonations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2022-12-31T00:00:00.000Z",
+    "date": "2022-12-31",
     "donorId": "larry-page",
     "recipientId": "american-cancer-society",
     "amount": 1000,
@@ -2638,7 +2638,7 @@ export const allDonations = [
     "recipient": "American Cancer Society"
   },
   {
-    "date": "2022-12-20T00:00:00.000Z",
+    "date": "2022-12-20",
     "donorId": "jaan-tallinn",
     "recipientId": "alignment-research-center",
     "amount": 2179000,
@@ -2648,7 +2648,7 @@ export const allDonations = [
     "recipient": "Alignment Research Center"
   },
   {
-    "date": "2022-12-15T00:00:00.000Z",
+    "date": "2022-12-15",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-enabling-ea-learning-research",
     "amount": 224000,
@@ -2658,7 +2658,7 @@ export const allDonations = [
     "recipient": "Centre for Enabling EA Learning & Research"
   },
   {
-    "date": "2022-12-08T00:00:00.000Z",
+    "date": "2022-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 450000,
@@ -2668,7 +2668,7 @@ export const allDonations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2022-12-08T00:00:00.000Z",
+    "date": "2022-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 600000,
@@ -2678,7 +2678,7 @@ export const allDonations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2022-12-06T00:00:00.000Z",
+    "date": "2022-12-06",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 546000,
@@ -2688,7 +2688,7 @@ export const allDonations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2022-11-12T00:00:00.000Z",
+    "date": "2022-11-12",
     "donorId": "jeff-bezos",
     "recipientId": "dolly-parton-bezos-courage-civility-award",
     "amount": 100000000,
@@ -2698,7 +2698,7 @@ export const allDonations = [
     "recipient": "Dolly Parton (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2022-11-01T00:00:00.000Z",
+    "date": "2022-11-01",
     "donorId": "vitalik-buterin",
     "recipientId": "university-of-maryland-school-of-public-health",
     "amount": 9400000,
@@ -2708,7 +2708,7 @@ export const allDonations = [
     "recipient": "University of Maryland, School of Public Health"
   },
   {
-    "date": "2022-09-07T00:00:00.000Z",
+    "date": "2022-09-07",
     "donorId": "vitalik-buterin",
     "recipientId": "long-covid-research-initiative",
     "amount": 15000000,
@@ -2718,7 +2718,7 @@ export const allDonations = [
     "recipient": "Long Covid Research Initiative"
   },
   {
-    "date": "2022-08-18T00:00:00.000Z",
+    "date": "2022-08-18",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 400000,
@@ -2728,7 +2728,7 @@ export const allDonations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2022-07-13T00:00:00.000Z",
+    "date": "2022-07-13",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 20000000000,
@@ -2738,7 +2738,7 @@ export const allDonations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2022-07-01T00:00:00.000Z",
+    "date": "2022-07-01",
     "donorId": "elon-musk",
     "recipientId": "university-of-texas-population-initiative",
     "amount": 10000000,
@@ -2748,7 +2748,7 @@ export const allDonations = [
     "recipient": "University of Texas Population Initiative"
   },
   {
-    "date": "2022-06-30T00:00:00.000Z",
+    "date": "2022-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 170486513,
@@ -2758,7 +2758,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2022-06-30T00:00:00.000Z",
+    "date": "2022-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 170486513,
@@ -2768,7 +2768,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2022-06-23T00:00:00.000Z",
+    "date": "2022-06-23",
     "donorId": "jaan-tallinn",
     "recipientId": "charter-cities-institute",
     "amount": 261000,
@@ -2778,7 +2778,7 @@ export const allDonations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2022-06-16T00:00:00.000Z",
+    "date": "2022-06-16",
     "donorId": "jaan-tallinn",
     "recipientId": "redwood-research",
     "amount": 1274000,
@@ -2788,7 +2788,7 @@ export const allDonations = [
     "recipient": "Redwood Research"
   },
   {
-    "date": "2022-06-13T00:00:00.000Z",
+    "date": "2022-06-13",
     "donorId": "vitalik-buterin",
     "recipientId": "balvi-philanthropic-fund",
     "amount": 10000000,
@@ -2798,7 +2798,7 @@ export const allDonations = [
     "recipient": "Balvi Philanthropic Fund"
   },
   {
-    "date": "2022-05-13T00:00:00.000Z",
+    "date": "2022-05-13",
     "donorId": "vitalik-buterin",
     "recipientId": "unsw-kirby-institute",
     "amount": 4000000,
@@ -2808,7 +2808,7 @@ export const allDonations = [
     "recipient": "UNSW Kirby Institute"
   },
   {
-    "date": "2022-05-12T00:00:00.000Z",
+    "date": "2022-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "dogecoin-foundation",
     "amount": 1000000,
@@ -2818,7 +2818,7 @@ export const allDonations = [
     "recipient": "Dogecoin Foundation"
   },
   {
-    "date": "2022-04-22T00:00:00.000Z",
+    "date": "2022-04-22",
     "donorId": "vitalik-buterin",
     "recipientId": "patient-led-research-collaborative",
     "amount": 3000000,
@@ -2828,7 +2828,7 @@ export const allDonations = [
     "recipient": "patient-led-research-collaborative"
   },
   {
-    "date": "2022-04-04T00:00:00.000Z",
+    "date": "2022-04-04",
     "donorId": "vitalik-buterin",
     "recipientId": "aid-for-ukraine",
     "amount": 2500000,
@@ -2838,7 +2838,7 @@ export const allDonations = [
     "recipient": "Aid For Ukraine"
   },
   {
-    "date": "2022-04-04T00:00:00.000Z",
+    "date": "2022-04-04",
     "donorId": "vitalik-buterin",
     "recipientId": "unchain-fund",
     "amount": 2500000,
@@ -2848,7 +2848,7 @@ export const allDonations = [
     "recipient": "Unchain Fund"
   },
   {
-    "date": "2022-02-26T00:00:00.000Z",
+    "date": "2022-02-26",
     "donorId": "elon-musk",
     "recipientId": "starlink-in-ukraine",
     "amount": 20000000,
@@ -2858,7 +2858,7 @@ export const allDonations = [
     "recipient": "Starlink in Ukraine"
   },
   {
-    "date": "2021-12-31T00:00:00.000Z",
+    "date": "2021-12-31",
     "donorId": "larry-page",
     "recipientId": "new-venture-fund",
     "amount": 200000,
@@ -2868,7 +2868,7 @@ export const allDonations = [
     "recipient": "New Venture Fund"
   },
   {
-    "date": "2021-12-31T00:00:00.000Z",
+    "date": "2021-12-31",
     "donorId": "larry-page",
     "recipientId": "shoo-the-flu",
     "amount": 38894,
@@ -2878,7 +2878,7 @@ export const allDonations = [
     "recipient": "Shoo the Flu"
   },
   {
-    "date": "2021-12-30T00:00:00.000Z",
+    "date": "2021-12-30",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 380000,
@@ -2888,7 +2888,7 @@ export const allDonations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2021-12-16T00:00:00.000Z",
+    "date": "2021-12-16",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 979000,
@@ -2898,7 +2898,7 @@ export const allDonations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2021-11-22T00:00:00.000Z",
+    "date": "2021-11-22",
     "donorId": "jeff-bezos",
     "recipientId": "obama-foundation",
     "amount": 100000000,
@@ -2908,7 +2908,7 @@ export const allDonations = [
     "recipient": "Obama Foundation"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 34000,
@@ -2918,7 +2918,7 @@ export const allDonations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "effective-altruism-infrastructure-fund",
     "amount": 699000,
@@ -2928,7 +2928,7 @@ export const allDonations = [
     "recipient": "Effective Altruism Infrastructure Fund"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "long-term-future-fund",
     "amount": 1417000,
@@ -2938,7 +2938,7 @@ export const allDonations = [
     "recipient": "Long-Term Future Fund"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-objectives-institute",
     "amount": 485000,
@@ -2948,7 +2948,7 @@ export const allDonations = [
     "recipient": "AI Objectives Institute"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 248000,
@@ -2958,7 +2958,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "modeling-cooperation",
     "amount": 83000,
@@ -2968,7 +2968,7 @@ export const allDonations = [
     "recipient": "Modeling Cooperation"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 450000,
@@ -2978,7 +2978,7 @@ export const allDonations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "new-science-research",
     "amount": 500000,
@@ -2988,7 +2988,7 @@ export const allDonations = [
     "recipient": "New Science Research"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-on-long-term-risk",
     "amount": 1218000,
@@ -2998,7 +2998,7 @@ export const allDonations = [
     "recipient": "center-on-long-term-risk"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-safety-camp",
     "amount": 130000,
@@ -3008,7 +3008,7 @@ export const allDonations = [
     "recipient": "AI Safety Camp"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ought",
     "amount": 542000,
@@ -3018,7 +3018,7 @@ export const allDonations = [
     "recipient": "Ought"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-long-term-resilience",
     "amount": 885000,
@@ -3028,7 +3028,7 @@ export const allDonations = [
     "recipient": "centre-for-long-term-resilience"
   },
   {
-    "date": "2021-09-20T00:00:00.000Z",
+    "date": "2021-09-20",
     "donorId": "mark-zuckerberg",
     "recipientId": "multiple-jewish-community-organizations",
     "amount": 1300000,
@@ -3038,7 +3038,7 @@ export const allDonations = [
     "recipient": "Multiple Jewish Community Organizations"
   },
   {
-    "date": "2021-09-18T00:00:00.000Z",
+    "date": "2021-09-18",
     "donorId": "elon-musk",
     "recipientId": "st-jude-childrens-hospital",
     "amount": 50000000,
@@ -3048,7 +3048,7 @@ export const allDonations = [
     "recipient": "St. Jude Children's Hospital"
   },
   {
-    "date": "2021-07-28T00:00:00.000Z",
+    "date": "2021-07-28",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 1207000,
@@ -3058,7 +3058,7 @@ export const allDonations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2021-07-23T00:00:00.000Z",
+    "date": "2021-07-23",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 221000,
@@ -3068,7 +3068,7 @@ export const allDonations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2021-07-20T00:00:00.000Z",
+    "date": "2021-07-20",
     "donorId": "jeff-bezos",
     "recipientId": "van-jones-bezos-courage-civility-award",
     "amount": 100000000,
@@ -3078,7 +3078,7 @@ export const allDonations = [
     "recipient": "Van Jones (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2021-07-20T00:00:00.000Z",
+    "date": "2021-07-20",
     "donorId": "jeff-bezos",
     "recipientId": "jose-andres-bezos-courage-civility-award",
     "amount": 100000000,
@@ -3088,7 +3088,7 @@ export const allDonations = [
     "recipient": "jose-andres-bezos-courage-civility-award"
   },
   {
-    "date": "2021-07-16T00:00:00.000Z",
+    "date": "2021-07-16",
     "donorId": "jaan-tallinn",
     "recipientId": "charter-cities-institute",
     "amount": 137000,
@@ -3098,7 +3098,7 @@ export const allDonations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2021-07-16T00:00:00.000Z",
+    "date": "2021-07-16",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 175000,
@@ -3108,7 +3108,7 @@ export const allDonations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2021-07-14T00:00:00.000Z",
+    "date": "2021-07-14",
     "donorId": "jeff-bezos",
     "recipientId": "smithsonian-institution",
     "amount": 200000000,
@@ -3118,7 +3118,7 @@ export const allDonations = [
     "recipient": "Smithsonian Institution"
   },
   {
-    "date": "2021-06-30T00:00:00.000Z",
+    "date": "2021-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 269722092,
@@ -3128,7 +3128,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2021-06-30T00:00:00.000Z",
+    "date": "2021-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 269722092,
@@ -3138,7 +3138,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "india-covid-crypto-relief-fund",
     "amount": 4000000,
@@ -3148,7 +3148,7 @@ export const allDonations = [
     "recipient": "india-covid-crypto-relief-fund"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "gitcoin",
     "amount": 5000000,
@@ -3158,7 +3158,7 @@ export const allDonations = [
     "recipient": "Gitcoin"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "methuselah-foundation",
     "amount": 4300000,
@@ -3168,7 +3168,7 @@ export const allDonations = [
     "recipient": "Methuselah Foundation"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "givewell",
     "amount": 50000000,
@@ -3178,7 +3178,7 @@ export const allDonations = [
     "recipient": "GiveWell"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 4378159,
@@ -3188,7 +3188,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "charter-cities-institute",
     "amount": 2080000,
@@ -3198,7 +3198,7 @@ export const allDonations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 1055000,
@@ -3208,7 +3208,7 @@ export const allDonations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-enabling-ea-learning-research",
     "amount": 61000,
@@ -3218,7 +3218,7 @@ export const allDonations = [
     "recipient": "Centre for Enabling EA Learning & Research"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "long-term-future-fund",
     "amount": 675000,
@@ -3228,7 +3228,7 @@ export const allDonations = [
     "recipient": "Long-Term Future Fund"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "global-catastrophic-risk-institute",
     "amount": 48000,
@@ -3238,7 +3238,7 @@ export const allDonations = [
     "recipient": "Global Catastrophic Risk Institute"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 145000,
@@ -3248,7 +3248,7 @@ export const allDonations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "legal-priorities-project",
     "amount": 265000,
@@ -3258,7 +3258,7 @@ export const allDonations = [
     "recipient": "Legal Priorities Project"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 37000,
@@ -3268,7 +3268,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "new-science-research",
     "amount": 147000,
@@ -3278,7 +3278,7 @@ export const allDonations = [
     "recipient": "New Science Research"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-safety-support",
     "amount": 200000,
@@ -3288,7 +3288,7 @@ export const allDonations = [
     "recipient": "AI Safety Support"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 103000,
@@ -3298,7 +3298,7 @@ export const allDonations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 13000,
@@ -3308,7 +3308,7 @@ export const allDonations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-long-term-resilience",
     "amount": 1013000,
@@ -3318,7 +3318,7 @@ export const allDonations = [
     "recipient": "centre-for-long-term-resilience"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 478000,
@@ -3328,7 +3328,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "generation-pledge",
     "amount": 291000,
@@ -3338,7 +3338,7 @@ export const allDonations = [
     "recipient": "Generation Pledge"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 333000,
@@ -3348,7 +3348,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-03-30T00:00:00.000Z",
+    "date": "2021-03-30",
     "donorId": "elon-musk",
     "recipientId": "cameron-county-schools-tx",
     "amount": 20000000,
@@ -3358,7 +3358,7 @@ export const allDonations = [
     "recipient": "Cameron County Schools, TX"
   },
   {
-    "date": "2021-03-30T00:00:00.000Z",
+    "date": "2021-03-30",
     "donorId": "elon-musk",
     "recipientId": "city-of-brownsville-tx",
     "amount": 10000000,
@@ -3368,7 +3368,7 @@ export const allDonations = [
     "recipient": "City of Brownsville, TX"
   },
   {
-    "date": "2021-03-12T00:00:00.000Z",
+    "date": "2021-03-12",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-human-compatible-ai",
     "amount": 20000,
@@ -3378,7 +3378,7 @@ export const allDonations = [
     "recipient": "Center for Human-Compatible AI"
   },
   {
-    "date": "2021-02-08T00:00:00.000Z",
+    "date": "2021-02-08",
     "donorId": "elon-musk",
     "recipientId": "xprize-climate-change",
     "amount": 100000000,
@@ -3388,7 +3388,7 @@ export const allDonations = [
     "recipient": "XPrize, Climate Change"
   },
   {
-    "date": "2021-01-12T00:00:00.000Z",
+    "date": "2021-01-12",
     "donorId": "jaan-tallinn",
     "recipientId": "global-catastrophic-risk-institute",
     "amount": 209000,
@@ -3398,7 +3398,7 @@ export const allDonations = [
     "recipient": "Global Catastrophic Risk Institute"
   },
   {
-    "date": "2021-01-12T00:00:00.000Z",
+    "date": "2021-01-12",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-human-compatible-ai",
     "amount": 799000,
@@ -3408,7 +3408,7 @@ export const allDonations = [
     "recipient": "Center for Human-Compatible AI"
   },
   {
-    "date": "2021-01-12T00:00:00.000Z",
+    "date": "2021-01-12",
     "donorId": "elon-musk",
     "recipientId": "khan-academy",
     "amount": 5000000,
@@ -3418,7 +3418,7 @@ export const allDonations = [
     "recipient": "Khan Academy"
   },
   {
-    "date": "2021-01-05T00:00:00.000Z",
+    "date": "2021-01-05",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 247000,
@@ -3428,7 +3428,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2020-12-23T00:00:00.000Z",
+    "date": "2020-12-23",
     "donorId": "jaan-tallinn",
     "recipientId": "rethink-priorities",
     "amount": 57000,
@@ -3438,7 +3438,7 @@ export const allDonations = [
     "recipient": "Rethink Priorities"
   },
   {
-    "date": "2020-12-23T00:00:00.000Z",
+    "date": "2020-12-23",
     "donorId": "jaan-tallinn",
     "recipientId": "median-group",
     "amount": 98000,
@@ -3448,7 +3448,7 @@ export const allDonations = [
     "recipient": "Median Group"
   },
   {
-    "date": "2020-12-21T00:00:00.000Z",
+    "date": "2020-12-21",
     "donorId": "jeff-bezos",
     "recipientId": "all-in-washington-covid-19-relief-effort",
     "amount": 25000000,
@@ -3458,7 +3458,7 @@ export const allDonations = [
     "recipient": "all-in-washington-covid-19-relief-effort"
   },
   {
-    "date": "2020-12-17T00:00:00.000Z",
+    "date": "2020-12-17",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 563000,
@@ -3468,7 +3468,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2020-12-08T00:00:00.000Z",
+    "date": "2020-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "modeling-cooperation",
     "amount": 74000,
@@ -3478,7 +3478,7 @@ export const allDonations = [
     "recipient": "Modeling Cooperation"
   },
   {
-    "date": "2020-12-08T00:00:00.000Z",
+    "date": "2020-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 39000,
@@ -3488,7 +3488,7 @@ export const allDonations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2020-12-04T00:00:00.000Z",
+    "date": "2020-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "future-of-life-institute",
     "amount": 347000,
@@ -3498,7 +3498,7 @@ export const allDonations = [
     "recipient": "Future of Life Institute"
   },
   {
-    "date": "2020-10-13T00:00:00.000Z",
+    "date": "2020-10-13",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-tech-and-civic-life",
     "amount": 100000000,
@@ -3508,7 +3508,7 @@ export const allDonations = [
     "recipient": "Center for Tech and Civic Life"
   },
   {
-    "date": "2020-10-01T00:00:00.000Z",
+    "date": "2020-10-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-election-innovation-and-research",
     "amount": 19500000,
@@ -3518,7 +3518,7 @@ export const allDonations = [
     "recipient": "Center for Election Innovation and Research"
   },
   {
-    "date": "2020-10-01T00:00:00.000Z",
+    "date": "2020-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 151000,
@@ -3528,7 +3528,7 @@ export const allDonations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2020-09-28T00:00:00.000Z",
+    "date": "2020-09-28",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-enabling-ea-learning-research",
     "amount": 50000,
@@ -3538,7 +3538,7 @@ export const allDonations = [
     "recipient": "Centre for Enabling EA Learning & Research"
   },
   {
-    "date": "2020-09-01T00:00:00.000Z",
+    "date": "2020-09-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-tech-and-civic-life",
     "amount": 250000000,
@@ -3548,7 +3548,7 @@ export const allDonations = [
     "recipient": "Center for Tech and Civic Life"
   },
   {
-    "date": "2020-09-01T00:00:00.000Z",
+    "date": "2020-09-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-election-innovation-and-research",
     "amount": 50000000,
@@ -3558,7 +3558,7 @@ export const allDonations = [
     "recipient": "Center for Election Innovation and Research"
   },
   {
-    "date": "2020-08-31T00:00:00.000Z",
+    "date": "2020-08-31",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 134000,
@@ -3568,7 +3568,7 @@ export const allDonations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2020-07-23T00:00:00.000Z",
+    "date": "2020-07-23",
     "donorId": "jaan-tallinn",
     "recipientId": "quantified-uncertainty-research-institute",
     "amount": 60000,
@@ -3578,7 +3578,7 @@ export const allDonations = [
     "recipient": "Quantified Uncertainty Research Institute"
   },
   {
-    "date": "2020-07-23T00:00:00.000Z",
+    "date": "2020-07-23",
     "donorId": "jaan-tallinn",
     "recipientId": "future-of-life-institute",
     "amount": 30000,
@@ -3588,7 +3588,7 @@ export const allDonations = [
     "recipient": "Future of Life Institute"
   },
   {
-    "date": "2020-06-30T00:00:00.000Z",
+    "date": "2020-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 1017208584,
@@ -3598,7 +3598,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2020-06-30T00:00:00.000Z",
+    "date": "2020-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 1017208584,
@@ -3608,7 +3608,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2020-06-29T00:00:00.000Z",
+    "date": "2020-06-29",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 10000,
@@ -3618,7 +3618,7 @@ export const allDonations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2020-06-24T00:00:00.000Z",
+    "date": "2020-06-24",
     "donorId": "jeff-bezos",
     "recipientId": "all-in-washington-covid-19-relief-effort",
     "amount": 25000000,
@@ -3628,7 +3628,7 @@ export const allDonations = [
     "recipient": "all-in-washington-covid-19-relief-effort"
   },
   {
-    "date": "2020-06-15T00:00:00.000Z",
+    "date": "2020-06-15",
     "donorId": "jaan-tallinn",
     "recipientId": "leverage-research",
     "amount": 80000,
@@ -3638,7 +3638,7 @@ export const allDonations = [
     "recipient": "Leverage Research"
   },
   {
-    "date": "2020-06-12T00:00:00.000Z",
+    "date": "2020-06-12",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 110000,
@@ -3648,7 +3648,7 @@ export const allDonations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2020-06-12T00:00:00.000Z",
+    "date": "2020-06-12",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 40000,
@@ -3658,7 +3658,7 @@ export const allDonations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2020-06-12T00:00:00.000Z",
+    "date": "2020-06-12",
     "donorId": "jaan-tallinn",
     "recipientId": "80000-hours",
     "amount": 30000,
@@ -3668,7 +3668,7 @@ export const allDonations = [
     "recipient": "80,000 Hours"
   },
   {
-    "date": "2020-06-11T00:00:00.000Z",
+    "date": "2020-06-11",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 20000,
@@ -3678,7 +3678,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2020-06-11T00:00:00.000Z",
+    "date": "2020-06-11",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 280000,
@@ -3688,7 +3688,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2020-06-09T00:00:00.000Z",
+    "date": "2020-06-09",
     "donorId": "jaan-tallinn",
     "recipientId": "global-catastrophic-risk-institute",
     "amount": 90000,
@@ -3698,7 +3698,7 @@ export const allDonations = [
     "recipient": "Global Catastrophic Risk Institute"
   },
   {
-    "date": "2020-06-01T00:00:00.000Z",
+    "date": "2020-06-01",
     "donorId": "elon-musk",
     "recipientId": "ad-astra-school",
     "amount": 60000,
@@ -3708,7 +3708,7 @@ export const allDonations = [
     "recipient": "Ad Astra School"
   },
   {
-    "date": "2020-06-01T00:00:00.000Z",
+    "date": "2020-06-01",
     "donorId": "elon-musk",
     "recipientId": "crossroads-school",
     "amount": 25000,
@@ -3718,7 +3718,7 @@ export const allDonations = [
     "recipient": "Crossroads School"
   },
   {
-    "date": "2020-06-01T00:00:00.000Z",
+    "date": "2020-06-01",
     "donorId": "elon-musk",
     "recipientId": "windward-school",
     "amount": 25000,
@@ -3728,7 +3728,7 @@ export const allDonations = [
     "recipient": "Windward School"
   },
   {
-    "date": "2020-04-02T00:00:00.000Z",
+    "date": "2020-04-02",
     "donorId": "jeff-bezos",
     "recipientId": "feeding-america-covid-19-response-fund",
     "amount": 100000000,
@@ -3738,7 +3738,7 @@ export const allDonations = [
     "recipient": "feeding-america-covid-19-response-fund"
   },
   {
-    "date": "2020-03-24T00:00:00.000Z",
+    "date": "2020-03-24",
     "donorId": "elon-musk",
     "recipientId": "california-covid-response",
     "amount": 30000000,
@@ -3748,7 +3748,7 @@ export const allDonations = [
     "recipient": "California Covid Response"
   },
   {
-    "date": "2020-02-17T00:00:00.000Z",
+    "date": "2020-02-17",
     "donorId": "jeff-bezos",
     "recipientId": "bezos-earth-fund",
     "amount": 10000000000,
@@ -3758,7 +3758,7 @@ export const allDonations = [
     "recipient": "Bezos Earth Fund"
   },
   {
-    "date": "2020-01-16T00:00:00.000Z",
+    "date": "2020-01-16",
     "donorId": "jaan-tallinn",
     "recipientId": "median-group",
     "amount": 120000,
@@ -3768,7 +3768,7 @@ export const allDonations = [
     "recipient": "Median Group"
   },
   {
-    "date": "2020-01-12T00:00:00.000Z",
+    "date": "2020-01-12",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 150000,
@@ -3778,7 +3778,7 @@ export const allDonations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2019-12-24T00:00:00.000Z",
+    "date": "2019-12-24",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 20000,
@@ -3788,7 +3788,7 @@ export const allDonations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2019-12-16T00:00:00.000Z",
+    "date": "2019-12-16",
     "donorId": "jaan-tallinn",
     "recipientId": "80000-hours",
     "amount": 70000,
@@ -3798,7 +3798,7 @@ export const allDonations = [
     "recipient": "80,000 Hours"
   },
   {
-    "date": "2019-12-04T00:00:00.000Z",
+    "date": "2019-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 50000,
@@ -3808,7 +3808,7 @@ export const allDonations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2019-12-04T00:00:00.000Z",
+    "date": "2019-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "leverage-research",
     "amount": 50000,
@@ -3818,7 +3818,7 @@ export const allDonations = [
     "recipient": "Leverage Research"
   },
   {
-    "date": "2019-12-04T00:00:00.000Z",
+    "date": "2019-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 30000,
@@ -3828,7 +3828,7 @@ export const allDonations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2019-10-29T00:00:00.000Z",
+    "date": "2019-10-29",
     "donorId": "elon-musk",
     "recipientId": "arbor-day-foundation",
     "amount": 1000000,
@@ -3838,7 +3838,7 @@ export const allDonations = [
     "recipient": "Arbor Day Foundation"
   },
   {
-    "date": "2019-06-30T00:00:00.000Z",
+    "date": "2019-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 552209978,
@@ -3848,7 +3848,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2019-06-30T00:00:00.000Z",
+    "date": "2019-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 552209978,
@@ -3858,7 +3858,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2019-04-03T00:00:00.000Z",
+    "date": "2019-04-03",
     "donorId": "jaan-tallinn",
     "recipientId": "leverage-research",
     "amount": 100000,
@@ -3868,7 +3868,7 @@ export const allDonations = [
     "recipient": "Leverage Research"
   },
   {
-    "date": "2018-12-31T00:00:00.000Z",
+    "date": "2018-12-31",
     "donorId": "vitalik-buterin",
     "recipientId": "sens-research-foundation",
     "amount": 350000,
@@ -3878,7 +3878,7 @@ export const allDonations = [
     "recipient": "SENS Research Foundation"
   },
   {
-    "date": "2018-11-18T00:00:00.000Z",
+    "date": "2018-11-18",
     "donorId": "michael-bloomberg",
     "recipientId": "johns-hopkins-university-education",
     "amount": 1800000000,
@@ -3888,7 +3888,7 @@ export const allDonations = [
     "recipient": "Johns Hopkins University (education)"
   },
   {
-    "date": "2018-10-01T00:00:00.000Z",
+    "date": "2018-10-01",
     "donorId": "elon-musk",
     "recipientId": "flint-public-schools-water-filtration",
     "amount": 480000,
@@ -3898,7 +3898,7 @@ export const allDonations = [
     "recipient": "Flint Public Schools (Water Filtration)"
   },
   {
-    "date": "2018-09-13T00:00:00.000Z",
+    "date": "2018-09-13",
     "donorId": "jeff-bezos",
     "recipientId": "bezos-day-one-fund",
     "amount": 2000000000,
@@ -3908,7 +3908,7 @@ export const allDonations = [
     "recipient": "Bezos Day One Fund"
   },
   {
-    "date": "2018-09-05T00:00:00.000Z",
+    "date": "2018-09-05",
     "donorId": "jeff-bezos",
     "recipientId": "with-honor-fund",
     "amount": 10000000,
@@ -3918,7 +3918,7 @@ export const allDonations = [
     "recipient": "With Honor Fund"
   },
   {
-    "date": "2018-06-30T00:00:00.000Z",
+    "date": "2018-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 403279018,
@@ -3928,7 +3928,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2018-06-30T00:00:00.000Z",
+    "date": "2018-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 403279018,
@@ -3938,7 +3938,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2018-03-27T00:00:00.000Z",
+    "date": "2018-03-27",
     "donorId": "vitalik-buterin",
     "recipientId": "givedirectly",
     "amount": 1000000,
@@ -3948,7 +3948,7 @@ export const allDonations = [
     "recipient": "GiveDirectly"
   },
   {
-    "date": "2018-02-12T00:00:00.000Z",
+    "date": "2018-02-12",
     "donorId": "vitalik-buterin",
     "recipientId": "internet-archive",
     "amount": 93469,
@@ -3958,7 +3958,7 @@ export const allDonations = [
     "recipient": "Internet Archive"
   },
   {
-    "date": "2018-01-12T00:00:00.000Z",
+    "date": "2018-01-12",
     "donorId": "jeff-bezos",
     "recipientId": "thedream-us",
     "amount": 33000000,
@@ -3968,7 +3968,7 @@ export const allDonations = [
     "recipient": "thedream-us"
   },
   {
-    "date": "2018-01-01T00:00:00.000Z",
+    "date": "2018-01-01",
     "donorId": "elon-musk",
     "recipientId": "sierra-club",
     "amount": 6000000,
@@ -3978,7 +3978,7 @@ export const allDonations = [
     "recipient": "Sierra Club"
   },
   {
-    "date": "2018-01-01T00:00:00.000Z",
+    "date": "2018-01-01",
     "donorId": "elon-musk",
     "recipientId": "aclu",
     "amount": 500000,
@@ -3988,7 +3988,7 @@ export const allDonations = [
     "recipient": "ACLU"
   },
   {
-    "date": "2018-01-01T00:00:00.000Z",
+    "date": "2018-01-01",
     "donorId": "elon-musk",
     "recipientId": "art-of-elysium",
     "amount": 250000,
@@ -3998,7 +3998,7 @@ export const allDonations = [
     "recipient": "Art of Elysium"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "vitalik-buterin",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 763970,
@@ -4008,7 +4008,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "oakland-unified-school-district-flu-shots",
     "amount": 800000,
@@ -4018,7 +4018,7 @@ export const allDonations = [
     "recipient": "Oakland Unified School District (Flu Shots)"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "regents-of-the-university-of-california-vaccine-delivery-study",
     "amount": 303000,
@@ -4028,7 +4028,7 @@ export const allDonations = [
     "recipient": "Regents of the University of California (vaccine delivery study)"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "oakland-unified-school-district-flu-study",
     "amount": 162000,
@@ -4038,7 +4038,7 @@ export const allDonations = [
     "recipient": "Oakland Unified School District (flu study)"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "new-venture-fund",
     "amount": 100000,
@@ -4048,7 +4048,7 @@ export const allDonations = [
     "recipient": "New Venture Fund"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "american-cancer-society",
     "amount": 1000,
@@ -4058,7 +4058,7 @@ export const allDonations = [
     "recipient": "American Cancer Society"
   },
   {
-    "date": "2017-12-14T00:00:00.000Z",
+    "date": "2017-12-14",
     "donorId": "vitalik-buterin",
     "recipientId": "sens-research-foundation",
     "amount": 2400000,
@@ -4068,7 +4068,7 @@ export const allDonations = [
     "recipient": "SENS Research Foundation"
   },
   {
-    "date": "2017-12-01T00:00:00.000Z",
+    "date": "2017-12-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 5000000,
@@ -4078,7 +4078,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2017-11-07T00:00:00.000Z",
+    "date": "2017-11-07",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 1856575000,
@@ -4088,7 +4088,7 @@ export const allDonations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2017-11-01T00:00:00.000Z",
+    "date": "2017-11-01",
     "donorId": "bill-gates",
     "recipientId": "dementia-discovery-fund",
     "amount": 50000000,
@@ -4098,7 +4098,7 @@ export const allDonations = [
     "recipient": "Dementia Discovery Fund"
   },
   {
-    "date": "2017-06-30T00:00:00.000Z",
+    "date": "2017-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 279174388,
@@ -4108,7 +4108,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2017-06-30T00:00:00.000Z",
+    "date": "2017-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 279174388,
@@ -4118,7 +4118,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2017-06-01T00:00:00.000Z",
+    "date": "2017-06-01",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 4680000000,
@@ -4128,7 +4128,7 @@ export const allDonations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2017-05-31T00:00:00.000Z",
+    "date": "2017-05-31",
     "donorId": "larry-page",
     "recipientId": "shoo-the-flu",
     "amount": 4100000,
@@ -4138,7 +4138,7 @@ export const allDonations = [
     "recipient": "Shoo the Flu"
   },
   {
-    "date": "2017-05-23T00:00:00.000Z",
+    "date": "2017-05-23",
     "donorId": "jeff-bezos",
     "recipientId": "reporters-committee-for-freedom-of-the-press",
     "amount": 1000000,
@@ -4148,7 +4148,7 @@ export const allDonations = [
     "recipient": "Reporters Committee for Freedom of the Press"
   },
   {
-    "date": "2017-01-01T00:00:00.000Z",
+    "date": "2017-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 2000000,
@@ -4158,7 +4158,7 @@ export const allDonations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2017-01-01T00:00:00.000Z",
+    "date": "2017-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 60500,
@@ -4168,7 +4168,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2016-09-08T00:00:00.000Z",
+    "date": "2016-09-08",
     "donorId": "dustin-moskovitz",
     "recipientId": "democratic-political-organizations",
     "amount": 20000000,
@@ -4178,7 +4178,7 @@ export const allDonations = [
     "recipient": "Democratic Political Organizations"
   },
   {
-    "date": "2016-09-08T00:00:00.000Z",
+    "date": "2016-09-08",
     "donorId": "cari-tuna",
     "recipientId": "democratic-political-organizations",
     "amount": 20000000,
@@ -4188,7 +4188,7 @@ export const allDonations = [
     "recipient": "Democratic Political Organizations"
   },
   {
-    "date": "2016-09-01T00:00:00.000Z",
+    "date": "2016-09-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 85000000,
@@ -4198,7 +4198,7 @@ export const allDonations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2016-06-30T00:00:00.000Z",
+    "date": "2016-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 252806176,
@@ -4208,7 +4208,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2016-06-30T00:00:00.000Z",
+    "date": "2016-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 252806176,
@@ -4218,7 +4218,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2016-01-01T00:00:00.000Z",
+    "date": "2016-01-01",
     "donorId": "michael-bloomberg",
     "recipientId": "johns-hopkins-university-science",
     "amount": 50000000,
@@ -4228,7 +4228,7 @@ export const allDonations = [
     "recipient": "Johns Hopkins University (science)"
   },
   {
-    "date": "2016-01-01T00:00:00.000Z",
+    "date": "2016-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 80000,
@@ -4238,7 +4238,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2016-01-01T00:00:00.000Z",
+    "date": "2016-01-01",
     "donorId": "elon-musk",
     "recipientId": "openai",
     "amount": 15000000,
@@ -4248,7 +4248,7 @@ export const allDonations = [
     "recipient": "OpenAI"
   },
   {
-    "date": "2015-10-15T00:00:00.000Z",
+    "date": "2015-10-15",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 5000,
@@ -4258,7 +4258,7 @@ export const allDonations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2015-06-30T00:00:00.000Z",
+    "date": "2015-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 226124175,
@@ -4268,7 +4268,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2015-06-30T00:00:00.000Z",
+    "date": "2015-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 226124175,
@@ -4278,7 +4278,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2015-05-31T00:00:00.000Z",
+    "date": "2015-05-31",
     "donorId": "larry-page",
     "recipientId": "shoo-the-flu",
     "amount": 88000,
@@ -4288,7 +4288,7 @@ export const allDonations = [
     "recipient": "Shoo the Flu"
   },
   {
-    "date": "2015-02-06T00:00:00.000Z",
+    "date": "2015-02-06",
     "donorId": "mark-zuckerberg",
     "recipientId": "san-francisco-general-hospital-foundation",
     "amount": 75000000,
@@ -4298,7 +4298,7 @@ export const allDonations = [
     "recipient": "San Francisco General Hospital Foundation"
   },
   {
-    "date": "2015-01-15T00:00:00.000Z",
+    "date": "2015-01-15",
     "donorId": "elon-musk",
     "recipientId": "future-of-life-institute",
     "amount": 10000000,
@@ -4308,7 +4308,7 @@ export const allDonations = [
     "recipient": "Future of Life Institute"
   },
   {
-    "date": "2014-11-10T00:00:00.000Z",
+    "date": "2014-11-10",
     "donorId": "larry-page",
     "recipientId": "ebola-relief-efforts",
     "amount": 15000000,
@@ -4318,7 +4318,7 @@ export const allDonations = [
     "recipient": "Ebola Relief Efforts"
   },
   {
-    "date": "2014-10-14T00:00:00.000Z",
+    "date": "2014-10-14",
     "donorId": "mark-zuckerberg",
     "recipientId": "cdc-foundation-ebola-response",
     "amount": 25000000,
@@ -4328,7 +4328,7 @@ export const allDonations = [
     "recipient": "CDC Foundation (Ebola Response)"
   },
   {
-    "date": "2014-07-10T00:00:00.000Z",
+    "date": "2014-07-10",
     "donorId": "elon-musk",
     "recipientId": "tesla-science-center-at-wardenclyffe",
     "amount": 1000000,
@@ -4338,7 +4338,7 @@ export const allDonations = [
     "recipient": "Tesla Science Center at Wardenclyffe"
   },
   {
-    "date": "2014-06-30T00:00:00.000Z",
+    "date": "2014-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 224868989,
@@ -4348,7 +4348,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2014-06-30T00:00:00.000Z",
+    "date": "2014-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 224868989,
@@ -4358,7 +4358,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2014-05-30T00:00:00.000Z",
+    "date": "2014-05-30",
     "donorId": "mark-zuckerberg",
     "recipientId": "bay-area-public-schools",
     "amount": 120000000,
@@ -4368,7 +4368,7 @@ export const allDonations = [
     "recipient": "Bay Area Public Schools"
   },
   {
-    "date": "2014-01-01T00:00:00.000Z",
+    "date": "2014-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 100000,
@@ -4378,7 +4378,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2013-06-30T00:00:00.000Z",
+    "date": "2013-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 28599982,
@@ -4388,7 +4388,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2013-06-30T00:00:00.000Z",
+    "date": "2013-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 28599982,
@@ -4398,7 +4398,7 @@ export const allDonations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2013-01-01T00:00:00.000Z",
+    "date": "2013-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 100000,
@@ -4408,7 +4408,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2012-07-28T00:00:00.000Z",
+    "date": "2012-07-28",
     "donorId": "jeff-bezos",
     "recipientId": "washington-united-for-marriage-referendum-74-campaign",
     "amount": 2500000,
@@ -4418,7 +4418,7 @@ export const allDonations = [
     "recipient": "Washington United for Marriage (Referendum 74 campaign)"
   },
   {
-    "date": "2012-01-01T00:00:00.000Z",
+    "date": "2012-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 155000,
@@ -4428,7 +4428,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2012-01-01T00:00:00.000Z",
+    "date": "2012-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 109000,
@@ -4438,7 +4438,7 @@ export const allDonations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2012-01-01T00:00:00.000Z",
+    "date": "2012-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 200000,
@@ -4448,7 +4448,7 @@ export const allDonations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2011-12-13T00:00:00.000Z",
+    "date": "2011-12-13",
     "donorId": "jeff-bezos",
     "recipientId": "princeton-university-science",
     "amount": 15000000,
@@ -4458,7 +4458,7 @@ export const allDonations = [
     "recipient": "Princeton University (science)"
   },
   {
-    "date": "2011-08-17T00:00:00.000Z",
+    "date": "2011-08-17",
     "donorId": "jeff-bezos",
     "recipientId": "museum-of-history-industry-seattle",
     "amount": 10000000,
@@ -4468,7 +4468,7 @@ export const allDonations = [
     "recipient": "Museum of History & Industry (Seattle)"
   },
   {
-    "date": "2011-07-01T00:00:00.000Z",
+    "date": "2011-07-01",
     "donorId": "elon-musk",
     "recipientId": "soma-city-fukushima-tech",
     "amount": 250000,
@@ -4478,7 +4478,7 @@ export const allDonations = [
     "recipient": "Soma City, Fukushima (tech)"
   },
   {
-    "date": "2010-12-01T00:00:00.000Z",
+    "date": "2010-12-01",
     "donorId": "elon-musk",
     "recipientId": "bayou-la-batre-hurricane-response-center",
     "amount": 250000,
@@ -4488,7 +4488,7 @@ export const allDonations = [
     "recipient": "Bayou La Batre Hurricane Response Center"
   },
   {
-    "date": "2010-09-24T00:00:00.000Z",
+    "date": "2010-09-24",
     "donorId": "mark-zuckerberg",
     "recipientId": "newark-public-schools",
     "amount": 100000000,
@@ -4498,7 +4498,7 @@ export const allDonations = [
     "recipient": "Newark Public Schools"
   },
   {
-    "date": "2010-01-01T00:00:00.000Z",
+    "date": "2010-01-01",
     "donorId": "michael-bloomberg",
     "recipientId": "sierra-club-climate-change",
     "amount": 50000000,
@@ -4508,7 +4508,7 @@ export const allDonations = [
     "recipient": "Sierra Club (climate change)"
   },
   {
-    "date": "2008-12-31T00:00:00.000Z",
+    "date": "2008-12-31",
     "donorId": "larry-page",
     "recipientId": "president-barack-obama-inaugural-committee",
     "amount": 25000,
@@ -4518,7 +4518,7 @@ export const allDonations = [
     "recipient": "President Barack Obama Inaugural Committee"
   },
   {
-    "date": "2008-11-01T00:00:00.000Z",
+    "date": "2008-11-01",
     "donorId": "larry-page",
     "recipientId": "no-on-proposition-8-campaign",
     "amount": 400000,
@@ -4528,7 +4528,7 @@ export const allDonations = [
     "recipient": "No on Proposition 8 Campaign"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "gates-foundation",
     "amount": 43000000000,
@@ -4538,7 +4538,7 @@ export const allDonations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "susan-thompson-buffett-foundation",
     "amount": 5800000000,
@@ -4548,7 +4548,7 @@ export const allDonations = [
     "recipient": "Susan Thompson Buffett Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "howard-g-buffett-foundation",
     "amount": 2600000000,
@@ -4558,7 +4558,7 @@ export const allDonations = [
     "recipient": "Howard G. Buffett Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "sherwood-foundation",
     "amount": 2600000000,
@@ -4568,7 +4568,7 @@ export const allDonations = [
     "recipient": "Sherwood Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "novo-foundation",
     "amount": 2600000000,
@@ -4578,7 +4578,7 @@ export const allDonations = [
     "recipient": "NoVo Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "glide-foundation",
     "amount": 53000000,
@@ -4588,7 +4588,7 @@ export const allDonations = [
     "recipient": "GLIDE Foundation"
   },
   {
-    "date": "2006-11-01T00:00:00.000Z",
+    "date": "2006-11-01",
     "donorId": "larry-page",
     "recipientId": "californians-for-clean-alternative-energy",
     "amount": 1000000,
@@ -4598,7 +4598,7 @@ export const allDonations = [
     "recipient": "Californians for Clean Alternative Energy"
   },
   {
-    "date": "2006-11-01T00:00:00.000Z",
+    "date": "2006-11-01",
     "donorId": "larry-page",
     "recipientId": "californians-for-clean-alternative-energy",
     "amount": 1000000,
@@ -4608,7 +4608,7 @@ export const allDonations = [
     "recipient": "Californians for Clean Alternative Energy"
   },
   {
-    "date": "2006-09-19T00:00:00.000Z",
+    "date": "2006-09-19",
     "donorId": "warren-buffett",
     "recipientId": "iaea-nuclear-fuel-bank",
     "amount": 50000000,
@@ -4618,7 +4618,7 @@ export const allDonations = [
     "recipient": "IAEA Nuclear Fuel Bank"
   },
   {
-    "date": "2004-11-01T00:00:00.000Z",
+    "date": "2004-11-01",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 3300000000,
@@ -4628,7 +4628,7 @@ export const allDonations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2003-04-24T00:00:00.000Z",
+    "date": "2003-04-24",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 70000000,
@@ -4638,7 +4638,7 @@ export const allDonations = [
     "recipient": "University of Washington (research)"
   },
   {
-    "date": "2000-01-24T00:00:00.000Z",
+    "date": "2000-01-24",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 5000000000,
@@ -4648,7 +4648,7 @@ export const allDonations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "1999-11-01T00:00:00.000Z",
+    "date": "1999-11-01",
     "donorId": "bill-gates",
     "recipientId": "gavi-alliance-the-vaccine-fund",
     "amount": 750000000,
@@ -4658,7 +4658,7 @@ export const allDonations = [
     "recipient": "GAVI Alliance (The Vaccine Fund)"
   },
   {
-    "date": "1999-04-14T00:00:00.000Z",
+    "date": "1999-04-14",
     "donorId": "bill-gates",
     "recipientId": "mit",
     "amount": 20000000,
@@ -4668,7 +4668,7 @@ export const allDonations = [
     "recipient": "MIT"
   },
   {
-    "date": "1999-01-01T00:00:00.000Z",
+    "date": "1999-01-01",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 15800000000,
@@ -4678,7 +4678,7 @@ export const allDonations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "1999-01-01T00:00:00.000Z",
+    "date": "1999-01-01",
     "donorId": "bill-gates",
     "recipientId": "united-negro-college-fund",
     "amount": 1265000000,
@@ -4688,7 +4688,7 @@ export const allDonations = [
     "recipient": "United Negro College Fund"
   },
   {
-    "date": "1998-12-01T00:00:00.000Z",
+    "date": "1998-12-01",
     "donorId": "bill-gates",
     "recipientId": "seattle-public-libraries",
     "amount": 20000000,
@@ -4698,7 +4698,7 @@ export const allDonations = [
     "recipient": "Seattle Public Libraries"
   },
   {
-    "date": "1998-12-01T00:00:00.000Z",
+    "date": "1998-12-01",
     "donorId": "bill-gates",
     "recipientId": "path",
     "amount": 100000000,
@@ -4708,7 +4708,7 @@ export const allDonations = [
     "recipient": "PATH"
   },
   {
-    "date": "1997-07-23T00:00:00.000Z",
+    "date": "1997-07-23",
     "donorId": "bill-gates",
     "recipientId": "gates-library-foundation",
     "amount": 200000000,
@@ -4718,7 +4718,7 @@ export const allDonations = [
     "recipient": "Gates Library Foundation"
   },
   {
-    "date": "1996-09-01T00:00:00.000Z",
+    "date": "1996-09-01",
     "donorId": "bill-gates",
     "recipientId": "harvard-university",
     "amount": 25000000,
@@ -4728,7 +4728,7 @@ export const allDonations = [
     "recipient": "Harvard University"
   },
   {
-    "date": "1996-01-01T00:00:00.000Z",
+    "date": "1996-01-01",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 12000000,
@@ -4738,7 +4738,7 @@ export const allDonations = [
     "recipient": "University of Washington"
   },
   {
-    "date": "1995-01-01T00:00:00.000Z",
+    "date": "1995-01-01",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 10000000,
@@ -4748,7 +4748,7 @@ export const allDonations = [
     "recipient": "University of Washington"
   },
   {
-    "date": "1992-01-01T00:00:00.000Z",
+    "date": "1992-01-01",
     "donorId": "bill-gates",
     "recipientId": "stanford-university",
     "amount": 6000000,
@@ -4758,7 +4758,7 @@ export const allDonations = [
     "recipient": "Stanford University"
   },
   {
-    "date": "1991-10-07T00:00:00.000Z",
+    "date": "1991-10-07",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 12000000,
@@ -4768,7 +4768,7 @@ export const allDonations = [
     "recipient": "University of Washington (research)"
   },
   {
-    "date": "1991-10-07T00:00:00.000Z",
+    "date": "1991-10-07",
     "donorId": "melinda-gates",
     "recipientId": "university-of-washington-research",
     "amount": 12000000,
@@ -6950,7 +6950,7 @@ export const recipients = [
 
 export const donations = [
   {
-    "date": "2025-04-24T00:00:00.000Z",
+    "date": "2025-04-24",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 3915000000,
@@ -6960,7 +6960,7 @@ export const donations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2025-04-01T00:00:00.000Z",
+    "date": "2025-04-01",
     "donorId": "vitalik-buterin",
     "recipientId": "zuitzerland-project",
     "amount": 500000,
@@ -6970,7 +6970,7 @@ export const donations = [
     "recipient": "Zuitzerland Project"
   },
   {
-    "date": "2025-01-06T00:00:00.000Z",
+    "date": "2025-01-06",
     "donorId": "vitalik-buterin",
     "recipientId": "kanro",
     "amount": 984000,
@@ -6980,7 +6980,7 @@ export const donations = [
     "recipient": "Kanro"
   },
   {
-    "date": "2024-12-31T00:00:00.000Z",
+    "date": "2024-12-31",
     "donorId": "michael-bloomberg",
     "recipientId": "bloomberg-philanthropies",
     "amount": 21000000000,
@@ -6990,7 +6990,7 @@ export const donations = [
     "recipient": "Bloomberg Philanthropies"
   },
   {
-    "date": "2024-12-31T00:00:00.000Z",
+    "date": "2024-12-31",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 1110000000,
@@ -7000,7 +7000,7 @@ export const donations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2024-12-20T00:00:00.000Z",
+    "date": "2024-12-20",
     "donorId": "elon-musk",
     "recipientId": "the-foundation-musk",
     "amount": 137000000,
@@ -7010,7 +7010,7 @@ export const donations = [
     "recipient": "The Foundation (Musk)"
   },
   {
-    "date": "2024-12-15T00:00:00.000Z",
+    "date": "2024-12-15",
     "donorId": "vitalik-buterin",
     "recipientId": "khao-kheow-open-zoo",
     "amount": 150000,
@@ -7020,7 +7020,7 @@ export const donations = [
     "recipient": "Khao Kheow Open Zoo"
   },
   {
-    "date": "2024-12-01T00:00:00.000Z",
+    "date": "2024-12-01",
     "donorId": "mackenzie-scott",
     "recipientId": "yield-giving",
     "amount": 19250000000,
@@ -7030,7 +7030,7 @@ export const donations = [
     "recipient": "Yield Giving"
   },
   {
-    "date": "2024-11-26T00:00:00.000Z",
+    "date": "2024-11-26",
     "donorId": "vitalik-buterin",
     "recipientId": "coin-center",
     "amount": 1000000,
@@ -7040,7 +7040,7 @@ export const donations = [
     "recipient": "Coin Center"
   },
   {
-    "date": "2024-10-05T00:00:00.000Z",
+    "date": "2024-10-05",
     "donorId": "vitalik-buterin",
     "recipientId": "tornado-cash-devs-legal-fund",
     "amount": 240000,
@@ -7050,7 +7050,7 @@ export const donations = [
     "recipient": "Tornado Cash Devs Legal Fund"
   },
   {
-    "date": "2024-08-14T00:00:00.000Z",
+    "date": "2024-08-14",
     "donorId": "vitalik-buterin",
     "recipientId": "ea-animal-welfare-fund",
     "amount": 532398,
@@ -7060,7 +7060,7 @@ export const donations = [
     "recipient": "EA Animal Welfare Fund"
   },
   {
-    "date": "2024-03-15T00:00:00.000Z",
+    "date": "2024-03-15",
     "donorId": "jeff-bezos",
     "recipientId": "eva-longoria-bezos-courage-civility-award",
     "amount": 50000000,
@@ -7070,7 +7070,7 @@ export const donations = [
     "recipient": "Eva Longoria (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2024-03-15T00:00:00.000Z",
+    "date": "2024-03-15",
     "donorId": "jeff-bezos",
     "recipientId": "bill-mcraven-bezos-courage-civility-award",
     "amount": 50000000,
@@ -7080,7 +7080,7 @@ export const donations = [
     "recipient": "Bill McRaven (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "association-for-computing-machinery-acm-facct",
     "amount": 75000,
@@ -7090,7 +7090,7 @@ export const donations = [
     "recipient": "Association for Computing Machinery (ACM FAccT)"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "80000-hours",
     "amount": 200000,
@@ -7100,7 +7100,7 @@ export const donations = [
     "recipient": "80,000 Hours"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 100000,
@@ -7110,7 +7110,7 @@ export const donations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "hitrecord-ai-safety-project",
     "amount": 500000,
@@ -7120,7 +7120,7 @@ export const donations = [
     "recipient": "HitRecord AI Safety Project"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-ai-safety-action-fund",
     "amount": 1000000,
@@ -7130,7 +7130,7 @@ export const donations = [
     "recipient": "Center for AI Safety Action Fund"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "radicalxchange",
     "amount": 500000,
@@ -7140,7 +7140,7 @@ export const donations = [
     "recipient": "Radicalxchange"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-ai-safety",
     "amount": 1000000,
@@ -7150,7 +7150,7 @@ export const donations = [
     "recipient": "Center for AI Safety"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "mila",
     "amount": 4000000,
@@ -7160,7 +7160,7 @@ export const donations = [
     "recipient": "MILA"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "saturn-data",
     "amount": 500000,
@@ -7170,7 +7170,7 @@ export const donations = [
     "recipient": "Saturn Data"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "signal-technology-foundation",
     "amount": 1000000,
@@ -7180,7 +7180,7 @@ export const donations = [
     "recipient": "Signal Technology Foundation"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 1720000,
@@ -7190,7 +7190,7 @@ export const donations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 200000,
@@ -7200,7 +7200,7 @@ export const donations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "haydn-belfield",
     "amount": 16000,
@@ -7210,7 +7210,7 @@ export const donations = [
     "recipient": "Haydn Belfield"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "collective-intelligence-project",
     "amount": 500000,
@@ -7220,7 +7220,7 @@ export const donations = [
     "recipient": "Collective Intelligence Project"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 300000,
@@ -7230,7 +7230,7 @@ export const donations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "zvi-mowshowitz",
     "amount": 200000,
@@ -7240,7 +7240,7 @@ export const donations = [
     "recipient": "Zvi Mowshowitz"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "institute-for-security-and-technology",
     "amount": 400000,
@@ -7250,7 +7250,7 @@ export const donations = [
     "recipient": "Institute for Security and Technology"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "hitrecord-ai-safety-project",
     "amount": 700000,
@@ -7260,7 +7260,7 @@ export const donations = [
     "recipient": "HitRecord AI Safety Project"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-policy-institute",
     "amount": 300000,
@@ -7270,7 +7270,7 @@ export const donations = [
     "recipient": "AI Policy Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 100000,
@@ -7280,7 +7280,7 @@ export const donations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-ai-safety",
     "amount": 300000,
@@ -7290,7 +7290,7 @@ export const donations = [
     "recipient": "Center for AI Safety"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "epoch-ai",
     "amount": 600000,
@@ -7300,7 +7300,7 @@ export const donations = [
     "recipient": "Epoch AI"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "longview-philanthropy",
     "amount": 700000,
@@ -7310,7 +7310,7 @@ export const donations = [
     "recipient": "Longview Philanthropy"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "safe-artificial-intelligence-forum-institute",
     "amount": 500000,
@@ -7320,7 +7320,7 @@ export const donations = [
     "recipient": "Safe Artificial Intelligence Forum Institute"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "our-world-in-data",
     "amount": 300000,
@@ -7330,7 +7330,7 @@ export const donations = [
     "recipient": "Our World in Data"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "rootclaim",
     "amount": 400000,
@@ -7340,7 +7340,7 @@ export const donations = [
     "recipient": "Rootclaim"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "erik-brynjolfsson",
     "amount": 400000,
@@ -7350,7 +7350,7 @@ export const donations = [
     "recipient": "Erik Brynjolfsson"
   },
   {
-    "date": "2024-01-01T00:00:00.000Z",
+    "date": "2024-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 100000,
@@ -7360,7 +7360,7 @@ export const donations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "vitalik-buterin",
     "recipientId": "tornado-cash-devs-legal-fund",
     "amount": 170000,
@@ -7370,7 +7370,7 @@ export const donations = [
     "recipient": "Tornado Cash Devs Legal Fund"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "stichting-european-climate-foundation",
     "amount": 20000000,
@@ -7380,7 +7380,7 @@ export const donations = [
     "recipient": "Stichting European Climate Foundation"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "rf-catalytic-capital-inc-community-project",
     "amount": 15000000,
@@ -7390,7 +7390,7 @@ export const donations = [
     "recipient": "RF Catalytic Capital Inc (community project)"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "instituto-clima-e-sociedade",
     "amount": 10000000,
@@ -7400,7 +7400,7 @@ export const donations = [
     "recipient": "Instituto Clima e Sociedade"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "world-resources-institute",
     "amount": 4750000,
@@ -7410,7 +7410,7 @@ export const donations = [
     "recipient": "World Resources Institute"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "the-energy-foundation",
     "amount": 4000000,
@@ -7420,7 +7420,7 @@ export const donations = [
     "recipient": "The Energy Foundation"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "stichting-european-climate-foundation",
     "amount": 3000000,
@@ -7430,7 +7430,7 @@ export const donations = [
     "recipient": "Stichting European Climate Foundation"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "global-fishing-watch",
     "amount": 3000000,
@@ -7440,7 +7440,7 @@ export const donations = [
     "recipient": "Global Fishing Watch"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "the-tides-center",
     "amount": 2000000,
@@ -7450,7 +7450,7 @@ export const donations = [
     "recipient": "The Tides Center"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "peoples-courage-international-inc",
     "amount": 2000000,
@@ -7460,7 +7460,7 @@ export const donations = [
     "recipient": "People's Courage International Inc"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "new-venture-fund",
     "amount": 1000000,
@@ -7470,7 +7470,7 @@ export const donations = [
     "recipient": "New Venture Fund"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "university-of-california-berkeley-foundation-science",
     "amount": 750000,
@@ -7480,7 +7480,7 @@ export const donations = [
     "recipient": "University Of California Berkeley Foundation (science)"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "upstream-usa",
     "amount": 500000,
@@ -7490,7 +7490,7 @@ export const donations = [
     "recipient": "Upstream USA"
   },
   {
-    "date": "2023-12-31T00:00:00.000Z",
+    "date": "2023-12-31",
     "donorId": "larry-page",
     "recipientId": "think-of-us",
     "amount": 500000,
@@ -7500,7 +7500,7 @@ export const donations = [
     "recipient": "Think Of Us"
   },
   {
-    "date": "2023-12-01T00:00:00.000Z",
+    "date": "2023-12-01",
     "donorId": "elon-musk",
     "recipientId": "unknown",
     "amount": 108200000,
@@ -7510,7 +7510,7 @@ export const donations = [
     "recipient": "Unknown"
   },
   {
-    "date": "2023-11-01T00:00:00.000Z",
+    "date": "2023-11-01",
     "donorId": "vitalik-buterin",
     "recipientId": "long-covid-research-initiative",
     "amount": 15000000,
@@ -7520,7 +7520,7 @@ export const donations = [
     "recipient": "Long Covid Research Initiative"
   },
   {
-    "date": "2023-10-01T00:00:00.000Z",
+    "date": "2023-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 179000,
@@ -7530,7 +7530,7 @@ export const donations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2023-06-30T00:00:00.000Z",
+    "date": "2023-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 1911407931,
@@ -7540,7 +7540,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2023-06-30T00:00:00.000Z",
+    "date": "2023-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 1911407931,
@@ -7550,7 +7550,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 1733000,
@@ -7560,7 +7560,7 @@ export const donations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 1159000,
@@ -7570,7 +7570,7 @@ export const donations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "charter-cities-institute",
     "amount": 315000,
@@ -7580,7 +7580,7 @@ export const donations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2023-04-01T00:00:00.000Z",
+    "date": "2023-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "alignment-research-center",
     "amount": 1846000,
@@ -7590,7 +7590,7 @@ export const donations = [
     "recipient": "Alignment Research Center"
   },
   {
-    "date": "2023-03-07T00:00:00.000Z",
+    "date": "2023-03-07",
     "donorId": "vitalik-buterin",
     "recipientId": "university-of-california-san-diego-airborne-institute",
     "amount": 15000000,
@@ -7600,7 +7600,7 @@ export const donations = [
     "recipient": "University of California San Diego (Airborne Institute)"
   },
   {
-    "date": "2023-02-16T00:00:00.000Z",
+    "date": "2023-02-16",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 427000,
@@ -7610,7 +7610,7 @@ export const donations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2022-12-31T00:00:00.000Z",
+    "date": "2022-12-31",
     "donorId": "larry-page",
     "recipientId": "american-cancer-society",
     "amount": 1000,
@@ -7620,7 +7620,7 @@ export const donations = [
     "recipient": "American Cancer Society"
   },
   {
-    "date": "2022-12-20T00:00:00.000Z",
+    "date": "2022-12-20",
     "donorId": "jaan-tallinn",
     "recipientId": "alignment-research-center",
     "amount": 2179000,
@@ -7630,7 +7630,7 @@ export const donations = [
     "recipient": "Alignment Research Center"
   },
   {
-    "date": "2022-12-15T00:00:00.000Z",
+    "date": "2022-12-15",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-enabling-ea-learning-research",
     "amount": 224000,
@@ -7640,7 +7640,7 @@ export const donations = [
     "recipient": "Centre for Enabling EA Learning & Research"
   },
   {
-    "date": "2022-12-08T00:00:00.000Z",
+    "date": "2022-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 450000,
@@ -7650,7 +7650,7 @@ export const donations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2022-12-08T00:00:00.000Z",
+    "date": "2022-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 600000,
@@ -7660,7 +7660,7 @@ export const donations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2022-12-06T00:00:00.000Z",
+    "date": "2022-12-06",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 546000,
@@ -7670,7 +7670,7 @@ export const donations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2022-11-12T00:00:00.000Z",
+    "date": "2022-11-12",
     "donorId": "jeff-bezos",
     "recipientId": "dolly-parton-bezos-courage-civility-award",
     "amount": 100000000,
@@ -7680,7 +7680,7 @@ export const donations = [
     "recipient": "Dolly Parton (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2022-11-01T00:00:00.000Z",
+    "date": "2022-11-01",
     "donorId": "vitalik-buterin",
     "recipientId": "university-of-maryland-school-of-public-health",
     "amount": 9400000,
@@ -7690,7 +7690,7 @@ export const donations = [
     "recipient": "University of Maryland, School of Public Health"
   },
   {
-    "date": "2022-09-07T00:00:00.000Z",
+    "date": "2022-09-07",
     "donorId": "vitalik-buterin",
     "recipientId": "long-covid-research-initiative",
     "amount": 15000000,
@@ -7700,7 +7700,7 @@ export const donations = [
     "recipient": "Long Covid Research Initiative"
   },
   {
-    "date": "2022-08-18T00:00:00.000Z",
+    "date": "2022-08-18",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 400000,
@@ -7710,7 +7710,7 @@ export const donations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2022-07-13T00:00:00.000Z",
+    "date": "2022-07-13",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 20000000000,
@@ -7720,7 +7720,7 @@ export const donations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2022-07-01T00:00:00.000Z",
+    "date": "2022-07-01",
     "donorId": "elon-musk",
     "recipientId": "university-of-texas-population-initiative",
     "amount": 10000000,
@@ -7730,7 +7730,7 @@ export const donations = [
     "recipient": "University of Texas Population Initiative"
   },
   {
-    "date": "2022-06-30T00:00:00.000Z",
+    "date": "2022-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 170486513,
@@ -7740,7 +7740,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2022-06-30T00:00:00.000Z",
+    "date": "2022-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 170486513,
@@ -7750,7 +7750,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2022-06-23T00:00:00.000Z",
+    "date": "2022-06-23",
     "donorId": "jaan-tallinn",
     "recipientId": "charter-cities-institute",
     "amount": 261000,
@@ -7760,7 +7760,7 @@ export const donations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2022-06-16T00:00:00.000Z",
+    "date": "2022-06-16",
     "donorId": "jaan-tallinn",
     "recipientId": "redwood-research",
     "amount": 1274000,
@@ -7770,7 +7770,7 @@ export const donations = [
     "recipient": "Redwood Research"
   },
   {
-    "date": "2022-06-13T00:00:00.000Z",
+    "date": "2022-06-13",
     "donorId": "vitalik-buterin",
     "recipientId": "balvi-philanthropic-fund",
     "amount": 10000000,
@@ -7780,7 +7780,7 @@ export const donations = [
     "recipient": "Balvi Philanthropic Fund"
   },
   {
-    "date": "2022-05-13T00:00:00.000Z",
+    "date": "2022-05-13",
     "donorId": "vitalik-buterin",
     "recipientId": "unsw-kirby-institute",
     "amount": 4000000,
@@ -7790,7 +7790,7 @@ export const donations = [
     "recipient": "UNSW Kirby Institute"
   },
   {
-    "date": "2022-05-12T00:00:00.000Z",
+    "date": "2022-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "dogecoin-foundation",
     "amount": 1000000,
@@ -7800,7 +7800,7 @@ export const donations = [
     "recipient": "Dogecoin Foundation"
   },
   {
-    "date": "2022-04-22T00:00:00.000Z",
+    "date": "2022-04-22",
     "donorId": "vitalik-buterin",
     "recipientId": "patient-led-research-collaborative",
     "amount": 3000000,
@@ -7810,7 +7810,7 @@ export const donations = [
     "recipient": "patient-led-research-collaborative"
   },
   {
-    "date": "2022-04-04T00:00:00.000Z",
+    "date": "2022-04-04",
     "donorId": "vitalik-buterin",
     "recipientId": "aid-for-ukraine",
     "amount": 2500000,
@@ -7820,7 +7820,7 @@ export const donations = [
     "recipient": "Aid For Ukraine"
   },
   {
-    "date": "2022-04-04T00:00:00.000Z",
+    "date": "2022-04-04",
     "donorId": "vitalik-buterin",
     "recipientId": "unchain-fund",
     "amount": 2500000,
@@ -7830,7 +7830,7 @@ export const donations = [
     "recipient": "Unchain Fund"
   },
   {
-    "date": "2022-02-26T00:00:00.000Z",
+    "date": "2022-02-26",
     "donorId": "elon-musk",
     "recipientId": "starlink-in-ukraine",
     "amount": 20000000,
@@ -7840,7 +7840,7 @@ export const donations = [
     "recipient": "Starlink in Ukraine"
   },
   {
-    "date": "2021-12-31T00:00:00.000Z",
+    "date": "2021-12-31",
     "donorId": "larry-page",
     "recipientId": "new-venture-fund",
     "amount": 200000,
@@ -7850,7 +7850,7 @@ export const donations = [
     "recipient": "New Venture Fund"
   },
   {
-    "date": "2021-12-31T00:00:00.000Z",
+    "date": "2021-12-31",
     "donorId": "larry-page",
     "recipientId": "shoo-the-flu",
     "amount": 38894,
@@ -7860,7 +7860,7 @@ export const donations = [
     "recipient": "Shoo the Flu"
   },
   {
-    "date": "2021-12-30T00:00:00.000Z",
+    "date": "2021-12-30",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 380000,
@@ -7870,7 +7870,7 @@ export const donations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2021-12-16T00:00:00.000Z",
+    "date": "2021-12-16",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 979000,
@@ -7880,7 +7880,7 @@ export const donations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2021-11-22T00:00:00.000Z",
+    "date": "2021-11-22",
     "donorId": "jeff-bezos",
     "recipientId": "obama-foundation",
     "amount": 100000000,
@@ -7890,7 +7890,7 @@ export const donations = [
     "recipient": "Obama Foundation"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 34000,
@@ -7900,7 +7900,7 @@ export const donations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "effective-altruism-infrastructure-fund",
     "amount": 699000,
@@ -7910,7 +7910,7 @@ export const donations = [
     "recipient": "Effective Altruism Infrastructure Fund"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "long-term-future-fund",
     "amount": 1417000,
@@ -7920,7 +7920,7 @@ export const donations = [
     "recipient": "Long-Term Future Fund"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-objectives-institute",
     "amount": 485000,
@@ -7930,7 +7930,7 @@ export const donations = [
     "recipient": "AI Objectives Institute"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 248000,
@@ -7940,7 +7940,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "modeling-cooperation",
     "amount": 83000,
@@ -7950,7 +7950,7 @@ export const donations = [
     "recipient": "Modeling Cooperation"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 450000,
@@ -7960,7 +7960,7 @@ export const donations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "new-science-research",
     "amount": 500000,
@@ -7970,7 +7970,7 @@ export const donations = [
     "recipient": "New Science Research"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "center-on-long-term-risk",
     "amount": 1218000,
@@ -7980,7 +7980,7 @@ export const donations = [
     "recipient": "center-on-long-term-risk"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-safety-camp",
     "amount": 130000,
@@ -7990,7 +7990,7 @@ export const donations = [
     "recipient": "AI Safety Camp"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ought",
     "amount": 542000,
@@ -8000,7 +8000,7 @@ export const donations = [
     "recipient": "Ought"
   },
   {
-    "date": "2021-10-01T00:00:00.000Z",
+    "date": "2021-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-long-term-resilience",
     "amount": 885000,
@@ -8010,7 +8010,7 @@ export const donations = [
     "recipient": "centre-for-long-term-resilience"
   },
   {
-    "date": "2021-09-20T00:00:00.000Z",
+    "date": "2021-09-20",
     "donorId": "mark-zuckerberg",
     "recipientId": "multiple-jewish-community-organizations",
     "amount": 1300000,
@@ -8020,7 +8020,7 @@ export const donations = [
     "recipient": "Multiple Jewish Community Organizations"
   },
   {
-    "date": "2021-09-18T00:00:00.000Z",
+    "date": "2021-09-18",
     "donorId": "elon-musk",
     "recipientId": "st-jude-childrens-hospital",
     "amount": 50000000,
@@ -8030,7 +8030,7 @@ export const donations = [
     "recipient": "St. Jude Children's Hospital"
   },
   {
-    "date": "2021-07-28T00:00:00.000Z",
+    "date": "2021-07-28",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 1207000,
@@ -8040,7 +8040,7 @@ export const donations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2021-07-23T00:00:00.000Z",
+    "date": "2021-07-23",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 221000,
@@ -8050,7 +8050,7 @@ export const donations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2021-07-20T00:00:00.000Z",
+    "date": "2021-07-20",
     "donorId": "jeff-bezos",
     "recipientId": "van-jones-bezos-courage-civility-award",
     "amount": 100000000,
@@ -8060,7 +8060,7 @@ export const donations = [
     "recipient": "Van Jones (Bezos Courage & Civility Award)"
   },
   {
-    "date": "2021-07-20T00:00:00.000Z",
+    "date": "2021-07-20",
     "donorId": "jeff-bezos",
     "recipientId": "jose-andres-bezos-courage-civility-award",
     "amount": 100000000,
@@ -8070,7 +8070,7 @@ export const donations = [
     "recipient": "jose-andres-bezos-courage-civility-award"
   },
   {
-    "date": "2021-07-16T00:00:00.000Z",
+    "date": "2021-07-16",
     "donorId": "jaan-tallinn",
     "recipientId": "charter-cities-institute",
     "amount": 137000,
@@ -8080,7 +8080,7 @@ export const donations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2021-07-16T00:00:00.000Z",
+    "date": "2021-07-16",
     "donorId": "jaan-tallinn",
     "recipientId": "alliance-to-feed-the-earth-in-disasters",
     "amount": 175000,
@@ -8090,7 +8090,7 @@ export const donations = [
     "recipient": "Alliance to Feed the Earth in Disasters"
   },
   {
-    "date": "2021-07-14T00:00:00.000Z",
+    "date": "2021-07-14",
     "donorId": "jeff-bezos",
     "recipientId": "smithsonian-institution",
     "amount": 200000000,
@@ -8100,7 +8100,7 @@ export const donations = [
     "recipient": "Smithsonian Institution"
   },
   {
-    "date": "2021-06-30T00:00:00.000Z",
+    "date": "2021-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 269722092,
@@ -8110,7 +8110,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2021-06-30T00:00:00.000Z",
+    "date": "2021-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 269722092,
@@ -8120,7 +8120,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "india-covid-crypto-relief-fund",
     "amount": 4000000,
@@ -8130,7 +8130,7 @@ export const donations = [
     "recipient": "india-covid-crypto-relief-fund"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "gitcoin",
     "amount": 5000000,
@@ -8140,7 +8140,7 @@ export const donations = [
     "recipient": "Gitcoin"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "methuselah-foundation",
     "amount": 4300000,
@@ -8150,7 +8150,7 @@ export const donations = [
     "recipient": "Methuselah Foundation"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "givewell",
     "amount": 50000000,
@@ -8160,7 +8160,7 @@ export const donations = [
     "recipient": "GiveWell"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 4378159,
@@ -8170,7 +8170,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2021-05-12T00:00:00.000Z",
+    "date": "2021-05-12",
     "donorId": "vitalik-buterin",
     "recipientId": "charter-cities-institute",
     "amount": 2080000,
@@ -8180,7 +8180,7 @@ export const donations = [
     "recipient": "Charter Cities Institute"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 1055000,
@@ -8190,7 +8190,7 @@ export const donations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-enabling-ea-learning-research",
     "amount": 61000,
@@ -8200,7 +8200,7 @@ export const donations = [
     "recipient": "Centre for Enabling EA Learning & Research"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "long-term-future-fund",
     "amount": 675000,
@@ -8210,7 +8210,7 @@ export const donations = [
     "recipient": "Long-Term Future Fund"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "global-catastrophic-risk-institute",
     "amount": 48000,
@@ -8220,7 +8220,7 @@ export const donations = [
     "recipient": "Global Catastrophic Risk Institute"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 145000,
@@ -8230,7 +8230,7 @@ export const donations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "legal-priorities-project",
     "amount": 265000,
@@ -8240,7 +8240,7 @@ export const donations = [
     "recipient": "Legal Priorities Project"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 37000,
@@ -8250,7 +8250,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "new-science-research",
     "amount": 147000,
@@ -8260,7 +8260,7 @@ export const donations = [
     "recipient": "New Science Research"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-safety-support",
     "amount": 200000,
@@ -8270,7 +8270,7 @@ export const donations = [
     "recipient": "AI Safety Support"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 103000,
@@ -8280,7 +8280,7 @@ export const donations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 13000,
@@ -8290,7 +8290,7 @@ export const donations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-long-term-resilience",
     "amount": 1013000,
@@ -8300,7 +8300,7 @@ export const donations = [
     "recipient": "centre-for-long-term-resilience"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 478000,
@@ -8310,7 +8310,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "generation-pledge",
     "amount": 291000,
@@ -8320,7 +8320,7 @@ export const donations = [
     "recipient": "Generation Pledge"
   },
   {
-    "date": "2021-04-01T00:00:00.000Z",
+    "date": "2021-04-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 333000,
@@ -8330,7 +8330,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2021-03-30T00:00:00.000Z",
+    "date": "2021-03-30",
     "donorId": "elon-musk",
     "recipientId": "cameron-county-schools-tx",
     "amount": 20000000,
@@ -8340,7 +8340,7 @@ export const donations = [
     "recipient": "Cameron County Schools, TX"
   },
   {
-    "date": "2021-03-30T00:00:00.000Z",
+    "date": "2021-03-30",
     "donorId": "elon-musk",
     "recipientId": "city-of-brownsville-tx",
     "amount": 10000000,
@@ -8350,7 +8350,7 @@ export const donations = [
     "recipient": "City of Brownsville, TX"
   },
   {
-    "date": "2021-03-12T00:00:00.000Z",
+    "date": "2021-03-12",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-human-compatible-ai",
     "amount": 20000,
@@ -8360,7 +8360,7 @@ export const donations = [
     "recipient": "Center for Human-Compatible AI"
   },
   {
-    "date": "2021-02-08T00:00:00.000Z",
+    "date": "2021-02-08",
     "donorId": "elon-musk",
     "recipientId": "xprize-climate-change",
     "amount": 100000000,
@@ -8370,7 +8370,7 @@ export const donations = [
     "recipient": "XPrize, Climate Change"
   },
   {
-    "date": "2021-01-12T00:00:00.000Z",
+    "date": "2021-01-12",
     "donorId": "jaan-tallinn",
     "recipientId": "global-catastrophic-risk-institute",
     "amount": 209000,
@@ -8380,7 +8380,7 @@ export const donations = [
     "recipient": "Global Catastrophic Risk Institute"
   },
   {
-    "date": "2021-01-12T00:00:00.000Z",
+    "date": "2021-01-12",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-human-compatible-ai",
     "amount": 799000,
@@ -8390,7 +8390,7 @@ export const donations = [
     "recipient": "Center for Human-Compatible AI"
   },
   {
-    "date": "2021-01-12T00:00:00.000Z",
+    "date": "2021-01-12",
     "donorId": "elon-musk",
     "recipientId": "khan-academy",
     "amount": 5000000,
@@ -8400,7 +8400,7 @@ export const donations = [
     "recipient": "Khan Academy"
   },
   {
-    "date": "2021-01-05T00:00:00.000Z",
+    "date": "2021-01-05",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 247000,
@@ -8410,7 +8410,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2020-12-23T00:00:00.000Z",
+    "date": "2020-12-23",
     "donorId": "jaan-tallinn",
     "recipientId": "rethink-priorities",
     "amount": 57000,
@@ -8420,7 +8420,7 @@ export const donations = [
     "recipient": "Rethink Priorities"
   },
   {
-    "date": "2020-12-23T00:00:00.000Z",
+    "date": "2020-12-23",
     "donorId": "jaan-tallinn",
     "recipientId": "median-group",
     "amount": 98000,
@@ -8430,7 +8430,7 @@ export const donations = [
     "recipient": "Median Group"
   },
   {
-    "date": "2020-12-21T00:00:00.000Z",
+    "date": "2020-12-21",
     "donorId": "jeff-bezos",
     "recipientId": "all-in-washington-covid-19-relief-effort",
     "amount": 25000000,
@@ -8440,7 +8440,7 @@ export const donations = [
     "recipient": "all-in-washington-covid-19-relief-effort"
   },
   {
-    "date": "2020-12-17T00:00:00.000Z",
+    "date": "2020-12-17",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 563000,
@@ -8450,7 +8450,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2020-12-08T00:00:00.000Z",
+    "date": "2020-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "modeling-cooperation",
     "amount": 74000,
@@ -8460,7 +8460,7 @@ export const donations = [
     "recipient": "Modeling Cooperation"
   },
   {
-    "date": "2020-12-08T00:00:00.000Z",
+    "date": "2020-12-08",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 39000,
@@ -8470,7 +8470,7 @@ export const donations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2020-12-04T00:00:00.000Z",
+    "date": "2020-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "future-of-life-institute",
     "amount": 347000,
@@ -8480,7 +8480,7 @@ export const donations = [
     "recipient": "Future of Life Institute"
   },
   {
-    "date": "2020-10-13T00:00:00.000Z",
+    "date": "2020-10-13",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-tech-and-civic-life",
     "amount": 100000000,
@@ -8490,7 +8490,7 @@ export const donations = [
     "recipient": "Center for Tech and Civic Life"
   },
   {
-    "date": "2020-10-01T00:00:00.000Z",
+    "date": "2020-10-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-election-innovation-and-research",
     "amount": 19500000,
@@ -8500,7 +8500,7 @@ export const donations = [
     "recipient": "Center for Election Innovation and Research"
   },
   {
-    "date": "2020-10-01T00:00:00.000Z",
+    "date": "2020-10-01",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 151000,
@@ -8510,7 +8510,7 @@ export const donations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2020-09-28T00:00:00.000Z",
+    "date": "2020-09-28",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-enabling-ea-learning-research",
     "amount": 50000,
@@ -8520,7 +8520,7 @@ export const donations = [
     "recipient": "Centre for Enabling EA Learning & Research"
   },
   {
-    "date": "2020-09-01T00:00:00.000Z",
+    "date": "2020-09-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-tech-and-civic-life",
     "amount": 250000000,
@@ -8530,7 +8530,7 @@ export const donations = [
     "recipient": "Center for Tech and Civic Life"
   },
   {
-    "date": "2020-09-01T00:00:00.000Z",
+    "date": "2020-09-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "center-for-election-innovation-and-research",
     "amount": 50000000,
@@ -8540,7 +8540,7 @@ export const donations = [
     "recipient": "Center for Election Innovation and Research"
   },
   {
-    "date": "2020-08-31T00:00:00.000Z",
+    "date": "2020-08-31",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 134000,
@@ -8550,7 +8550,7 @@ export const donations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2020-07-23T00:00:00.000Z",
+    "date": "2020-07-23",
     "donorId": "jaan-tallinn",
     "recipientId": "quantified-uncertainty-research-institute",
     "amount": 60000,
@@ -8560,7 +8560,7 @@ export const donations = [
     "recipient": "Quantified Uncertainty Research Institute"
   },
   {
-    "date": "2020-07-23T00:00:00.000Z",
+    "date": "2020-07-23",
     "donorId": "jaan-tallinn",
     "recipientId": "future-of-life-institute",
     "amount": 30000,
@@ -8570,7 +8570,7 @@ export const donations = [
     "recipient": "Future of Life Institute"
   },
   {
-    "date": "2020-06-30T00:00:00.000Z",
+    "date": "2020-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 1017208584,
@@ -8580,7 +8580,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2020-06-30T00:00:00.000Z",
+    "date": "2020-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 1017208584,
@@ -8590,7 +8590,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2020-06-29T00:00:00.000Z",
+    "date": "2020-06-29",
     "donorId": "jaan-tallinn",
     "recipientId": "convergence-analysis",
     "amount": 10000,
@@ -8600,7 +8600,7 @@ export const donations = [
     "recipient": "Convergence Analysis"
   },
   {
-    "date": "2020-06-24T00:00:00.000Z",
+    "date": "2020-06-24",
     "donorId": "jeff-bezos",
     "recipientId": "all-in-washington-covid-19-relief-effort",
     "amount": 25000000,
@@ -8610,7 +8610,7 @@ export const donations = [
     "recipient": "all-in-washington-covid-19-relief-effort"
   },
   {
-    "date": "2020-06-15T00:00:00.000Z",
+    "date": "2020-06-15",
     "donorId": "jaan-tallinn",
     "recipientId": "leverage-research",
     "amount": 80000,
@@ -8620,7 +8620,7 @@ export const donations = [
     "recipient": "Leverage Research"
   },
   {
-    "date": "2020-06-12T00:00:00.000Z",
+    "date": "2020-06-12",
     "donorId": "jaan-tallinn",
     "recipientId": "lightcone-infrastructure",
     "amount": 110000,
@@ -8630,7 +8630,7 @@ export const donations = [
     "recipient": "Lightcone Infrastructure"
   },
   {
-    "date": "2020-06-12T00:00:00.000Z",
+    "date": "2020-06-12",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 40000,
@@ -8640,7 +8640,7 @@ export const donations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2020-06-12T00:00:00.000Z",
+    "date": "2020-06-12",
     "donorId": "jaan-tallinn",
     "recipientId": "80000-hours",
     "amount": 30000,
@@ -8650,7 +8650,7 @@ export const donations = [
     "recipient": "80,000 Hours"
   },
   {
-    "date": "2020-06-11T00:00:00.000Z",
+    "date": "2020-06-11",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 20000,
@@ -8660,7 +8660,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2020-06-11T00:00:00.000Z",
+    "date": "2020-06-11",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 280000,
@@ -8670,7 +8670,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2020-06-09T00:00:00.000Z",
+    "date": "2020-06-09",
     "donorId": "jaan-tallinn",
     "recipientId": "global-catastrophic-risk-institute",
     "amount": 90000,
@@ -8680,7 +8680,7 @@ export const donations = [
     "recipient": "Global Catastrophic Risk Institute"
   },
   {
-    "date": "2020-06-01T00:00:00.000Z",
+    "date": "2020-06-01",
     "donorId": "elon-musk",
     "recipientId": "ad-astra-school",
     "amount": 60000,
@@ -8690,7 +8690,7 @@ export const donations = [
     "recipient": "Ad Astra School"
   },
   {
-    "date": "2020-06-01T00:00:00.000Z",
+    "date": "2020-06-01",
     "donorId": "elon-musk",
     "recipientId": "crossroads-school",
     "amount": 25000,
@@ -8700,7 +8700,7 @@ export const donations = [
     "recipient": "Crossroads School"
   },
   {
-    "date": "2020-06-01T00:00:00.000Z",
+    "date": "2020-06-01",
     "donorId": "elon-musk",
     "recipientId": "windward-school",
     "amount": 25000,
@@ -8710,7 +8710,7 @@ export const donations = [
     "recipient": "Windward School"
   },
   {
-    "date": "2020-04-02T00:00:00.000Z",
+    "date": "2020-04-02",
     "donorId": "jeff-bezos",
     "recipientId": "feeding-america-covid-19-response-fund",
     "amount": 100000000,
@@ -8720,7 +8720,7 @@ export const donations = [
     "recipient": "feeding-america-covid-19-response-fund"
   },
   {
-    "date": "2020-03-24T00:00:00.000Z",
+    "date": "2020-03-24",
     "donorId": "elon-musk",
     "recipientId": "california-covid-response",
     "amount": 30000000,
@@ -8730,7 +8730,7 @@ export const donations = [
     "recipient": "California Covid Response"
   },
   {
-    "date": "2020-02-17T00:00:00.000Z",
+    "date": "2020-02-17",
     "donorId": "jeff-bezos",
     "recipientId": "bezos-earth-fund",
     "amount": 10000000000,
@@ -8740,7 +8740,7 @@ export const donations = [
     "recipient": "Bezos Earth Fund"
   },
   {
-    "date": "2020-01-16T00:00:00.000Z",
+    "date": "2020-01-16",
     "donorId": "jaan-tallinn",
     "recipientId": "median-group",
     "amount": 120000,
@@ -8750,7 +8750,7 @@ export const donations = [
     "recipient": "Median Group"
   },
   {
-    "date": "2020-01-12T00:00:00.000Z",
+    "date": "2020-01-12",
     "donorId": "jaan-tallinn",
     "recipientId": "topos-institute",
     "amount": 150000,
@@ -8760,7 +8760,7 @@ export const donations = [
     "recipient": "Topos Institute"
   },
   {
-    "date": "2019-12-24T00:00:00.000Z",
+    "date": "2019-12-24",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 20000,
@@ -8770,7 +8770,7 @@ export const donations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2019-12-16T00:00:00.000Z",
+    "date": "2019-12-16",
     "donorId": "jaan-tallinn",
     "recipientId": "80000-hours",
     "amount": 70000,
@@ -8780,7 +8780,7 @@ export const donations = [
     "recipient": "80,000 Hours"
   },
   {
-    "date": "2019-12-04T00:00:00.000Z",
+    "date": "2019-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "center-for-applied-rationality",
     "amount": 50000,
@@ -8790,7 +8790,7 @@ export const donations = [
     "recipient": "Center for Applied Rationality"
   },
   {
-    "date": "2019-12-04T00:00:00.000Z",
+    "date": "2019-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "leverage-research",
     "amount": 50000,
@@ -8800,7 +8800,7 @@ export const donations = [
     "recipient": "Leverage Research"
   },
   {
-    "date": "2019-12-04T00:00:00.000Z",
+    "date": "2019-12-04",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 30000,
@@ -8810,7 +8810,7 @@ export const donations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2019-10-29T00:00:00.000Z",
+    "date": "2019-10-29",
     "donorId": "elon-musk",
     "recipientId": "arbor-day-foundation",
     "amount": 1000000,
@@ -8820,7 +8820,7 @@ export const donations = [
     "recipient": "Arbor Day Foundation"
   },
   {
-    "date": "2019-06-30T00:00:00.000Z",
+    "date": "2019-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 552209978,
@@ -8830,7 +8830,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2019-06-30T00:00:00.000Z",
+    "date": "2019-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 552209978,
@@ -8840,7 +8840,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2019-04-03T00:00:00.000Z",
+    "date": "2019-04-03",
     "donorId": "jaan-tallinn",
     "recipientId": "leverage-research",
     "amount": 100000,
@@ -8850,7 +8850,7 @@ export const donations = [
     "recipient": "Leverage Research"
   },
   {
-    "date": "2018-12-31T00:00:00.000Z",
+    "date": "2018-12-31",
     "donorId": "vitalik-buterin",
     "recipientId": "sens-research-foundation",
     "amount": 350000,
@@ -8860,7 +8860,7 @@ export const donations = [
     "recipient": "SENS Research Foundation"
   },
   {
-    "date": "2018-11-18T00:00:00.000Z",
+    "date": "2018-11-18",
     "donorId": "michael-bloomberg",
     "recipientId": "johns-hopkins-university-education",
     "amount": 1800000000,
@@ -8870,7 +8870,7 @@ export const donations = [
     "recipient": "Johns Hopkins University (education)"
   },
   {
-    "date": "2018-10-01T00:00:00.000Z",
+    "date": "2018-10-01",
     "donorId": "elon-musk",
     "recipientId": "flint-public-schools-water-filtration",
     "amount": 480000,
@@ -8880,7 +8880,7 @@ export const donations = [
     "recipient": "Flint Public Schools (Water Filtration)"
   },
   {
-    "date": "2018-09-13T00:00:00.000Z",
+    "date": "2018-09-13",
     "donorId": "jeff-bezos",
     "recipientId": "bezos-day-one-fund",
     "amount": 2000000000,
@@ -8890,7 +8890,7 @@ export const donations = [
     "recipient": "Bezos Day One Fund"
   },
   {
-    "date": "2018-09-05T00:00:00.000Z",
+    "date": "2018-09-05",
     "donorId": "jeff-bezos",
     "recipientId": "with-honor-fund",
     "amount": 10000000,
@@ -8900,7 +8900,7 @@ export const donations = [
     "recipient": "With Honor Fund"
   },
   {
-    "date": "2018-06-30T00:00:00.000Z",
+    "date": "2018-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 403279018,
@@ -8910,7 +8910,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2018-06-30T00:00:00.000Z",
+    "date": "2018-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 403279018,
@@ -8920,7 +8920,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2018-03-27T00:00:00.000Z",
+    "date": "2018-03-27",
     "donorId": "vitalik-buterin",
     "recipientId": "givedirectly",
     "amount": 1000000,
@@ -8930,7 +8930,7 @@ export const donations = [
     "recipient": "GiveDirectly"
   },
   {
-    "date": "2018-02-12T00:00:00.000Z",
+    "date": "2018-02-12",
     "donorId": "vitalik-buterin",
     "recipientId": "internet-archive",
     "amount": 93469,
@@ -8940,7 +8940,7 @@ export const donations = [
     "recipient": "Internet Archive"
   },
   {
-    "date": "2018-01-12T00:00:00.000Z",
+    "date": "2018-01-12",
     "donorId": "jeff-bezos",
     "recipientId": "thedream-us",
     "amount": 33000000,
@@ -8950,7 +8950,7 @@ export const donations = [
     "recipient": "thedream-us"
   },
   {
-    "date": "2018-01-01T00:00:00.000Z",
+    "date": "2018-01-01",
     "donorId": "elon-musk",
     "recipientId": "sierra-club",
     "amount": 6000000,
@@ -8960,7 +8960,7 @@ export const donations = [
     "recipient": "Sierra Club"
   },
   {
-    "date": "2018-01-01T00:00:00.000Z",
+    "date": "2018-01-01",
     "donorId": "elon-musk",
     "recipientId": "aclu",
     "amount": 500000,
@@ -8970,7 +8970,7 @@ export const donations = [
     "recipient": "ACLU"
   },
   {
-    "date": "2018-01-01T00:00:00.000Z",
+    "date": "2018-01-01",
     "donorId": "elon-musk",
     "recipientId": "art-of-elysium",
     "amount": 250000,
@@ -8980,7 +8980,7 @@ export const donations = [
     "recipient": "Art of Elysium"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "vitalik-buterin",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 763970,
@@ -8990,7 +8990,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "oakland-unified-school-district-flu-shots",
     "amount": 800000,
@@ -9000,7 +9000,7 @@ export const donations = [
     "recipient": "Oakland Unified School District (Flu Shots)"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "regents-of-the-university-of-california-vaccine-delivery-study",
     "amount": 303000,
@@ -9010,7 +9010,7 @@ export const donations = [
     "recipient": "Regents of the University of California (vaccine delivery study)"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "oakland-unified-school-district-flu-study",
     "amount": 162000,
@@ -9020,7 +9020,7 @@ export const donations = [
     "recipient": "Oakland Unified School District (flu study)"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "new-venture-fund",
     "amount": 100000,
@@ -9030,7 +9030,7 @@ export const donations = [
     "recipient": "New Venture Fund"
   },
   {
-    "date": "2017-12-31T00:00:00.000Z",
+    "date": "2017-12-31",
     "donorId": "larry-page",
     "recipientId": "american-cancer-society",
     "amount": 1000,
@@ -9040,7 +9040,7 @@ export const donations = [
     "recipient": "American Cancer Society"
   },
   {
-    "date": "2017-12-14T00:00:00.000Z",
+    "date": "2017-12-14",
     "donorId": "vitalik-buterin",
     "recipientId": "sens-research-foundation",
     "amount": 2400000,
@@ -9050,7 +9050,7 @@ export const donations = [
     "recipient": "SENS Research Foundation"
   },
   {
-    "date": "2017-12-01T00:00:00.000Z",
+    "date": "2017-12-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 5000000,
@@ -9060,7 +9060,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2017-11-07T00:00:00.000Z",
+    "date": "2017-11-07",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 1856575000,
@@ -9070,7 +9070,7 @@ export const donations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2017-11-01T00:00:00.000Z",
+    "date": "2017-11-01",
     "donorId": "bill-gates",
     "recipientId": "dementia-discovery-fund",
     "amount": 50000000,
@@ -9080,7 +9080,7 @@ export const donations = [
     "recipient": "Dementia Discovery Fund"
   },
   {
-    "date": "2017-06-30T00:00:00.000Z",
+    "date": "2017-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 279174388,
@@ -9090,7 +9090,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2017-06-30T00:00:00.000Z",
+    "date": "2017-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 279174388,
@@ -9100,7 +9100,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2017-06-01T00:00:00.000Z",
+    "date": "2017-06-01",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 4680000000,
@@ -9110,7 +9110,7 @@ export const donations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2017-05-31T00:00:00.000Z",
+    "date": "2017-05-31",
     "donorId": "larry-page",
     "recipientId": "shoo-the-flu",
     "amount": 4100000,
@@ -9120,7 +9120,7 @@ export const donations = [
     "recipient": "Shoo the Flu"
   },
   {
-    "date": "2017-05-23T00:00:00.000Z",
+    "date": "2017-05-23",
     "donorId": "jeff-bezos",
     "recipientId": "reporters-committee-for-freedom-of-the-press",
     "amount": 1000000,
@@ -9130,7 +9130,7 @@ export const donations = [
     "recipient": "Reporters Committee for Freedom of the Press"
   },
   {
-    "date": "2017-01-01T00:00:00.000Z",
+    "date": "2017-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "berkeley-existential-risk-initiative",
     "amount": 2000000,
@@ -9140,7 +9140,7 @@ export const donations = [
     "recipient": "Berkeley Existential Risk Initiative"
   },
   {
-    "date": "2017-01-01T00:00:00.000Z",
+    "date": "2017-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 60500,
@@ -9150,7 +9150,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2016-09-08T00:00:00.000Z",
+    "date": "2016-09-08",
     "donorId": "dustin-moskovitz",
     "recipientId": "democratic-political-organizations",
     "amount": 20000000,
@@ -9160,7 +9160,7 @@ export const donations = [
     "recipient": "Democratic Political Organizations"
   },
   {
-    "date": "2016-09-08T00:00:00.000Z",
+    "date": "2016-09-08",
     "donorId": "cari-tuna",
     "recipientId": "democratic-political-organizations",
     "amount": 20000000,
@@ -9170,7 +9170,7 @@ export const donations = [
     "recipient": "Democratic Political Organizations"
   },
   {
-    "date": "2016-09-01T00:00:00.000Z",
+    "date": "2016-09-01",
     "donorId": "mark-zuckerberg",
     "recipientId": "chan-zuckerberg-initiative",
     "amount": 85000000,
@@ -9180,7 +9180,7 @@ export const donations = [
     "recipient": "Chan Zuckerberg Initiative"
   },
   {
-    "date": "2016-06-30T00:00:00.000Z",
+    "date": "2016-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 252806176,
@@ -9190,7 +9190,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2016-06-30T00:00:00.000Z",
+    "date": "2016-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 252806176,
@@ -9200,7 +9200,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2016-01-01T00:00:00.000Z",
+    "date": "2016-01-01",
     "donorId": "michael-bloomberg",
     "recipientId": "johns-hopkins-university-science",
     "amount": 50000000,
@@ -9210,7 +9210,7 @@ export const donations = [
     "recipient": "Johns Hopkins University (science)"
   },
   {
-    "date": "2016-01-01T00:00:00.000Z",
+    "date": "2016-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 80000,
@@ -9220,7 +9220,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2016-01-01T00:00:00.000Z",
+    "date": "2016-01-01",
     "donorId": "elon-musk",
     "recipientId": "openai",
     "amount": 15000000,
@@ -9230,7 +9230,7 @@ export const donations = [
     "recipient": "OpenAI"
   },
   {
-    "date": "2015-10-15T00:00:00.000Z",
+    "date": "2015-10-15",
     "donorId": "jaan-tallinn",
     "recipientId": "ai-impacts",
     "amount": 5000,
@@ -9240,7 +9240,7 @@ export const donations = [
     "recipient": "AI Impacts"
   },
   {
-    "date": "2015-06-30T00:00:00.000Z",
+    "date": "2015-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 226124175,
@@ -9250,7 +9250,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2015-06-30T00:00:00.000Z",
+    "date": "2015-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 226124175,
@@ -9260,7 +9260,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2015-05-31T00:00:00.000Z",
+    "date": "2015-05-31",
     "donorId": "larry-page",
     "recipientId": "shoo-the-flu",
     "amount": 88000,
@@ -9270,7 +9270,7 @@ export const donations = [
     "recipient": "Shoo the Flu"
   },
   {
-    "date": "2015-02-06T00:00:00.000Z",
+    "date": "2015-02-06",
     "donorId": "mark-zuckerberg",
     "recipientId": "san-francisco-general-hospital-foundation",
     "amount": 75000000,
@@ -9280,7 +9280,7 @@ export const donations = [
     "recipient": "San Francisco General Hospital Foundation"
   },
   {
-    "date": "2015-01-15T00:00:00.000Z",
+    "date": "2015-01-15",
     "donorId": "elon-musk",
     "recipientId": "future-of-life-institute",
     "amount": 10000000,
@@ -9290,7 +9290,7 @@ export const donations = [
     "recipient": "Future of Life Institute"
   },
   {
-    "date": "2014-11-10T00:00:00.000Z",
+    "date": "2014-11-10",
     "donorId": "larry-page",
     "recipientId": "ebola-relief-efforts",
     "amount": 15000000,
@@ -9300,7 +9300,7 @@ export const donations = [
     "recipient": "Ebola Relief Efforts"
   },
   {
-    "date": "2014-10-14T00:00:00.000Z",
+    "date": "2014-10-14",
     "donorId": "mark-zuckerberg",
     "recipientId": "cdc-foundation-ebola-response",
     "amount": 25000000,
@@ -9310,7 +9310,7 @@ export const donations = [
     "recipient": "CDC Foundation (Ebola Response)"
   },
   {
-    "date": "2014-07-10T00:00:00.000Z",
+    "date": "2014-07-10",
     "donorId": "elon-musk",
     "recipientId": "tesla-science-center-at-wardenclyffe",
     "amount": 1000000,
@@ -9320,7 +9320,7 @@ export const donations = [
     "recipient": "Tesla Science Center at Wardenclyffe"
   },
   {
-    "date": "2014-06-30T00:00:00.000Z",
+    "date": "2014-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 224868989,
@@ -9330,7 +9330,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2014-06-30T00:00:00.000Z",
+    "date": "2014-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 224868989,
@@ -9340,7 +9340,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2014-05-30T00:00:00.000Z",
+    "date": "2014-05-30",
     "donorId": "mark-zuckerberg",
     "recipientId": "bay-area-public-schools",
     "amount": 120000000,
@@ -9350,7 +9350,7 @@ export const donations = [
     "recipient": "Bay Area Public Schools"
   },
   {
-    "date": "2014-01-01T00:00:00.000Z",
+    "date": "2014-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 100000,
@@ -9360,7 +9360,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2013-06-30T00:00:00.000Z",
+    "date": "2013-06-30",
     "donorId": "dustin-moskovitz",
     "recipientId": "good-ventures",
     "amount": 28599982,
@@ -9370,7 +9370,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2013-06-30T00:00:00.000Z",
+    "date": "2013-06-30",
     "donorId": "cari-tuna",
     "recipientId": "good-ventures",
     "amount": 28599982,
@@ -9380,7 +9380,7 @@ export const donations = [
     "recipient": "Good Ventures"
   },
   {
-    "date": "2013-01-01T00:00:00.000Z",
+    "date": "2013-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 100000,
@@ -9390,7 +9390,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2012-07-28T00:00:00.000Z",
+    "date": "2012-07-28",
     "donorId": "jeff-bezos",
     "recipientId": "washington-united-for-marriage-referendum-74-campaign",
     "amount": 2500000,
@@ -9400,7 +9400,7 @@ export const donations = [
     "recipient": "Washington United for Marriage (Referendum 74 campaign)"
   },
   {
-    "date": "2012-01-01T00:00:00.000Z",
+    "date": "2012-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 155000,
@@ -9410,7 +9410,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2012-01-01T00:00:00.000Z",
+    "date": "2012-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "machine-intelligence-research-institute",
     "amount": 109000,
@@ -9420,7 +9420,7 @@ export const donations = [
     "recipient": "Machine Intelligence Research Institute"
   },
   {
-    "date": "2012-01-01T00:00:00.000Z",
+    "date": "2012-01-01",
     "donorId": "jaan-tallinn",
     "recipientId": "centre-for-the-study-of-existential-risk",
     "amount": 200000,
@@ -9430,7 +9430,7 @@ export const donations = [
     "recipient": "Centre for the Study of Existential Risk"
   },
   {
-    "date": "2011-12-13T00:00:00.000Z",
+    "date": "2011-12-13",
     "donorId": "jeff-bezos",
     "recipientId": "princeton-university-science",
     "amount": 15000000,
@@ -9440,7 +9440,7 @@ export const donations = [
     "recipient": "Princeton University (science)"
   },
   {
-    "date": "2011-08-17T00:00:00.000Z",
+    "date": "2011-08-17",
     "donorId": "jeff-bezos",
     "recipientId": "museum-of-history-industry-seattle",
     "amount": 10000000,
@@ -9450,7 +9450,7 @@ export const donations = [
     "recipient": "Museum of History & Industry (Seattle)"
   },
   {
-    "date": "2011-07-01T00:00:00.000Z",
+    "date": "2011-07-01",
     "donorId": "elon-musk",
     "recipientId": "soma-city-fukushima-tech",
     "amount": 250000,
@@ -9460,7 +9460,7 @@ export const donations = [
     "recipient": "Soma City, Fukushima (tech)"
   },
   {
-    "date": "2010-12-01T00:00:00.000Z",
+    "date": "2010-12-01",
     "donorId": "elon-musk",
     "recipientId": "bayou-la-batre-hurricane-response-center",
     "amount": 250000,
@@ -9470,7 +9470,7 @@ export const donations = [
     "recipient": "Bayou La Batre Hurricane Response Center"
   },
   {
-    "date": "2010-09-24T00:00:00.000Z",
+    "date": "2010-09-24",
     "donorId": "mark-zuckerberg",
     "recipientId": "newark-public-schools",
     "amount": 100000000,
@@ -9480,7 +9480,7 @@ export const donations = [
     "recipient": "Newark Public Schools"
   },
   {
-    "date": "2010-01-01T00:00:00.000Z",
+    "date": "2010-01-01",
     "donorId": "michael-bloomberg",
     "recipientId": "sierra-club-climate-change",
     "amount": 50000000,
@@ -9490,7 +9490,7 @@ export const donations = [
     "recipient": "Sierra Club (climate change)"
   },
   {
-    "date": "2008-12-31T00:00:00.000Z",
+    "date": "2008-12-31",
     "donorId": "larry-page",
     "recipientId": "president-barack-obama-inaugural-committee",
     "amount": 25000,
@@ -9500,7 +9500,7 @@ export const donations = [
     "recipient": "President Barack Obama Inaugural Committee"
   },
   {
-    "date": "2008-11-01T00:00:00.000Z",
+    "date": "2008-11-01",
     "donorId": "larry-page",
     "recipientId": "no-on-proposition-8-campaign",
     "amount": 400000,
@@ -9510,7 +9510,7 @@ export const donations = [
     "recipient": "No on Proposition 8 Campaign"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "gates-foundation",
     "amount": 43000000000,
@@ -9520,7 +9520,7 @@ export const donations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "susan-thompson-buffett-foundation",
     "amount": 5800000000,
@@ -9530,7 +9530,7 @@ export const donations = [
     "recipient": "Susan Thompson Buffett Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "howard-g-buffett-foundation",
     "amount": 2600000000,
@@ -9540,7 +9540,7 @@ export const donations = [
     "recipient": "Howard G. Buffett Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "sherwood-foundation",
     "amount": 2600000000,
@@ -9550,7 +9550,7 @@ export const donations = [
     "recipient": "Sherwood Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "novo-foundation",
     "amount": 2600000000,
@@ -9560,7 +9560,7 @@ export const donations = [
     "recipient": "NoVo Foundation"
   },
   {
-    "date": "2006-11-25T00:00:00.000Z",
+    "date": "2006-11-25",
     "donorId": "warren-buffett",
     "recipientId": "glide-foundation",
     "amount": 53000000,
@@ -9570,7 +9570,7 @@ export const donations = [
     "recipient": "GLIDE Foundation"
   },
   {
-    "date": "2006-11-01T00:00:00.000Z",
+    "date": "2006-11-01",
     "donorId": "larry-page",
     "recipientId": "californians-for-clean-alternative-energy",
     "amount": 1000000,
@@ -9580,7 +9580,7 @@ export const donations = [
     "recipient": "Californians for Clean Alternative Energy"
   },
   {
-    "date": "2006-11-01T00:00:00.000Z",
+    "date": "2006-11-01",
     "donorId": "larry-page",
     "recipientId": "californians-for-clean-alternative-energy",
     "amount": 1000000,
@@ -9590,7 +9590,7 @@ export const donations = [
     "recipient": "Californians for Clean Alternative Energy"
   },
   {
-    "date": "2006-09-19T00:00:00.000Z",
+    "date": "2006-09-19",
     "donorId": "warren-buffett",
     "recipientId": "iaea-nuclear-fuel-bank",
     "amount": 50000000,
@@ -9600,7 +9600,7 @@ export const donations = [
     "recipient": "IAEA Nuclear Fuel Bank"
   },
   {
-    "date": "2004-11-01T00:00:00.000Z",
+    "date": "2004-11-01",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 3300000000,
@@ -9610,7 +9610,7 @@ export const donations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "2003-04-24T00:00:00.000Z",
+    "date": "2003-04-24",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 70000000,
@@ -9620,7 +9620,7 @@ export const donations = [
     "recipient": "University of Washington (research)"
   },
   {
-    "date": "2000-01-24T00:00:00.000Z",
+    "date": "2000-01-24",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 5000000000,
@@ -9630,7 +9630,7 @@ export const donations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "1999-11-01T00:00:00.000Z",
+    "date": "1999-11-01",
     "donorId": "bill-gates",
     "recipientId": "gavi-alliance-the-vaccine-fund",
     "amount": 750000000,
@@ -9640,7 +9640,7 @@ export const donations = [
     "recipient": "GAVI Alliance (The Vaccine Fund)"
   },
   {
-    "date": "1999-04-14T00:00:00.000Z",
+    "date": "1999-04-14",
     "donorId": "bill-gates",
     "recipientId": "mit",
     "amount": 20000000,
@@ -9650,7 +9650,7 @@ export const donations = [
     "recipient": "MIT"
   },
   {
-    "date": "1999-01-01T00:00:00.000Z",
+    "date": "1999-01-01",
     "donorId": "bill-gates",
     "recipientId": "gates-foundation",
     "amount": 15800000000,
@@ -9660,7 +9660,7 @@ export const donations = [
     "recipient": "gates-foundation"
   },
   {
-    "date": "1999-01-01T00:00:00.000Z",
+    "date": "1999-01-01",
     "donorId": "bill-gates",
     "recipientId": "united-negro-college-fund",
     "amount": 1265000000,
@@ -9670,7 +9670,7 @@ export const donations = [
     "recipient": "United Negro College Fund"
   },
   {
-    "date": "1998-12-01T00:00:00.000Z",
+    "date": "1998-12-01",
     "donorId": "bill-gates",
     "recipientId": "seattle-public-libraries",
     "amount": 20000000,
@@ -9680,7 +9680,7 @@ export const donations = [
     "recipient": "Seattle Public Libraries"
   },
   {
-    "date": "1998-12-01T00:00:00.000Z",
+    "date": "1998-12-01",
     "donorId": "bill-gates",
     "recipientId": "path",
     "amount": 100000000,
@@ -9690,7 +9690,7 @@ export const donations = [
     "recipient": "PATH"
   },
   {
-    "date": "1997-07-23T00:00:00.000Z",
+    "date": "1997-07-23",
     "donorId": "bill-gates",
     "recipientId": "gates-library-foundation",
     "amount": 200000000,
@@ -9700,7 +9700,7 @@ export const donations = [
     "recipient": "Gates Library Foundation"
   },
   {
-    "date": "1996-09-01T00:00:00.000Z",
+    "date": "1996-09-01",
     "donorId": "bill-gates",
     "recipientId": "harvard-university",
     "amount": 25000000,
@@ -9710,7 +9710,7 @@ export const donations = [
     "recipient": "Harvard University"
   },
   {
-    "date": "1996-01-01T00:00:00.000Z",
+    "date": "1996-01-01",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 12000000,
@@ -9720,7 +9720,7 @@ export const donations = [
     "recipient": "University of Washington"
   },
   {
-    "date": "1995-01-01T00:00:00.000Z",
+    "date": "1995-01-01",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington",
     "amount": 10000000,
@@ -9730,7 +9730,7 @@ export const donations = [
     "recipient": "University of Washington"
   },
   {
-    "date": "1992-01-01T00:00:00.000Z",
+    "date": "1992-01-01",
     "donorId": "bill-gates",
     "recipientId": "stanford-university",
     "amount": 6000000,
@@ -9740,7 +9740,7 @@ export const donations = [
     "recipient": "Stanford University"
   },
   {
-    "date": "1991-10-07T00:00:00.000Z",
+    "date": "1991-10-07",
     "donorId": "bill-gates",
     "recipientId": "university-of-washington-research",
     "amount": 12000000,
@@ -9750,7 +9750,7 @@ export const donations = [
     "recipient": "University of Washington (research)"
   },
   {
-    "date": "1991-10-07T00:00:00.000Z",
+    "date": "1991-10-07",
     "donorId": "melinda-gates",
     "recipientId": "university-of-washington-research",
     "amount": 12000000,

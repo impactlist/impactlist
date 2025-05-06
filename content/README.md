@@ -17,9 +17,9 @@ Each category file (e.g., `global_health.md`) follows this format:
 
 ```yaml
 ---
-id: "global_health"
+id: global-health
 name: "Global Health"
-costPerLife: 5000
+costPerLife: 5_000
 ---
 ```
 
@@ -29,10 +29,10 @@ Each donor file (e.g., `bill_gates.md`) follows this format:
 
 ```yaml
 ---
-id: "bill_gates"
+id: "bill-gates"
 name: "Bill Gates"
-netWorth: 1.08e11
-totalDonated: 5.9e10  # Optional
+netWorth: 108_000_000_000
+totalDonated: 59_000_000_000 # optional
 ---
 ```
 
@@ -42,13 +42,13 @@ Each recipient file (e.g., `against_malaria_foundation.md`) follows this format:
 
 ```yaml
 ---
-id: "against_malaria_foundation"
+id: against-malaria-foundation
 name: "Against Malaria Foundation"
 categories:
-  - id: "global_health"
-    fraction: 1.0
-    costPerLife: 4000  # Optional, overrides category default
-    multiplier: 1.5    # Optional
+  - id: global-health 
+    fraction: 1.0 
+    costPerLife: 4_000  # Optional, overrides category default
+    multiplier: 1.5    # Optional    
 ---
 ```
 
@@ -56,15 +56,13 @@ For recipients with multiple categories:
 
 ```yaml
 ---
-id: "bill_melinda_gates_foundation"
+id: gates-foundation
 name: "Bill & Melinda Gates Foundation"
 categories:
-  - id: "global_health"
+  - id: global-health
     fraction: 0.4
-  - id: "global_development"
+  - id: global-development
     fraction: 0.3
-  - id: "climate_change"
-    fraction: 0.07
   # etc.
 ---
 ```
@@ -75,25 +73,22 @@ Each file in the donations directory (typically named after a donor, like `bill_
 
 ```yaml
 ---
-donations:
-  - date: "1991-10-07"
-    recipient: "university_of_washington_research"
-    amount: 12000000
-    splits:
-      - donor: "bill_gates"
-        credit: 1.0
+donations:  
+  - date: 1991-10-07
+    recipient: university-of-washington-research
+    amount: 12_000_000
+    credit:
+      bill-gates: 0.7
+      melinda-gates: 0.3
     source: "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/"
-  
-  - date: "1999-01-01"
-    recipient: "bill_melinda_gates_foundation"
-    amount: 15800000000
-    splits:
-      - donor: "bill_gates"
-        credit: 0.8
-      - donor: "melinda_gates" 
-        credit: 0.2
-    source: "https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf"
     notes: "Initial endowment"  # Optional
+
+  - date: 1992-01-01
+    recipient: stanford-university
+    amount: 6_000_000
+    credit:
+      bill-gates: 1.0
+    source: "https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period"
 ---
 ```
 
@@ -105,16 +100,12 @@ For example, the same joint donation might appear in both `larry_page.md` and `m
 # In larry_page.md and mark_zuckerberg.md
 ---
 donations:
-  - date: "2014-11-10"
-    recipient: "ebola_relief_efforts"
-    amount: 45000000
-    splits:
-      - donor: "larry_page"
-        credit: 0.33
-      - donor: "google"
-        credit: 0.33
-      - donor: "mark_zuckerberg"
-        credit: 0.34
+  - date: 2014-11-10
+    recipient: ebola-relief-efforts
+    amount: 45_000_000
+    credit:
+      - larry_page: 0.33
+      - mark_zuckerberg: 0.67
     source: "https://philanthropynewsdigest.org/news/google-larry-page-pledge-30-million-for-ebola-relief-efforts"
     notes: "Joint tech sector response to Ebola crisis"
 ---
@@ -125,7 +116,7 @@ donations:
 After updating these files, run the data generation script to create the JavaScript data file:
 
 ```bash
-node scripts/generate-data-updated.js
+node scripts/generate-data.js
 ```
 
-This will create/update `src/data/donationData.js` with the compiled data from all markdown files. The script handles deduplication of donation events that appear in multiple files. 
+This will create/update `src/data/generatedData.js` with the compiled data from all markdown files. The script handles deduplication of donation events that appear in multiple files. 

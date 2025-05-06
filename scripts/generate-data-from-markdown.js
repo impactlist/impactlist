@@ -253,14 +253,21 @@ function generateJavaScriptFile() {
   
   console.log('Processing donations...');
   const donations = addReadableFields(categories, donors, recipients, rawDonations);
+
+  console.log('Filtering unused entities...');
+  const { 
+    filteredDonors, 
+    filteredRecipients, 
+    filteredCategories 
+  } = filterUnusedEntities(donors, recipients, categories, rawDonations);
   
   // Create compatibility arrays for old code
-  const donorsArray = Object.entries(donors).map(([id, data]) => ({
+  const donorsArray = Object.entries(filteredDonors).map(([id, data]) => ({
     id,
     ...data
   }));
   
-  const recipientsArray = Object.entries(recipients).map(([id, data]) => ({
+  const recipientsArray = Object.entries(filteredRecipients).map(([id, data]) => ({
     id,
     ...data
   }));
@@ -269,19 +276,19 @@ function generateJavaScriptFile() {
 // DO NOT EDIT DIRECTLY
 
 // Categories by ID
-export const categoriesById = ${JSON.stringify(categories, null, 2)};
+export const categoriesById = ${JSON.stringify(filteredCategories, null, 2)};
 
 // Donors by ID
-export const donorsById = ${JSON.stringify(donors, null, 2)};
+export const donorsById = ${JSON.stringify(filteredDonors, null, 2)};
 
 // Recipients by ID
-export const recipientsById = ${JSON.stringify(recipients, null, 2)};
+export const recipientsById = ${JSON.stringify(filteredRecipients, null, 2)};
 
 // All donations
 export const allDonations = ${JSON.stringify(donations, null, 2)};
 
 // Backward compatibility exports (arrays instead of objects)
-export const effectivenessCategories = ${JSON.stringify(categories, null, 2)};
+export const effectivenessCategories = ${JSON.stringify(filteredCategories, null, 2)};
 
 export const donors = ${JSON.stringify(donorsArray, null, 2)};
 
@@ -296,10 +303,50 @@ export const donations = ${JSON.stringify(donations, null, 2)};
   // Provide some stats
   console.log('');
   console.log('=== STATS ===');
-  console.log(`Categories: ${Object.keys(categories).length}`);
-  console.log(`Donors: ${Object.keys(donors).length}`);
-  console.log(`Recipients: ${Object.keys(recipients).length}`);
+  console.log(`Categories: ${Object.keys(filteredCategories).length} (of ${Object.keys(categories).length} total)`);
+  console.log(`Donors: ${Object.keys(filteredDonors).length} (of ${Object.keys(donors).length} total)`);
+  console.log(`Recipients: ${Object.keys(filteredRecipients).length} (of ${Object.keys(recipients).length} total)`);
   console.log(`Donations: ${donations.length}`);
+}
+
+// Filter out entities that are not used
+function filterUnusedEntities(donors, recipients, categories, donations) {
+  // Find donors and recipients with donations
+  const donorsWithDonations = new Set();
+  const recipientsWithDonations = new Set();
+  
+  donations.forEach(donation => {
+    donorsWithDonations.add(donation.donorId);
+    recipientsWithDonations.add(donation.recipientId);
+  });
+  
+  // Filter donors and recipients
+  const filteredDonors = Object.fromEntries(
+    Object.entries(donors).filter(([id]) => donorsWithDonations.has(id))
+  );
+  
+  const filteredRecipients = Object.fromEntries(
+    Object.entries(recipients).filter(([id]) => recipientsWithDonations.has(id))
+  );
+  
+  // Find categories used by recipients who received donations
+  const usedCategories = new Set();
+  Object.values(filteredRecipients).forEach(recipient => {
+    Object.keys(recipient.categories).forEach(categoryId => {
+      usedCategories.add(categoryId);
+    });
+  });
+  
+  // Filter categories
+  const filteredCategories = Object.fromEntries(
+    Object.entries(categories).filter(([id]) => usedCategories.has(id))
+  );
+  
+  return {
+    filteredDonors,
+    filteredRecipients,
+    filteredCategories
+  };
 }
 
 generateJavaScriptFile(); 

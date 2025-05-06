@@ -31,7 +31,13 @@ export const getAllRecipients = () => Object.values(recipientsById);
 export const getAllDonors = () => Object.values(donorsById);
 
 // Helper to get all categories as an array
-export const getAllCategories = () => Object.values(categoriesById);
+export const getAllCategories = () => {
+  // Convert to array of objects with id included
+  return Object.entries(categoriesById).map(([id, data]) => ({
+    ...data,
+    id // Include the ID in the object
+  }));
+};
 
 // Helper to find an entity's ID by its object reference
 export const findEntityId = (entityObj, entitiesById) => {

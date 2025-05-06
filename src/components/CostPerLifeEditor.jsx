@@ -335,7 +335,7 @@ const CostPerLifeEditor = () => {
         
         const initialCategoryValues = initializeFormValues(
           categoryEntries, 
-          value => value.toLocaleString()
+          formatWithCommas
         );
         
         setCategoryFormValues(initialCategoryValues);
@@ -366,7 +366,7 @@ const CostPerLifeEditor = () => {
         if (recipientEntries.length > 0) {
           const initialRecipientValues = initializeFormValues(
             recipientEntries,
-            value => typeof value === 'number' ? formatWithCommas(value) : value
+            formatWithCommas
           );
           
           setRecipientFormValues(initialRecipientValues);
@@ -380,16 +380,8 @@ const CostPerLifeEditor = () => {
         filterRecipients(searchTerm, searchTerm === '');
       }
     }
-    // Remove filterRecipients, searchTerm, showOnlyCustom from dependencies to avoid infinite loops
-  }, [isModalOpen, customValues]);
+  }, [isModalOpen, customValues, allCategories]); // Added allCategories to dependencies
   
-  // Reset search term when modal closes
-  /*useEffect(() => {
-    if (!isModalOpen) {
-      setSearchTerm('');
-    }
-  }, [isModalOpen]);*/
-
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {
     if (activeTab === 'recipients') {
@@ -764,9 +756,11 @@ const CostPerLifeEditor = () => {
       // Convert array of [key, value] pairs
       sourceValues.forEach(([key, value]) => {
         if (createFormState) {
-          const formattedValue = formatValue(value);
+          // Ensure value is a number for formatting
+          const numValue = typeof value === 'string' ? parseFloat(value) : value;
+          const formattedValue = formatValue(numValue);
           initialValues[key] = {
-            raw: value.toString(),
+            raw: numValue.toString(),
             display: formattedValue
           };
         } else {
@@ -777,9 +771,11 @@ const CostPerLifeEditor = () => {
       // Convert object of key: value pairs
       Object.entries(sourceValues).forEach(([key, value]) => {
         if (createFormState) {
-          const formattedValue = formatValue(value);
+          // Ensure value is a number for formatting
+          const numValue = typeof value === 'string' ? parseFloat(value) : value;
+          const formattedValue = formatValue(numValue);
           initialValues[key] = {
-            raw: value.toString(),
+            raw: numValue.toString(),
             display: formattedValue
           };
         } else {

@@ -11,10 +11,6 @@ export const categoriesById = {
     "name": "Science and Tech",
     "costPerLife": 20000
   },
-  "religious": {
-    "name": "Religious",
-    "costPerLife": 100000
-  },
   "population": {
     "name": "Population",
     "costPerLife": 50000
@@ -259,14 +255,6 @@ export const recipientsById = {
       }
     }
   },
-  "wikimedia-foundation": {
-    "name": "Wikimedia Foundation",
-    "categories": {
-      "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
   "washington-united-for-marriage-referendum-74-campaign": {
     "name": "Washington United for Marriage (Referendum 74 campaign)",
     "categories": {
@@ -331,22 +319,6 @@ export const recipientsById = {
       }
     }
   },
-  "university-of-southern-california-medicine": {
-    "name": "University of Southern California (Medicine)",
-    "categories": {
-      "health-medicine": {
-        "fraction": 1
-      }
-    }
-  },
-  "university-of-oxford-science": {
-    "name": "University of Oxford (Science)",
-    "categories": {
-      "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
   "university-of-maryland-school-of-public-health": {
     "name": "University of Maryland, School of Public Health",
     "categories": {
@@ -359,14 +331,6 @@ export const recipientsById = {
     "name": "University of California San Diego (Airborne Institute)",
     "categories": {
       "pandemics": {
-        "fraction": 1
-      }
-    }
-  },
-  "university-of-california-davis-medicine": {
-    "name": "University of California, Davis (Medicine)",
-    "categories": {
-      "health-medicine": {
         "fraction": 1
       }
     }
@@ -448,14 +412,6 @@ export const recipientsById = {
     "name": "The Energy Foundation",
     "categories": {
       "climate-change": {
-        "fraction": 1
-      }
-    }
-  },
-  "the-end-fund": {
-    "name": "The END Fund",
-    "categories": {
-      "disaster-relief": {
         "fraction": 1
       }
     }
@@ -600,22 +556,6 @@ export const recipientsById = {
     "name": "Seattle Public Libraries",
     "categories": {
       "education": {
-        "fraction": 1
-      }
-    }
-  },
-  "sderot-community-center-israel": {
-    "name": "Sderot Community Center (Israel)",
-    "categories": {
-      "local-community": {
-        "fraction": 1
-      }
-    }
-  },
-  "sci-foundation": {
-    "name": "SCI Foundation",
-    "categories": {
-      "health-medicine": {
         "fraction": 1
       }
     }
@@ -800,14 +740,6 @@ export const recipientsById = {
       }
     }
   },
-  "nuclear-threat-initiative": {
-    "name": "Nuclear Threat Initiative",
-    "categories": {
-      "nuclear": {
-        "fraction": 1
-      }
-    }
-  },
   "novo-foundation": {
     "name": "NoVo Foundation",
     "categories": {
@@ -860,14 +792,6 @@ export const recipientsById = {
       }
     }
   },
-  "new-incentives": {
-    "name": "New Incentives",
-    "categories": {
-      "global-health": {
-        "fraction": 1
-      }
-    }
-  },
   "museum-of-history-industry-seattle": {
     "name": "Museum of History & Industry (Seattle)",
     "categories": {
@@ -916,26 +840,10 @@ export const recipientsById = {
       }
     }
   },
-  "mercy-for-animals": {
-    "name": "Mercy For Animals",
-    "categories": {
-      "animal-welfare": {
-        "fraction": 1
-      }
-    }
-  },
   "median-group": {
     "name": "Median Group",
     "categories": {
       "education": {
-        "fraction": 1
-      }
-    }
-  },
-  "malaria-consortium": {
-    "name": "Malaria Consortium",
-    "categories": {
-      "global-health": {
         "fraction": 1
       }
     }
@@ -959,23 +867,6 @@ export const recipientsById = {
       },
       "nuclear": {
         "fraction": 0.3
-      },
-      "global-priorities": {
-        "fraction": 0.1
-      }
-    }
-  },
-  "longterm-future-fund": {
-    "name": "Long-Term Future Fund",
-    "categories": {
-      "ai-risk": {
-        "fraction": 0.6
-      },
-      "pandemics": {
-        "fraction": 0.15
-      },
-      "meta-theory": {
-        "fraction": 0.15
       },
       "global-priorities": {
         "fraction": 0.1
@@ -1143,14 +1034,6 @@ export const recipientsById = {
       }
     }
   },
-  "helen-keller-international": {
-    "name": "Helen Keller International",
-    "categories": {
-      "global-health": {
-        "fraction": 1
-      }
-    }
-  },
   "haydn-belfield": {
     "name": "Haydn Belfield",
     "categories": {
@@ -1159,26 +1042,10 @@ export const recipientsById = {
       }
     }
   },
-  "harvard-university-tech-research": {
-    "name": "Harvard University (tech research)",
-    "categories": {
-      "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
   "harvard-university": {
     "name": "Harvard University",
     "categories": {
       "education": {
-        "fraction": 1
-      }
-    }
-  },
-  "habitat-for-humanity": {
-    "name": "Habitat for Humanity",
-    "categories": {
-      "housing": {
         "fraction": 1
       }
     }
@@ -1221,22 +1088,6 @@ export const recipientsById = {
       }
     }
   },
-  "global-priorities-institute": {
-    "name": "Global Priorities Institute",
-    "categories": {
-      "global-priorities": {
-        "fraction": 1
-      }
-    }
-  },
-  "global-polio-eradication-initiative": {
-    "name": "Global Polio Eradication Initiative",
-    "categories": {
-      "global-health": {
-        "fraction": 1
-      }
-    }
-  },
   "global-fishing-watch": {
     "name": "Global Fishing Watch",
     "categories": {
@@ -1267,14 +1118,6 @@ export const recipientsById = {
       },
       "social-justice": {
         "fraction": 0.3
-      }
-    }
-  },
-  "givewell-maximum-impact-fund": {
-    "name": "GiveWell Maximum Impact Fund",
-    "categories": {
-      "meta-theory": {
-        "fraction": 1
       }
     }
   },
@@ -1360,14 +1203,6 @@ export const recipientsById = {
       }
     }
   },
-  "friends-of-the-israel-defense-forces": {
-    "name": "Friends of the Israel Defense Forces",
-    "categories": {
-      "conflict-mitigation": {
-        "fraction": 1
-      }
-    }
-  },
   "flint-public-schools-water-filtration": {
     "name": "Flint Public Schools (Water Filtration)",
     "categories": {
@@ -1380,14 +1215,6 @@ export const recipientsById = {
     "name": "Feeding America (COVID-19 Response Fund)",
     "categories": {
       "disaster-relief": {
-        "fraction": 1
-      }
-    }
-  },
-  "evidence-action": {
-    "name": "Evidence Action",
-    "categories": {
-      "global-health": {
         "fraction": 1
       }
     }
@@ -1412,14 +1239,6 @@ export const recipientsById = {
     "name": "Epoch AI",
     "categories": {
       "ai-risk": {
-        "fraction": 1
-      }
-    }
-  },
-  "ellison-medical-foundation": {
-    "name": "Ellison Medical Foundation",
-    "categories": {
-      "health-medicine": {
         "fraction": 1
       }
     }
@@ -1460,14 +1279,6 @@ export const recipientsById = {
     "name": "Dogecoin Foundation",
     "categories": {
       "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
-  "development-media-international": {
-    "name": "Development Media International",
-    "categories": {
-      "education": {
         "fraction": 1
       }
     }
@@ -1516,22 +1327,6 @@ export const recipientsById = {
     "name": "Coin Center",
     "categories": {
       "institutions": {
-        "fraction": 1
-      }
-    }
-  },
-  "coalition-for-epidemic-preparedness": {
-    "name": "Coalition for Epidemic Preparedness",
-    "categories": {
-      "pandemics": {
-        "fraction": 1
-      }
-    }
-  },
-  "climate-works": {
-    "name": "Climate Works",
-    "categories": {
-      "climate-change": {
         "fraction": 1
       }
     }
@@ -1618,14 +1413,6 @@ export const recipientsById = {
     "name": "Center for Tech and Civic Life",
     "categories": {
       "institutions": {
-        "fraction": 1
-      }
-    }
-  },
-  "center-for-humancompatible-ai": {
-    "name": "Center for Human-Compatible AI",
-    "categories": {
-      "ai-risk": {
         "fraction": 1
       }
     }
@@ -1820,15 +1607,6 @@ export const recipientsById = {
       }
     }
   },
-  "anthropic": {
-    "name": "Anthropic",
-    "categories": {
-      "ai-risk": {
-        "fraction": 1,
-        "costPerLife": -50
-      }
-    }
-  },
   "american-cancer-society": {
     "name": "American Cancer Society",
     "categories": {
@@ -1905,14 +1683,6 @@ export const recipientsById = {
     "name": "AI Impacts",
     "categories": {
       "ai-risk": {
-        "fraction": 1
-      }
-    }
-  },
-  "against-malaria-foundation": {
-    "name": "Against Malaria Foundation",
-    "categories": {
-      "global-health": {
         "fraction": 1
       }
     }
@@ -4767,10 +4537,6 @@ export const effectivenessCategories = {
     "name": "Science and Tech",
     "costPerLife": 20000
   },
-  "religious": {
-    "name": "Religious",
-    "costPerLife": 100000
-  },
   "population": {
     "name": "Population",
     "costPerLife": 50000
@@ -5034,15 +4800,6 @@ export const recipients = [
     }
   },
   {
-    "id": "wikimedia-foundation",
-    "name": "Wikimedia Foundation",
-    "categories": {
-      "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "washington-united-for-marriage-referendum-74-campaign",
     "name": "Washington United for Marriage (Referendum 74 campaign)",
     "categories": {
@@ -5115,24 +4872,6 @@ export const recipients = [
     }
   },
   {
-    "id": "university-of-southern-california-medicine",
-    "name": "University of Southern California (Medicine)",
-    "categories": {
-      "health-medicine": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "university-of-oxford-science",
-    "name": "University of Oxford (Science)",
-    "categories": {
-      "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "university-of-maryland-school-of-public-health",
     "name": "University of Maryland, School of Public Health",
     "categories": {
@@ -5146,15 +4885,6 @@ export const recipients = [
     "name": "University of California San Diego (Airborne Institute)",
     "categories": {
       "pandemics": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "university-of-california-davis-medicine",
-    "name": "University of California, Davis (Medicine)",
-    "categories": {
-      "health-medicine": {
         "fraction": 1
       }
     }
@@ -5246,15 +4976,6 @@ export const recipients = [
     "name": "The Energy Foundation",
     "categories": {
       "climate-change": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "the-end-fund",
-    "name": "The END Fund",
-    "categories": {
-      "disaster-relief": {
         "fraction": 1
       }
     }
@@ -5414,24 +5135,6 @@ export const recipients = [
     "name": "Seattle Public Libraries",
     "categories": {
       "education": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "sderot-community-center-israel",
-    "name": "Sderot Community Center (Israel)",
-    "categories": {
-      "local-community": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "sci-foundation",
-    "name": "SCI Foundation",
-    "categories": {
-      "health-medicine": {
         "fraction": 1
       }
     }
@@ -5639,15 +5342,6 @@ export const recipients = [
     }
   },
   {
-    "id": "nuclear-threat-initiative",
-    "name": "Nuclear Threat Initiative",
-    "categories": {
-      "nuclear": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "novo-foundation",
     "name": "NoVo Foundation",
     "categories": {
@@ -5700,15 +5394,6 @@ export const recipients = [
     "name": "New Science Research",
     "categories": {
       "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "new-incentives",
-    "name": "New Incentives",
-    "categories": {
-      "global-health": {
         "fraction": 1
       }
     }
@@ -5768,28 +5453,10 @@ export const recipients = [
     }
   },
   {
-    "id": "mercy-for-animals",
-    "name": "Mercy For Animals",
-    "categories": {
-      "animal-welfare": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "median-group",
     "name": "Median Group",
     "categories": {
       "education": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "malaria-consortium",
-    "name": "Malaria Consortium",
-    "categories": {
-      "global-health": {
         "fraction": 1
       }
     }
@@ -5815,24 +5482,6 @@ export const recipients = [
       },
       "nuclear": {
         "fraction": 0.3
-      },
-      "global-priorities": {
-        "fraction": 0.1
-      }
-    }
-  },
-  {
-    "id": "longterm-future-fund",
-    "name": "Long-Term Future Fund",
-    "categories": {
-      "ai-risk": {
-        "fraction": 0.6
-      },
-      "pandemics": {
-        "fraction": 0.15
-      },
-      "meta-theory": {
-        "fraction": 0.15
       },
       "global-priorities": {
         "fraction": 0.1
@@ -6019,15 +5668,6 @@ export const recipients = [
     }
   },
   {
-    "id": "helen-keller-international",
-    "name": "Helen Keller International",
-    "categories": {
-      "global-health": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "haydn-belfield",
     "name": "Haydn Belfield",
     "categories": {
@@ -6037,28 +5677,10 @@ export const recipients = [
     }
   },
   {
-    "id": "harvard-university-tech-research",
-    "name": "Harvard University (tech research)",
-    "categories": {
-      "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "harvard-university",
     "name": "Harvard University",
     "categories": {
       "education": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "habitat-for-humanity",
-    "name": "Habitat for Humanity",
-    "categories": {
-      "housing": {
         "fraction": 1
       }
     }
@@ -6103,24 +5725,6 @@ export const recipients = [
     }
   },
   {
-    "id": "global-priorities-institute",
-    "name": "Global Priorities Institute",
-    "categories": {
-      "global-priorities": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "global-polio-eradication-initiative",
-    "name": "Global Polio Eradication Initiative",
-    "categories": {
-      "global-health": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "global-fishing-watch",
     "name": "Global Fishing Watch",
     "categories": {
@@ -6153,15 +5757,6 @@ export const recipients = [
       },
       "social-justice": {
         "fraction": 0.3
-      }
-    }
-  },
-  {
-    "id": "givewell-maximum-impact-fund",
-    "name": "GiveWell Maximum Impact Fund",
-    "categories": {
-      "meta-theory": {
-        "fraction": 1
       }
     }
   },
@@ -6256,15 +5851,6 @@ export const recipients = [
     }
   },
   {
-    "id": "friends-of-the-israel-defense-forces",
-    "name": "Friends of the Israel Defense Forces",
-    "categories": {
-      "conflict-mitigation": {
-        "fraction": 1
-      }
-    }
-  },
-  {
     "id": "flint-public-schools-water-filtration",
     "name": "Flint Public Schools (Water Filtration)",
     "categories": {
@@ -6278,15 +5864,6 @@ export const recipients = [
     "name": "Feeding America (COVID-19 Response Fund)",
     "categories": {
       "disaster-relief": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "evidence-action",
-    "name": "Evidence Action",
-    "categories": {
-      "global-health": {
         "fraction": 1
       }
     }
@@ -6314,15 +5891,6 @@ export const recipients = [
     "name": "Epoch AI",
     "categories": {
       "ai-risk": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "ellison-medical-foundation",
-    "name": "Ellison Medical Foundation",
-    "categories": {
-      "health-medicine": {
         "fraction": 1
       }
     }
@@ -6368,15 +5936,6 @@ export const recipients = [
     "name": "Dogecoin Foundation",
     "categories": {
       "science-tech": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "development-media-international",
-    "name": "Development Media International",
-    "categories": {
-      "education": {
         "fraction": 1
       }
     }
@@ -6431,24 +5990,6 @@ export const recipients = [
     "name": "Coin Center",
     "categories": {
       "institutions": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "coalition-for-epidemic-preparedness",
-    "name": "Coalition for Epidemic Preparedness",
-    "categories": {
-      "pandemics": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "climate-works",
-    "name": "Climate Works",
-    "categories": {
-      "climate-change": {
         "fraction": 1
       }
     }
@@ -6543,15 +6084,6 @@ export const recipients = [
     "name": "Center for Tech and Civic Life",
     "categories": {
       "institutions": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "center-for-humancompatible-ai",
-    "name": "Center for Human-Compatible AI",
-    "categories": {
-      "ai-risk": {
         "fraction": 1
       }
     }
@@ -6767,16 +6299,6 @@ export const recipients = [
     }
   },
   {
-    "id": "anthropic",
-    "name": "Anthropic",
-    "categories": {
-      "ai-risk": {
-        "fraction": 1,
-        "costPerLife": -50
-      }
-    }
-  },
-  {
     "id": "american-cancer-society",
     "name": "American Cancer Society",
     "categories": {
@@ -6862,15 +6384,6 @@ export const recipients = [
     "name": "AI Impacts",
     "categories": {
       "ai-risk": {
-        "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "against-malaria-foundation",
-    "name": "Against Malaria Foundation",
-    "categories": {
-      "global-health": {
         "fraction": 1
       }
     }

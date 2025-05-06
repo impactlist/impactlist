@@ -153,8 +153,8 @@ const AppContent = () => {
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<Home hideHeader={true} />} />
-            <Route path="/donor/:donorName" element={<DonorDetail hideHeader={true} />} />
-            <Route path="/recipient/:recipientName" element={<RecipientDetail hideHeader={true} />} />
+            <Route path="/donor/:donorId" element={<DonorDetail hideHeader={true} />} />
+            <Route path="/recipient/:recipientId" element={<RecipientDetail hideHeader={true} />} />
             <Route path="/recipients" element={<Recipients hideHeader={true} />} />
           </Routes>
         </AnimatePresence>

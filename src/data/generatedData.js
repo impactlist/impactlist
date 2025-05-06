@@ -127,6 +127,10 @@ export const donorsById = {
     "name": "Michael Bloomberg",
     "netWorth": 110000000000
   },
+  "melinda-gates": {
+    "name": "Melinda French Gates",
+    "netWorth": 30400000000
+  },
   "mark-zuckerberg": {
     "name": "Mark Zuckerberg",
     "netWorth": 170000000000
@@ -415,7 +419,7 @@ export const recipientsById = {
       }
     }
   },
-  "thedreamus": {
+  "thedream-us": {
     "name": "TheDream.US",
     "categories": {
       "education": {
@@ -728,7 +732,7 @@ export const recipientsById = {
       }
     }
   },
-  "patientled-research-collaborative": {
+  "patient-led-research-collaborative": {
     "name": "Patient-Led Research Collaborative",
     "categories": {
       "health-medicine": {
@@ -1052,7 +1056,7 @@ export const recipientsById = {
       }
     }
   },
-  "jos-andrs-bezos-courage-civility-award": {
+  "jose-andres-bezos-courage-civility-award": {
     "name": "José Andrés (Bezos Courage & Civility Award)",
     "categories": {
       "other": {
@@ -1101,7 +1105,7 @@ export const recipientsById = {
       }
     }
   },
-  "india-covidcrypto-relief-fund": {
+  "india-covid-crypto-relief-fund": {
     "name": "India COVID-Crypto Relief Fund",
     "categories": {
       "disaster-relief": {
@@ -1322,6 +1326,32 @@ export const recipientsById = {
       }
     }
   },
+  "gates-foundation": {
+    "name": "Bill & Melinda Gates Foundation",
+    "categories": {
+      "global-health": {
+        "fraction": 0.4
+      },
+      "global-development": {
+        "fraction": 0.3
+      },
+      "climate-change": {
+        "fraction": 0.07
+      },
+      "education": {
+        "fraction": 0.08
+      },
+      "pandemics": {
+        "fraction": 0.07
+      },
+      "science-tech": {
+        "fraction": 0.05
+      },
+      "human-rights": {
+        "fraction": 0.03
+      }
+    }
+  },
   "future-of-life-institute": {
     "name": "Future of Life Institute",
     "categories": {
@@ -1346,7 +1376,7 @@ export const recipientsById = {
       }
     }
   },
-  "feeding-america-covid19-response-fund": {
+  "feeding-america-covid-19-response-fund": {
     "name": "Feeding America (COVID-19 Response Fund)",
     "categories": {
       "disaster-relief": {
@@ -1560,7 +1590,7 @@ export const recipientsById = {
       }
     }
   },
-  "centre-for-longterm-resilience": {
+  "centre-for-long-term-resilience": {
     "name": "Centre for Long-Term Resilience",
     "categories": {
       "ai-risk": {
@@ -1576,7 +1606,7 @@ export const recipientsById = {
       }
     }
   },
-  "center-on-longterm-risk": {
+  "center-on-long-term-risk": {
     "name": "Center on Long-Term Risk",
     "categories": {
       "ai-risk": {
@@ -1707,63 +1737,11 @@ export const recipientsById = {
       }
     }
   },
-  "bill-melinda-gates-foundation": {
-    "name": "Bill & Melinda Gates Foundation",
-    "categories": {
-      "global-health": {
-        "fraction": 0.4
-      },
-      "global-development": {
-        "fraction": 0.3
-      },
-      "climate-change": {
-        "fraction": 0.07
-      },
-      "education": {
-        "fraction": 0.08
-      },
-      "pandemics": {
-        "fraction": 0.07
-      },
-      "science-tech": {
-        "fraction": 0.05
-      },
-      "human-rights": {
-        "fraction": 0.03
-      }
-    }
-  },
   "bill-mcraven-bezos-courage-civility-award": {
     "name": "Bill McRaven (Bezos Courage & Civility Award)",
     "categories": {
       "other": {
         "fraction": 1
-      }
-    }
-  },
-  "bill-and-melinda-gates-foundation": {
-    "name": "Bill & Melinda Gates Foundation",
-    "categories": {
-      "global-health": {
-        "fraction": 0.4
-      },
-      "global-development": {
-        "fraction": 0.3
-      },
-      "climate-change": {
-        "fraction": 0.07
-      },
-      "education": {
-        "fraction": 0.08
-      },
-      "pandemics": {
-        "fraction": 0.07
-      },
-      "science-tech": {
-        "fraction": 0.05
-      },
-      "human-rights": {
-        "fraction": 0.03
       }
     }
   },
@@ -1867,7 +1845,7 @@ export const recipientsById = {
       }
     }
   },
-  "all-in-washington-covid19-relief-effort": {
+  "all-in-washington-covid-19-relief-effort": {
     "name": "All In Washington (COVID-19 relief effort)",
     "categories": {
       "disaster-relief": {
@@ -2735,7 +2713,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2022-07-01",
@@ -2825,7 +2803,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://patientresearchcovid19.com/balvi-press-release/",
     "donor": "Vitalik Buterin",
-    "recipient": "patient-led-research-collaborative"
+    "recipient": "Patient-Led Research Collaborative"
   },
   {
     "date": "2022-04-04",
@@ -2995,7 +2973,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://survivalandflourishing.fund/sff-2021-h2-recommendations",
     "donor": "Jaan Tallinn",
-    "recipient": "center-on-long-term-risk"
+    "recipient": "Center on Long-Term Risk"
   },
   {
     "date": "2021-10-01",
@@ -3025,7 +3003,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://survivalandflourishing.fund/sff-2021-h2-recommendations",
     "donor": "Jaan Tallinn",
-    "recipient": "centre-for-long-term-resilience"
+    "recipient": "Centre for Long-Term Resilience"
   },
   {
     "date": "2021-09-20",
@@ -3085,7 +3063,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.axios.com/2021/07/20/bezos-unveils-million-dollar-awards-van-jones-jose-andres",
     "donor": "Jeff Bezos",
-    "recipient": "jose-andres-bezos-courage-civility-award"
+    "recipient": "José Andrés (Bezos Courage & Civility Award)"
   },
   {
     "date": "2021-07-16",
@@ -3145,7 +3123,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.indiatoday.in/technology/news/story/vitalik-donates-1-billion-worth-shiba-inu-and-ethereum-to-india-covid-19-relief-fund-1802009-2021-05-13",
     "donor": "Vitalik Buterin",
-    "recipient": "india-covid-crypto-relief-fund"
+    "recipient": "India COVID-Crypto Relief Fund"
   },
   {
     "date": "2021-05-12",
@@ -3315,7 +3293,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://survivalandflourishing.fund/sff-2021-h1-recommendations",
     "donor": "Jaan Tallinn",
-    "recipient": "centre-for-long-term-resilience"
+    "recipient": "Centre for Long-Term Resilience"
   },
   {
     "date": "2021-04-01",
@@ -3455,7 +3433,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.kentreporter.com/business/bezos-pledges-an-additional-25-million-to-support-covid-19-relief-efforts/",
     "donor": "Jeff Bezos",
-    "recipient": "all-in-washington-covid-19-relief-effort"
+    "recipient": "All In Washington (COVID-19 relief effort)"
   },
   {
     "date": "2020-12-17",
@@ -3625,7 +3603,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.geekwire.com/2020/jeff-bezos-pledges-25m-wa-help-group-provide-covid-19-relief-across-state/",
     "donor": "Jeff Bezos",
-    "recipient": "all-in-washington-covid-19-relief-effort"
+    "recipient": "All In Washington (COVID-19 relief effort)"
   },
   {
     "date": "2020-06-15",
@@ -3735,7 +3713,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.feedingamerica.org/about-us/press-room/jeff-bezos-support-food-banks",
     "donor": "Jeff Bezos",
-    "recipient": "feeding-america-covid-19-response-fund"
+    "recipient": "Feeding America (COVID-19 Response Fund)"
   },
   {
     "date": "2020-03-24",
@@ -3965,7 +3943,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.reuters.com/article/world/us/jeff-bezos-contributes-33-million-to-dreamers-scholarship-program-idUSKBN1F124Z/",
     "donor": "Jeff Bezos",
-    "recipient": "thedream-us"
+    "recipient": "TheDream.US"
   },
   {
     "date": "2018-01-01",
@@ -4125,7 +4103,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2017-05-31",
@@ -4535,7 +4513,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md",
     "donor": "Warren Buffett",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2006-11-25",
@@ -4625,7 +4603,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2003-04-24",
@@ -4645,7 +4623,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "1999-11-01",
@@ -4675,7 +4653,7 @@ export const allDonations = [
     "credit": 1,
     "source": "https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "1999-01-01",
@@ -4774,7 +4752,7 @@ export const allDonations = [
     "amount": 12000000,
     "credit": 0.3,
     "source": "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/",
-    "donor": "melinda-gates",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington (research)"
   }
 ];
@@ -4906,6 +4884,11 @@ export const donors = [
     "id": "michael-bloomberg",
     "name": "Michael Bloomberg",
     "netWorth": 110000000000
+  },
+  {
+    "id": "melinda-gates",
+    "name": "Melinda French Gates",
+    "netWorth": 30400000000
   },
   {
     "id": "mark-zuckerberg",
@@ -5231,7 +5214,7 @@ export const recipients = [
     }
   },
   {
-    "id": "thedreamus",
+    "id": "thedream-us",
     "name": "TheDream.US",
     "categories": {
       "education": {
@@ -5580,7 +5563,7 @@ export const recipients = [
     }
   },
   {
-    "id": "patientled-research-collaborative",
+    "id": "patient-led-research-collaborative",
     "name": "Patient-Led Research Collaborative",
     "categories": {
       "health-medicine": {
@@ -5939,7 +5922,7 @@ export const recipients = [
     }
   },
   {
-    "id": "jos-andrs-bezos-courage-civility-award",
+    "id": "jose-andres-bezos-courage-civility-award",
     "name": "José Andrés (Bezos Courage & Civility Award)",
     "categories": {
       "other": {
@@ -5994,7 +5977,7 @@ export const recipients = [
     }
   },
   {
-    "id": "india-covidcrypto-relief-fund",
+    "id": "india-covid-crypto-relief-fund",
     "name": "India COVID-Crypto Relief Fund",
     "categories": {
       "disaster-relief": {
@@ -6237,6 +6220,33 @@ export const recipients = [
     }
   },
   {
+    "id": "gates-foundation",
+    "name": "Bill & Melinda Gates Foundation",
+    "categories": {
+      "global-health": {
+        "fraction": 0.4
+      },
+      "global-development": {
+        "fraction": 0.3
+      },
+      "climate-change": {
+        "fraction": 0.07
+      },
+      "education": {
+        "fraction": 0.08
+      },
+      "pandemics": {
+        "fraction": 0.07
+      },
+      "science-tech": {
+        "fraction": 0.05
+      },
+      "human-rights": {
+        "fraction": 0.03
+      }
+    }
+  },
+  {
     "id": "future-of-life-institute",
     "name": "Future of Life Institute",
     "categories": {
@@ -6264,7 +6274,7 @@ export const recipients = [
     }
   },
   {
-    "id": "feeding-america-covid19-response-fund",
+    "id": "feeding-america-covid-19-response-fund",
     "name": "Feeding America (COVID-19 Response Fund)",
     "categories": {
       "disaster-relief": {
@@ -6502,7 +6512,7 @@ export const recipients = [
     }
   },
   {
-    "id": "centre-for-longterm-resilience",
+    "id": "centre-for-long-term-resilience",
     "name": "Centre for Long-Term Resilience",
     "categories": {
       "ai-risk": {
@@ -6520,7 +6530,7 @@ export const recipients = [
     }
   },
   {
-    "id": "center-on-longterm-risk",
+    "id": "center-on-long-term-risk",
     "name": "Center on Long-Term Risk",
     "categories": {
       "ai-risk": {
@@ -6664,65 +6674,11 @@ export const recipients = [
     }
   },
   {
-    "id": "bill-melinda-gates-foundation",
-    "name": "Bill & Melinda Gates Foundation",
-    "categories": {
-      "global-health": {
-        "fraction": 0.4
-      },
-      "global-development": {
-        "fraction": 0.3
-      },
-      "climate-change": {
-        "fraction": 0.07
-      },
-      "education": {
-        "fraction": 0.08
-      },
-      "pandemics": {
-        "fraction": 0.07
-      },
-      "science-tech": {
-        "fraction": 0.05
-      },
-      "human-rights": {
-        "fraction": 0.03
-      }
-    }
-  },
-  {
     "id": "bill-mcraven-bezos-courage-civility-award",
     "name": "Bill McRaven (Bezos Courage & Civility Award)",
     "categories": {
       "other": {
         "fraction": 1
-      }
-    }
-  },
-  {
-    "id": "bill-and-melinda-gates-foundation",
-    "name": "Bill & Melinda Gates Foundation",
-    "categories": {
-      "global-health": {
-        "fraction": 0.4
-      },
-      "global-development": {
-        "fraction": 0.3
-      },
-      "climate-change": {
-        "fraction": 0.07
-      },
-      "education": {
-        "fraction": 0.08
-      },
-      "pandemics": {
-        "fraction": 0.07
-      },
-      "science-tech": {
-        "fraction": 0.05
-      },
-      "human-rights": {
-        "fraction": 0.03
       }
     }
   },
@@ -6839,7 +6795,7 @@ export const recipients = [
     }
   },
   {
-    "id": "all-in-washington-covid19-relief-effort",
+    "id": "all-in-washington-covid-19-relief-effort",
     "name": "All In Washington (COVID-19 relief effort)",
     "categories": {
       "disaster-relief": {
@@ -7717,7 +7673,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2022-07-01",
@@ -7807,7 +7763,7 @@ export const donations = [
     "credit": 1,
     "source": "https://patientresearchcovid19.com/balvi-press-release/",
     "donor": "Vitalik Buterin",
-    "recipient": "patient-led-research-collaborative"
+    "recipient": "Patient-Led Research Collaborative"
   },
   {
     "date": "2022-04-04",
@@ -7977,7 +7933,7 @@ export const donations = [
     "credit": 1,
     "source": "https://survivalandflourishing.fund/sff-2021-h2-recommendations",
     "donor": "Jaan Tallinn",
-    "recipient": "center-on-long-term-risk"
+    "recipient": "Center on Long-Term Risk"
   },
   {
     "date": "2021-10-01",
@@ -8007,7 +7963,7 @@ export const donations = [
     "credit": 1,
     "source": "https://survivalandflourishing.fund/sff-2021-h2-recommendations",
     "donor": "Jaan Tallinn",
-    "recipient": "centre-for-long-term-resilience"
+    "recipient": "Centre for Long-Term Resilience"
   },
   {
     "date": "2021-09-20",
@@ -8067,7 +8023,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.axios.com/2021/07/20/bezos-unveils-million-dollar-awards-van-jones-jose-andres",
     "donor": "Jeff Bezos",
-    "recipient": "jose-andres-bezos-courage-civility-award"
+    "recipient": "José Andrés (Bezos Courage & Civility Award)"
   },
   {
     "date": "2021-07-16",
@@ -8127,7 +8083,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.indiatoday.in/technology/news/story/vitalik-donates-1-billion-worth-shiba-inu-and-ethereum-to-india-covid-19-relief-fund-1802009-2021-05-13",
     "donor": "Vitalik Buterin",
-    "recipient": "india-covid-crypto-relief-fund"
+    "recipient": "India COVID-Crypto Relief Fund"
   },
   {
     "date": "2021-05-12",
@@ -8297,7 +8253,7 @@ export const donations = [
     "credit": 1,
     "source": "https://survivalandflourishing.fund/sff-2021-h1-recommendations",
     "donor": "Jaan Tallinn",
-    "recipient": "centre-for-long-term-resilience"
+    "recipient": "Centre for Long-Term Resilience"
   },
   {
     "date": "2021-04-01",
@@ -8437,7 +8393,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.kentreporter.com/business/bezos-pledges-an-additional-25-million-to-support-covid-19-relief-efforts/",
     "donor": "Jeff Bezos",
-    "recipient": "all-in-washington-covid-19-relief-effort"
+    "recipient": "All In Washington (COVID-19 relief effort)"
   },
   {
     "date": "2020-12-17",
@@ -8607,7 +8563,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.geekwire.com/2020/jeff-bezos-pledges-25m-wa-help-group-provide-covid-19-relief-across-state/",
     "donor": "Jeff Bezos",
-    "recipient": "all-in-washington-covid-19-relief-effort"
+    "recipient": "All In Washington (COVID-19 relief effort)"
   },
   {
     "date": "2020-06-15",
@@ -8717,7 +8673,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.feedingamerica.org/about-us/press-room/jeff-bezos-support-food-banks",
     "donor": "Jeff Bezos",
-    "recipient": "feeding-america-covid-19-response-fund"
+    "recipient": "Feeding America (COVID-19 Response Fund)"
   },
   {
     "date": "2020-03-24",
@@ -8947,7 +8903,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.reuters.com/article/world/us/jeff-bezos-contributes-33-million-to-dreamers-scholarship-program-idUSKBN1F124Z/",
     "donor": "Jeff Bezos",
-    "recipient": "thedream-us"
+    "recipient": "TheDream.US"
   },
   {
     "date": "2018-01-01",
@@ -9107,7 +9063,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.wsj.com/articles/bill-gates-donates-billions-in-stock-to-foundation-1502822229",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2017-05-31",
@@ -9517,7 +9473,7 @@ export const donations = [
     "credit": 1,
     "source": "https://gist.github.com/elliotolds/3254004d00be1af97fd1676bd230f5c6#file-warren_bufftet_donations-md",
     "donor": "Warren Buffett",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2006-11-25",
@@ -9607,7 +9563,7 @@ export const donations = [
     "credit": 1,
     "source": "https://money.cnn.com/2004/09/21/technology/gates_pay/index.htm?cnn#:~:text=This%20November%2C%20the%20company%20plans,for%20him%20and%20his%20wife",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "2003-04-24",
@@ -9627,7 +9583,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.gatesfoundation.org/ideas/media-center/press-releases/2000/01/statement-from-the-bill-melinda-gates-foundation#:~:text=SEATTLE%20,8%20billion",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "1999-11-01",
@@ -9657,7 +9613,7 @@ export const donations = [
     "credit": 1,
     "source": "https://www.gatesfoundation.org/-/media/gfo/1annual-reports/1999gates-foundation-annual-report.pdf#:~:text=Continuing%20their%20generous%20and%20aggressive,national%20and%20global%20challenges%2C%20it",
     "donor": "Bill Gates",
-    "recipient": "gates-foundation"
+    "recipient": "Bill & Melinda Gates Foundation"
   },
   {
     "date": "1999-01-01",
@@ -9756,7 +9712,7 @@ export const donations = [
     "amount": 12000000,
     "credit": 0.3,
     "source": "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/",
-    "donor": "melinda-gates",
+    "donor": "Melinda French Gates",
     "recipient": "University of Washington (research)"
   }
 ];

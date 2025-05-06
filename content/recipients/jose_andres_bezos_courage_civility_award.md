@@ -1,5 +1,5 @@
 ---
-id: jos-andrs-bezos-courage-civility-award
+id: jose-andres-bezos-courage-civility-award
 name: "José Andrés (Bezos Courage & Civility Award)"
 categories:
   - id: other

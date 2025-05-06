@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { recipients, donations } from '../data/donationData';
-import { getCostPerLifeForRecipient, getPrimaryCategoryId, getCategoryBreakdown } from '../utils/donationDataHelpers';
+import { 
+  getCostPerLifeForRecipient, 
+  getPrimaryCategoryId, 
+  getCategoryBreakdown,
+  getAllRecipients,
+  getDonationsForRecipient,
+  getCategoryById,
+  getRecipientId,
+  calculateLivesSavedForDonation
+} from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -14,42 +22,64 @@ function Recipients(props) {
 
   useEffect(() => {
     // Calculate recipient statistics
-    const recipientStats = recipients.map(recipient => {
-      const recipientDonations = donations.filter(d => d.recipient === recipient.name);
+    const recipientStats = getAllRecipients().map(recipient => {
+      const recipientId = getRecipientId(recipient);
+      
+      if (!recipientId) {
+        throw new Error(`Could not find ID for recipient ${recipient.name}. Please check that this recipient has a valid ID.`);
+      }
+      
+      const recipientDonations = getDonationsForRecipient(recipientId);
       const totalReceived = recipientDonations.reduce((sum, d) => sum + d.amount, 0);
-      const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
+      const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
 
       // Get the primary category and all categories for display
-      const primaryCategory = getPrimaryCategoryId(recipient);
-      const categoryBreakdown = getCategoryBreakdown(recipient);
-      const categoryNames = categoryBreakdown.map(category => category.name);
+      const primaryCategoryId = getPrimaryCategoryId(recipientId);
       
+      if (!primaryCategoryId) {
+        throw new Error(`No primary category found for recipient ${recipient.name}. Please check that this recipient has categories defined.`);
+      }
+      
+      const primaryCategory = getCategoryById(primaryCategoryId);
+      
+      if (!primaryCategory) {
+        throw new Error(`Invalid primary category ID: ${primaryCategoryId} for recipient ${recipient.name}. This category does not exist.`);
+      }
+      
+      const categoryBreakdown = getCategoryBreakdown(recipientId);
+      
+      // Get category names from breakdown
+      const categoryNames = categoryBreakdown.map(category => {
+        const categoryObj = getCategoryById(category.categoryId);
+        
+        if (!categoryObj) {
+          throw new Error(`Invalid category ID: ${category.categoryId} for recipient ${recipient.name}. This category does not exist.`);
+        }
+        
+        return categoryObj.name;
+      });
+      
+      // Calculate total lives saved
       const totalLivesSaved = recipientDonations.reduce(
-        (sum, d) => {
-          // Apply credit multiplier if it exists
-          const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
-          
-          const livesSaved = costPerLife !== 0 ? creditedAmount / costPerLife : 0; 
-          return sum + livesSaved;
-        }, 
+        (sum, donation) => sum + calculateLivesSavedForDonation(donation, customValues),
         0
       );
       
       return {
+        id: recipientId,
         name: recipient.name,
-        primaryCategoryId: primaryCategory.id,
+        primaryCategoryId: primaryCategoryId,
         primaryCategoryName: primaryCategory.name,
         categoryNames,
         totalReceived,
         costPerLife,
         totalLivesSaved
       };
-    }).sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
+    })
+    .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
     
     setRecipientStats(recipientStats);
   }, [customValues]);
-
-  // Using imported formatNumber and formatCurrency functions from utils/formatters.js
 
   // Recipient table columns configuration
   const recipientColumns = [
@@ -63,7 +93,7 @@ function Recipients(props) {
       label: 'Organization',
       render: (recipient) => (
         <Link 
-          to={`/recipient/${encodeURIComponent(recipient.name)}`}
+          to={`/recipient/${encodeURIComponent(recipient.id)}`}
           className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
         >
           {recipient.name}

@@ -1,9 +1,19 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { donations, recipients, effectivenessCategories, donors } from '../data/donationData';
-import { calculateDonorStats, getCostPerLifeForRecipient, getPrimaryCategoryId, 
-  getDefaultCostPerLifeForCategory, getActualCostPerLifeForCategoryData } from '../utils/donationDataHelpers';
+import { 
+  calculateDonorStats,
+  getCostPerLifeForRecipient,
+  getPrimaryCategoryId,
+  getDefaultCostPerLifeForCategory,
+  getActualCostPerLifeForCategoryData,
+  getDonorById,
+  getCategoryById,
+  getRecipientById,
+  getDonationsForDonor,
+  getRecipientId,
+  calculateLivesSavedForDonation
+} from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart, { ImpactChartToggle } from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';
@@ -14,7 +24,7 @@ import { formatNumber, formatCurrency } from '../utils/formatters';
 const ANIMATION_DURATION = 600;
 
 function DonorDetail(props) {
-  const { donorName } = useParams();
+  const { donorId } = useParams();
   const [donorStats, setDonorStats] = useState(null);
   const [donorDonations, setDonorDonations] = useState([]);
   const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
@@ -50,44 +60,51 @@ function DonorDetail(props) {
   useEffect(() => {
     // Get full donor statistics
     const stats = calculateDonorStats(customValues);
-    const currentDonor = stats.find(donor => donor.name === donorName);
+    const currentDonor = stats.find(donor => donor.id === donorId);
     setDonorStats(currentDonor);
     
+    if (!currentDonor) {
+      throw new Error(`Donor with ID "${donorId}" not found. Please check that this donor exists in the database.`);
+    }
+    
     // Get donor donations and sort by date (most recent first)
-    const donorDonationsList = donations
-      .filter(donation => donation.donor === donorName)
+    const donorDonationsList = getDonationsForDonor(donorId)
       .map(donation => {
-        const recipient = recipients.find(r => r.name === donation.recipient);
+        const recipientId = donation.recipientId;
+        const recipient = getRecipientById(recipientId);
         
         // Throw error if recipient doesn't exist in our database
         if (!recipient) {
-          throw new Error(`Recipient not found: ${donation.recipient} for donor ${donorName}. This recipient needs to be added to the recipients array.`);
+          throw new Error(`Recipient not found: ${donation.recipient} for donor ${donorId}. This recipient needs to be added to the recipients array.`);
         }
         
-        const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
+        // Normal flow when recipient exists
+        const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
         
         // Get the primary category ID for this recipient
-        const primaryCategoryId = getPrimaryCategoryId(recipient);
+        const primaryCategoryId = getPrimaryCategoryId(recipientId);
+        const primaryCategory = getCategoryById(primaryCategoryId) || { name: 'Other' };
         
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
         
-        const livesSaved = costPerLife !== 0 ? creditedAmount / costPerLife : 0; 
+        // Calculate lives saved
+        const livesSaved = calculateLivesSavedForDonation(donation, customValues);
         
         return {
           ...donation,
           creditedAmount,
           category: primaryCategoryId, // Use primary category ID 
-          categoryName: effectivenessCategories[primaryCategoryId].name, // Get the name from effectivenessCategories
+          categoryName: primaryCategory.name, // Get the name from categoriesById
           livesSaved,
           costPerLife,
-          dateObj: new Date(donation.date)
+          dateObj: donation.date ? new Date(donation.date) : new Date(0)
         };
       })
       .sort((a, b) => b.dateObj - a.dateObj);
     
-    // Find the donor with the totalDonated field in the donors array
-    const donorData = donors.find(donor => donor.name === donorName);
+    // Find the donor object
+    const donorData = getDonorById(donorId);
     
     // Keep track of the sum of known donations for reference
     const knownDonationsTotal = donorDonationsList.reduce((total, donation) => total + donation.amount, 0);
@@ -109,7 +126,9 @@ function DonorDetail(props) {
       // Add the unknown donation to the list
       donorDonationsList.unshift({
         date: 'Unknown',
-        donor: donorName,
+        donorId: donorId,
+        donor: donorData.name,
+        recipientId: 'unknown',
         recipient: 'Unknown',
         amount: unknownAmount,
         category: 'other', // Use 'other' as the primary category ID
@@ -120,16 +139,6 @@ function DonorDetail(props) {
         source: '',
         isUnknown: true
       });
-      
-      // Also create a dummy recipient for the 'Unknown' entry to avoid errors
-      if (!recipients.some(r => r.name === 'Unknown')) {
-        recipients.push({
-          name: 'Unknown',
-          categories: {
-            other: { fraction: 1.0 }
-          }
-        });
-      }
     }
     
     setDonorDonations(donorDonationsList);
@@ -146,16 +155,18 @@ function DonorDetail(props) {
       if (donation.isUnknown) return;
       
       // Get the recipient and its categories
-      const recipient = recipients.find(r => r.name === donation.recipient);
+      const recipientId = donation.recipientId;
+      const recipient = getRecipientById(recipientId);
       if (!recipient) return;
       
       // Process each category this recipient belongs to
       Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
         const fraction = categoryData.fraction;
-        const categoryName = effectivenessCategories[categoryId].name;
+        const category = getCategoryById(categoryId);
+        const categoryName = category.name;
         
         // Get the costPerLife with multiplier properly applied
-        const costPerLife = getActualCostPerLifeForCategoryData(donation.recipient, categoryId, categoryData, customValues);
+        const costPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
         
         // Calculate category-specific amount and lives saved
         const categoryAmount = donation.amount * fraction;
@@ -258,7 +269,7 @@ function DonorDetail(props) {
     
     // Store the raw data with both values
     setRawChartData(unifiedData);
-  }, [donorName, customValues]);
+  }, [donorId, customValues]);
 
   // Prepare the initial sorted data once
   useEffect(() => {
@@ -486,15 +497,17 @@ function DonorDetail(props) {
       key: 'recipient', 
       label: 'Recipient',
       render: (donation) => (
-        donation.isUnknown ? 
-        <span className="text-sm text-slate-500">Unknown</span> :
         <div>
-          <Link 
-            to={`/recipient/${encodeURIComponent(donation.recipient)}`}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-          >
-            {donation.recipient}
-          </Link>
+          {donation.isUnknown ? (
+            <span className="text-sm text-slate-500">Unknown</span>
+          ) : (
+            <Link 
+              to={`/recipient/${encodeURIComponent(donation.recipientId)}`}
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+            >
+              {donation.recipient}
+            </Link>
+          )}
           {donation.credit !== undefined && (
             <div className="text-xs text-gray-500 mt-1">
               via intermediary, {Math.round(donation.credit * 100)}% credit
@@ -517,8 +530,8 @@ function DonorDetail(props) {
         }
         
         // Get the recipient to check if it has multiple categories
-        const recipient = recipients.find(r => r.name === donation.recipient);
-        if (!recipient) {
+        const recipientDetails = getRecipientById(donation.recipientId);
+        if (!recipientDetails) {
           return (
             <div className="text-sm text-slate-900">
               {donation.categoryName}
@@ -527,7 +540,7 @@ function DonorDetail(props) {
         }
         
         // Count categories
-        const categoryCount = Object.keys(recipient.categories).length;
+        const categoryCount = Object.keys(recipientDetails.categories).length;
         const hasMultipleCategories = categoryCount > 1;
         
         return (

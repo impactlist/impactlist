@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
-import { effectivenessCategories, recipients } from '../data/donationData';
+import { getAllRecipients, getAllCategories, getCategoryById } from '../utils/donationDataHelpers';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CostPerLifeEditor = () => {
@@ -25,16 +25,29 @@ const CostPerLifeEditor = () => {
   const [filteredRecipients, setFilteredRecipients] = useState([]);
   const [showOnlyCustom, setShowOnlyCustom] = useState(true);
   
+  const allRecipients = useMemo(() => getAllRecipients(), []);
+  const allCategories = useMemo(() => {
+    // Convert to format expected by the component
+    const categories = {};
+    getAllCategories().forEach(category => {
+      categories[category.id] = {
+        name: category.name,
+        costPerLife: category.costPerLife
+      };
+    });
+    return categories;
+  }, []);
+  
   // Get recipients with non-default values (multiplier or costPerLife)
   const recipientsWithOverrides = useMemo(() => {
-    return recipients.filter(recipient => {
+    return allRecipients.filter(recipient => {
       if (!recipient.categories) return false;
       
       return Object.entries(recipient.categories).some(([categoryId, categoryData]) => {
         return categoryData.multiplier !== undefined || categoryData.costPerLife !== undefined;
       });
     });
-  }, []);
+  }, [allRecipients]);
   
   // Handle tab switching
   const handleTabChange = (tab) => {
@@ -47,7 +60,7 @@ const CostPerLifeEditor = () => {
   
   // Filter recipients based on search term and showOnlyCustom flag
   const filterRecipients = React.useCallback((term, onlyCustom) => {
-    let filtered = recipients;
+    let filtered = allRecipients;
     
     // Filter by search term if provided
     if (term) {
@@ -147,7 +160,7 @@ const CostPerLifeEditor = () => {
     }
     
     setFilteredRecipients(filtered);
-  }, [customValues, recipientFormValues]); // Include both customValues and recipientFormValues in dependencies
+  }, [customValues, recipientFormValues, allRecipients]); // Add allRecipients to dependencies
   
   // Handle search term changes
   const handleSearchChange = (e) => {
@@ -312,7 +325,7 @@ const CostPerLifeEditor = () => {
     if (isModalOpen) {
       // Only initialize form values if they haven't been set already
       if (Object.keys(categoryFormValues).length === 0) {
-        const categoryEntries = Object.entries(effectivenessCategories).map(([key, category]) => {
+        const categoryEntries = Object.entries(allCategories).map(([key, category]) => {
           // If custom value exists, use it; otherwise use default
           const value = customValues && customValues[key] !== undefined 
             ? customValues[key] 
@@ -420,7 +433,7 @@ const CostPerLifeEditor = () => {
     let hasErrors = false;
     
     Object.entries(categoryFormValues).forEach(([key, valueObj]) => {
-      const defaultValue = effectivenessCategories[key].costPerLife;
+      const defaultValue = allCategories[key].costPerLife;
       const rawValue = valueObj.raw;
       
       // Skip validation if value is the same as default
@@ -547,7 +560,7 @@ const CostPerLifeEditor = () => {
     const categoryOnlyCustomized = {};
     
     Object.entries(categoryFormValues).forEach(([key, valueObj]) => {
-      const defaultValue = effectivenessCategories[key].costPerLife;
+      const defaultValue = allCategories[key].costPerLife;
       const rawValue = valueObj.raw;
       
       // Process the value - convert string to number
@@ -601,7 +614,7 @@ const CostPerLifeEditor = () => {
           // Get default value if it exists
           let defaultValue;
           try {
-            const recipient = recipients.find(r => r.name === recipientName);
+            const recipient = allRecipients.find(r => r.name === recipientName);
             if (recipient && recipient.categories && recipient.categories[categoryId]) {
               defaultValue = recipient.categories[categoryId][type];
             }
@@ -679,7 +692,7 @@ const CostPerLifeEditor = () => {
   // Reset a specific form to default values
   const resetFormToDefaults = (formType) => {
     if (formType === 'categories') {
-      const categoryEntries = Object.entries(effectivenessCategories).map(([key, category]) => {
+      const categoryEntries = Object.entries(allCategories).map(([key, category]) => {
         return [key, category.costPerLife];
       });
       
@@ -711,7 +724,7 @@ const CostPerLifeEditor = () => {
           // Check if we have custom category values in the form
           const categoryCustomValues = {};
           Object.entries(categoryFormValues).forEach(([key, valueObj]) => {
-            const defaultValue = effectivenessCategories[key].costPerLife;
+            const defaultValue = allCategories[key].costPerLife;
             const rawValue = valueObj.raw;
             
             // Skip if value is default
@@ -881,7 +894,7 @@ const CostPerLifeEditor = () => {
             {activeTab === 'categories' ? (
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                  {Object.entries(effectivenessCategories)
+                  {Object.entries(allCategories)
                     .sort((a, b) => a[1].name.localeCompare(b[1].name))
                     .map(([key, category]) => {
                       const defaultValue = category.costPerLife;
@@ -997,10 +1010,10 @@ const CostPerLifeEditor = () => {
                           <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
                           <div className="space-y-3">
                             {recipientCategories.map(([categoryId, categoryData]) => {
-                              const categoryName = effectivenessCategories[categoryId]?.name || categoryId;
+                              const categoryName = allCategories[categoryId]?.name || categoryId;
                               const baseCostPerLife = customValues && customValues[categoryId] !== undefined 
                                 ? customValues[categoryId] 
-                                : effectivenessCategories[categoryId]?.costPerLife || 0;
+                                : allCategories[categoryId]?.costPerLife || 0;
                                 
                               // Get existing values (with null checks)
                               const defaultMultiplier = categoryData?.multiplier;

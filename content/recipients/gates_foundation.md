@@ -1,5 +1,5 @@
 ---
-id: bill-melinda-gates-foundation
+id: gates-foundation
 name: "Bill & Melinda Gates Foundation"
 categories:
   - id: global-health

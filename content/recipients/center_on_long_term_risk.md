@@ -1,5 +1,5 @@
 ---
-id: center-on-longterm-risk
+id: center-on-long-term-risk
 name: "Center on Long-Term Risk"
 categories:
   - id: ai-risk

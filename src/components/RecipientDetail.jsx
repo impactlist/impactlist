@@ -1,13 +1,16 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { donations, recipients, effectivenessCategories } from '../data/donationData';
 import { 
   getCostPerLifeForRecipient, 
   getPrimaryCategoryId,
   getCategoryBreakdown,
   getDefaultCostPerLifeForCategory,
-  getActualCostPerLifeForCategoryData
+  getActualCostPerLifeForCategoryData,
+  getRecipientById,
+  getDonationsForRecipient,
+  getCategoryById,
+  calculateLivesSavedForDonation
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import ImpactBarChart, { ImpactChartToggle } from './ImpactBarChart';
@@ -19,7 +22,7 @@ import { formatNumber, formatCurrency } from '../utils/formatters';
 const ANIMATION_DURATION = 600;
 
 function RecipientDetail(props) {
-  const { recipientName } = useParams();
+  const { recipientId } = useParams();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
   const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
@@ -58,13 +61,13 @@ function RecipientDetail(props) {
       const categoryId = entry.categoryId || entry.id;
       
       // Get category-specific cost per life
-      const recipient = recipients.find(r => r.name === recipientName);
+      const recipient = getRecipientById(recipientId);
       const categoryData = recipient?.categories[categoryId];
       let costPerLife;
       
       if (categoryData) {
         // Use our helper function to calculate the cost per life
-        costPerLife = getActualCostPerLifeForCategoryData(recipientName, categoryId, categoryData, customValues);
+        costPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
       }
       
       return (
@@ -111,141 +114,154 @@ function RecipientDetail(props) {
 
   useEffect(() => {
     // Get recipient info
-    const recipient = recipients.find(r => r.name === recipientName);
+    const recipient = getRecipientById(recipientId);
     
-    if (recipient) {
-      const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
-      
-      // Get primary category and category breakdown
-      const primaryCategoryId = getPrimaryCategoryId(recipient);
-      const primaryCategoryName = effectivenessCategories[primaryCategoryId].name;
-      
-      // Get cost per life for the primary category
-      const categoryCostPerLife = getDefaultCostPerLifeForCategory(primaryCategoryId, customValues);
-      
-      // Get formatted breakdown for bar chart with required properties
-      const categoryBreakdown = getCategoryBreakdown(recipient).map(category => ({
+    if (!recipient) {
+      throw new Error(`Invalid recipient ID: ${recipientId}. This recipient does not exist.`);
+    }
+    
+    const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+    
+    // Get primary category and category breakdown
+    const primaryCategoryId = getPrimaryCategoryId(recipientId);
+    const primaryCategory = getCategoryById(primaryCategoryId) || { name: 'Other' };
+    const primaryCategoryName = primaryCategory.name;
+    
+    // Get cost per life for the primary category
+    const categoryCostPerLife = getDefaultCostPerLifeForCategory(primaryCategoryId, customValues);
+    
+    // Get formatted breakdown for bar chart with required properties
+    const categoryBreakdown = getCategoryBreakdown(recipientId).map(category => {
+      const categoryInfo = getCategoryById(category.categoryId);
+      if (!categoryInfo) {
+        throw new Error(`Invalid category ID: ${category.categoryId}. This category does not exist.`);
+      }
+      return {
         ...category,
         id: category.categoryId,
-        name: effectivenessCategories[category.categoryId].name,
+        name: categoryInfo.name,
         percentage: Math.round(category.fraction * 100)
-      }));
-      
-      // Filter donations for this recipient
-      const recipientDonations = donations
-        .filter(donation => donation.recipient === recipientName)
-        .map(donation => {
-          // Apply credit multiplier if it exists
-          const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-          
-          const livesSaved = costPerLife !== 0 ? creditedAmount / costPerLife : 0; 
-          
-          return {
-            ...donation,
-            creditedAmount,
-            livesSaved,
-            dateObj: new Date(donation.date)
-          };
-        })
-        .sort((a, b) => b.dateObj - a.dateObj);
-      
-      // Calculate total received
-      const totalReceived = recipientDonations.reduce((sum, donation) => sum + donation.amount, 0);
-      const totalLivesSaved = recipientDonations.reduce((sum, donation) => sum + donation.livesSaved, 0);
-      
-      // Prepare data for the two chart views
-      // Create donations by category data
-      const categoryDonations = {};
-      const categoryLivesSaved = {};
-      let chartDonationsTotal = 0;
-      let chartLivesSavedTotal = 0;
-      
-      recipientDonations.forEach(donation => {
-        // Process each category this donation belongs to
-        Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
-          const fraction = categoryData.fraction;
-          const categoryName = effectivenessCategories[categoryId].name;
-          
-          // Get category-specific cost per life
-          const catCostPerLife = getActualCostPerLifeForCategoryData(recipientName, categoryId, categoryData, customValues);
-          
-          // Calculate donation amount and lives saved for this category
-          const categoryAmount = donation.amount * fraction;
-          const creditedAmount = donation.credit !== undefined ? 
-            categoryAmount * donation.credit : categoryAmount;
-          
-          const livesSaved = catCostPerLife !== 0 ? creditedAmount / catCostPerLife : 0;
-          
-          // Initialize category objects if they don't exist
-          if (!categoryDonations[categoryName]) {
-            categoryDonations[categoryName] = {
-              name: categoryName,
-              value: 0,
-              categoryId: categoryId
-            };
-          }
-          
-          if (!categoryLivesSaved[categoryName]) {
-            categoryLivesSaved[categoryName] = {
-              name: categoryName,
-              value: 0,
-              categoryId: categoryId
-            };
-          }
-          
-          // Sum donation amounts
-          categoryDonations[categoryName].value += categoryAmount;
-          chartDonationsTotal += categoryAmount;
-          
-          // Sum lives saved
-          categoryLivesSaved[categoryName].value += livesSaved;
-          chartLivesSavedTotal += livesSaved;
-        });
-      });
-      
-      // Get the complete set of category names from both datasets
-      const allCategoryNames = new Set([
-        ...Object.keys(categoryDonations),
-        ...Object.keys(categoryLivesSaved)
-      ]);
-      
-      // Create a unified dataset with both values
-      let unifiedData = Array.from(allCategoryNames).map(name => {
-        const donationEntry = categoryDonations[name] || { name, value: 0, categoryId: categoryLivesSaved[name]?.categoryId };
-        const livesSavedEntry = categoryLivesSaved[name] || { name, value: 0, categoryId: categoryDonations[name]?.categoryId };
-        const categoryId = donationEntry.categoryId || livesSavedEntry.categoryId;
+      };
+    });
+    
+    // Filter donations for this recipient
+    const recipientDonationsList = getDonationsForRecipient(recipientId)
+      .map(donation => {
+        // Calculate lives saved for this donation
+        const livesSaved = calculateLivesSavedForDonation(donation, customValues);
+        
+        // Apply credit multiplier if it exists
+        const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
         
         return {
-          name,
-          donationValue: donationEntry.value,
-          livesSavedValue: livesSavedEntry.value,
-          categoryId,
-          donationPercentage: (donationEntry.value / chartDonationsTotal * 100).toFixed(1),
-          livesSavedPercentage: chartLivesSavedTotal !== 0 ? 
-            (Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal) * 100).toFixed(1) : 0
+          ...donation,
+          creditedAmount,
+          livesSaved,
+          dateObj: donation.date
         };
+      })
+      .sort((a, b) => b.dateObj - a.dateObj);
+    
+    // Calculate total received
+    const totalReceived = recipientDonationsList.reduce((sum, donation) => sum + donation.amount, 0);
+    const totalLivesSaved = recipientDonationsList.reduce((sum, donation) => sum + donation.livesSaved, 0);
+    
+    // Prepare data for the two chart views
+    // Create donations by category data
+    const categoryDonations = {};
+    const categoryLivesSaved = {};
+    let chartDonationsTotal = 0;
+    let chartLivesSavedTotal = 0;
+    
+    recipientDonationsList.forEach(donation => {
+      // Process each category this donation belongs to
+      Object.entries(recipient.categories || { 'other': { fraction: 1 }}).forEach(([categoryId, categoryData]) => {
+        const fraction = categoryData.fraction || 1;
+        const category = getCategoryById(categoryId);
+        if (!category) {
+          throw new Error(`Invalid category ID: ${categoryId}. This category does not exist.`);
+        }
+        const categoryName = category.name;
+        
+        // Get category-specific cost per life
+        const catCostPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
+        
+        // Calculate donation amount and lives saved for this category
+        const categoryAmount = donation.amount * fraction;
+        const creditedAmount = donation.credit !== undefined ? 
+          categoryAmount * donation.credit : categoryAmount;
+        
+        const livesSaved = catCostPerLife !== 0 ? creditedAmount / catCostPerLife : 0;
+        
+        // Initialize category objects if they don't exist
+        if (!categoryDonations[categoryName]) {
+          categoryDonations[categoryName] = {
+            name: categoryName,
+            value: 0,
+            categoryId: categoryId
+          };
+        }
+        
+        if (!categoryLivesSaved[categoryName]) {
+          categoryLivesSaved[categoryName] = {
+            name: categoryName,
+            value: 0,
+            categoryId: categoryId
+          };
+        }
+        
+        // Sum donation amounts
+        categoryDonations[categoryName].value += categoryAmount;
+        chartDonationsTotal += categoryAmount;
+        
+        // Sum lives saved
+        categoryLivesSaved[categoryName].value += livesSaved;
+        chartLivesSavedTotal += livesSaved;
       });
+    });
+    
+    // Get the complete set of category names from both datasets
+    const allCategoryNames = new Set([
+      ...Object.keys(categoryDonations),
+      ...Object.keys(categoryLivesSaved)
+    ]);
+    
+    // Create a unified dataset with both values
+    let unifiedData = Array.from(allCategoryNames).map(name => {
+      const donationEntry = categoryDonations[name] || { name, value: 0, categoryId: categoryLivesSaved[name]?.categoryId };
+      const livesSavedEntry = categoryLivesSaved[name] || { name, value: 0, categoryId: categoryDonations[name]?.categoryId };
+      const categoryId = donationEntry.categoryId || livesSavedEntry.categoryId;
       
-      // Sort by donation amount (largest first)
-      unifiedData.sort((a, b) => b.donationValue - a.donationValue);
-      
-      // Prepare chart data
-      setRawChartData(unifiedData);
-      
-      setRecipientInfo({
-        name: recipientName,
-        categoryId: primaryCategoryId,
-        categoryName: primaryCategoryName,
-        categoryBreakdown,
-        costPerLife,
-        categoryCostPerLife,
-        totalReceived,
-        totalLivesSaved
-      });
-      
-      setRecipientDonations(recipientDonations);
-    }
-  }, [recipientName, customValues]);
+      return {
+        name,
+        donationValue: donationEntry.value,
+        livesSavedValue: livesSavedEntry.value,
+        categoryId,
+        donationPercentage: chartDonationsTotal > 0 ? (donationEntry.value / chartDonationsTotal * 100).toFixed(1) : '0.0',
+        livesSavedPercentage: chartLivesSavedTotal !== 0 ? 
+          (Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal) * 100).toFixed(1) : '0.0'
+      };
+    });
+    
+    // Sort by donation amount (largest first)
+    unifiedData.sort((a, b) => b.donationValue - a.donationValue);
+    
+    // Prepare chart data
+    setRawChartData(unifiedData);
+    
+    setRecipientInfo({
+      name: recipient.name,
+      categoryId: primaryCategoryId,
+      categoryName: primaryCategoryName,
+      categoryBreakdown,
+      costPerLife,
+      categoryCostPerLife,
+      totalReceived,
+      totalLivesSaved
+    });
+    
+    setRecipientDonations(recipientDonationsList);
+  }, [recipientId, customValues]);
 
   // Prepare the initial sorted data once
   useEffect(() => {
@@ -504,7 +520,7 @@ function RecipientDetail(props) {
               <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
                 <span className="text-sm text-slate-600 uppercase font-semibold">Focus Area</span>
                 <span className="text-3xl font-bold text-slate-900">
-                  {effectivenessCategories[recipientInfo.categoryBreakdown[0].categoryId].name}
+                  {recipientInfo.categoryBreakdown[0].name}
                 </span>
               </div>
             )}

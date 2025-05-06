@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { recipients, donations } from '../data/donationData';
-import { calculateDonorStats, getCostPerLifeForRecipient, getPrimaryCategoryId } from '../utils/donationDataHelpers';
+import { 
+  calculateDonorStats, 
+  getCostPerLifeForRecipient, 
+  getPrimaryCategoryId,
+  getDonationsForRecipient,
+  getCategoryById,
+  getAllRecipients,
+  getTotalAmountForRecipient,
+  calculateLivesSavedForDonation,
+  getRecipientNameById,
+  getRecipientId
+} from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -19,34 +29,44 @@ function Home(props) {
     setDonorStats(stats);
 
     // Calculate recipient statistics
-    const recipientStats = recipients.map(recipient => {
-      const recipientDonations = donations.filter(d => d.recipient === recipient.name);
-      const totalReceived = recipientDonations.reduce((sum, d) => sum + d.amount, 0);
-      const costPerLife = getCostPerLifeForRecipient(recipient, customValues);
-      
-      // Get the primary category for display
-      const primaryCategory = getPrimaryCategoryId(recipient);
-      
-      const totalLivesSaved = recipientDonations.reduce(
-        (sum, d) => {
-          // Apply credit multiplier if it exists
-          const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
-          
-          const livesSaved = costPerLife !== 0 ? creditedAmount / costPerLife : 0; 
-          return sum + livesSaved;
-        }, 
-        0
-      );
-      
-      return {
-        name: recipient.name,
-        primaryCategoryId: primaryCategory.id,
-        categoryName: primaryCategory.name,
-        totalReceived,
-        costPerLife,
-        totalLivesSaved
-      };
-    }).sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
+    const recipientStats = getAllRecipients().map(recipient => {
+        // Find the recipient ID
+        const recipientId = getRecipientId(recipient);
+        
+        if (!recipientId) {
+          throw new Error(`Could not find ID for recipient ${recipient.name}. This recipient exists in the data but has no ID mapping.`);
+        }
+        
+        const totalReceived = getTotalAmountForRecipient(recipientId);
+        const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+        
+        // Get the primary category for display
+        const primaryCategoryId = getPrimaryCategoryId(recipientId);
+        const primaryCategory = getCategoryById(primaryCategoryId);
+        
+        if (!primaryCategory) {
+          throw new Error(`Invalid primary category "${primaryCategoryId}" for recipient "${recipient.name}". This category does not exist in categoriesById.`);
+        }
+        
+        // Calculate total lives saved for this recipient
+        const recipientDonations = getDonationsForRecipient(recipientId);
+        const totalLivesSaved = recipientDonations.reduce(
+          (sum, donation) => sum + calculateLivesSavedForDonation(donation, customValues),
+          0
+        );
+        
+        return {
+          id: recipientId,
+          name: recipient.name,
+          primaryCategoryId: primaryCategoryId,
+          categoryName: primaryCategory.name,
+          totalReceived,
+          costPerLife,
+          totalLivesSaved
+        };
+    })
+    .filter(recipient => recipient !== null) // Filter out any recipients that couldn't be processed
+    .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
     
     setRecipientStats(recipientStats);
   }, [customValues]);
@@ -64,7 +84,7 @@ function Home(props) {
       label: 'Name',
       render: (donor) => (
         <Link 
-          to={`/donor/${encodeURIComponent(donor.name)}`}
+          to={`/donor/${encodeURIComponent(donor.id)}`}
           className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
         >
           {donor.name}
@@ -108,7 +128,7 @@ function Home(props) {
       label: 'Organization',
       render: (recipient) => (
         <Link 
-          to={`/recipient/${encodeURIComponent(recipient.name)}`}
+          to={`/recipient/${encodeURIComponent(recipient.id)}`}
           className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
         >
           {recipient.name}

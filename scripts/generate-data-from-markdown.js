@@ -197,6 +197,43 @@ function addReadableFields(categories, donors, recipients, donations) {
   });
 }
 
+// Validate that all referenced entities exist in their respective collections
+function validateDataIntegrity(categories, donors, recipients, donations) {
+  const errors = [];
+
+  // Check all donations reference valid donors and recipients
+  donations.forEach((donation, index) => {
+    // Check donor exists
+    if (!donors[donation.donorId]) {
+      errors.push(`Error: Donation #${index + 1} references non-existent donor ID "${donation.donorId}"`);
+    }
+    
+    // Check recipient exists
+    if (!recipients[donation.recipientId]) {
+      errors.push(`Error: Donation #${index + 1} references non-existent recipient ID "${donation.recipientId}"`);
+    }
+  });
+
+  // Check all recipients reference valid categories
+  Object.entries(recipients).forEach(([recipientId, recipient]) => {
+    Object.keys(recipient.categories).forEach(categoryId => {
+      if (!categories[categoryId]) {
+        errors.push(`Error: Recipient "${recipientId}" references non-existent category ID "${categoryId}"`);
+      }
+    });
+  });
+
+  // Report errors if any
+  if (errors.length > 0) {
+    console.error('\n=== VALIDATION ERRORS ===');
+    errors.forEach(error => console.error(error));
+    console.error('\nData validation failed. Please fix the errors above before continuing.');
+    process.exit(1);
+  }
+  
+  console.log('All data references validated successfully.');
+}
+
 // Generate the JavaScript file
 function generateJavaScriptFile() {
   console.log('Loading categories...');
@@ -210,6 +247,9 @@ function generateJavaScriptFile() {
   
   console.log('Loading donations...');
   const rawDonations = loadDonations();
+  
+  console.log('Validating data integrity...');
+  validateDataIntegrity(categories, donors, recipients, rawDonations);
   
   console.log('Processing donations...');
   const donations = addReadableFields(categories, donors, recipients, rawDonations);

@@ -297,6 +297,8 @@ export const recipients = ${JSON.stringify(recipientsArray, null, 2)};
 export const donations = ${JSON.stringify(donations, null, 2)};
 `;
   
+  // Create the direcotry if it doesn't exist
+  fs.mkdirSync(path.dirname(outputFile), { recursive: true });
   fs.writeFileSync(outputFile, jsContent);
   console.log(`Data file generated at ${outputFile}`);
   

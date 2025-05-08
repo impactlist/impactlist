@@ -106,11 +106,11 @@ function Home(props) {
       render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.totalDonated)}</div>
     },
     { 
-      key: 'costPerLifeSaved', 
+      key: 'costPerLife', 
       label: 'Cost/Life',
       render: (donor) => (
         <div className={`text-sm ${donor.costPerLifeSaved < 0 ? 'text-red-600' : 'text-slate-900'}`}>
-          {donor.livesSaved === 0 ? '∞' : formatCurrency(donor.costPerLifeSaved)}
+          {donor.livesSaved === 0 ? '∞' : formatCurrency(donor.costPerLife)}
         </div>
       )
     },

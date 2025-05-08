@@ -390,7 +390,7 @@ export const calculateDonorStats = (customValues = null) => {
     }
     
     // Calculate cost per life saved
-    const costPerLifeSaved = totalLivesSaved !== 0 ? totalDonated / totalLivesSaved : Infinity;
+    const costPerLife = totalLivesSaved !== 0 ? totalDonated / totalLivesSaved : Infinity;
     
     return {
       name: donor.name,
@@ -401,7 +401,7 @@ export const calculateDonorStats = (customValues = null) => {
       totalDonatedField,
       livesSaved: totalLivesSaved,
       unknownLivesSaved,
-      costPerLifeSaved: costPerLifeSaved
+      costPerLife: costPerLife
     };
   });
   

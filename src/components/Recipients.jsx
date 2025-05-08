@@ -76,9 +76,9 @@ function Recipients(props) {
         costPerLife,
         totalLivesSaved
       };
-    })
-    .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
+    });
     
+    // Let SortableTable handle the sorting with the special logic
     setRecipientStats(recipientStats);
   }, [customValues]);
 

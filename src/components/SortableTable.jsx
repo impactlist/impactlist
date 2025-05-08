@@ -25,7 +25,36 @@ function SortableTable({ columns, data, defaultSortColumn, defaultSortDirection 
     // Determine sort order
     const sortMultiplier = sortDirection === 'asc' ? 1 : -1;
     
-    // Compare values
+    // Special handling for cost per life column
+    if (sortColumn === 'costPerLife') {
+      // Handle negative values in cost per life
+      // 1. Negative values are considered "worse" (higher cost) than any positive value
+      // 2. Among negative values, those closer to zero are worse than those further from zero
+      
+      // Both values are negative
+      if (aValue < 0 && bValue < 0) {
+        // Sort by absolute value, but reversed (closer to zero = higher cost)
+        // Math.abs converts to positive, we want smaller absolute values first when ascending
+        return sortMultiplier * (Math.abs(bValue) - Math.abs(aValue));
+      }
+      
+      // Only a is negative
+      if (aValue < 0 && bValue >= 0) {
+        // Negative values are considered higher cost than positive values
+        return sortDirection === 'asc' ? 1 : -1; // In asc, a comes after b
+      }
+      
+      // Only b is negative
+      if (aValue >= 0 && bValue < 0) {
+        // Negative values are considered higher cost than positive values
+        return sortDirection === 'asc' ? -1 : 1; // In asc, b comes after a
+      }
+      
+      // Both are non-negative, use normal sorting
+      return sortMultiplier * (aValue - bValue);
+    }
+    
+    // Normal sorting for other columns
     if (typeof aValue === 'string' && typeof bValue === 'string') {
       return sortMultiplier * aValue.localeCompare(bValue);
     } else {

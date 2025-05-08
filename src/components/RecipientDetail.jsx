@@ -416,7 +416,7 @@ function RecipientDetail(props) {
       render: (donation) => (
         <div>
           <Link 
-            to={`/donor/${encodeURIComponent(donation.donor)}`}
+            to={`/donor/${encodeURIComponent(donation.donorId)}`}
             className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
           >
             {donation.donor}

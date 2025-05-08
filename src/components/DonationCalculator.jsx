@@ -202,11 +202,12 @@ const DonationCalculator = () => {
           )}
         </div>
         
+        {/* Instruction text moved between panels */}
+        <p className="text-lg text-slate-700 mb-6 px-2">
+          Enter your donation amounts to see your impact based on past or future donations.
+        </p>
+        
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6">
-          <p className="text-lg text-slate-700 mb-4">
-            Enter donation amounts below to see how many lives your donations could save based on our cost-effectiveness model.
-          </p>
-          
           {/* Donation inputs grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-2">
             {categories.map(category => {

@@ -454,7 +454,7 @@ function RecipientDetail(props) {
             <div className="flex items-center">
               <BackButton 
                 className="text-indigo-100 hover:text-white" 
-                containerProps={{ className: "" }}
+                containerProps={{ className: "flex justify-start" }}
               />
             </div>
           </div>

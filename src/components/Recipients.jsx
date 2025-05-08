@@ -171,25 +171,6 @@ function Recipients(props) {
       
       {/* Back Link */}
       <BackButton to="/" label="Back to top donors" />
-      
-      {/* Donation Calculator Link */}
-      <motion.div 
-        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-right"
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.15, duration: 0.3 }}
-      >
-        <Link 
-          to="/calculator" 
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          onClick={() => window.scrollTo(0, 0)}
-        >
-          Try the Donation Calculator
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-        </Link>
-      </motion.div>
         
       {/* Recipients Table Container */}
       <motion.div 

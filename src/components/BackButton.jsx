@@ -34,7 +34,7 @@ const BackButton = ({
 
   // Default container props
   const defaultContainerProps = {
-    className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-3"
+    className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-3 flex justify-start"
   };
 
   const mergedContainerProps = { ...defaultContainerProps, ...containerProps };

@@ -233,22 +233,22 @@ const DonationCalculator = () => {
               <div className="text-sm text-slate-500 mb-1">Your Potential Rank on Impact List</div>
               <div className="text-xl font-bold text-indigo-700">#{donorRank}</div>
               <div className="text-sm text-slate-600 mt-1">
-                With {formatLives(totalLivesSaved)} lives saved, you would rank #{donorRank} on Impact List
+                With {formatLives(totalLivesSaved)} lives saved, you would rank
                 {!neighboringDonors.above && !neighboringDonors.below && "."}
                 
                 {/* Top of the list */}
                 {!neighboringDonors.above && neighboringDonors.below && (
-                  <>, at the top of the list, above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatLives(neighboringDonors.below.livesSaved)} lives saved).</>
+                  <> at the top of the list, above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatLives(neighboringDonors.below.livesSaved)} lives saved).</>
                 )}
                 
                 {/* Bottom of the list */}
                 {neighboringDonors.above && !neighboringDonors.below && (
-                  <>, at the bottom of the list, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatLives(neighboringDonors.above.livesSaved)} lives saved).</>
+                  <> at the bottom of the list, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatLives(neighboringDonors.above.livesSaved)} lives saved).</>
                 )}
                 
                 {/* Middle of the list */}
                 {neighboringDonors.above && neighboringDonors.below && (
-                  <>, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatLives(neighboringDonors.above.livesSaved)} lives saved) and above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatLives(neighboringDonors.below.livesSaved)} lives saved).</>
+                  <> below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatLives(neighboringDonors.above.livesSaved)} lives saved) and above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatLives(neighboringDonors.below.livesSaved)} lives saved).</>
                 )}
               </div>
             </div>

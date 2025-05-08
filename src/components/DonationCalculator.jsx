@@ -8,7 +8,7 @@ import {
   getDefaultCostPerLifeForCategory 
 } from '../utils/donationDataHelpers';
 import { useCostPerLife } from './CostPerLifeContext';
-import { formatNumber, formatCurrency } from '../utils/formatters';
+import { formatNumber, formatCurrency, formatLives } from '../utils/formatters';
 import CustomValuesIndicator from './CustomValuesIndicator';
 
 const DonationCalculator = () => {
@@ -196,7 +196,7 @@ const DonationCalculator = () => {
             
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="text-sm text-slate-500 mb-1">Lives Saved</div>
-              <div className="text-xl font-bold text-emerald-700">{formatNumber(Math.round(totalLivesSaved))}</div>
+              <div className="text-xl font-bold text-emerald-700">{formatLives(totalLivesSaved)}</div>
             </div>
             
             <div className="bg-white p-4 rounded-lg shadow-sm">
@@ -212,22 +212,22 @@ const DonationCalculator = () => {
               <div className="text-sm text-slate-500 mb-1">Your Potential Rank on Impact List</div>
               <div className="text-xl font-bold text-indigo-700">#{donorRank}</div>
               <div className="text-sm text-slate-600 mt-1">
-                With {formatNumber(Math.round(totalLivesSaved))} lives saved, you would rank #{donorRank} on our Impact List
+                With {formatLives(totalLivesSaved)} lives saved, you would rank #{donorRank} on our Impact List
                 {!neighboringDonors.above && !neighboringDonors.below && "."}
                 
                 {/* Top of the list */}
                 {!neighboringDonors.above && neighboringDonors.below && (
-                  <>, at the top of the list, above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatNumber(Math.round(neighboringDonors.below.livesSaved))} lives saved).</>
+                  <>, at the top of the list, above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatLives(neighboringDonors.below.livesSaved)} lives saved).</>
                 )}
                 
                 {/* Bottom of the list */}
                 {neighboringDonors.above && !neighboringDonors.below && (
-                  <>, at the bottom of the list, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatNumber(Math.round(neighboringDonors.above.livesSaved))} lives saved).</>
+                  <>, at the bottom of the list, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatLives(neighboringDonors.above.livesSaved)} lives saved).</>
                 )}
                 
                 {/* Middle of the list */}
                 {neighboringDonors.above && neighboringDonors.below && (
-                  <>, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatNumber(Math.round(neighboringDonors.above.livesSaved))} lives saved) and above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatNumber(Math.round(neighboringDonors.below.livesSaved))} lives saved).</>
+                  <>, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatLives(neighboringDonors.above.livesSaved)} lives saved) and above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatLives(neighboringDonors.below.livesSaved)} lives saved).</>
                 )}
               </div>
             </div>
@@ -271,7 +271,7 @@ const DonationCalculator = () => {
                   </div>
                   {amount && !isNaN(Number(amount)) && (
                     <div className="text-emerald-700 text-sm">
-                      Lives saved: {formatNumber(Math.round(livesSaved))}
+                      Lives saved: {formatLives(livesSaved)}
                     </div>
                   )}
                 </div>

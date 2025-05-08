@@ -38,6 +38,42 @@ export const formatNumber = (num) => {
 };
 
 /**
+ * Format lives saved with appropriate decimal places
+ * @param {number} lives - The number of lives saved
+ * @returns {string} - Formatted lives saved with appropriate precision
+ */
+export const formatLives = (lives) => {
+  const absLives = Math.abs(lives);
+  const isNegative = lives < 0;
+  
+  if (Number.isInteger(absLives)) {
+    // If it's a whole number, just format with commas
+    return formatNumber(lives);
+  } else if (absLives >= 100) {
+    // For large fractional numbers, round to nearest whole number
+    return formatNumber(Math.round(lives));
+  } else if (absLives >= 10) {
+    // For medium numbers, show 1 decimal place
+    const rounded = Math.round(absLives * 10) / 10;
+    return isNegative ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}` 
+                      : rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  } else if (absLives >= 1) {
+    // For small numbers, show 2 decimal places
+    const rounded = Math.round(absLives * 100) / 100;
+    return isNegative ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
+                      : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } else if (absLives >= 0.01) {
+    // For very small numbers, show 2 decimal places
+    const rounded = Math.round(absLives * 100) / 100;
+    return isNegative ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
+                      : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } else {
+    // For extremely small numbers, use 3 significant digits
+    return isNegative ? `-${absLives.toPrecision(3)}` : absLives.toPrecision(3);
+  }
+};
+
+/**
  * Format currency values with appropriate formatting based on magnitude
  * - Values ≥ $1B are shown as $1.5B 
  * - Values ≥ $1M are shown as $1.5M

@@ -18,6 +18,7 @@ const DonationCalculator = () => {
   const [totalLivesSaved, setTotalLivesSaved] = useState(0);
   const [costPerLife, setCostPerLife] = useState(0);
   const [donorRank, setDonorRank] = useState(null);
+  const [neighboringDonors, setNeighboringDonors] = useState({ above: null, below: null });
   const { customValues, openModal } = useCostPerLife();
 
   // Initialize categories on component mount
@@ -89,19 +90,34 @@ const DonationCalculator = () => {
         
         // Find where the user would rank
         let rank = 1;
-        for (const donor of donorStats) {
+        let donorAbove = null;
+        let donorBelow = null;
+
+        // Donors are sorted by lives saved in descending order
+        for (let i = 0; i < donorStats.length; i++) {
+          const donor = donorStats[i];
+          
           if (lives <= donor.livesSaved) {
             rank++;
+            // This donor would be above the user
+            donorAbove = donor;
           } else {
+            // This donor would be below the user
+            donorBelow = i < donorStats.length ? donor : null;
             break;
           }
         }
         
         setDonorRank(rank);
+        setNeighboringDonors({
+          above: donorAbove,
+          below: donorBelow
+        });
       });
     }).catch(error => {
       console.error("Error calculating donor rank:", error);
       setDonorRank(null);
+      setNeighboringDonors({ above: null, below: null });
     });
   };
   
@@ -196,7 +212,23 @@ const DonationCalculator = () => {
               <div className="text-sm text-slate-500 mb-1">Your Potential Rank on Impact List</div>
               <div className="text-xl font-bold text-indigo-700">#{donorRank}</div>
               <div className="text-sm text-slate-600 mt-1">
-                With {formatNumber(Math.round(totalLivesSaved))} lives saved, you would rank #{donorRank} on our Impact List.
+                With {formatNumber(Math.round(totalLivesSaved))} lives saved, you would rank #{donorRank} on our Impact List
+                {!neighboringDonors.above && !neighboringDonors.below && "."}
+                
+                {/* Top of the list */}
+                {!neighboringDonors.above && neighboringDonors.below && (
+                  <>, at the top of the list, above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatNumber(Math.round(neighboringDonors.below.livesSaved))} lives saved).</>
+                )}
+                
+                {/* Bottom of the list */}
+                {neighboringDonors.above && !neighboringDonors.below && (
+                  <>, at the bottom of the list, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatNumber(Math.round(neighboringDonors.above.livesSaved))} lives saved).</>
+                )}
+                
+                {/* Middle of the list */}
+                {neighboringDonors.above && neighboringDonors.below && (
+                  <>, below <Link to={`/donor/${neighboringDonors.above.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.above.name}</Link> ({formatNumber(Math.round(neighboringDonors.above.livesSaved))} lives saved) and above <Link to={`/donor/${neighboringDonors.below.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">{neighboringDonors.below.name}</Link> ({formatNumber(Math.round(neighboringDonors.below.livesSaved))} lives saved).</>
+                )}
               </div>
             </div>
           )}

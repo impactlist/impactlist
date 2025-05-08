@@ -1,5 +1,8 @@
 ---
 id: other
 name: "Other"
-costPerLife: 100_000
+costPerLife: 1_000_000
 --- 
+
+Assume it's toward the worse end of the spectrum.
+

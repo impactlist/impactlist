@@ -1,5 +1,5 @@
 ---
 id: religious
 name: "Religious"
-costPerLife: 100_000
+costPerLife: 1_500_000
 --- 

@@ -108,7 +108,7 @@ function SortableTable({ columns, data, defaultSortColumn, defaultSortDirection 
             <th 
               key={column.key} 
               scope="col" 
-              className={`px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer group hover:bg-slate-200 transition-colors ${column.key === 'name' ? 'w-[300px]' : ''}`}
+              className={`${column.key === 'rank' ? 'px-2' : 'px-6'} py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer group hover:bg-slate-200 transition-colors ${column.key === 'name' ? 'w-[300px]' : ''} ${column.key === 'rank' ? 'w-10' : ''}`}
               onClick={() => handleSort(column.key)}
             >
               <div className="flex items-center">
@@ -126,7 +126,7 @@ function SortableTable({ columns, data, defaultSortColumn, defaultSortDirection 
             className={`transition-colors hover:bg-indigo-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}
           >
             {columns.map((column) => (
-              <td key={`cell-${column.key}-${index}`} className={`px-6 py-5 ${column.key === 'name' ? '' : 'whitespace-nowrap'}`}>
+              <td key={`cell-${column.key}-${index}`} className={`${column.key === 'rank' ? 'px-2' : 'px-6'} py-5 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-10' : ''}`}>
                 {column.render ? column.render(item) : item[column.key]}
               </td>
             ))}

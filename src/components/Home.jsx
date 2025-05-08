@@ -77,7 +77,7 @@ function Home(props) {
     { 
       key: 'rank', 
       label: 'Rank',
-      render: (donor) => <div className="text-sm text-slate-900">{donor.rank}</div>
+      render: (donor) => <div className="text-sm text-slate-900 w-8 mx-auto text-center">{donor.rank}</div>
     },
     { 
       key: 'name', 

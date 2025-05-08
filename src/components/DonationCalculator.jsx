@@ -263,7 +263,7 @@ const DonationCalculator = () => {
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6">
           {/* Donation inputs header with reset button */}
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-slate-800">Enter your donations</h3>
+            <h3 className="text-lg font-medium text-slate-800">Donations by category</h3>
             <button 
               onClick={resetDonations}
               className="inline-flex items-center px-3 py-1.5 border border-slate-300 text-slate-700 bg-white rounded-md text-sm font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Home from './components/Home';
@@ -66,25 +66,36 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
       transition={{ duration: 0.2 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {!isHome && !isRecipients && !isCalculator && (
-          <div className="flex items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
+        <div className="flex justify-center items-center">
+          <motion.nav 
+            className="flex space-x-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <Link 
+              to="/" 
+              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isHome ? 'bg-indigo-600 text-white' : ''}`}
             >
-              <a href="/" className="text-indigo-100 hover:text-white flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                </svg>
-                Back to Impact List
-              </a>
-            </motion.div>
-          </div>
-        )}
+              Impact List
+            </Link>
+            <Link 
+              to="/recipients" 
+              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              Recipients
+            </Link>
+            <Link 
+              to="/calculator" 
+              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              Calculator
+            </Link>
+          </motion.nav>
+        </div>
         
         {isHome && (
-          <div className="text-center">
+          <div className="text-center mt-4">
             <motion.h1 
               className="text-4xl font-extrabold text-white mb-2 tracking-tight"
               initial={{ opacity: 0, y: -10 }}
@@ -105,7 +116,7 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
         )}
         
         {isRecipients && (
-          <div className="text-center">
+          <div className="text-center mt-4">
             <motion.h1 
               className="text-4xl font-extrabold text-white mb-2 tracking-tight"
               initial={{ opacity: 0, y: -10 }}
@@ -126,7 +137,7 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
         )}
         
         {isCalculator && (
-          <div className="text-center">
+          <div className="text-center mt-4">
             <motion.h1 
               className="text-4xl font-extrabold text-white mb-2 tracking-tight"
               initial={{ opacity: 0, y: -10 }}

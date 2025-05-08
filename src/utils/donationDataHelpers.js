@@ -326,6 +326,24 @@ export const calculateLivesSavedForDonation = (donation, customValues = null) =>
   }
 };
 
+// Helper to calculate lives saved for a direct donation to a category
+export const calculateLivesSavedForCategory = (categoryId, amount, customValues = null) => {
+  if (!categoryId || !amount || isNaN(Number(amount))) {
+    return 0;
+  }
+  
+  // Get the cost per life for this category
+  const costPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+  
+  // Calculate lives saved
+  if (costPerLife === 0) {
+    throw new Error(`Cost per life for category ${categoryId} is zero, which would result in infinite lives saved.`);
+  } else {
+    // Normal case
+    return Number(amount) / costPerLife;
+  }
+};
+
 // Calculate donor statistics, including donations and lives saved
 export const calculateDonorStats = (customValues = null) => {
   const donorStats = getAllDonors().map(donor => {

@@ -222,20 +222,33 @@ function Home(props) {
         </div>
       </motion.div>
       
-      {/* Link to Recipients Page */}
+      {/* Links to other pages */}
       <motion.div 
         className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
       >
-        <Link 
-          to="/recipients" 
-          className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
-          onClick={() => window.scrollTo(0, 0)}
-        >
-          View list of recipient organizations →
-        </Link>
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+          <Link 
+            to="/recipients" 
+            className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            View list of recipient organizations →
+          </Link>
+          
+          <Link 
+            to="/calculator" 
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            Try the Donation Calculator
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </Link>
+        </div>
       </motion.div>
       
       {/* Footer - Hidden when using App layout */}

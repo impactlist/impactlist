@@ -6,6 +6,7 @@ import Home from './components/Home';
 import DonorDetail from './components/DonorDetail';
 import RecipientDetail from './components/RecipientDetail';
 import Recipients from './components/Recipients';
+import DonationCalculator from './components/DonationCalculator';
 import { CostPerLifeProvider } from './components/CostPerLifeContext';
 import CostPerLifeEditor from './components/CostPerLifeEditor';
 
@@ -56,7 +57,7 @@ class ErrorBoundary extends React.Component {
 }
 
 // Header component that stays visible during navigation
-const Header = ({ isHome, isRecipients }) => {
+const Header = ({ isHome, isRecipients, isCalculator }) => {
   return (
     <motion.div
       className="w-full bg-indigo-700 py-9 shadow-lg"
@@ -65,7 +66,7 @@ const Header = ({ isHome, isRecipients }) => {
       transition={{ duration: 0.2 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {!isHome && !isRecipients && (
+        {!isHome && !isRecipients && !isCalculator && (
           <div className="flex items-center">
             <motion.div
               initial={{ opacity: 0, x: -10 }}
@@ -123,6 +124,27 @@ const Header = ({ isHome, isRecipients }) => {
             </motion.p>
           </div>
         )}
+        
+        {isCalculator && (
+          <div className="text-center">
+            <motion.h1 
+              className="text-4xl font-extrabold text-white mb-2 tracking-tight"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              Donation Calculator
+            </motion.h1>
+            <motion.p 
+              className="text-xl text-indigo-100 max-w-3xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+            >
+              Calculate the lives you could save with your donations
+            </motion.p>
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -144,11 +166,12 @@ const AppContent = () => {
   const location = useLocation();
   const isHome = location.pathname === '/';
   const isRecipients = location.pathname === '/recipients';
+  const isCalculator = location.pathname === '/calculator';
   
   return (
     <>
       <ScrollToTop />
-      <Header isHome={isHome} isRecipients={isRecipients} />
+      <Header isHome={isHome} isRecipients={isRecipients} isCalculator={isCalculator} />
       <div className="page-content bg-slate-50 min-h-[calc(100vh-160px)]">
         <AnimatePresence mode="wait">
           <Routes>
@@ -156,6 +179,7 @@ const AppContent = () => {
             <Route path="/donor/:donorId" element={<DonorDetail hideHeader={true} />} />
             <Route path="/recipient/:recipientId" element={<RecipientDetail hideHeader={true} />} />
             <Route path="/recipients" element={<Recipients hideHeader={true} />} />
+            <Route path="/calculator" element={<DonationCalculator />} />
           </Routes>
         </AnimatePresence>
       </div>

@@ -21,18 +21,22 @@ const DonationCalculator = () => {
   const [neighboringDonors, setNeighboringDonors] = useState({ above: null, below: null });
   const { customValues, openModal } = useCostPerLife();
 
-  // Initialize categories on component mount
+  // Initialize categories and load saved donation values on component mount
   useEffect(() => {
     const categoriesData = getAllCategories();
     // Sort categories alphabetically by name
     const sortedCategories = [...categoriesData].sort((a, b) => a.name.localeCompare(b.name));
     setCategories(sortedCategories);
     
-    // Initialize donations object with empty values
+    // Initialize donations object with saved values or empty values
+    const savedDonations = localStorage.getItem('donationCalculatorValues');
+    const parsedDonations = savedDonations ? JSON.parse(savedDonations) : {};
+    
     const initialDonations = {};
     sortedCategories.forEach(category => {
-      initialDonations[category.id] = '';
+      initialDonations[category.id] = parsedDonations[category.id] || '';
     });
+    
     setDonations(initialDonations);
   }, []);
 
@@ -121,6 +125,14 @@ const DonationCalculator = () => {
     });
   };
   
+  // Save donations to localStorage when they change
+  useEffect(() => {
+    // Skip saving if no categories loaded yet
+    if (categories.length === 0) return;
+    
+    localStorage.setItem('donationCalculatorValues', JSON.stringify(donations));
+  }, [donations, categories]);
+
   // Handle donation input change
   const handleDonationChange = (categoryId, value) => {
     // Remove any non-numeric characters except decimal point
@@ -137,6 +149,15 @@ const DonationCalculator = () => {
     if (!value) return '';
     const num = Number(value);
     return isNaN(num) ? value : num.toLocaleString();
+  };
+  
+  // Reset all donation amounts
+  const resetDonations = () => {
+    const emptyDonations = {};
+    categories.forEach(category => {
+      emptyDonations[category.id] = '';
+    });
+    setDonations(emptyDonations);
   };
   
   // Calculate lives saved for a specific category
@@ -240,6 +261,20 @@ const DonationCalculator = () => {
         </p>
         
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6">
+          {/* Donation inputs header with reset button */}
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium text-slate-800">Enter your donations</h3>
+            <button 
+              onClick={resetDonations}
+              className="inline-flex items-center px-3 py-1.5 border border-slate-300 text-slate-700 bg-white rounded-md text-sm font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7.805v2.203a1 1 0 01-1.707.707L1.707 8.13a1 1 0 010-1.415l2.586-2.586A1 1 0 015 3.99V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13.5V11a1 1 0 012 0v2a7.002 7.002 0 01-11.601 5.29 1 1 0 01-.61-1.275l.009-.019.354-.707a1 1 0 01.614-.61z" clipRule="evenodd" />
+              </svg>
+              Reset All Amounts
+            </button>
+          </div>
+          
           {/* Donation inputs grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-2">
             {categories.map(category => {

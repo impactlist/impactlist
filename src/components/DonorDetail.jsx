@@ -662,8 +662,8 @@ function DonorDetail(props) {
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">
               <span className="text-sm text-slate-600 uppercase font-semibold">Cost Per Life</span>
-              <span className={`text-3xl font-bold ${donorStats.costPerLifeSaved < 0 ? 'text-red-600' : 'text-slate-900'}`}>
-                {donorStats.livesSaved === 0 ? <span className="text-6xl">∞</span> : formatCurrency(donorStats.costPerLifeSaved)}
+              <span className={`text-3xl font-bold ${donorStats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+                {donorStats.livesSaved === 0 ? <span className="text-6xl">∞</span> : formatCurrency(donorStats.costPerLife)}
               </span>
             </div>
             <div className="flex flex-col items-center p-4 bg-slate-50 rounded-lg">

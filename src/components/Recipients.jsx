@@ -85,27 +85,24 @@ function Recipients(props) {
   // Recipient table columns configuration
   const recipientColumns = [
     { 
-      key: 'rank', 
-      label: 'Rank',
-      render: (recipient) => <div className="text-sm text-slate-900">{recipient.rank}</div>
-    },
-    { 
       key: 'name', 
       label: 'Organization',
       render: (recipient) => (
-        <Link 
-          to={`/recipient/${encodeURIComponent(recipient.id)}`}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
-          {recipient.name}
-        </Link>
+        <div className="max-w-[300px] break-words">
+          <Link 
+            to={`/recipient/${encodeURIComponent(recipient.id)}`}
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            {recipient.name}
+          </Link>
+        </div>
       )
     },
     { 
       key: 'totalLivesSaved', 
       label: 'Lives Saved',
       render: (recipient) => (
-        <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+        <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-red-700' : 'text-slate-900'}`}>
           {formatNumber(Math.round(recipient.totalLivesSaved))}
         </div>
       )
@@ -198,13 +195,9 @@ function Recipients(props) {
           <div className="overflow-x-auto">
             <SortableTable 
               columns={recipientColumns} 
-              data={recipientStats.map((recipient, index) => ({
-                ...recipient,
-                rank: index + 1
-              }))} 
+              data={recipientStats} 
               defaultSortColumn="totalLivesSaved" 
               defaultSortDirection="desc"
-              rankKey="rank"
             />
           </div>
         </div>

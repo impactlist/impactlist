@@ -23,11 +23,13 @@ const DonationCalculator = () => {
   // Initialize categories on component mount
   useEffect(() => {
     const categoriesData = getAllCategories();
-    setCategories(categoriesData);
+    // Sort categories alphabetically by name
+    const sortedCategories = [...categoriesData].sort((a, b) => a.name.localeCompare(b.name));
+    setCategories(sortedCategories);
     
     // Initialize donations object with empty values
     const initialDonations = {};
-    categoriesData.forEach(category => {
+    sortedCategories.forEach(category => {
       initialDonations[category.id] = '';
     });
     setDonations(initialDonations);
@@ -166,13 +168,47 @@ const DonationCalculator = () => {
           </div>
         </div>
         
-        <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6 mb-6">
+        {/* Results panel - Now at the top */}
+        <div className="bg-indigo-50 shadow-lg rounded-xl overflow-hidden border border-indigo-200 p-6 mb-6">
+          <h2 className="text-xl font-bold text-indigo-800 mb-4">Your Impact Summary</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="text-sm text-slate-500 mb-1">Total Donated</div>
+              <div className="text-xl font-bold text-slate-800">{formatCurrency(totalDonated)}</div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="text-sm text-slate-500 mb-1">Lives Saved</div>
+              <div className="text-xl font-bold text-emerald-700">{formatNumber(Math.round(totalLivesSaved))}</div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="text-sm text-slate-500 mb-1">Average Cost Per Life</div>
+              <div className="text-xl font-bold text-slate-800">
+                {totalLivesSaved > 0 ? formatCurrency(costPerLife) : '—'}
+              </div>
+            </div>
+          </div>
+          
+          {donorRank && (
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="text-sm text-slate-500 mb-1">Your Potential Rank on Impact List</div>
+              <div className="text-xl font-bold text-indigo-700">#{donorRank}</div>
+              <div className="text-sm text-slate-600 mt-1">
+                With {formatNumber(Math.round(totalLivesSaved))} lives saved, you would rank #{donorRank} on our Impact List.
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6">
           <p className="text-lg text-slate-700 mb-4">
             Enter donation amounts below to see how many lives your donations could save based on our cost-effectiveness model.
           </p>
           
           {/* Donation inputs grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-2">
             {categories.map(category => {
               const amount = donations[category.id] || '';
               const livesSaved = getLivesSavedForCategory(category.id, amount);
@@ -209,40 +245,6 @@ const DonationCalculator = () => {
               );
             })}
           </div>
-        </div>
-        
-        {/* Results panel */}
-        <div className="bg-indigo-50 shadow-lg rounded-xl overflow-hidden border border-indigo-200 p-6">
-          <h2 className="text-xl font-bold text-indigo-800 mb-4">Your Impact Summary</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="text-sm text-slate-500 mb-1">Total Donated</div>
-              <div className="text-xl font-bold text-slate-800">{formatCurrency(totalDonated)}</div>
-            </div>
-            
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="text-sm text-slate-500 mb-1">Lives Saved</div>
-              <div className="text-xl font-bold text-emerald-700">{formatNumber(Math.round(totalLivesSaved))}</div>
-            </div>
-            
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="text-sm text-slate-500 mb-1">Average Cost Per Life</div>
-              <div className="text-xl font-bold text-slate-800">
-                {totalLivesSaved > 0 ? formatCurrency(costPerLife) : '—'}
-              </div>
-            </div>
-          </div>
-          
-          {donorRank && (
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="text-sm text-slate-500 mb-1">Your Potential Rank on Impact List</div>
-              <div className="text-xl font-bold text-indigo-700">#{donorRank}</div>
-              <div className="text-sm text-slate-600 mt-1">
-                With {formatNumber(Math.round(totalLivesSaved))} lives saved, you would rank #{donorRank} on our Impact List.
-              </div>
-            </div>
-          )}
         </div>
       </motion.div>
     </motion.div>

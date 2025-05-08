@@ -1,6 +1,7 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import BackButton from './BackButton';
 import { 
   getCostPerLifeForRecipient, 
   getPrimaryCategoryId,
@@ -23,6 +24,7 @@ const ANIMATION_DURATION = 600;
 
 function RecipientDetail(props) {
   const { recipientId } = useParams();
+  const navigate = useNavigate();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
   const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
@@ -450,18 +452,16 @@ function RecipientDetail(props) {
         <div className="w-full bg-indigo-700 py-8 mb-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center">
-              <Link to="/" className="text-indigo-100 hover:text-white flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                </svg>
-                Back to Impact List
-              </Link>
+              <BackButton 
+                className="text-indigo-100 hover:text-white" 
+                containerProps={{ className: "" }}
+              />
             </div>
           </div>
         </div>
       )}
-      {/* Spacer when using App layout */}
-      {props.hideHeader && <div className="h-10"></div>}
+      {/* Back button when using App layout */}
+      {props.hideHeader && <BackButton />}
 
       <motion.div 
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"

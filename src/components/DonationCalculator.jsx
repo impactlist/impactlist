@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import BackButton from './BackButton';
 import { 
   getAllCategories, 
   calculateLivesSavedForCategory, 
@@ -137,6 +139,9 @@ const DonationCalculator = () => {
     >
       {/* Spacer */}
       <div className="h-10"></div>
+      
+      {/* Back Link */}
+      <BackButton to="/" label="Back to top donors" />
       
       {/* Main Content Container */}
       <motion.div 

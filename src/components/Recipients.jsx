@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import BackButton from './BackButton';
 import { 
   getCostPerLifeForRecipient, 
   getPrimaryCategoryId, 
@@ -169,19 +170,7 @@ function Recipients(props) {
       {props.hideHeader && <div className="h-10"></div>}
       
       {/* Back Link */}
-      <motion.div 
-        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6"
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
-      >
-        <Link 
-          to="/" 
-          className="text-indigo-600 hover:text-indigo-800 hover:underline flex items-center"
-        >
-          ← Back to top donors
-        </Link>
-      </motion.div>
+      <BackButton to="/" label="Back to top donors" />
       
       {/* Donation Calculator Link */}
       <motion.div 

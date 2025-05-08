@@ -233,7 +233,7 @@ const DonationCalculator = () => {
               <div className="text-sm text-slate-500 mb-1">Your Potential Rank on Impact List</div>
               <div className="text-xl font-bold text-indigo-700">#{donorRank}</div>
               <div className="text-sm text-slate-600 mt-1">
-                With {formatLives(totalLivesSaved)} lives saved, you would rank #{donorRank} on our Impact List
+                With {formatLives(totalLivesSaved)} lives saved, you would rank #{donorRank} on Impact List
                 {!neighboringDonors.above && !neighboringDonors.below && "."}
                 
                 {/* Top of the list */}

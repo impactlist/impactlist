@@ -7,13 +7,17 @@ import {
   getAllRecipients,
   calculateLivesSavedForCategory,
   getDefaultCostPerLifeForCategory,
-  getCostPerLifeForRecipient
+  getCostPerLifeForRecipient,
+  getCategoryById,
+  getPrimaryCategoryForRecipient
 } from '../utils/donationDataHelpers';
 import { recipientsById } from '../data/generatedData';
 import { useCostPerLife } from './CostPerLifeContext';
 import { formatNumber, formatCurrency, formatLives } from '../utils/formatters';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import SpecificDonationModal from './SpecificDonationModal';
+import SortableTable from './SortableTable';
+import CategoryDisplay from './CategoryDisplay';
 
 const DonationCalculator = () => {
   const [categories, setCategories] = useState([]);
@@ -404,68 +408,101 @@ const DonationCalculator = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
-              {specificDonations.map((donation) => {
-                const livesSaved = calculateLivesSavedForSpecificDonation(donation);
-                const categoryName = donation.isCustomRecipient && donation.categoryId ?
-                  categories.find(c => c.id === donation.categoryId)?.name : null;
-
-                return (
-                  <div key={donation.id} className="p-4 border border-slate-200 rounded-lg">
-                    <div className="flex flex-wrap md:flex-nowrap items-start justify-between">
-                      <div className="w-full md:w-auto mb-2 md:mb-0">
-                        <div className="flex items-center">
-                          <span className="font-medium text-slate-800 mr-2">{donation.recipientName}</span>
-                          {categoryName && (
-                            <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
-                              {categoryName}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="mt-1 flex items-center text-slate-700">
-                          <span className="font-medium mr-2">{formatCurrency(donation.amount)}</span>
-
-                          {donation.isCustomRecipient && (
-                            <span className="text-xs text-slate-500">
-                              {donation.multiplier && `(${donation.multiplier}x multiplier)`}
-                              {donation.costPerLife && `(${formatCurrency(donation.costPerLife)}/life)`}
-                            </span>
-                          )}
-                        </div>
+            <div className="overflow-x-auto">
+              <SortableTable
+                columns={[
+                  {
+                    key: 'date',
+                    label: 'Date',
+                    render: () => (
+                      <div className="text-sm text-slate-500">--</div>
+                    )
+                  },
+                  {
+                    key: 'amount',
+                    label: 'Amount',
+                    render: (donation) => (
+                      <div className="text-sm font-medium text-slate-700">
+                        {formatCurrency(donation.amount)}
                       </div>
-
-                      <div className="flex items-center space-x-3">
-                        <div className={livesSaved < 0 ? "text-red-700" : "text-emerald-700"}>
-                          {livesSaved < 0 ? `-${formatLives(Math.abs(livesSaved))}` : formatLives(livesSaved)} lives
-                        </div>
-
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => openDonationModal(donation)}
-                            className="p-1 text-slate-400 hover:text-indigo-600 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            title="Edit donation"
+                    )
+                  },
+                  {
+                    key: 'recipientName',
+                    label: 'Recipient',
+                    render: (donation) => (
+                      <div>
+                        {donation.isCustomRecipient ? (
+                          <span className="text-sm font-medium text-slate-700">
+                            {donation.recipientName}
+                          </span>
+                        ) : (
+                          <Link
+                            to={`/recipient/${encodeURIComponent(Object.keys(recipientsById).find(id =>
+                              recipientsById[id].name === donation.recipientName) || '')}`}
+                            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                            </svg>
-                          </button>
-
-                          <button
-                            onClick={() => handleDeleteSpecificDonation(donation.id)}
-                            className="p-1 text-slate-400 hover:text-red-600 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-                            title="Delete donation"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
-                          </button>
-                        </div>
+                            {donation.recipientName}
+                          </Link>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    )
+                  },
+                  {
+                    key: 'category',
+                    label: 'Category',
+                    render: (donation) => (
+                      <CategoryDisplay
+                        donation={donation}
+                        categories={categories}
+                        recipientsById={recipientsById}
+                      />
+                    )
+                  },
+                  {
+                    key: 'lives',
+                    label: 'Lives Saved',
+                    render: (donation) => {
+                      const livesSaved = calculateLivesSavedForSpecificDonation(donation);
+                      return (
+                        <div className={`text-sm font-medium ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                          {livesSaved < 0 ? '-' : ''}{formatLives(Math.abs(livesSaved))}
+                        </div>
+                      );
+                    }
+                  },
+                  {
+                    key: 'actions',
+                    label: 'Actions',
+                    render: (donation) => (
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => openDonationModal(donation)}
+                          className="p-1 text-slate-400 hover:text-indigo-600 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          title="Edit donation"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                          </svg>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteSpecificDonation(donation.id)}
+                          className="p-1 text-slate-400 hover:text-red-600 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+                          title="Delete donation"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
+                    )
+                  }
+                ]}
+                data={specificDonations}
+                defaultSortColumn="recipientName"
+                defaultSortDirection="asc"
+              />
             </div>
           </div>
         )}

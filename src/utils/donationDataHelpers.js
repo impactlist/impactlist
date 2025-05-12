@@ -30,6 +30,48 @@ export const getAllRecipients = () => Object.values(recipientsById);
 // Helper to get all donors as an array
 export const getAllDonors = () => Object.values(donorsById);
 
+// Get primary category for a recipient
+export const getPrimaryCategoryForRecipient = (recipientId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient || !recipient.categories) {
+    return { categoryId: null, categoryName: "Unknown", count: 0 };
+  }
+
+  const categories = recipient.categories;
+  const categoryCount = Object.keys(categories).length;
+
+  if (categoryCount === 0) {
+    return { categoryId: null, categoryName: "None", count: 0 };
+  } else if (categoryCount === 1) {
+    // Single category
+    const categoryId = Object.keys(categories)[0];
+    const category = getCategoryById(categoryId);
+    return {
+      categoryId,
+      categoryName: category?.name || categoryId,
+      count: 1
+    };
+  } else {
+    // Multiple categories - find primary (highest fraction)
+    let primaryCategoryId = null;
+    let maxWeight = -1;
+
+    for (const [catId, catData] of Object.entries(categories)) {
+      if (catData.fraction > maxWeight) {
+        maxWeight = catData.fraction;
+        primaryCategoryId = catId;
+      }
+    }
+
+    const primaryCategory = getCategoryById(primaryCategoryId);
+    return {
+      categoryId: primaryCategoryId,
+      categoryName: primaryCategory?.name || primaryCategoryId,
+      count: categoryCount
+    };
+  }
+};
+
 // Helper to get all categories as an array
 export const getAllCategories = () => {
   // Convert to array of objects with id included

@@ -23,22 +23,25 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const allRecipients = useMemo(() => getAllRecipients(), []);
   const allCategories = useMemo(() => getAllCategories(), []);
   
+  // State to control dropdown visibility
+  const [showDropdown, setShowDropdown] = useState(false);
+
   // Filtered recipients based on search
   const filteredRecipients = useMemo(() => {
-    if (!searchTerm) return [];
-    
+    if (!searchTerm || !showDropdown) return [];
+
     const term = searchTerm.toLowerCase();
     return allRecipients
       .filter(recipient => recipient.name.toLowerCase().includes(term))
       .sort((a, b) => a.name.localeCompare(b.name))
       .slice(0, 10); // Limit to first 10 results
-  }, [searchTerm, allRecipients]);
-  
+  }, [searchTerm, allRecipients, showDropdown]);
+
   // Initialize with editing data if provided
   useEffect(() => {
     if (editingDonation) {
       setAmount(editingDonation.amount.toString());
-      
+
       if (editingDonation.isCustomRecipient) {
         setIsExistingRecipient(false);
         setCustomRecipientName(editingDonation.recipientName);
@@ -58,6 +61,9 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       // Reset form when opening for a new donation
       resetForm();
     }
+
+    // Always hide dropdown when initializing
+    setShowDropdown(false);
   }, [editingDonation, isOpen, allRecipients]);
   
   const resetForm = () => {
@@ -70,12 +76,15 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     setCostPerLife('');
     setErrors({});
     setIsExistingRecipient(true);
+    setShowDropdown(false);
   };
   
   const handleSelectRecipient = (recipient) => {
     setSelectedRecipient(recipient);
     setSearchTerm(recipient.name);
     setErrors({ ...errors, recipient: null });
+    // Hide dropdown
+    setShowDropdown(false);
   };
   
   // Format a number with commas
@@ -103,8 +112,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   };
   
   const handleSubmit = () => {
+    // Hide dropdown when submitting
+    setShowDropdown(false);
+
     const newErrors = {};
-    
+
     // Validate recipient or custom recipient
     if (isExistingRecipient && !selectedRecipient) {
       newErrors.recipient = 'Please select a recipient';
@@ -266,19 +278,32 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setShowDropdown(true);
+                    }}
+                    onFocus={() => setShowDropdown(true)}
                     placeholder="Type to search..."
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                       errors.recipient ? 'border-red-300' : 'border-gray-300'
                     }`}
+
+                    // Handle click outside to close dropdown
+                    onBlur={(e) => {
+                      // Only hide if not clicking on a dropdown item
+                      if (!e.relatedTarget || !e.relatedTarget.classList.contains('recipient-item')) {
+                        setTimeout(() => setShowDropdown(false), 200);
+                      }
+                    }}
                   />
-                  {searchTerm && filteredRecipients.length > 0 && (
+                  {showDropdown && searchTerm && filteredRecipients.length > 0 && (
                     <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm">
                       {filteredRecipients.map((recipient) => (
                         <div
                           key={recipient.name}
                           onClick={() => handleSelectRecipient(recipient)}
-                          className="cursor-pointer hover:bg-indigo-50 px-4 py-2"
+                          className="cursor-pointer hover:bg-indigo-50 px-4 py-2 recipient-item"
+                          tabIndex="0"
                         >
                           {recipient.name}
                         </div>
@@ -289,7 +314,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 {errors.recipient && (
                   <p className="mt-1 text-sm text-red-600">{errors.recipient}</p>
                 )}
-                {searchTerm && filteredRecipients.length === 0 && (
+                {searchTerm && filteredRecipients.length === 0 && showDropdown && !selectedRecipient && (
                   <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
                 )}
               </div>
@@ -339,20 +364,9 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             )}
           </div>
           
-          {/* Display recipient/category information */}
-          {selectedRecipient && isExistingRecipient && (
-            <div className="mb-4 p-3 bg-indigo-50 rounded-md">
-              <h3 className="font-medium text-indigo-800">
-                {selectedRecipient.name}
-              </h3>
-            </div>
-          )}
-          
+          {/* Display category information for custom recipients */}
           {customRecipientName && !isExistingRecipient && selectedCategory && (
             <div className="mb-4 p-3 bg-indigo-50 rounded-md">
-              <h3 className="font-medium text-indigo-800">
-                {customRecipientName}
-              </h3>
               <p className="text-sm text-indigo-600">
                 Category: {allCategories.find(c => c.id === selectedCategory)?.name || ''}
               </p>

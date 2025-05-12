@@ -6,8 +6,10 @@ import {
   getAllCategories,
   getAllRecipients,
   calculateLivesSavedForCategory,
-  getDefaultCostPerLifeForCategory
+  getDefaultCostPerLifeForCategory,
+  getCostPerLifeForRecipient
 } from '../utils/donationDataHelpers';
+import { recipientsById } from '../data/generatedData';
 import { useCostPerLife } from './CostPerLifeContext';
 import { formatNumber, formatCurrency, formatLives } from '../utils/formatters';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -99,9 +101,17 @@ const DonationCalculator = () => {
 
         livesSaved = donation.amount / costPerLife;
       } else {
-        // For existing recipients, we would need more complex logic based on their
-        // weighted categories, but as a placeholder just use a simple calculation
-        livesSaved = donation.amount / 5000; // Placeholder - would use actual calculation
+        // For existing recipients, find the appropriate recipient ID
+        const recipientId = Object.keys(recipientsById).find(id =>
+          recipientsById[id].name === donation.recipientName);
+
+        if (!recipientId) {
+          throw new Error(`Could not find ID for recipient: ${donation.recipientName}`);
+        }
+
+        // Get actual cost per life for this recipient
+        const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+        livesSaved = donation.amount / recipientCostPerLife;
       }
 
       totalLives += livesSaved;
@@ -269,8 +279,18 @@ const DonationCalculator = () => {
 
       return donation.amount / costPerLife;
     } else {
-      // For existing recipients, would need actual implementation
-      return donation.amount / 5000; // Placeholder
+      // For existing recipients, find the recipient in our data
+      // Find the appropriate recipient ID by matching name
+      const recipientId = Object.keys(recipientsById).find(id =>
+        recipientsById[id].name === donation.recipientName);
+
+      if (!recipientId) {
+        throw new Error(`Could not find ID for recipient: ${donation.recipientName}`);
+      }
+
+      // Get actual cost per life for this recipient
+      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+      return donation.amount / recipientCostPerLife;
     }
   };
   
@@ -416,8 +436,8 @@ const DonationCalculator = () => {
                       </div>
 
                       <div className="flex items-center space-x-3">
-                        <div className="text-emerald-700">
-                          {formatLives(livesSaved)} lives
+                        <div className={livesSaved < 0 ? "text-red-700" : "text-emerald-700"}>
+                          {livesSaved < 0 ? `-${formatLives(Math.abs(livesSaved))}` : formatLives(livesSaved)} lives
                         </div>
 
                         <div className="flex space-x-2">
@@ -508,8 +528,8 @@ const DonationCalculator = () => {
                     />
                   </div>
                   {amount && !isNaN(Number(amount)) && (
-                    <div className="text-emerald-700 text-sm">
-                      Lives saved: {formatLives(livesSaved)}
+                    <div className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                      Lives saved: {livesSaved < 0 ? '-' : ''}{formatLives(Math.abs(livesSaved))}
                     </div>
                   )}
                 </div>

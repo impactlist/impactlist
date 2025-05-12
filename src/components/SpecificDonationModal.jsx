@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  getAllRecipients, 
-  getAllCategories, 
-  getDefaultCostPerLifeForCategory 
+import {
+  getAllRecipients,
+  getAllCategories,
+  getDefaultCostPerLifeForCategory,
+  getCostPerLifeForRecipient,
+  getRecipientId
 } from '../utils/donationDataHelpers';
 import { formatNumber } from '../utils/formatters';
 import { useCostPerLife } from './CostPerLifeContext';
@@ -186,17 +188,22 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     if (!amount || isNaN(Number(cleanNumberInput(amount))) || Number(cleanNumberInput(amount)) <= 0) {
       return 0;
     }
-    
+
     const cleanedAmount = Number(cleanNumberInput(amount));
-    
+
     if (isExistingRecipient && selectedRecipient) {
-      // For existing recipients, we would need to calculate based on their weighted categories
-      // This is a simplified version - in a real implementation, you would use
-      // the recipient's actual cost per life calculation
-      return cleanedAmount / 5000; // Placeholder - would use actual calculation
+      // For existing recipients, calculate based on their weighted categories
+      const recipientId = getRecipientId(selectedRecipient);
+      if (!recipientId) {
+        throw new Error(`Could not find ID for recipient: ${selectedRecipient.name}`);
+      }
+
+      // Get actual cost per life for this recipient
+      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+      return cleanedAmount / recipientCostPerLife;
     } else if (!isExistingRecipient && selectedCategory) {
       let effectiveCostPerLife;
-      
+
       if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
         const multiplierValue = Number(cleanNumberInput(multiplier));
         const baseCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
@@ -206,15 +213,27 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       } else {
         effectiveCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
       }
-      
+
       return cleanedAmount / effectiveCostPerLife;
     }
-    
+
     return 0;
   };
   
   const livesSaved = calculateLivesSaved();
-  
+
+  // Calculate cost per life for the selected recipient
+  const getRecipientCostPerLife = () => {
+    if (!isExistingRecipient || !selectedRecipient) return null;
+
+    const recipientId = getRecipientId(selectedRecipient);
+    if (!recipientId) return null;
+
+    return getCostPerLifeForRecipient(recipientId, customValues);
+  };
+
+  const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
+
   if (!isOpen) return null;
   
   return (
@@ -364,7 +383,15 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             )}
           </div>
           
-          {/* Display category information for custom recipients */}
+          {/* Display information about selected recipient or category */}
+          {isExistingRecipient && selectedRecipient && recipientCostPerLife && (
+            <div className="mb-4 p-3 bg-indigo-50 rounded-md">
+              <p className="text-sm text-indigo-600">
+                Cost per life: ${formatNumber(recipientCostPerLife)}
+              </p>
+            </div>
+          )}
+
           {customRecipientName && !isExistingRecipient && selectedCategory && (
             <div className="mb-4 p-3 bg-indigo-50 rounded-md">
               <p className="text-sm text-indigo-600">
@@ -458,9 +485,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
           
           {/* Lives saved preview */}
           {amount && !errors.amount && (
-            <div className="mb-4 p-3 bg-emerald-50 rounded-md">
-              <p className="text-sm text-emerald-700">
-                Estimated lives saved: <span className="font-medium">{livesSaved.toFixed(2)}</span>
+            <div className={`mb-4 p-3 ${livesSaved < 0 ? 'bg-red-50' : 'bg-emerald-50'} rounded-md`}>
+              <p className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                Estimated lives saved: <span className="font-medium">
+                  {livesSaved < 0 ? '-' : ''}{Math.abs(livesSaved).toFixed(2)}
+                </span>
               </p>
             </div>
           )}

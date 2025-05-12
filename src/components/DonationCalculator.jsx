@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import BackButton from './BackButton';
-import { 
-  getAllCategories, 
-  calculateLivesSavedForCategory, 
-  getDefaultCostPerLifeForCategory 
+import {
+  getAllCategories,
+  getAllRecipients,
+  calculateLivesSavedForCategory,
+  getDefaultCostPerLifeForCategory
 } from '../utils/donationDataHelpers';
 import { useCostPerLife } from './CostPerLifeContext';
 import { formatNumber, formatCurrency, formatLives } from '../utils/formatters';
 import CustomValuesIndicator from './CustomValuesIndicator';
+import SpecificDonationModal from './SpecificDonationModal';
 
 const DonationCalculator = () => {
   const [categories, setCategories] = useState([]);
   const [donations, setDonations] = useState({});
+  const [specificDonations, setSpecificDonations] = useState([]);
   const [totalDonated, setTotalDonated] = useState(0);
   const [totalLivesSaved, setTotalLivesSaved] = useState(0);
   const [costPerLife, setCostPerLife] = useState(0);
@@ -21,56 +24,99 @@ const DonationCalculator = () => {
   const [neighboringDonors, setNeighboringDonors] = useState({ above: null, below: null });
   const { customValues, openModal } = useCostPerLife();
 
+  // For specific donation modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingDonation, setEditingDonation] = useState(null);
+
   // Initialize categories and load saved donation values on component mount
   useEffect(() => {
     const categoriesData = getAllCategories();
     // Sort categories alphabetically by name
     const sortedCategories = [...categoriesData].sort((a, b) => a.name.localeCompare(b.name));
     setCategories(sortedCategories);
-    
+
     // Initialize donations object with saved values or empty values
     const savedDonations = localStorage.getItem('donationCalculatorValues');
     const parsedDonations = savedDonations ? JSON.parse(savedDonations) : {};
-    
+
     const initialDonations = {};
     sortedCategories.forEach(category => {
       initialDonations[category.id] = parsedDonations[category.id] || '';
     });
-    
+
     setDonations(initialDonations);
+
+    // Load specific donations
+    const savedSpecificDonations = localStorage.getItem('specificDonations');
+    if (savedSpecificDonations) {
+      setSpecificDonations(JSON.parse(savedSpecificDonations));
+    }
   }, []);
 
-  // Calculate lives saved when donations or customValues change
+  // Calculate lives saved when donations, specificDonations, or customValues change
   useEffect(() => {
     // Skip calculation if no categories loaded yet
     if (categories.length === 0) return;
-    
+
     let totalAmount = 0;
     let totalLives = 0;
-    
+
     // Calculate for each category
     Object.entries(donations).forEach(([categoryId, amount]) => {
       // Skip empty or invalid inputs
       if (!amount || isNaN(Number(amount))) return;
-      
+
       const donationAmount = Number(amount);
       totalAmount += donationAmount;
-      
+
       // Calculate lives saved for this category
       const livesSaved = calculateLivesSavedForCategory(categoryId, donationAmount, customValues);
       totalLives += livesSaved;
     });
-    
+
+    // Add specific donations
+    specificDonations.forEach(donation => {
+      totalAmount += donation.amount;
+
+      // Calculate lives saved for each specific donation
+      let livesSaved = 0;
+
+      if (donation.isCustomRecipient && donation.categoryId) {
+        // For custom recipients, calculate based on the category and any overrides
+        let costPerLife;
+
+        if (donation.costPerLife) {
+          // Use directly provided cost per life
+          costPerLife = donation.costPerLife;
+        } else if (donation.multiplier) {
+          // Apply multiplier to the category's cost per life
+          const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+          costPerLife = baseCostPerLife / donation.multiplier;
+        } else {
+          // Use category default
+          costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        }
+
+        livesSaved = donation.amount / costPerLife;
+      } else {
+        // For existing recipients, we would need more complex logic based on their
+        // weighted categories, but as a placeholder just use a simple calculation
+        livesSaved = donation.amount / 5000; // Placeholder - would use actual calculation
+      }
+
+      totalLives += livesSaved;
+    });
+
     setTotalDonated(totalAmount);
     setTotalLivesSaved(totalLives);
-    
+
     // Calculate overall cost per life
     if (totalLives > 0) {
       setCostPerLife(totalAmount / totalLives);
     } else {
       setCostPerLife(0);
     }
-    
+
     // Calculate rank
     // This would ideally use actual donor data from the application
     // For now, we'll set a placeholder calculation
@@ -79,7 +125,7 @@ const DonationCalculator = () => {
     } else {
       setDonorRank(null);
     }
-  }, [donations, customValues, categories]);
+  }, [donations, specificDonations, customValues, categories]);
   
   // Calculate donor rank based on lives saved
   const calculateDonorRank = (lives) => {
@@ -129,9 +175,14 @@ const DonationCalculator = () => {
   useEffect(() => {
     // Skip saving if no categories loaded yet
     if (categories.length === 0) return;
-    
+
     localStorage.setItem('donationCalculatorValues', JSON.stringify(donations));
   }, [donations, categories]);
+
+  // Save specific donations to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('specificDonations', JSON.stringify(specificDonations));
+  }, [specificDonations]);
 
   // Handle donation input change
   const handleDonationChange = (categoryId, value) => {
@@ -159,13 +210,68 @@ const DonationCalculator = () => {
     });
     setDonations(emptyDonations);
   };
-  
+
+  // Clear all specific donations
+  const clearSpecificDonations = () => {
+    setSpecificDonations([]);
+  };
+
   // Calculate lives saved for a specific category
   const getLivesSavedForCategory = (categoryId, amount) => {
     if (!amount || isNaN(Number(amount))) return 0;
-    
+
     const donationAmount = Number(amount);
     return calculateLivesSavedForCategory(categoryId, donationAmount, customValues);
+  };
+
+  // Open modal to add or edit a specific donation
+  const openDonationModal = (donation = null) => {
+    setEditingDonation(donation);
+    setIsModalOpen(true);
+  };
+
+  // Handle saving a specific donation
+  const handleSaveSpecificDonation = (donationData) => {
+    if (editingDonation) {
+      // Update existing donation
+      setSpecificDonations(prev =>
+        prev.map(item => item.id === donationData.id ? donationData : item)
+      );
+    } else {
+      // Add new donation
+      setSpecificDonations(prev => [...prev, donationData]);
+    }
+    setEditingDonation(null);
+  };
+
+  // Handle deleting a specific donation
+  const handleDeleteSpecificDonation = (id) => {
+    setSpecificDonations(prev => prev.filter(item => item.id !== id));
+  };
+
+  // Calculate lives saved for a specific donation
+  const calculateLivesSavedForSpecificDonation = (donation) => {
+    if (donation.isCustomRecipient && donation.categoryId) {
+      // For custom recipients, calculate based on the category and any overrides
+      let costPerLife;
+
+      if (donation.costPerLife) {
+        // Use directly provided cost per life
+        costPerLife = donation.costPerLife;
+      } else if (donation.multiplier) {
+        // Apply multiplier to the category's cost per life
+        const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        costPerLife = baseCostPerLife / donation.multiplier;
+      } else {
+        // Use category default
+        costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+      }
+
+      return donation.amount / costPerLife;
+    } else {
+      // For existing recipients, would need actual implementation
+      return donation.amount / 5000; // Placeholder
+    }
   };
   
   return (
@@ -259,7 +365,104 @@ const DonationCalculator = () => {
         <p className="text-lg text-slate-700 mb-6 px-2">
           Enter your donation amounts to see your impact based on past or future donations.
         </p>
-        
+
+        {/* Specific Donations */}
+        {specificDonations.length > 0 && (
+          <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6 mb-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-slate-800">Your Specific Donations</h3>
+              <div className="flex space-x-2">
+                <button
+                  onClick={clearSpecificDonations}
+                  className="inline-flex items-center px-3 py-1.5 border border-slate-300 text-slate-700 bg-white rounded-md text-sm font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  Clear All
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {specificDonations.map((donation) => {
+                const livesSaved = calculateLivesSavedForSpecificDonation(donation);
+                const categoryName = donation.isCustomRecipient && donation.categoryId ?
+                  categories.find(c => c.id === donation.categoryId)?.name : null;
+
+                return (
+                  <div key={donation.id} className="p-4 border border-slate-200 rounded-lg">
+                    <div className="flex flex-wrap md:flex-nowrap items-start justify-between">
+                      <div className="w-full md:w-auto mb-2 md:mb-0">
+                        <div className="flex items-center">
+                          <span className="font-medium text-slate-800 mr-2">{donation.recipientName}</span>
+                          {categoryName && (
+                            <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
+                              {categoryName}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="mt-1 flex items-center text-slate-700">
+                          <span className="font-medium mr-2">{formatCurrency(donation.amount)}</span>
+
+                          {donation.isCustomRecipient && (
+                            <span className="text-xs text-slate-500">
+                              {donation.multiplier && `(${donation.multiplier}x multiplier)`}
+                              {donation.costPerLife && `(${formatCurrency(donation.costPerLife)}/life)`}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <div className="text-emerald-700">
+                          {formatLives(livesSaved)} lives
+                        </div>
+
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => openDonationModal(donation)}
+                            className="p-1 text-slate-400 hover:text-indigo-600 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            title="Edit donation"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                            </svg>
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteSpecificDonation(donation.id)}
+                            className="p-1 text-slate-400 hover:text-red-600 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+                            title="Delete donation"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Add Specific Donation button */}
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => openDonationModal()}
+            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Add Specific Donation
+          </button>
+        </div>
+
         <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6">
           {/* Donation inputs header with reset button */}
           <div className="flex justify-between items-center mb-4">
@@ -315,6 +518,21 @@ const DonationCalculator = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* Specific Donation Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <SpecificDonationModal
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setEditingDonation(null);
+            }}
+            onSave={handleSaveSpecificDonation}
+            editingDonation={editingDonation}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

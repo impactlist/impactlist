@@ -1,0 +1,476 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  getAllRecipients, 
+  getAllCategories, 
+  getDefaultCostPerLifeForCategory 
+} from '../utils/donationDataHelpers';
+import { formatNumber } from '../utils/formatters';
+import { useCostPerLife } from './CostPerLifeContext';
+
+const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
+  const { customValues } = useCostPerLife();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [customRecipientName, setCustomRecipientName] = useState('');
+  const [amount, setAmount] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [multiplier, setMultiplier] = useState('');
+  const [costPerLife, setCostPerLife] = useState('');
+  const [errors, setErrors] = useState({});
+  const [isExistingRecipient, setIsExistingRecipient] = useState(true);
+  
+  const allRecipients = useMemo(() => getAllRecipients(), []);
+  const allCategories = useMemo(() => getAllCategories(), []);
+  
+  // Filtered recipients based on search
+  const filteredRecipients = useMemo(() => {
+    if (!searchTerm) return [];
+    
+    const term = searchTerm.toLowerCase();
+    return allRecipients
+      .filter(recipient => recipient.name.toLowerCase().includes(term))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .slice(0, 10); // Limit to first 10 results
+  }, [searchTerm, allRecipients]);
+  
+  // Initialize with editing data if provided
+  useEffect(() => {
+    if (editingDonation) {
+      setAmount(editingDonation.amount.toString());
+      
+      if (editingDonation.isCustomRecipient) {
+        setIsExistingRecipient(false);
+        setCustomRecipientName(editingDonation.recipientName);
+        setSelectedCategory(editingDonation.categoryId);
+        if (editingDonation.multiplier) {
+          setMultiplier(editingDonation.multiplier.toString());
+        } else if (editingDonation.costPerLife) {
+          setCostPerLife(editingDonation.costPerLife.toString());
+        }
+      } else {
+        setIsExistingRecipient(true);
+        const recipient = allRecipients.find(r => r.name === editingDonation.recipientName);
+        setSelectedRecipient(recipient || null);
+        setSearchTerm(recipient?.name || '');
+      }
+    } else {
+      // Reset form when opening for a new donation
+      resetForm();
+    }
+  }, [editingDonation, isOpen, allRecipients]);
+  
+  const resetForm = () => {
+    setSearchTerm('');
+    setSelectedRecipient(null);
+    setCustomRecipientName('');
+    setAmount('');
+    setSelectedCategory('');
+    setMultiplier('');
+    setCostPerLife('');
+    setErrors({});
+    setIsExistingRecipient(true);
+  };
+  
+  const handleSelectRecipient = (recipient) => {
+    setSelectedRecipient(recipient);
+    setSearchTerm(recipient.name);
+    setErrors({ ...errors, recipient: null });
+  };
+  
+  // Format a number with commas
+  const formatWithCommas = (value) => {
+    if (!value) return '';
+    
+    const rawValue = value.toString().replace(/,/g, '');
+    if (rawValue === '' || rawValue === '-' || rawValue === '.' || rawValue.endsWith('.')) {
+      return rawValue;
+    }
+    
+    const number = Number(rawValue);
+    if (isNaN(number)) return rawValue;
+    
+    if (Math.abs(number) >= 1000) {
+      return number.toLocaleString('en-US');
+    }
+    
+    return rawValue;
+  };
+  
+  // Clean a number input value
+  const cleanNumberInput = (value) => {
+    return value.toString().replace(/,/g, '');
+  };
+  
+  const handleSubmit = () => {
+    const newErrors = {};
+    
+    // Validate recipient or custom recipient
+    if (isExistingRecipient && !selectedRecipient) {
+      newErrors.recipient = 'Please select a recipient';
+    } else if (!isExistingRecipient && !customRecipientName.trim()) {
+      newErrors.customRecipientName = 'Please enter a recipient name';
+    }
+    
+    // Validate amount
+    const cleanedAmount = cleanNumberInput(amount);
+    if (!cleanedAmount || isNaN(Number(cleanedAmount)) || Number(cleanedAmount) <= 0) {
+      newErrors.amount = 'Please enter a valid amount';
+    }
+    
+    // For custom recipients, validate category and at least one of multiplier or costPerLife
+    if (!isExistingRecipient) {
+      if (!selectedCategory) {
+        newErrors.category = 'Please select a category';
+      }
+      
+      const cleanedMultiplier = cleanNumberInput(multiplier);
+      const cleanedCostPerLife = cleanNumberInput(costPerLife);
+      
+      if (cleanedMultiplier && (isNaN(Number(cleanedMultiplier)) || Number(cleanedMultiplier) <= 0)) {
+        newErrors.multiplier = 'Please enter a valid multiplier';
+      }
+      
+      if (cleanedCostPerLife && (isNaN(Number(cleanedCostPerLife)) || Number(cleanedCostPerLife) <= 0)) {
+        newErrors.costPerLife = 'Please enter a valid cost per life';
+      }
+    }
+    
+    setErrors(newErrors);
+    
+    // Check if there are any errors
+    const hasErrors = Object.keys(newErrors).length > 0;
+    
+    if (!hasErrors) {
+      const donationData = {
+        id: editingDonation?.id || new Date().getTime().toString(),
+        recipientName: isExistingRecipient ? selectedRecipient.name : customRecipientName,
+        amount: Number(cleanNumberInput(amount)),
+        isCustomRecipient: !isExistingRecipient,
+      };
+      
+      // Add category and effectiveness data for custom recipients
+      if (!isExistingRecipient) {
+        donationData.categoryId = selectedCategory;
+        
+        const cleanedMultiplier = cleanNumberInput(multiplier);
+        const cleanedCostPerLife = cleanNumberInput(costPerLife);
+        
+        if (cleanedMultiplier) {
+          donationData.multiplier = Number(cleanedMultiplier);
+        } else if (cleanedCostPerLife) {
+          donationData.costPerLife = Number(cleanedCostPerLife);
+        }
+      }
+      
+      onSave(donationData);
+      resetForm();
+      onClose();
+    }
+  };
+  
+  // Calculate lives saved for the current donation
+  const calculateLivesSaved = () => {
+    if (!amount || isNaN(Number(cleanNumberInput(amount))) || Number(cleanNumberInput(amount)) <= 0) {
+      return 0;
+    }
+    
+    const cleanedAmount = Number(cleanNumberInput(amount));
+    
+    if (isExistingRecipient && selectedRecipient) {
+      // For existing recipients, we would need to calculate based on their weighted categories
+      // This is a simplified version - in a real implementation, you would use
+      // the recipient's actual cost per life calculation
+      return cleanedAmount / 5000; // Placeholder - would use actual calculation
+    } else if (!isExistingRecipient && selectedCategory) {
+      let effectiveCostPerLife;
+      
+      if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
+        const multiplierValue = Number(cleanNumberInput(multiplier));
+        const baseCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
+        effectiveCostPerLife = baseCostPerLife / multiplierValue;
+      } else if (costPerLife && !isNaN(Number(cleanNumberInput(costPerLife)))) {
+        effectiveCostPerLife = Number(cleanNumberInput(costPerLife));
+      } else {
+        effectiveCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
+      }
+      
+      return cleanedAmount / effectiveCostPerLife;
+    }
+    
+    return 0;
+  };
+  
+  const livesSaved = calculateLivesSaved();
+  
+  if (!isOpen) return null;
+  
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <motion.div 
+        className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ type: 'spring', damping: 20 }}
+      >
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {editingDonation ? 'Edit Donation' : 'Add Specific Donation'}
+            </h2>
+            <button 
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div className="p-6">
+          <div className="mb-6">
+            <div className="flex space-x-4 mb-4">
+              <button
+                type="button"
+                onClick={() => setIsExistingRecipient(true)}
+                className={`px-4 py-2 rounded-md text-sm font-medium flex-1 ${
+                  isExistingRecipient 
+                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300' 
+                    : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
+                }`}
+              >
+                Existing Recipient
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsExistingRecipient(false)}
+                className={`px-4 py-2 rounded-md text-sm font-medium flex-1 ${
+                  !isExistingRecipient 
+                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300' 
+                    : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
+                }`}
+              >
+                New Recipient
+              </button>
+            </div>
+            
+            {isExistingRecipient ? (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Search for a recipient
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Type to search..."
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                      errors.recipient ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  />
+                  {searchTerm && filteredRecipients.length > 0 && (
+                    <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm">
+                      {filteredRecipients.map((recipient) => (
+                        <div
+                          key={recipient.name}
+                          onClick={() => handleSelectRecipient(recipient)}
+                          className="cursor-pointer hover:bg-indigo-50 px-4 py-2"
+                        >
+                          {recipient.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {errors.recipient && (
+                  <p className="mt-1 text-sm text-red-600">{errors.recipient}</p>
+                )}
+                {searchTerm && filteredRecipients.length === 0 && (
+                  <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
+                )}
+              </div>
+            ) : (
+              <div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Recipient Name
+                  </label>
+                  <input
+                    type="text"
+                    value={customRecipientName}
+                    onChange={(e) => setCustomRecipientName(e.target.value)}
+                    placeholder="Enter recipient name"
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                      errors.customRecipientName ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  />
+                  {errors.customRecipientName && (
+                    <p className="mt-1 text-sm text-red-600">{errors.customRecipientName}</p>
+                  )}
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                      errors.category ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  >
+                    <option value="">Select a category</option>
+                    {allCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.category && (
+                    <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Display recipient/category information */}
+          {selectedRecipient && isExistingRecipient && (
+            <div className="mb-4 p-3 bg-indigo-50 rounded-md">
+              <h3 className="font-medium text-indigo-800">
+                {selectedRecipient.name}
+              </h3>
+            </div>
+          )}
+          
+          {customRecipientName && !isExistingRecipient && selectedCategory && (
+            <div className="mb-4 p-3 bg-indigo-50 rounded-md">
+              <h3 className="font-medium text-indigo-800">
+                {customRecipientName}
+              </h3>
+              <p className="text-sm text-indigo-600">
+                Category: {allCategories.find(c => c.id === selectedCategory)?.name || ''}
+              </p>
+            </div>
+          )}
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Donation Amount
+            </label>
+            <div className="flex items-center">
+              <span className="mr-1 text-gray-600">$</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={formatWithCommas(amount)}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="0"
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                  errors.amount ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+            </div>
+            {errors.amount && (
+              <p className="mt-1 text-sm text-red-600">{errors.amount}</p>
+            )}
+          </div>
+          
+          {!isExistingRecipient && selectedCategory && (
+            <div className="mb-4">
+              <p className="text-sm font-medium text-gray-700 mb-2">Effectiveness</p>
+              
+              <div className="mb-3">
+                <label className="block text-sm text-gray-600 mb-1">
+                  Multiplier (makes recipient more effective)
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={formatWithCommas(multiplier)}
+                  onChange={(e) => {
+                    setMultiplier(e.target.value);
+                    setCostPerLife(''); // Clear cost per life when setting multiplier
+                  }}
+                  placeholder="1.0"
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                    errors.multiplier ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  disabled={!!costPerLife}
+                />
+                {errors.multiplier && (
+                  <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>
+                )}
+              </div>
+              
+              <div className="mb-2">
+                <label className="block text-sm text-gray-600 mb-1">
+                  OR Direct Cost Per Life
+                </label>
+                <div className="flex items-center">
+                  <span className="mr-1 text-gray-600">$</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={formatWithCommas(costPerLife)}
+                    onChange={(e) => {
+                      setCostPerLife(e.target.value);
+                      setMultiplier(''); // Clear multiplier when setting cost per life
+                    }}
+                    placeholder={selectedCategory ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues)) : "0"}
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                      errors.costPerLife ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                    disabled={!!multiplier}
+                  />
+                </div>
+                {errors.costPerLife && (
+                  <p className="mt-1 text-sm text-red-600">{errors.costPerLife}</p>
+                )}
+              </div>
+              
+              {selectedCategory && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Default for {allCategories.find(c => c.id === selectedCategory)?.name}: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}/life
+                </p>
+              )}
+            </div>
+          )}
+          
+          {/* Lives saved preview */}
+          {amount && !errors.amount && (
+            <div className="mb-4 p-3 bg-emerald-50 rounded-md">
+              <p className="text-sm text-emerald-700">
+                Estimated lives saved: <span className="font-medium">{livesSaved.toFixed(2)}</span>
+              </p>
+            </div>
+          )}
+          
+          <div className="flex space-x-3 mt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="flex-1 px-4 py-2 bg-indigo-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {editingDonation ? 'Update' : 'Add'} Donation
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+export default SpecificDonationModal;

@@ -304,10 +304,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <motion.div 
         className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ type: 'spring', damping: 20 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
       >
         <div className="p-6 border-b border-gray-200">
           <div className="flex justify-between items-center">

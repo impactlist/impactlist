@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
   getAllRecipients,
@@ -21,12 +21,19 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const [costPerLife, setCostPerLife] = useState('');
   const [errors, setErrors] = useState({});
   const [isExistingRecipient, setIsExistingRecipient] = useState(true);
-  
+
+  // References for search input and dropdown
+  const searchInputRef = useRef(null);
+  const dropdownRef = useRef(null);
+
   const allRecipients = useMemo(() => getAllRecipients(), []);
   const allCategories = useMemo(() => getAllCategories(), []);
-  
+
   // State to control dropdown visibility
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Track highlighted item for keyboard navigation
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   // Filtered recipients based on search
   const filteredRecipients = useMemo(() => {
@@ -67,6 +74,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     // Always hide dropdown when initializing
     setShowDropdown(false);
   }, [editingDonation, isOpen, allRecipients]);
+
+  // Reset highlighted index when filtered results change
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [filteredRecipients.length]);
   
   const resetForm = () => {
     setSearchTerm('');
@@ -79,14 +91,66 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     setErrors({});
     setIsExistingRecipient(true);
     setShowDropdown(false);
+    setHighlightedIndex(-1);
   };
-  
+
   const handleSelectRecipient = (recipient) => {
     setSelectedRecipient(recipient);
     setSearchTerm(recipient.name);
     setErrors({ ...errors, recipient: null });
     // Hide dropdown
     setShowDropdown(false);
+    setHighlightedIndex(-1);
+  };
+
+  // Handle keyboard navigation in dropdown
+  const handleKeyDown = (e) => {
+    if (!showDropdown || filteredRecipients.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex((prevIndex) => {
+          const nextIndex = prevIndex < filteredRecipients.length - 1 ? prevIndex + 1 : prevIndex;
+          scrollToHighlighted(nextIndex);
+          return nextIndex;
+        });
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex((prevIndex) => {
+          const nextIndex = prevIndex > 0 ? prevIndex - 1 : 0;
+          scrollToHighlighted(nextIndex);
+          return nextIndex;
+        });
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (highlightedIndex >= 0 && highlightedIndex < filteredRecipients.length) {
+          handleSelectRecipient(filteredRecipients[highlightedIndex]);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setShowDropdown(false);
+        setHighlightedIndex(-1);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Scroll to highlighted item in dropdown
+  const scrollToHighlighted = (index) => {
+    if (dropdownRef.current && index >= 0) {
+      const highlightedElement = dropdownRef.current.children[index];
+      if (highlightedElement) {
+        highlightedElement.scrollIntoView({
+          block: 'nearest',
+          behavior: 'smooth'
+        });
+      }
+    }
   };
   
   // Format a number with commas
@@ -295,18 +359,20 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 </label>
                 <div className="relative">
                   <input
+                    ref={searchInputRef}
                     type="text"
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value);
                       setShowDropdown(true);
+                      setHighlightedIndex(-1);
                     }}
                     onFocus={() => setShowDropdown(true)}
+                    onKeyDown={handleKeyDown}
                     placeholder="Type to search..."
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                       errors.recipient ? 'border-red-300' : 'border-gray-300'
                     }`}
-
                     // Handle click outside to close dropdown
                     onBlur={(e) => {
                       // Only hide if not clicking on a dropdown item
@@ -316,12 +382,19 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     }}
                   />
                   {showDropdown && searchTerm && filteredRecipients.length > 0 && (
-                    <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm">
-                      {filteredRecipients.map((recipient) => (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm"
+                    >
+                      {filteredRecipients.map((recipient, index) => (
                         <div
                           key={recipient.name}
                           onClick={() => handleSelectRecipient(recipient)}
-                          className="cursor-pointer hover:bg-indigo-50 px-4 py-2 recipient-item"
+                          className={`cursor-pointer px-4 py-2 recipient-item ${
+                            index === highlightedIndex
+                              ? 'bg-indigo-100 text-indigo-900'
+                              : 'hover:bg-indigo-50'
+                          }`}
                           tabIndex="0"
                         >
                           {recipient.name}

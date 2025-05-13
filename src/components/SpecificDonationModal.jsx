@@ -440,14 +440,21 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     }`}
                   >
                     <option value="">Select a category</option>
-                    {allCategories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
+                    {allCategories
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
                   </select>
                   {errors.category && (
                     <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+                  )}
+                  {selectedCategory && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Default cost per life: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}
+                    </p>
                   )}
                 </div>
 
@@ -463,17 +470,22 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       inputMode="numeric"
                       value={formatWithCommas(multiplier)}
                       onChange={(e) => {
-                        setMultiplier(e.target.value);
-                        setCostPerLife(''); // Clear cost per life when setting multiplier
+                        const newValue = e.target.value;
+                        setMultiplier(newValue);
+                        setCostPerLife(''); // Clear cost per life when editing multiplier
                       }}
                       placeholder="1.0"
                       className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                         errors.multiplier ? 'border-red-300' : 'border-gray-300'
                       }`}
-                      disabled={!!costPerLife}
                     />
                     {errors.multiplier && (
                       <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>
+                    )}
+                    {multiplier && selectedCategory && !isNaN(Number(cleanNumberInput(multiplier))) && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Cost per life: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues) / Number(cleanNumberInput(multiplier)))}
+                      </p>
                     )}
                   </div>
                   
@@ -488,26 +500,20 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         inputMode="numeric"
                         value={formatWithCommas(costPerLife)}
                         onChange={(e) => {
-                          setCostPerLife(e.target.value);
-                          setMultiplier(''); // Clear multiplier when setting cost per life
+                          const newValue = e.target.value;
+                          setCostPerLife(newValue);
+                          setMultiplier(''); // Clear multiplier when editing cost per life
                         }}
                         placeholder={selectedCategory ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues)) : "0"}
                         className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                           errors.costPerLife ? 'border-red-300' : 'border-gray-300'
                         }`}
-                        disabled={!!multiplier}
                       />
                     </div>
                     {errors.costPerLife && (
                       <p className="mt-1 text-sm text-red-600">{errors.costPerLife}</p>
                     )}
                   </div>
-                  
-                  {selectedCategory && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      Default for {allCategories.find(c => c.id === selectedCategory)?.name}: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}/life
-                    </p>
-                  )}
                 </div>
               </div>
             )}

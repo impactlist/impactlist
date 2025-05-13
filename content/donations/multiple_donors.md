@@ -1,6 +1,6 @@
 ---
 donations:
-  - date: 2001-05-28
+  - date: 2021-05-28
     recipient: anthropic
     amount: 24_000_000
     credit:

@@ -21,11 +21,11 @@ categories:
   - id: global-health
     fraction: 0.30
   - id: pandemics
-    fraction: 0.097
+    fraction: 0.094
   - id: ai-risk
     fraction: 0.06
   - id: ai-capabilities
-    fraction: 0.003
+    fraction: 0.006
 --- 
 
-OpenPhil gave 30 million to OpenAI.. which we're approximating by 0.3% of their total spending.. Might need to be updated in the future if we add more spending for them.
+OpenPhil gave 30 million to OpenAI.. which we're approximating by 0.6% of their total spending.. Might need to be updated in the future if we add more spending for them.

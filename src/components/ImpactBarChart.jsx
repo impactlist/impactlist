@@ -119,7 +119,13 @@ const ImpactBarChart = ({
     const values = data.map(item => item[dataKey]);
     const hasNegativeValues = values.some(val => val < 0);
     if (hasNegativeValues) {
-      return [Math.floor(Math.min(...values)), Math.ceil(Math.max(...values))];
+      const minValue = Math.floor(Math.min(...values));
+      const maxValue = Math.ceil(Math.max(...values));
+      
+      // If max is 0 (only negative values), ensure we include 0 in the domain
+      const adjustedMax = maxValue < 0 ? 0 : maxValue;
+      
+      return [minValue, adjustedMax];
     } else {
       return [0, Math.ceil(Math.max(...values))];
     }
@@ -151,6 +157,10 @@ const ImpactBarChart = ({
               }}
               tickLine={true}
               stroke="#1e293b"
+              // Ensure we show enough ticks for better readability
+              tickCount={7}
+              // Add padding to prevent labels from being cut off
+              allowDataOverflow={true}
             />
             <YAxis 
               type="category" 

@@ -742,7 +742,9 @@ function DonorDetail(props) {
                     const hasNegativeValues = chartData.some(item => item.valueTarget < 0);
                     
                     if (hasNegativeValues) {
-                      return ['dataMin', 'dataMax'];
+                      const minValue = Math.min(0, ...chartData.map(d => d.valueTarget));
+                      const maxValue = Math.max(0, ...chartData.map(d => d.valueTarget));
+                      return [minValue, maxValue];
                     } else if (chartView === 'donations' || 
                               (chartView === 'livesSaved' && !chartData.some(item => item.livesSavedValue < 0))) {
                       return [0, 'auto'];

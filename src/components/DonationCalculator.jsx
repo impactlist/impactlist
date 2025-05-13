@@ -350,7 +350,9 @@ const DonationCalculator = () => {
             
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="text-sm text-slate-500 mb-1">Lives Saved</div>
-              <div className="text-xl font-bold text-emerald-700">{formatLives(totalLivesSaved)}</div>
+              <div className={`text-xl font-bold ${totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                {totalLivesSaved < 0 ? '-' : ''}{formatLives(Math.abs(totalLivesSaved))}
+              </div>
             </div>
             
             <div className="bg-white p-4 rounded-lg shadow-sm">

@@ -7,7 +7,7 @@ import {
   getCostPerLifeForRecipient,
   getRecipientId
 } from '../utils/donationDataHelpers';
-import { formatNumber } from '../utils/formatters';
+import { formatNumber, formatLives } from '../utils/formatters';
 import { useCostPerLife } from './CostPerLifeContext';
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
@@ -407,6 +407,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 {searchTerm && filteredRecipients.length === 0 && showDropdown && !selectedRecipient && (
                   <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
                 )}
+                {selectedRecipient && recipientCostPerLife && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Default cost per life: ${formatNumber(recipientCostPerLife)}
+                  </p>
+                )}
               </div>
             ) : (
               <div>
@@ -520,10 +525,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
           </div>
           
           {/* Display information about selected recipient or category */}
-          {isExistingRecipient && selectedRecipient && recipientCostPerLife && (
+          {customRecipientName && !isExistingRecipient && selectedCategory && (
             <div className="mb-4 p-3 bg-indigo-50 rounded-md">
               <p className="text-sm text-indigo-600">
-                Cost per life: ${formatNumber(recipientCostPerLife)}
+                Category: {allCategories.find(c => c.id === selectedCategory)?.name || ''}
               </p>
             </div>
           )}
@@ -555,7 +560,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             <div className={`mb-4 p-3 ${livesSaved < 0 ? 'bg-red-50' : 'bg-emerald-50'} rounded-md`}>
               <p className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
                 Estimated lives saved: <span className="font-medium">
-                  {livesSaved < 0 ? '-' : ''}{Math.abs(livesSaved).toFixed(2)}
+                  {livesSaved < 0 ? '-' : ''}{formatLives(Math.abs(livesSaved))}
                 </span>
               </p>
             </div>

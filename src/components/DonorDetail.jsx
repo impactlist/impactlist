@@ -171,14 +171,11 @@ function DonorDetail(props) {
         const costPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
         
         // Calculate category-specific amount and lives saved
-        const categoryAmount = donation.amount * fraction;
+        const categoryAmount = donation.creditedAmount * fraction;
         let livesSavedForCategory;
         
-        // Apply credit multiplier if it exists
-        const creditedAmount = donation.credit !== undefined ? 
-          categoryAmount * donation.credit : categoryAmount;
-        
-        livesSavedForCategory = costPerLife !== 0 ? creditedAmount / costPerLife : 0; // Normal case
+        // Calculate lives saved directly from the credited amount
+        livesSavedForCategory = costPerLife !== 0 ? categoryAmount / costPerLife : 0; // Normal case
         
         // Initialize category objects if they don't exist
         if (!categoryAmounts[categoryName]) {

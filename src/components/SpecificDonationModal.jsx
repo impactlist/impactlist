@@ -373,9 +373,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                       errors.recipient ? 'border-red-300' : 'border-gray-300'
                     }`}
-                    // Handle click outside to close dropdown
                     onBlur={(e) => {
-                      // Only hide if not clicking on a dropdown item
                       if (!e.relatedTarget || !e.relatedTarget.classList.contains('recipient-item')) {
                         setTimeout(() => setShowDropdown(false), 200);
                       }
@@ -452,6 +450,65 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     <p className="mt-1 text-sm text-red-600">{errors.category}</p>
                   )}
                 </div>
+
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Effectiveness</p>
+                  
+                  <div className="mb-3">
+                    <label className="block text-sm text-gray-600 mb-1">
+                      Multiplier (makes recipient more effective)
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={formatWithCommas(multiplier)}
+                      onChange={(e) => {
+                        setMultiplier(e.target.value);
+                        setCostPerLife(''); // Clear cost per life when setting multiplier
+                      }}
+                      placeholder="1.0"
+                      className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                        errors.multiplier ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      disabled={!!costPerLife}
+                    />
+                    {errors.multiplier && (
+                      <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>
+                    )}
+                  </div>
+                  
+                  <div className="mb-2">
+                    <label className="block text-sm text-gray-600 mb-1">
+                      OR Direct Cost Per Life
+                    </label>
+                    <div className="flex items-center">
+                      <span className="mr-1 text-gray-600">$</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={formatWithCommas(costPerLife)}
+                        onChange={(e) => {
+                          setCostPerLife(e.target.value);
+                          setMultiplier(''); // Clear multiplier when setting cost per life
+                        }}
+                        placeholder={selectedCategory ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues)) : "0"}
+                        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                          errors.costPerLife ? 'border-red-300' : 'border-gray-300'
+                        }`}
+                        disabled={!!multiplier}
+                      />
+                    </div>
+                    {errors.costPerLife && (
+                      <p className="mt-1 text-sm text-red-600">{errors.costPerLife}</p>
+                    )}
+                  </div>
+                  
+                  {selectedCategory && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Default for {allCategories.find(c => c.id === selectedCategory)?.name}: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}/life
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -465,14 +522,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             </div>
           )}
 
-          {customRecipientName && !isExistingRecipient && selectedCategory && (
-            <div className="mb-4 p-3 bg-indigo-50 rounded-md">
-              <p className="text-sm text-indigo-600">
-                Category: {allCategories.find(c => c.id === selectedCategory)?.name || ''}
-              </p>
-            </div>
-          )}
-          
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Donation Amount
@@ -494,67 +543,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
               <p className="mt-1 text-sm text-red-600">{errors.amount}</p>
             )}
           </div>
-          
-          {!isExistingRecipient && selectedCategory && (
-            <div className="mb-4">
-              <p className="text-sm font-medium text-gray-700 mb-2">Effectiveness</p>
-              
-              <div className="mb-3">
-                <label className="block text-sm text-gray-600 mb-1">
-                  Multiplier (makes recipient more effective)
-                </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={formatWithCommas(multiplier)}
-                  onChange={(e) => {
-                    setMultiplier(e.target.value);
-                    setCostPerLife(''); // Clear cost per life when setting multiplier
-                  }}
-                  placeholder="1.0"
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                    errors.multiplier ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  disabled={!!costPerLife}
-                />
-                {errors.multiplier && (
-                  <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>
-                )}
-              </div>
-              
-              <div className="mb-2">
-                <label className="block text-sm text-gray-600 mb-1">
-                  OR Direct Cost Per Life
-                </label>
-                <div className="flex items-center">
-                  <span className="mr-1 text-gray-600">$</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    value={formatWithCommas(costPerLife)}
-                    onChange={(e) => {
-                      setCostPerLife(e.target.value);
-                      setMultiplier(''); // Clear multiplier when setting cost per life
-                    }}
-                    placeholder={selectedCategory ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues)) : "0"}
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.costPerLife ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    disabled={!!multiplier}
-                  />
-                </div>
-                {errors.costPerLife && (
-                  <p className="mt-1 text-sm text-red-600">{errors.costPerLife}</p>
-                )}
-              </div>
-              
-              {selectedCategory && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Default for {allCategories.find(c => c.id === selectedCategory)?.name}: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}/life
-                </p>
-              )}
-            </div>
-          )}
           
           {/* Lives saved preview */}
           {amount && !errors.amount && (

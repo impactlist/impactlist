@@ -1,6 +1,6 @@
 ---
 id: gates-foundation
-name: "Bill & Melinda Gates Foundation"
+name: "Gates Foundation"
 categories:
   - id: global-health
     fraction: 0.4

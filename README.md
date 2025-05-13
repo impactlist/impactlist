@@ -15,15 +15,19 @@ A minimalist React template with Tailwind CSS and Vite.
    ```
    npm install
    ```
-3. Start development server:
+3. Generate data
+   ```
+   npm run generate-data
+   ```
+4. Start development server:
    ```
    npm run dev
    ```
-4. Build for production:
+5. Build for production:
    ```
    npm run build
    ```
-5. Preview production build:
+6. Preview production build:
    ```
    npm run preview
    ```

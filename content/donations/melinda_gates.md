@@ -32,7 +32,7 @@ Bill Gates and Melinda Gates were married between January 1, 1994, and August 2,
   The $200 million and $240 million donations listed above are significant initial distributions from this commitment.
   She also announced a $250 million grant competition, "Action for Women's Health," as part of this $1 billion, run via Lever for Change,
   which will award grants to organizations working on women's health. Specific recipients and dates for all these grants are not yet fully detailed.
-  Additionally, upon her departure from the Bill & Melinda Gates Foundation in June 2024, she would receive $12.5 billion for her own philanthropic work,
+  Additionally, upon her departure from the Gates Foundation in June 2024, she would receive $12.5 billion for her own philanthropic work,
   which will fund these and future initiatives focusing on women and families.
   Wikipedia also mentions over $10 million donated to Democratic causes by Melinda French Gates in the lead-up to the 2024 US presidential election,
   however, specific individual donations (recipient, date, amount per donation) that fit the requested format are not readily available from the provided search snippets.

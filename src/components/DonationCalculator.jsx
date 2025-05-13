@@ -195,8 +195,11 @@ const DonationCalculator = () => {
 
   // Save specific donations to localStorage when they change
   useEffect(() => {
+    // Skip saving if no categories loaded yet
+    if (categories.length === 0) return;
+
     localStorage.setItem('specificDonations', JSON.stringify(specificDonations));
-  }, [specificDonations]);
+  }, [specificDonations, categories]);
 
   // Handle donation input change
   const handleDonationChange = (categoryId, value) => {

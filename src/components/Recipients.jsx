@@ -31,7 +31,10 @@ function Recipients(props) {
       }
       
       const recipientDonations = getDonationsForRecipient(recipientId);
-      const totalReceived = recipientDonations.reduce((sum, d) => sum + d.amount, 0);
+      const totalReceived = recipientDonations.reduce((sum, d) => {
+        const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
+        return sum + creditedAmount;
+      }, 0);
       const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
 
       // Get the primary category and all categories for display

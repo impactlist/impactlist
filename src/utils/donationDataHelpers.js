@@ -335,7 +335,10 @@ export const getDonationsForRecipient = (recipientId) => {
 // Helper to get total amount received by a recipient
 export const getTotalAmountForRecipient = (recipientId) => {
   const recipientDonations = getDonationsForRecipient(recipientId);
-  return recipientDonations.reduce((total, donation) => total + donation.amount, 0);
+  return recipientDonations.reduce((total, donation) => {
+    const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+    return total + creditedAmount;
+  }, 0);
 };
 
 // Helper to get total amount donated by a donor

@@ -165,7 +165,7 @@ function RecipientDetail(props) {
       .sort((a, b) => b.dateObj - a.dateObj);
     
     // Calculate total received
-    const totalReceived = recipientDonationsList.reduce((sum, donation) => sum + donation.amount, 0);
+    const totalReceived = recipientDonationsList.reduce((sum, donation) => sum + donation.creditedAmount, 0);
     const totalLivesSaved = recipientDonationsList.reduce((sum, donation) => sum + donation.livesSaved, 0);
     
     // Prepare data for the two chart views
@@ -189,11 +189,8 @@ function RecipientDetail(props) {
         const catCostPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
         
         // Calculate donation amount and lives saved for this category
-        const categoryAmount = donation.amount * fraction;
-        const creditedAmount = donation.credit !== undefined ? 
-          categoryAmount * donation.credit : categoryAmount;
-        
-        const livesSaved = catCostPerLife !== 0 ? creditedAmount / catCostPerLife : 0;
+        const categoryAmount = donation.creditedAmount * fraction;
+        const livesSaved = catCostPerLife !== 0 ? categoryAmount / catCostPerLife : 0;
         
         // Initialize category objects if they don't exist
         if (!categoryDonations[categoryName]) {

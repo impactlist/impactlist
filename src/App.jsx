@@ -80,16 +80,16 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
               Impact List
             </Link>
             <Link 
-              to="/recipients" 
-              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
-            >
-              Recipients
-            </Link>
-            <Link 
               to="/calculator" 
               className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
             >
               Calculator
+            </Link>
+            <Link 
+              to="/recipients" 
+              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              Recipients
             </Link>
           </motion.nav>
         </div>

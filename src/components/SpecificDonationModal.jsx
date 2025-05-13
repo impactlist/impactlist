@@ -205,11 +205,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       const cleanedMultiplier = cleanNumberInput(multiplier);
       const cleanedCostPerLife = cleanNumberInput(costPerLife);
       
-      if (cleanedMultiplier && (isNaN(Number(cleanedMultiplier)) || Number(cleanedMultiplier) <= 0)) {
+      if (cleanedMultiplier && (isNaN(Number(cleanedMultiplier)))) {
         newErrors.multiplier = 'Please enter a valid multiplier';
       }
       
-      if (cleanedCostPerLife && (isNaN(Number(cleanedCostPerLife)) || Number(cleanedCostPerLife) <= 0)) {
+      if (cleanedCostPerLife && (isNaN(Number(cleanedCostPerLife)))) {
         newErrors.costPerLife = 'Please enter a valid cost per life';
       }
     }

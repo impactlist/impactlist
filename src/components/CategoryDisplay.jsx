@@ -1,6 +1,5 @@
 import React from 'react';
-import { getCategoryById, getPrimaryCategoryForRecipient } from '../utils/donationDataHelpers';
-import { formatCurrency } from '../utils/formatters';
+import { getPrimaryCategoryForRecipient } from '../utils/donationDataHelpers';
 
 /**
  * A reusable component for displaying category information consistently across the app.
@@ -19,10 +18,6 @@ const CategoryDisplay = ({
         <span className="text-sm text-slate-700">
           {categoryName}
         </span>
-        <div className="text-xs text-slate-500 mt-1">
-          {donation.multiplier && `${donation.multiplier}x multiplier`}
-          {donation.costPerLife && `${formatCurrency(donation.costPerLife)}/life`}
-        </div>
       </div>
     );
   }

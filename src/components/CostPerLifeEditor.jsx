@@ -1069,7 +1069,11 @@ const CostPerLifeEditor = () => {
                                       className={`w-full py-1 px-1.5 text-sm border rounded ${
                                         recipientErrors[recipient.name]?.[categoryId]?.multiplier 
                                           ? 'border-red-300 text-red-700 bg-red-50' 
-                                          : getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__multiplier`, defaultMultiplier) !== ''
+                                          : (customValues?.recipients?.[recipient.name]?.[categoryId]?.multiplier !== undefined && 
+                                             customValues.recipients[recipient.name][categoryId].multiplier !== defaultMultiplier) || 
+                                            (recipientFormValues[`${recipient.name}__${categoryId}__multiplier`] && 
+                                             recipientFormValues[`${recipient.name}__${categoryId}__multiplier`].raw !== '' && 
+                                             Number(recipientFormValues[`${recipient.name}__${categoryId}__multiplier`].raw) !== defaultMultiplier)
                                             ? 'border-indigo-300 bg-indigo-50' 
                                             : 'border-gray-300'
                                       }`}
@@ -1124,7 +1128,11 @@ const CostPerLifeEditor = () => {
                                         className={`w-full py-1 px-1.5 text-sm border rounded ${
                                           recipientErrors[recipient.name]?.[categoryId]?.costPerLife 
                                             ? 'border-red-300 text-red-700 bg-red-50' 
-                                            : getFormValue(recipientFormValues, `${recipient.name}__${categoryId}__costPerLife`, defaultCostPerLife) !== ''
+                                            : (customValues?.recipients?.[recipient.name]?.[categoryId]?.costPerLife !== undefined && 
+                                               customValues.recipients[recipient.name][categoryId].costPerLife !== defaultCostPerLife) || 
+                                              (recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`] && 
+                                               recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`].raw !== '' && 
+                                               Number(recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`].raw) !== defaultCostPerLife)
                                               ? 'border-indigo-300 bg-indigo-50' 
                                               : 'border-gray-300'
                                         }`}

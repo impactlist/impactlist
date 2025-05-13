@@ -415,13 +415,6 @@ const DonationCalculator = () => {
               <SortableTable
                 columns={[
                   {
-                    key: 'date',
-                    label: 'Date',
-                    render: () => (
-                      <div className="text-sm text-slate-500">--</div>
-                    )
-                  },
-                  {
                     key: 'amount',
                     label: 'Amount',
                     render: (donation) => (
@@ -475,6 +468,39 @@ const DonationCalculator = () => {
                     }
                   },
                   {
+                    key: 'costPerLife',
+                    label: 'Cost Per Life',
+                    render: (donation) => {
+                      let costPerLife;
+
+                      if (donation.isCustomRecipient && donation.categoryId) {
+                        if (donation.costPerLife) {
+                          costPerLife = donation.costPerLife;
+                        } else if (donation.multiplier) {
+                          const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+                          costPerLife = baseCostPerLife / donation.multiplier;
+                        } else {
+                          costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+                        }
+                      } else {
+                        const recipientId = Object.keys(recipientsById).find(id =>
+                          recipientsById[id].name === donation.recipientName);
+
+                        if (recipientId) {
+                          costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+                        } else {
+                          costPerLife = 0;
+                        }
+                      }
+
+                      return (
+                        <div className="text-sm font-medium text-slate-700">
+                          {formatCurrency(costPerLife)}
+                        </div>
+                      );
+                    }
+                  },
+                  {
                     key: 'actions',
                     label: 'Actions',
                     render: (donation) => (
@@ -503,8 +529,8 @@ const DonationCalculator = () => {
                   }
                 ]}
                 data={specificDonations}
-                defaultSortColumn="recipientName"
-                defaultSortDirection="asc"
+                defaultSortColumn="amount"
+                defaultSortDirection="desc"
               />
             </div>
           </div>

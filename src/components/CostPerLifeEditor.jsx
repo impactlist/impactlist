@@ -446,6 +446,11 @@ const CostPerLifeEditor = () => {
         newCategoryErrors[key] = 'Invalid number';
         hasErrors = true;
       }
+      // Check if value is zero
+      else if (numValue === 0) {
+        newCategoryErrors[key] = 'Cost per life cannot be zero';
+        hasErrors = true;
+      }
     });
     
     setCategoryErrors(newCategoryErrors);
@@ -470,6 +475,17 @@ const CostPerLifeEditor = () => {
           newRecipientErrors[recipientName][categoryId] = {};
         }
         newRecipientErrors[recipientName][categoryId][type] = 'Invalid number';
+        hasErrors = true;
+      }
+      // Check if value is zero for cost per life fields
+      else if (type === 'costPerLife' && Number(rawValue) === 0) {
+        if (!newRecipientErrors[recipientName]) {
+          newRecipientErrors[recipientName] = {};
+        }
+        if (!newRecipientErrors[recipientName][categoryId]) {
+          newRecipientErrors[recipientName][categoryId] = {};
+        }
+        newRecipientErrors[recipientName][categoryId][type] = 'Cost per life cannot be zero';
         hasErrors = true;
       }
     });
@@ -524,6 +540,17 @@ const CostPerLifeEditor = () => {
                 newRecipientErrors[recipientName][categoryId] = {};
               }
               newRecipientErrors[recipientName][categoryId].costPerLife = 'Invalid number';
+              hasErrors = true;
+            }
+            // Check if value is zero
+            else if (costPerLife === 0) {
+              if (!newRecipientErrors[recipientName]) {
+                newRecipientErrors[recipientName] = {};
+              }
+              if (!newRecipientErrors[recipientName][categoryId]) {
+                newRecipientErrors[recipientName][categoryId] = {};
+              }
+              newRecipientErrors[recipientName][categoryId].costPerLife = 'Cost per life cannot be zero';
               hasErrors = true;
             }
           }

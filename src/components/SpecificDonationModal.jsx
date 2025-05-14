@@ -209,8 +209,13 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         newErrors.multiplier = 'Please enter a valid multiplier';
       }
       
-      if (cleanedCostPerLife && (isNaN(Number(cleanedCostPerLife)))) {
-        newErrors.costPerLife = 'Please enter a valid cost per life';
+      if (cleanedCostPerLife) {
+        const costPerLifeNum = Number(cleanedCostPerLife);
+        if (isNaN(costPerLifeNum)) {
+          newErrors.costPerLife = 'Please enter a valid cost per life';
+        } else if (costPerLifeNum === 0) {
+          newErrors.costPerLife = 'Cost per life cannot be zero';
+        }
       }
     }
     

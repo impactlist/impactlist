@@ -28,7 +28,7 @@ const DonationCalculator = () => {
   const [totalLivesSaved, setTotalLivesSaved] = useState(0);
   const [costPerLife, setCostPerLife] = useState(0);
   const [donorRank, setDonorRank] = useState(null);
-  const [neighboringDonors, setNeighboringDonors] = useState({ above: null, below: null, twoBelow: null });
+  const [neighboringDonors, setNeighboringDonors] = useState({ above: null, below: null, twoBelow: null, twoAbove: null });
   const { customValues, openModal } = useCostPerLife();
 
   // For specific donation modal
@@ -126,7 +126,7 @@ const DonationCalculator = () => {
     setTotalLivesSaved(totalLives);
 
     // Calculate overall cost per life
-    if (totalLives > 0) {
+    if (totalLives !== 0) {
       setCostPerLife(totalAmount / totalLives);
     } else {
       setCostPerLife(0);
@@ -135,7 +135,7 @@ const DonationCalculator = () => {
     // Calculate rank
     // This would ideally use actual donor data from the application
     // For now, we'll set a placeholder calculation
-    if (totalLives > 0) {
+    if (totalLives !== 0) {
       calculateDonorRank(totalLives);
     } else {
       setDonorRank(null);
@@ -158,6 +158,7 @@ const DonationCalculator = () => {
         let donorAbove = null;
         let donorBelow = null;
         let twoBelow = null;
+        let twoAbove = null;
 
         // Donors are sorted by lives saved in descending order
         for (let i = 0; i < donorStats.length; i++) {
@@ -167,6 +168,10 @@ const DonationCalculator = () => {
             rank++;
             // This donor would be above the user
             donorAbove = donor;
+            // If we're at the bottom, get the donor two positions above
+            if (!donorBelow && i > 0) {
+              twoAbove = donorStats[i - 1];
+            }
           } else {
             // This donor would be below the user
             donorBelow = i < donorStats.length ? donor : null;
@@ -182,13 +187,14 @@ const DonationCalculator = () => {
         setNeighboringDonors({
           above: donorAbove,
           below: donorBelow,
-          twoBelow: twoBelow
+          twoBelow: twoBelow,
+          twoAbove: twoAbove
         });
       });
     }).catch(error => {
       console.error("Error calculating donor rank:", error);
       setDonorRank(null);
-      setNeighboringDonors({ above: null, below: null, twoBelow: null });
+      setNeighboringDonors({ above: null, below: null, twoBelow: null, twoAbove: null });
     });
   };
   
@@ -364,13 +370,13 @@ const DonationCalculator = () => {
             
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="text-sm text-slate-500 mb-1">Average Cost Per Life</div>
-              <div className="text-xl font-bold text-slate-800">
-                {totalLivesSaved > 0 ? formatCurrency(costPerLife) : '—'}
+              <div className={`text-xl font-bold ${costPerLife < 0 ? 'text-red-700' : 'text-slate-800'}`}>
+                {totalLivesSaved !== 0 ? formatCurrency(costPerLife) : '—'}
               </div>
             </div>
           </div>
           
-          {donorRank && (
+          {donorRank !== null && (
             <MiniImpactList
               donorRank={donorRank}
               totalLivesSaved={totalLivesSaved}

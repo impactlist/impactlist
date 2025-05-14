@@ -41,6 +41,15 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
   else if (!neighboringDonors.below) {
     rows.push(
       {
+        rank: donorRank - 2,
+        name: neighboringDonors.twoAbove.name,
+        livesSaved: neighboringDonors.twoAbove.livesSaved,
+        totalDonated: neighboringDonors.twoAbove.totalDonated,
+        costPerLife: neighboringDonors.twoAbove.costPerLife,
+        netWorth: neighboringDonors.twoAbove.netWorth,
+        id: neighboringDonors.twoAbove.id
+      },
+      {
         rank: donorRank - 1,
         name: neighboringDonors.above.name,
         livesSaved: neighboringDonors.above.livesSaved,
@@ -56,15 +65,6 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         totalDonated: totalDonated,
         costPerLife: costPerLife,
         isCurrentUser: true
-      },
-      {
-        rank: donorRank + 1,
-        name: 'Next donor',
-        livesSaved: 0,
-        totalDonated: 0,
-        costPerLife: 0,
-        netWorth: 0,
-        isPlaceholder: true
       }
     );
   }

@@ -23,6 +23,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: neighboringDonors.below.livesSaved,
         totalDonated: neighboringDonors.below.totalDonated,
         costPerLife: neighboringDonors.below.costPerLife,
+        netWorth: neighboringDonors.below.netWorth,
         id: neighboringDonors.below.id
       },
       {
@@ -31,6 +32,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: 0,
         totalDonated: 0,
         costPerLife: 0,
+        netWorth: 0,
         isPlaceholder: true
       }
     );
@@ -44,6 +46,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: neighboringDonors.above.livesSaved,
         totalDonated: neighboringDonors.above.totalDonated,
         costPerLife: neighboringDonors.above.costPerLife,
+        netWorth: neighboringDonors.above.netWorth,
         id: neighboringDonors.above.id
       },
       {
@@ -60,6 +63,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: 0,
         totalDonated: 0,
         costPerLife: 0,
+        netWorth: 0,
         isPlaceholder: true
       }
     );
@@ -73,6 +77,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: neighboringDonors.above.livesSaved,
         totalDonated: neighboringDonors.above.totalDonated,
         costPerLife: neighboringDonors.above.costPerLife,
+        netWorth: neighboringDonors.above.netWorth,
         id: neighboringDonors.above.id
       },
       {
@@ -89,6 +94,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: neighboringDonors.below.livesSaved,
         totalDonated: neighboringDonors.below.totalDonated,
         costPerLife: neighboringDonors.below.costPerLife,
+        netWorth: neighboringDonors.below.netWorth,
         id: neighboringDonors.below.id
       }
     );
@@ -96,7 +102,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm">
-      <div className="text-sm text-slate-500 mb-3">Your Potential Rank on Impact List</div>
+      <div className="text-sm text-slate-500 mb-3">Your potential rank on Impact List</div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-slate-200">
           <thead>
@@ -106,6 +112,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
               <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Lives Saved</th>
               <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Donated</th>
               <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Cost/Life</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Net Worth</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
@@ -136,6 +143,9 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
                   {row.isPlaceholder ? '—' : (row.livesSaved === 0 ? '∞' : formatCurrency(row.costPerLife))}
+                </td>
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
+                  {row.isPlaceholder ? '—' : row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}
                 </td>
               </tr>
             ))}

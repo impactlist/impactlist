@@ -28,7 +28,7 @@ const DonationCalculator = () => {
   const [totalLivesSaved, setTotalLivesSaved] = useState(0);
   const [costPerLife, setCostPerLife] = useState(0);
   const [donorRank, setDonorRank] = useState(null);
-  const [neighboringDonors, setNeighboringDonors] = useState({ above: null, below: null });
+  const [neighboringDonors, setNeighboringDonors] = useState({ above: null, below: null, twoBelow: null });
   const { customValues, openModal } = useCostPerLife();
 
   // For specific donation modal
@@ -157,6 +157,7 @@ const DonationCalculator = () => {
         let rank = 1;
         let donorAbove = null;
         let donorBelow = null;
+        let twoBelow = null;
 
         // Donors are sorted by lives saved in descending order
         for (let i = 0; i < donorStats.length; i++) {
@@ -169,6 +170,10 @@ const DonationCalculator = () => {
           } else {
             // This donor would be below the user
             donorBelow = i < donorStats.length ? donor : null;
+            // Get the donor two positions below if we're at the top
+            if (rank === 1 && i + 2 < donorStats.length) {
+              twoBelow = donorStats[i + 2];
+            }
             break;
           }
         }
@@ -176,13 +181,14 @@ const DonationCalculator = () => {
         setDonorRank(rank);
         setNeighboringDonors({
           above: donorAbove,
-          below: donorBelow
+          below: donorBelow,
+          twoBelow: twoBelow
         });
       });
     }).catch(error => {
       console.error("Error calculating donor rank:", error);
       setDonorRank(null);
-      setNeighboringDonors({ above: null, below: null });
+      setNeighboringDonors({ above: null, below: null, twoBelow: null });
     });
   };
   

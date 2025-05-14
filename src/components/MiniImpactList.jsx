@@ -28,12 +28,12 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       },
       {
         rank: 3,
-        name: 'Next donor',
-        livesSaved: 0,
-        totalDonated: 0,
-        costPerLife: 0,
-        netWorth: 0,
-        isPlaceholder: true
+        name: neighboringDonors.twoBelow.name,
+        livesSaved: neighboringDonors.twoBelow.livesSaved,
+        totalDonated: neighboringDonors.twoBelow.totalDonated,
+        costPerLife: neighboringDonors.twoBelow.costPerLife,
+        netWorth: neighboringDonors.twoBelow.netWorth,
+        id: neighboringDonors.twoBelow.id
       }
     );
   }

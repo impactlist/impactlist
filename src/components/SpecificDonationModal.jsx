@@ -477,7 +477,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     </label>
                     <input
                       type="text"
-                      inputMode="numeric"
+                      inputMode="text"
                       value={formatWithCommas(multiplier)}
                       onChange={(e) => {
                         const newValue = e.target.value;
@@ -507,7 +507,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       <span className="mr-1 text-gray-600">$</span>
                       <input
                         type="text"
-                        inputMode="numeric"
+                        inputMode="text"
                         value={formatWithCommas(costPerLife)}
                         onChange={(e) => {
                           const newValue = e.target.value;

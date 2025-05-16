@@ -55,4 +55,16 @@ export default [
       },
     },
   },
+  // Add specific configuration for scripts directory
+  {
+    files: ['scripts/**/*.js'],
+    languageOptions: {
+      globals: {
+        process: 'readonly'
+      }
+    },
+    rules: {
+      'no-console': 'off'  // Allow console usage in scripts
+    }
+  }
 ]; 

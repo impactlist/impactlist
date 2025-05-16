@@ -1,5 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
+/* global localStorage */
+
 // Create context
 const CostPerLifeContext = createContext();
 

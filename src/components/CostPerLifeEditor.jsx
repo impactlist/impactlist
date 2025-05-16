@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
-import { getAllRecipients, getAllCategories, getCategoryById } from '../utils/donationDataHelpers';
+import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CostPerLifeEditor = () => {
   const { 
     customValues, 
-    isUsingCustomValues, 
     resetToDefaults, 
     updateValues,
-    updateRecipientValue,
-    getRecipientValue,
     isModalOpen,
     closeModal
   } = useCostPerLife();
@@ -37,17 +34,6 @@ const CostPerLifeEditor = () => {
     });
     return categories;
   }, []);
-  
-  // Get recipients with non-default values (multiplier or costPerLife)
-  const recipientsWithOverrides = useMemo(() => {
-    return allRecipients.filter(recipient => {
-      if (!recipient.categories) return false;
-      
-      return Object.entries(recipient.categories).some(([categoryId, categoryData]) => {
-        return categoryData.multiplier !== undefined || categoryData.costPerLife !== undefined;
-      });
-    });
-  }, [allRecipients]);
   
   // Handle tab switching
   const handleTabChange = (tab) => {
@@ -120,7 +106,7 @@ const CostPerLifeEditor = () => {
             const value = recipientFormValues[fieldKey];
             if (value && value.raw !== '') {
               // Get the parts from the field key
-              const [_, categoryId, type] = fieldKey.split('__');
+              const [, categoryId, type] = fieldKey.split('__');
               
               // Get default value from recipient data if it exists
               let defaultValue;
@@ -380,7 +366,7 @@ const CostPerLifeEditor = () => {
         filterRecipients(searchTerm, searchTerm === '');
       }
     }
-  }, [isModalOpen, customValues, allCategories]); // Added allCategories to dependencies
+  }, [isModalOpen, customValues, allCategories, activeTab, searchTerm, filterRecipients, categoryFormValues, recipientFormValues]); 
   
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {
@@ -389,34 +375,14 @@ const CostPerLifeEditor = () => {
       // console.log("Filtering recipients with customValues");
       filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [customValues, activeTab]);
+  }, [customValues, activeTab, filterRecipients, searchTerm]); 
   
   // Separate effect for search and filter changes to avoid dependency loops
   useEffect(() => {
     if (activeTab === 'recipients') {
       filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [searchTerm]);
-  
-  // Get value for recipient form field
-  const getRecipientFormValue = (recipientName, categoryId, type) => {
-    const fieldKey = `${recipientName}__${categoryId}__${type}`;
-    const formValue = recipientFormValues[fieldKey];
-    
-    // If we have a form value, return its display value
-    if (formValue) {
-      return formValue.display;
-    }
-    
-    // Otherwise check if there's a custom value in context
-    const customValue = getCustomRecipientValueForUI(recipientName, categoryId, type);
-    if (customValue !== '' && customValue !== null && customValue !== undefined) {
-      return formatWithCommas(customValue);
-    }
-    
-    // Return empty string if no value found
-    return '';
-  };
+  }, [searchTerm, activeTab, filterRecipients]); 
   
   // Validate all values before submission
   const validateAllValues = () => {
@@ -1069,10 +1035,11 @@ const CostPerLifeEditor = () => {
                                   </div>
                                   
                                   <div>
-                                    <label className="block text-xs font-medium text-gray-500 mb-1">
+                                    <label htmlFor={`multiplier-${recipient.name}-${categoryId}`} className="block text-xs font-medium text-gray-500 mb-1">
                                       Multiplier
                                     </label>
                                     <input
+                                      id={`multiplier-${recipient.name}-${categoryId}`}
                                       type="text"
                                       inputMode="text"
                                       placeholder={
@@ -1126,12 +1093,13 @@ const CostPerLifeEditor = () => {
                                   </div>
                                   
                                   <div>
-                                    <label className="block text-xs font-medium text-gray-500 mb-1">
+                                    <label htmlFor={`cost-per-life-${recipient.name}-${categoryId}`} className="block text-xs font-medium text-gray-500 mb-1">
                                       Direct Cost Per Life
                                     </label>
                                     <div className="flex items-center">
                                       <span className="mr-1 text-gray-600 text-xs">$</span>
                                       <input
+                                        id={`cost-per-life-${recipient.name}-${categoryId}`}
                                         type="text"
                                         inputMode="text"
                                         placeholder={

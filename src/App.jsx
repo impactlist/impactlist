@@ -206,7 +206,7 @@ const AppContent = () => {
   );
 };
 
-function App() {
+const App = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {

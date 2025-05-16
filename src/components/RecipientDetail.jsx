@@ -22,7 +22,7 @@ import { formatNumber, formatCurrency } from '../utils/formatters';
 // Animation speed constant (in milliseconds)
 const ANIMATION_DURATION = 600;
 
-function RecipientDetail(props) {
+const RecipientDetail = (props) => {
   const { recipientId } = useParams();
   const navigate = useNavigate();
   const [recipientInfo, setRecipientInfo] = useState(null);

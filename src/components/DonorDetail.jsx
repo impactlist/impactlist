@@ -24,7 +24,7 @@ import { formatNumber, formatCurrency } from '../utils/formatters';
 // Animation speed constant (in milliseconds)
 const ANIMATION_DURATION = 600;
 
-function DonorDetail(props) {
+const DonorDetail = (props) => {
   const { donorId } = useParams();
   const navigate = useNavigate();
   const [donorStats, setDonorStats] = useState(null);

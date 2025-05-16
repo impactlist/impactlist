@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function SortableTable({ columns, data, defaultSortColumn, defaultSortDirection = 'desc', rankKey }) {
+const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection = 'desc', rankKey }) => {
   const [sortColumn, setSortColumn] = useState(defaultSortColumn);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
 

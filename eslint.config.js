@@ -2,12 +2,15 @@ import js from '@eslint/js';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import { FlatCompat } from '@eslint/eslintrc';
+
+const compat = new FlatCompat();
 
 export default [
   js.configs.recommended,
-  reactPlugin.configs.recommended,
-  reactHooksPlugin.configs.recommended,
-  jsxA11yPlugin.configs.recommended,
+  ...compat.extends('plugin:react/recommended'),
+  ...compat.extends('plugin:react-hooks/recommended'),
+  ...compat.extends('plugin:jsx-a11y/recommended'),
   {
     files: ['**/*.js', '**/*.jsx'],
     plugins: {

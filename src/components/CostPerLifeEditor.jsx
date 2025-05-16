@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -45,7 +45,7 @@ const CostPerLifeEditor = () => {
   };
   
   // Filter recipients based on search term and showOnlyCustom flag
-  const filterRecipients = React.useCallback((term, onlyCustom) => {
+  const filterRecipients = useCallback((term, onlyCustom) => {
     let filtered = allRecipients;
     
     // Filter by search term if provided
@@ -146,7 +146,7 @@ const CostPerLifeEditor = () => {
     }
     
     setFilteredRecipients(filtered);
-  }, [customValues, recipientFormValues, allRecipients]); // Add allRecipients to dependencies
+  }, [allRecipients, customValues, recipientFormValues]);
   
   // Handle search term changes
   const handleSearchChange = (e) => {
@@ -366,7 +366,8 @@ const CostPerLifeEditor = () => {
         filterRecipients(searchTerm, searchTerm === '');
       }
     }
-  }, [isModalOpen, customValues, allCategories, activeTab, searchTerm, filterRecipients, categoryFormValues, recipientFormValues]); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isModalOpen, customValues, allCategories, activeTab, searchTerm, filterRecipients]);
   
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {
@@ -375,14 +376,14 @@ const CostPerLifeEditor = () => {
       // console.log("Filtering recipients with customValues");
       filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [customValues, activeTab, filterRecipients, searchTerm]); 
+  }, [customValues, activeTab, filterRecipients, searchTerm]);
   
   // Separate effect for search and filter changes to avoid dependency loops
   useEffect(() => {
     if (activeTab === 'recipients') {
       filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [searchTerm, activeTab, filterRecipients]); 
+  }, [searchTerm, activeTab, filterRecipients]);
   
   // Validate all values before submission
   const validateAllValues = () => {

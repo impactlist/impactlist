@@ -36,7 +36,7 @@ export default [
     },
     rules: {
       // React rules - only override specific rules
-      'react/prop-types': 'error',
+      'react/prop-types': 'off',   // turn off prop validation. requires too much boilerplate
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'error',

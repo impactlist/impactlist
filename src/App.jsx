@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Routes, useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -55,6 +56,10 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 // Header component that stays visible during navigation
 const Header = ({ isHome, isRecipients, isCalculator }) => {
@@ -159,6 +164,18 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
       </div>
     </motion.div>
   );
+};
+
+Header.propTypes = {
+  isHome: PropTypes.bool,
+  isRecipients: PropTypes.bool,
+  isCalculator: PropTypes.bool
+};
+
+Header.defaultProps = {
+  isHome: false,
+  isRecipients: false,
+  isCalculator: false
 };
 
 // Scroll to top component that runs on route changes

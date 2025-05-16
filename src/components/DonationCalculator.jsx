@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import BackButton from './BackButton';
@@ -7,8 +7,6 @@ import {
   calculateLivesSavedForCategory,
   getDefaultCostPerLifeForCategory,
   getCostPerLifeForRecipient,
-  getCategoryById,
-  getPrimaryCategoryForRecipient
 } from '../utils/donationDataHelpers';
 import { recipientsById } from '../data/generatedData';
 import { useCostPerLife } from './CostPerLifeContext';
@@ -18,6 +16,8 @@ import SpecificDonationModal from './SpecificDonationModal';
 import SortableTable from './SortableTable';
 import CategoryDisplay from './CategoryDisplay';
 import MiniImpactList from './MiniImpactList';
+
+/* global localStorage */
 
 const DonationCalculator = () => {
   const [categories, setCategories] = useState([]);
@@ -34,8 +34,8 @@ const DonationCalculator = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDonation, setEditingDonation] = useState(null);
 
-  // Calculate donor rank based on lives saved
-  const calculateDonorRank = (lives) => {
+  // Calculate donor rank based on lives saved - now wrapped in useCallback
+  const calculateDonorRank = useCallback((lives) => {
     // This would use actual donor data, for now it's a placeholder
     // Ideally, it would compare the lives saved against all donors' lives saved
     // and determine where this user would rank
@@ -88,7 +88,7 @@ const DonationCalculator = () => {
       setDonorRank(null);
       setNeighboringDonors({ above: null, below: null, twoBelow: null, twoAbove: null });
     });
-  };
+  }, [customValues]);
 
   // Initialize categories and load saved donation values on component mount
   useEffect(() => {

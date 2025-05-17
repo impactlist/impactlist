@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from './BackButton';
@@ -24,7 +24,6 @@ const ANIMATION_DURATION = 600;
 
 const RecipientDetail = (props) => {
   const { recipientId } = useParams();
-  const navigate = useNavigate();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
   const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values

@@ -10,7 +10,6 @@ import {
   getAllRecipients,
   getTotalAmountForRecipient,
   calculateLivesSavedForDonation,
-  getRecipientNameById,
   getRecipientId
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
@@ -20,7 +19,7 @@ import { formatNumber, formatCurrency } from '../utils/formatters';
 
 const Home = (props) => {
   const [donorStats, setDonorStats] = useState([]);
-  const [recipientStats, setRecipientStats] = useState([]);
+  const [ , setRecipientStats] = useState([]);
   const { customValues, openModal } = useCostPerLife();
 
   useEffect(() => {
@@ -118,52 +117,6 @@ const Home = (props) => {
       key: 'netWorth', 
       label: 'Net Worth',
       render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.netWorth)}</div>
-    }
-  ];
-
-  // Recipient table columns configuration
-  const recipientColumns = [
-    { 
-      key: 'name', 
-      label: 'Organization',
-      render: (recipient) => (
-        <Link 
-          to={`/recipient/${encodeURIComponent(recipient.id)}`}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
-          {recipient.name}
-        </Link>
-      )
-    },
-    { 
-      key: 'totalLivesSaved', 
-      label: 'Lives Saved',
-      render: (recipient) => (
-        <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-          {formatNumber(Math.round(recipient.totalLivesSaved))}
-        </div>
-      )
-    },
-    { 
-      key: 'costPerLife', 
-      label: 'Cost/Life',
-      render: (recipient) => {
-        return (
-          <div className="text-sm text-slate-900">
-            {recipient.costPerLife === 0 ? '∞' : formatCurrency(recipient.costPerLife)}
-          </div>
-        );
-      }
-    },
-    { 
-      key: 'totalReceived', 
-      label: 'Total Received',
-      render: (recipient) => <div className="text-sm text-slate-900">{formatCurrency(recipient.totalReceived)}</div>
-    },
-    { 
-      key: 'categoryName', 
-      label: 'Focus Area',
-      render: (recipient) => <div className="text-sm text-slate-900">{recipient.categoryName}</div>
     }
   ];
 

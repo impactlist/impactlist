@@ -46,7 +46,6 @@ const ImpactBarChart = ({
     '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
     '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#3f3f46'
   ],
-  formatValue = (value) => value,
   formatXAxisTick = (value) => `${value}%`,
   dataKey = 'percentage',
   nameKey = 'name',

@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from './BackButton';
@@ -12,7 +12,6 @@ import {
   getCategoryById,
   getRecipientById,
   getDonationsForDonor,
-  getRecipientId,
   calculateLivesSavedForDonation
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
@@ -26,7 +25,6 @@ const ANIMATION_DURATION = 600;
 
 const DonorDetail = (props) => {
   const { donorId } = useParams();
-  const navigate = useNavigate();
   const [donorStats, setDonorStats] = useState(null);
   const [donorDonations, setDonorDonations] = useState([]);
   const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values

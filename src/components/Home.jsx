@@ -184,11 +184,11 @@ const Home = (props) => {
       >
         <div className="flex justify-center items-center">
           <Link 
-            to="/recipients" 
+            to="/calculator" 
             className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
             onClick={() => window.scrollTo(0, 0)}
           >
-            View list of recipient organizations →
+            Calculate the lives you could save with your donations →
           </Link>
         </div>
       </motion.div>

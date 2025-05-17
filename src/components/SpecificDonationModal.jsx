@@ -359,11 +359,15 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             
             {isExistingRecipient ? (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label 
+                  htmlFor="recipient-search"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Search for a recipient
                 </label>
                 <div className="relative">
                   <input
+                    id="recipient-search"
                     ref={searchInputRef}
                     type="text"
                     value={searchTerm}

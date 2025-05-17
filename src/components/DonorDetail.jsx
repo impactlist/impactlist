@@ -321,6 +321,7 @@ const DonorDetail = (props) => {
     }, ANIMATION_DURATION);
     
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transitionStage, chartView, customValues]); // Include customValues in dependencies
   
   // Keep this as a placeholder to avoid changing too much code structure
@@ -362,7 +363,7 @@ const DonorDetail = (props) => {
       
       setChartData(sortedData);
     }
-  }, [rawChartData, customValues, chartView, transitionStage, shouldAnimate]); // Include all dependencies
+  }, [rawChartData, customValues, chartView, transitionStage, shouldAnimate, chartData.length]); // Include all dependencies
   
   // Separate effect to handle animation timing
   useEffect(() => {

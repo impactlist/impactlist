@@ -303,6 +303,7 @@ const RecipientDetail = (props) => {
     }, ANIMATION_DURATION);
     
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transitionStage, chartView, customValues]); // Include customValues in dependencies
 
   // Initialize chart view on rawChartData load

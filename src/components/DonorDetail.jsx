@@ -20,9 +20,7 @@ import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import EntityChartSection from './entity/EntityChartSection';
 import EntityDonationTable from './entity/EntityDonationTable';
-
-// Animation speed constant (in milliseconds)
-const ANIMATION_DURATION = 600;
+import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
 const DonorDetail = (props) => {
   const { donorId } = useParams();
@@ -321,7 +319,7 @@ const DonorDetail = (props) => {
     // Complete the transition after animation
     const timer = setTimeout(() => {
       setTransitionStage('none');
-    }, ANIMATION_DURATION);
+    }, CHART_ANIMATION_DURATION);
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -371,7 +369,7 @@ const DonorDetail = (props) => {
     if (shouldAnimate) {
       const timer = setTimeout(() => {
         setShouldAnimate(false);
-      }, ANIMATION_DURATION + 50); // Add a small buffer
+      }, CHART_ANIMATION_DURATION + 50); // Add a small buffer
 
       return () => clearTimeout(timer);
     }

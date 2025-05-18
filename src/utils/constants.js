@@ -27,6 +27,7 @@ export const CHART_MARGIN_WITHOUT_LABELS = { top: 20, right: 20, left: 25, botto
 export const CHART_LARGE_WIDTH_THRESHOLD = 800;
 export const CHART_MEDIUM_WIDTH_THRESHOLD = 400;
 export const CHART_DEFAULT_WIDTH = 500;
+export const CHART_ANIMATION_DURATION = 600;
 
 // Chart colors
 export const CHART_COLORS = [

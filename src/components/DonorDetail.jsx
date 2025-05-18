@@ -76,14 +76,14 @@ const DonorDetail = (props) => {
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
 
         // Calculate lives saved
-        const livesSaved = calculateLivesSavedForDonation(donation, customValues);
+        const totalLivesSaved = calculateLivesSavedForDonation(donation, customValues);
 
         return {
           ...donation,
           creditedAmount,
           category: primaryCategoryId, // Use primary category ID
           categoryName: primaryCategory.name, // Get the name from categoriesById
-          livesSaved,
+          totalLivesSaved,
           costPerLife,
           dateObj: donation.date ? new Date(donation.date) : new Date(0),
         };
@@ -102,7 +102,7 @@ const DonorDetail = (props) => {
       const unknownAmount = donorData.totalDonated - knownDonationsTotal;
 
       // Calculate the average cost per life for all known donations
-      const totalLivesSaved = donorDonationsList.reduce((total, donation) => total + donation.livesSaved, 0);
+      const totalLivesSaved = donorDonationsList.reduce((total, donation) => total + donation.totalLivesSaved, 0);
 
       // Only calculate avg cost if there are lives saved (avoid division by zero)
       const avgCostPerLife = totalLivesSaved !== 0 ? knownDonationsTotal / totalLivesSaved : 0;
@@ -120,7 +120,7 @@ const DonorDetail = (props) => {
         amount: unknownAmount,
         category: 'other', // Use 'other' as the primary category ID
         categoryName: 'Unknown', // Use 'Unknown' as the primary category name
-        livesSaved: unknownLivesSaved,
+        totalLivesSaved: unknownLivesSaved,
         costPerLife: avgCostPerLife,
         dateObj: new Date(0), // Oldest date to sort at the end
         source: '',

@@ -449,7 +449,7 @@ export const calculateDonorStats = (customValues = null) => {
       totalDonated,
       knownDonations,
       totalDonatedField,
-      livesSaved: totalLivesSaved,
+      totalLivesSaved,
       unknownLivesSaved,
       costPerLife: costPerLife,
     };
@@ -458,7 +458,7 @@ export const calculateDonorStats = (customValues = null) => {
   // Filter out donors with no donations and sort by lives saved
   const filteredStats = donorStats
     .filter((donor) => donor.totalDonated > 0)
-    .sort((a, b) => b.livesSaved - a.livesSaved);
+    .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
 
   // Add rank
   return filteredStats.map((donor, index) => ({

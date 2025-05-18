@@ -95,11 +95,11 @@ const Home = (props) => {
       ),
     },
     {
-      key: 'livesSaved',
+      key: 'totalLivesSaved',
       label: 'Lives Saved',
       render: (donor) => (
-        <div className={`text-sm ${donor.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-          {formatNumber(Math.round(donor.livesSaved))}
+        <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(donor.totalLivesSaved))}
         </div>
       ),
     },
@@ -112,8 +112,8 @@ const Home = (props) => {
       key: 'costPerLife',
       label: 'Cost/Life',
       render: (donor) => (
-        <div className={`text-sm ${donor.costPerLifeSaved < 0 ? 'text-red-600' : 'text-slate-900'}`}>
-          {donor.livesSaved === 0 ? '∞' : formatCurrency(donor.costPerLife)}
+        <div className={`text-sm ${donor.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+          {donor.totalLivesSaved === 0 ? '∞' : formatCurrency(donor.costPerLife)}
         </div>
       ),
     },
@@ -180,7 +180,7 @@ const Home = (props) => {
             <SortableTable
               columns={donorColumns}
               data={donorStats}
-              defaultSortColumn="livesSaved"
+              defaultSortColumn="totalLivesSaved"
               defaultSortDirection="desc"
               rankKey="rank"
             />

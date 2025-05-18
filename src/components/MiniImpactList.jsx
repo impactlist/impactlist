@@ -12,7 +12,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: 1,
         name: 'You',
-        livesSaved: totalLivesSaved,
+        totalLivesSaved: totalLivesSaved,
         totalDonated: totalDonated,
         costPerLife: costPerLife,
         isCurrentUser: true,
@@ -20,7 +20,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: 2,
         name: neighboringDonors.below.name,
-        livesSaved: neighboringDonors.below.livesSaved,
+        totalLivesSaved: neighboringDonors.below.totalLivesSaved,
         totalDonated: neighboringDonors.below.totalDonated,
         costPerLife: neighboringDonors.below.costPerLife,
         netWorth: neighboringDonors.below.netWorth,
@@ -29,7 +29,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: 3,
         name: neighboringDonors.twoBelow.name,
-        livesSaved: neighboringDonors.twoBelow.livesSaved,
+        totalLivesSaved: neighboringDonors.twoBelow.totalLivesSaved,
         totalDonated: neighboringDonors.twoBelow.totalDonated,
         costPerLife: neighboringDonors.twoBelow.costPerLife,
         netWorth: neighboringDonors.twoBelow.netWorth,
@@ -43,7 +43,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: donorRank - 2,
         name: neighboringDonors.twoAbove.name,
-        livesSaved: neighboringDonors.twoAbove.livesSaved,
+        totalLivesSaved: neighboringDonors.twoAbove.totalLivesSaved,
         totalDonated: neighboringDonors.twoAbove.totalDonated,
         costPerLife: neighboringDonors.twoAbove.costPerLife,
         netWorth: neighboringDonors.twoAbove.netWorth,
@@ -52,7 +52,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: donorRank - 1,
         name: neighboringDonors.above.name,
-        livesSaved: neighboringDonors.above.livesSaved,
+        totalLivesSaved: neighboringDonors.above.totalLivesSaved,
         totalDonated: neighboringDonors.above.totalDonated,
         costPerLife: neighboringDonors.above.costPerLife,
         netWorth: neighboringDonors.above.netWorth,
@@ -61,7 +61,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: donorRank,
         name: 'You',
-        livesSaved: totalLivesSaved,
+        totalLivesSaved: totalLivesSaved,
         totalDonated: totalDonated,
         costPerLife: costPerLife,
         isCurrentUser: true,
@@ -74,7 +74,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: donorRank - 1,
         name: neighboringDonors.above.name,
-        livesSaved: neighboringDonors.above.livesSaved,
+        totalLivesSaved: neighboringDonors.above.totalLivesSaved,
         totalDonated: neighboringDonors.above.totalDonated,
         costPerLife: neighboringDonors.above.costPerLife,
         netWorth: neighboringDonors.above.netWorth,
@@ -83,7 +83,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: donorRank,
         name: 'You',
-        livesSaved: totalLivesSaved,
+        totalLivesSaved: totalLivesSaved,
         totalDonated: totalDonated,
         costPerLife: costPerLife,
         isCurrentUser: true,
@@ -91,7 +91,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       {
         rank: donorRank + 1,
         name: neighboringDonors.below.name,
-        livesSaved: neighboringDonors.below.livesSaved,
+        totalLivesSaved: neighboringDonors.below.totalLivesSaved,
         totalDonated: neighboringDonors.below.totalDonated,
         costPerLife: neighboringDonors.below.costPerLife,
         netWorth: neighboringDonors.below.netWorth,
@@ -142,15 +142,15 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                   )}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
-                  <span className={row.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}>
-                    {row.isPlaceholder ? '—' : formatNumber(Math.round(row.livesSaved))}
+                  <span className={row.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}>
+                    {row.isPlaceholder ? '—' : formatNumber(Math.round(row.totalLivesSaved))}
                   </span>
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
                   {row.isPlaceholder ? '—' : formatCurrency(row.totalDonated)}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
-                  {row.isPlaceholder ? '—' : row.livesSaved === 0 ? '∞' : formatCurrency(row.costPerLife)}
+                  {row.isPlaceholder ? '—' : row.totalLivesSaved === 0 ? '∞' : formatCurrency(row.costPerLife)}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
                   {row.isPlaceholder ? '—' : row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}

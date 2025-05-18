@@ -105,15 +105,18 @@ const EntityStatistics = ({
 
 EntityStatistics.propTypes = {
   stats: PropTypes.shape({
+    // Common properties
     totalLivesSaved: PropTypes.number.isRequired,
     costPerLife: PropTypes.number.isRequired,
     categoryCostPerLife: PropTypes.number,
+
     // Donor-specific properties
     totalDonated: PropTypes.number,
     totalDonatedField: PropTypes.number,
     knownDonations: PropTypes.number,
     rank: PropTypes.number,
     netWorth: PropTypes.number,
+
     // Recipient-specific properties
     totalReceived: PropTypes.number,
     categoryBreakdown: PropTypes.array,

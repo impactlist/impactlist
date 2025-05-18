@@ -63,7 +63,7 @@ const DonationCalculator = () => {
             for (let i = 0; i < donorStats.length; i++) {
               const donor = donorStats[i];
 
-              if (lives <= donor.livesSaved) {
+              if (lives <= donor.totalLivesSaved) {
                 rank++;
                 // This donor would be above the user
                 donorAbove = donor;

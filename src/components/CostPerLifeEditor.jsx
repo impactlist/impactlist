@@ -3,6 +3,10 @@ import { useCostPerLife } from './CostPerLifeContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Import shared components
+import DefaultValuesSection from './costperlife/DefaultValuesSection';
+import RecipientValuesSection from './costperlife/RecipientValuesSection';
+
 const CostPerLifeEditor = () => {
   const { customValues, resetToDefaults, updateValues, isModalOpen, closeModal } = useCostPerLife();
 
@@ -165,9 +169,6 @@ const CostPerLifeEditor = () => {
     filterRecipients(term, shouldShowOnlyCustom);
   };
 
-  // Note: showOnlyCustom state is still used but is now controlled by the searchTerm
-  // We set it to true when searchTerm is empty, false otherwise
-
   // Format a number with commas
   const formatWithCommas = (value) => {
     // If value is null or undefined, return empty string
@@ -289,24 +290,6 @@ const CostPerLifeEditor = () => {
         return newErrors;
       });
     }
-  };
-
-  // Generic function to get form value with fallback
-  const getFormValue = (formValues, key, fallbackValue) => {
-    const formValue = formValues[key];
-
-    // If we have a form value, return its display value
-    if (formValue) {
-      return formValue.display;
-    }
-
-    // Otherwise check if there's a fallback value
-    if (fallbackValue !== undefined && fallbackValue !== null && fallbackValue !== '') {
-      return formatWithCommas(fallbackValue);
-    }
-
-    // Return empty string if no value found
-    return '';
   };
 
   // Initialize form values when modal opens
@@ -789,24 +772,14 @@ const CostPerLifeEditor = () => {
     return initialValues;
   };
 
-  // Get custom value for a recipient's category
-  const getCustomRecipientValueForUI = (recipientName, categoryId, type) => {
-    try {
-      // Manual check to see if the value exists
-      if (
-        customValues &&
-        customValues.recipients &&
-        customValues.recipients[recipientName] &&
-        customValues.recipients[recipientName][categoryId] &&
-        customValues.recipients[recipientName][categoryId][type] !== undefined
-      ) {
-        return customValues.recipients[recipientName][categoryId][type];
-      }
-    } catch (error) {
-      console.error('Error in getCustomRecipientValueForUI:', error);
-    }
+  // Helper function to handle category form value change
+  const handleCategoryFormChange = (key, value) => {
+    handleNumberInputChange(key, value, setCategoryFormValues, clearCategoryError);
+  };
 
-    return '';
+  // Helper function to handle recipient form value change
+  const handleRecipientFormChange = (key, value) => {
+    handleNumberInputChange(key, value, setRecipientFormValues, clearRecipientError);
   };
 
   if (!isModalOpen) return null;
@@ -892,398 +865,28 @@ const CostPerLifeEditor = () => {
             </div>
           </div>
 
+          {/* Tab content container */}
           <div className="overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]">
             {activeTab === 'categories' ? (
               <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                  {Object.entries(allCategories)
-                    .sort((a, b) => a[1].name.localeCompare(b[1].name))
-                    .map(([key, category]) => {
-                      const defaultValue = category.costPerLife;
-                      const valueObj = categoryFormValues[key] || { raw: '', display: '' };
-                      const hasError = categoryErrors[key];
-
-                      // Check if value is custom (different from default)
-                      const isCustom = Number(valueObj.raw) !== defaultValue;
-
-                      return (
-                        <div
-                          key={key}
-                          className={`py-1.5 px-2 rounded border ${
-                            hasError
-                              ? 'border-red-300 bg-red-50'
-                              : isCustom
-                                ? 'border-indigo-300 bg-indigo-50'
-                                : 'border-gray-200'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <label className="text-sm font-medium text-gray-700 truncate pr-2" title={category.name}>
-                              {category.name}
-                            </label>
-                            {isCustom && (
-                              <button
-                                type="button"
-                                className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
-                                onClick={() => {
-                                  const value = defaultValue;
-                                  const formattedValue = value >= 1000 ? value.toLocaleString() : value.toString();
-
-                                  handleNumberInputChange(
-                                    key,
-                                    formattedValue,
-                                    setCategoryFormValues,
-                                    clearCategoryError
-                                  );
-                                }}
-                              >
-                                Reset
-                              </button>
-                            )}
-                          </div>
-                          <div className="flex items-center mt-0.5">
-                            <span className="mr-1 text-gray-600 text-sm">$</span>
-                            <input
-                              type="text"
-                              inputMode="text"
-                              value={getFormValue(categoryFormValues, key, defaultValue)}
-                              onChange={(e) =>
-                                handleNumberInputChange(key, e.target.value, setCategoryFormValues, clearCategoryError)
-                              }
-                              className={`w-full py-1 px-1.5 text-sm border rounded ${
-                                hasError
-                                  ? 'border-red-300 text-red-700'
-                                  : isCustom
-                                    ? 'border-indigo-300'
-                                    : 'border-gray-300'
-                              }`}
-                            />
-                          </div>
-                          {hasError && <div className="text-xs text-red-600 mt-0.5">{categoryErrors[key]}</div>}
-                          {isCustom && !hasError && (
-                            <div className="text-xs text-gray-500 mt-0.5">
-                              Default: ${defaultValue.toLocaleString()}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                </div>
+                <DefaultValuesSection
+                  allCategories={allCategories}
+                  formValues={categoryFormValues}
+                  errors={categoryErrors}
+                  onChange={handleCategoryFormChange}
+                />
               </form>
             ) : (
-              <div>
-                <div className="mb-4 flex flex-col space-y-2">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search recipients..."
-                      value={searchTerm}
-                      onChange={handleSearchChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-gray-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-600 italic">
-                    {searchTerm === ''
-                      ? 'Showing only recipients with custom values. Use search to find others.'
-                      : filteredRecipients.length >= 10
-                        ? 'Showing first 10 matching recipients.'
-                        : `Showing ${filteredRecipients.length} matching recipient${filteredRecipients.length === 1 ? '' : 's'}.`}
-                  </div>
-                </div>
-
-                {filteredRecipients.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    {searchTerm
-                      ? 'No recipients found matching your search'
-                      : 'No recipients with custom values found. Uncheck the filter or search for a specific recipient.'}
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredRecipients
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((recipient, index) => {
-                        const recipientCategories = Object.entries(recipient.categories || {});
-                        if (recipientCategories.length === 0) return null;
-
-                        // Alternate between two background colors
-                        const isEven = index % 2 === 0;
-                        const bgColorClass = isEven ? 'bg-white' : 'bg-gray-100';
-
-                        return (
-                          <div key={recipient.name} className={`border border-gray-200 rounded-md p-3 ${bgColorClass}`}>
-                            <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
-                            <div className="space-y-3">
-                              {recipientCategories.map(([categoryId, categoryData]) => {
-                                const categoryName = allCategories[categoryId]?.name || categoryId;
-                                const baseCostPerLife =
-                                  customValues && customValues[categoryId] !== undefined
-                                    ? customValues[categoryId]
-                                    : allCategories[categoryId]?.costPerLife || 0;
-
-                                // Get existing values (with null checks)
-                                const defaultMultiplier = categoryData?.multiplier;
-                                const defaultCostPerLife = categoryData?.costPerLife;
-
-                                // Get custom values if they exist
-                                const customMultiplier = getCustomRecipientValueForUI(
-                                  recipient.name,
-                                  categoryId,
-                                  'multiplier'
-                                );
-                                const customCostPerLife = getCustomRecipientValueForUI(
-                                  recipient.name,
-                                  categoryId,
-                                  'costPerLife'
-                                );
-
-                                // Determine if this category has any custom or default override values
-                                const hasOverrides =
-                                  defaultMultiplier !== undefined ||
-                                  defaultCostPerLife !== undefined ||
-                                  (customMultiplier !== undefined && customMultiplier !== '') ||
-                                  (customCostPerLife !== undefined && customCostPerLife !== '');
-
-                                // Check for form values specific to this category
-                                const hasFormValues =
-                                  recipientFormValues[`${recipient.name}__${categoryId}__multiplier`] !== undefined ||
-                                  recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`] !== undefined;
-
-                                // If we're showing only custom values, and this category has no overrides or form values, skip it
-                                if (!hasOverrides && !hasFormValues && showOnlyCustom) return null;
-
-                                return (
-                                  <div
-                                    key={categoryId}
-                                    className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-2 rounded"
-                                  >
-                                    <div className="text-sm text-gray-700">
-                                      <span>{categoryName}</span>
-                                      <div className="text-xs text-gray-500">
-                                        Category: ${baseCostPerLife.toLocaleString()}
-                                      </div>
-                                    </div>
-
-                                    <div>
-                                      <label
-                                        htmlFor={`multiplier-${recipient.name}-${categoryId}`}
-                                        className="block text-xs font-medium text-gray-500 mb-1"
-                                      >
-                                        Multiplier
-                                      </label>
-                                      <input
-                                        id={`multiplier-${recipient.name}-${categoryId}`}
-                                        type="text"
-                                        inputMode="text"
-                                        placeholder={
-                                          // If the cost per life field has a value, show "None" instead of default
-                                          customCostPerLife !== '' ||
-                                          getFormValue(
-                                            recipientFormValues,
-                                            `${recipient.name}__${categoryId}__costPerLife`,
-                                            ''
-                                          ) !== ''
-                                            ? 'None'
-                                            : // Otherwise show default if it exists
-                                              defaultMultiplier !== undefined
-                                              ? defaultMultiplier.toString()
-                                              : 'None'
-                                        }
-                                        value={getFormValue(
-                                          recipientFormValues,
-                                          `${recipient.name}__${categoryId}__multiplier`,
-                                          defaultMultiplier
-                                        )}
-                                        onChange={(e) => {
-                                          const fieldKey = `${recipient.name}__${categoryId}__multiplier`;
-                                          // First clear the other field if this field has a value
-                                          if (e.target.value.trim() !== '') {
-                                            const otherFieldKey = `${recipient.name}__${categoryId}__costPerLife`;
-                                            // Set empty string in the other field instead of deleting it
-                                            handleNumberInputChange(
-                                              otherFieldKey,
-                                              '',
-                                              setRecipientFormValues,
-                                              clearRecipientError
-                                            );
-                                          }
-                                          // Then update this field
-                                          handleNumberInputChange(
-                                            fieldKey,
-                                            e.target.value,
-                                            setRecipientFormValues,
-                                            clearRecipientError
-                                          );
-                                        }}
-                                        className={`w-full py-1 px-1.5 text-sm border rounded ${
-                                          recipientErrors[recipient.name]?.[categoryId]?.multiplier
-                                            ? 'border-red-300 text-red-700 bg-red-50'
-                                            : (customValues?.recipients?.[recipient.name]?.[categoryId]?.multiplier !==
-                                                  undefined &&
-                                                  customValues.recipients[recipient.name][categoryId].multiplier !==
-                                                    defaultMultiplier) ||
-                                                (recipientFormValues[`${recipient.name}__${categoryId}__multiplier`] &&
-                                                  recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]
-                                                    .raw !== '' &&
-                                                  Number(
-                                                    recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]
-                                                      .raw
-                                                  ) !== defaultMultiplier)
-                                              ? 'border-indigo-300 bg-indigo-50'
-                                              : 'border-gray-300'
-                                        }`}
-                                      />
-                                      {recipientErrors[recipient.name]?.[categoryId]?.multiplier && (
-                                        <div className="text-xs text-red-600 mt-0.5">
-                                          {recipientErrors[recipient.name][categoryId].multiplier}
-                                        </div>
-                                      )}
-                                      {/* Show default label when the value is different from the default or the other field has a value */}
-                                      {defaultMultiplier !== undefined &&
-                                        // Check if either:
-                                        // 1. Current value exists and is different from default
-                                        ((recipientFormValues[`${recipient.name}__${categoryId}__multiplier`]?.raw &&
-                                          Number(
-                                            recipientFormValues[`${recipient.name}__${categoryId}__multiplier`].raw
-                                          ) !== Number(defaultMultiplier)) ||
-                                          // 2. Other field has a value
-                                          getFormValue(
-                                            recipientFormValues,
-                                            `${recipient.name}__${categoryId}__costPerLife`,
-                                            defaultCostPerLife
-                                          ) !== '') && (
-                                          <div className="text-xs text-gray-500 mt-0.5">
-                                            Default: {defaultMultiplier}
-                                          </div>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                      <label
-                                        htmlFor={`cost-per-life-${recipient.name}-${categoryId}`}
-                                        className="block text-xs font-medium text-gray-500 mb-1"
-                                      >
-                                        Direct Cost Per Life
-                                      </label>
-                                      <div className="flex items-center">
-                                        <span className="mr-1 text-gray-600 text-xs">$</span>
-                                        <input
-                                          id={`cost-per-life-${recipient.name}-${categoryId}`}
-                                          type="text"
-                                          inputMode="text"
-                                          placeholder={
-                                            // If the other field has a value, show "None" instead of default
-                                            customMultiplier !== '' ||
-                                            getFormValue(
-                                              recipientFormValues,
-                                              `${recipient.name}__${categoryId}__multiplier`,
-                                              ''
-                                            ) !== ''
-                                              ? 'None'
-                                              : // Otherwise show default if it exists
-                                                defaultCostPerLife !== undefined
-                                                ? Math.abs(defaultCostPerLife) >= 1000
-                                                  ? defaultCostPerLife.toLocaleString()
-                                                  : defaultCostPerLife.toString()
-                                                : 'None'
-                                          }
-                                          value={getFormValue(
-                                            recipientFormValues,
-                                            `${recipient.name}__${categoryId}__costPerLife`,
-                                            defaultCostPerLife
-                                          )}
-                                          onChange={(e) => {
-                                            const fieldKey = `${recipient.name}__${categoryId}__costPerLife`;
-                                            // First clear the other field if this field has a value
-                                            if (e.target.value.trim() !== '') {
-                                              const otherFieldKey = `${recipient.name}__${categoryId}__multiplier`;
-                                              // Set empty string in the other field instead of deleting it
-                                              handleNumberInputChange(
-                                                otherFieldKey,
-                                                '',
-                                                setRecipientFormValues,
-                                                clearRecipientError
-                                              );
-                                            }
-                                            // Then update this field
-                                            handleNumberInputChange(
-                                              fieldKey,
-                                              e.target.value,
-                                              setRecipientFormValues,
-                                              clearRecipientError
-                                            );
-                                          }}
-                                          className={`w-full py-1 px-1.5 text-sm border rounded ${
-                                            recipientErrors[recipient.name]?.[categoryId]?.costPerLife
-                                              ? 'border-red-300 text-red-700 bg-red-50'
-                                              : (customValues?.recipients?.[recipient.name]?.[categoryId]
-                                                    ?.costPerLife !== undefined &&
-                                                    customValues.recipients[recipient.name][categoryId].costPerLife !==
-                                                      defaultCostPerLife) ||
-                                                  (recipientFormValues[
-                                                    `${recipient.name}__${categoryId}__costPerLife`
-                                                  ] &&
-                                                    recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]
-                                                      .raw !== '' &&
-                                                    Number(
-                                                      recipientFormValues[
-                                                        `${recipient.name}__${categoryId}__costPerLife`
-                                                      ].raw
-                                                    ) !== defaultCostPerLife)
-                                                ? 'border-indigo-300 bg-indigo-50'
-                                                : 'border-gray-300'
-                                          }`}
-                                        />
-                                      </div>
-                                      {recipientErrors[recipient.name]?.[categoryId]?.costPerLife && (
-                                        <div className="text-xs text-red-600 mt-0.5">
-                                          {recipientErrors[recipient.name][categoryId].costPerLife}
-                                        </div>
-                                      )}
-                                      {/* Show default label when the value is different from the default or the other field has a value */}
-                                      {defaultCostPerLife !== undefined &&
-                                        // Check if either:
-                                        // 1. Current value exists and is different from default
-                                        ((recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`]?.raw &&
-                                          Number(
-                                            recipientFormValues[`${recipient.name}__${categoryId}__costPerLife`].raw
-                                          ) !== Number(defaultCostPerLife)) ||
-                                          // 2. Other field has a value
-                                          getFormValue(
-                                            recipientFormValues,
-                                            `${recipient.name}__${categoryId}__multiplier`,
-                                            defaultMultiplier
-                                          ) !== '') && (
-                                          <div className="text-xs text-gray-500 mt-0.5">
-                                            Default: ${defaultCostPerLife.toLocaleString()}
-                                          </div>
-                                        )}
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                )}
-              </div>
+              <RecipientValuesSection
+                filteredRecipients={filteredRecipients}
+                formValues={recipientFormValues}
+                errors={recipientErrors}
+                allCategories={allCategories}
+                customValues={customValues}
+                onChange={handleRecipientFormChange}
+                onSearch={handleSearchChange}
+                searchTerm={searchTerm}
+              />
             )}
           </div>
         </motion.div>

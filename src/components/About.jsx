@@ -31,7 +31,7 @@ const About = () => {
             for details.
           </p>
           <p className="text-gray-600 mb-4">
-            We&apos;re actively seeking volunteers to help with the project. Join the{' '}
+            We're actively seeking volunteers to help with the project. Join the{' '}
             <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800">
               discord
             </a>{' '}

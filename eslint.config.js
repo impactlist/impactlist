@@ -53,6 +53,7 @@ export default [
           unnamedComponents: 'arrow-function',
         },
       ],
+      'react/no-unescaped-entities': ['error', { forbid: ['<', '>', '{', '}'] }],
 
       // General JavaScript rules - only override specific rules
       'no-unused-vars': 'warn',

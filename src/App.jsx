@@ -171,7 +171,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isAbout }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              About
+              About Impact List
             </motion.h1>
             <motion.p
               className="text-xl text-indigo-100 max-w-3xl mx-auto"
@@ -179,7 +179,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isAbout }) => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1, duration: 0.3 }}
             >
-              Learn more about our mission and how we work
+              Learn about about what we're doing and why
             </motion.p>
           </div>
         )}

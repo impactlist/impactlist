@@ -1,7 +1,7 @@
 ---
 id: dogecoin-foundation
-name: "Dogecoin Foundation"
+name: 'Dogecoin Foundation'
 categories:
   - id: science-tech
     fraction: 1
---- 
+---

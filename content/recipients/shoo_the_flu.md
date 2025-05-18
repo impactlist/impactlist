@@ -1,7 +1,7 @@
 ---
 id: shoo-the-flu
-name: "Shoo the Flu"
+name: 'Shoo the Flu'
 categories:
   - id: health-medicine
     fraction: 1
---- 
+---

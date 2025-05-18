@@ -1,7 +1,7 @@
 ---
 id: mila
-name: "MILA"
+name: 'MILA'
 categories:
   - id: ai-risk
     fraction: 1
---- 
+---

@@ -1,7 +1,7 @@
 ---
 id: windward-school
-name: "Windward School"
+name: 'Windward School'
 categories:
   - id: education
     fraction: 1
---- 
+---

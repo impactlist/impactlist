@@ -1,6 +1,6 @@
 ---
 id: rosalynn-carter-institute-for-caregivers
-name: "Rosalynn Carter Institute for Caregivers"
+name: 'Rosalynn Carter Institute for Caregivers'
 categories:
   - id: local-community
     fraction: 0.7

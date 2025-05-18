@@ -1,7 +1,7 @@
 ---
 id: topos-institute
-name: "Topos Institute"
+name: 'Topos Institute'
 categories:
   - id: ai-risk
     fraction: 1
---- 
+---

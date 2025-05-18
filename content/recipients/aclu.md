@@ -1,7 +1,7 @@
 ---
 id: aclu
-name: "ACLU"
+name: 'ACLU'
 categories:
   - id: human-rights
     fraction: 1
---- 
+---

@@ -1,6 +1,6 @@
 ---
 id: novo-foundation
-name: "NoVo Foundation"
+name: 'NoVo Foundation'
 categories:
   - id: human-rights
     fraction: 0.15
@@ -12,4 +12,4 @@ categories:
     fraction: 0.05
   - id: social-justice
     fraction: 0.6
---- 
+---

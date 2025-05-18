@@ -1,8 +1,7 @@
 ---
 id: openai
-name: "OpenAI"
+name: 'OpenAI'
 categories:
   - id: ai-capabilities
     fraction: 1.0
---- 
-
+---

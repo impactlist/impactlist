@@ -1,6 +1,6 @@
 ---
 id: susan-thompson-buffett-foundation
-name: "Susan Thompson Buffett Foundation"
+name: 'Susan Thompson Buffett Foundation'
 categories:
   - id: health-medicine
     fraction: 0.65
@@ -12,4 +12,4 @@ categories:
     fraction: 0.05
   - id: human-rights
     fraction: 0.05
---- 
+---

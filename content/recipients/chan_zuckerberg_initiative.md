@@ -1,6 +1,6 @@
 ---
 id: chan-zuckerberg-initiative
-name: "Chan Zuckerberg Initiative"
+name: 'Chan Zuckerberg Initiative'
 categories:
   - id: health-medicine
     fraction: 0.4
@@ -18,4 +18,4 @@ categories:
     fraction: 0.03
   - id: social-justice
     fraction: 0.03
---- 
+---

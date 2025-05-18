@@ -6,7 +6,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2014-06-30
     recipient: good-ventures
@@ -14,7 +14,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2015-06-30
     recipient: good-ventures
@@ -22,7 +22,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2016-06-30
     recipient: good-ventures
@@ -30,7 +30,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2016-09-08
     recipient: democratic-political-organizations
@@ -38,7 +38,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://medium.com/@moskov/compelled-to-act-1413930041ee"
+    source: 'https://medium.com/@moskov/compelled-to-act-1413930041ee'
 
   - date: 2017-06-30
     recipient: good-ventures
@@ -46,7 +46,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2018-06-30
     recipient: good-ventures
@@ -54,7 +54,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2019-06-30
     recipient: good-ventures
@@ -62,7 +62,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2020-06-30
     recipient: good-ventures
@@ -70,7 +70,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2021-06-30
     recipient: good-ventures
@@ -78,7 +78,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2022-06-30
     recipient: good-ventures
@@ -86,7 +86,7 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
   - date: 2023-06-30
     recipient: good-ventures
@@ -94,5 +94,5 @@ donations:
     credit:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
-    source: "https://projects.propublica.org/nonprofits/organizations/461008520"
---- 
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
+---

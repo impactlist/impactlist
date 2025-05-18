@@ -1,5 +1,5 @@
 ---
-title: "Recipients"
+title: 'Recipients'
 ---
 
-This directory contains information about recipient organizations. 
+This directory contains information about recipient organizations.

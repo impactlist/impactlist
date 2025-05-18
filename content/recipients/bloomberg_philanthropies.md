@@ -1,6 +1,6 @@
 ---
 id: bloomberg-philanthropies
-name: "Bloomberg Philanthropies"
+name: 'Bloomberg Philanthropies'
 categories:
   - id: health-medicine
     fraction: 0.2
@@ -22,4 +22,4 @@ categories:
     fraction: 0.02
   - id: global-development
     fraction: 0.05
---- 
+---

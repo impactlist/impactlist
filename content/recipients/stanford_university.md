@@ -1,7 +1,7 @@
 ---
 id: stanford-university
-name: "Stanford University"
+name: 'Stanford University'
 categories:
   - id: education
     fraction: 1
---- 
+---

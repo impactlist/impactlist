@@ -18,7 +18,7 @@ Each category file (e.g., `global_health.md`) follows this format:
 ```yaml
 ---
 id: global-health
-name: "Global Health"
+name: 'Global Health'
 costPerLife: 5_000
 ---
 ```
@@ -29,8 +29,8 @@ Each donor file (e.g., `bill_gates.md`) follows this format:
 
 ```yaml
 ---
-id: "bill-gates"
-name: "Bill Gates"
+id: 'bill-gates'
+name: 'Bill Gates'
 netWorth: 108_000_000_000
 totalDonated: 59_000_000_000 # optional
 ---
@@ -43,12 +43,12 @@ Each recipient file (e.g., `against_malaria_foundation.md`) follows this format:
 ```yaml
 ---
 id: against-malaria-foundation
-name: "Against Malaria Foundation"
+name: 'Against Malaria Foundation'
 categories:
-  - id: global-health 
-    fraction: 1.0 
-    costPerLife: 4_000  # Optional, overrides category default
-    multiplier: 1.5    # Optional    
+  - id: global-health
+    fraction: 1.0
+    costPerLife: 4_000 # Optional, overrides category default
+    multiplier: 1.5 # Optional
 ---
 ```
 
@@ -57,7 +57,7 @@ For recipients with multiple categories:
 ```yaml
 ---
 id: gates-foundation
-name: "Gates Foundation"
+name: 'Gates Foundation'
 categories:
   - id: global-health
     fraction: 0.4
@@ -73,22 +73,22 @@ Each file in the donations directory (typically named after a donor, like `bill_
 
 ```yaml
 ---
-donations:  
+donations:
   - date: 1991-10-07
     recipient: university-of-washington-research
     amount: 12_000_000
     credit:
       bill-gates: 0.7
       melinda-gates: 0.3
-    source: "https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/"
-    notes: "Initial endowment"  # Optional
+    source: 'https://www.washington.edu/news/1991/10/07/bill-gates-gives-uw-12-million-to-create-biotech-department/'
+    notes: 'Initial endowment' # Optional
 
   - date: 1992-01-01
     recipient: stanford-university
     amount: 6_000_000
     credit:
       bill-gates: 1.0
-    source: "https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period"
+    source: 'https://www.cs.stanford.edu/about/gates-computer-science-building#:~:text=The%20Gates%20Building%20is%20named,month%20period'
 ---
 ```
 
@@ -106,8 +106,8 @@ donations:
     credit:
       - larry_page: 0.33
       - mark_zuckerberg: 0.67
-    source: "https://philanthropynewsdigest.org/news/google-larry-page-pledge-30-million-for-ebola-relief-efforts"
-    notes: "Joint tech sector response to Ebola crisis"
+    source: 'https://philanthropynewsdigest.org/news/google-larry-page-pledge-30-million-for-ebola-relief-efforts'
+    notes: 'Joint tech sector response to Ebola crisis'
 ---
 ```
 
@@ -119,4 +119,4 @@ After updating these files, run the data generation script to create the JavaScr
 node scripts/generate-data.js
 ```
 
-This will create/update `src/data/generatedData.js` with the compiled data from all markdown files. The script handles deduplication of donation events that appear in multiple files. 
+This will create/update `src/data/generatedData.js` with the compiled data from all markdown files. The script handles deduplication of donation events that appear in multiple files.

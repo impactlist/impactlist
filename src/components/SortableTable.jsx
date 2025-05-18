@@ -21,39 +21,39 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
     // Get values to compare
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
-    
+
     // Determine sort order
     const sortMultiplier = sortDirection === 'asc' ? 1 : -1;
-    
+
     // Special handling for cost per life column
     if (sortColumn === 'costPerLife') {
       // Handle negative values in cost per life
       // 1. Negative values are considered "worse" (higher cost) than any positive value
       // 2. Among negative values, those closer to zero are worse than those further from zero
-      
+
       // Both values are negative
       if (aValue < 0 && bValue < 0) {
         // Sort by absolute value, but reversed (closer to zero = higher cost)
         // Math.abs converts to positive, we want smaller absolute values first when ascending
         return sortMultiplier * (Math.abs(bValue) - Math.abs(aValue));
       }
-      
+
       // Only a is negative
       if (aValue < 0 && bValue >= 0) {
         // Negative values are considered higher cost than positive values
         return sortDirection === 'asc' ? 1 : -1; // In asc, a comes after b
       }
-      
+
       // Only b is negative
       if (aValue >= 0 && bValue < 0) {
         // Negative values are considered higher cost than positive values
         return sortDirection === 'asc' ? -1 : 1; // In asc, b comes after a
       }
-      
+
       // Both are non-negative, use normal sorting
       return sortMultiplier * (aValue - bValue);
     }
-    
+
     // Normal sorting for other columns
     if (typeof aValue === 'string' && typeof bValue === 'string') {
       return sortMultiplier * aValue.localeCompare(bValue);
@@ -64,13 +64,13 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
 
   // If rankKey is provided, preserve the original rank values
   // This ensures that even when sorted by a different column, the rank column still shows the correct rank
-  const rankedData = rankKey 
-    ? sortedData.map(item => {
+  const rankedData = rankKey
+    ? sortedData.map((item) => {
         // Find the original item with this item's ID to get its rank
-        const originalItem = data.find(original => original.name === item.name);
+        const originalItem = data.find((original) => original.name === item.name);
         return {
           ...item,
-          [rankKey]: originalItem[rankKey]
+          [rankKey]: originalItem[rankKey],
         };
       })
     : sortedData;
@@ -79,12 +79,22 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
   const renderSortIndicator = (columnKey) => {
     if (sortColumn !== columnKey) {
       return (
-        <svg className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+        <svg
+          className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 ml-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+          />
         </svg>
       );
     }
-    
+
     if (sortDirection === 'asc') {
       return (
         <svg className="h-4 w-4 text-indigo-500 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,9 +115,9 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
       <thead className="bg-slate-100">
         <tr>
           {columns.map((column) => (
-            <th 
-              key={column.key} 
-              scope="col" 
+            <th
+              key={column.key}
+              scope="col"
               className={`${column.key === 'rank' ? 'px-2' : 'px-6'} py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer group hover:bg-slate-200 transition-colors ${column.key === 'name' ? 'w-[300px]' : ''} ${column.key === 'rank' ? 'w-10' : ''}`}
               onClick={() => handleSort(column.key)}
             >
@@ -121,12 +131,15 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
       </thead>
       <tbody className="bg-white divide-y divide-slate-200">
         {rankedData.map((item, index) => (
-          <tr 
+          <tr
             key={`row-${index}`}
             className={`transition-colors hover:bg-indigo-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}
           >
             {columns.map((column) => (
-              <td key={`cell-${column.key}-${index}`} className={`${column.key === 'rank' ? 'px-2' : 'px-6'} py-5 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-10' : ''}`}>
+              <td
+                key={`cell-${column.key}-${index}`}
+                className={`${column.key === 'rank' ? 'px-2' : 'px-6'} py-5 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-10' : ''}`}
+              >
                 {column.render ? column.render(item) : item[column.key]}
               </td>
             ))}
@@ -135,6 +148,6 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
       </tbody>
     </table>
   );
-}
+};
 
 export default SortableTable;

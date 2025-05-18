@@ -23,7 +23,7 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     this.setState({ errorInfo });
-    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+    console.error('Error caught by ErrorBoundary:', error, errorInfo);
   }
 
   render() {
@@ -42,8 +42,8 @@ class ErrorBoundary extends React.Component {
               </div>
             </details>
             <p>Try refreshing the page or check your browser console for more details.</p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Refresh Page
@@ -58,7 +58,7 @@ class ErrorBoundary extends React.Component {
 }
 
 ErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 // Header component that stays visible during navigation
@@ -72,36 +72,36 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center items-center">
-          <motion.nav 
+          <motion.nav
             className="flex space-x-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isHome ? 'bg-indigo-600 text-white' : ''}`}
             >
               Impact List
             </Link>
-            <Link 
-              to="/calculator" 
+            <Link
+              to="/calculator"
               className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
             >
               Calculator
             </Link>
-            <Link 
-              to="/recipients" 
+            <Link
+              to="/recipients"
               className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
             >
               Recipients
             </Link>
           </motion.nav>
         </div>
-        
+
         {isHome && (
           <div className="text-center mt-4">
-            <motion.h1 
+            <motion.h1
               className="text-4xl font-extrabold text-white mb-2 tracking-tight"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -109,7 +109,7 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
             >
               Impact List
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-xl text-indigo-100 max-w-3xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -119,10 +119,10 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
             </motion.p>
           </div>
         )}
-        
+
         {isRecipients && (
           <div className="text-center mt-4">
-            <motion.h1 
+            <motion.h1
               className="text-4xl font-extrabold text-white mb-2 tracking-tight"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -130,7 +130,7 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
             >
               Recipient Organizations
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-xl text-indigo-100 max-w-3xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -140,10 +140,10 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
             </motion.p>
           </div>
         )}
-        
+
         {isCalculator && (
           <div className="text-center mt-4">
-            <motion.h1 
+            <motion.h1
               className="text-4xl font-extrabold text-white mb-2 tracking-tight"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -151,7 +151,7 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
             >
               Donation Calculator
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-xl text-indigo-100 max-w-3xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -169,23 +169,23 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
 Header.propTypes = {
   isHome: PropTypes.bool,
   isRecipients: PropTypes.bool,
-  isCalculator: PropTypes.bool
+  isCalculator: PropTypes.bool,
 };
 
 Header.defaultProps = {
   isHome: false,
   isRecipients: false,
-  isCalculator: false
+  isCalculator: false,
 };
 
 // Scroll to top component that runs on route changes
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-  
+
   return null;
 };
 
@@ -195,7 +195,7 @@ const AppContent = () => {
   const isHome = location.pathname === '/';
   const isRecipients = location.pathname === '/recipients';
   const isCalculator = location.pathname === '/calculator';
-  
+
   return (
     <>
       <ScrollToTop />
@@ -211,7 +211,7 @@ const AppContent = () => {
           </Routes>
         </AnimatePresence>
       </div>
-      <motion.div 
+      <motion.div
         className="w-full py-6 bg-slate-800 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -252,8 +252,8 @@ const App = () => {
             )}
           </div>
           <p>Try refreshing the page or check your browser console for more details.</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Refresh Page
@@ -273,6 +273,6 @@ const App = () => {
       </CostPerLifeProvider>
     </ErrorBoundary>
   );
-}
+};
 
 export default App;

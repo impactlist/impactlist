@@ -29,20 +29,20 @@ function formatDateString(dateString) {
 function loadCategories() {
   const categoryFiles = glob.sync(path.join(categoriesDir, '*.md'));
   const categories = {};
-  
-  categoryFiles.forEach(file => {
+
+  categoryFiles.forEach((file) => {
     if (path.basename(file) === '_index.md') return;
-    
+
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data } = matter(fileContent);
-    
+
     // Use ID as the key
     categories[data.id] = {
       name: data.name,
-      costPerLife: data.costPerLife
+      costPerLife: data.costPerLife,
     };
   });
-  
+
   return categories;
 }
 
@@ -50,24 +50,24 @@ function loadCategories() {
 function loadDonors() {
   const donorFiles = glob.sync(path.join(donorsDir, '*.md'));
   const donors = {};
-  
-  donorFiles.forEach(file => {
+
+  donorFiles.forEach((file) => {
     if (path.basename(file) === '_index.md') return;
-    
+
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data } = matter(fileContent);
-    
+
     // Use ID as the key
     donors[data.id] = {
       name: data.name,
-      netWorth: data.netWorth
+      netWorth: data.netWorth,
     };
-    
+
     if (data.totalDonated) {
       donors[data.id].totalDonated = data.totalDonated;
     }
   });
-  
+
   return donors;
 }
 
@@ -75,16 +75,16 @@ function loadDonors() {
 function loadRecipients() {
   const recipientFiles = glob.sync(path.join(recipientsDir, '*.md'));
   const recipients = {};
-  
-  recipientFiles.forEach(file => {
+
+  recipientFiles.forEach((file) => {
     if (path.basename(file) === '_index.md') return;
-    
+
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data } = matter(fileContent);
-    
+
     const categoriesObj = {};
-    
-    data.categories.forEach(category => {
+
+    data.categories.forEach((category) => {
       const categoryData = { fraction: category.fraction };
       if (category.costPerLife !== undefined) {
         categoryData.costPerLife = category.costPerLife;
@@ -94,14 +94,14 @@ function loadRecipients() {
       }
       categoriesObj[category.id] = categoryData;
     });
-    
+
     // Use ID as the key
     recipients[data.id] = {
       name: data.name,
-      categories: categoriesObj
+      categories: categoriesObj,
     };
   });
-  
+
   return recipients;
 }
 
@@ -109,31 +109,33 @@ function loadRecipients() {
 function loadDonations() {
   const donationFiles = glob.sync(path.join(donationsDir, '*.md'));
   const donations = [];
-  
-  donationFiles.forEach(file => {
+
+  donationFiles.forEach((file) => {
     if (path.basename(file) === '_index.md') return;
-    
+
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data } = matter(fileContent);
-    
+
     if (!data.donations || !Array.isArray(data.donations)) {
-      throw new Error(`Error: File ${file} is missing required 'donations' array property. Each donation file must contain a 'donations' array with donation objects.`);
+      throw new Error(
+        `Error: File ${file} is missing required 'donations' array property. Each donation file must contain a 'donations' array with donation objects.`
+      );
     }
-    
-    data.donations.forEach(donation => {
+
+    data.donations.forEach((donation) => {
       if (!donation.recipient || !donation.amount || !donation.date) {
         throw new Error(
           `Error: Donation in ${file} is missing required fields:\n` +
-          `  recipient: ${donation.recipient || 'MISSING'}\n` +
-          `  amount: ${donation.amount || 'MISSING'}\n` + 
-          `  date: ${donation.date || 'MISSING'}\n` +
-          `Full donation object: ${JSON.stringify(donation, null, 2)}`
+            `  recipient: ${donation.recipient || 'MISSING'}\n` +
+            `  amount: ${donation.amount || 'MISSING'}\n` +
+            `  date: ${donation.date || 'MISSING'}\n` +
+            `Full donation object: ${JSON.stringify(donation, null, 2)}`
         );
       }
-      
+
       // Format the date as YYYY-MM-DD
       const formattedDate = formatDateString(donation.date);
-      
+
       // Handle both old format (just a donor string) and new format (credit object)
       if (donation.credit) {
         // New format with credit object
@@ -145,13 +147,13 @@ function loadDonations() {
             amount: donation.amount,
             credit: creditAmount,
             source: donation.source,
-            notes: donation.notes
+            notes: donation.notes,
           });
         });
       } else {
         // Derive donor ID from filename for backwards compatibility
         const donorId = path.basename(file, '.md');
-        
+
         donations.push({
           date: formattedDate,
           donorId,
@@ -159,42 +161,38 @@ function loadDonations() {
           amount: donation.amount,
           credit: 1.0, // Default to full credit
           source: donation.source,
-          notes: donation.notes
+          notes: donation.notes,
         });
       }
     });
   });
-  
+
   // Sort donations by date (newest first)
   donations.sort((a, b) => new Date(b.date) - new Date(a.date));
-  
+
   return donations;
 }
 
 // Add human-readable fields for compatibility with old code
 function addReadableFields(categories, donors, recipients, donations) {
   // Create maps to quickly look up names from IDs
-  const donorNameMap = Object.fromEntries(
-    Object.entries(donors).map(([id, data]) => [id, data.name])
-  );
-  
-  const recipientNameMap = Object.fromEntries(
-    Object.entries(recipients).map(([id, data]) => [id, data.name])
-  );
-  
+  const donorNameMap = Object.fromEntries(Object.entries(donors).map(([id, data]) => [id, data.name]));
+
+  const recipientNameMap = Object.fromEntries(Object.entries(recipients).map(([id, data]) => [id, data.name]));
+
   // Add readable fields to each donation
-  return donations.map(donation => {
+  return donations.map((donation) => {
     const enhanced = { ...donation };
     enhanced.donor = donorNameMap[donation.donorId] || donation.donorId;
     enhanced.recipient = recipientNameMap[donation.recipientId] || donation.recipientId;
-    
+
     // Clean up undefined fields
-    Object.keys(enhanced).forEach(key => {
+    Object.keys(enhanced).forEach((key) => {
       if (enhanced[key] === undefined) {
         delete enhanced[key];
       }
     });
-    
+
     return enhanced;
   });
 }
@@ -209,7 +207,7 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
     if (!donors[donation.donorId]) {
       errors.push(`Error: Donation #${index + 1} references non-existent donor ID "${donation.donorId}"`);
     }
-    
+
     // Check recipient exists
     if (!recipients[donation.recipientId]) {
       errors.push(`Error: Donation #${index + 1} references non-existent recipient ID "${donation.recipientId}"`);
@@ -218,7 +216,7 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
 
   // Check all recipients reference valid categories
   Object.entries(recipients).forEach(([recipientId, recipient]) => {
-    Object.keys(recipient.categories).forEach(categoryId => {
+    Object.keys(recipient.categories).forEach((categoryId) => {
       if (!categories[categoryId]) {
         errors.push(`Error: Recipient "${recipientId}" references non-existent category ID "${categoryId}"`);
       }
@@ -228,11 +226,11 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
   // Report errors if any
   if (errors.length > 0) {
     console.error('\n=== VALIDATION ERRORS ===');
-    errors.forEach(error => console.error(error));
+    errors.forEach((error) => console.error(error));
     console.error('\nData validation failed. Please fix the errors above before continuing.');
     process.exit(1);
   }
-  
+
   console.log('All data references validated successfully.');
 }
 
@@ -240,40 +238,41 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
 function generateJavaScriptFile() {
   console.log('Loading categories...');
   const categories = loadCategories();
-  
+
   console.log('Loading donors...');
   const donors = loadDonors();
-  
+
   console.log('Loading recipients...');
   const recipients = loadRecipients();
-  
+
   console.log('Loading donations...');
   const rawDonations = loadDonations();
-  
+
   console.log('Validating data integrity...');
   validateDataIntegrity(categories, donors, recipients, rawDonations);
-  
+
   console.log('Processing donations...');
   const donations = addReadableFields(categories, donors, recipients, rawDonations);
 
   console.log('Filtering unused entities...');
-  const { 
-    filteredDonors, 
-    filteredRecipients, 
-    filteredCategories 
-  } = filterUnusedEntities(donors, recipients, categories, rawDonations);
-  
+  const { filteredDonors, filteredRecipients, filteredCategories } = filterUnusedEntities(
+    donors,
+    recipients,
+    categories,
+    rawDonations
+  );
+
   // Create compatibility arrays for old code
   const donorsArray = Object.entries(filteredDonors).map(([id, data]) => ({
     id,
-    ...data
+    ...data,
   }));
-  
+
   const recipientsArray = Object.entries(filteredRecipients).map(([id, data]) => ({
     id,
-    ...data
+    ...data,
   }));
-  
+
   let jsContent = `// THIS FILE IS AUTOMATICALLY GENERATED
 // DO NOT EDIT DIRECTLY
 
@@ -298,12 +297,12 @@ export const recipients = ${JSON.stringify(recipientsArray, null, 2)};
 
 export const donations = ${JSON.stringify(donations, null, 2)};
 `;
-  
+
   // Create the direcotry if it doesn't exist
   fs.mkdirSync(path.dirname(outputFile), { recursive: true });
   fs.writeFileSync(outputFile, jsContent);
   console.log(`Data file generated at ${outputFile}`);
-  
+
   // Provide some stats
   console.log('');
   console.log('=== STATS ===');
@@ -318,39 +317,35 @@ function filterUnusedEntities(donors, recipients, categories, donations) {
   // Find donors and recipients with donations
   const donorsWithDonations = new Set();
   const recipientsWithDonations = new Set();
-  
-  donations.forEach(donation => {
+
+  donations.forEach((donation) => {
     donorsWithDonations.add(donation.donorId);
     recipientsWithDonations.add(donation.recipientId);
   });
-  
+
   // Filter donors and recipients
-  const filteredDonors = Object.fromEntries(
-    Object.entries(donors).filter(([id]) => donorsWithDonations.has(id))
-  );
-  
+  const filteredDonors = Object.fromEntries(Object.entries(donors).filter(([id]) => donorsWithDonations.has(id)));
+
   const filteredRecipients = Object.fromEntries(
     Object.entries(recipients).filter(([id]) => recipientsWithDonations.has(id))
   );
-  
+
   // Find categories used by recipients who received donations
   const usedCategories = new Set();
-  Object.values(filteredRecipients).forEach(recipient => {
-    Object.keys(recipient.categories).forEach(categoryId => {
+  Object.values(filteredRecipients).forEach((recipient) => {
+    Object.keys(recipient.categories).forEach((categoryId) => {
       usedCategories.add(categoryId);
     });
   });
-  
+
   // Filter categories
-  const filteredCategories = Object.fromEntries(
-    Object.entries(categories).filter(([id]) => usedCategories.has(id))
-  );
-  
+  const filteredCategories = Object.fromEntries(Object.entries(categories).filter(([id]) => usedCategories.has(id)));
+
   return {
     filteredDonors,
     filteredRecipients,
-    filteredCategories
+    filteredCategories,
   };
 }
 
-generateJavaScriptFile(); 
+generateJavaScriptFile();

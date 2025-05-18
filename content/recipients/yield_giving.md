@@ -1,6 +1,6 @@
 ---
 id: yield-giving
-name: "Yield Giving"
+name: 'Yield Giving'
 categories:
   - id: social-justice
     fraction: 0.4
@@ -24,4 +24,4 @@ categories:
     fraction: 0.05
   - id: global-development
     fraction: 0.07
---- 
+---

@@ -1,7 +1,7 @@
 ---
 id: institutions
-name: "Improving Institutions"
+name: 'Improving Institutions'
 costPerLife: 50_000
---- 
+---
 
-Me: very uncertain.. varies wildly.. 
+Me: very uncertain.. varies wildly..

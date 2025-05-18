@@ -1,7 +1,7 @@
 ---
 id: mit
-name: "MIT"
+name: 'MIT'
 categories:
   - id: education
     fraction: 1
---- 
+---

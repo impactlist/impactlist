@@ -1,6 +1,6 @@
 ---
 id: good-ventures
-name: "Good Ventures"
+name: 'Good Ventures'
 categories:
   - id: climate-change
     fraction: 0.03
@@ -26,6 +26,6 @@ categories:
     fraction: 0.06
   - id: ai-capabilities
     fraction: 0.006
---- 
+---
 
 OpenPhil gave 30 million to OpenAI.. which we're approximating by 0.6% of their total spending.. Might need to be updated in the future if we add more spending for them.

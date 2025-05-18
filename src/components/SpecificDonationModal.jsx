@@ -5,7 +5,7 @@ import {
   getAllCategories,
   getDefaultCostPerLifeForCategory,
   getCostPerLifeForRecipient,
-  getRecipientId
+  getRecipientId,
 } from '../utils/donationDataHelpers';
 import { formatNumber, formatLives } from '../utils/formatters';
 import { useCostPerLife } from './CostPerLifeContext';
@@ -41,7 +41,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
     const term = searchTerm.toLowerCase();
     return allRecipients
-      .filter(recipient => recipient.name.toLowerCase().includes(term))
+      .filter((recipient) => recipient.name.toLowerCase().includes(term))
       .sort((a, b) => a.name.localeCompare(b.name))
       .slice(0, 10); // Limit to first 10 results
   }, [searchTerm, allRecipients, showDropdown]);
@@ -62,7 +62,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         }
       } else {
         setIsExistingRecipient(true);
-        const recipient = allRecipients.find(r => r.name === editingDonation.recipientName);
+        const recipient = allRecipients.find((r) => r.name === editingDonation.recipientName);
         setSelectedRecipient(recipient || null);
         setSearchTerm(recipient?.name || '');
       }
@@ -79,7 +79,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   useEffect(() => {
     setHighlightedIndex(-1);
   }, [filteredRecipients.length]);
-  
+
   const resetForm = () => {
     setSearchTerm('');
     setSelectedRecipient(null);
@@ -147,36 +147,36 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       if (highlightedElement) {
         highlightedElement.scrollIntoView({
           block: 'nearest',
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }
   };
-  
+
   // Format a number with commas
   const formatWithCommas = (value) => {
     if (!value) return '';
-    
+
     const rawValue = value.toString().replace(/,/g, '');
     if (rawValue === '' || rawValue === '-' || rawValue === '.' || rawValue.endsWith('.')) {
       return rawValue;
     }
-    
+
     const number = Number(rawValue);
     if (isNaN(number)) return rawValue;
-    
+
     if (Math.abs(number) >= 1000) {
       return number.toLocaleString('en-US');
     }
-    
+
     return rawValue;
   };
-  
+
   // Clean a number input value
   const cleanNumberInput = (value) => {
     return value.toString().replace(/,/g, '');
   };
-  
+
   const handleSubmit = () => {
     // Hide dropdown when submitting
     setShowDropdown(false);
@@ -189,26 +189,26 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     } else if (!isExistingRecipient && !customRecipientName.trim()) {
       newErrors.customRecipientName = 'Please enter a recipient name';
     }
-    
+
     // Validate amount
     const cleanedAmount = cleanNumberInput(amount);
     if (!cleanedAmount || isNaN(Number(cleanedAmount)) || Number(cleanedAmount) <= 0) {
       newErrors.amount = 'Please enter a valid amount';
     }
-    
+
     // For custom recipients, validate category and at least one of multiplier or costPerLife
     if (!isExistingRecipient) {
       if (!selectedCategory) {
         newErrors.category = 'Please select a category';
       }
-      
+
       const cleanedMultiplier = cleanNumberInput(multiplier);
       const cleanedCostPerLife = cleanNumberInput(costPerLife);
-      
-      if (cleanedMultiplier && (isNaN(Number(cleanedMultiplier)))) {
+
+      if (cleanedMultiplier && isNaN(Number(cleanedMultiplier))) {
         newErrors.multiplier = 'Please enter a valid multiplier';
       }
-      
+
       if (cleanedCostPerLife) {
         const costPerLifeNum = Number(cleanedCostPerLife);
         if (isNaN(costPerLifeNum)) {
@@ -218,12 +218,12 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         }
       }
     }
-    
+
     setErrors(newErrors);
-    
+
     // Check if there are any errors
     const hasErrors = Object.keys(newErrors).length > 0;
-    
+
     if (!hasErrors) {
       const donationData = {
         id: editingDonation?.id || new Date().getTime().toString(),
@@ -231,27 +231,27 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         amount: Number(cleanNumberInput(amount)),
         isCustomRecipient: !isExistingRecipient,
       };
-      
+
       // Add category and effectiveness data for custom recipients
       if (!isExistingRecipient) {
         donationData.categoryId = selectedCategory;
-        
+
         const cleanedMultiplier = cleanNumberInput(multiplier);
         const cleanedCostPerLife = cleanNumberInput(costPerLife);
-        
+
         if (cleanedMultiplier) {
           donationData.multiplier = Number(cleanedMultiplier);
         } else if (cleanedCostPerLife) {
           donationData.costPerLife = Number(cleanedCostPerLife);
         }
       }
-      
+
       onSave(donationData);
       resetForm();
       onClose();
     }
   };
-  
+
   // Calculate lives saved for the current donation
   const calculateLivesSaved = () => {
     if (!amount || isNaN(Number(cleanNumberInput(amount))) || Number(cleanNumberInput(amount)) <= 0) {
@@ -288,7 +288,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
     return 0;
   };
-  
+
   const livesSaved = calculateLivesSaved();
 
   // Calculate cost per life for the selected recipient
@@ -304,10 +304,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
 
   if (!isOpen) return null;
-  
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <motion.div 
+      <motion.div
         className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -319,17 +319,20 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             <h2 className="text-2xl font-bold text-gray-800">
               {editingDonation ? 'Edit Donation' : 'Add Specific Donation'}
             </h2>
-            <button 
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700 focus:outline-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
         </div>
-        
+
         <div className="p-6">
           <div className="mb-6">
             <div className="flex space-x-4 mb-4">
@@ -337,8 +340,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 type="button"
                 onClick={() => setIsExistingRecipient(true)}
                 className={`px-4 py-2 rounded-md text-sm font-medium flex-1 ${
-                  isExistingRecipient 
-                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300' 
+                  isExistingRecipient
+                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
                     : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
                 }`}
               >
@@ -348,21 +351,18 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 type="button"
                 onClick={() => setIsExistingRecipient(false)}
                 className={`px-4 py-2 rounded-md text-sm font-medium flex-1 ${
-                  !isExistingRecipient 
-                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300' 
+                  !isExistingRecipient
+                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
                     : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
                 }`}
               >
                 New Recipient
               </button>
             </div>
-            
+
             {isExistingRecipient ? (
               <div>
-                <label 
-                  htmlFor="recipient-search"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label htmlFor="recipient-search" className="block text-sm font-medium text-gray-700 mb-1">
                   Search for a recipient
                 </label>
                 <div className="relative">
@@ -398,9 +398,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                           key={recipient.name}
                           onClick={() => handleSelectRecipient(recipient)}
                           className={`cursor-pointer px-4 py-2 recipient-item ${
-                            index === highlightedIndex
-                              ? 'bg-indigo-100 text-indigo-900'
-                              : 'hover:bg-indigo-50'
+                            index === highlightedIndex ? 'bg-indigo-100 text-indigo-900' : 'hover:bg-indigo-50'
                           }`}
                           tabIndex="0"
                         >
@@ -410,9 +408,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     </div>
                   )}
                 </div>
-                {errors.recipient && (
-                  <p className="mt-1 text-sm text-red-600">{errors.recipient}</p>
-                )}
+                {errors.recipient && <p className="mt-1 text-sm text-red-600">{errors.recipient}</p>}
                 {searchTerm && filteredRecipients.length === 0 && showDropdown && !selectedRecipient && (
                   <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
                 )}
@@ -425,9 +421,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             ) : (
               <div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Recipient Name
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Recipient Name</label>
                   <input
                     type="text"
                     value={customRecipientName}
@@ -441,11 +435,9 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     <p className="mt-1 text-sm text-red-600">{errors.customRecipientName}</p>
                   )}
                 </div>
-                
+
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
@@ -462,19 +454,18 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         </option>
                       ))}
                   </select>
-                  {errors.category && (
-                    <p className="mt-1 text-sm text-red-600">{errors.category}</p>
-                  )}
+                  {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
-                      Default cost per life: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}
+                      Default cost per life: $
+                      {formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}
                     </p>
                   )}
                 </div>
 
                 <div className="mb-4">
                   <p className="text-sm font-medium text-gray-700 mb-2">Effectiveness</p>
-                  
+
                   <div className="mb-3">
                     <label className="block text-sm text-gray-600 mb-1">
                       Multiplier (makes recipient more effective)
@@ -493,20 +484,20 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         errors.multiplier ? 'border-red-300' : 'border-gray-300'
                       }`}
                     />
-                    {errors.multiplier && (
-                      <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>
-                    )}
+                    {errors.multiplier && <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>}
                     {multiplier && selectedCategory && !isNaN(Number(cleanNumberInput(multiplier))) && (
                       <p className="mt-1 text-xs text-gray-500">
-                        Cost per life: ${formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues) / Number(cleanNumberInput(multiplier)))}
+                        Cost per life: $
+                        {formatNumber(
+                          getDefaultCostPerLifeForCategory(selectedCategory, customValues) /
+                            Number(cleanNumberInput(multiplier))
+                        )}
                       </p>
                     )}
                   </div>
-                  
+
                   <div className="mb-2">
-                    <label className="block text-sm text-gray-600 mb-1">
-                      OR Direct Cost Per Life
-                    </label>
+                    <label className="block text-sm text-gray-600 mb-1">OR Direct Cost Per Life</label>
                     <div className="flex items-center">
                       <span className="mr-1 text-gray-600">$</span>
                       <input
@@ -518,34 +509,34 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                           setCostPerLife(newValue);
                           setMultiplier(''); // Clear multiplier when editing cost per life
                         }}
-                        placeholder={selectedCategory ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues)) : "0"}
+                        placeholder={
+                          selectedCategory
+                            ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))
+                            : '0'
+                        }
                         className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                           errors.costPerLife ? 'border-red-300' : 'border-gray-300'
                         }`}
                       />
                     </div>
-                    {errors.costPerLife && (
-                      <p className="mt-1 text-sm text-red-600">{errors.costPerLife}</p>
-                    )}
+                    {errors.costPerLife && <p className="mt-1 text-sm text-red-600">{errors.costPerLife}</p>}
                   </div>
                 </div>
               </div>
             )}
           </div>
-          
+
           {/* Display information about selected recipient or category */}
           {customRecipientName && !isExistingRecipient && selectedCategory && (
             <div className="mb-4 p-3 bg-indigo-50 rounded-md">
               <p className="text-sm text-indigo-600">
-                Category: {allCategories.find(c => c.id === selectedCategory)?.name || ''}
+                Category: {allCategories.find((c) => c.id === selectedCategory)?.name || ''}
               </p>
             </div>
           )}
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Donation Amount
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Donation Amount</label>
             <div className="flex items-center">
               <span className="mr-1 text-gray-600">$</span>
               <input
@@ -559,22 +550,22 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 }`}
               />
             </div>
-            {errors.amount && (
-              <p className="mt-1 text-sm text-red-600">{errors.amount}</p>
-            )}
+            {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>}
           </div>
-          
+
           {/* Lives saved preview */}
           {amount && !errors.amount && (
             <div className={`mb-4 p-3 ${livesSaved < 0 ? 'bg-red-50' : 'bg-emerald-50'} rounded-md`}>
               <p className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-                Estimated lives saved: <span className="font-medium">
-                  {livesSaved < 0 ? '-' : ''}{formatLives(Math.abs(livesSaved))}
+                Estimated lives saved:{' '}
+                <span className="font-medium">
+                  {livesSaved < 0 ? '-' : ''}
+                  {formatLives(Math.abs(livesSaved))}
                 </span>
               </p>
             </div>
           )}
-          
+
           <div className="flex space-x-3 mt-6">
             <button
               type="button"

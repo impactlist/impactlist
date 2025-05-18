@@ -1,7 +1,7 @@
 ---
 id: ought
-name: "Ought"
+name: 'Ought'
 categories:
   - id: ai-risk
     fraction: 1
---- 
+---

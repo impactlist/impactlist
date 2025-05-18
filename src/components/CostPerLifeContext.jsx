@@ -21,7 +21,7 @@ export const CostPerLifeProvider = ({ children }) => {
     const savedValues = localStorage.getItem('customCostPerLifeValues');
     return savedValues ? JSON.parse(savedValues) : null;
   });
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Save to localStorage when customValues change
@@ -40,7 +40,7 @@ export const CostPerLifeProvider = ({ children }) => {
 
   // Update a specific category value
   const updateCategoryValue = (categoryKey, value) => {
-    setCustomValues(prev => {
+    setCustomValues((prev) => {
       const newValues = prev ? { ...prev } : {};
       if (value === '' || isNaN(value) || value === null) {
         delete newValues[categoryKey];
@@ -51,7 +51,7 @@ export const CostPerLifeProvider = ({ children }) => {
       }
     });
   };
-  
+
   // Update a recipient's override values - type can be 'multiplier' or 'costPerLife'
   const updateRecipientValue = (recipientName, categoryId, type, value) => {
     if (!recipientName) {
@@ -66,28 +66,28 @@ export const CostPerLifeProvider = ({ children }) => {
     if (type !== 'multiplier' && type !== 'costPerLife') {
       throw new Error(`Invalid type '${type}'. Must be 'multiplier' or 'costPerLife'`);
     }
-    
-    setCustomValues(prev => {
+
+    setCustomValues((prev) => {
       const newValues = prev ? { ...prev } : {};
-      
+
       // Initialize the recipients field if it doesn't exist
       if (!newValues.recipients) {
         newValues.recipients = {};
       }
-      
+
       // Initialize the recipient entry if it doesn't exist
       if (!newValues.recipients[recipientName]) {
         newValues.recipients[recipientName] = {};
       }
-      
+
       // Initialize the category entry if it doesn't exist
       if (!newValues.recipients[recipientName][categoryId]) {
         newValues.recipients[recipientName][categoryId] = {};
       }
-      
+
       // Handle special cases for valid inputs in intermediate states
       const isIntermediateState = value === '-' || value === '.' || value.endsWith('.');
-      
+
       // Update values
       if (value === '') {
         // If both values are being cleared, remove the category
@@ -99,18 +99,18 @@ export const CostPerLifeProvider = ({ children }) => {
           // Just clear this specific value
           delete newValues.recipients[recipientName][categoryId][type];
         }
-        
+
         // Clean up empty objects - using safe checks
-        if (newValues.recipients?.[recipientName]?.[categoryId] &&
-            Object.keys(newValues.recipients[recipientName][categoryId]).length === 0) {
+        if (
+          newValues.recipients?.[recipientName]?.[categoryId] &&
+          Object.keys(newValues.recipients[recipientName][categoryId]).length === 0
+        ) {
           delete newValues.recipients[recipientName][categoryId];
         }
-        if (newValues.recipients?.[recipientName] && 
-            Object.keys(newValues.recipients[recipientName]).length === 0) {
+        if (newValues.recipients?.[recipientName] && Object.keys(newValues.recipients[recipientName]).length === 0) {
           delete newValues.recipients[recipientName];
         }
-        if (newValues.recipients && 
-            Object.keys(newValues.recipients).length === 0) {
+        if (newValues.recipients && Object.keys(newValues.recipients).length === 0) {
           delete newValues.recipients;
         }
       } else if (isIntermediateState) {
@@ -125,11 +125,11 @@ export const CostPerLifeProvider = ({ children }) => {
         } else if (type === 'costPerLife') {
           delete newValues.recipients[recipientName][categoryId].multiplier;
         }
-        
+
         // Store numeric value
         newValues.recipients[recipientName][categoryId][type] = Number(value);
       }
-      
+
       // Return updated object
       return Object.keys(newValues).length > 0 ? newValues : null;
     });
@@ -142,14 +142,16 @@ export const CostPerLifeProvider = ({ children }) => {
 
   // Get recipient custom value
   const getRecipientValue = (recipientName, categoryId, type) => {
-    if (!customValues || 
-        !customValues.recipients || 
-        !customValues.recipients[recipientName] || 
-        !customValues.recipients[recipientName][categoryId] ||
-        customValues.recipients[recipientName][categoryId][type] === undefined) {
+    if (
+      !customValues ||
+      !customValues.recipients ||
+      !customValues.recipients[recipientName] ||
+      !customValues.recipients[recipientName][categoryId] ||
+      customValues.recipients[recipientName][categoryId][type] === undefined
+    ) {
       return null;
     }
-    
+
     return customValues.recipients[recipientName][categoryId][type];
   };
 
@@ -174,11 +176,7 @@ export const CostPerLifeProvider = ({ children }) => {
     closeModal,
   };
 
-  return (
-    <CostPerLifeContext.Provider value={contextValue}>
-      {children}
-    </CostPerLifeContext.Provider>
-  );
+  return <CostPerLifeContext.Provider value={contextValue}>{children}</CostPerLifeContext.Provider>;
 };
 
 export default CostPerLifeContext;

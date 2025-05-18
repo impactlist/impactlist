@@ -1,6 +1,6 @@
 ---
 id: gates-foundation
-name: "Gates Foundation"
+name: 'Gates Foundation'
 categories:
   - id: global-health
     fraction: 0.4
@@ -16,4 +16,4 @@ categories:
     fraction: 0.05
   - id: human-rights
     fraction: 0.03
---- 
+---

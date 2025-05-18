@@ -1,7 +1,7 @@
 ---
 id: evidence-action
-name: "Evidence Action"
+name: 'Evidence Action'
 categories:
   - id: global-health
     fraction: 1.0
---- 
+---

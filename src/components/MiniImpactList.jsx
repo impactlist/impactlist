@@ -5,7 +5,7 @@ import { formatNumber, formatCurrency } from '../utils/formatters';
 const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife, neighboringDonors }) => {
   // Create the three rows to display
   const rows = [];
-  
+
   // If at the top of the list
   if (!neighboringDonors.above) {
     rows.push(
@@ -15,7 +15,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: totalLivesSaved,
         totalDonated: totalDonated,
         costPerLife: costPerLife,
-        isCurrentUser: true
+        isCurrentUser: true,
       },
       {
         rank: 2,
@@ -24,7 +24,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         totalDonated: neighboringDonors.below.totalDonated,
         costPerLife: neighboringDonors.below.costPerLife,
         netWorth: neighboringDonors.below.netWorth,
-        id: neighboringDonors.below.id
+        id: neighboringDonors.below.id,
       },
       {
         rank: 3,
@@ -33,7 +33,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         totalDonated: neighboringDonors.twoBelow.totalDonated,
         costPerLife: neighboringDonors.twoBelow.costPerLife,
         netWorth: neighboringDonors.twoBelow.netWorth,
-        id: neighboringDonors.twoBelow.id
+        id: neighboringDonors.twoBelow.id,
       }
     );
   }
@@ -47,7 +47,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         totalDonated: neighboringDonors.twoAbove.totalDonated,
         costPerLife: neighboringDonors.twoAbove.costPerLife,
         netWorth: neighboringDonors.twoAbove.netWorth,
-        id: neighboringDonors.twoAbove.id
+        id: neighboringDonors.twoAbove.id,
       },
       {
         rank: donorRank - 1,
@@ -56,7 +56,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         totalDonated: neighboringDonors.above.totalDonated,
         costPerLife: neighboringDonors.above.costPerLife,
         netWorth: neighboringDonors.above.netWorth,
-        id: neighboringDonors.above.id
+        id: neighboringDonors.above.id,
       },
       {
         rank: donorRank,
@@ -64,7 +64,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: totalLivesSaved,
         totalDonated: totalDonated,
         costPerLife: costPerLife,
-        isCurrentUser: true
+        isCurrentUser: true,
       }
     );
   }
@@ -78,7 +78,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         totalDonated: neighboringDonors.above.totalDonated,
         costPerLife: neighboringDonors.above.costPerLife,
         netWorth: neighboringDonors.above.netWorth,
-        id: neighboringDonors.above.id
+        id: neighboringDonors.above.id,
       },
       {
         rank: donorRank,
@@ -86,7 +86,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         livesSaved: totalLivesSaved,
         totalDonated: totalDonated,
         costPerLife: costPerLife,
-        isCurrentUser: true
+        isCurrentUser: true,
       },
       {
         rank: donorRank + 1,
@@ -95,7 +95,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
         totalDonated: neighboringDonors.below.totalDonated,
         costPerLife: neighboringDonors.below.costPerLife,
         netWorth: neighboringDonors.below.netWorth,
-        id: neighboringDonors.below.id
+        id: neighboringDonors.below.id,
       }
     );
   }
@@ -109,10 +109,18 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
             <tr>
               <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Rank</th>
               <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Lives Saved</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Donated</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Cost/Life</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Net Worth</th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Lives Saved
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Donated
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Cost/Life
+              </th>
+              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Net Worth
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
@@ -142,7 +150,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                   {row.isPlaceholder ? '—' : formatCurrency(row.totalDonated)}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
-                  {row.isPlaceholder ? '—' : (row.livesSaved === 0 ? '∞' : formatCurrency(row.costPerLife))}
+                  {row.isPlaceholder ? '—' : row.livesSaved === 0 ? '∞' : formatCurrency(row.costPerLife)}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
                   {row.isPlaceholder ? '—' : row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}
@@ -156,4 +164,4 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
   );
 };
 
-export default MiniImpactList; 
+export default MiniImpactList;

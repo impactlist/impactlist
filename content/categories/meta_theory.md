@@ -1,8 +1,8 @@
 ---
 id: meta-theory
-name: "Meta and Theory"
+name: 'Meta and Theory'
 costPerLife: 1_700
---- 
+---
 
 o3: No consensus $/QALY; GiveWell regards some meta orgs (~CEA) as 3–10× top-charity but private models.
 

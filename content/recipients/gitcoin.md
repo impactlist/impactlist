@@ -1,7 +1,7 @@
 ---
 id: gitcoin
-name: "Gitcoin"
+name: 'Gitcoin'
 categories:
   - id: institutions
     fraction: 1
---- 
+---

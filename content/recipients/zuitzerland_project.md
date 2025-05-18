@@ -1,7 +1,7 @@
 ---
 id: zuitzerland-project
-name: "Zuitzerland Project"
+name: 'Zuitzerland Project'
 categories:
   - id: institutions
     fraction: 1
---- 
+---

@@ -1,6 +1,6 @@
 ---
 id: glide-foundation
-name: "GLIDE Foundation"
+name: 'GLIDE Foundation'
 categories:
   - id: local-community
     fraction: 0.2
@@ -10,4 +10,4 @@ categories:
     fraction: 0.1
   - id: social-justice
     fraction: 0.3
---- 
+---

@@ -1,7 +1,7 @@
 ---
 id: median-group
-name: "Median Group"
+name: 'Median Group'
 categories:
   - id: education
     fraction: 1
---- 
+---

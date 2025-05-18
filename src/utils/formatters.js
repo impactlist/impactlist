@@ -45,7 +45,7 @@ export const formatNumber = (num) => {
 export const formatLives = (lives) => {
   const absLives = Math.abs(lives);
   const isNegative = lives < 0;
-  
+
   if (Number.isInteger(absLives)) {
     // If it's a whole number, just format with commas
     return formatNumber(lives);
@@ -55,18 +55,21 @@ export const formatLives = (lives) => {
   } else if (absLives >= 10) {
     // For medium numbers, show 1 decimal place
     const rounded = Math.round(absLives * 10) / 10;
-    return isNegative ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}` 
-                      : rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    return isNegative
+      ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`
+      : rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   } else if (absLives >= 1) {
     // For small numbers, show 2 decimal places
     const rounded = Math.round(absLives * 100) / 100;
-    return isNegative ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
-                      : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return isNegative
+      ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   } else if (absLives >= 0.01) {
     // For very small numbers, show 2 decimal places
     const rounded = Math.round(absLives * 100) / 100;
-    return isNegative ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
-                      : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return isNegative
+      ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   } else {
     // For extremely small numbers, use 3 significant digits
     return isNegative ? `-${absLives.toPrecision(3)}` : absLives.toPrecision(3);
@@ -75,11 +78,11 @@ export const formatLives = (lives) => {
 
 /**
  * Format currency values with appropriate formatting based on magnitude
- * - Values ≥ $1B are shown as $1.5B 
+ * - Values ≥ $1B are shown as $1.5B
  * - Values ≥ $1M are shown as $1.5M
  * - Values ≥ $10 are shown as integers
  * - Values < $10 are shown with at most 2 significant digits
- * 
+ *
  * @param {number} amount - The amount to format
  * @param {number|null} effectivenessRate - Optional parameter for handling special cases
  * @returns {string} - Formatted currency string
@@ -90,10 +93,10 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
   } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
     return '∞';
   }
-  
+
   const isNegative = amount < 0;
   const absAmount = Math.abs(amount);
-  
+
   let formattedValue;
   if (absAmount >= 1000000000000) {
     // Trillions
@@ -142,6 +145,6 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     const roundedAmount = Math.round(absAmount * multiplier) / multiplier;
     formattedValue = `$${roundedAmount}`;
   }
-  
+
   return isNegative ? `-${formattedValue}` : formattedValue;
 };

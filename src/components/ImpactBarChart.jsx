@@ -2,20 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 // Optional chart toggle component that both DonorDetail and RecipientDetail can use
-export const ImpactChartToggle = ({ 
-  chartView, 
-  onToggle, 
-  disabled 
-}) => {
+export const ImpactChartToggle = ({ chartView, onToggle, disabled }) => {
   return (
     <div className="flex items-center">
       <div className="p-0.5 bg-slate-100 rounded-lg flex text-xs sm:text-sm shadow-inner">
         <button
           onClick={() => onToggle('donations')}
           className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
-            chartView === 'donations'
-              ? 'bg-indigo-600 text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-200'
+            chartView === 'donations' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
           }`}
           disabled={disabled}
         >
@@ -24,9 +18,7 @@ export const ImpactChartToggle = ({
         <button
           onClick={() => onToggle('livesSaved')}
           className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
-            chartView === 'livesSaved'
-              ? 'bg-indigo-600 text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-200'
+            chartView === 'livesSaved' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
           }`}
           disabled={disabled}
         >
@@ -37,14 +29,37 @@ export const ImpactChartToggle = ({
   );
 };
 
-const ImpactBarChart = ({ 
-  data, 
+const ImpactBarChart = ({
+  data,
   layout = 'vertical',
   colors = [
-    '#4f46e5', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#818cf8',
-    '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#22c55e', '#84cc16', '#34d399',
-    '#eab308', '#f59e0b', '#f97316', '#ef4444', '#a3e635', '#fbbf24', '#fb923c',
-    '#ec4899', '#db2777', '#be185d', '#9d174d', '#831843', '#3f3f46'
+    '#4f46e5',
+    '#3b82f6',
+    '#6366f1',
+    '#8b5cf6',
+    '#a855f7',
+    '#d946ef',
+    '#818cf8',
+    '#10b981',
+    '#14b8a6',
+    '#06b6d4',
+    '#0ea5e9',
+    '#22c55e',
+    '#84cc16',
+    '#34d399',
+    '#eab308',
+    '#f59e0b',
+    '#f97316',
+    '#ef4444',
+    '#a3e635',
+    '#fbbf24',
+    '#fb923c',
+    '#ec4899',
+    '#db2777',
+    '#be185d',
+    '#9d174d',
+    '#831843',
+    '#3f3f46',
   ],
   formatXAxisTick = (value) => `${value}%`,
   dataKey = 'percentage',
@@ -58,9 +73,9 @@ const ImpactBarChart = ({
   isAnimationActive = false,
   animationDuration = 0,
   animationBegin = 0,
-  animationEasing = "ease-out",
+  animationEasing = 'ease-out',
   showLegend = false,
-  legendFormatter = () => "Value"
+  legendFormatter = () => 'Value',
 }) => {
   const [containerWidth, setContainerWidth] = useState(800);
   const chartContainerRef = useRef(null);
@@ -69,10 +84,10 @@ const ImpactBarChart = ({
   const calculateChartMargins = (width) => {
     // Default margins for larger screens
     const defaultMargins = { top: 20, right: 100, left: 120, bottom: 5 };
-    
+
     // Minimum margins before scroll is needed
     const minMargins = { top: 20, right: 20, left: 25, bottom: 5 };
-    
+
     // Linearly reduce margins as width decreases
     if (width >= 800) {
       // Full margins for wider screens
@@ -100,13 +115,13 @@ const ImpactBarChart = ({
         setContainerWidth(width);
       }
     };
-    
+
     // Initial update
     updateContainerWidth();
-    
+
     // Add resize listener
     window.addEventListener('resize', updateContainerWidth);
-    
+
     // Cleanup
     return () => {
       window.removeEventListener('resize', updateContainerWidth);
@@ -114,25 +129,27 @@ const ImpactBarChart = ({
   }, []);
 
   // Handle case where some values might be negative
-  const domain = xAxisDomain || (() => {
-    const values = data.map(item => item[dataKey]);
-    const hasNegativeValues = values.some(val => val < 0);
-    if (hasNegativeValues) {
-      const minValue = Math.floor(Math.min(...values));
-      const maxValue = Math.ceil(Math.max(...values));
-      
-      // If max is 0 (only negative values), ensure we include 0 in the domain
-      const adjustedMax = maxValue < 0 ? 0 : maxValue;
-      
-      return [minValue, adjustedMax];
-    } else {
-      return [0, Math.ceil(Math.max(...values))];
-    }
-  })();
+  const domain =
+    xAxisDomain ||
+    (() => {
+      const values = data.map((item) => item[dataKey]);
+      const hasNegativeValues = values.some((val) => val < 0);
+      if (hasNegativeValues) {
+        const minValue = Math.floor(Math.min(...values));
+        const maxValue = Math.ceil(Math.max(...values));
+
+        // If max is 0 (only negative values), ensure we include 0 in the domain
+        const adjustedMax = maxValue < 0 ? 0 : maxValue;
+
+        return [minValue, adjustedMax];
+      } else {
+        return [0, Math.ceil(Math.max(...values))];
+      }
+    })();
 
   return (
     <div className={`py-4 px-2 relative ${containerWidth < 500 ? 'overflow-x-auto' : 'overflow-hidden'}`}>
-      <div 
+      <div
         ref={chartContainerRef}
         className="w-full overflow-visible"
         style={{ height: `${heightCalculator(data.length)}px` }}
@@ -145,12 +162,12 @@ const ImpactBarChart = ({
             barGap={barGap}
             barCategoryGap={barCategoryGap}
           >
-            <XAxis 
-              type="number" 
+            <XAxis
+              type="number"
               tickFormatter={formatXAxisTick}
               domain={domain}
               axisLine={true}
-              tick={{ 
+              tick={{
                 fill: '#1e293b',
                 fontSize: 14,
               }}
@@ -161,38 +178,33 @@ const ImpactBarChart = ({
               // Add padding to prevent labels from being cut off
               allowDataOverflow={true}
             />
-            <YAxis 
-              type="category" 
-              dataKey={nameKey} 
+            <YAxis
+              type="category"
+              dataKey={nameKey}
               width={120}
-              tick={{ 
-                fontSize: 14, 
+              tick={{
+                fontSize: 14,
                 fill: '#1e293b',
-                dy: 0
+                dy: 0,
               }}
               axisLine={true}
               stroke="#1e293b"
               interval={0}
             />
-            
-            {tooltipContent && (
-              <Tooltip 
-                content={tooltipContent}
-                cursor={false}
-              />
-            )}
-            
+
+            {tooltipContent && <Tooltip content={tooltipContent} cursor={false} />}
+
             {showLegend && <Legend formatter={legendFormatter} />}
-            
-            <Bar 
-              dataKey={dataKey} 
+
+            <Bar
+              dataKey={dataKey}
               name="Value"
               radius={[0, 4, 4, 0]}
-              label={{ 
-                position: "right",
+              label={{
+                position: 'right',
                 formatter: labelFormatter,
                 fontSize: 12,
-                fill: '#64748b'
+                fill: '#64748b',
               }}
               isAnimationActive={isAnimationActive}
               animationDuration={animationDuration}
@@ -200,13 +212,13 @@ const ImpactBarChart = ({
               animationEasing={animationEasing}
             >
               {data.map((entry, index) => (
-                <Cell 
-                  key={`cell-${entry.id || index}`} 
+                <Cell
+                  key={`cell-${entry.id || index}`}
                   fill={colors[index % colors.length]}
                   style={{
                     filter: 'brightness(1)',
                     transition: 'filter 0.2s ease-in-out',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.filter = 'brightness(1.15)';

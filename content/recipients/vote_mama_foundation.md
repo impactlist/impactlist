@@ -1,6 +1,6 @@
 ---
 id: vote-mama-foundation
-name: "Vote Mama Foundation"
+name: 'Vote Mama Foundation'
 categories:
   - id: political
     fraction: 0.7

@@ -6,4 +6,4 @@ categories:
     fraction: 0.5
   - id: social-justice
     fraction: 0.5
---- 
+---

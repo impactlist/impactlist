@@ -1,8 +1,8 @@
 ---
 id: arts-culture
-name: "Arts, Culture, Heritage"
+name: 'Arts, Culture, Heritage'
 costPerLife: 1_000_000
---- 
+---
 
 o3 says $2000 - $3000 per QALY, so assume $2500, times 80 = $200k
 

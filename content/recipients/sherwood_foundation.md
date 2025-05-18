@@ -1,6 +1,6 @@
 ---
 id: sherwood-foundation
-name: "Sherwood Foundation"
+name: 'Sherwood Foundation'
 categories:
   - id: education
     fraction: 0.5
@@ -12,4 +12,4 @@ categories:
     fraction: 0.05
   - id: local-community
     fraction: 0.15
---- 
+---

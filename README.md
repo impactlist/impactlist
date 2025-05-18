@@ -48,3 +48,13 @@ npm run lint
 ```
 npx eslint <filename>
 ```
+### Prettier
+
+Check: 
+```
+npx prettier --check .
+```
+Write:
+```
+npx prettier --write .
+```

@@ -37,3 +37,14 @@ We’re actively seeking volunteers to help with the project. Join [the discord]
    ```
    npm run preview
    ```
+
+## Linting
+
+1. The entire project
+```
+npm run lint
+```
+2. On single file
+```
+npx eslint <filename>
+```

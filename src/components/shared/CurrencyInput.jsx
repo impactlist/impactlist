@@ -34,7 +34,7 @@ const CurrencyInput = ({ id, value, onChange, placeholder = '0', label, classNam
         </label>
       )}
       <div className={`flex items-center relative ${error ? 'text-red-500' : ''}`}>
-        <span className={`text-slate-700 absolute left-3 ${error ? 'text-red-500' : ''}`}>$</span>
+        <span className={`text-slate-700 absolute left-2 text-sm ${error ? 'text-red-500' : ''}`}>$</span>
         <input
           id={id}
           type="text"
@@ -47,7 +47,7 @@ const CurrencyInput = ({ id, value, onChange, placeholder = '0', label, classNam
           disabled={disabled}
           aria-invalid={!!error}
           aria-errormessage={error ? `${id}-error` : undefined}
-          className={`w-full pl-7 py-2 border rounded focus:ring-2 focus:outline-none ${
+          className={`w-full pl-5 py-1 text-sm border rounded focus:ring-1 focus:outline-none ${
             error
               ? 'border-red-300 text-red-700 focus:ring-red-500 focus:border-red-500'
               : 'border-slate-300 focus:ring-indigo-500 focus:border-indigo-500'

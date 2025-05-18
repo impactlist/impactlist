@@ -1,5 +1,6 @@
 // Helper functions for donation and impact calculations
 import { categoriesById, donorsById, recipientsById, donations } from '../data/generatedData';
+import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
 
 // Helper to get category by ID
 export const getCategoryById = (categoryId) => {
@@ -240,7 +241,7 @@ export const getCostPerLifeForRecipient = (recipientId, customValues = null) => 
   }
 
   let totalWeight = 0;
-  const spendingTotal = 1e9; // simulate spending a billion dollars to get the cost per life
+  const spendingTotal = SIMULATION_AMOUNT; // simulate spending a billion dollars to get the cost per life
   let totalLivesSaved = 0;
 
   // Go through each category and calculate weighted costs
@@ -263,7 +264,7 @@ export const getCostPerLifeForRecipient = (recipientId, customValues = null) => 
   }
 
   // Ensure total weight is normalized
-  if (Math.abs(totalWeight - 1) > 0.01) {
+  if (Math.abs(totalWeight - 1) > WEIGHT_NORMALIZATION_TOLERANCE) {
     throw new Error(`Category weights for recipient "${recipient.name}" do not sum to 1 (total: ${totalWeight}).`);
   }
 

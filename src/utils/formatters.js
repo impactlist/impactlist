@@ -1,3 +1,16 @@
+import {
+  TRILLION,
+  BILLION,
+  MILLION,
+  THOUSAND,
+  TEN,
+  SMALL_NUMBER_THRESHOLD,
+  HUNDRED_LIVES,
+  TEN_LIVES,
+  ONE_LIFE,
+  FRACTION_LIFE_THRESHOLD,
+} from './constants';
+
 /**
  * Format numbers with commas and suffixes for large values
  * @param {number} num - The number to format
@@ -9,23 +22,23 @@ export const formatNumber = (num) => {
   let formattedValue;
 
   // Handle extremely large numbers with B/T suffixes
-  if (absNum >= 1000000000000) {
+  if (absNum >= TRILLION) {
     // Trillions - use 2 significant digits
-    const value = absNum / 1000000000000;
+    const value = absNum / TRILLION;
     // Format integer or decimal value
     let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
     // Add commas for large prefix values (e.g., 1,234.5T)
-    if (value >= 1000) {
+    if (value >= THOUSAND) {
       valueStr = Number(valueStr).toLocaleString('en-US');
     }
     formattedValue = `${valueStr}T`;
-  } else if (absNum >= 1000000000) {
+  } else if (absNum >= BILLION) {
     // Billions - use 2 significant digits
-    const value = absNum / 1000000000;
+    const value = absNum / BILLION;
     // Format integer or decimal value
     let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
     // Add commas for large prefix values (e.g., 1,234.5B)
-    if (value >= 1000) {
+    if (value >= THOUSAND) {
       valueStr = Number(valueStr).toLocaleString('en-US');
     }
     formattedValue = `${valueStr}B`;
@@ -49,22 +62,22 @@ export const formatLives = (lives) => {
   if (Number.isInteger(absLives)) {
     // If it's a whole number, just format with commas
     return formatNumber(lives);
-  } else if (absLives >= 100) {
+  } else if (absLives >= HUNDRED_LIVES) {
     // For large fractional numbers, round to nearest whole number
     return formatNumber(Math.round(lives));
-  } else if (absLives >= 10) {
+  } else if (absLives >= TEN_LIVES) {
     // For medium numbers, show 1 decimal place
     const rounded = Math.round(absLives * 10) / 10;
     return isNegative
       ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`
       : rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  } else if (absLives >= 1) {
+  } else if (absLives >= ONE_LIFE) {
     // For small numbers, show 2 decimal places
     const rounded = Math.round(absLives * 100) / 100;
     return isNegative
       ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
       : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  } else if (absLives >= 0.01) {
+  } else if (absLives >= FRACTION_LIFE_THRESHOLD) {
     // For very small numbers, show 2 decimal places
     const rounded = Math.round(absLives * 100) / 100;
     return isNegative
@@ -98,9 +111,9 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
   const absAmount = Math.abs(amount);
 
   let formattedValue;
-  if (absAmount >= 1000000000000) {
+  if (absAmount >= TRILLION) {
     // Trillions
-    const value = absAmount / 1000000000000;
+    const value = absAmount / TRILLION;
     // Format integer or decimal value
     let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
     // Add commas for large prefix values (e.g., $1,234.5T)
@@ -108,9 +121,9 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
       valueStr = Number(valueStr).toLocaleString('en-US');
     }
     formattedValue = `$${valueStr}T`;
-  } else if (absAmount >= 1000000000) {
+  } else if (absAmount >= BILLION) {
     // Billions
-    const value = absAmount / 1000000000;
+    const value = absAmount / BILLION;
     // Format integer or decimal value
     let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
     // Add commas for large prefix values (e.g., $1,234.5B)
@@ -118,9 +131,9 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
       valueStr = Number(valueStr).toLocaleString('en-US');
     }
     formattedValue = `$${valueStr}B`;
-  } else if (absAmount >= 1000000) {
+  } else if (absAmount >= MILLION) {
     // Millions
-    const value = absAmount / 1000000;
+    const value = absAmount / MILLION;
     // Format integer or decimal value
     let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
     // Add commas for large prefix values (e.g., $1,234.5M)
@@ -128,13 +141,13 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
       valueStr = Number(valueStr).toLocaleString('en-US');
     }
     formattedValue = `$${valueStr}M`;
-  } else if (absAmount >= 1000) {
+  } else if (absAmount >= THOUSAND) {
     // For values ≥ 1,000, show with commas but without 'K' abbreviation
     formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;
-  } else if (absAmount >= 10) {
+  } else if (absAmount >= TEN) {
     // For values ≥ 10, show only integer dollars
     formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;
-  } else if (absAmount < 0.0001) {
+  } else if (absAmount < SMALL_NUMBER_THRESHOLD) {
     // For extremely small values, use scientific notation to avoid showing $0
     // Format as $1.23e-4 for better readability
     formattedValue = `$${absAmount.toExponential(2)}`;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { motion, AnimatePresence } from 'framer-motion';
+import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
 
 // Import shared components
 import DefaultValuesSection from './costperlife/DefaultValuesSection';
@@ -55,9 +56,9 @@ const CostPerLifeEditor = () => {
         // Sort alphabetically
         filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
 
-        // Limit to first 10 results when searching
-        if (filtered.length > 10) {
-          filtered = filtered.slice(0, 10);
+        // Limit to first N results when searching
+        if (filtered.length > DEFAULT_RESULTS_LIMIT) {
+          filtered = filtered.slice(0, DEFAULT_RESULTS_LIMIT);
         }
       } else if (onlyCustom) {
         // When no search term, filter to only show recipients with custom values

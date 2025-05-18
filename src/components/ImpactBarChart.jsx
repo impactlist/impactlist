@@ -1,5 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import {
+  CHART_COLORS,
+  CHART_MARGIN_WITH_LABELS,
+  CHART_MARGIN_WITHOUT_LABELS,
+  CHART_LARGE_WIDTH_THRESHOLD,
+  CHART_MEDIUM_WIDTH_THRESHOLD,
+  CHART_DEFAULT_WIDTH,
+} from '../utils/constants';
 
 // Optional chart toggle component that both DonorDetail and RecipientDetail can use
 export const ImpactChartToggle = ({ chartView, onToggle, disabled }) => {
@@ -32,35 +40,7 @@ export const ImpactChartToggle = ({ chartView, onToggle, disabled }) => {
 const ImpactBarChart = ({
   data,
   layout = 'vertical',
-  colors = [
-    '#4f46e5',
-    '#3b82f6',
-    '#6366f1',
-    '#8b5cf6',
-    '#a855f7',
-    '#d946ef',
-    '#818cf8',
-    '#10b981',
-    '#14b8a6',
-    '#06b6d4',
-    '#0ea5e9',
-    '#22c55e',
-    '#84cc16',
-    '#34d399',
-    '#eab308',
-    '#f59e0b',
-    '#f97316',
-    '#ef4444',
-    '#a3e635',
-    '#fbbf24',
-    '#fb923c',
-    '#ec4899',
-    '#db2777',
-    '#be185d',
-    '#9d174d',
-    '#831843',
-    '#3f3f46',
-  ],
+  colors = CHART_COLORS,
   formatXAxisTick = (value) => `${value}%`,
   dataKey = 'percentage',
   nameKey = 'name',
@@ -82,27 +62,26 @@ const ImpactBarChart = ({
 
   // Calculate responsive margins based on available width
   const calculateChartMargins = (width) => {
-    // Default margins for larger screens
-    const defaultMargins = { top: 20, right: 100, left: 120, bottom: 5 };
-
-    // Minimum margins before scroll is needed
-    const minMargins = { top: 20, right: 20, left: 25, bottom: 5 };
-
     // Linearly reduce margins as width decreases
-    if (width >= 800) {
+    if (width >= CHART_LARGE_WIDTH_THRESHOLD) {
       // Full margins for wider screens
-      return defaultMargins;
-    } else if (width <= 400) {
+      return CHART_MARGIN_WITH_LABELS;
+    } else if (width <= CHART_MEDIUM_WIDTH_THRESHOLD) {
       // Minimum margins for very narrow screens
-      return minMargins;
+      return CHART_MARGIN_WITHOUT_LABELS;
     } else {
       // Proportional margins for in-between widths
-      const ratio = (width - 400) / 400; // 0 to 1
+      const ratio = (width - CHART_MEDIUM_WIDTH_THRESHOLD) / CHART_MEDIUM_WIDTH_THRESHOLD; // 0 to 1
       return {
-        top: defaultMargins.top,
-        right: Math.round(minMargins.right + (defaultMargins.right - minMargins.right) * ratio),
-        left: Math.round(minMargins.left + (defaultMargins.left - minMargins.left) * ratio),
-        bottom: defaultMargins.bottom,
+        top: CHART_MARGIN_WITH_LABELS.top,
+        right: Math.round(
+          CHART_MARGIN_WITHOUT_LABELS.right +
+            (CHART_MARGIN_WITH_LABELS.right - CHART_MARGIN_WITHOUT_LABELS.right) * ratio
+        ),
+        left: Math.round(
+          CHART_MARGIN_WITHOUT_LABELS.left + (CHART_MARGIN_WITH_LABELS.left - CHART_MARGIN_WITHOUT_LABELS.left) * ratio
+        ),
+        bottom: CHART_MARGIN_WITH_LABELS.bottom,
       };
     }
   };
@@ -148,13 +127,19 @@ const ImpactBarChart = ({
     })();
 
   return (
-    <div className={`py-4 px-2 relative ${containerWidth < 500 ? 'overflow-x-auto' : 'overflow-hidden'}`}>
+    <div
+      className={`py-4 px-2 relative ${containerWidth < CHART_DEFAULT_WIDTH ? 'overflow-x-auto' : 'overflow-hidden'}`}
+    >
       <div
         ref={chartContainerRef}
         className="w-full overflow-visible"
         style={{ height: `${heightCalculator(data.length)}px` }}
       >
-        <ResponsiveContainer width="98%" height="100%" minWidth={containerWidth < 500 ? 500 : undefined}>
+        <ResponsiveContainer
+          width="98%"
+          height="100%"
+          minWidth={containerWidth < CHART_DEFAULT_WIDTH ? CHART_DEFAULT_WIDTH : undefined}
+        >
           <BarChart
             data={data}
             layout={layout}

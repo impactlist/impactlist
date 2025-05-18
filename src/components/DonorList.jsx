@@ -132,17 +132,8 @@ const DonorList = (props) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Hero Header - Hidden when using App layout */}
-      {!props.hideHeader && (
-        <div className="w-full bg-indigo-700 py-10 mb-10 text-center shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Impact List</h1>
-            <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Rankings based on positive impact via donations</p>
-          </div>
-        </div>
-      )}
-      {/* Spacer when using App layout */}
-      {props.hideHeader && <div className="h-10"></div>}
+      {/* Spacer */}
+      <div className="h-10"></div>
 
       {/* Donors Table Container */}
       <motion.div

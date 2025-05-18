@@ -22,7 +22,7 @@ import EntityChartSection from './entity/EntityChartSection';
 import EntityDonationTable from './entity/EntityDonationTable';
 import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
-const DonorDetail = (props) => {
+const DonorDetail = () => {
   const { donorId } = useParams();
   const [donorStats, setDonorStats] = useState(null);
   const [donorDonations, setDonorDonations] = useState([]);
@@ -414,21 +414,7 @@ const DonorDetail = (props) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Header with back button - Hidden when using App layout */}
-      {!props.hideHeader && (
-        <div className="w-full bg-indigo-700 py-8 mb-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center">
-              <BackButton
-                className="text-indigo-100 hover:text-white"
-                containerProps={{ className: 'flex justify-start' }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-      {/* Back button when using App layout */}
-      {props.hideHeader && <BackButton />}
+      <BackButton />
 
       <motion.div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
@@ -467,13 +453,6 @@ const DonorDetail = (props) => {
         {/* Donations list */}
         <EntityDonationTable donations={donorDonations} entityType="donor" />
       </motion.div>
-
-      {/* Footer - Hidden when using App layout */}
-      {!props.hideHeader && (
-        <div className="w-full py-6 bg-slate-800 text-center">
-          <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
-        </div>
-      )}
     </motion.div>
   );
 };

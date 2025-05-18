@@ -17,7 +17,7 @@ import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 
-const RecipientList = (props) => {
+const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);
   const { customValues, openModal } = useCostPerLife();
 
@@ -210,13 +210,6 @@ const RecipientList = (props) => {
           </div>
         </div>
       </motion.div>
-
-      {/* Footer - Hidden when using App layout */}
-      {!props.hideHeader && (
-        <div className="w-full py-6 bg-slate-800 text-center">
-          <p className="text-sm text-slate-400">Data compiled from public donations and impact estimates</p>
-        </div>
-      )}
     </motion.div>
   );
 };

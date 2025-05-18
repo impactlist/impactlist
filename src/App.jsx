@@ -203,10 +203,10 @@ const AppContent = () => {
       <div className="page-content bg-slate-50 min-h-[calc(100vh-160px)]">
         <AnimatePresence mode="wait">
           <Routes>
-            <Route path="/" element={<DonorList hideHeader={true} />} />
-            <Route path="/donor/:donorId" element={<DonorDetail hideHeader={true} />} />
-            <Route path="/recipient/:recipientId" element={<RecipientDetail hideHeader={true} />} />
-            <Route path="/recipients" element={<RecipientList hideHeader={true} />} />
+            <Route path="/" element={<DonorList />} />
+            <Route path="/donor/:donorId" element={<DonorDetail />} />
+            <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
+            <Route path="/recipients" element={<RecipientList />} />
             <Route path="/calculator" element={<DonationCalculator />} />
           </Routes>
         </AnimatePresence>

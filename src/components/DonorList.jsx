@@ -17,7 +17,7 @@ import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 
-const Home = (props) => {
+const DonorList = (props) => {
   const [donorStats, setDonorStats] = useState([]);
   const [, setRecipientStats] = useState([]);
   const { customValues, openModal } = useCostPerLife();
@@ -216,4 +216,4 @@ const Home = (props) => {
   );
 };
 
-export default Home;
+export default DonorList;

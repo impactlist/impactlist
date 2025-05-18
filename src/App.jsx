@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Routes, useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Home from './components/Home';
+import DonorList from './components/DonorList';
 import DonorDetail from './components/DonorDetail';
 import RecipientDetail from './components/RecipientDetail';
-import Recipients from './components/Recipients';
+import RecipientList from './components/RecipientList';
 import DonationCalculator from './components/DonationCalculator';
 import { CostPerLifeProvider } from './components/CostPerLifeContext';
 import CostPerLifeEditor from './components/CostPerLifeEditor';
@@ -128,7 +128,7 @@ const Header = ({ isHome, isRecipients, isCalculator }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              Recipient Organizations
+              Donation Recipients
             </motion.h1>
             <motion.p
               className="text-xl text-indigo-100 max-w-3xl mx-auto"
@@ -203,10 +203,10 @@ const AppContent = () => {
       <div className="page-content bg-slate-50 min-h-[calc(100vh-160px)]">
         <AnimatePresence mode="wait">
           <Routes>
-            <Route path="/" element={<Home hideHeader={true} />} />
+            <Route path="/" element={<DonorList hideHeader={true} />} />
             <Route path="/donor/:donorId" element={<DonorDetail hideHeader={true} />} />
             <Route path="/recipient/:recipientId" element={<RecipientDetail hideHeader={true} />} />
-            <Route path="/recipients" element={<Recipients hideHeader={true} />} />
+            <Route path="/recipients" element={<RecipientList hideHeader={true} />} />
             <Route path="/calculator" element={<DonationCalculator />} />
           </Routes>
         </AnimatePresence>

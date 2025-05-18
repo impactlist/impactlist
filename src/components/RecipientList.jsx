@@ -17,7 +17,7 @@ import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 
-const Recipients = (props) => {
+const RecipientList = (props) => {
   const [recipientStats, setRecipientStats] = useState([]);
   const { customValues, openModal } = useCostPerLife();
 
@@ -166,7 +166,7 @@ const Recipients = (props) => {
       {!props.hideHeader && (
         <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-10 mb-10 text-center shadow-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Recipient Organizations</h1>
+            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Donation Recipients</h1>
             <p className="text-xl text-indigo-100 max-w-3xl mx-auto">Ranked by total lives saved through donations</p>
           </div>
         </div>
@@ -185,7 +185,7 @@ const Recipients = (props) => {
         transition={{ delay: 0.2, duration: 0.4 }}
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-slate-800">Recipient Organizations</h2>
+          <h2 className="text-2xl font-bold text-slate-800">Donation Recipients</h2>
           <div className="flex items-center space-x-3">
             <CustomValuesIndicator />
             <button
@@ -230,4 +230,4 @@ const Recipients = (props) => {
   );
 };
 
-export default Recipients;
+export default RecipientList;

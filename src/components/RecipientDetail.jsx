@@ -77,7 +77,7 @@ const RecipientDetail = () => {
     const recipientDonationsList = getDonationsForRecipient(recipientId)
       .map((donation) => {
         // Calculate lives saved for this donation
-        const livesSaved = calculateLivesSavedForDonation(donation, customValues);
+        const totalLivesSaved = calculateLivesSavedForDonation(donation, customValues);
 
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
@@ -85,7 +85,7 @@ const RecipientDetail = () => {
         return {
           ...donation,
           creditedAmount,
-          livesSaved,
+          totalLivesSaved,
           dateObj: donation.date,
         };
       })
@@ -93,7 +93,7 @@ const RecipientDetail = () => {
 
     // Calculate total received
     const totalReceived = recipientDonationsList.reduce((sum, donation) => sum + donation.creditedAmount, 0);
-    const totalLivesSaved = recipientDonationsList.reduce((sum, donation) => sum + donation.livesSaved, 0);
+    const totalLivesSaved = recipientDonationsList.reduce((sum, donation) => sum + donation.totalLivesSaved, 0);
 
     // Prepare data for the two chart views
     // Create donations by category data

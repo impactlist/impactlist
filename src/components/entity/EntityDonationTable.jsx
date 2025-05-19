@@ -90,10 +90,10 @@ const EntityDonationTable = ({ donations, entityType, className = '' }) => {
       render: (donation) => (
         <div
           className={`text-sm ${
-            donation.isUnknown ? 'text-slate-500' : donation.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'
+            donation.isUnknown ? 'text-slate-500' : donation.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'
           }`}
         >
-          {formatNumber(Math.round(donation.livesSaved))}
+          {formatNumber(Math.round(donation.totalLivesSaved))}
         </div>
       ),
     },
@@ -102,7 +102,7 @@ const EntityDonationTable = ({ donations, entityType, className = '' }) => {
       label: 'Cost/Life',
       render: (donation) => (
         <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 'text-slate-900'}`}>
-          {donation.livesSaved === 0 ? <span className="text-2xl">∞</span> : formatCurrency(donation.costPerLife)}
+          {donation.totalLivesSaved === 0 ? <span className="text-2xl">∞</span> : formatCurrency(donation.costPerLife)}
         </div>
       ),
     },
@@ -156,11 +156,11 @@ const EntityDonationTable = ({ donations, entityType, className = '' }) => {
       ),
     },
     {
-      key: 'livesSaved',
+      key: 'totalLivesSaved',
       label: 'Lives Saved',
       render: (donation) => (
-        <div className={`text-sm ${donation.livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-          {formatNumber(Math.round(donation.livesSaved))}
+        <div className={`text-sm ${donation.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+          {formatNumber(Math.round(donation.totalLivesSaved))}
         </div>
       ),
     },

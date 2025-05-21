@@ -11,6 +11,7 @@ import { recipientsById } from '../data/generatedData';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import SpecificDonationModal from './SpecificDonationModal';
+import PageHeader from './PageHeader';
 
 // Import new components
 import CalculatorStats from './calculator/CalculatorStats';
@@ -330,126 +331,136 @@ const DonationCalculator = () => {
   };
 
   return (
-    <motion.div
-      className="min-h-screen bg-slate-50 flex flex-col items-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      {/* Spacer */}
-      <div className="h-10"></div>
-
-      {/* Back Link */}
+    <div>
       <BackButton to="/" label="Back to top donors" />
-
-      {/* Main Content Container */}
       <motion.div
-        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.4 }}
+        className="min-h-screen bg-slate-50 flex flex-col items-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
       >
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-slate-800">Donation Calculator</h1>
-          <div className="flex items-center space-x-3">
-            <CustomValuesIndicator />
-            <button
-              onClick={openModal}
-              className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 bg-white rounded-md text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-1.5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+        {/* Page Header */}
+        <PageHeader
+          title="Donation Calculator"
+          subtitle="Calculate the impact of your donations and see where you would rank"
+        />
+
+        {/* Main Content Container */}
+        <motion.div
+          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+        >
+          <div className="flex justify-end items-center mb-6">
+            <div className="flex items-center space-x-3">
+              <CustomValuesIndicator />
+              <button
+                onClick={openModal}
+                className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 bg-white rounded-md text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Adjust Assumptions
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1.5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Adjust Assumptions
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Impact Summary - Using the new CalculatorStats component */}
-        <CalculatorStats
-          totalDonated={totalDonated}
-          totalLivesSaved={totalLivesSaved}
-          costPerLife={costPerLife}
-          donorRank={donorRank}
-          neighboringDonors={neighboringDonors}
-          className="mb-6"
-        />
+          {/* Impact Summary */}
+          <CalculatorStats
+            totalDonated={totalDonated}
+            totalLivesSaved={totalLivesSaved}
+            costPerLife={costPerLife}
+            donorRank={donorRank}
+            neighboringDonors={neighboringDonors}
+          />
 
-        {/* Instruction text */}
-        <p className="text-lg text-slate-700 mb-6 px-2">
-          Enter your donation amounts to see your impact based on past or future donations.
-        </p>
+          {/* Smaller Spacer */}
+          <div className="h-10"></div>
 
-        {/* Specific Donations - Using the new RecipientTable component */}
-        {specificDonations.length > 0 && (
-          <RecipientTable
-            donations={specificDonations}
+          {/* Instruction text */}
+          <p className="text-lg text-slate-700 mb-6 px-2">
+            Enter your donation amounts to see your impact based on past or future donations.
+          </p>
+
+          {/* Specific Donations - Using the new RecipientTable component */}
+          {specificDonations.length > 0 && (
+            <RecipientTable
+              donations={specificDonations}
+              categories={categories}
+              recipientsById={recipientsById}
+              onAddClick={() => openDonationModal()}
+              onEditClick={(donation) => openDonationModal(donation)}
+              onDeleteClick={handleDeleteSpecificDonation}
+              calculateLivesSaved={calculateLivesSavedForSpecificDonation}
+              getCostPerLife={getCostPerLifeForSpecificDonation}
+              className="mb-6"
+            />
+          )}
+
+          {/* Add Specific Donation button - Only show if no donations yet */}
+          {specificDonations.length === 0 && (
+            <div className="flex justify-center mb-6">
+              <button
+                onClick={() => openDonationModal()}
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add Specific Donation
+              </button>
+            </div>
+          )}
+
+          {/* Category Donations - Using the new CalculatorForm component */}
+          <CalculatorForm
             categories={categories}
-            recipientsById={recipientsById}
-            onAddClick={() => openDonationModal()}
-            onEditClick={(donation) => openDonationModal(donation)}
-            onDeleteClick={handleDeleteSpecificDonation}
-            calculateLivesSaved={calculateLivesSavedForSpecificDonation}
-            getCostPerLife={getCostPerLifeForSpecificDonation}
-            className="mb-6"
+            donations={donations}
+            onDonationChange={handleDonationChange}
+            onReset={resetDonations}
+            getLivesSavedForCategory={getLivesSavedForCategory}
+            getCostPerLifeForCategory={(categoryId) => getDefaultCostPerLifeForCategory(categoryId, customValues)}
           />
-        )}
+        </motion.div>
 
-        {/* Add Specific Donation button - Only show if no donations yet */}
-        {specificDonations.length === 0 && (
-          <div className="flex justify-center mb-6">
-            <button
-              onClick={() => openDonationModal()}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Add Specific Donation
-            </button>
-          </div>
-        )}
-
-        {/* Category Donations - Using the new CalculatorForm component */}
-        <CalculatorForm
-          categories={categories}
-          donations={donations}
-          onDonationChange={handleDonationChange}
-          onReset={resetDonations}
-          getLivesSavedForCategory={getLivesSavedForCategory}
-          getCostPerLifeForCategory={(categoryId) => getDefaultCostPerLifeForCategory(categoryId, customValues)}
-        />
+        {/* Specific Donation Modal */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <SpecificDonationModal
+              isOpen={isModalOpen}
+              onClose={() => {
+                setIsModalOpen(false);
+                setEditingDonation(null);
+              }}
+              onSave={handleSaveSpecificDonation}
+              editingDonation={editingDonation}
+              categories={categories}
+            />
+          )}
+        </AnimatePresence>
       </motion.div>
-
-      {/* Specific Donation Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <SpecificDonationModal
-            isOpen={isModalOpen}
-            onClose={() => {
-              setIsModalOpen(false);
-              setEditingDonation(null);
-            }}
-            onSave={handleSaveSpecificDonation}
-            editingDonation={editingDonation}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
+    </div>
   );
 };
 

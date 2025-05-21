@@ -16,6 +16,7 @@ import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
+import PageHeader from './PageHeader';
 
 const DonorList = () => {
   const [donorStats, setDonorStats] = useState([]);
@@ -125,78 +126,80 @@ const DonorList = () => {
   ];
 
   return (
-    <motion.div
-      className="min-h-screen bg-slate-50 flex flex-col items-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      {/* Spacer */}
+    <div>
       <div className="h-10"></div>
-
-      {/* Donors Table Container */}
       <motion.div
-        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.4 }}
-      >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-slate-800">Top Donors</h2>
-          <div className="flex items-center space-x-3">
-            <CustomValuesIndicator />
-            <button
-              onClick={openModal}
-              className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 bg-white rounded-md text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-1.5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Adjust Assumptions
-            </button>
-          </div>
-        </div>
-        <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
-          <div className="overflow-x-auto">
-            <SortableTable
-              columns={donorColumns}
-              data={donorStats}
-              defaultSortColumn="totalLivesSaved"
-              defaultSortDirection="desc"
-              rankKey="rank"
-            />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Links to other pages */}
-      <motion.div
-        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center"
+        className="min-h-screen bg-slate-50 flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.4 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
       >
-        <div className="flex justify-center items-center">
-          <Link
-            to="/calculator"
-            className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
-            onClick={() => window.scrollTo(0, 0)}
-          >
-            Calculate the lives you could save with your donations →
-          </Link>
-        </div>
+        {/* Page Header */}
+        <PageHeader title="Impact List" subtitle="Ranking the top donors by their positive impact on the world" />
+
+        {/* Donors Table Container */}
+        <motion.div
+          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+        >
+          <div className="flex justify-end items-center mb-4">
+            <div className="flex items-center space-x-3">
+              <CustomValuesIndicator />
+              <button
+                onClick={openModal}
+                className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 bg-white rounded-md text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1.5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Adjust Assumptions
+              </button>
+            </div>
+          </div>
+          <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
+            <div className="overflow-x-auto">
+              <SortableTable
+                columns={donorColumns}
+                data={donorStats}
+                defaultSortColumn="totalLivesSaved"
+                defaultSortDirection="desc"
+                rankKey="rank"
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Links to other pages */}
+        <motion.div
+          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
+          <div className="flex justify-center items-center">
+            <Link
+              to="/calculator"
+              className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              Calculate the lives you could save with your donations →
+            </Link>
+          </div>
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

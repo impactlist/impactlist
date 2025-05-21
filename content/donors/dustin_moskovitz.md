@@ -1,5 +1,5 @@
 ---
 id: 'dustin-moskovitz'
 name: 'Dustin Moskovitz'
-netWorth: 14_000_000_000
+netWorth: 8_600_000_000
 ---

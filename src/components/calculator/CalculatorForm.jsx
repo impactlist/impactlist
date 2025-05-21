@@ -51,15 +51,15 @@ const CalculatorForm = ({
           return (
             <div
               key={category.id}
-              className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+              className="px-4 py-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
             >
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex justify-between items-start mb-1">
                 <label className="text-sm font-medium text-slate-800" htmlFor={`donation-${category.id}`}>
                   {category.name}
                 </label>
                 <span className="text-xs text-slate-500">${formatNumber(costPerLife)}/life</span>
               </div>
-              <div className="flex items-center mb-2">
+              <div className="flex items-center mb-1">
                 <span className="text-slate-700 mr-1">$</span>
                 <input
                   id={`donation-${category.id}`}

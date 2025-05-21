@@ -54,7 +54,7 @@ const CalculatorForm = ({
               className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
             >
               <div className="flex justify-between items-start mb-2">
-                <label className="font-medium text-slate-800" htmlFor={`donation-${category.id}`}>
+                <label className="text-sm font-medium text-slate-800" htmlFor={`donation-${category.id}`}>
                   {category.name}
                 </label>
                 <span className="text-xs text-slate-500">${formatNumber(costPerLife)}/life</span>
@@ -67,7 +67,7 @@ const CalculatorForm = ({
                   inputMode="decimal"
                   value={formatDonationInput(amount)}
                   onChange={(e) => onDonationChange(category.id, e.target.value)}
-                  className="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full py-0.5 px-2 border rounded text-sm leading-tight focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="0"
                 />
               </div>

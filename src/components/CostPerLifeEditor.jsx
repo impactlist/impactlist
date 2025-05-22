@@ -327,13 +327,11 @@ const CostPerLifeEditor = () => {
       const defaultValue = allCategories[key].costPerLife;
       const rawValue = valueObj.raw;
 
-      // Skip validation if value is the same as default
+      // Skip validation if value is the same as default or if empty (empty = use default)
       if (Number(rawValue) === defaultValue) return;
 
-      // Check if blank or not a string
+      // Empty values are valid - they'll use the default value
       if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
-        newCategoryErrors[key] = 'Invalid number';
-        hasErrors = true;
         return;
       }
 
@@ -521,11 +519,19 @@ const CostPerLifeEditor = () => {
 
       // Process the value - convert string to number
       const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
-      const processedValue = cleanValue.trim() === '' ? null : Number(cleanValue);
 
-      // Only consider valid number inputs that are different from default and not zero
-      if (!isNaN(processedValue) && processedValue !== defaultValue && processedValue !== 0) {
-        categoryOnlyCustomized[key] = processedValue;
+      // If the value is empty, we'll use the default value (by not adding to customizations)
+      // Empty fields will automatically use the default value
+      const isEmpty = cleanValue.trim() === '';
+
+      // For non-empty values, check if they're different from default
+      if (!isEmpty) {
+        const processedValue = Number(cleanValue);
+
+        // Only consider valid number inputs that are different from default and not zero
+        if (!isNaN(processedValue) && processedValue !== defaultValue && processedValue !== 0) {
+          categoryOnlyCustomized[key] = processedValue;
+        }
       }
     });
 

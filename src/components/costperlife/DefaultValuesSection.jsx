@@ -72,11 +72,12 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
               </div>
               <CurrencyInput
                 id={`category-${key}`}
-                value={getFormValue(formValues, key, defaultValue)}
+                value={getFormValue(formValues, key, defaultValue)} // Never use default as value
                 onChange={(value) => onChange(key, value)}
                 error={hasError}
                 className="w-full"
                 validateOnBlur={true} // Only validate on blur, not while typing
+                placeholder={formatNumberWithCommas(defaultValue)} // Use default as placeholder
               />
               {isCustom && !hasError && (
                 <div className="text-xs text-gray-500 mt-0.5">Default: ${formatNumberWithCommas(defaultValue)}</div>

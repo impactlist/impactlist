@@ -7,6 +7,7 @@ import DonorList from './components/DonorList';
 import DonorDetail from './components/DonorDetail';
 import RecipientDetail from './components/RecipientDetail';
 import RecipientList from './components/RecipientList';
+import CategoryDetail from './components/CategoryDetail';
 import DonationCalculator from './components/DonationCalculator';
 import About from './components/About';
 import { CostPerLifeProvider } from './components/CostPerLifeContext';
@@ -94,6 +95,7 @@ const AppContent = () => {
               <Route path="/" element={<DonorList />} />
               <Route path="/donor/:donorId" element={<DonorDetail />} />
               <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
+              <Route path="/category/:categoryId" element={<CategoryDetail />} />
               <Route path="/recipients" element={<RecipientList />} />
               <Route path="/calculator" element={<DonationCalculator />} />
               <Route path="/about" element={<About />} />

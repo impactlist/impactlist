@@ -1,6 +1,14 @@
 import { useState } from 'react';
 
-const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection = 'desc', rankKey }) => {
+const SortableTable = ({
+  columns,
+  data,
+  defaultSortColumn,
+  defaultSortDirection = 'desc',
+  rankKey,
+  tiebreakColumn,
+  tiebreakDirection = 'desc',
+}) => {
   const [sortColumn, setSortColumn] = useState(defaultSortColumn);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
 
@@ -35,7 +43,16 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
       if (aValue < 0 && bValue < 0) {
         // Sort by absolute value, but reversed (closer to zero = higher cost)
         // Math.abs converts to positive, we want smaller absolute values first when ascending
-        return sortMultiplier * (Math.abs(bValue) - Math.abs(aValue));
+        const result = sortMultiplier * (Math.abs(bValue) - Math.abs(aValue));
+
+        // Use tiebreaker if values are equal and tiebreakColumn is provided
+        if (result === 0 && tiebreakColumn) {
+          // Apply the tiebreaker based on the specified direction
+          const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
+          return tiebreakMultiplier * (a[tiebreakColumn] - b[tiebreakColumn]);
+        }
+
+        return result;
       }
 
       // Only a is negative
@@ -51,15 +68,34 @@ const SortableTable = ({ columns, data, defaultSortColumn, defaultSortDirection 
       }
 
       // Both are non-negative, use normal sorting
-      return sortMultiplier * (aValue - bValue);
+      const result = sortMultiplier * (aValue - bValue);
+
+      // Use tiebreaker if values are equal and tiebreakColumn is provided
+      if (result === 0 && tiebreakColumn) {
+        // Apply the tiebreaker based on the specified direction
+        const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
+        return tiebreakMultiplier * (a[tiebreakColumn] - b[tiebreakColumn]);
+      }
+
+      return result;
     }
 
     // Normal sorting for other columns
+    let result;
     if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortMultiplier * aValue.localeCompare(bValue);
+      result = sortMultiplier * aValue.localeCompare(bValue);
     } else {
-      return sortMultiplier * (aValue - bValue);
+      result = sortMultiplier * (aValue - bValue);
     }
+
+    // Use tiebreaker if values are equal and tiebreakColumn is provided
+    if (result === 0 && tiebreakColumn) {
+      // Apply the tiebreaker based on the specified direction
+      const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
+      return tiebreakMultiplier * (a[tiebreakColumn] - b[tiebreakColumn]);
+    }
+
+    return result;
   });
 
   // If rankKey is provided, preserve the original rank values

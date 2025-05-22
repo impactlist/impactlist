@@ -167,7 +167,7 @@ const RecipientList = () => {
         transition={{ duration: 0.3 }}
       >
         {/* Page Header */}
-        <PageHeader title="Recipients" subtitle="Organizations and causes that have received donations" />
+        <PageHeader title="Recipients" subtitle="Entities that have received donations" />
 
         {/* Recipients Table Container */}
         <motion.div
@@ -187,8 +187,10 @@ const RecipientList = () => {
               <SortableTable
                 columns={recipientColumns}
                 data={recipientStats}
-                defaultSortColumn="totalLivesSaved"
-                defaultSortDirection="desc"
+                defaultSortColumn="costPerLife"
+                defaultSortDirection="asc"
+                tiebreakColumn="totalLivesSaved"
+                tiebreakDirection="desc"
               />
             </div>
           </div>

@@ -105,7 +105,7 @@ const CategoryDetail = () => {
         {/* Category metadata content */}
         {categoryInfo.content && (
           <motion.div
-            className="mt-8 bg-white rounded-lg shadow-sm p-6"
+            className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6 mt-8"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.2 }}

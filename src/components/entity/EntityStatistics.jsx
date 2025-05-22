@@ -18,12 +18,7 @@ const EntityStatistics = ({
   const isDonor = entityType === 'donor';
 
   return (
-    <motion.div
-      className={`bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200 ${className}`}
-      initial={{ y: 10, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.1, duration: 0.4 }}
-    >
+    <>
       {(customValuesIndicator || onAdjustAssumptions) && (
         <div className="flex justify-end mb-4">
           <div className="flex items-center space-x-3">
@@ -33,55 +28,62 @@ const EntityStatistics = ({
         </div>
       )}
 
-      <div
-        className={`grid grid-cols-1 ${
-          (stats.categoryBreakdown?.length === 1 && !isDonor) || isDonor ? 'md:grid-cols-4' : 'md:grid-cols-3'
-        } gap-6`}
+      <motion.div
+        className={`bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200 ${className}`}
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.4 }}
       >
-        {/* Common statistics for both donors and recipients */}
-        <StatisticsCard
-          label={'Lives Saved'}
-          value={formatNumber(Math.round(stats.totalLivesSaved))}
-          valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
-        />
+        <div
+          className={`grid grid-cols-1 ${
+            (stats.categoryBreakdown?.length === 1 && !isDonor) || isDonor ? 'md:grid-cols-4' : 'md:grid-cols-3'
+          } gap-6`}
+        >
+          {/* Common statistics for both donors and recipients */}
+          <StatisticsCard
+            label={'Lives Saved'}
+            value={formatNumber(Math.round(stats.totalLivesSaved))}
+            valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
+          />
 
-        <StatisticsCard
-          label="Cost Per Life"
-          value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
-          valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
-          subtext={
-            stats.categoryCostPerLife !== undefined
-              ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
-              : undefined
-          }
-        />
+          <StatisticsCard
+            label="Cost Per Life"
+            value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
+            valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
+            subtext={
+              stats.categoryCostPerLife !== undefined
+                ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
+                : undefined
+            }
+          />
 
-        {/* Donor-specific statistics */}
-        {isDonor ? (
-          <>
-            <StatisticsCard
-              label="Total Donated"
-              value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
-              subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
-            />
+          {/* Donor-specific statistics */}
+          {isDonor ? (
+            <>
+              <StatisticsCard
+                label="Total Donated"
+                value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
+                subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
+              />
 
-            <StatisticsCard
-              label={stats.rank ? 'Impact Rank' : 'Net Worth'}
-              value={stats.rank ? `#${stats.rank}` : formatCurrency(stats.netWorth)}
-            />
-          </>
-        ) : (
-          <>
-            <StatisticsCard label="Total Received" value={formatCurrency(stats.totalReceived)} />
+              <StatisticsCard
+                label={stats.rank ? 'Impact Rank' : 'Net Worth'}
+                value={stats.rank ? `#${stats.rank}` : formatCurrency(stats.netWorth)}
+              />
+            </>
+          ) : (
+            <>
+              <StatisticsCard label="Total Received" value={formatCurrency(stats.totalReceived)} />
 
-            {/* Focus Area - Only shown for recipients with a single category */}
-            {stats.categoryBreakdown?.length === 1 && (
-              <StatisticsCard label="Focus Area" value={stats.categoryBreakdown[0].name} />
-            )}
-          </>
-        )}
-      </div>
-    </motion.div>
+              {/* Focus Area - Only shown for recipients with a single category */}
+              {stats.categoryBreakdown?.length === 1 && (
+                <StatisticsCard label="Focus Area" value={stats.categoryBreakdown[0].name} />
+              )}
+            </>
+          )}
+        </div>
+      </motion.div>
+    </>
   );
 };
 

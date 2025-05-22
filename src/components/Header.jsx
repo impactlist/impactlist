@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) => {
+const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -55,10 +55,10 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
               Recipients
             </Link>
             <Link
-              to="/about"
-              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAbout ? 'bg-indigo-600 text-white' : ''}`}
+              to="/faq"
+              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
             >
-              About
+              FAQ
             </Link>
           </motion.nav>
         </div>
@@ -179,7 +179,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
                 >
                   Categories
                 </Link>
-                {/* Show Recipients and About on both mobile and tablet */}
+                {/* Show Recipients and FAQ on both mobile and tablet */}
                 <Link
                   to="/recipients"
                   className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
@@ -188,11 +188,11 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
                   Recipients
                 </Link>
                 <Link
-                  to="/about"
-                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAbout ? 'bg-indigo-600 text-white' : ''}`}
+                  to="/faq"
+                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
-                  About
+                  FAQ
                 </Link>
               </div>
             </nav>
@@ -208,7 +208,7 @@ Header.propTypes = {
   isRecipients: PropTypes.bool,
   isCalculator: PropTypes.bool,
   isCategories: PropTypes.bool,
-  isAbout: PropTypes.bool,
+  isFAQ: PropTypes.bool,
 };
 
 Header.defaultProps = {
@@ -216,7 +216,7 @@ Header.defaultProps = {
   isRecipients: false,
   isCalculator: false,
   isCategories: false,
-  isAbout: false,
+  isFAQ: false,
 };
 
 export default Header;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const Footer = () => {
@@ -11,9 +10,6 @@ const Footer = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="flex justify-center items-center space-x-6">
-        <Link to="/about" className="text-slate-400 hover:text-white transition-colors">
-          About
-        </Link>
         <a
           href="https://github.com/impactlist/impactlist"
           target="_blank"

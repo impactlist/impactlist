@@ -10,7 +10,7 @@ import RecipientList from './components/RecipientList';
 import CategoryList from './components/CategoryList';
 import CategoryDetail from './components/CategoryDetail';
 import DonationCalculator from './components/DonationCalculator';
-import About from './components/About';
+import FAQ from './components/FAQ';
 import { CostPerLifeProvider } from './components/CostPerLifeContext';
 import CostPerLifeEditor from './components/CostPerLifeEditor';
 import Header from './components/Header';
@@ -84,7 +84,7 @@ const AppContent = () => {
   const isRecipients = location.pathname === '/recipients';
   const isCategories = location.pathname === '/categories';
   const isCalculator = location.pathname === '/calculator';
-  const isAbout = location.pathname === '/about';
+  const isFAQ = location.pathname === '/faq';
 
   return (
     <>
@@ -95,7 +95,7 @@ const AppContent = () => {
           isRecipients={isRecipients}
           isCategories={isCategories}
           isCalculator={isCalculator}
-          isAbout={isAbout}
+          isFAQ={isFAQ}
         />
         <div className="flex-grow bg-slate-50">
           <AnimatePresence mode="wait">
@@ -107,7 +107,7 @@ const AppContent = () => {
               <Route path="/categories" element={<CategoryList />} />
               <Route path="/recipients" element={<RecipientList />} />
               <Route path="/calculator" element={<DonationCalculator />} />
-              <Route path="/about" element={<About />} />
+              <Route path="/faq" element={<FAQ />} />
             </Routes>
           </AnimatePresence>
         </div>

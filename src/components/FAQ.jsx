@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import PageHeader from './PageHeader';
 import BackButton from './BackButton';
 
-const About = () => {
+const FAQ = () => {
   return (
     <>
       <BackButton to="/" label="Back to top donors" />
@@ -14,7 +14,7 @@ const About = () => {
         transition={{ duration: 0.3 }}
       >
         {/* Page Header */}
-        <PageHeader title="About" subtitle="What we're doing and why" />
+        <PageHeader title="FAQ" subtitle="Answers to frequently asked questions" />
 
         <motion.div
           className="max-w-4xl mx-auto px-4 py-8"
@@ -70,4 +70,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default FAQ;

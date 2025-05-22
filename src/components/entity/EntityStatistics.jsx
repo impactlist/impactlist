@@ -40,7 +40,7 @@ const EntityStatistics = ({
       >
         {/* Common statistics for both donors and recipients */}
         <StatisticsCard
-          label={isDonor ? 'Lives Saved' : 'Total Lives Saved'}
+          label={'Lives Saved'}
           value={formatNumber(Math.round(stats.totalLivesSaved))}
           valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
         />

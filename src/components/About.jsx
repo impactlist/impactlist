@@ -5,7 +5,7 @@ import BackButton from './BackButton';
 
 const About = () => {
   return (
-    <div>
+    <>
       <BackButton to="/" label="Back to top donors" />
       <motion.div
         initial={{ opacity: 0 }}
@@ -66,7 +66,7 @@ const About = () => {
           </div>
         </motion.div>
       </motion.div>
-    </div>
+    </>
   );
 };
 

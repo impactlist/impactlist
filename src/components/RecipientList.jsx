@@ -157,7 +157,7 @@ const RecipientList = () => {
   ];
 
   return (
-    <div>
+    <>
       <BackButton to="/" label="Back to top donors" />
       <motion.div
         className="min-h-screen bg-slate-50 flex flex-col items-center"
@@ -194,7 +194,7 @@ const RecipientList = () => {
           </div>
         </motion.div>
       </motion.div>
-    </div>
+    </>
   );
 };
 

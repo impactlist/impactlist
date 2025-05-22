@@ -127,7 +127,7 @@ const DonorList = () => {
   ];
 
   return (
-    <div>
+    <>
       <div className="h-10"></div>
       <motion.div
         className="min-h-screen bg-slate-50 flex flex-col items-center"
@@ -183,7 +183,7 @@ const DonorList = () => {
           </div>
         </motion.div>
       </motion.div>
-    </div>
+    </>
   );
 };
 

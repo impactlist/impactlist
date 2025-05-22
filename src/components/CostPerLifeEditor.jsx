@@ -3,6 +3,7 @@ import { useCostPerLife } from './CostPerLifeContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
+import { formatNumber } from '../utils/formatters';
 
 // Import shared components
 import DefaultValuesSection from './costperlife/DefaultValuesSection';
@@ -32,6 +33,13 @@ const CostPerLifeEditor = () => {
       };
     });
     return categories;
+  }, []);
+
+  // Format value for input display - handles special cases and uses formatNumber for valid numbers
+  const formatValueForInput = useCallback((value) => {
+    if (value === null || value === undefined) return '';
+    if (value === '' || value === '-' || value === '.' || typeof value !== 'number') return value.toString();
+    return formatNumber(value);
   }, []);
 
   // Handle tab switching
@@ -170,44 +178,6 @@ const CostPerLifeEditor = () => {
     filterRecipients(term, shouldShowOnlyCustom);
   };
 
-  // Format a number with commas
-  const formatWithCommas = (value) => {
-    // If value is null or undefined, return empty string
-    if (value === null || value === undefined) return '';
-
-    // If value is empty string, just return it
-    if (value === '') return '';
-
-    try {
-      const rawValue = value.toString().replace(/,/g, '');
-
-      // Check if it's a valid number and not in an intermediate state
-      const isValidNumber =
-        rawValue !== '' && rawValue !== '-' && rawValue !== '.' && !rawValue.endsWith('.') && !isNaN(Number(rawValue));
-
-      // Format with commas if it's a valid number and large enough
-      let displayValue = rawValue;
-      if (isValidNumber) {
-        const numValue = Number(rawValue);
-        if (Math.abs(numValue) >= 1000) {
-          // Split into integer and decimal parts to preserve decimal precision
-          const parts = rawValue.split('.');
-          const integerPart = parts[0];
-          const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
-
-          // Format integer part with commas
-          const integerWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-          displayValue = integerWithCommas + decimalPart;
-        }
-      }
-
-      return displayValue;
-    } catch (error) {
-      console.error('Error in formatWithCommas:', error, 'Value was:', value);
-      return '';
-    }
-  };
-
   // Generic function to handle number input changes
   const handleNumberInputChange = (key, value, setFormValues, clearError) => {
     // Store the raw value (without commas) internally
@@ -223,7 +193,17 @@ const CostPerLifeEditor = () => {
     }
 
     // Format display value
-    const displayValue = formatWithCommas(rawValue);
+    let displayValue;
+
+    // Check if it's a valid number and not in an intermediate state
+    const isValidNumber =
+      rawValue !== '' && rawValue !== '-' && rawValue !== '.' && !rawValue.endsWith('.') && !isNaN(Number(rawValue));
+
+    if (isValidNumber) {
+      displayValue = formatNumber(Number(rawValue));
+    } else {
+      displayValue = rawValue; // For intermediate states, just use the raw value
+    }
 
     // Store both the raw value (for calculations) and display value (for UI)
     setFormValues((prev) => ({
@@ -304,7 +284,7 @@ const CostPerLifeEditor = () => {
           return [key, value];
         });
 
-        const initialCategoryValues = initializeFormValues(categoryEntries, formatWithCommas);
+        const initialCategoryValues = initializeFormValues(categoryEntries, formatValueForInput);
 
         setCategoryFormValues(initialCategoryValues);
       }
@@ -332,7 +312,7 @@ const CostPerLifeEditor = () => {
         });
 
         if (recipientEntries.length > 0) {
-          const initialRecipientValues = initializeFormValues(recipientEntries, formatWithCommas);
+          const initialRecipientValues = initializeFormValues(recipientEntries, formatValueForInput);
 
           setRecipientFormValues(initialRecipientValues);
         }
@@ -345,8 +325,9 @@ const CostPerLifeEditor = () => {
         filterRecipients(searchTerm, searchTerm === '');
       }
     }
+    // Include formatValueForInput in the dependency array
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen, customValues, allCategories, activeTab, searchTerm, filterRecipients]);
+  }, [isModalOpen, customValues, allCategories, activeTab, searchTerm, filterRecipients, formatValueForInput]);
 
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {
@@ -744,7 +725,10 @@ const CostPerLifeEditor = () => {
         if (createFormState) {
           // Ensure value is a number for formatting
           const numValue = typeof value === 'string' ? parseFloat(value) : value;
-          const formattedValue = formatValue(numValue);
+
+          // Use formatNumber for number formatting if it's a valid number
+          const formattedValue = !isNaN(numValue) ? formatNumber(numValue) : formatValue(numValue);
+
           initialValues[key] = {
             raw: numValue.toString(),
             display: formattedValue,
@@ -759,7 +743,10 @@ const CostPerLifeEditor = () => {
         if (createFormState) {
           // Ensure value is a number for formatting
           const numValue = typeof value === 'string' ? parseFloat(value) : value;
-          const formattedValue = formatValue(numValue);
+
+          // Use formatNumber for number formatting if it's a valid number
+          const formattedValue = !isNaN(numValue) ? formatNumber(numValue) : formatValue(numValue);
+
           initialValues[key] = {
             raw: numValue.toString(),
             display: formattedValue,

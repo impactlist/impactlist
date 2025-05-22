@@ -355,7 +355,7 @@ const CostPerLifeEditor = () => {
       }
       // Check if value is zero
       else if (numValue === 0) {
-        newCategoryErrors[key] = 'Cost per life cannot be zero';
+        newCategoryErrors[key] = 'Value cannot be zero';
         hasErrors = true;
       }
     });
@@ -389,15 +389,15 @@ const CostPerLifeEditor = () => {
         newRecipientErrors[recipientName][categoryId][type] = errorMessage;
         hasErrors = true;
       }
-      // Check if value is zero for cost per life fields
-      else if (type === 'costPerLife' && Number(cleanValue) === 0) {
+      // Check if value is zero (neither costPerLife nor multiplier can be zero)
+      else if (Number(cleanValue) === 0) {
         if (!newRecipientErrors[recipientName]) {
           newRecipientErrors[recipientName] = {};
         }
         if (!newRecipientErrors[recipientName][categoryId]) {
           newRecipientErrors[recipientName][categoryId] = {};
         }
-        newRecipientErrors[recipientName][categoryId][type] = 'Cost per life cannot be zero';
+        newRecipientErrors[recipientName][categoryId][type] = 'Value cannot be zero';
         hasErrors = true;
       }
     });
@@ -520,10 +520,11 @@ const CostPerLifeEditor = () => {
       const rawValue = valueObj.raw;
 
       // Process the value - convert string to number
-      const processedValue = rawValue.trim() === '' ? 0 : Number(rawValue);
+      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+      const processedValue = cleanValue.trim() === '' ? null : Number(cleanValue);
 
-      // Only consider valid number inputs that are different from default
-      if (!isNaN(processedValue) && processedValue !== defaultValue) {
+      // Only consider valid number inputs that are different from default and not zero
+      if (!isNaN(processedValue) && processedValue !== defaultValue && processedValue !== 0) {
         categoryOnlyCustomized[key] = processedValue;
       }
     });
@@ -584,9 +585,12 @@ const CostPerLifeEditor = () => {
             console.error('Error getting default value:', e);
           }
 
-          // Skip if the value matches the default
-          const numValue = Number(rawValue);
-          if (defaultValue !== undefined && numValue === defaultValue) {
+          // Clean the value and convert to number
+          const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+          const numValue = Number(cleanValue);
+
+          // Skip if the value matches the default or if it's zero (for both costPerLife and multiplier)
+          if (numValue === 0 || (defaultValue !== undefined && numValue === defaultValue)) {
             // If there's already a saved value, we need to explicitly remove it
             if (
               customized &&

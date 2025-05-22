@@ -23,7 +23,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation - Full */}
-        <div className="hidden lg:flex justify-center items-center">
+        <div className="hidden md:flex justify-center items-center">
           <motion.nav
             className="flex space-x-4"
             initial={{ opacity: 0 }}
@@ -64,7 +64,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
         </div>
 
         {/* Tablet Navigation - Partial with Hamburger */}
-        <div className="hidden md:flex lg:hidden justify-center items-center relative">
+        <div className="hidden sm:flex md:hidden justify-center items-center relative">
           <motion.nav
             className="flex space-x-4"
             initial={{ opacity: 0 }}
@@ -117,7 +117,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden flex justify-between items-center">
+        <div className="sm:hidden flex justify-between items-center">
           <Link
             to="/"
             className={`text-indigo-100 px-3 py-2 rounded-md text-lg font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isHome ? 'bg-indigo-600 text-white' : ''}`}
@@ -156,7 +156,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="lg:hidden absolute top-full left-0 right-0 bg-indigo-700 shadow-lg border-t border-indigo-600 z-50"
+            className="md:hidden absolute top-full left-0 right-0 bg-indigo-700 shadow-lg border-t border-indigo-600 z-50"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -164,17 +164,17 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) =
           >
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="flex flex-col space-y-2">
-                {/* Show Calculator and Categories only on mobile (below md) */}
+                {/* Show Calculator and Categories only on mobile (below sm) */}
                 <Link
                   to="/calculator"
-                  className={`md:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
+                  className={`sm:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
                   Calculator
                 </Link>
                 <Link
                   to="/categories"
-                  className={`md:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
+                  className={`sm:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
                   Categories

@@ -4,6 +4,11 @@ name: 'Arts, Culture, Heritage'
 costPerLife: 1_000_000
 ---
 
-o3 says $2000 - $3000 per QALY, so assume $2500, times 80 = $200k
+# Justification of cost per life
 
-OpenAIDeepResearch: "Cost per QALY is not applicable and likely extremely high (i.e. millions of $ per life-year, effectively)."
+OpenAI Deep Research: "Cost per QALY is likely extremely high (i.e. millions of $ per life-year, effectively)."
+
+This project hasn't officially launched yet and we're looking for help improving our cost per life estimates.
+If you'd like to help, read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)
+
+# Internal Notes

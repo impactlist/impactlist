@@ -7,6 +7,7 @@ import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import { donations } from '../data/generatedData';
+import ReactMarkdown from 'react-markdown';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();
@@ -61,6 +62,7 @@ const CategoryDetail = () => {
       defaultCostPerLife,
       totalDonated,
       totalLivesSaved,
+      content: category.content,
     });
   }, [categoryId, customValues]);
 
@@ -99,6 +101,20 @@ const CategoryDetail = () => {
           customValuesIndicator={<CustomValuesIndicator />}
           onAdjustAssumptions={openModal}
         />
+
+        {/* Category metadata content */}
+        {categoryInfo.content && (
+          <motion.div
+            className="mt-8 bg-white rounded-lg shadow-sm p-6"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <div className="prose prose-slate max-w-none">
+              <ReactMarkdown>{categoryInfo.content}</ReactMarkdown>
+            </div>
+          </motion.div>
+        )}
       </motion.div>
     </motion.div>
   );

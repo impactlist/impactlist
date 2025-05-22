@@ -4,7 +4,18 @@ name: 'AI Existential Risk'
 costPerLife: 25
 ---
 
-# justification
+# Justification of cost per life
+
+Assume that with out past spending of roughly a billion dollars on AI safety we've reduced existential risk by about 1%. Assume the marginal value of the next dollars in this area is the same
+as with the first billion.
+
+Then spending a billion more dollars has a 1% chance of saving 8 billion people, which is 80 million lives in expected value. Each person's life is on average half over, so cut that to 40
+million lives for a billion dollars, or $25 per life.
+
+Disagree? This project hasn't officially launched yet and we're looking for help improving our cost per life estimates.
+If you'd like to contribute, read about how you can do so [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md).
+
+# Internal Notes
 
 https://80000hours.org/articles/existential-risks/ argues the cost is about $1000, but maybe $100, counting existing people
 

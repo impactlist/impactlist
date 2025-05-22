@@ -6,7 +6,7 @@ costPerLife: 25
 
 # Justification of cost per life
 
-Assume that with out past spending of roughly a billion dollars on AI safety we've reduced existential risk by about 1%. Assume the marginal value of the next dollars in this area is the same
+Assume that with our past spending of roughly a billion dollars on AI safety we've reduced existential risk by about 1%. Assume the marginal value of the next dollars in this area is the same
 as with the first billion.
 
 Then spending a billion more dollars has a 1% chance of saving 8 billion people, which is 80 million lives in expected value. Each person's life is on average half over, so cut that to 40

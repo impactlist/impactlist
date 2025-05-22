@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
+import { formatNumberWithCommas, formatWithCursorHandling } from '../../utils/formatters';
 
 /**
  * Component for managing recipient-specific cost per life values.
@@ -37,7 +38,7 @@ const RecipientValuesSection = ({
     }
 
     if (fallbackValue !== undefined && fallbackValue !== null && fallbackValue !== '') {
-      return fallbackValue >= 1000 ? fallbackValue.toLocaleString() : fallbackValue.toString();
+      return formatNumberWithCommas(fallbackValue);
     }
 
     return '';
@@ -160,7 +161,17 @@ const RecipientValuesSection = ({
                                 if (e.target.value.trim() !== '') {
                                   onChange(costPerLifeKey, '');
                                 }
-                                onChange(multiplierKey, e.target.value);
+
+                                // Get the current input element and cursor position
+                                const inputElement = e.target;
+                                const newValue = e.target.value;
+                                const currentPosition = e.target.selectionStart;
+
+                                // Format with commas while preserving cursor position
+                                const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
+
+                                // Pass the value to parent
+                                onChange(multiplierKey, result.value);
                               }}
                               className={`w-full py-1 px-1.5 text-sm border rounded ${
                                 errors[recipient.name]?.[categoryId]?.multiplier
@@ -185,9 +196,12 @@ const RecipientValuesSection = ({
                             {/* Show default value indicator */}
                             {defaultMultiplier !== undefined &&
                               ((formValues[multiplierKey]?.raw &&
-                                Number(formValues[multiplierKey].raw) !== Number(defaultMultiplier)) ||
+                                Number(formValues[multiplierKey].raw.replace(/,/g, '')) !==
+                                  Number(defaultMultiplier)) ||
                                 getFormValue(formValues, costPerLifeKey, defaultCostPerLife) !== '') && (
-                                <div className="text-xs text-gray-500 mt-0.5">Default: {defaultMultiplier}</div>
+                                <div className="text-xs text-gray-500 mt-0.5">
+                                  Default: {formatNumberWithCommas(defaultMultiplier)}
+                                </div>
                               )}
                           </div>
 
@@ -218,14 +232,16 @@ const RecipientValuesSection = ({
                               }
                               error={errors[recipient.name]?.[categoryId]?.costPerLife}
                               className="w-full"
+                              validateOnBlur={true} // Only validate on blur, not while typing
                             />
                             {/* Show default value indicator */}
                             {defaultCostPerLife !== undefined &&
                               ((formValues[costPerLifeKey]?.raw &&
-                                Number(formValues[costPerLifeKey].raw) !== Number(defaultCostPerLife)) ||
+                                Number(formValues[costPerLifeKey].raw.replace(/,/g, '')) !==
+                                  Number(defaultCostPerLife)) ||
                                 getFormValue(formValues, multiplierKey, defaultMultiplier) !== '') && (
                                 <div className="text-xs text-gray-500 mt-0.5">
-                                  Default: ${defaultCostPerLife.toLocaleString()}
+                                  Default: ${formatNumberWithCommas(defaultCostPerLife)}
                                 </div>
                               )}
                           </div>

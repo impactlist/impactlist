@@ -3,7 +3,7 @@ import { useCostPerLife } from './CostPerLifeContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
-import { formatNumber } from '../utils/formatters';
+import { formatNumber, formatNumberWithCommas, formatWithCursorHandling } from '../utils/formatters';
 
 // Import shared components
 import DefaultValuesSection from './costperlife/DefaultValuesSection';
@@ -39,7 +39,7 @@ const CostPerLifeEditor = () => {
   const formatValueForInput = useCallback((value) => {
     if (value === null || value === undefined) return '';
     if (value === '' || value === '-' || value === '.' || typeof value !== 'number') return value.toString();
-    return formatNumber(value);
+    return formatNumberWithCommas(value);
   }, []);
 
   // Handle tab switching
@@ -180,9 +180,6 @@ const CostPerLifeEditor = () => {
 
   // Generic function to handle number input changes
   const handleNumberInputChange = (key, value, setFormValues, clearError) => {
-    // Store the raw value (without commas) internally
-    const rawValue = value.toString().replace(/,/g, '');
-
     // Get the current cursor position from the active element
     const input = document.activeElement;
     let selectionStart = null;
@@ -192,18 +189,13 @@ const CostPerLifeEditor = () => {
       selectionStart = input.selectionStart;
     }
 
-    // Format display value
-    let displayValue;
+    // Store the raw value (without commas) internally
+    // Allow any input, don't sanitize here
+    const rawValue = value;
 
-    // Check if it's a valid number and not in an intermediate state
-    const isValidNumber =
-      rawValue !== '' && rawValue !== '-' && rawValue !== '.' && !rawValue.endsWith('.') && !isNaN(Number(rawValue));
-
-    if (isValidNumber) {
-      displayValue = formatNumber(Number(rawValue));
-    } else {
-      displayValue = rawValue; // For intermediate states, just use the raw value
-    }
+    // Format the value and get new cursor position using the utility function
+    const result = formatWithCursorHandling(value, selectionStart, input);
+    const displayValue = result.value;
 
     // Store both the raw value (for calculations) and display value (for UI)
     setFormValues((prev) => ({
@@ -213,26 +205,6 @@ const CostPerLifeEditor = () => {
         display: displayValue,
       },
     }));
-
-    // Restore cursor position in the next tick if we have a position to restore
-    if (selectionStart !== null) {
-      // Track how many commas were before the cursor position in the old value
-      const oldValue = value.toString();
-      const commasBefore = (oldValue.substring(0, selectionStart).match(/,/g) || []).length;
-
-      // Calculate how many commas are before the cursor in the new value
-      const newCommasBefore = (displayValue.substring(0, selectionStart).match(/,/g) || []).length;
-
-      // Adjust cursor position for added or removed commas
-      const newPosition = selectionStart + (newCommasBefore - commasBefore);
-
-      // Use setTimeout to ensure the DOM has updated with the new value
-      setTimeout(() => {
-        if (input && input.tagName === 'INPUT') {
-          input.setSelectionRange(newPosition, newPosition);
-        }
-      }, 0);
-    }
 
     // Clear error if needed
     if (clearError) {
@@ -358,15 +330,23 @@ const CostPerLifeEditor = () => {
       // Skip validation if value is the same as default
       if (Number(rawValue) === defaultValue) return;
 
-      // Check if blank
-      if (rawValue.trim() === '') {
+      // Check if blank or not a string
+      if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
         newCategoryErrors[key] = 'Invalid number';
         hasErrors = true;
         return;
       }
 
-      // Convert to number
-      const numValue = Number(rawValue);
+      // Allow minus sign only during input, not for saving
+      if (rawValue === '-') {
+        newCategoryErrors[key] = 'Please enter a complete number';
+        hasErrors = true;
+        return;
+      }
+
+      // Remove commas before converting to number
+      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+      const numValue = Number(cleanValue);
 
       // Check if it's a valid number
       if (isNaN(numValue)) {
@@ -391,21 +371,26 @@ const CostPerLifeEditor = () => {
       const rawValue = valueObj.raw;
 
       // Skip empty values - for recipients, empty is allowed
-      if (rawValue === '') return;
+      if (rawValue === null || rawValue === undefined || rawValue === '') return;
+
+      // Remove commas before checking validity
+      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
 
       // Check for intermediate states or invalid numbers
-      if (rawValue === '-' || rawValue === '.' || rawValue.endsWith('.') || isNaN(Number(rawValue))) {
+      if (cleanValue === '-' || cleanValue === '.' || cleanValue.endsWith('.') || isNaN(Number(cleanValue))) {
         if (!newRecipientErrors[recipientName]) {
           newRecipientErrors[recipientName] = {};
         }
         if (!newRecipientErrors[recipientName][categoryId]) {
           newRecipientErrors[recipientName][categoryId] = {};
         }
-        newRecipientErrors[recipientName][categoryId][type] = 'Invalid number';
+
+        const errorMessage = cleanValue === '-' ? 'Please enter a complete number' : 'Invalid number';
+        newRecipientErrors[recipientName][categoryId][type] = errorMessage;
         hasErrors = true;
       }
       // Check if value is zero for cost per life fields
-      else if (type === 'costPerLife' && Number(rawValue) === 0) {
+      else if (type === 'costPerLife' && Number(cleanValue) === 0) {
         if (!newRecipientErrors[recipientName]) {
           newRecipientErrors[recipientName] = {};
         }
@@ -432,10 +417,13 @@ const CostPerLifeEditor = () => {
             // Skip empty values
             if (multiplier === '') return;
 
-            // Skip intermediate values
+            // Get clean value without commas for validation
+            const cleanMultiplier = typeof multiplier === 'string' ? multiplier.replace(/,/g, '') : multiplier;
+
+            // Check if it's a valid number (not in an intermediate state)
             if (
-              typeof multiplier === 'string' &&
-              (multiplier === '-' || multiplier === '.' || multiplier.endsWith('.'))
+              typeof cleanMultiplier === 'string' &&
+              (cleanMultiplier === '-' || cleanMultiplier === '.' || cleanMultiplier.endsWith('.'))
             ) {
               if (!newRecipientErrors[recipientName]) {
                 newRecipientErrors[recipientName] = {};
@@ -443,7 +431,9 @@ const CostPerLifeEditor = () => {
               if (!newRecipientErrors[recipientName][categoryId]) {
                 newRecipientErrors[recipientName][categoryId] = {};
               }
-              newRecipientErrors[recipientName][categoryId].multiplier = 'Invalid number';
+
+              const errorMessage = cleanMultiplier === '-' ? 'Please enter a complete number' : 'Invalid number';
+              newRecipientErrors[recipientName][categoryId].multiplier = errorMessage;
               hasErrors = true;
             }
           }
@@ -459,10 +449,13 @@ const CostPerLifeEditor = () => {
             // Skip empty values
             if (costPerLife === '') return;
 
-            // Skip intermediate values
+            // Get clean value without commas for validation
+            const cleanCostPerLife = typeof costPerLife === 'string' ? costPerLife.replace(/,/g, '') : costPerLife;
+
+            // Check if it's a valid number (not in an intermediate state)
             if (
-              typeof costPerLife === 'string' &&
-              (costPerLife === '-' || costPerLife === '.' || costPerLife.endsWith('.'))
+              typeof cleanCostPerLife === 'string' &&
+              (cleanCostPerLife === '-' || cleanCostPerLife === '.' || cleanCostPerLife.endsWith('.'))
             ) {
               if (!newRecipientErrors[recipientName]) {
                 newRecipientErrors[recipientName] = {};
@@ -470,11 +463,13 @@ const CostPerLifeEditor = () => {
               if (!newRecipientErrors[recipientName][categoryId]) {
                 newRecipientErrors[recipientName][categoryId] = {};
               }
-              newRecipientErrors[recipientName][categoryId].costPerLife = 'Invalid number';
+
+              const errorMessage = cleanCostPerLife === '-' ? 'Please enter a complete number' : 'Invalid number';
+              newRecipientErrors[recipientName][categoryId].costPerLife = errorMessage;
               hasErrors = true;
             }
             // Check if value is zero
-            else if (costPerLife === 0) {
+            else if (cleanCostPerLife === 0 || Number(cleanCostPerLife) === 0) {
               if (!newRecipientErrors[recipientName]) {
                 newRecipientErrors[recipientName] = {};
               }
@@ -490,6 +485,17 @@ const CostPerLifeEditor = () => {
     }
 
     setRecipientErrors(newRecipientErrors);
+
+    // Show alert if there are errors
+    if (hasErrors) {
+      // Scroll to first error
+      setTimeout(() => {
+        const errorElement = document.querySelector('.border-red-300');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
 
     return !hasErrors;
   };

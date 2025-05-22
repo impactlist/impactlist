@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
+import { formatNumberWithCommas } from '../../utils/formatters';
 
 /**
  * Component for managing default cost per life values for categories.
@@ -18,7 +19,7 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
 
     // Otherwise check if there's a fallback value
     if (defaultValue !== undefined && defaultValue !== null && defaultValue !== '') {
-      return defaultValue >= 1000 ? defaultValue.toLocaleString() : defaultValue.toString();
+      return formatNumberWithCommas(defaultValue);
     }
 
     // Return empty string if no value found
@@ -35,7 +36,9 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
           const hasError = errors[key];
 
           // Check if value is custom (different from default)
-          const isCustom = Number(valueObj.raw) !== defaultValue;
+          // Remove commas before comparing numeric values
+          const rawWithoutCommas = valueObj.raw ? valueObj.raw.toString().replace(/,/g, '') : '';
+          const isCustom = rawWithoutCommas !== '' && Number(rawWithoutCommas) !== defaultValue;
 
           return (
             <div
@@ -59,7 +62,7 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
                     className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
                     onClick={() => {
                       const value = defaultValue;
-                      const formattedValue = value >= 1000 ? value.toLocaleString() : value.toString();
+                      const formattedValue = formatNumberWithCommas(value);
                       onChange(key, formattedValue);
                     }}
                   >
@@ -73,9 +76,10 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
                 onChange={(value) => onChange(key, value)}
                 error={hasError}
                 className="w-full"
+                validateOnBlur={true} // Only validate on blur, not while typing
               />
               {isCustom && !hasError && (
-                <div className="text-xs text-gray-500 mt-0.5">Default: ${defaultValue.toLocaleString()}</div>
+                <div className="text-xs text-gray-500 mt-0.5">Default: ${formatNumberWithCommas(defaultValue)}</div>
               )}
             </div>
           );

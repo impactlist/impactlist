@@ -51,6 +51,156 @@ export const formatNumber = (num) => {
 };
 
 /**
+ * Format a number with commas without any suffixes
+ * This function accepts any input and preserves non-numeric input
+ * Useful for formatting while maintaining cursor position
+ *
+ * @param {string|number} value - The value to format
+ * @returns {string} - The formatted string with commas
+ */
+export const formatNumberWithCommas = (value) => {
+  // Handle non-string values
+  if (value === null || value === undefined) return '';
+  if (typeof value !== 'string') {
+    value = String(value);
+  }
+
+  // If the value is empty, just return it
+  if (value === '') return '';
+
+  // Handle minus sign
+  const isNegative = value.startsWith('-');
+
+  // If it's just a minus sign, return it as is
+  if (value === '-') return '-';
+
+  // Remove commas and get only valid characters for processing
+  const cleanValue = value.replace(/,/g, '');
+
+  // If it's not a valid number format (could be in-progress typing), return as is
+  if (!/^-?\d*$/.test(cleanValue)) {
+    return value;
+  }
+
+  // If it's empty after cleaning, return empty string
+  if (cleanValue === '' || cleanValue === '-') {
+    return cleanValue;
+  }
+
+  // Parse the numeric value
+  const numericValue = parseFloat(cleanValue);
+
+  // Format with commas
+  return isNegative ? '-' + Math.abs(numericValue).toLocaleString('en-US') : numericValue.toLocaleString('en-US');
+};
+
+/**
+ * Calculate the new cursor position after formatting a value with commas
+ * This maintains the cursor position relative to the digits, not the commas
+ *
+ * @param {string} oldValue - The original value before formatting
+ * @param {string} newValue - The formatted value with commas
+ * @param {number} oldPosition - The cursor position in the original value
+ * @returns {number} - The new cursor position in the formatted value
+ */
+export const calculateCursorPosition = (oldValue, newValue, oldPosition) => {
+  if (oldPosition === null || oldPosition === undefined) return null;
+
+  // If values are the same, no adjustment needed
+  if (oldValue === newValue) return oldPosition;
+
+  // Extract text before the cursor
+  const valueBeforeCursor = oldValue.substring(0, oldPosition);
+
+  // Count digits and determine if there's a minus sign before the cursor
+  const digitsBeforeCursor = valueBeforeCursor.replace(/[^\d-]/g, '').length;
+  const hasMinusBeforeCursor = valueBeforeCursor.includes('-');
+
+  // Special case: if cursor is just after the minus sign
+  if (hasMinusBeforeCursor && digitsBeforeCursor === 1) {
+    return 1; // Position right after the minus sign
+  }
+
+  // Find position in new formatted value with same number of digits
+  let newPosition = 0;
+  let digitCount = 0;
+  let foundMinus = false;
+
+  // Find corresponding position in formatted value
+  for (let i = 0; i < newValue.length; i++) {
+    if (newValue[i] === '-') {
+      foundMinus = true;
+      if (hasMinusBeforeCursor) {
+        continue; // Skip counting minus if it was already counted
+      }
+    }
+
+    if (/\d/.test(newValue[i])) {
+      digitCount++;
+      if (digitCount === digitsBeforeCursor && (!hasMinusBeforeCursor || foundMinus)) {
+        newPosition = i + 1;
+        break;
+      }
+    }
+  }
+
+  // If we didn't find the right position (e.g., cursor was at the end)
+  if (newPosition === 0 && digitsBeforeCursor > 0) {
+    newPosition = newValue.length;
+  }
+
+  return newPosition;
+};
+
+/**
+ * Set the cursor position in an input element
+ *
+ * @param {HTMLInputElement} inputElement - The input element to set the cursor position in
+ * @param {number} position - The position to set the cursor to
+ */
+export const setCursorPosition = (inputElement, position) => {
+  if (!inputElement || position === null || typeof position !== 'number') return;
+
+  // Use setTimeout to ensure the DOM has updated
+  setTimeout(() => {
+    if (inputElement && document.activeElement === inputElement) {
+      try {
+        inputElement.setSelectionRange(position, position);
+      } catch (e) {
+        console.error('Error setting cursor position:', e);
+      }
+    }
+  }, 0);
+};
+
+/**
+ * Format a value with commas and update cursor position in one operation
+ * This is a utility function that combines formatting and cursor position handling
+ *
+ * @param {string} value - The value to format
+ * @param {number} cursorPosition - The current cursor position
+ * @param {HTMLInputElement} inputElement - The input element (optional)
+ * @returns {Object} - Object containing the formatted value and new cursor position
+ */
+export const formatWithCursorHandling = (value, cursorPosition, inputElement = null) => {
+  // Format the value
+  const formattedValue = formatNumberWithCommas(value);
+
+  // Calculate new cursor position
+  const newPosition = calculateCursorPosition(value, formattedValue, cursorPosition);
+
+  // Update cursor position if input element is provided
+  if (inputElement && newPosition !== null) {
+    setCursorPosition(inputElement, newPosition);
+  }
+
+  return {
+    value: formattedValue,
+    cursorPosition: newPosition,
+  };
+};
+
+/**
  * Format lives saved with appropriate decimal places
  * @param {number} lives - The number of lives saved
  * @returns {string} - Formatted lives saved with appropriate precision

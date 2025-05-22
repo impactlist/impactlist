@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import ImpactBarChart from '../ImpactBarChart';
 import ChartContainer from '../shared/ChartContainer';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
@@ -108,6 +109,41 @@ const EntityChartSection = ({
     return null;
   };
 
+  // Custom Y-axis tick renderer to make category names clickable
+  const renderYAxisTick = (props) => {
+    const { x, y, payload } = props;
+    // Find the corresponding data entry to get the categoryId
+    const dataEntry = chartData.find((item) => item.name === payload.value);
+
+    if (!dataEntry || !dataEntry.categoryId || dataEntry.name === 'Other Categories') {
+      return (
+        <g transform={`translate(${x},${y})`}>
+          <text x={-6} y={0} dy={4} textAnchor="end" fill="#1e293b" fontSize={14}>
+            {payload.value}
+          </text>
+        </g>
+      );
+    }
+
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <Link to={`/category/${encodeURIComponent(dataEntry.categoryId)}`}>
+          <text
+            x={-6}
+            y={0}
+            dy={4}
+            textAnchor="end"
+            fill="#4f46e5"
+            fontSize={14}
+            className="hover:underline hover:font-medium"
+          >
+            {payload.value}
+          </text>
+        </Link>
+      </g>
+    );
+  };
+
   if (chartData.length === 0) {
     return null;
   }
@@ -190,6 +226,7 @@ const EntityChartSection = ({
           legendFormatter={() =>
             chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'
           }
+          renderYAxisTick={renderYAxisTick}
         />
       </div>
     </ChartContainer>

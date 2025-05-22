@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { formatNumber } from '../../utils/formatters';
 
 /**
@@ -55,7 +56,12 @@ const CalculatorForm = ({
             >
               <div className="flex justify-between items-start mb-1">
                 <label className="text-sm font-medium text-slate-800" htmlFor={`donation-${category.id}`}>
-                  {category.name}
+                  <Link
+                    to={`/category/${encodeURIComponent(category.id)}`}
+                    className="text-indigo-600 hover:text-indigo-800 hover:underline"
+                  >
+                    {category.name}
+                  </Link>
                 </label>
                 <span className="text-xs text-slate-500">${formatNumber(costPerLife)}/life</span>
               </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
 
 /**
@@ -125,7 +126,12 @@ const RecipientValuesSection = ({
                       return (
                         <div key={categoryId} className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-2 rounded">
                           <div className="text-sm text-gray-700">
-                            <span>{categoryName}</span>
+                            <Link
+                              to={`/category/${encodeURIComponent(categoryId)}`}
+                              className="text-indigo-600 hover:text-indigo-800 hover:underline"
+                            >
+                              {categoryName}
+                            </Link>
                             <div className="text-xs text-gray-500">Category: ${baseCostPerLife.toLocaleString()}</div>
                           </div>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
 
 /**
@@ -44,12 +45,13 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
               }`}
             >
               <div className="flex justify-between items-start mb-2">
-                <label
-                  className="text-sm font-medium text-gray-700 truncate pr-2"
-                  htmlFor={`category-${key}`}
-                  title={category.name}
-                >
-                  {category.name}
+                <label className="text-sm font-medium truncate pr-2" htmlFor={`category-${key}`} title={category.name}>
+                  <Link
+                    to={`/category/${encodeURIComponent(key)}`}
+                    className="text-indigo-600 hover:text-indigo-800 hover:underline"
+                  >
+                    {category.name}
+                  </Link>
                 </label>
                 {isCustom && (
                   <button

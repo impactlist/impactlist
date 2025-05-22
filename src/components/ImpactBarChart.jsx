@@ -56,6 +56,7 @@ const ImpactBarChart = ({
   animationEasing = 'ease-out',
   showLegend = false,
   legendFormatter = () => 'Value',
+  renderYAxisTick = null,
 }) => {
   const [containerWidth, setContainerWidth] = useState(800);
   const chartContainerRef = useRef(null);
@@ -167,11 +168,13 @@ const ImpactBarChart = ({
               type="category"
               dataKey={nameKey}
               width={120}
-              tick={{
-                fontSize: 14,
-                fill: '#1e293b',
-                dy: 0,
-              }}
+              tick={
+                renderYAxisTick || {
+                  fontSize: 14,
+                  fill: '#1e293b',
+                  dy: 0,
+                }
+              }
               axisLine={true}
               stroke="#1e293b"
               interval={0}

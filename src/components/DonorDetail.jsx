@@ -82,6 +82,7 @@ const DonorDetail = () => {
           ...donation,
           creditedAmount,
           category: primaryCategoryId, // Use primary category ID
+          categoryId: primaryCategoryId, // Add explicit categoryId for links
           categoryName: primaryCategory.name, // Get the name from categoriesById
           totalLivesSaved,
           costPerLife,
@@ -119,6 +120,7 @@ const DonorDetail = () => {
         recipient: 'Unknown',
         amount: unknownAmount,
         category: 'other', // Use 'other' as the primary category ID
+        categoryId: 'other', // Add explicit categoryId for links
         categoryName: 'Unknown', // Use 'Unknown' as the primary category name
         totalLivesSaved: unknownLivesSaved,
         costPerLife: avgCostPerLife,

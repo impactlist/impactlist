@@ -142,10 +142,20 @@ const RecipientList = () => {
       render: (recipient) => (
         <div className="text-sm text-slate-900">
           {recipient.categoryNames.length === 1 ? (
-            recipient.primaryCategoryName
+            <Link
+              to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`}
+              className="text-indigo-600 hover:text-indigo-800 hover:underline"
+            >
+              {recipient.primaryCategoryName}
+            </Link>
           ) : (
             <div>
-              <div>{recipient.primaryCategoryName}</div>
+              <Link
+                to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`}
+                className="text-indigo-600 hover:text-indigo-800 hover:underline"
+              >
+                {recipient.primaryCategoryName}
+              </Link>
               {recipient.categoryNames.length > 1 && (
                 <div className="text-xs text-gray-500 mt-1">+{recipient.categoryNames.length - 1} more</div>
               )}

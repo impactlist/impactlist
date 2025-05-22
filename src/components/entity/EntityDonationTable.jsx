@@ -74,9 +74,20 @@ const EntityDonationTable = ({ donations, entityType, className = '' }) => {
       key: 'categoryName',
       label: 'Category',
       render: (donation) => {
+        // Get the primary category ID if it's not already in the donation object
+        const categoryId = donation.categoryId || donation.primaryCategoryId;
+        if (!categoryId) {
+          throw new Error(`Category ID not found for donation ${donation.id}`);
+        }
+
         return (
           <div className="text-sm text-slate-900">
-            {donation.categoryName}
+            <Link
+              to={`/category/${encodeURIComponent(categoryId)}`}
+              className="text-indigo-600 hover:text-indigo-800 hover:underline"
+            >
+              {donation.categoryName}
+            </Link>
             {donation.categoryCount > 1 && (
               <span className="text-xs text-slate-500 ml-1">(+{donation.categoryCount - 1})</span>
             )}

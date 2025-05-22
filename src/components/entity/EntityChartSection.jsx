@@ -79,7 +79,7 @@ const EntityChartSection = ({
             <>
               <p className="text-sm">{formatCurrency(value)}</p>
               <p className="text-xs text-slate-500">{`${percentage}% of known donations`}</p>
-              {entry.name !== 'Other Categories' && entry.category && (
+              {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 pt-1 border-t border-slate-100">
                   <p className="text-xs text-slate-600">Cost per life: {formatCurrency(entry.costPerLife || 0)}</p>
                   <p className="text-xs text-slate-600">
@@ -94,7 +94,7 @@ const EntityChartSection = ({
                 {formatNumber(Math.round(value))} lives {value < 0 ? 'lost' : 'saved'}
               </p>
               <p className="text-xs text-slate-500">{`${percentage}% of total impact`}</p>
-              {entry.name !== 'Other Categories' && entry.category && (
+              {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 pt-1 border-t border-slate-100">
                   <p className="text-xs text-slate-600">Cost per life: {formatCurrency(entry.costPerLife || 0)}</p>
                   <p className="text-xs text-slate-600">Donation amount: {formatCurrency(entry.donationValue)}</p>

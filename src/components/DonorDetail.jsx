@@ -81,8 +81,7 @@ const DonorDetail = () => {
         return {
           ...donation,
           creditedAmount,
-          category: primaryCategoryId, // Use primary category ID
-          categoryId: primaryCategoryId, // Add explicit categoryId for links
+          categoryId: primaryCategoryId, // Use primary category ID
           categoryName: primaryCategory.name, // Get the name from categoriesById
           totalLivesSaved,
           costPerLife,
@@ -119,8 +118,7 @@ const DonorDetail = () => {
         recipientId: 'unknown',
         recipient: 'Unknown',
         amount: unknownAmount,
-        category: 'other', // Use 'other' as the primary category ID
-        categoryId: 'other', // Add explicit categoryId for links
+        categoryId: 'other', // Use 'other' as the primary category ID
         categoryName: 'Unknown', // Use 'Unknown' as the primary category name
         totalLivesSaved: unknownLivesSaved,
         costPerLife: avgCostPerLife,
@@ -182,7 +180,7 @@ const DonorDetail = () => {
           categoryAmounts[categoryName] = {
             name: categoryName,
             value: 0,
-            category: categoryId,
+            categoryId: categoryId,
           };
         }
 
@@ -190,7 +188,7 @@ const DonorDetail = () => {
           categoryLivesSaved[categoryName] = {
             name: categoryName,
             value: 0,
-            category: categoryId,
+            categoryId: categoryId,
             costPerLife: costPerLife,
             // Store multiplier info for the tooltip
             hasMultiplier: categoryData.multiplier !== undefined,
@@ -213,22 +211,31 @@ const DonorDetail = () => {
 
     // Create a unified dataset with both values
     let unifiedData = Array.from(allCategoryNames).map((name) => {
-      const donationEntry = categoryAmounts[name] || { name, value: 0, category: categoryLivesSaved[name]?.category };
-      const livesSavedEntry = categoryLivesSaved[name] || { name, value: 0, category: categoryAmounts[name]?.category };
-      const category = donationEntry.category || livesSavedEntry.category;
+      const donationEntry = categoryAmounts[name] || {
+        name,
+        value: 0,
+        categoryId: categoryLivesSaved[name]?.categoryId,
+      };
+      const livesSavedEntry = categoryLivesSaved[name] || {
+        name,
+        value: 0,
+        categoryId: categoryAmounts[name]?.categoryId,
+      };
+      const categoryId = donationEntry.categoryId || livesSavedEntry.categoryId;
 
       return {
         name,
         donationValue: donationEntry.value,
         livesSavedValue: livesSavedEntry.value,
-        category,
+        categoryId,
         donationPercentage: ((donationEntry.value / chartDonationsTotal) * 100).toFixed(1),
         livesSavedPercentage:
           chartLivesSavedTotal !== 0
             ? ((Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal)) * 100).toFixed(1)
             : 0,
         costPerLife:
-          livesSavedEntry.costPerLife || (category ? getDefaultCostPerLifeForCategory(category, customValues) || 0 : 0),
+          livesSavedEntry.costPerLife ||
+          (categoryId ? getDefaultCostPerLifeForCategory(categoryId, customValues) || 0 : 0),
         hasMultiplier: livesSavedEntry.hasMultiplier,
         multiplier: livesSavedEntry.multiplier,
       };
@@ -290,7 +297,7 @@ const DonorDetail = () => {
       valueTarget: item.livesSavedValue, // Target is initially the same
       donationValue: item.donationValue,
       livesSavedValue: item.livesSavedValue,
-      category: item.category,
+      categoryId: item.categoryId,
       donationPercentage: item.donationPercentage,
       livesSavedPercentage: item.livesSavedPercentage,
       costPerLife: item.costPerLife,
@@ -344,7 +351,7 @@ const DonorDetail = () => {
         // Copy all raw data fields directly from rawChartData for the most current values
         donationValue: item.donationValue,
         livesSavedValue: item.livesSavedValue,
-        category: item.category,
+        categoryId: item.categoryId,
         donationPercentage: item.donationPercentage,
         livesSavedPercentage: item.livesSavedPercentage,
         costPerLife: item.costPerLife,

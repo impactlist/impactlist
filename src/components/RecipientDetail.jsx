@@ -168,7 +168,6 @@ const RecipientDetail = () => {
         donationValue: donationEntry.value,
         livesSavedValue: livesSavedEntry.value,
         categoryId,
-        category: categoryId, // Add category field for compatibility with EntityChartSection
         donationPercentage:
           chartDonationsTotal > 0 ? ((donationEntry.value / chartDonationsTotal) * 100).toFixed(1) : '0.0',
         livesSavedPercentage:
@@ -256,7 +255,6 @@ const RecipientDetail = () => {
         donationValue: item.donationValue,
         livesSavedValue: item.livesSavedValue,
         categoryId: item.categoryId,
-        category: item.categoryId, // Add category field for compatibility with EntityChartSection
         donationPercentage: item.donationPercentage,
         livesSavedPercentage: item.livesSavedPercentage,
         // Set current value and target based on view

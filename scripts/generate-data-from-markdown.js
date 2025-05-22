@@ -25,6 +25,20 @@ function formatDateString(dateString) {
   return date.toISOString().split('T')[0];
 }
 
+// Helper function to extract content excluding "Internal Notes" section
+function extractContentExcludingInternalNotes(content) {
+  // Split the content into sections based on headers
+  const sections = content.split(/(?=^# )/m);
+
+  // Filter out the "Internal Notes" section and join the rest
+  const filteredContent = sections
+    .filter((section) => !section.trim().startsWith('# Internal Notes'))
+    .join('')
+    .trim();
+
+  return filteredContent || null;
+}
+
 // Load all categories
 function loadCategories() {
   const categoryFiles = glob.sync(path.join(categoriesDir, '*.md'));
@@ -34,13 +48,19 @@ function loadCategories() {
     if (path.basename(file) === '_index.md') return;
 
     const fileContent = fs.readFileSync(file, 'utf8');
-    const { data } = matter(fileContent);
+    const { data, content } = matter(fileContent);
 
     // Use ID as the key
     categories[data.id] = {
       name: data.name,
       costPerLife: data.costPerLife,
     };
+
+    // Extract content excluding "Internal Notes" section
+    const extractedContent = extractContentExcludingInternalNotes(content);
+    if (extractedContent) {
+      categories[data.id].content = extractedContent;
+    }
   });
 
   return categories;
@@ -55,7 +75,7 @@ function loadDonors() {
     if (path.basename(file) === '_index.md') return;
 
     const fileContent = fs.readFileSync(file, 'utf8');
-    const { data } = matter(fileContent);
+    const { data, content } = matter(fileContent);
 
     // Use ID as the key
     donors[data.id] = {
@@ -65,6 +85,12 @@ function loadDonors() {
 
     if (data.totalDonated) {
       donors[data.id].totalDonated = data.totalDonated;
+    }
+
+    // Extract content excluding "Internal Notes" section
+    const extractedContent = extractContentExcludingInternalNotes(content);
+    if (extractedContent) {
+      donors[data.id].content = extractedContent;
     }
   });
 
@@ -80,7 +106,7 @@ function loadRecipients() {
     if (path.basename(file) === '_index.md') return;
 
     const fileContent = fs.readFileSync(file, 'utf8');
-    const { data } = matter(fileContent);
+    const { data, content } = matter(fileContent);
 
     const categoriesObj = {};
 
@@ -100,6 +126,12 @@ function loadRecipients() {
       name: data.name,
       categories: categoriesObj,
     };
+
+    // Extract content excluding "Internal Notes" section
+    const extractedContent = extractContentExcludingInternalNotes(content);
+    if (extractedContent) {
+      recipients[data.id].content = extractedContent;
+    }
   });
 
   return recipients;

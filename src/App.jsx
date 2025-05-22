@@ -7,6 +7,7 @@ import DonorList from './components/DonorList';
 import DonorDetail from './components/DonorDetail';
 import RecipientDetail from './components/RecipientDetail';
 import RecipientList from './components/RecipientList';
+import CategoryList from './components/CategoryList';
 import CategoryDetail from './components/CategoryDetail';
 import DonationCalculator from './components/DonationCalculator';
 import About from './components/About';
@@ -81,6 +82,7 @@ const AppContent = () => {
   const location = useLocation();
   const isHome = location.pathname === '/';
   const isRecipients = location.pathname === '/recipients';
+  const isCategories = location.pathname === '/categories';
   const isCalculator = location.pathname === '/calculator';
   const isAbout = location.pathname === '/about';
 
@@ -88,7 +90,13 @@ const AppContent = () => {
     <>
       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
-        <Header isHome={isHome} isRecipients={isRecipients} isCalculator={isCalculator} isAbout={isAbout} />
+        <Header
+          isHome={isHome}
+          isRecipients={isRecipients}
+          isCategories={isCategories}
+          isCalculator={isCalculator}
+          isAbout={isAbout}
+        />
         <div className="flex-grow bg-slate-50">
           <AnimatePresence mode="wait">
             <Routes>
@@ -96,6 +104,7 @@ const AppContent = () => {
               <Route path="/donor/:donorId" element={<DonorDetail />} />
               <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
               <Route path="/category/:categoryId" element={<CategoryDetail />} />
+              <Route path="/categories" element={<CategoryList />} />
               <Route path="/recipients" element={<RecipientList />} />
               <Route path="/calculator" element={<DonationCalculator />} />
               <Route path="/about" element={<About />} />

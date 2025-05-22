@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const Header = ({ isHome, isRecipients, isCalculator, isAbout }) => {
+const Header = ({ isHome, isRecipients, isCalculator, isCategories, isAbout }) => {
   return (
     <motion.div
       className="w-full bg-indigo-700 py-4 shadow-lg"
@@ -32,6 +32,12 @@ const Header = ({ isHome, isRecipients, isCalculator, isAbout }) => {
               Calculator
             </Link>
             <Link
+              to="/categories"
+              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              Categories
+            </Link>
+            <Link
               to="/recipients"
               className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
             >
@@ -54,6 +60,7 @@ Header.propTypes = {
   isHome: PropTypes.bool,
   isRecipients: PropTypes.bool,
   isCalculator: PropTypes.bool,
+  isCategories: PropTypes.bool,
   isAbout: PropTypes.bool,
 };
 
@@ -61,6 +68,7 @@ Header.defaultProps = {
   isHome: false,
   isRecipients: false,
   isCalculator: false,
+  isCategories: false,
   isAbout: false,
 };
 

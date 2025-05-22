@@ -68,14 +68,6 @@ const CurrencyInput = ({
     [onChange, validateOnBlur]
   );
 
-  // Handle focus
-  const handleFocus = useCallback(() => {
-    // Select the entire content when focused
-    if (inputRef.current) {
-      inputRef.current.select();
-    }
-  }, []);
-
   // Handle blur for validation
   const handleBlur = useCallback(() => {
     if (validateOnBlur) {
@@ -123,7 +115,6 @@ const CurrencyInput = ({
           inputMode="text"
           value={localValue}
           onChange={handleChange}
-          onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={placeholder}
           disabled={disabled}

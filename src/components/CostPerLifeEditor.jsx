@@ -169,7 +169,8 @@ const CostPerLifeEditor = () => {
 
   // Handle search term changes
   const handleSearchChange = (e) => {
-    const term = e.target.value;
+    // Handle both event objects and direct string values
+    const term = e && e.target ? e.target.value : e;
     setSearchTerm(term);
     // Update showOnlyCustom based on whether search is empty
     const shouldShowOnlyCustom = term === '';

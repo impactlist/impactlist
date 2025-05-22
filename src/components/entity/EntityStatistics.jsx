@@ -17,6 +17,14 @@ const EntityStatistics = ({
 }) => {
   const isDonor = entityType === 'donor';
 
+  // Determine if we need to show the default cost per life
+  const showDefaultCostPerLife =
+    stats.defaultCostPerLife !== undefined && stats.costPerLife !== stats.defaultCostPerLife;
+
+  const defaultCostPerLifeText = showDefaultCostPerLife
+    ? `Default: ${stats.defaultCostPerLife === 0 ? '∞' : formatCurrency(stats.defaultCostPerLife)}`
+    : undefined;
+
   return (
     <>
       {(customValuesIndicator || onAdjustAssumptions) && (
@@ -51,9 +59,10 @@ const EntityStatistics = ({
             value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
             valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
             subtext={
-              stats.categoryCostPerLife !== undefined
+              defaultCostPerLifeText ||
+              (stats.categoryCostPerLife !== undefined
                 ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
-                : undefined
+                : undefined)
             }
           />
 
@@ -93,6 +102,7 @@ EntityStatistics.propTypes = {
     totalLivesSaved: PropTypes.number.isRequired,
     costPerLife: PropTypes.number.isRequired,
     categoryCostPerLife: PropTypes.number,
+    defaultCostPerLife: PropTypes.number,
 
     // Donor-specific properties
     totalDonated: PropTypes.number,

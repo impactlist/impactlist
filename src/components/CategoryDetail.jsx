@@ -23,6 +23,8 @@ const CategoryDetail = () => {
 
     // Get cost per life for this category
     const costPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+    // Get default cost per life (without custom values)
+    const defaultCostPerLife = getDefaultCostPerLifeForCategory(categoryId, null);
 
     // Calculate total donated to this category and lives saved
     let totalDonated = 0;
@@ -56,6 +58,7 @@ const CategoryDetail = () => {
     setCategoryInfo({
       name: category.name,
       costPerLife,
+      defaultCostPerLife,
       totalDonated,
       totalLivesSaved,
     });
@@ -89,6 +92,7 @@ const CategoryDetail = () => {
           stats={{
             totalLivesSaved: categoryInfo.totalLivesSaved,
             costPerLife: categoryInfo.costPerLife,
+            defaultCostPerLife: categoryInfo.defaultCostPerLife,
             totalReceived: categoryInfo.totalDonated,
           }}
           entityType="recipient" // Reuse recipient styling

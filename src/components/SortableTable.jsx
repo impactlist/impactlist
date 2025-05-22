@@ -33,8 +33,8 @@ const SortableTable = ({
     // Determine sort order
     const sortMultiplier = sortDirection === 'asc' ? 1 : -1;
 
-    // Special handling for cost per life column
-    if (sortColumn === 'costPerLife') {
+    // Special handling for cost per life column (both costPerLife and actualCostPerLife)
+    if (sortColumn === 'costPerLife' || sortColumn === 'actualCostPerLife') {
       // Handle negative values in cost per life
       // 1. Negative values are considered "worse" (higher cost) than any positive value
       // 2. Among negative values, those closer to zero are worse than those further from zero

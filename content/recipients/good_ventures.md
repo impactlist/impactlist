@@ -17,13 +17,13 @@ categories:
   - id: animal-welfare
     fraction: 0.09
   - id: global-development
-    fraction: 0.25
+    fraction: 0.24
   - id: global-health
-    fraction: 0.30
+    fraction: 0.29
   - id: pandemics
     fraction: 0.094
   - id: ai-risk
-    fraction: 0.06
+    fraction: 0.08
   - id: ai-capabilities
     fraction: 0.006
 ---

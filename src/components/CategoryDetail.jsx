@@ -7,7 +7,7 @@ import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import { donations } from '../data/generatedData';
-import ReactMarkdown from 'react-markdown';
+import MarkdownContent from './MarkdownContent';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();
@@ -102,19 +102,8 @@ const CategoryDetail = () => {
           onAdjustAssumptions={openModal}
         />
 
-        {/* Category metadata content */}
-        {categoryInfo.content && (
-          <motion.div
-            className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6 mt-8"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
-            <div className="prose prose-slate max-w-none">
-              <ReactMarkdown>{categoryInfo.content}</ReactMarkdown>
-            </div>
-          </motion.div>
-        )}
+        {/* Category markdown content */}
+        <MarkdownContent content={categoryInfo.content} className="mt-8 mb-8" />
       </motion.div>
     </motion.div>
   );

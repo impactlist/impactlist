@@ -19,11 +19,13 @@ import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import EntityChartSection from './entity/EntityChartSection';
 import EntityDonationTable from './entity/EntityDonationTable';
+import MarkdownContent from './MarkdownContent';
 import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
 const RecipientDetail = () => {
   const { recipientId } = useParams();
   const [recipientInfo, setRecipientInfo] = useState(null);
+  const [recipientContent, setRecipientContent] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
   const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
   const [chartData, setChartData] = useState([]); // This will change format based on view
@@ -193,6 +195,9 @@ const RecipientDetail = () => {
       totalReceived,
       totalLivesSaved,
     });
+
+    // Store recipient content for rendering
+    setRecipientContent(recipient.content);
 
     setRecipientDonations(recipientDonationsList);
   }, [recipientId, customValues]);
@@ -366,6 +371,9 @@ const RecipientDetail = () => {
             containerHeight={calculateChartHeight(chartData)}
           />
         )}
+
+        {/* Recipient markdown content */}
+        <MarkdownContent content={recipientContent} className="mt-8 mb-8" />
 
         {/* Donations list */}
         <EntityDonationTable donations={recipientDonations} entityType="recipient" />

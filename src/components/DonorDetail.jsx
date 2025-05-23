@@ -20,11 +20,13 @@ import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import EntityChartSection from './entity/EntityChartSection';
 import EntityDonationTable from './entity/EntityDonationTable';
+import MarkdownContent from './MarkdownContent';
 import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
 const DonorDetail = () => {
   const { donorId } = useParams();
   const [donorStats, setDonorStats] = useState(null);
+  const [donorContent, setDonorContent] = useState(null);
   const [donorDonations, setDonorDonations] = useState([]);
   const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
   const [chartData, setChartData] = useState([]); // This will change format based on view
@@ -92,6 +94,9 @@ const DonorDetail = () => {
 
     // Find the donor object
     const donorData = getDonorById(donorId);
+
+    // Store donor content for rendering
+    setDonorContent(donorData?.content);
 
     // Keep track of the sum of known donations for reference
     const knownDonationsTotal = donorDonationsList.reduce((total, donation) => total + donation.amount, 0);
@@ -458,6 +463,9 @@ const DonorDetail = () => {
           entityType="donor"
           containerHeight={calculateChartHeight(chartData)}
         />
+
+        {/* Donor markdown content */}
+        <MarkdownContent content={donorContent} className="mt-8 mb-8" />
 
         {/* Donations list */}
         <EntityDonationTable donations={donorDonations} entityType="donor" />

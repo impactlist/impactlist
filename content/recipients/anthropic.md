@@ -7,4 +7,10 @@ categories:
     multiplier: 0.25
 ---
 
-They seem to be racing in a bad way. Not as bad as OpenAI. Give them a multiplier of 1/4.
+# Notes
+
+Anthropic seems to be racing toward AGI, but
+they appear more safety focused than most AI capabilities organizations so we'll provisionally give them a low multiplier.
+
+Disagree? This project hasn't launched yet and we're looking for help improving our cost per life estimates.
+If you'd like to contribute, read about how you can do so [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md).

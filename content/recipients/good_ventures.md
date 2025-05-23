@@ -28,4 +28,12 @@ categories:
     fraction: 0.006
 ---
 
-OpenPhil gave 30 million to OpenAI.. which we're approximating by 0.6% of their total spending.. Might need to be updated in the future if we add more spending for them.
+# Notes
+
+OpenPhil [gave 30 million to OpenAI](https://www.openphilanthropy.org/grants/openai-general-support/) in
+March 2017, believing it was an AI safety donation.
+However we categorize this as an AI capabilities donation.
+
+# Internal Notes
+
+We're approximating the 30 million donation by 0.6% of their total spending, since we're currently not tracking donations from foundations but instead are estimating their donations to each category. The 0.6% might need to be updated in the future if we add more spending for them. But it may also be reasonable to assume their future distribution will be the same as their past distribution until we do a more thorough investigation.

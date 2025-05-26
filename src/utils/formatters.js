@@ -60,8 +60,8 @@ export const formatNumber = (num) => {
     // For regular numbers, use standard comma formatting
     formattedValue = Math.round(absNum).toLocaleString('en-US');
   } else {
-    // For regular numbers, use standard comma formatting
-    formattedValue = absNum.toLocaleString('en-US');
+    // Using toLocaleString would round to 0 for very small numbers, so we use toString instead
+    formattedValue = absNum.toString();
   }
 
   return isNegative ? `-${formattedValue}` : formattedValue;

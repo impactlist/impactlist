@@ -3,6 +3,7 @@ import {
   BILLION,
   MILLION,
   THOUSAND,
+  HUNDRED,
   TEN,
   SMALL_NUMBER_THRESHOLD,
   HUNDRED_LIVES,
@@ -10,6 +11,19 @@ import {
   ONE_LIFE,
   FRACTION_LIFE_THRESHOLD,
 } from './constants';
+
+/**
+ * Add one digit after the decimal if the number is < 100 and is a non-integer, otherwise round to integer.
+ * @param {number} num - A non-negative number to format
+ * @returns {string} - Formatted number
+ */
+export const formatNumberWithNoMoreThanOneDecimal = (num) => {
+  if (num < 100 && !Number.isInteger(num)) {
+    return num.toFixed(1);
+  } else {
+    return Math.round(num).toString();
+  }
+};
 
 /**
  * Format numbers with commas and suffixes for large values
@@ -25,8 +39,8 @@ export const formatNumber = (num) => {
   if (absNum >= TRILLION) {
     // Trillions - use 2 significant digits
     const value = absNum / TRILLION;
-    // Format integer or decimal value
-    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    // Format integer or decimal value.
+    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
     // Add commas for large prefix values (e.g., 1,234.5T)
     if (value >= THOUSAND) {
       valueStr = Number(valueStr).toLocaleString('en-US');
@@ -36,12 +50,15 @@ export const formatNumber = (num) => {
     // Billions - use 2 significant digits
     const value = absNum / BILLION;
     // Format integer or decimal value
-    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
     // Add commas for large prefix values (e.g., 1,234.5B)
     if (value >= THOUSAND) {
       valueStr = Number(valueStr).toLocaleString('en-US');
     }
     formattedValue = `${valueStr}B`;
+  } else if (absNum >= HUNDRED) {
+    // For regular numbers, use standard comma formatting
+    formattedValue = Math.round(absNum).toLocaleString('en-US');
   } else {
     // For regular numbers, use standard comma formatting
     formattedValue = absNum.toLocaleString('en-US');
@@ -265,7 +282,7 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     // Trillions
     const value = absAmount / TRILLION;
     // Format integer or decimal value
-    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
     // Add commas for large prefix values (e.g., $1,234.5T)
     if (value >= 1000) {
       valueStr = Number(valueStr).toLocaleString('en-US');
@@ -275,7 +292,7 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     // Billions
     const value = absAmount / BILLION;
     // Format integer or decimal value
-    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
     // Add commas for large prefix values (e.g., $1,234.5B)
     if (value >= 1000) {
       valueStr = Number(valueStr).toLocaleString('en-US');
@@ -285,7 +302,7 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     // Millions
     const value = absAmount / MILLION;
     // Format integer or decimal value
-    let valueStr = Number.isInteger(value) ? value.toString() : value.toFixed(1);
+    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
     // Add commas for large prefix values (e.g., $1,234.5M)
     if (value >= 1000) {
       valueStr = Number(valueStr).toLocaleString('en-US');

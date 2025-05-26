@@ -12,6 +12,7 @@ export const TRILLION = 1000000000000;
 export const BILLION = 1000000000;
 export const MILLION = 1000000;
 export const THOUSAND = 1000;
+export const HUNDRED = 100;
 export const TEN = 10;
 export const SMALL_NUMBER_THRESHOLD = 0.0001;
 

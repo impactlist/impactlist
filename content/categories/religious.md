@@ -1,7 +1,15 @@
 ---
 id: religious
 name: 'Religious'
-costPerLife: 1_500_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 6.666666666666667e-7
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

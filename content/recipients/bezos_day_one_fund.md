@@ -1,9 +1,9 @@
 ---
 id: bezos-day-one-fund
 name: 'Bezos Day One Fund'
-categories:
-  - id: housing
+effects:
+  - categoryId: housing
     fraction: 0.5
-  - id: education
+  - categoryId: education
     fraction: 0.5
 ---

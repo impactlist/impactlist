@@ -1,7 +1,15 @@
 ---
 id: climate-change
 name: 'Climate Change'
-costPerLife: 70_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 0.000014285714285714285
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

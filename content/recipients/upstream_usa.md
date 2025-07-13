@@ -1,7 +1,7 @@
 ---
 id: upstream-usa
 name: 'Upstream USA'
-categories:
-  - id: health-medicine
+effects:
+  - categoryId: health-medicine
     fraction: 1
 ---

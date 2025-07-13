@@ -1,7 +1,21 @@
 ---
 id: ai-capabilities
 name: 'AGI Development'
-costPerLife: -25
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'existential risk increase'
+    startTime: 10
+    windowLength: 50
+    peoplePerDollar: 0.04
+    benefitPerYear: -1
+    targetPopulation: 'human'
+  - name: 'scientific advancement'
+    startTime: 0
+    windowLength: 20
+    peoplePerDollar: 0.00000625
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

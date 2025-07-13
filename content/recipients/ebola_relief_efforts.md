@@ -1,7 +1,7 @@
 ---
 id: ebola-relief-efforts
 name: 'Ebola Relief Efforts'
-categories:
-  - id: disaster-relief
+effects:
+  - categoryId: disaster-relief
     fraction: 1
 ---

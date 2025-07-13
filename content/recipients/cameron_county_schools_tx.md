@@ -1,7 +1,7 @@
 ---
 id: cameron-county-schools-tx
 name: 'Cameron County Schools, TX'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

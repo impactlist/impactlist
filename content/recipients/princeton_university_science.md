@@ -1,7 +1,7 @@
 ---
 id: princeton-university-science
 name: 'Princeton University (science)'
-categories:
-  - id: science-tech
+effects:
+  - categoryId: science-tech
     fraction: 1
 ---

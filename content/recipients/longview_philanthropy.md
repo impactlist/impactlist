@@ -1,13 +1,13 @@
 ---
 id: longview-philanthropy
 name: 'Longview Philanthropy'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 0.3
-  - id: pandemics
+  - categoryId: pandemics
     fraction: 0.3
-  - id: nuclear
+  - categoryId: nuclear
     fraction: 0.3
-  - id: global-priorities
+  - categoryId: global-priorities
     fraction: 0.1
 ---

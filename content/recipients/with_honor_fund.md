@@ -1,7 +1,7 @@
 ---
 id: with-honor-fund
 name: 'With Honor Fund'
-categories:
-  - id: political
+effects:
+  - categoryId: political
     fraction: 1
 ---

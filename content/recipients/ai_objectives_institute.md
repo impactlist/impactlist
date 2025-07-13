@@ -1,7 +1,7 @@
 ---
 id: ai-objectives-institute
 name: 'AI Objectives Institute'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

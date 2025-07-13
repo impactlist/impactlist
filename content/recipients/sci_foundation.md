@@ -1,7 +1,7 @@
 ---
 id: sci-foundation
 name: 'SCI Foundation'
-categories:
-  - id: health-medicine
-    fraction: 1.0
+effects:
+  - categoryId: health-medicine
+    fraction: 1
 ---

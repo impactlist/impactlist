@@ -1,15 +1,15 @@
 ---
 id: susan-thompson-buffett-foundation
 name: 'Susan Thompson Buffett Foundation'
-categories:
-  - id: health-medicine
+effects:
+  - categoryId: health-medicine
     fraction: 0.65
-  - id: global-health
+  - categoryId: global-health
     fraction: 0.15
-  - id: education
-    fraction: 0.10
-  - id: social-justice
+  - categoryId: education
+    fraction: 0.1
+  - categoryId: social-justice
     fraction: 0.05
-  - id: human-rights
+  - categoryId: human-rights
     fraction: 0.05
 ---

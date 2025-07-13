@@ -1,11 +1,11 @@
 ---
 id: howard-g-buffett-foundation
 name: 'Howard G. Buffett Foundation'
-categories:
-  - id: conflict-mitigation
+effects:
+  - categoryId: conflict-mitigation
     fraction: 0.25
-  - id: human-rights
+  - categoryId: human-rights
     fraction: 0.15
-  - id: global-development
+  - categoryId: global-development
     fraction: 0.6
 ---

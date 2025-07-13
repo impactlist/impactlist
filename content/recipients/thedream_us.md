@@ -1,7 +1,7 @@
 ---
 id: thedream-us
 name: 'TheDream.US'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

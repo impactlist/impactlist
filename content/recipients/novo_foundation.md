@@ -1,15 +1,15 @@
 ---
 id: novo-foundation
 name: 'NoVo Foundation'
-categories:
-  - id: human-rights
+effects:
+  - categoryId: human-rights
     fraction: 0.15
-  - id: education
+  - categoryId: education
     fraction: 0.1
-  - id: local-community
+  - categoryId: local-community
     fraction: 0.1
-  - id: environmental
+  - categoryId: environmental
     fraction: 0.05
-  - id: social-justice
+  - categoryId: social-justice
     fraction: 0.6
 ---

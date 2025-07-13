@@ -1,7 +1,7 @@
 ---
 id: the-end-fund
 name: 'The END Fund'
-categories:
-  - id: disaster-relief
-    fraction: 1.0
+effects:
+  - categoryId: disaster-relief
+    fraction: 1
 ---

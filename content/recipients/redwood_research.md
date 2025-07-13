@@ -1,7 +1,7 @@
 ---
 id: redwood-research
 name: 'Redwood Research'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

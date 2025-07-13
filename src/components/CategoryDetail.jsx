@@ -2,69 +2,61 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from './BackButton';
-import { getCategoryById, getDefaultCostPerLifeForCategory, getRecipientById } from '../utils/donationDataHelpers';
-import { useCostPerLife } from './CostPerLifeContext';
+import { getRecipientById, calculateLivesSavedForDonation } from '../utils/donationDataHelpers';
+import { useGlobalParameters } from './GlobalParametersContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
-import { donations } from '../data/generatedData';
+import { donations, categoriesById } from '../data/generatedData';
 import MarkdownContent from './MarkdownContent';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();
   const [categoryInfo, setCategoryInfo] = useState(null);
-  const { customValues, openModal } = useCostPerLife();
+  const { customEffectivenessData, openModal } = useGlobalParameters();
 
   useEffect(() => {
-    // Get category info
-    const category = getCategoryById(categoryId);
+    // Get category info directly from generated data
+    const category = categoriesById[categoryId];
 
     if (!category) {
       throw new Error(`Invalid category ID: ${categoryId}. This category does not exist.`);
     }
 
-    // Get cost per life for this category
-    const costPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-    // Get default cost per life (without custom values)
-    const defaultCostPerLife = getDefaultCostPerLifeForCategory(categoryId, null);
-
     // Calculate total donated to this category and lives saved
     let totalDonated = 0;
     let totalLivesSaved = 0;
 
-    // Loop through all donations and add up amounts for this category
+    // Process donations and calculate impact using the new effects system
     donations.forEach((donation) => {
       const recipientId = donation.recipientId;
       const recipient = getRecipientById(recipientId);
 
-      if (recipient && recipient.categories && recipient.categories[categoryId]) {
-        // This recipient donates to our category
-        const categoryData = recipient.categories[categoryId];
-        const fraction = categoryData.fraction || 0;
+      if (recipient && recipient.effects) {
+        // Check if recipient has effects in this category
+        const hasEffectInCategory = recipient.effects.some((effect) => effect.categoryId === categoryId);
 
-        // Apply credit multiplier if it exists
-        const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+        if (hasEffectInCategory) {
+          const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
 
-        // Calculate amount that goes to this category
-        const amountToCategory = creditedAmount * fraction;
-        totalDonated += amountToCategory;
+          // For category totals, we need to calculate the fraction that goes to this category
+          const categoryEffects = recipient.effects.filter((effect) => effect.categoryId === categoryId);
+          const totalFraction = categoryEffects.reduce((sum, effect) => sum + effect.fraction, 0);
 
-        // Calculate lives saved
-        const categorySpecificCostPerLife = costPerLife;
-        if (categorySpecificCostPerLife !== 0) {
-          totalLivesSaved += amountToCategory / categorySpecificCostPerLife;
+          totalDonated += creditedAmount * totalFraction;
+
+          // Calculate lives saved using the new effects system
+          totalLivesSaved += calculateLivesSavedForDonation(donation) * totalFraction;
         }
       }
     });
 
     setCategoryInfo({
       name: category.name,
-      costPerLife,
-      defaultCostPerLife,
       totalDonated,
       totalLivesSaved,
       content: category.content,
     });
-  }, [categoryId, customValues]);
+  }, [categoryId, customEffectivenessData]);
 
   if (!categoryInfo) {
     return <div className="p-8 text-center">Loading...</div>;

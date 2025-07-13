@@ -1,7 +1,7 @@
 ---
 id: ai-policy-institute
 name: 'AI Policy Institute'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

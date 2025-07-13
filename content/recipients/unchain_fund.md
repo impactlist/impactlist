@@ -1,7 +1,7 @@
 ---
 id: unchain-fund
 name: 'Unchain Fund'
-categories:
-  - id: disaster-relief
+effects:
+  - categoryId: disaster-relief
     fraction: 1
 ---

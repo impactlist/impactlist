@@ -1,7 +1,7 @@
 ---
 id: mila
 name: 'MILA'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

@@ -1,7 +1,7 @@
 ---
 id: xprize-climate-change
 name: 'XPrize, Climate Change'
-categories:
-  - id: climate-change
+effects:
+  - categoryId: climate-change
     fraction: 1
 ---

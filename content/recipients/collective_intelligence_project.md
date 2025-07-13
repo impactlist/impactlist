@@ -1,7 +1,7 @@
 ---
 id: collective-intelligence-project
 name: 'Collective Intelligence Project'
-categories:
-  - id: decision-making
+effects:
+  - categoryId: decision-making
     fraction: 1
 ---

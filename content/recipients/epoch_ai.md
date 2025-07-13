@@ -1,7 +1,7 @@
 ---
 id: epoch-ai
 name: 'Epoch AI'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

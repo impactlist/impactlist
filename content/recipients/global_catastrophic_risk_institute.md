@@ -1,7 +1,7 @@
 ---
 id: global-catastrophic-risk-institute
 name: 'Global Catastrophic Risk Institute'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

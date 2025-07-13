@@ -1,19 +1,19 @@
 ---
 id: gates-foundation
 name: 'Gates Foundation'
-categories:
-  - id: global-health
+effects:
+  - categoryId: global-health
     fraction: 0.4
-  - id: global-development
+  - categoryId: global-development
     fraction: 0.3
-  - id: climate-change
+  - categoryId: climate-change
     fraction: 0.07
-  - id: education
+  - categoryId: education
     fraction: 0.08
-  - id: pandemics
+  - categoryId: pandemics
     fraction: 0.07
-  - id: science-tech
+  - categoryId: science-tech
     fraction: 0.05
-  - id: human-rights
+  - categoryId: human-rights
     fraction: 0.03
 ---

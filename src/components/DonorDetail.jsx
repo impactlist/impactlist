@@ -5,17 +5,17 @@ import BackButton from './BackButton';
 import {
   calculateDonorStats,
   getCostPerLifeForRecipient,
-  getPrimaryCategoryId,
-  getDefaultCostPerLifeForCategory,
-  getActualCostPerLifeForCategoryData,
   getDonorById,
-  getCategoryById,
   getRecipientById,
   getDonationsForDonor,
   calculateLivesSavedForDonation,
+  getPrimaryCategoryId,
+  getCategoryById,
+  getActualCostPerLifeForCategoryData,
+  getDefaultCostPerLifeForCategory,
 } from '../utils/donationDataHelpers';
 import { ImpactChartToggle } from './ImpactBarChart';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useGlobalParameters } from './GlobalParametersContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import EntityChartSection from './entity/EntityChartSection';
@@ -35,7 +35,7 @@ const DonorDetail = () => {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
-  const { customValues, openModal } = useCostPerLife();
+  const { customEffectivenessData, openModal } = useGlobalParameters();
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -46,7 +46,7 @@ const DonorDetail = () => {
 
   useEffect(() => {
     // Get full donor statistics
-    const stats = calculateDonorStats(customValues);
+    const stats = calculateDonorStats();
     const currentDonor = stats.find((donor) => donor.id === donorId);
     setDonorStats(currentDonor);
 
@@ -68,7 +68,7 @@ const DonorDetail = () => {
         }
 
         // Normal flow when recipient exists
-        const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+        const costPerLife = getCostPerLifeForRecipient(recipientId, customEffectivenessData);
 
         // Get the primary category ID for this recipient
         const primaryCategoryId = getPrimaryCategoryId(recipientId);
@@ -78,7 +78,7 @@ const DonorDetail = () => {
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
 
         // Calculate lives saved
-        const totalLivesSaved = calculateLivesSavedForDonation(donation, customValues);
+        const totalLivesSaved = calculateLivesSavedForDonation(donation);
 
         return {
           ...donation,
@@ -171,7 +171,12 @@ const DonorDetail = () => {
         const categoryName = category.name;
 
         // Get the costPerLife with multiplier properly applied
-        const costPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
+        const costPerLife = getActualCostPerLifeForCategoryData(
+          recipientId,
+          categoryId,
+          categoryData,
+          customEffectivenessData
+        );
 
         // Calculate category-specific amount and lives saved
         const categoryAmount = donation.creditedAmount * fraction;
@@ -240,7 +245,7 @@ const DonorDetail = () => {
             : 0,
         costPerLife:
           livesSavedEntry.costPerLife ||
-          (categoryId ? getDefaultCostPerLifeForCategory(categoryId, customValues) || 0 : 0),
+          (categoryId ? getDefaultCostPerLifeForCategory(categoryId, customEffectivenessData) || 0 : 0),
         hasMultiplier: livesSavedEntry.hasMultiplier,
         multiplier: livesSavedEntry.multiplier,
       };
@@ -281,7 +286,7 @@ const DonorDetail = () => {
 
     // Store the raw data with both values
     setRawChartData(unifiedData);
-  }, [donorId, customValues]);
+  }, [donorId, customEffectivenessData]);
 
   // Prepare the initial sorted data once
   useEffect(() => {
@@ -311,7 +316,7 @@ const DonorDetail = () => {
     }));
 
     setChartData(initialChartData);
-  }, [rawChartData, customValues]); // Include customValues in dependencies
+  }, [rawChartData]); // Include rawChartData in dependencies
 
   // Handle the transition between views
   useEffect(() => {
@@ -336,8 +341,7 @@ const DonorDetail = () => {
     }, CHART_ANIMATION_DURATION);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transitionStage, chartView, customValues]); // Include customValues in dependencies
+  }, [chartData, chartView, transitionStage]); // Include all dependencies
 
   // Update chart view whenever rawChartData or customValues change
   useEffect(() => {
@@ -374,7 +378,7 @@ const DonorDetail = () => {
 
       setChartData(sortedData);
     }
-  }, [rawChartData, customValues, chartView, transitionStage, shouldAnimate, chartData.length]); // Include all dependencies
+  }, [chartData, chartView, rawChartData, transitionStage, shouldAnimate]); // Include all dependencies
 
   // Separate effect to handle animation timing
   useEffect(() => {

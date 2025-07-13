@@ -1,7 +1,7 @@
 ---
 id: wikimedia-foundation
 name: 'Wikimedia Foundation'
-categories:
-  - id: science-tech
-    fraction: 1.0
+effects:
+  - categoryId: science-tech
+    fraction: 1
 ---

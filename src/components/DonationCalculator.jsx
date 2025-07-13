@@ -8,7 +8,7 @@ import {
   getCostPerLifeForRecipient,
 } from '../utils/donationDataHelpers';
 import { recipientsById } from '../data/generatedData';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useGlobalParameters } from './GlobalParametersContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import SpecificDonationModal from './SpecificDonationModal';
 import PageHeader from './PageHeader';
@@ -35,7 +35,7 @@ const DonationCalculator = () => {
     twoBelow: null,
     twoAbove: null,
   });
-  const { customValues, openModal } = useCostPerLife();
+  const { customEffectivenessData, openModal } = useGlobalParameters();
 
   // For specific donation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,7 +52,7 @@ const DonationCalculator = () => {
       import('./SortableTable')
         .then(() => {
           import('../utils/donationDataHelpers').then(({ calculateDonorStats }) => {
-            const donorStats = calculateDonorStats(customValues);
+            const donorStats = calculateDonorStats(customEffectivenessData);
 
             // Find where the user would rank
             let rank = 1;
@@ -99,7 +99,7 @@ const DonationCalculator = () => {
           setNeighboringDonors({ above: null, below: null, twoBelow: null, twoAbove: null });
         });
     },
-    [customValues]
+    [customEffectivenessData]
   );
 
   // Initialize categories and load saved donation values on component mount
@@ -144,7 +144,7 @@ const DonationCalculator = () => {
       totalAmount += donationAmount;
 
       // Calculate lives saved for this category
-      const livesSaved = calculateLivesSavedForCategory(categoryId, donationAmount, customValues);
+      const livesSaved = calculateLivesSavedForCategory(categoryId, donationAmount, customEffectivenessData);
       totalLives += livesSaved;
     });
 
@@ -164,11 +164,11 @@ const DonationCalculator = () => {
           costPerLife = donation.costPerLife;
         } else if (donation.multiplier) {
           // Apply multiplier to the category's cost per life
-          const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+          const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customEffectivenessData);
           costPerLife = baseCostPerLife / donation.multiplier;
         } else {
           // Use category default
-          costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+          costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customEffectivenessData);
         }
 
         livesSaved = donation.amount / costPerLife;
@@ -183,7 +183,7 @@ const DonationCalculator = () => {
         }
 
         // Get actual cost per life for this recipient
-        const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+        const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customEffectivenessData);
         livesSaved = donation.amount / recipientCostPerLife;
       }
 
@@ -206,7 +206,7 @@ const DonationCalculator = () => {
     } else {
       setDonorRank(null);
     }
-  }, [donations, specificDonations, customValues, categories, calculateDonorRank]);
+  }, [donations, specificDonations, customEffectivenessData, categories, calculateDonorRank]);
 
   // Save donations to localStorage when they change
   useEffect(() => {
@@ -249,7 +249,7 @@ const DonationCalculator = () => {
     if (!amount || isNaN(Number(amount))) return 0;
 
     const donationAmount = Number(amount);
-    return calculateLivesSavedForCategory(categoryId, donationAmount, customValues);
+    return calculateLivesSavedForCategory(categoryId, donationAmount, customEffectivenessData);
   };
 
   // Open modal to add or edit a specific donation
@@ -286,11 +286,11 @@ const DonationCalculator = () => {
         costPerLife = donation.costPerLife;
       } else if (donation.multiplier) {
         // Apply multiplier to the category's cost per life
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customEffectivenessData);
         costPerLife = baseCostPerLife / donation.multiplier;
       } else {
         // Use category default
-        costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customEffectivenessData);
       }
 
       return donation.amount / costPerLife;
@@ -304,7 +304,7 @@ const DonationCalculator = () => {
       }
 
       // Get actual cost per life for this recipient
-      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customEffectivenessData);
       return donation.amount / recipientCostPerLife;
     }
   };
@@ -315,16 +315,16 @@ const DonationCalculator = () => {
       if (donation.costPerLife) {
         return donation.costPerLife;
       } else if (donation.multiplier) {
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customEffectivenessData);
         return baseCostPerLife / donation.multiplier;
       } else {
-        return getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        return getDefaultCostPerLifeForCategory(donation.categoryId, customEffectivenessData);
       }
     } else {
       const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === donation.recipientName);
 
       if (recipientId) {
-        return getCostPerLifeForRecipient(recipientId, customValues);
+        return getCostPerLifeForRecipient(recipientId, customEffectivenessData);
       } else {
         return 0;
       }
@@ -424,7 +424,9 @@ const DonationCalculator = () => {
             onDonationChange={handleDonationChange}
             onReset={resetDonations}
             getLivesSavedForCategory={getLivesSavedForCategory}
-            getCostPerLifeForCategory={(categoryId) => getDefaultCostPerLifeForCategory(categoryId, customValues)}
+            getCostPerLifeForCategory={(categoryId) =>
+              getDefaultCostPerLifeForCategory(categoryId, customEffectivenessData)
+            }
           />
         </motion.div>
 

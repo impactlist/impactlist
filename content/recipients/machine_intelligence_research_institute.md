@@ -1,7 +1,7 @@
 ---
 id: machine-intelligence-research-institute
 name: 'Machine Intelligence Research Institute'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

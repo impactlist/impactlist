@@ -1,25 +1,25 @@
 ---
 id: bloomberg-philanthropies
 name: 'Bloomberg Philanthropies'
-categories:
-  - id: health-medicine
+effects:
+  - categoryId: health-medicine
     fraction: 0.2
-  - id: global-health
+  - categoryId: global-health
     fraction: 0.2
-  - id: education
+  - categoryId: education
     fraction: 0.15
-  - id: climate-change
+  - categoryId: climate-change
     fraction: 0.15
-  - id: local-community
+  - categoryId: local-community
     fraction: 0.07
-  - id: arts-culture
+  - categoryId: arts-culture
     fraction: 0.08
-  - id: institutions
+  - categoryId: institutions
     fraction: 0.05
-  - id: pandemics
+  - categoryId: pandemics
     fraction: 0.03
-  - id: science-tech
+  - categoryId: science-tech
     fraction: 0.02
-  - id: global-development
+  - categoryId: global-development
     fraction: 0.05
 ---

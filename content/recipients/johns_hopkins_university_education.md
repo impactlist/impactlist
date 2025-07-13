@@ -1,7 +1,7 @@
 ---
 id: johns-hopkins-university-education
 name: 'Johns Hopkins University (education)'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

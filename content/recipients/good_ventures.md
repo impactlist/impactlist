@@ -1,30 +1,30 @@
 ---
 id: good-ventures
 name: 'Good Ventures'
-categories:
-  - id: climate-change
+effects:
+  - categoryId: climate-change
     fraction: 0.03
-  - id: political
+  - categoryId: political
     fraction: 0.03
-  - id: institutions
+  - categoryId: institutions
     fraction: 0.02
-  - id: meta-theory
+  - categoryId: meta-theory
     fraction: 0.03
-  - id: science-tech
+  - categoryId: science-tech
     fraction: 0.05
-  - id: human-rights
+  - categoryId: human-rights
     fraction: 0.04
-  - id: animal-welfare
+  - categoryId: animal-welfare
     fraction: 0.09
-  - id: global-development
+  - categoryId: global-development
     fraction: 0.24
-  - id: global-health
+  - categoryId: global-health
     fraction: 0.29
-  - id: pandemics
+  - categoryId: pandemics
     fraction: 0.094
-  - id: ai-risk
+  - categoryId: ai-risk
     fraction: 0.08
-  - id: ai-capabilities
+  - categoryId: ai-capabilities
     fraction: 0.006
 ---
 

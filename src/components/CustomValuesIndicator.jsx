@@ -1,8 +1,8 @@
 import React from 'react';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useGlobalParameters } from './GlobalParametersContext';
 
 const CustomValuesIndicator = ({ className = '' }) => {
-  const { isUsingCustomValues } = useCostPerLife();
+  const { isUsingCustomValues } = useGlobalParameters();
 
   if (!isUsingCustomValues) return null;
 

@@ -1,7 +1,7 @@
 ---
 id: zvi-mowshowitz
 name: 'Zvi Mowshowitz'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

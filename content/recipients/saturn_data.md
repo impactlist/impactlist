@@ -1,7 +1,7 @@
 ---
 id: saturn-data
 name: 'Saturn Data'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

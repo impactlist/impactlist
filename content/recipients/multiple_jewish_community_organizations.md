@@ -1,7 +1,7 @@
 ---
 id: multiple-jewish-community-organizations
 name: 'Multiple Jewish Community Organizations'
-categories:
-  - id: local-community
+effects:
+  - categoryId: local-community
     fraction: 1
 ---

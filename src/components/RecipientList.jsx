@@ -3,17 +3,16 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from './BackButton';
 import {
-  getCostPerLifeForRecipient,
-  getPrimaryCategoryId,
+  getPrimaryEffectForRecipient,
   getCategoryBreakdown,
   getAllRecipients,
   getDonationsForRecipient,
-  getCategoryById,
   getRecipientId,
   calculateLivesSavedForDonation,
+  getCostPerLifeForRecipient,
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useGlobalParameters } from './GlobalParametersContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from './PageHeader';
@@ -21,7 +20,7 @@ import AdjustAssumptionsButton from './AdjustAssumptionsButton';
 
 const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);
-  const { customValues, openModal } = useCostPerLife();
+  const { openModal, customEffectivenessData } = useGlobalParameters();
 
   useEffect(() => {
     // Calculate recipient statistics
@@ -39,61 +38,39 @@ const RecipientList = () => {
         const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
         return sum + creditedAmount;
       }, 0);
-      const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
 
-      // Get the primary category and all categories for display
-      const primaryCategoryId = getPrimaryCategoryId(recipientId);
-
-      if (!primaryCategoryId) {
-        throw new Error(
-          `No primary category found for recipient ${recipient.name}. Please check that this recipient has categories defined.`
-        );
-      }
-
-      const primaryCategory = getCategoryById(primaryCategoryId);
-
-      if (!primaryCategory) {
-        throw new Error(
-          `Invalid primary category ID: ${primaryCategoryId} for recipient ${recipient.name}. This category does not exist.`
-        );
-      }
+      // Get the primary effect for display
+      const primaryEffect = getPrimaryEffectForRecipient(recipientId);
 
       const categoryBreakdown = getCategoryBreakdown(recipientId);
 
-      // Get category names from breakdown
-      const categoryNames = categoryBreakdown.map((category) => {
-        const categoryObj = getCategoryById(category.categoryId);
+      // Get category names from breakdown (keeping this for display)
+      const categoryNames = categoryBreakdown.map((category) => category.categoryId);
 
-        if (!categoryObj) {
-          throw new Error(
-            `Invalid category ID: ${category.categoryId} for recipient ${recipient.name}. This category does not exist.`
-          );
-        }
-
-        return categoryObj.name;
-      });
-
-      // Calculate total lives saved
-      const totalLivesSaved = recipientDonations.reduce(
-        (sum, donation) => sum + calculateLivesSavedForDonation(donation, customValues),
+      // Calculate total impact using new effects system
+      const totalImpact = recipientDonations.reduce(
+        (sum, donation) => sum + calculateLivesSavedForDonation(donation),
         0
       );
+
+      // Calculate cost per life for this recipient
+      const costPerLife = getCostPerLifeForRecipient(recipientId, customEffectivenessData) || 0;
 
       return {
         id: recipientId,
         name: recipient.name,
-        primaryCategoryId: primaryCategoryId,
-        primaryCategoryName: primaryCategory.name,
+        primaryCategoryId: primaryEffect.categoryId,
+        primaryCategoryName: primaryEffect.effectName,
         categoryNames,
         totalReceived,
+        totalLivesSaved: totalImpact,
         costPerLife,
-        totalLivesSaved,
       };
     });
 
     // Let SortableTable handle the sorting with the special logic
     setRecipientStats(recipientStats);
-  }, [customValues]);
+  }, [customEffectivenessData]);
 
   // Recipient table columns configuration
   const recipientColumns = [

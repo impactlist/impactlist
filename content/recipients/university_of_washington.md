@@ -1,7 +1,7 @@
 ---
 id: university-of-washington
 name: 'University of Washington'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

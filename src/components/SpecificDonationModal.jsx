@@ -8,10 +8,10 @@ import {
   getRecipientId,
 } from '../utils/donationDataHelpers';
 import { formatNumber, formatLives } from '../utils/formatters';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useGlobalParameters } from './GlobalParametersContext';
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
-  const { customValues } = useCostPerLife();
+  const { customEffectivenessData } = useGlobalParameters();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [customRecipientName, setCustomRecipientName] = useState('');
@@ -268,19 +268,19 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       }
 
       // Get actual cost per life for this recipient
-      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customEffectivenessData);
       return cleanedAmount / recipientCostPerLife;
     } else if (!isExistingRecipient && selectedCategory) {
       let effectiveCostPerLife;
 
       if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
         const multiplierValue = Number(cleanNumberInput(multiplier));
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
+        const baseCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData);
         effectiveCostPerLife = baseCostPerLife / multiplierValue;
       } else if (costPerLife && !isNaN(Number(cleanNumberInput(costPerLife)))) {
         effectiveCostPerLife = Number(cleanNumberInput(costPerLife));
       } else {
-        effectiveCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
+        effectiveCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData);
       }
 
       return cleanedAmount / effectiveCostPerLife;
@@ -298,7 +298,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     const recipientId = getRecipientId(selectedRecipient);
     if (!recipientId) return null;
 
-    return getCostPerLifeForRecipient(recipientId, customValues);
+    return getCostPerLifeForRecipient(recipientId, customEffectivenessData);
   };
 
   const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
@@ -458,7 +458,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
                       Default cost per life: $
-                      {formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}
+                      {formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData))}
                     </p>
                   )}
                 </div>
@@ -489,7 +489,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       <p className="mt-1 text-xs text-gray-500">
                         Cost per life: $
                         {formatNumber(
-                          getDefaultCostPerLifeForCategory(selectedCategory, customValues) /
+                          getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData) /
                             Number(cleanNumberInput(multiplier))
                         )}
                       </p>
@@ -511,7 +511,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         }}
                         placeholder={
                           selectedCategory
-                            ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))
+                            ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData))
                             : '0'
                         }
                         className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${

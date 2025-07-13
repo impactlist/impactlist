@@ -1,7 +1,7 @@
 ---
 id: sderot-community-center-israel
 name: 'Sderot Community Center (Israel)'
-categories:
-  - id: local-community
+effects:
+  - categoryId: local-community
     fraction: 1
 ---

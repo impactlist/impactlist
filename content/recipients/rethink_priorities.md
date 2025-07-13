@@ -1,7 +1,7 @@
 ---
 id: rethink-priorities
 name: 'Rethink Priorities'
-categories:
-  - id: global-priorities
+effects:
+  - categoryId: global-priorities
     fraction: 1
 ---

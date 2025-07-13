@@ -1,8 +1,10 @@
 ---
 id: the-foundation-musk
 name: 'The Foundation (Musk)'
-categories:
-  - id: education
-    fraction: 1.0
-    multiplier: 5.0
+effects:
+  - categoryId: education
+    fraction: 1
+    effects:
+      'primary impact':
+        peoplePerDollarMultiplier: 5
 ---

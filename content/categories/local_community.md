@@ -1,7 +1,15 @@
 ---
 id: local-community
 name: 'Local Community'
-costPerLife: 2_400_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 4.1666666666666667e-7
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

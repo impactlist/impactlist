@@ -1,7 +1,7 @@
 ---
 id: arbor-day-foundation
 name: 'Arbor Day Foundation'
-categories:
-  - id: environmental
+effects:
+  - categoryId: environmental
     fraction: 1
 ---

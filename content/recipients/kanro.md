@@ -1,7 +1,7 @@
 ---
 id: kanro
 name: 'Kanro'
-categories:
-  - id: pandemics
+effects:
+  - categoryId: pandemics
     fraction: 1
 ---

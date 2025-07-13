@@ -10,7 +10,7 @@ import {
   calculateLivesSavedForDonation,
 } from '../utils/donationDataHelpers';
 import SortableTable from './SortableTable';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useGlobalParameters } from './GlobalParametersContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from './PageHeader';
@@ -18,7 +18,7 @@ import AdjustAssumptionsButton from './AdjustAssumptionsButton';
 
 const CategoryList = () => {
   const [categoryStats, setCategoryStats] = useState([]);
-  const { customValues, openModal } = useCostPerLife();
+  const { openModal, globalParameters, customEffectivenessData } = useGlobalParameters();
 
   useEffect(() => {
     // Get all categories
@@ -47,7 +47,7 @@ const CategoryList = () => {
       // For each donation to this recipient
       recipientDonations.forEach((donation) => {
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-        const livesSaved = calculateLivesSavedForDonation(donation, customValues);
+        const livesSaved = calculateLivesSavedForDonation(donation);
 
         // If the donation has category information
         if (donation.categoryId) {
@@ -76,14 +76,16 @@ const CategoryList = () => {
         costPerLife: category.costPerLife,
         // Use custom values if available
         actualCostPerLife:
-          customValues && customValues[category.id] !== undefined ? customValues[category.id] : category.costPerLife,
+          customEffectivenessData && customEffectivenessData[category.id] !== undefined
+            ? customEffectivenessData[category.id]
+            : category.costPerLife,
         totalDonated: categoryTotals[category.id] || 0,
         totalLivesSaved: categoryLivesSaved[category.id] || 0,
       };
     });
 
     setCategoryStats(stats);
-  }, [customValues]);
+  }, [globalParameters, customEffectivenessData]);
 
   // Category table columns configuration
   const categoryColumns = [

@@ -1,7 +1,7 @@
 ---
 id: windward-school
 name: 'Windward School'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

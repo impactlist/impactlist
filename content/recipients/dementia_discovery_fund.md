@@ -1,7 +1,7 @@
 ---
 id: dementia-discovery-fund
 name: 'Dementia Discovery Fund'
-categories:
-  - id: health-medicine
+effects:
+  - categoryId: health-medicine
     fraction: 1
 ---

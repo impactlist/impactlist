@@ -1,7 +1,7 @@
 ---
 id: india-covid-crypto-relief-fund
 name: 'India COVID-Crypto Relief Fund'
-categories:
-  - id: disaster-relief
+effects:
+  - categoryId: disaster-relief
     fraction: 1
 ---

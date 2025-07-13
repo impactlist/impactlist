@@ -1,7 +1,7 @@
 ---
 id: haydn-belfield
 name: 'Haydn Belfield'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

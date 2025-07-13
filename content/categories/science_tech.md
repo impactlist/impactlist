@@ -1,7 +1,15 @@
 ---
 id: science-tech
 name: 'Science and Tech'
-costPerLife: 160_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 0.00000625
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

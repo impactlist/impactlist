@@ -1,7 +1,7 @@
 ---
 id: newark-public-schools
 name: 'Newark Public Schools'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

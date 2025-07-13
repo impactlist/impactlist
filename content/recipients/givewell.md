@@ -1,7 +1,7 @@
 ---
 id: givewell
 name: 'GiveWell'
-categories:
-  - id: meta-theory
+effects:
+  - categoryId: meta-theory
     fraction: 1
 ---

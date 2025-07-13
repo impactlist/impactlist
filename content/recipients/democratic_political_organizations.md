@@ -1,7 +1,7 @@
 ---
 id: democratic-political-organizations
 name: 'Democratic Political Organizations'
-categories:
-  - id: political
+effects:
+  - categoryId: political
     fraction: 1
 ---

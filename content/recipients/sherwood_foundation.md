@@ -1,15 +1,15 @@
 ---
 id: sherwood-foundation
 name: 'Sherwood Foundation'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 0.5
-  - id: social-justice
+  - categoryId: social-justice
     fraction: 0.25
-  - id: housing
+  - categoryId: housing
     fraction: 0.05
-  - id: health-medicine
+  - categoryId: health-medicine
     fraction: 0.05
-  - id: local-community
+  - categoryId: local-community
     fraction: 0.15
 ---

@@ -56,6 +56,11 @@ function loadCategories() {
       costPerLife: data.costPerLife,
     };
 
+    // Add effects if they exist
+    if (data.effects && Array.isArray(data.effects)) {
+      categories[data.id].effects = data.effects;
+    }
+
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
     if (extractedContent) {
@@ -108,24 +113,31 @@ function loadRecipients() {
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data, content } = matter(fileContent);
 
-    const categoriesObj = {};
-
-    data.categories.forEach((category) => {
-      const categoryData = { fraction: category.fraction };
-      if (category.costPerLife !== undefined) {
-        categoryData.costPerLife = category.costPerLife;
-      }
-      if (category.multiplier !== undefined) {
-        categoryData.multiplier = category.multiplier;
-      }
-      categoriesObj[category.id] = categoryData;
-    });
-
     // Use ID as the key
     recipients[data.id] = {
       name: data.name,
-      categories: categoriesObj,
     };
+
+    // Handle new effects format
+    if (data.effects && Array.isArray(data.effects)) {
+      recipients[data.id].effects = data.effects;
+    }
+
+    // Handle old categories format for backward compatibility
+    if (data.categories && Array.isArray(data.categories)) {
+      const categoriesObj = {};
+      data.categories.forEach((category) => {
+        const categoryData = { fraction: category.fraction };
+        if (category.costPerLife !== undefined) {
+          categoryData.costPerLife = category.costPerLife;
+        }
+        if (category.multiplier !== undefined) {
+          categoryData.multiplier = category.multiplier;
+        }
+        categoriesObj[category.id] = categoryData;
+      });
+      recipients[data.id].categories = categoriesObj;
+    }
 
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
@@ -248,11 +260,25 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
 
   // Check all recipients reference valid categories
   Object.entries(recipients).forEach(([recipientId, recipient]) => {
-    Object.keys(recipient.categories).forEach((categoryId) => {
-      if (!categories[categoryId]) {
-        errors.push(`Error: Recipient "${recipientId}" references non-existent category ID "${categoryId}"`);
-      }
-    });
+    // Check old categories format
+    if (recipient.categories) {
+      Object.keys(recipient.categories).forEach((categoryId) => {
+        if (!categories[categoryId]) {
+          errors.push(`Error: Recipient "${recipientId}" references non-existent category ID "${categoryId}"`);
+        }
+      });
+    }
+
+    // Check new effects format
+    if (recipient.effects) {
+      recipient.effects.forEach((effect, index) => {
+        if (effect.categoryId && !categories[effect.categoryId]) {
+          errors.push(
+            `Error: Recipient "${recipientId}" effect ${index + 1} references non-existent category ID "${effect.categoryId}"`
+          );
+        }
+      });
+    }
   });
 
   // Report errors if any
@@ -365,9 +391,21 @@ function filterUnusedEntities(donors, recipients, categories, donations) {
   // Find categories used by recipients who received donations
   const usedCategories = new Set();
   Object.values(filteredRecipients).forEach((recipient) => {
-    Object.keys(recipient.categories).forEach((categoryId) => {
-      usedCategories.add(categoryId);
-    });
+    // Handle new effects format
+    if (recipient.effects) {
+      recipient.effects.forEach((effect) => {
+        if (effect.categoryId) {
+          usedCategories.add(effect.categoryId);
+        }
+      });
+    }
+
+    // Handle old categories format (for backward compatibility)
+    if (recipient.categories) {
+      Object.keys(recipient.categories).forEach((categoryId) => {
+        usedCategories.add(categoryId);
+      });
+    }
   });
 
   // Filter categories

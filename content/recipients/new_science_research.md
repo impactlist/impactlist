@@ -1,7 +1,7 @@
 ---
 id: new-science-research
 name: 'New Science Research'
-categories:
-  - id: science-tech
+effects:
+  - categoryId: science-tech
     fraction: 1
 ---

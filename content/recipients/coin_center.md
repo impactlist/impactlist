@@ -1,7 +1,7 @@
 ---
 id: coin-center
 name: 'Coin Center'
-categories:
-  - id: institutions
+effects:
+  - categoryId: institutions
     fraction: 1
 ---

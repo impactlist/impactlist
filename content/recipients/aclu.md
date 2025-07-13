@@ -1,7 +1,7 @@
 ---
 id: aclu
 name: 'ACLU'
-categories:
-  - id: human-rights
+effects:
+  - categoryId: human-rights
     fraction: 1
 ---

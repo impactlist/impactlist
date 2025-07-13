@@ -1,7 +1,7 @@
 ---
 id: harvard-university-tech-research
 name: 'Harvard University (tech research)'
-categories:
-  - id: science-tech
+effects:
+  - categoryId: science-tech
     fraction: 1
 ---

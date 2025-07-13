@@ -1,7 +1,15 @@
 ---
 id: pandemics
 name: 'Pandemics'
-costPerLife: 4_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 0.00025
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

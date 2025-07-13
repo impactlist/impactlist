@@ -41,20 +41,27 @@ We’re actively seeking volunteers to help with the project. Join [the discord]
 ## Linting
 
 1. The entire project
+
 ```
 npm run lint
 ```
+
 2. On single file
+
 ```
 npx eslint <filename>
 ```
+
 ### Prettier
 
-Check: 
+Check:
+
 ```
 npx prettier --check .
 ```
+
 Write:
+
 ```
 npx prettier --write .
 ```

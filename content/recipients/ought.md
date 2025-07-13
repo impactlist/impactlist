@@ -1,7 +1,7 @@
 ---
 id: ought
 name: 'Ought'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

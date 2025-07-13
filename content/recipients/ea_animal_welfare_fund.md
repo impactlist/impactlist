@@ -1,7 +1,7 @@
 ---
 id: ea-animal-welfare-fund
 name: 'EA Animal Welfare Fund'
-categories:
-  - id: animal-welfare
+effects:
+  - categoryId: animal-welfare
     fraction: 1
 ---

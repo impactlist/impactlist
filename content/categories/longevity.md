@@ -1,7 +1,15 @@
 ---
 id: longevity
 name: 'Longevity'
-costPerLife: 42_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 0.00002380952380952381
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

@@ -1,7 +1,7 @@
 ---
 id: mit
 name: 'MIT'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

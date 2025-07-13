@@ -1,7 +1,7 @@
 ---
 id: path
 name: 'PATH'
-categories:
-  - id: global-health
+effects:
+  - categoryId: global-health
     fraction: 1
 ---

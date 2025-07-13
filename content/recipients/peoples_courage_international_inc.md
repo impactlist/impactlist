@@ -1,7 +1,7 @@
 ---
 id: peoples-courage-international-inc
-name: "People's Courage International Inc"
-categories:
-  - id: human-rights
+name: 'Peoples Courage International Inc'
+effects:
+  - categoryId: human-rights
     fraction: 1
 ---

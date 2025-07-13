@@ -1,7 +1,7 @@
 ---
 id: radicalxchange
 name: 'Radicalxchange'
-categories:
-  - id: institutions
+effects:
+  - categoryId: institutions
     fraction: 1
 ---

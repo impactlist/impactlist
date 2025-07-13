@@ -1,7 +1,7 @@
 ---
 id: sierra-club
 name: 'Sierra Club'
-categories:
-  - id: environmental
+effects:
+  - categoryId: environmental
     fraction: 1
 ---

@@ -1,6 +1,10 @@
 // Helper functions for donation and impact calculations
 import { categoriesById, donorsById, recipientsById, donations } from '../data/generatedData';
-import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
+import {
+  calculateDonationImpact,
+  calculateCostPerLifeEquivalent,
+  calculateRecipientCostPerLife,
+} from './effectsCalculation';
 
 // Helper to get category by ID
 export const getCategoryById = (categoryId) => {
@@ -31,48 +35,6 @@ export const getAllRecipients = () => Object.values(recipientsById);
 // Helper to get all donors as an array
 export const getAllDonors = () => Object.values(donorsById);
 
-// Get primary category for a recipient
-export const getPrimaryCategoryForRecipient = (recipientId) => {
-  const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    return { categoryId: null, categoryName: 'Unknown', count: 0 };
-  }
-
-  const categories = recipient.categories;
-  const categoryCount = Object.keys(categories).length;
-
-  if (categoryCount === 0) {
-    return { categoryId: null, categoryName: 'None', count: 0 };
-  } else if (categoryCount === 1) {
-    // Single category
-    const categoryId = Object.keys(categories)[0];
-    const category = getCategoryById(categoryId);
-    return {
-      categoryId,
-      categoryName: category?.name || categoryId,
-      count: 1,
-    };
-  } else {
-    // Multiple categories - find primary (highest fraction)
-    let primaryCategoryId = null;
-    let maxWeight = -1;
-
-    for (const [catId, catData] of Object.entries(categories)) {
-      if (catData.fraction > maxWeight) {
-        maxWeight = catData.fraction;
-        primaryCategoryId = catId;
-      }
-    }
-
-    const primaryCategory = getCategoryById(primaryCategoryId);
-    return {
-      categoryId: primaryCategoryId,
-      categoryName: primaryCategory?.name || primaryCategoryId,
-      count: categoryCount,
-    };
-  }
-};
-
 // Helper to get all categories as an array
 export const getAllCategories = () => {
   // Convert to array of objects with id included
@@ -80,6 +42,147 @@ export const getAllCategories = () => {
     ...data,
     id, // Include the ID in the object
   }));
+};
+
+// Get primary effect for a recipient (for display purposes)
+export const getPrimaryEffectForRecipient = (recipientId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient || !recipient.effects || recipient.effects.length === 0) {
+    // Fallback to categories if no effects defined (backward compatibility)
+    if (recipient && recipient.categories) {
+      const primaryCategoryId = Object.keys(recipient.categories)[0];
+      return {
+        effectName: `${primaryCategoryId} impact`,
+        categoryId: primaryCategoryId,
+      };
+    }
+    return { effectName: 'Unknown', categoryId: null };
+  }
+
+  // Return the first effect as the primary one
+  const primaryEffect = recipient.effects[0];
+  return {
+    effectName: `${primaryEffect.categoryId} impact`,
+    categoryId: primaryEffect.categoryId,
+  };
+};
+
+// Get primary category ID for a recipient (for backward compatibility)
+export const getPrimaryCategoryId = (recipientId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient) return null;
+
+  // Check if recipient has effects (new format)
+  if (recipient.effects && recipient.effects.length > 0) {
+    return recipient.effects[0].categoryId;
+  }
+
+  // Fallback to categories (old format)
+  if (recipient.categories) {
+    const categories = recipient.categories;
+    const categoryCount = Object.keys(categories).length;
+
+    if (categoryCount === 0) {
+      return null;
+    } else if (categoryCount === 1) {
+      return Object.keys(categories)[0];
+    } else {
+      // Multiple categories - find primary (highest fraction)
+      let primaryCategoryId = null;
+      let maxWeight = -1;
+
+      for (const [catId, catData] of Object.entries(categories)) {
+        if (catData.fraction > maxWeight) {
+          maxWeight = catData.fraction;
+          primaryCategoryId = catId;
+        }
+      }
+
+      return primaryCategoryId;
+    }
+  }
+
+  return null;
+};
+
+// Get primary category for a recipient (for backward compatibility)
+export const getPrimaryCategoryForRecipient = (recipientId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient) return { categoryId: null, categoryName: 'Unknown', count: 0 };
+
+  // Check if recipient has effects (new format)
+  if (recipient.effects && recipient.effects.length > 0) {
+    const primaryCategoryId = recipient.effects[0].categoryId;
+    const primaryCategory = getCategoryById(primaryCategoryId);
+    return {
+      categoryId: primaryCategoryId,
+      categoryName: primaryCategory?.name || primaryCategoryId,
+      count: recipient.effects.length,
+    };
+  }
+
+  // Fallback to categories (old format)
+  if (recipient.categories) {
+    const categories = recipient.categories;
+    const categoryCount = Object.keys(categories).length;
+
+    if (categoryCount === 0) {
+      return { categoryId: null, categoryName: 'None', count: 0 };
+    } else if (categoryCount === 1) {
+      // Single category
+      const categoryId = Object.keys(categories)[0];
+      const category = getCategoryById(categoryId);
+      return {
+        categoryId,
+        categoryName: category?.name || categoryId,
+        count: 1,
+      };
+    } else {
+      // Multiple categories - find primary (highest fraction)
+      let primaryCategoryId = null;
+      let maxWeight = -1;
+
+      for (const [catId, catData] of Object.entries(categories)) {
+        if (catData.fraction > maxWeight) {
+          maxWeight = catData.fraction;
+          primaryCategoryId = catId;
+        }
+      }
+
+      const primaryCategory = getCategoryById(primaryCategoryId);
+      return {
+        categoryId: primaryCategoryId,
+        categoryName: primaryCategory?.name || primaryCategoryId,
+        count: categoryCount,
+      };
+    }
+  }
+
+  return { categoryId: null, categoryName: 'Unknown', count: 0 };
+};
+
+// Get category breakdown for a recipient (for backward compatibility)
+export const getCategoryBreakdown = (recipientId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient) return [];
+
+  // Handle effects format (new)
+  if (recipient.effects && recipient.effects.length > 0) {
+    return recipient.effects.map((effect) => ({
+      categoryId: effect.categoryId,
+      fraction: effect.fraction,
+    }));
+  }
+
+  // Handle categories format (old)
+  if (recipient.categories) {
+    return Object.entries(recipient.categories).map(([categoryId, categoryData]) => ({
+      categoryId,
+      fraction: categoryData.fraction,
+    }));
+  }
+
+  return [];
 };
 
 // Helper to find an entity's ID by its object reference
@@ -113,211 +216,6 @@ export const getDonorNameById = (donorId) => {
     throw new Error(`Invalid donor ID: ${donorId}. This donor does not exist.`);
   }
   return donor.name;
-};
-
-// Get the effective costPerLife for a given category, considering custom values if they exist
-export const getDefaultCostPerLifeForCategory = (categoryId, customValues = null) => {
-  // If we have custom values for this category, use them
-  if (customValues && customValues[categoryId] !== undefined) {
-    return customValues[categoryId];
-  }
-
-  // Use default category values if available
-  const category = categoriesById[categoryId];
-  if (category) {
-    return category.costPerLife;
-  }
-
-  // Throw an error for invalid category IDs to make debugging easier
-  throw new Error(`Invalid category ID: "${categoryId}". This category does not exist in categoriesById.`);
-};
-
-// From the category data within a recipient, get the actual cost per life, taking into account custom values if they exist
-export const getActualCostPerLifeForCategoryData = (recipientId, categoryId, categoryData, customValues = null) => {
-  if (!categoryData || typeof categoryData.fraction !== 'number') {
-    throw new Error(`Invalid category data for ${categoryId}.`);
-  }
-
-  const recipientName = getRecipientNameById(recipientId);
-
-  // First check if we have custom values for this specific recipient and category
-  if (
-    customValues &&
-    customValues.recipients &&
-    customValues.recipients[recipientName] &&
-    customValues.recipients[recipientName][categoryId]
-  ) {
-    const recipientCustomData = customValues.recipients[recipientName][categoryId];
-
-    // If there's a custom costPerLife value, use that directly
-    if (recipientCustomData.costPerLife !== undefined) {
-      // Check if it's a valid number (not in intermediate state)
-      const costPerLife = recipientCustomData.costPerLife;
-      if (typeof costPerLife === 'string') {
-        // Ignore intermediate inputs like '-', '.', or '3.'
-        if (costPerLife === '-' || costPerLife === '.' || costPerLife.endsWith('.')) {
-          // Fall back to default behavior
-        } else if (!isNaN(Number(costPerLife))) {
-          return Number(costPerLife);
-        }
-      } else if (typeof costPerLife === 'number') {
-        return costPerLife;
-      }
-    }
-
-    // If there's a custom multiplier value, apply it to the base cost
-    if (recipientCustomData.multiplier !== undefined) {
-      // Check if it's a valid number (not in intermediate state)
-      const multiplier = recipientCustomData.multiplier;
-      if (typeof multiplier === 'string') {
-        // Ignore intermediate inputs like '-', '.', or '3.'
-        if (multiplier === '-' || multiplier === '.' || multiplier.endsWith('.')) {
-          // Fall back to default behavior
-        } else if (!isNaN(Number(multiplier))) {
-          // Get the appropriate base cost per life
-          const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-          // Note: Higher multiplier means more lives saved per dollar, so it DIVIDES the cost
-          return baseCostPerLife / Number(multiplier);
-        }
-      } else if (typeof multiplier === 'number') {
-        // Get the appropriate base cost per life
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-        // Note: Higher multiplier means more lives saved per dollar, so it DIVIDES the cost
-        return baseCostPerLife / multiplier;
-      }
-    }
-  }
-
-  // Otherwise fall back to the original logic
-  let baseCostPerLife = 0;
-  let multiplier = 1;
-
-  if (categoryData.costPerLife !== undefined) {
-    baseCostPerLife = categoryData.costPerLife;
-  } else {
-    baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-    if (categoryData.multiplier !== undefined) {
-      multiplier = categoryData.multiplier;
-    }
-  }
-
-  // Since multiplier increases effectiveness, we divide the cost per life
-  const result = baseCostPerLife / multiplier;
-  return result;
-};
-
-// Get the primary (highest weight) category for a recipient
-export const getPrimaryCategoryId = (recipientId) => {
-  const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    throw new Error(`Invalid recipient: ${recipientId}. Recipient not found or missing categories.`);
-  }
-
-  let maxWeight = -1;
-  let primaryCategoryId = null;
-
-  // Find the category with the highest weight
-  for (const [categoryId, categoryData] of Object.entries(recipient.categories)) {
-    const weight = categoryData.fraction;
-
-    if (weight > maxWeight) {
-      maxWeight = weight;
-      primaryCategoryId = categoryId;
-    }
-  }
-
-  if (primaryCategoryId === null) {
-    throw new Error(`No categories found for recipient ${recipient.name}.`);
-  }
-
-  return primaryCategoryId;
-};
-
-// Calculate weighted average cost per life for a recipient
-export const getCostPerLifeForRecipient = (recipientId, customValues = null) => {
-  const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    throw new Error(`Invalid recipient: ${recipientId}. Recipient not found or missing categories.`);
-  }
-
-  let totalWeight = 0;
-  const spendingTotal = SIMULATION_AMOUNT; // simulate spending a billion dollars to get the cost per life
-  let totalLivesSaved = 0;
-
-  // Go through each category and calculate weighted costs
-  for (const [categoryId, categoryData] of Object.entries(recipient.categories)) {
-    if (!categoryData || typeof categoryData.fraction !== 'number') {
-      throw new Error(
-        `Invalid category data for ${categoryId} in recipient ${recipient.name}. Missing fraction or not a number.`
-      );
-    }
-
-    const weight = categoryData.fraction;
-    totalWeight += weight;
-
-    if (weight <= 0) {
-      throw new Error(`Weight for category ${categoryId} in recipient ${recipient.name} is not positive.`);
-    }
-
-    const costPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
-    totalLivesSaved += (spendingTotal * weight) / costPerLife;
-  }
-
-  // Ensure total weight is normalized
-  if (Math.abs(totalWeight - 1) > WEIGHT_NORMALIZATION_TOLERANCE) {
-    throw new Error(`Category weights for recipient "${recipient.name}" do not sum to 1 (total: ${totalWeight}).`);
-  }
-
-  // If no valid weights found, return a default value
-  if (totalWeight === 0) {
-    throw new Error(`No valid categories with positive weights found for recipient ${recipient.name}.`);
-  }
-
-  return spendingTotal / totalLivesSaved;
-};
-
-// Get the cost per life for all categories in a recipient
-export const getAllCategoryCostsPerLifeWithinRecipient = (recipientId, customValues = null) => {
-  const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    throw new Error(`Invalid recipient: ${recipientId}`);
-  }
-
-  const result = {};
-
-  // Calculate cost per life for each category
-  for (const [categoryId, categoryData] of Object.entries(recipient.categories)) {
-    if (!categoryData || typeof categoryData.fraction !== 'number') {
-      throw new Error(`Invalid category data for ${categoryId} in recipient ${recipient.name}.`);
-    }
-
-    result[categoryId] = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
-  }
-
-  return result;
-};
-
-// Get a breakdown of categories for a recipient
-export const getCategoryBreakdown = (recipientId) => {
-  const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    throw new Error(`Invalid recipient: ${recipientId}. Recipient not found or missing categories.`);
-  }
-
-  // Convert categories object to an array with categoryId included
-  const categories = Object.entries(recipient.categories).map(([categoryId, categoryData]) => {
-    return {
-      categoryId,
-      ...categoryData,
-    };
-  });
-
-  if (categories.length === 0) {
-    throw new Error(`No categories found for recipient ${recipient.name}.`);
-  }
-
-  // Sort by fraction (weight) in descending order
-  return categories.sort((a, b) => b.fraction - a.fraction);
 };
 
 // Helper to get donations for a specific donor
@@ -354,48 +252,84 @@ export const getTotalAmountForDonor = (donorId) => {
   return donorDonations.reduce((total, donation) => total + donation.amount, 0);
 };
 
-// Helper to calculate lives saved for a specific donation
-export const calculateLivesSavedForDonation = (donation, customValues = null) => {
+// Helper to calculate total impact for a specific donation
+export const calculateLivesSavedForDonation = (donation) => {
   if (!donation || !donation.recipientId || !donation.amount) {
     throw new Error(`Invalid donation data: ${JSON.stringify(donation)}. Missing recipientId or amount.`);
   }
 
-  const costPerLife = getCostPerLifeForRecipient(donation.recipientId, customValues);
+  const recipient = getRecipientById(donation.recipientId);
+  const result = calculateDonationImpact(donation, recipient);
 
-  // Apply credit multiplier if it exists
-  const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-
-  // Calculate lives saved
-  if (costPerLife === 0) {
-    throw new Error(
-      `Cost per life for recipient ${donation.recipientId} is zero, which would result in infinite lives saved.`
-    );
-  } else {
-    // Normal case
-    return creditedAmount / costPerLife;
-  }
+  // Convert back to "lives saved" equivalent for compatibility
+  // Since impact is now weighted by population type, we return the total weighted impact
+  return result.totalImpact;
 };
 
-// Helper to calculate lives saved for a direct donation to a category
-export const calculateLivesSavedForCategory = (categoryId, amount, customValues = null) => {
+// Helper to calculate impact for a category donation (for backward compatibility)
+export const calculateLivesSavedForCategory = (categoryId, amount, customEffectivenessData = null) => {
   if (!categoryId || !amount || isNaN(Number(amount))) {
     return 0;
   }
 
-  // Get the cost per life for this category
-  const costPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+  const costPerLife = calculateCostPerLifeEquivalent(categoryId, null, null, customEffectivenessData);
 
-  // Calculate lives saved
-  if (costPerLife === 0) {
-    throw new Error(`Cost per life for category ${categoryId} is zero, which would result in infinite lives saved.`);
-  } else {
-    // Normal case
-    return Number(amount) / costPerLife;
+  if (!costPerLife || costPerLife === 0) {
+    return 0;
   }
+
+  return Number(amount) / costPerLife;
 };
 
-// Calculate donor statistics, including donations and lives saved
-export const calculateDonorStats = (customValues = null) => {
+// Helper function to get cost per life for a recipient (wrapper for components)
+export const getCostPerLifeForRecipient = (recipientId, customEffectivenessData = null) => {
+  return calculateRecipientCostPerLife(recipientId, customEffectivenessData);
+};
+
+// Helper function to get cost per life for a category (wrapper for components)
+export const getCostPerLifeForCategory = (
+  categoryId,
+  effectName = null,
+  recipientName = null,
+  customEffectivenessData = null
+) => {
+  return calculateCostPerLifeEquivalent(categoryId, effectName, recipientName, customEffectivenessData);
+};
+
+// Helper function to get the default cost per life for a category (for backward compatibility)
+export const getDefaultCostPerLifeForCategory = (categoryId, customEffectivenessData = null) => {
+  return calculateCostPerLifeEquivalent(categoryId, null, null, customEffectivenessData);
+};
+
+// Helper function to get cost per life for a specific category within a recipient (for backward compatibility)
+export const getActualCostPerLifeForCategoryData = (
+  recipientId,
+  categoryId,
+  categoryData,
+  customEffectivenessData = null
+) => {
+  // For backward compatibility, try to calculate the cost per life using the new effects system
+  const recipientName = getRecipientNameById(recipientId);
+
+  // Use the new effects-based calculation
+  const costPerLife = calculateCostPerLifeEquivalent(categoryId, null, recipientName, customEffectivenessData);
+
+  // If the old categoryData has a multiplier, apply it for backward compatibility
+  if (categoryData && categoryData.multiplier) {
+    const baseCost = calculateCostPerLifeEquivalent(categoryId, null, null, customEffectivenessData);
+    return baseCost / categoryData.multiplier;
+  }
+
+  // If the old categoryData has a direct cost per life, use that
+  if (categoryData && categoryData.costPerLife) {
+    return categoryData.costPerLife;
+  }
+
+  return costPerLife;
+};
+
+// Calculate donor statistics, including donations and impact
+export const calculateDonorStats = (customEffectivenessData = null) => {
   const donorStats = getAllDonors().map((donor) => {
     const donorId = Object.keys(donorsById).find((id) => donorsById[id] === donor);
     if (!donorId) {
@@ -405,7 +339,7 @@ export const calculateDonorStats = (customValues = null) => {
     const donorData = getDonationsForDonor(donorId);
 
     let totalDonated = 0;
-    let totalLivesSaved = 0;
+    let totalImpact = 0;
     let knownDonations = 0;
 
     // Calculate totals based on actual donations
@@ -414,13 +348,14 @@ export const calculateDonorStats = (customValues = null) => {
       totalDonated += creditedAmount;
       knownDonations += creditedAmount;
 
-      const livesSaved = calculateLivesSavedForDonation(donation, customValues);
-      totalLivesSaved += livesSaved;
+      const recipient = getRecipientById(donation.recipientId);
+      const impact = calculateDonationImpact(donation, recipient, customEffectivenessData);
+      totalImpact += impact.totalImpact;
     }
 
     // Handle known totalDonated field if available
     let totalDonatedField = null;
-    let unknownLivesSaved = 0;
+    let unknownImpact = 0;
 
     if (donor.totalDonated && donor.totalDonated > knownDonations) {
       totalDonatedField = donor.totalDonated;
@@ -428,19 +363,19 @@ export const calculateDonorStats = (customValues = null) => {
       // Calculate unknown amount
       const unknownAmount = donor.totalDonated - knownDonations;
 
-      // Estimate lives saved for unknown donations if there are known donations
-      if (knownDonations > 0 && totalLivesSaved !== 0) {
-        const avgCostPerLife = knownDonations / totalLivesSaved;
-        unknownLivesSaved = unknownAmount / avgCostPerLife;
-        totalLivesSaved += unknownLivesSaved;
+      // Estimate impact for unknown donations if there are known donations
+      if (knownDonations > 0 && totalImpact !== 0) {
+        const avgCostPerImpact = knownDonations / totalImpact;
+        unknownImpact = unknownAmount / avgCostPerImpact;
+        totalImpact += unknownImpact;
       }
 
       // Add unknown amount to total
       totalDonated = donor.totalDonated;
     }
 
-    // Calculate cost per life saved
-    const costPerLife = totalLivesSaved !== 0 ? totalDonated / totalLivesSaved : Infinity;
+    // Calculate cost per impact unit
+    const costPerLife = totalImpact !== 0 ? totalDonated / totalImpact : Infinity;
 
     return {
       name: donor.name,
@@ -449,20 +384,19 @@ export const calculateDonorStats = (customValues = null) => {
       totalDonated,
       knownDonations,
       totalDonatedField,
-      totalLivesSaved,
-      unknownLivesSaved,
+      totalLivesSaved: totalImpact, // Keep old name for compatibility
+      unknownLivesSaved: unknownImpact, // Keep old name for compatibility
       costPerLife: costPerLife,
     };
   });
 
-  // Filter out donors with no donations and sort by lives saved
+  // Filter out donors with no donations and sort by impact
   const filteredStats = donorStats
     .filter((donor) => donor.totalDonated > 0)
     .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
 
-  // Add rank
-  return filteredStats.map((donor, index) => ({
-    ...donor,
-    rank: index + 1,
-  }));
+  return filteredStats;
 };
+
+// Re-export cost per life helpers for easy component access
+export { calculateCostPerLifeEquivalent, calculateRecipientCostPerLife };

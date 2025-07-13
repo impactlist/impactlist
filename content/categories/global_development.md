@@ -1,7 +1,15 @@
 ---
 id: global-development
 name: 'Global Development / Poverty'
-costPerLife: 12_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 0.00008333333333333333
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

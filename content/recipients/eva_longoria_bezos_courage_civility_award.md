@@ -1,7 +1,7 @@
 ---
 id: eva-longoria-bezos-courage-civility-award
 name: 'Eva Longoria (Bezos Courage & Civility Award)'
-categories:
-  - id: other
+effects:
+  - categoryId: other
     fraction: 1
 ---

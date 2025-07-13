@@ -1,7 +1,7 @@
 ---
 id: rootclaim
 name: 'Rootclaim'
-categories:
-  - id: decision-making
+effects:
+  - categoryId: decision-making
     fraction: 1
 ---

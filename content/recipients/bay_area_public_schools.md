@@ -1,7 +1,7 @@
 ---
 id: bay-area-public-schools
 name: 'Bay Area Public Schools'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

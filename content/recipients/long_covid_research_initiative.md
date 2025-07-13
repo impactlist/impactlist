@@ -1,7 +1,7 @@
 ---
 id: long-covid-research-initiative
 name: 'Long Covid Research Initiative'
-categories:
-  - id: health-medicine
+effects:
+  - categoryId: health-medicine
     fraction: 1
 ---

@@ -1,7 +1,7 @@
 ---
 id: think-of-us
 name: 'Think Of Us'
-categories:
-  - id: social-justice
+effects:
+  - categoryId: social-justice
     fraction: 1
 ---

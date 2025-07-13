@@ -1,7 +1,7 @@
 ---
 id: president-barack-obama-inaugural-committee
 name: 'President Barack Obama Inaugural Committee'
-categories:
-  - id: political
+effects:
+  - categoryId: political
     fraction: 1
 ---

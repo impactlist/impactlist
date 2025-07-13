@@ -1,7 +1,7 @@
 ---
 id: the-energy-foundation
 name: 'The Energy Foundation'
-categories:
-  - id: climate-change
+effects:
+  - categoryId: climate-change
     fraction: 1
 ---

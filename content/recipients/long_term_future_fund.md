@@ -1,13 +1,13 @@
 ---
 id: long-term-future-fund
 name: 'Long-Term Future Fund'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 0.6
-  - id: pandemics
+  - categoryId: pandemics
     fraction: 0.15
-  - id: meta-theory
+  - categoryId: meta-theory
     fraction: 0.15
-  - id: global-priorities
+  - categoryId: global-priorities
     fraction: 0.1
 ---

@@ -1,10 +1,12 @@
 ---
 id: anthropic
 name: 'Anthropic'
-categories:
-  - id: ai-capabilities
-    fraction: 1.0
-    multiplier: 0.25
+effects:
+  - categoryId: ai-capabilities
+    fraction: 1
+    effects:
+      'primary impact':
+        peoplePerDollarMultiplier: 0.25
 ---
 
 # Notes

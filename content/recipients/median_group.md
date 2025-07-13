@@ -1,7 +1,7 @@
 ---
 id: median-group
 name: 'Median Group'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

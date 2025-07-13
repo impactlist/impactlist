@@ -1,7 +1,7 @@
 ---
 id: seattle-public-libraries
 name: 'Seattle Public Libraries'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

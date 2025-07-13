@@ -1,7 +1,7 @@
 ---
 id: unsw-kirby-institute
 name: 'UNSW Kirby Institute'
-categories:
-  - id: pandemics
+effects:
+  - categoryId: pandemics
     fraction: 1
 ---

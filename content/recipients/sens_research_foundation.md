@@ -1,7 +1,7 @@
 ---
 id: sens-research-foundation
 name: 'SENS Research Foundation'
-categories:
-  - id: longevity
+effects:
+  - categoryId: longevity
     fraction: 1
 ---

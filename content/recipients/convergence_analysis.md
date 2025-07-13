@@ -1,7 +1,7 @@
 ---
 id: convergence-analysis
 name: 'Convergence Analysis'
-categories:
-  - id: ai-risk
+effects:
+  - categoryId: ai-risk
     fraction: 1
 ---

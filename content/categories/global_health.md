@@ -1,7 +1,15 @@
 ---
 id: global-health
 name: 'Global Health'
-costPerLife: 5_000
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 0.0002
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

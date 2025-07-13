@@ -1,7 +1,7 @@
 ---
 id: world-resources-institute
 name: 'World Resources Institute'
-categories:
-  - id: environmental
+effects:
+  - categoryId: environmental
     fraction: 1
 ---

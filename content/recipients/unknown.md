@@ -1,7 +1,7 @@
 ---
 id: unknown
 name: 'Unknown'
-categories:
-  - id: other
+effects:
+  - categoryId: other
     fraction: 1
 ---

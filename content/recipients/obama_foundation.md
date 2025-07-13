@@ -1,9 +1,9 @@
 ---
 id: obama-foundation
 name: 'Obama Foundation'
-categories:
-  - id: local-community
+effects:
+  - categoryId: local-community
     fraction: 0.5
-  - id: social-justice
+  - categoryId: social-justice
     fraction: 0.5
 ---

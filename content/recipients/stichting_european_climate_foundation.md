@@ -1,7 +1,7 @@
 ---
 id: stichting-european-climate-foundation
 name: 'Stichting European Climate Foundation'
-categories:
-  - id: climate-change
+effects:
+  - categoryId: climate-change
     fraction: 1
 ---

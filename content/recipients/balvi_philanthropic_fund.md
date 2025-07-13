@@ -1,7 +1,7 @@
 ---
 id: balvi-philanthropic-fund
 name: 'Balvi Philanthropic Fund'
-categories:
-  - id: pandemics
+effects:
+  - categoryId: pandemics
     fraction: 1
 ---

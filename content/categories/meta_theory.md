@@ -1,7 +1,15 @@
 ---
 id: meta-theory
 name: 'Meta and Theory'
-costPerLife: 1_700
+
+# Effects produced by interventions in this category
+effects:
+  - name: 'primary impact'
+    startTime: 0
+    windowLength: 1
+    peoplePerDollar: 0.000588235294117647
+    benefitPerYear: 1
+    targetPopulation: 'human'
 ---
 
 # Justification of cost per life

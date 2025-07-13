@@ -1,7 +1,7 @@
 ---
 id: ad-astra-school
 name: 'Ad Astra School'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

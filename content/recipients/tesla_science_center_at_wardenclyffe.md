@@ -1,7 +1,7 @@
 ---
 id: tesla-science-center-at-wardenclyffe
 name: 'Tesla Science Center at Wardenclyffe'
-categories:
-  - id: arts-culture
+effects:
+  - categoryId: arts-culture
     fraction: 1
 ---

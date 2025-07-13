@@ -1,7 +1,7 @@
 ---
 id: gitcoin
 name: 'Gitcoin'
-categories:
-  - id: institutions
+effects:
+  - categoryId: institutions
     fraction: 1
 ---

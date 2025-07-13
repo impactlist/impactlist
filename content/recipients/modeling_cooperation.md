@@ -1,7 +1,7 @@
 ---
 id: modeling-cooperation
 name: 'Modeling Cooperation'
-categories:
-  - id: decision-making
+effects:
+  - categoryId: decision-making
     fraction: 1
 ---

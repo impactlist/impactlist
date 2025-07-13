@@ -1,8 +1,10 @@
 ---
 id: khan-academy
 name: 'Khan Academy'
-categories:
-  - id: education
-    fraction: 1.0
-    multiplier: 10
+effects:
+  - categoryId: education
+    fraction: 1
+    effects:
+      'primary impact':
+        peoplePerDollarMultiplier: 10
 ---

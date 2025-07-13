@@ -1,7 +1,7 @@
 ---
 id: methuselah-foundation
 name: 'Methuselah Foundation'
-categories:
-  - id: longevity
+effects:
+  - categoryId: longevity
     fraction: 1
 ---

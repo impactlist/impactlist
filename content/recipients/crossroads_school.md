@@ -1,7 +1,7 @@
 ---
 id: crossroads-school
 name: 'Crossroads School'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

@@ -1,7 +1,7 @@
 ---
 id: gates-library-foundation
 name: 'Gates Library Foundation'
-categories:
-  - id: education
+effects:
+  - categoryId: education
     fraction: 1
 ---

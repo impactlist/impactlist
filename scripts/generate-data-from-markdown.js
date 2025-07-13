@@ -53,7 +53,6 @@ function loadCategories() {
     // Use ID as the key
     categories[data.id] = {
       name: data.name,
-      costPerLife: data.costPerLife,
     };
 
     // Add effects if they exist
@@ -123,22 +122,6 @@ function loadRecipients() {
       recipients[data.id].effects = data.effects;
     }
 
-    // Handle old categories format for backward compatibility
-    if (data.categories && Array.isArray(data.categories)) {
-      const categoriesObj = {};
-      data.categories.forEach((category) => {
-        const categoryData = { fraction: category.fraction };
-        if (category.costPerLife !== undefined) {
-          categoryData.costPerLife = category.costPerLife;
-        }
-        if (category.multiplier !== undefined) {
-          categoryData.multiplier = category.multiplier;
-        }
-        categoriesObj[category.id] = categoryData;
-      });
-      recipients[data.id].categories = categoriesObj;
-    }
-
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
     if (extractedContent) {
@@ -195,18 +178,9 @@ function loadDonations() {
           });
         });
       } else {
-        // Derive donor ID from filename for backwards compatibility
-        const donorId = path.basename(file, '.md');
-
-        donations.push({
-          date: formattedDate,
-          donorId,
-          recipientId: donation.recipient,
-          amount: donation.amount,
-          credit: 1.0, // Default to full credit
-          source: donation.source,
-          notes: donation.notes,
-        });
+        throw new Error(
+          `Error: Donation in ${file} is missing required 'credit' field. All donations must use the new credit format with donor IDs and credit amounts.`
+        );
       }
     });
   });
@@ -217,7 +191,7 @@ function loadDonations() {
   return donations;
 }
 
-// Add human-readable fields for compatibility with old code
+// Add human-readable fields to donations
 function addReadableFields(categories, donors, recipients, donations) {
   // Create maps to quickly look up names from IDs
   const donorNameMap = Object.fromEntries(Object.entries(donors).map(([id, data]) => [id, data.name]));
@@ -260,15 +234,6 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
 
   // Check all recipients reference valid categories
   Object.entries(recipients).forEach(([recipientId, recipient]) => {
-    // Check old categories format
-    if (recipient.categories) {
-      Object.keys(recipient.categories).forEach((categoryId) => {
-        if (!categories[categoryId]) {
-          errors.push(`Error: Recipient "${recipientId}" references non-existent category ID "${categoryId}"`);
-        }
-      });
-    }
-
     // Check new effects format
     if (recipient.effects) {
       recipient.effects.forEach((effect, index) => {
@@ -320,7 +285,7 @@ function generateJavaScriptFile() {
     rawDonations
   );
 
-  // Create compatibility arrays for old code
+  // Create arrays for convenient iteration
   const donorsArray = Object.entries(filteredDonors).map(([id, data]) => ({
     id,
     ...data,
@@ -345,9 +310,6 @@ export const recipientsById = ${JSON.stringify(filteredRecipients, null, 2)};
 
 // All donations
 export const allDonations = ${JSON.stringify(donations, null, 2)};
-
-// Backward compatibility exports (arrays instead of objects)
-export const effectivenessCategories = ${JSON.stringify(filteredCategories, null, 2)};
 
 export const donors = ${JSON.stringify(donorsArray, null, 2)};
 
@@ -397,13 +359,6 @@ function filterUnusedEntities(donors, recipients, categories, donations) {
         if (effect.categoryId) {
           usedCategories.add(effect.categoryId);
         }
-      });
-    }
-
-    // Handle old categories format (for backward compatibility)
-    if (recipient.categories) {
-      Object.keys(recipient.categories).forEach((categoryId) => {
-        usedCategories.add(categoryId);
       });
     }
   });

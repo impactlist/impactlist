@@ -11,8 +11,7 @@ import {
   calculateLivesSavedForDonation,
   getPrimaryCategoryId,
   getCategoryById,
-  getActualCostPerLifeForCategoryData,
-  getDefaultCostPerLifeForCategory,
+  getCostPerLifeForCategory,
 } from '../utils/donationDataHelpers';
 import { ImpactChartToggle } from './ImpactBarChart';
 import { useGlobalParameters } from './GlobalParametersContext';
@@ -171,12 +170,7 @@ const DonorDetail = () => {
         const categoryName = category.name;
 
         // Get the costPerLife with multiplier properly applied
-        const costPerLife = getActualCostPerLifeForCategoryData(
-          recipientId,
-          categoryId,
-          categoryData,
-          customEffectivenessData
-        );
+        const costPerLife = getCostPerLifeForCategory(categoryId, null, recipient.name, customEffectivenessData);
 
         // Calculate category-specific amount and lives saved
         const categoryAmount = donation.creditedAmount * fraction;
@@ -245,7 +239,7 @@ const DonorDetail = () => {
             : 0,
         costPerLife:
           livesSavedEntry.costPerLife ||
-          (categoryId ? getDefaultCostPerLifeForCategory(categoryId, customEffectivenessData) || 0 : 0),
+          (categoryId ? getCostPerLifeForCategory(categoryId, null, null, customEffectivenessData) || 0 : 0),
         hasMultiplier: livesSavedEntry.hasMultiplier,
         multiplier: livesSavedEntry.multiplier,
       };

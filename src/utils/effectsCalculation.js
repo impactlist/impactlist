@@ -256,10 +256,10 @@ export const calculateDonationImpact = (donation, recipient, customEffectiveness
       // Apply recipient-specific fraction
       const effectAmount = creditedAmount * recipientEffect.fraction;
 
-      // Apply overrides in correct order: base → category overrides → built-in recipient overrides → user recipient overrides
+      // Apply overrides: base → category overrides → user recipient overrides
       let modifiedEffect = { ...categoryEffect };
 
-      // Step 1: Apply user category and recipient overrides
+      // Apply user category and recipient overrides
       modifiedEffect = applyEffectOverrides(
         modifiedEffect,
         recipientEffect.categoryId,
@@ -267,32 +267,6 @@ export const calculateDonationImpact = (donation, recipient, customEffectiveness
         recipient.name,
         customEffectivenessData
       );
-
-      // Step 2: Apply built-in recipient overrides from markdown (maintains backward compatibility)
-      if (recipientEffect.effects && recipientEffect.effects[categoryEffect.name]) {
-        const builtInOverrides = recipientEffect.effects[categoryEffect.name];
-
-        // Apply multipliers
-        if (builtInOverrides.peoplePerDollarMultiplier) {
-          modifiedEffect.peoplePerDollar =
-            (modifiedEffect.peoplePerDollar || 0) * builtInOverrides.peoplePerDollarMultiplier;
-        }
-        if (builtInOverrides.probabilityPerDollarMultiplier) {
-          modifiedEffect.probabilityPerDollar =
-            (modifiedEffect.probabilityPerDollar || 0) * builtInOverrides.probabilityPerDollarMultiplier;
-        }
-        if (builtInOverrides.benefitPerYearMultiplier) {
-          modifiedEffect.benefitPerYear =
-            (modifiedEffect.benefitPerYear || 1) * builtInOverrides.benefitPerYearMultiplier;
-        }
-
-        // Apply direct overrides
-        Object.keys(builtInOverrides).forEach((key) => {
-          if (!key.endsWith('Multiplier')) {
-            modifiedEffect[key] = builtInOverrides[key];
-          }
-        });
-      }
 
       const effectResult = calculateEffectImpact(modifiedEffect, effectAmount);
       totalImpact += effectResult.totalImpact;

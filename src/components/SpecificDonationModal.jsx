@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import {
   getAllRecipients,
   getAllCategories,
-  getDefaultCostPerLifeForCategory,
-  getCostPerLifeForRecipient,
   getRecipientId,
+  getCostPerLifeForRecipient,
+  getCostPerLifeForCategory,
 } from '../utils/donationDataHelpers';
 import { formatNumber, formatLives } from '../utils/formatters';
 import { useGlobalParameters } from './GlobalParametersContext';
@@ -275,12 +275,12 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
       if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
         const multiplierValue = Number(cleanNumberInput(multiplier));
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData);
+        const baseCostPerLife = getCostPerLifeForCategory(selectedCategory, customEffectivenessData);
         effectiveCostPerLife = baseCostPerLife / multiplierValue;
       } else if (costPerLife && !isNaN(Number(cleanNumberInput(costPerLife)))) {
         effectiveCostPerLife = Number(cleanNumberInput(costPerLife));
       } else {
-        effectiveCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData);
+        effectiveCostPerLife = getCostPerLifeForCategory(selectedCategory, customEffectivenessData);
       }
 
       return cleanedAmount / effectiveCostPerLife;
@@ -458,7 +458,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
                       Default cost per life: $
-                      {formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData))}
+                      {formatNumber(getCostPerLifeForCategory(selectedCategory, customEffectivenessData))}
                     </p>
                   )}
                 </div>
@@ -489,7 +489,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       <p className="mt-1 text-xs text-gray-500">
                         Cost per life: $
                         {formatNumber(
-                          getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData) /
+                          getCostPerLifeForCategory(selectedCategory, customEffectivenessData) /
                             Number(cleanNumberInput(multiplier))
                         )}
                       </p>
@@ -511,7 +511,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         }}
                         placeholder={
                           selectedCategory
-                            ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customEffectivenessData))
+                            ? formatNumber(getCostPerLifeForCategory(selectedCategory, customEffectivenessData))
                             : '0'
                         }
                         className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${

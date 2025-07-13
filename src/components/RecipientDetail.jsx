@@ -3,15 +3,14 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from './BackButton';
 import {
-  getCostPerLifeForRecipient,
-  getPrimaryCategoryId,
-  getCategoryBreakdown,
-  getDefaultCostPerLifeForCategory,
-  getActualCostPerLifeForCategoryData,
   getRecipientById,
-  getDonationsForRecipient,
+  getPrimaryCategoryId,
   getCategoryById,
+  getCategoryBreakdown,
+  getDonationsForRecipient,
   calculateLivesSavedForDonation,
+  getCostPerLifeForRecipient,
+  getCostPerLifeForCategory,
 } from '../utils/donationDataHelpers';
 import { ImpactChartToggle } from './ImpactBarChart';
 import { useGlobalParameters } from './GlobalParametersContext';
@@ -59,7 +58,7 @@ const RecipientDetail = () => {
     const primaryCategoryName = primaryCategory.name;
 
     // Get cost per life for the primary category
-    const categoryCostPerLife = getDefaultCostPerLifeForCategory(primaryCategoryId, customEffectivenessData);
+    const categoryCostPerLife = getCostPerLifeForCategory(primaryCategoryId, null, null, customEffectivenessData);
 
     // Get formatted breakdown for bar chart with required properties
     const categoryBreakdown = getCategoryBreakdown(recipientId).map((category) => {
@@ -115,12 +114,7 @@ const RecipientDetail = () => {
         const categoryName = category.name;
 
         // Get category-specific cost per life
-        const catCostPerLife = getActualCostPerLifeForCategoryData(
-          recipientId,
-          categoryId,
-          categoryData,
-          customEffectivenessData
-        );
+        const catCostPerLife = getCostPerLifeForCategory(categoryId, null, recipient.name, customEffectivenessData);
 
         // Calculate donation amount and lives saved for this category
         const categoryAmount = donation.creditedAmount * fraction;

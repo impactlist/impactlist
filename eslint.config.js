@@ -8,6 +8,23 @@ import { FlatCompat } from '@eslint/eslintrc';
 const compat = new FlatCompat();
 
 export default [
+  // Global ignores - files and directories to skip
+  {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'dist-ssr/**',
+      'content/**',
+      'src/data/generatedData.js',
+      '.husky/**',
+      '.cursor/**',
+      '.claude/**',
+      '.vscode/**',
+      '*.log',
+      '*.local',
+      'public/**',
+    ],
+  },
   js.configs.recommended,
   ...compat.extends('plugin:react/recommended'),
   ...compat.extends('plugin:react-hooks/recommended'),

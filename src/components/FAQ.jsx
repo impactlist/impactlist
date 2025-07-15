@@ -86,6 +86,29 @@ const FAQ = () => {
               </div>
 
               <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  How does it make sense to estimate the lives saved of a charity that doesn't try to save lives?
+                </h3>
+                <p className="text-gray-600">
+                  We use the concept of a{' '}
+                  <a
+                    href="https://en.wikipedia.org/wiki/Quality-adjusted_life_year"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                  >
+                    quality adjusted life year (QALY)
+                  </a>{' '}
+                  to estimate the lives saved of a donation. One QALY represents the value of a life year lived in good
+                  health. To compare different cause areas, we need to convert the effects of charities into QALYs.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  For instance, if a charity cures someone's blindness or educates a child, we need to estimate some
+                  amount of QALYs that this is equivalent to. This inherently involves approximations and uncertainty,
+                  but we think it's better than not trying to compare them at all.
+                </p>
+              </div>
+
+              <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">How can I get involved?</h3>
                 <p className="text-gray-600">
                   We're actively seeking volunteers to help with the project. We're looking for people to research the

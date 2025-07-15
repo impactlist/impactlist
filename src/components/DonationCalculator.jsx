@@ -6,6 +6,7 @@ import {
   calculateLivesSavedForCategory,
   getDefaultCostPerLifeForCategory,
   getCostPerLifeForRecipient,
+  getEffectiveCostPerLife,
 } from '../utils/donationDataHelpers';
 import { recipientsById } from '../data/generatedData';
 import { useCostPerLife } from './CostPerLifeContext';
@@ -311,6 +312,7 @@ const DonationCalculator = () => {
 
   // Get cost per life for a specific donation (for display in the table)
   const getCostPerLifeForSpecificDonation = (donation) => {
+    // For custom recipients, we need to handle multiplier and costPerLife overrides
     if (donation.isCustomRecipient && donation.categoryId) {
       if (donation.costPerLife) {
         return donation.costPerLife;
@@ -321,10 +323,10 @@ const DonationCalculator = () => {
         return getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
       }
     } else {
+      // For existing recipients, add recipientId to the donation object for the helper
       const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === donation.recipientName);
-
       if (recipientId) {
-        return getCostPerLifeForRecipient(recipientId, customValues);
+        return getEffectiveCostPerLife({ ...donation, recipientId }, customValues);
       } else {
         return 0;
       }

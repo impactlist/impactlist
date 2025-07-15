@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ImpactBarChart from '../ImpactBarChart';
 import ChartContainer from '../shared/ChartContainer';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
+import { getEffectiveCostPerLife } from '../../utils/donationDataHelpers';
 
 /**
  * A reusable chart section for displaying entity impact data.
@@ -17,6 +18,7 @@ const EntityChartSection = ({
   entityType,
   className = '',
   containerHeight = 384,
+  customValues = null,
 }) => {
   const chartTitle =
     entityType === 'donor'
@@ -82,7 +84,9 @@ const EntityChartSection = ({
               <p className="text-xs text-slate-500">{`${percentage}% of known donations`}</p>
               {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 pt-1 border-t border-slate-100">
-                  <p className="text-xs text-slate-600">Cost per life: {formatCurrency(entry.costPerLife || 0)}</p>
+                  <p className="text-xs text-slate-600">
+                    Cost per life: {formatCurrency(getEffectiveCostPerLife(entry, customValues))}
+                  </p>
                   <p className="text-xs text-slate-600">
                     Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}
                   </p>
@@ -97,7 +101,9 @@ const EntityChartSection = ({
               <p className="text-xs text-slate-500">{`${percentage}% of total impact`}</p>
               {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 pt-1 border-t border-slate-100">
-                  <p className="text-xs text-slate-600">Cost per life: {formatCurrency(entry.costPerLife || 0)}</p>
+                  <p className="text-xs text-slate-600">
+                    Cost per life: {formatCurrency(getEffectiveCostPerLife(entry, customValues))}
+                  </p>
                   <p className="text-xs text-slate-600">Donation amount: {formatCurrency(entry.donationValue)}</p>
                 </div>
               )}
@@ -242,6 +248,7 @@ EntityChartSection.propTypes = {
   entityType: PropTypes.oneOf(['donor', 'recipient']).isRequired,
   className: PropTypes.string,
   containerHeight: PropTypes.number,
+  customValues: PropTypes.object,
 };
 
 export default React.memo(EntityChartSection);

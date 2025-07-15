@@ -466,3 +466,35 @@ export const calculateDonorStats = (customValues = null) => {
     rank: index + 1,
   }));
 };
+
+/**
+ * Get the effective cost per life for any entity (donation, recipient, category, etc.)
+ * This is a centralized function that handles all cost per life calculations
+ * and can be extended in the future to support more complex impact calculations.
+ *
+ * @param {Object} entity - The entity to calculate cost per life for
+ * @param {Object|null} customValues - Custom values for cost per life calculations
+ * @returns {number} The effective cost per life
+ */
+export const getEffectiveCostPerLife = (entity, customValues = null) => {
+  if (!entity) {
+    return 0;
+  }
+
+  // If entity has a direct costPerLife field, use it
+  if (entity.costPerLife !== undefined) {
+    return entity.costPerLife;
+  }
+
+  // If entity has recipientId, calculate for recipient
+  if (entity.recipientId) {
+    return getCostPerLifeForRecipient(entity.recipientId, customValues);
+  }
+
+  // If entity has categoryId, get default for category
+  if (entity.categoryId) {
+    return getDefaultCostPerLifeForCategory(entity.categoryId, customValues);
+  }
+
+  throw new Error('No valid calculation method found for cost per life.');
+};

@@ -462,13 +462,14 @@ const DonorDetail = () => {
           }
           entityType="donor"
           containerHeight={calculateChartHeight(chartData)}
+          customValues={customValues}
         />
 
         {/* Donor markdown content */}
         <MarkdownContent content={donorContent} className="mt-8 mb-8" />
 
         {/* Donations list */}
-        <EntityDonationTable donations={donorDonations} entityType="donor" />
+        <EntityDonationTable donations={donorDonations} entityType="donor" customValues={customValues} />
       </motion.div>
     </motion.div>
   );

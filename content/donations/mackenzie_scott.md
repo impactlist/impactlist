@@ -1,6 +1,6 @@
 ---
 donations:
-  - date: 2024-11-31
+  - date: 2024-11-30
     recipient: yield-giving
     amount: 19_250_000_000
     credit:

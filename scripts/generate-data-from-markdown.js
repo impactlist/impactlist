@@ -17,6 +17,7 @@ const categoriesDir = path.join(__dirname, '../content/categories');
 const donorsDir = path.join(__dirname, '../content/donors');
 const recipientsDir = path.join(__dirname, '../content/recipients');
 const donationsDir = path.join(__dirname, '../content/donations');
+const globalParametersFile = path.join(__dirname, '../content/globalParameters.md');
 const outputFile = path.join(__dirname, '../src/data/generatedData.js');
 
 // Helper function to format date as YYYY-MM-DD
@@ -317,6 +318,35 @@ function loadDonations() {
   return donations;
 }
 
+// Load global parameters
+function loadGlobalParameters() {
+  if (!fs.existsSync(globalParametersFile)) {
+    throw new Error(`Global parameters file not found: ${globalParametersFile}`);
+  }
+
+  const fileContent = fs.readFileSync(globalParametersFile, 'utf8');
+  const parsed = matter(fileContent);
+  const data = parsed.data;
+
+  // Validate that all required parameters are present
+  const requiredParams = ['discountRate', 'populationGrowthRate', 'timeLimit', 'populationLimit', 'currentPopulation'];
+
+  for (const param of requiredParams) {
+    if (data[param] === undefined || data[param] === null) {
+      throw new Error(`Global parameter '${param}' is missing from globalParameters.md`);
+    }
+  }
+
+  // Validate that numeric parameters are actually numbers
+  for (const param of requiredParams) {
+    if (typeof data[param] !== 'number') {
+      throw new Error(`Global parameter '${param}' must be a number, got ${typeof data[param]}`);
+    }
+  }
+
+  return data;
+}
+
 // Add human-readable fields for compatibility with old code
 function addReadableFields(categories, donors, recipients, donations) {
   // Create maps to quickly look up names from IDs
@@ -392,6 +422,9 @@ function generateJavaScriptFile() {
   console.log('Loading donations...');
   const rawDonations = loadDonations();
 
+  console.log('Loading global parameters...');
+  const globalParameters = loadGlobalParameters();
+
   console.log('Validating data integrity...');
   validateDataIntegrity(categories, donors, recipients, rawDonations);
 
@@ -440,6 +473,9 @@ export const donors = ${JSON.stringify(donorsArray, null, 2)};
 export const recipients = ${JSON.stringify(recipientsArray, null, 2)};
 
 export const donations = ${JSON.stringify(donations, null, 2)};
+
+// Global parameters
+export const globalParameters = ${JSON.stringify(globalParameters, null, 2)};
 `;
 
   // Create the direcotry if it doesn't exist

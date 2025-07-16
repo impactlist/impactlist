@@ -15,6 +15,7 @@ import { CostPerLifeProvider } from './components/CostPerLifeContext';
 import CostPerLifeEditor from './components/CostPerLifeEditor';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { validateDataOnStartup } from './utils/startupValidation';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -121,6 +122,15 @@ const App = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Run startup validation to catch data structure issues early
+    try {
+      validateDataOnStartup();
+    } catch (error) {
+      console.error('Startup validation failed:', error);
+      setError(error);
+      return;
+    }
+
     const handleGlobalError = (event) => {
       console.error('Global error:', event.error);
       setError(event.error);

@@ -1,6 +1,14 @@
 // Helper functions for donation and impact calculations
 import { categoriesById, donorsById, recipientsById, donations } from '../data/generatedData';
 import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
+import {
+  assertExists,
+  assertPositiveNumber,
+  assertNonZeroNumber,
+  validateRecipient,
+  crashInsteadOfFallback,
+} from './dataValidation';
+import { calculateCategoryBaseCostPerLife, applyRecipientEffectModifications } from './effectsCalculation';
 
 // Helper to get category by ID
 export const getCategoryById = (categoryId) => {
@@ -117,93 +125,68 @@ export const getDonorNameById = (donorId) => {
 
 // Get the effective costPerLife for a given category, considering custom values if they exist
 export const getDefaultCostPerLifeForCategory = (categoryId, customValues = null) => {
+  // Validate inputs
+  assertExists(categoryId, 'categoryId');
+
   // If we have custom values for this category, use them
   if (customValues && customValues[categoryId] !== undefined) {
-    return customValues[categoryId];
+    return assertNonZeroNumber(customValues[categoryId], `customValues[${categoryId}]`);
   }
 
-  // Use default category values if available
+  // Get category from data
   const category = categoriesById[categoryId];
-  if (category) {
-    return category.costPerLife;
+  if (!category) {
+    throw new Error(`Invalid category ID: "${categoryId}". This category does not exist in categoriesById.`);
   }
 
-  // Throw an error for invalid category IDs to make debugging easier
-  throw new Error(`Invalid category ID: "${categoryId}". This category does not exist in categoriesById.`);
+  // Calculate cost per life from effects (replaces old category.costPerLife access)
+  return calculateCategoryBaseCostPerLife(category, categoryId);
 };
 
 // From the category data within a recipient, get the actual cost per life, taking into account custom values if they exist
 export const getActualCostPerLifeForCategoryData = (recipientId, categoryId, categoryData, customValues = null) => {
-  if (!categoryData || typeof categoryData.fraction !== 'number') {
-    throw new Error(`Invalid category data for ${categoryId}.`);
-  }
+  // Validate inputs
+  assertExists(recipientId, 'recipientId');
+  assertExists(categoryId, 'categoryId');
+  assertExists(categoryData, 'categoryData', `for category ${categoryId} in recipient ${recipientId}`);
+  assertPositiveNumber(
+    categoryData.fraction,
+    'categoryData.fraction',
+    `for category ${categoryId} in recipient ${recipientId}`
+  );
 
   const recipientName = getRecipientNameById(recipientId);
 
-  // First check if we have custom values for this specific recipient and category
-  if (
-    customValues &&
-    customValues.recipients &&
-    customValues.recipients[recipientName] &&
-    customValues.recipients[recipientName][categoryId]
-  ) {
-    const recipientCustomData = customValues.recipients[recipientName][categoryId];
+  // Get base cost per life from category (using new effects-based calculation)
+  let baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
 
-    // If there's a custom costPerLife value, use that directly
-    if (recipientCustomData.costPerLife !== undefined) {
-      // Check if it's a valid number (not in intermediate state)
-      const costPerLife = recipientCustomData.costPerLife;
-      if (typeof costPerLife === 'string') {
-        // Ignore intermediate inputs like '-', '.', or '3.'
-        if (costPerLife === '-' || costPerLife === '.' || costPerLife.endsWith('.')) {
-          // Fall back to default behavior
-        } else if (!isNaN(Number(costPerLife))) {
-          return Number(costPerLife);
-        }
-      } else if (typeof costPerLife === 'number') {
-        return costPerLife;
-      }
+  // Check for recipient-specific effect modifications in the new format
+  if (categoryData.effects && Array.isArray(categoryData.effects)) {
+    // Apply recipient effect modifications
+    const category = categoriesById[categoryId];
+    if (!category) {
+      throw new Error(`Category ${categoryId} not found when processing recipient effects`);
     }
 
-    // If there's a custom multiplier value, apply it to the base cost
-    if (recipientCustomData.multiplier !== undefined) {
-      // Check if it's a valid number (not in intermediate state)
-      const multiplier = recipientCustomData.multiplier;
-      if (typeof multiplier === 'string') {
-        // Ignore intermediate inputs like '-', '.', or '3.'
-        if (multiplier === '-' || multiplier === '.' || multiplier.endsWith('.')) {
-          // Fall back to default behavior
-        } else if (!isNaN(Number(multiplier))) {
-          // Get the appropriate base cost per life
-          const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-          // Note: Higher multiplier means more lives saved per dollar, so it DIVIDES the cost
-          return baseCostPerLife / Number(multiplier);
-        }
-      } else if (typeof multiplier === 'number') {
-        // Get the appropriate base cost per life
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-        // Note: Higher multiplier means more lives saved per dollar, so it DIVIDES the cost
-        return baseCostPerLife / multiplier;
+    // For now, apply modifications from the first effect that matches the category's first effect
+    // TODO: Implement proper multi-effect handling
+    if (category.effects && category.effects.length > 0 && categoryData.effects.length > 0) {
+      const categoryEffect = category.effects[0];
+      const recipientEffect = categoryData.effects.find((re) => re.effectId === categoryEffect.effectId);
+
+      if (recipientEffect) {
+        const context = `for recipient ${recipientName} category ${categoryId}`;
+        baseCostPerLife = applyRecipientEffectModifications(
+          baseCostPerLife,
+          recipientEffect,
+          categoryEffect.effectId,
+          context
+        );
       }
     }
   }
 
-  // Otherwise fall back to the original logic
-  let baseCostPerLife = 0;
-  let multiplier = 1;
-
-  if (categoryData.costPerLife !== undefined) {
-    baseCostPerLife = categoryData.costPerLife;
-  } else {
-    baseCostPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
-    if (categoryData.multiplier !== undefined) {
-      multiplier = categoryData.multiplier;
-    }
-  }
-
-  // Since multiplier increases effectiveness, we divide the cost per life
-  const result = baseCostPerLife / multiplier;
-  return result;
+  return baseCostPerLife;
 };
 
 // Get the primary (highest weight) category for a recipient
@@ -235,32 +218,38 @@ export const getPrimaryCategoryId = (recipientId) => {
 
 // Calculate weighted average cost per life for a recipient
 export const getCostPerLifeForRecipient = (recipientId, customValues = null) => {
+  // Validate inputs
+  assertExists(recipientId, 'recipientId');
+
   const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    throw new Error(`Invalid recipient: ${recipientId}. Recipient not found or missing categories.`);
+  if (!recipient) {
+    throw new Error(`Invalid recipient: ${recipientId}. Recipient not found in recipientsById.`);
   }
 
+  // Validate recipient structure
+  validateRecipient(recipient, recipientId);
+
   let totalWeight = 0;
-  const spendingTotal = SIMULATION_AMOUNT; // simulate spending a billion dollars to get the cost per life
+  const spendingTotal = assertPositiveNumber(SIMULATION_AMOUNT, 'SIMULATION_AMOUNT');
   let totalLivesSaved = 0;
 
   // Go through each category and calculate weighted costs
   for (const [categoryId, categoryData] of Object.entries(recipient.categories)) {
-    if (!categoryData || typeof categoryData.fraction !== 'number') {
-      throw new Error(
-        `Invalid category data for ${categoryId} in recipient ${recipient.name}. Missing fraction or not a number.`
-      );
-    }
-
-    const weight = categoryData.fraction;
+    const weight = assertPositiveNumber(
+      categoryData.fraction,
+      'categoryData.fraction',
+      `for category ${categoryId} in recipient ${recipient.name}`
+    );
     totalWeight += weight;
 
-    if (weight <= 0) {
-      throw new Error(`Weight for category ${categoryId} in recipient ${recipient.name} is not positive.`);
-    }
-
     const costPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
-    totalLivesSaved += (spendingTotal * weight) / costPerLife;
+    const validCostPerLife = assertNonZeroNumber(
+      costPerLife,
+      'costPerLife',
+      `for category ${categoryId} in recipient ${recipient.name}`
+    );
+
+    totalLivesSaved += (spendingTotal * weight) / validCostPerLife;
   }
 
   // Ensure total weight is normalized
@@ -268,9 +257,13 @@ export const getCostPerLifeForRecipient = (recipientId, customValues = null) => 
     throw new Error(`Category weights for recipient "${recipient.name}" do not sum to 1 (total: ${totalWeight}).`);
   }
 
-  // If no valid weights found, return a default value
+  // This should never happen after validation, but check anyway
   if (totalWeight === 0) {
-    throw new Error(`No valid categories with positive weights found for recipient ${recipient.name}.`);
+    crashInsteadOfFallback(`No valid categories with positive weights found for recipient ${recipient.name}`);
+  }
+
+  if (totalLivesSaved === 0) {
+    crashInsteadOfFallback(`Total lives saved calculation resulted in zero for recipient ${recipient.name}`);
   }
 
   return spendingTotal / totalLivesSaved;
@@ -356,42 +349,40 @@ export const getTotalAmountForDonor = (donorId) => {
 
 // Helper to calculate lives saved for a specific donation
 export const calculateLivesSavedForDonation = (donation, customValues = null) => {
-  if (!donation || !donation.recipientId || !donation.amount) {
-    throw new Error(`Invalid donation data: ${JSON.stringify(donation)}. Missing recipientId or amount.`);
-  }
+  // Validate donation structure
+  assertExists(donation, 'donation');
+  assertExists(donation.recipientId, 'donation.recipientId');
+  assertPositiveNumber(donation.amount, 'donation.amount');
 
   const costPerLife = getCostPerLifeForRecipient(donation.recipientId, customValues);
+  const validCostPerLife = assertNonZeroNumber(costPerLife, 'costPerLife', `for recipient ${donation.recipientId}`);
 
   // Apply credit multiplier if it exists
-  const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+  let credit = 1;
+  if (donation.credit !== undefined) {
+    credit = assertPositiveNumber(donation.credit, 'donation.credit');
+  }
+
+  const creditedAmount = donation.amount * credit;
 
   // Calculate lives saved
-  if (costPerLife === 0) {
-    throw new Error(
-      `Cost per life for recipient ${donation.recipientId} is zero, which would result in infinite lives saved.`
-    );
-  } else {
-    // Normal case
-    return creditedAmount / costPerLife;
-  }
+  return creditedAmount / validCostPerLife;
 };
 
 // Helper to calculate lives saved for a direct donation to a category
 export const calculateLivesSavedForCategory = (categoryId, amount, customValues = null) => {
-  if (!categoryId || !amount || isNaN(Number(amount))) {
-    return 0;
-  }
+  // Validate inputs
+  assertExists(categoryId, 'categoryId');
+  assertExists(amount, 'amount');
+
+  const validAmount = assertPositiveNumber(Number(amount), 'amount', `for category ${categoryId}`);
 
   // Get the cost per life for this category
   const costPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+  const validCostPerLife = assertNonZeroNumber(costPerLife, 'costPerLife', `for category ${categoryId}`);
 
   // Calculate lives saved
-  if (costPerLife === 0) {
-    throw new Error(`Cost per life for category ${categoryId} is zero, which would result in infinite lives saved.`);
-  } else {
-    // Normal case
-    return Number(amount) / costPerLife;
-  }
+  return validAmount / validCostPerLife;
 };
 
 // Calculate donor statistics, including donations and lives saved

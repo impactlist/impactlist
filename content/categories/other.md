@@ -1,7 +1,11 @@
 ---
 id: other
 name: 'Other'
-costPerLife: 1_000_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 25_000
 ---
 
 # Justification of cost per life

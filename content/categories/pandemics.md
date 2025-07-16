@@ -1,7 +1,11 @@
 ---
 id: pandemics
 name: 'Pandemics'
-costPerLife: 4_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 100
 ---
 
 # Justification of cost per life

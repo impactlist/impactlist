@@ -1,7 +1,11 @@
 ---
 id: global-health
 name: 'Global Health'
-costPerLife: 5_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 125
 ---
 
 # Justification of cost per life

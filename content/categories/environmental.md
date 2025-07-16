@@ -1,7 +1,11 @@
 ---
 id: environmental
 name: 'General Environmental'
-costPerLife: 80_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 2_000
 ---
 
 # Justification of cost per life

@@ -1,7 +1,11 @@
 ---
 id: religious
 name: 'Religious'
-costPerLife: 1_500_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 37_500
 ---
 
 # Justification of cost per life

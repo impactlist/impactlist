@@ -1,7 +1,11 @@
 ---
 id: ai-risk
 name: 'AI Existential Risk'
-costPerLife: 25
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 0.625
 ---
 
 # Justification of cost per life

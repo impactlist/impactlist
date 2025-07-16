@@ -1,7 +1,11 @@
 ---
 id: global-priorities
 name: 'Global Priorities Research'
-costPerLife: 2000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 50
 ---
 
 # Justification of cost per life

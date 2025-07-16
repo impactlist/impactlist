@@ -1,7 +1,11 @@
 ---
 id: institutions
 name: 'Improving Institutions'
-costPerLife: 50_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 1_250
 ---
 
 # Justification of cost per life

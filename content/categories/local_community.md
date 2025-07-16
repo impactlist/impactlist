@@ -1,7 +1,11 @@
 ---
 id: local-community
 name: 'Local Community'
-costPerLife: 2_400_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 60_000
 ---
 
 # Justification of cost per life

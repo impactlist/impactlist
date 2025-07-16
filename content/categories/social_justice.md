@@ -1,7 +1,11 @@
 ---
 id: social-justice
 name: 'Social Justice'
-costPerLife: 2_600_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 65_000
 ---
 
 # Justification of cost per life

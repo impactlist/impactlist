@@ -1,7 +1,11 @@
 ---
 id: animal-welfare
 name: 'Animal Welfare'
-costPerLife: 16_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 400
 ---
 
 # Justification of cost per life

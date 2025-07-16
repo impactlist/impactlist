@@ -1,7 +1,11 @@
 ---
 id: decision-making
 name: 'Improving Decision Making'
-costPerLife: 20_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 500
 ---
 
 # Justification of cost per life

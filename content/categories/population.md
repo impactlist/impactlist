@@ -1,7 +1,11 @@
 ---
 id: population
 name: 'Population'
-costPerLife: 500_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 12_500
 ---
 
 # Justification of cost per life

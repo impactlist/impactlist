@@ -1,7 +1,11 @@
 ---
 id: longevity
 name: 'Longevity'
-costPerLife: 42_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 1_050
 ---
 
 # Justification of cost per life

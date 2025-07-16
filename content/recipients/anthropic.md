@@ -3,8 +3,11 @@ id: anthropic
 name: 'Anthropic'
 categories:
   - id: ai-capabilities
-    fraction: 1.0
-    multiplier: 0.25
+    fraction: 1
+    effects:
+      - effectId: standard
+        multipliers:
+          costPerQALY: 0.25
 ---
 
 # Notes

@@ -53,8 +53,17 @@ function loadCategories() {
     // Use ID as the key
     categories[data.id] = {
       name: data.name,
-      costPerLife: data.costPerLife,
     };
+
+    // Handle legacy costPerLife for backward compatibility
+    if (data.costPerLife !== undefined) {
+      categories[data.id].costPerLife = data.costPerLife;
+    }
+
+    // Handle new effects structure
+    if (data.effects && Array.isArray(data.effects)) {
+      categories[data.id].effects = data.effects;
+    }
 
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
@@ -112,12 +121,20 @@ function loadRecipients() {
 
     data.categories.forEach((category) => {
       const categoryData = { fraction: category.fraction };
+
+      // Handle legacy fields for backward compatibility
       if (category.costPerLife !== undefined) {
         categoryData.costPerLife = category.costPerLife;
       }
       if (category.multiplier !== undefined) {
         categoryData.multiplier = category.multiplier;
       }
+
+      // Handle new effects structure with overrides and multipliers
+      if (category.effects && Array.isArray(category.effects)) {
+        categoryData.effects = category.effects;
+      }
+
       categoriesObj[category.id] = categoryData;
     });
 

@@ -1,7 +1,11 @@
 ---
 id: science-tech
 name: 'Science and Tech'
-costPerLife: 160_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 4_000
 ---
 
 # Justification of cost per life

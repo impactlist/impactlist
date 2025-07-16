@@ -1,7 +1,11 @@
 ---
 id: human-rights
 name: 'Human Rights and Justice'
-costPerLife: 100_000
+effects:
+  - effectId: standard
+    startTime: 0
+    windowLength: 1
+    costPerQALY: 2_500
 ---
 
 # Justification of cost per life

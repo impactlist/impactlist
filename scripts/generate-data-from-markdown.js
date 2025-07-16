@@ -50,20 +50,70 @@ function loadCategories() {
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data, content } = matter(fileContent);
 
+    // Validate required fields
+    if (!data.id || typeof data.id !== 'string') {
+      throw new Error(`Error: Category file ${path.basename(file)} is missing required 'id' field.`);
+    }
+    if (!data.name || typeof data.name !== 'string') {
+      throw new Error(`Error: Category file ${path.basename(file)} is missing required 'name' field.`);
+    }
+
     // Use ID as the key
     categories[data.id] = {
       name: data.name,
     };
 
-    // Handle legacy costPerLife for backward compatibility
-    if (data.costPerLife !== undefined) {
-      categories[data.id].costPerLife = data.costPerLife;
+    // Require effects structure - no backwards compatibility
+    if (!data.effects || !Array.isArray(data.effects)) {
+      throw new Error(
+        `Error: Category file ${path.basename(file)} is missing required 'effects' array. All categories must have an effects array in the new format.`
+      );
     }
 
-    // Handle new effects structure
-    if (data.effects && Array.isArray(data.effects)) {
-      categories[data.id].effects = data.effects;
-    }
+    // Validate each effect has required fields
+    data.effects.forEach((effect, index) => {
+      if (!effect.effectId || typeof effect.effectId !== 'string') {
+        throw new Error(
+          `Error: Category file ${path.basename(file)}, effect #${index + 1} is missing required 'effectId' field.`
+        );
+      }
+      if (typeof effect.startTime !== 'number') {
+        throw new Error(
+          `Error: Category file ${path.basename(file)}, effect #${index + 1} is missing required 'startTime' number field.`
+        );
+      }
+      if (typeof effect.windowLength !== 'number') {
+        throw new Error(
+          `Error: Category file ${path.basename(file)}, effect #${index + 1} is missing required 'windowLength' number field.`
+        );
+      }
+
+      // Validate that effect has either costPerQALY or costPerMicroprobability
+      const hasCostPerQALY = typeof effect.costPerQALY === 'number';
+      const hasCostPerMicroprobability = typeof effect.costPerMicroprobability === 'number';
+
+      if (!hasCostPerQALY && !hasCostPerMicroprobability) {
+        throw new Error(
+          `Error: Category file ${path.basename(file)}, effect #${index + 1} must have either 'costPerQALY' or 'costPerMicroprobability' field.`
+        );
+      }
+
+      // If it has costPerMicroprobability, it should also have the required population fields
+      if (hasCostPerMicroprobability) {
+        if (typeof effect.populationFractionAffected !== 'number') {
+          throw new Error(
+            `Error: Category file ${path.basename(file)}, effect #${index + 1} with costPerMicroprobability must have 'populationFractionAffected' number field.`
+          );
+        }
+        if (typeof effect.qalyImprovementPerYear !== 'number') {
+          throw new Error(
+            `Error: Category file ${path.basename(file)}, effect #${index + 1} with costPerMicroprobability must have 'qalyImprovementPerYear' number field.`
+          );
+        }
+      }
+    });
+
+    categories[data.id].effects = data.effects;
 
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
@@ -85,6 +135,17 @@ function loadDonors() {
 
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data, content } = matter(fileContent);
+
+    // Validate required fields
+    if (!data.id || typeof data.id !== 'string') {
+      throw new Error(`Error: Donor file ${path.basename(file)} is missing required 'id' field.`);
+    }
+    if (!data.name || typeof data.name !== 'string') {
+      throw new Error(`Error: Donor file ${path.basename(file)} is missing required 'name' field.`);
+    }
+    if (typeof data.netWorth !== 'number') {
+      throw new Error(`Error: Donor file ${path.basename(file)} is missing required 'netWorth' number field.`);
+    }
 
     // Use ID as the key
     donors[data.id] = {
@@ -117,21 +178,55 @@ function loadRecipients() {
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data, content } = matter(fileContent);
 
+    // Validate required fields
+    if (!data.id || typeof data.id !== 'string') {
+      throw new Error(`Error: Recipient file ${path.basename(file)} is missing required 'id' field.`);
+    }
+    if (!data.name || typeof data.name !== 'string') {
+      throw new Error(`Error: Recipient file ${path.basename(file)} is missing required 'name' field.`);
+    }
+    if (!data.categories || !Array.isArray(data.categories)) {
+      throw new Error(`Error: Recipient file ${path.basename(file)} is missing required 'categories' array.`);
+    }
+
     const categoriesObj = {};
 
-    data.categories.forEach((category) => {
+    data.categories.forEach((category, index) => {
+      // Validate category structure
+      if (!category.id || typeof category.id !== 'string') {
+        throw new Error(
+          `Error: Recipient file ${path.basename(file)}, category #${index + 1} is missing required 'id' field.`
+        );
+      }
+      if (typeof category.fraction !== 'number' || category.fraction <= 0 || category.fraction > 1) {
+        throw new Error(
+          `Error: Recipient file ${path.basename(file)}, category ${category.id} must have 'fraction' field as a number between 0 and 1.`
+        );
+      }
+
       const categoryData = { fraction: category.fraction };
 
-      // Handle legacy fields for backward compatibility
-      if (category.costPerLife !== undefined) {
-        categoryData.costPerLife = category.costPerLife;
-      }
-      if (category.multiplier !== undefined) {
-        categoryData.multiplier = category.multiplier;
-      }
-
-      // Handle new effects structure with overrides and multipliers
+      // Handle effects structure with overrides and multipliers (optional for recipients)
       if (category.effects && Array.isArray(category.effects)) {
+        // Validate each effect override/multiplier has proper structure
+        category.effects.forEach((effect, index) => {
+          if (!effect.effectId || typeof effect.effectId !== 'string') {
+            throw new Error(
+              `Error: Recipient file ${path.basename(file)}, category ${category.id}, effect #${index + 1} is missing required 'effectId' field.`
+            );
+          }
+
+          // Must have either overrides or multipliers (or both)
+          const hasOverrides = effect.overrides && typeof effect.overrides === 'object';
+          const hasMultipliers = effect.multipliers && typeof effect.multipliers === 'object';
+
+          if (!hasOverrides && !hasMultipliers) {
+            throw new Error(
+              `Error: Recipient file ${path.basename(file)}, category ${category.id}, effect #${index + 1} must have either 'overrides' or 'multipliers' object.`
+            );
+          }
+        });
+
         categoryData.effects = category.effects;
       }
 

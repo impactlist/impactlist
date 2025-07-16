@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import BackButton from './BackButton';
 import { getCategoryById, getDefaultCostPerLifeForCategory, getRecipientById } from '../utils/donationDataHelpers';
 import { useCostPerLife } from './CostPerLifeContext';
+import { getCostPerLifeFromCombined } from '../utils/combinedAssumptions';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import { donations } from '../data/generatedData';
@@ -12,7 +13,7 @@ import MarkdownContent from './MarkdownContent';
 const CategoryDetail = () => {
   const { categoryId } = useParams();
   const [categoryInfo, setCategoryInfo] = useState(null);
-  const { customValues, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useCostPerLife();
 
   useEffect(() => {
     // Get category info
@@ -22,8 +23,8 @@ const CategoryDetail = () => {
       throw new Error(`Invalid category ID: ${categoryId}. This category does not exist.`);
     }
 
-    // Get cost per life for this category
-    const costPerLife = getDefaultCostPerLifeForCategory(categoryId, customValues);
+    // Get cost per life for this category using combined assumptions
+    const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
     // Get default cost per life (without custom values)
     const defaultCostPerLife = getDefaultCostPerLifeForCategory(categoryId, null);
 
@@ -64,7 +65,7 @@ const CategoryDetail = () => {
       totalLivesSaved,
       content: category.content,
     });
-  }, [categoryId, customValues]);
+  }, [categoryId, combinedAssumptions]);
 
   if (!categoryInfo) {
     return <div className="p-8 text-center">Loading...</div>;

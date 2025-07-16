@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
+import { createCombinedAssumptions } from '../utils/combinedAssumptions';
 
 /* global localStorage */
 
@@ -23,6 +24,12 @@ export const CostPerLifeProvider = ({ children }) => {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Create combined assumptions whenever customValues change
+  // For now, pass null since we're in transition from old to new format
+  const combinedAssumptions = useMemo(() => {
+    return createCombinedAssumptions(null);
+  }, []);
 
   // Save to localStorage when customValues change
   useEffect(() => {
@@ -165,6 +172,7 @@ export const CostPerLifeProvider = ({ children }) => {
   // Context value
   const contextValue = {
     customValues,
+    combinedAssumptions,
     isUsingCustomValues,
     resetToDefaults,
     updateCategoryValue,

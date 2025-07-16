@@ -241,19 +241,22 @@ export const validateGlobalParameters = (globalParams) => {
   assertExists(globalParams, 'globalParameters');
   assertObject(globalParams, 'globalParameters');
 
-  // Required numeric parameters
-  const requiredParams = [
-    'discountRate',
-    'populationGrowthRate',
-    'timeLimit',
-    'populationLimit',
-    'currentPopulation',
-    'yearsPerLife',
-  ];
+  // Parameters that must be positive (> 0)
+  assertPositiveNumber(globalParams.currentPopulation, 'currentPopulation', 'in globalParameters');
+  assertPositiveNumber(globalParams.yearsPerLife, 'yearsPerLife', 'in globalParameters');
+  assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParameters');
 
-  for (const param of requiredParams) {
-    assertPositiveNumber(globalParams[param], param, 'in globalParameters');
+  // Parameters that must be non-negative (>= 0)
+  assertNumber(globalParams.populationLimit, 'populationLimit', 'in globalParameters');
+  if (globalParams.populationLimit < 0) {
+    throw new Error(
+      'Field populationLimit in globalParameters must be non-negative, got: ' + globalParams.populationLimit
+    );
   }
+
+  // Parameters that can be any number (including negative)
+  assertNumber(globalParams.discountRate, 'discountRate', 'in globalParameters');
+  assertNumber(globalParams.populationGrowthRate, 'populationGrowthRate', 'in globalParameters');
 };
 
 /**

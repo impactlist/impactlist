@@ -18,9 +18,11 @@ const qalyEffectToCostPerLife = (effect) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerQALY, 'costPerQALY', 'in QALY effect');
 
-  // Assume average life expectancy remaining is 40 years
+  // Use global parameter for average life expectancy remaining
   // Assume 1 QALY per year of life (could be made configurable)
-  const avgLifeYears = 40;
+  assertExists(globalParameters, 'globalParameters');
+  assertPositiveNumber(globalParameters.yearsPerLife, 'yearsPerLife', 'in globalParameters');
+  const avgLifeYears = globalParameters.yearsPerLife;
   const qalyPerLife = avgLifeYears * 1.0;
 
   return effect.costPerQALY * qalyPerLife;
@@ -61,7 +63,8 @@ const populationEffectToCostPerLife = (effect) => {
   const probability = 1 / 1_000_000;
 
   // Cost per life = cost per micropropability / (probability * total QALYs / average life QALYs)
-  const avgLifeQALYs = 40; // Same assumption as above
+  assertPositiveNumber(globalParameters.yearsPerLife, 'yearsPerLife', 'in globalParameters');
+  const avgLifeQALYs = globalParameters.yearsPerLife; // Same assumption as above
   const livesSavedPerMicroprobability = (probability * totalQALYs) / avgLifeQALYs;
 
   return effect.costPerMicroprobability / livesSavedPerMicroprobability;

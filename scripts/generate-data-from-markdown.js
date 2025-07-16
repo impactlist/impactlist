@@ -329,7 +329,14 @@ function loadGlobalParameters() {
   const data = parsed.data;
 
   // Validate that all required parameters are present
-  const requiredParams = ['discountRate', 'populationGrowthRate', 'timeLimit', 'populationLimit', 'currentPopulation'];
+  const requiredParams = [
+    'discountRate',
+    'populationGrowthRate',
+    'timeLimit',
+    'populationLimit',
+    'currentPopulation',
+    'yearsPerLife',
+  ];
 
   for (const param of requiredParams) {
     if (data[param] === undefined || data[param] === null) {

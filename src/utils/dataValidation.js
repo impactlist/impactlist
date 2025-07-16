@@ -234,6 +234,29 @@ export const validateRecipient = (recipient, recipientId) => {
 };
 
 /**
+ * Validate global parameters structure
+ * @param {Object} globalParams - The global parameters object
+ */
+export const validateGlobalParameters = (globalParams) => {
+  assertExists(globalParams, 'globalParameters');
+  assertObject(globalParams, 'globalParameters');
+
+  // Required numeric parameters
+  const requiredParams = [
+    'discountRate',
+    'populationGrowthRate',
+    'timeLimit',
+    'populationLimit',
+    'currentPopulation',
+    'yearsPerLife',
+  ];
+
+  for (const param of requiredParams) {
+    assertPositiveNumber(globalParams[param], param, 'in globalParameters');
+  }
+};
+
+/**
  * No-op function that crashes loudly instead of returning fallback values
  * Use this to replace any silent fallback patterns in the codebase
  * @param {string} message - Error message describing what was expected

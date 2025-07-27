@@ -6,7 +6,7 @@ import { assertExists } from './dataValidation';
 
 /**
  * Create a combined assumptions object that merges default data with custom overrides
- * @param {Object|null} customData - Custom data from user input in new effects format (can be null)
+ * @param {Object|null} customData - Custom data from user input in effects format (can be null)
  * @returns {Object} Combined assumptions object with all raw data unified
  */
 export const createCombinedAssumptions = (customData = null) => {
@@ -94,4 +94,36 @@ export const getRecipientFromCombined = (combinedAssumptions, recipientId) => {
   }
 
   return recipient;
+};
+
+/**
+ * Convert a simple cost per life value to effects format
+ * @param {number} costPerLife - The cost per life value
+ * @returns {Object} Effect object in new format
+ */
+export const costPerLifeToEffect = (costPerLife) => {
+  assertExists(costPerLife, 'costPerLife');
+  assertExists(globalParameters, 'globalParameters');
+  assertExists(globalParameters.yearsPerLife, 'globalParameters.yearsPerLife');
+
+  return {
+    effectId: 'user-override',
+    startTime: 0,
+    windowLength: 1,
+    costPerQALY: costPerLife / globalParameters.yearsPerLife,
+  };
+};
+
+/**
+ * Convert an effects object back to simple cost per life for display
+ * @param {Object} effect - The effect object
+ * @returns {number} Cost per life value
+ */
+export const effectToCostPerLife = (effect) => {
+  assertExists(effect, 'effect');
+  assertExists(effect.costPerQALY, 'effect.costPerQALY');
+  assertExists(globalParameters, 'globalParameters');
+  assertExists(globalParameters.yearsPerLife, 'globalParameters.yearsPerLife');
+
+  return effect.costPerQALY * globalParameters.yearsPerLife;
 };

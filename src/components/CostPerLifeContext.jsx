@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
-import { createCombinedAssumptions } from '../utils/combinedAssumptions';
+import { createCombinedAssumptions, costPerLifeToEffect, effectToCostPerLife } from '../utils/combinedAssumptions';
+import { categoriesById, recipientsById } from '../data/generatedData';
 
 /* global localStorage */
 
@@ -17,44 +18,70 @@ export const useCostPerLife = () => {
 
 // Provider component
 export const CostPerLifeProvider = ({ children }) => {
-  // Initialize state from localStorage or defaults
-  const [customValues, setCustomValues] = useState(() => {
-    const savedValues = localStorage.getItem('customCostPerLifeValues');
-    return savedValues ? JSON.parse(savedValues) : null;
+  // Initialize state from localStorage or defaults (new format)
+  const [customData, setCustomData] = useState(() => {
+    // Clean up old format data
+    localStorage.removeItem('customCostPerLifeValues');
+
+    const savedData = localStorage.getItem('customEffectsData');
+    return savedData ? JSON.parse(savedData) : null;
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Create combined assumptions whenever customValues change
-  // For now, pass null since we're in transition from old to new format
+  // Create combined assumptions whenever customData changes
   const combinedAssumptions = useMemo(() => {
-    return createCombinedAssumptions(null);
-  }, []);
+    return createCombinedAssumptions(customData);
+  }, [customData]);
 
-  // Save to localStorage when customValues change
+  // Save to localStorage when customData changes
   useEffect(() => {
-    if (customValues) {
-      localStorage.setItem('customCostPerLifeValues', JSON.stringify(customValues));
+    if (customData) {
+      localStorage.setItem('customEffectsData', JSON.stringify(customData));
     } else {
-      localStorage.removeItem('customCostPerLifeValues');
+      localStorage.removeItem('customEffectsData');
     }
-  }, [customValues]);
+  }, [customData]);
 
   // Reset to default values
   const resetToDefaults = () => {
-    setCustomValues(null);
+    setCustomData(null);
   };
 
-  // Update a specific category value
+  // Update a specific category value (converts simple cost per life to effects format)
   const updateCategoryValue = (categoryKey, value) => {
-    setCustomValues((prev) => {
-      const newValues = prev ? { ...prev } : {};
+    setCustomData((prev) => {
+      const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
+
       if (value === '' || isNaN(value) || value === null) {
-        delete newValues[categoryKey];
-        return Object.keys(newValues).length > 0 ? newValues : null;
+        // Remove the category override
+        if (newData.categories && newData.categories[categoryKey]) {
+          delete newData.categories[categoryKey];
+        }
+
+        // Clean up empty objects
+        if (newData.categories && Object.keys(newData.categories).length === 0) {
+          delete newData.categories;
+        }
+        if (newData.recipients && Object.keys(newData.recipients).length === 0) {
+          delete newData.recipients;
+        }
+
+        return Object.keys(newData).length > 0 ? newData : null;
       } else {
-        newValues[categoryKey] = Number(value);
-        return newValues;
+        // Convert cost per life to effects format
+        const costPerLife = Number(value);
+        const effect = costPerLifeToEffect(costPerLife);
+
+        if (!newData.categories) {
+          newData.categories = {};
+        }
+
+        newData.categories[categoryKey] = {
+          effects: [effect],
+        };
+
+        return newData;
       }
     });
   };
@@ -74,96 +101,154 @@ export const CostPerLifeProvider = ({ children }) => {
       throw new Error(`Invalid type '${type}'. Must be 'multiplier' or 'costPerLife'`);
     }
 
-    setCustomValues((prev) => {
-      const newValues = prev ? { ...prev } : {};
+    setCustomData((prev) => {
+      const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
+
+      // Find the recipient ID by name
+      const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === recipientName);
+      if (!recipientId) {
+        throw new Error(`Recipient ${recipientName} not found`);
+      }
 
       // Initialize the recipients field if it doesn't exist
-      if (!newValues.recipients) {
-        newValues.recipients = {};
+      if (!newData.recipients) {
+        newData.recipients = {};
       }
 
       // Initialize the recipient entry if it doesn't exist
-      if (!newValues.recipients[recipientName]) {
-        newValues.recipients[recipientName] = {};
+      if (!newData.recipients[recipientId]) {
+        newData.recipients[recipientId] = { categories: {} };
       }
 
       // Initialize the category entry if it doesn't exist
-      if (!newValues.recipients[recipientName][categoryId]) {
-        newValues.recipients[recipientName][categoryId] = {};
+      if (!newData.recipients[recipientId].categories[categoryId]) {
+        newData.recipients[recipientId].categories[categoryId] = {};
       }
 
       // Handle special cases for valid inputs in intermediate states
       const isIntermediateState = value === '-' || value === '.' || value.endsWith('.');
 
       // Update values
-      if (value === '') {
-        // If both values are being cleared, remove the category
-        if (type === 'multiplier' && !newValues.recipients[recipientName][categoryId].costPerLife) {
-          delete newValues.recipients[recipientName][categoryId];
-        } else if (type === 'costPerLife' && !newValues.recipients[recipientName][categoryId].multiplier) {
-          delete newValues.recipients[recipientName][categoryId];
-        } else {
-          // Just clear this specific value
-          delete newValues.recipients[recipientName][categoryId][type];
+      if (value === '' || isIntermediateState) {
+        // For empty or intermediate states, remove the override for now
+        // We could handle intermediate states differently if needed
+        if (newData.recipients[recipientId].categories[categoryId].effects) {
+          delete newData.recipients[recipientId].categories[categoryId].effects;
         }
 
-        // Clean up empty objects - using safe checks
-        if (
-          newValues.recipients?.[recipientName]?.[categoryId] &&
-          Object.keys(newValues.recipients[recipientName][categoryId]).length === 0
-        ) {
-          delete newValues.recipients[recipientName][categoryId];
+        // Clean up empty objects
+        if (Object.keys(newData.recipients[recipientId].categories[categoryId]).length === 0) {
+          delete newData.recipients[recipientId].categories[categoryId];
         }
-        if (newValues.recipients?.[recipientName] && Object.keys(newValues.recipients[recipientName]).length === 0) {
-          delete newValues.recipients[recipientName];
+        if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
+          delete newData.recipients[recipientId];
         }
-        if (newValues.recipients && Object.keys(newValues.recipients).length === 0) {
-          delete newValues.recipients;
+        if (Object.keys(newData.recipients).length === 0) {
+          delete newData.recipients;
         }
-      } else if (isIntermediateState) {
-        // For intermediate states, store the string value temporarily
-        // These won't be used in calculations until they're valid numbers
-        newValues.recipients[recipientName][categoryId][type] = value;
       } else if (!isNaN(Number(value))) {
-        // Only clear the other field if we're setting a valid number
-        // When setting a multiplier, clear costPerLife and vice versa
-        if (type === 'multiplier') {
-          delete newValues.recipients[recipientName][categoryId].costPerLife;
-        } else if (type === 'costPerLife') {
-          delete newValues.recipients[recipientName][categoryId].multiplier;
+        const numValue = Number(value);
+
+        // Get the base category effect to use as template
+        const baseCategory = categoriesById[categoryId];
+        if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
+          throw new Error(`Category ${categoryId} has no base effects to override`);
         }
 
-        // Store numeric value
-        newValues.recipients[recipientName][categoryId][type] = Number(value);
+        const baseEffect = baseCategory.effects[0]; // Use first effect as template
+
+        let newEffect;
+        if (type === 'costPerLife') {
+          // Direct cost per life override
+          newEffect = costPerLifeToEffect(numValue);
+        } else if (type === 'multiplier') {
+          // Apply multiplier to base effect's costPerQALY
+          newEffect = {
+            ...baseEffect,
+            effectId: 'user-override',
+            costPerQALY: baseEffect.costPerQALY * numValue,
+          };
+        }
+
+        newData.recipients[recipientId].categories[categoryId] = {
+          effects: [newEffect],
+        };
       }
 
       // Return updated object
-      return Object.keys(newValues).length > 0 ? newValues : null;
+      return Object.keys(newData).length > 0 ? newData : null;
     });
   };
 
-  // Update multiple values at once
-  const updateValues = (newValues) => {
-    setCustomValues(newValues);
+  // Update multiple values at once (expects new effects format)
+  const updateValues = (newData) => {
+    setCustomData(newData);
   };
 
-  // Get recipient custom value
+  // Get recipient custom value for display (converts from effects back to simple value)
   const getRecipientValue = (recipientName, categoryId, type) => {
+    if (!customData || !customData.recipients) {
+      return null;
+    }
+
+    // Find the recipient ID by name
+    const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === recipientName);
+    if (!recipientId) {
+      return null;
+    }
+
+    const recipientData = customData.recipients[recipientId];
     if (
-      !customValues ||
-      !customValues.recipients ||
-      !customValues.recipients[recipientName] ||
-      !customValues.recipients[recipientName][categoryId] ||
-      customValues.recipients[recipientName][categoryId][type] === undefined
+      !recipientData ||
+      !recipientData.categories ||
+      !recipientData.categories[categoryId] ||
+      !recipientData.categories[categoryId].effects
     ) {
       return null;
     }
 
-    return customValues.recipients[recipientName][categoryId][type];
+    const effect = recipientData.categories[categoryId].effects[0]; // Use first effect
+    if (!effect) {
+      return null;
+    }
+
+    if (type === 'costPerLife') {
+      // Convert effect back to cost per life for display
+      return effectToCostPerLife(effect);
+    } else if (type === 'multiplier') {
+      // For multipliers, we need to compare against the base effect
+      const baseCategory = categoriesById[categoryId];
+      if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
+        return null;
+      }
+      const baseEffect = baseCategory.effects[0];
+      return effect.costPerQALY / baseEffect.costPerQALY;
+    }
+
+    return null;
+  };
+
+  // Get category custom value for display (converts from effects back to simple cost per life)
+  const getCategoryValue = (categoryId) => {
+    if (
+      !customData ||
+      !customData.categories ||
+      !customData.categories[categoryId] ||
+      !customData.categories[categoryId].effects
+    ) {
+      return null;
+    }
+
+    const effect = customData.categories[categoryId].effects[0]; // Use first effect
+    if (!effect) {
+      return null;
+    }
+
+    return effectToCostPerLife(effect);
   };
 
   // Determine if custom values are being used
-  const isUsingCustomValues = customValues !== null;
+  const isUsingCustomValues = customData !== null;
 
   // Open/close the edit modal
   const openModal = () => setIsModalOpen(true);
@@ -171,7 +256,7 @@ export const CostPerLifeProvider = ({ children }) => {
 
   // Context value
   const contextValue = {
-    customValues,
+    customData,
     combinedAssumptions,
     isUsingCustomValues,
     resetToDefaults,
@@ -179,6 +264,7 @@ export const CostPerLifeProvider = ({ children }) => {
     updateRecipientValue,
     updateValues,
     getRecipientValue,
+    getCategoryValue,
     isModalOpen,
     openModal,
     closeModal,

@@ -7,8 +7,8 @@ import {
   getAllRecipients,
   getDonationsForRecipient,
   getRecipientId,
-  calculateLivesSavedForDonation,
 } from '../utils/donationDataHelpers';
+import { getCostPerLifeFromCombined, calculateLivesSavedForDonationFromCombined } from '../utils/combinedAssumptions';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -18,7 +18,7 @@ import AdjustAssumptionsButton from './AdjustAssumptionsButton';
 
 const CategoryList = () => {
   const [categoryStats, setCategoryStats] = useState([]);
-  const { customValues, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useCostPerLife();
 
   useEffect(() => {
     // Get all categories
@@ -47,7 +47,7 @@ const CategoryList = () => {
       // For each donation to this recipient
       recipientDonations.forEach((donation) => {
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-        const livesSaved = calculateLivesSavedForDonation(donation, customValues);
+        const livesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
 
         // If the donation has category information
         if (donation.categoryId) {
@@ -73,17 +73,15 @@ const CategoryList = () => {
       return {
         id: category.id,
         name: category.name,
-        costPerLife: category.costPerLife,
-        // Use custom values if available
-        actualCostPerLife:
-          customValues && customValues[category.id] !== undefined ? customValues[category.id] : category.costPerLife,
+        costPerLife: getCostPerLifeFromCombined(combinedAssumptions, category.id),
+        actualCostPerLife: getCostPerLifeFromCombined(combinedAssumptions, category.id),
         totalDonated: categoryTotals[category.id] || 0,
         totalLivesSaved: categoryLivesSaved[category.id] || 0,
       };
     });
 
     setCategoryStats(stats);
-  }, [customValues]);
+  }, [combinedAssumptions]);
 
   // Category table columns configuration
   const categoryColumns = [

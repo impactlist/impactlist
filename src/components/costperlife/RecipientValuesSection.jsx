@@ -12,36 +12,17 @@ const RecipientValuesSection = ({
   formValues,
   errors,
   allCategories,
-  customValues,
+  getCustomRecipientValue,
   onChange,
   onSearch,
   searchTerm,
 }) => {
-  // Helper function to get custom value for a recipient's category
-  const getCustomRecipientValue = (recipientName, categoryId, type) => {
-    try {
-      if (customValues?.recipients?.[recipientName]?.[categoryId]?.[type] !== undefined) {
-        return customValues.recipients[recipientName][categoryId][type];
-      }
-    } catch (error) {
-      console.error('Error in getCustomRecipientValue:', error);
+  // Helper function to get form value or default
+  const getFormValue = (formValues, key, defaultValue) => {
+    if (formValues[key] && formValues[key].formatted !== undefined) {
+      return formValues[key].formatted;
     }
-    return '';
-  };
-
-  // Get form value with fallback to default
-  const getFormValue = (formValues, key, fallbackValue) => {
-    const formValue = formValues[key];
-
-    if (formValue) {
-      return formValue.display;
-    }
-
-    if (fallbackValue !== undefined && fallbackValue !== null && fallbackValue !== '') {
-      return formatNumberWithCommas(fallbackValue);
-    }
-
-    return '';
+    return defaultValue !== undefined ? formatNumberWithCommas(defaultValue) : '';
   };
 
   return (
@@ -107,10 +88,7 @@ const RecipientValuesSection = ({
                       const categoryName = allCategories[categoryId]?.name || categoryId;
 
                       // Calculate base values
-                      const baseCostPerLife =
-                        customValues?.[categoryId] !== undefined
-                          ? customValues[categoryId]
-                          : allCategories[categoryId]?.costPerLife || 0;
+                      const baseCostPerLife = allCategories[categoryId]?.costPerLife || 0;
 
                       // Get existing values
                       const defaultMultiplier = categoryData?.multiplier;
@@ -176,10 +154,7 @@ const RecipientValuesSection = ({
                               className={`w-full py-1 px-1.5 text-sm border rounded ${
                                 errors[recipient.name]?.[categoryId]?.multiplier
                                   ? 'border-red-300 text-red-700 bg-red-50'
-                                  : (customValues?.recipients?.[recipient.name]?.[categoryId]?.multiplier !==
-                                        undefined &&
-                                        customValues.recipients[recipient.name][categoryId].multiplier !==
-                                          defaultMultiplier) ||
+                                  : (customMultiplier !== undefined && customMultiplier !== defaultMultiplier) ||
                                       (formValues[multiplierKey] &&
                                         formValues[multiplierKey].raw !== '' &&
                                         Number(formValues[multiplierKey].raw) !== defaultMultiplier)
@@ -263,7 +238,7 @@ RecipientValuesSection.propTypes = {
   formValues: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   allCategories: PropTypes.object.isRequired,
-  customValues: PropTypes.object,
+  getCustomRecipientValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,

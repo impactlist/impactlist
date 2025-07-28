@@ -10,7 +10,15 @@ import DefaultValuesSection from './costperlife/DefaultValuesSection';
 import RecipientValuesSection from './costperlife/RecipientValuesSection';
 
 const CostPerLifeEditor = () => {
-  const { customValues, resetToDefaults, updateValues, isModalOpen, closeModal } = useCostPerLife();
+  const {
+    combinedAssumptions,
+    updateCategoryValue,
+    updateRecipientValue,
+    getCategoryValue,
+    getRecipientValue,
+    isModalOpen,
+    closeModal,
+  } = useCostPerLife();
 
   // Local state for form values and errors
   const [categoryFormValues, setCategoryFormValues] = useState({});
@@ -78,35 +86,14 @@ const CostPerLifeEditor = () => {
 
           // Check if recipient has meaningful custom overrides from context
           let hasCustomOverrides = false;
-          if (customValues && customValues.recipients && customValues.recipients[recipient.name]) {
-            // Check each category to see if there's at least one with a non-default value
-            hasCustomOverrides = Object.entries(customValues.recipients[recipient.name]).some(
-              ([categoryId, categoryData]) => {
-                // If we have a multiplier value
-                if (categoryData.multiplier !== undefined) {
-                  // Check if it's different from default
-                  const defaultMultiplier =
-                    recipient.categories &&
-                    recipient.categories[categoryId] &&
-                    recipient.categories[categoryId].multiplier;
+          if (recipient.categories) {
+            hasCustomOverrides = Object.keys(recipient.categories).some((categoryId) => {
+              // Check if there are custom values using context getters
+              const customMultiplier = getRecipientValue(recipient.name, categoryId, 'multiplier');
+              const customCostPerLife = getRecipientValue(recipient.name, categoryId, 'costPerLife');
 
-                  return defaultMultiplier === undefined || categoryData.multiplier !== defaultMultiplier;
-                }
-
-                // If we have a costPerLife value
-                if (categoryData.costPerLife !== undefined) {
-                  // Check if it's different from default
-                  const defaultCostPerLife =
-                    recipient.categories &&
-                    recipient.categories[categoryId] &&
-                    recipient.categories[categoryId].costPerLife;
-
-                  return defaultCostPerLife === undefined || categoryData.costPerLife !== defaultCostPerLife;
-                }
-
-                return false;
-              }
-            );
+              return customMultiplier !== null || customCostPerLife !== null;
+            });
           }
 
           // Check if recipient has custom values in the current form that differ from defaults
@@ -130,11 +117,11 @@ const CostPerLifeEditor = () => {
 
                 // Check if we have a saved custom value in context
                 const savedCustomValue =
-                  customValues &&
-                  customValues.recipients &&
-                  customValues.recipients[recipient.name] &&
-                  customValues.recipients[recipient.name][categoryId] &&
-                  customValues.recipients[recipient.name][categoryId][type];
+                  combinedAssumptions &&
+                  combinedAssumptions.recipients &&
+                  combinedAssumptions.recipients[recipient.name] &&
+                  combinedAssumptions.recipients[recipient.name][categoryId] &&
+                  combinedAssumptions.recipients[recipient.name][categoryId][type];
 
                 // If there's a saved custom value, check if the form value is different from it
                 if (savedCustomValue !== undefined) {
@@ -164,7 +151,7 @@ const CostPerLifeEditor = () => {
 
       setFilteredRecipients(filtered);
     },
-    [allRecipients, customValues, recipientFormValues]
+    [allRecipients, combinedAssumptions, recipientFormValues, getRecipientValue]
   );
 
   // Handle search term changes
@@ -252,8 +239,9 @@ const CostPerLifeEditor = () => {
       // Only initialize form values if they haven't been set already
       if (Object.keys(categoryFormValues).length === 0) {
         const categoryEntries = Object.entries(allCategories).map(([key, category]) => {
-          // If custom value exists, use it; otherwise use default
-          const value = customValues && customValues[key] !== undefined ? customValues[key] : category.costPerLife;
+          // Get custom value from context, or use default if no custom value
+          const customValue = getCategoryValue(key);
+          const value = customValue !== null ? customValue : category.costPerLife;
           return [key, value];
         });
 
@@ -264,32 +252,8 @@ const CostPerLifeEditor = () => {
 
       setCategoryErrors({});
 
-      // Initialize recipient form values from customValues if they exist
-      if (customValues?.recipients && Object.keys(recipientFormValues).length === 0) {
-        const recipientEntries = [];
-
-        Object.entries(customValues.recipients).forEach(([recipientName, recipientData]) => {
-          Object.entries(recipientData).forEach(([categoryId, categoryData]) => {
-            // Handle multiplier
-            if (categoryData.multiplier !== undefined) {
-              const fieldKey = `${recipientName}__${categoryId}__multiplier`;
-              recipientEntries.push([fieldKey, categoryData.multiplier]);
-            }
-
-            // Handle costPerLife
-            if (categoryData.costPerLife !== undefined) {
-              const fieldKey = `${recipientName}__${categoryId}__costPerLife`;
-              recipientEntries.push([fieldKey, categoryData.costPerLife]);
-            }
-          });
-        });
-
-        if (recipientEntries.length > 0) {
-          const initialRecipientValues = initializeFormValues(recipientEntries, formatValueForInput);
-
-          setRecipientFormValues(initialRecipientValues);
-        }
-      }
+      // Recipient form values will be populated on-demand using context getters
+      // No need to pre-populate since RecipientValuesSection uses getRecipientValue
 
       setRecipientErrors({});
 
@@ -300,7 +264,7 @@ const CostPerLifeEditor = () => {
     }
     // Include formatValueForInput in the dependency array
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen, customValues, allCategories, activeTab, searchTerm, filterRecipients, formatValueForInput]);
+  }, [isModalOpen, combinedAssumptions, allCategories, activeTab, searchTerm, filterRecipients, formatValueForInput]);
 
   // Update filtered recipients when customValues changes or tab changes
   useEffect(() => {
@@ -309,7 +273,7 @@ const CostPerLifeEditor = () => {
       // console.log("Filtering recipients with customValues");
       filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [customValues, activeTab, filterRecipients, searchTerm]);
+  }, [combinedAssumptions, activeTab, filterRecipients, searchTerm]);
 
   // Separate effect for search and filter changes to avoid dependency loops
   useEffect(() => {
@@ -401,88 +365,7 @@ const CostPerLifeEditor = () => {
       }
     });
 
-    // Also check customValues.recipients for any values not in form
-    if (customValues && customValues.recipients && Object.keys(customValues.recipients).length > 0) {
-      Object.entries(customValues.recipients).forEach(([recipientName, recipientData]) => {
-        Object.entries(recipientData).forEach(([categoryId, categoryData]) => {
-          // Check multiplier values
-          if (categoryData.multiplier !== undefined) {
-            const multiplier = categoryData.multiplier;
-            const fieldKey = `${recipientName}__${categoryId}__multiplier`;
-
-            // Skip if already in form values
-            if (recipientFormValues[fieldKey]) return;
-
-            // Skip empty values
-            if (multiplier === '') return;
-
-            // Get clean value without commas for validation
-            const cleanMultiplier = typeof multiplier === 'string' ? multiplier.replace(/,/g, '') : multiplier;
-
-            // Check if it's a valid number (not in an intermediate state)
-            if (
-              typeof cleanMultiplier === 'string' &&
-              (cleanMultiplier === '-' || cleanMultiplier === '.' || cleanMultiplier.endsWith('.'))
-            ) {
-              if (!newRecipientErrors[recipientName]) {
-                newRecipientErrors[recipientName] = {};
-              }
-              if (!newRecipientErrors[recipientName][categoryId]) {
-                newRecipientErrors[recipientName][categoryId] = {};
-              }
-
-              const errorMessage = cleanMultiplier === '-' ? 'Please enter a complete number' : 'Invalid number';
-              newRecipientErrors[recipientName][categoryId].multiplier = errorMessage;
-              hasErrors = true;
-            }
-          }
-
-          // Check costPerLife values
-          if (categoryData.costPerLife !== undefined) {
-            const costPerLife = categoryData.costPerLife;
-            const fieldKey = `${recipientName}__${categoryId}__costPerLife`;
-
-            // Skip if already in form values
-            if (recipientFormValues[fieldKey]) return;
-
-            // Skip empty values
-            if (costPerLife === '') return;
-
-            // Get clean value without commas for validation
-            const cleanCostPerLife = typeof costPerLife === 'string' ? costPerLife.replace(/,/g, '') : costPerLife;
-
-            // Check if it's a valid number (not in an intermediate state)
-            if (
-              typeof cleanCostPerLife === 'string' &&
-              (cleanCostPerLife === '-' || cleanCostPerLife === '.' || cleanCostPerLife.endsWith('.'))
-            ) {
-              if (!newRecipientErrors[recipientName]) {
-                newRecipientErrors[recipientName] = {};
-              }
-              if (!newRecipientErrors[recipientName][categoryId]) {
-                newRecipientErrors[recipientName][categoryId] = {};
-              }
-
-              const errorMessage = cleanCostPerLife === '-' ? 'Please enter a complete number' : 'Invalid number';
-              newRecipientErrors[recipientName][categoryId].costPerLife = errorMessage;
-              hasErrors = true;
-            }
-            // Check if value is zero
-            else if (cleanCostPerLife === 0 || Number(cleanCostPerLife) === 0) {
-              if (!newRecipientErrors[recipientName]) {
-                newRecipientErrors[recipientName] = {};
-              }
-              if (!newRecipientErrors[recipientName][categoryId]) {
-                newRecipientErrors[recipientName][categoryId] = {};
-              }
-              newRecipientErrors[recipientName][categoryId].costPerLife = 'Cost per life cannot be zero';
-              hasErrors = true;
-            }
-          }
-        });
-      });
-    }
-
+    // Validation complete - only check form fields, not stored data
     setRecipientErrors(newRecipientErrors);
 
     // Show alert if there are errors
@@ -508,160 +391,38 @@ const CostPerLifeEditor = () => {
       return; // Stop if there are errors
     }
 
-    // Initialize customized - if customValues is null, start with empty object
-    const customized = customValues ? { ...customValues } : {};
-
-    // Start with a clean copy but preserve recipients data if it exists
-    const categoryOnlyCustomized = {};
-
-    Object.entries(categoryFormValues).forEach(([key, valueObj]) => {
-      const defaultValue = allCategories[key].costPerLife;
+    // Update category values using context methods
+    Object.entries(categoryFormValues).forEach(([categoryId, valueObj]) => {
       const rawValue = valueObj.raw;
-
-      // Process the value - convert string to number
       const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
 
-      // If the value is empty, we'll use the default value (by not adding to customizations)
-      // Empty fields will automatically use the default value
-      const isEmpty = cleanValue.trim() === '';
-
-      // For non-empty values, check if they're different from default
-      if (!isEmpty) {
-        const processedValue = Number(cleanValue);
-
-        // Only consider valid number inputs that are different from default and not zero
-        if (!isNaN(processedValue) && processedValue !== defaultValue && processedValue !== 0) {
-          categoryOnlyCustomized[key] = processedValue;
+      if (cleanValue.trim() === '') {
+        // Empty value - clear any custom override
+        updateCategoryValue(categoryId, '');
+      } else {
+        const numValue = Number(cleanValue);
+        if (!isNaN(numValue) && numValue > 0) {
+          updateCategoryValue(categoryId, numValue);
         }
       }
     });
 
-    // Process recipient form values
-    if (recipientFormValues && Object.keys(recipientFormValues).length > 0) {
-      // Initialize recipients object if needed
-      if (!customized.recipients) {
-        customized.recipients = {};
+    // Update recipient values using context methods
+    Object.entries(recipientFormValues).forEach(([fieldKey, valueObj]) => {
+      const [recipientName, categoryId, type] = fieldKey.split('__');
+      const rawValue = valueObj.raw;
+      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+
+      if (cleanValue.trim() === '') {
+        // Empty value - clear any custom override
+        updateRecipientValue(recipientName, categoryId, type, '');
+      } else {
+        const numValue = Number(cleanValue);
+        if (!isNaN(numValue) && numValue > 0) {
+          updateRecipientValue(recipientName, categoryId, type, numValue);
+        }
       }
-
-      // Process each recipient form value
-      Object.entries(recipientFormValues).forEach(([fieldKey, valueObj]) => {
-        // Extract the parts from the field key
-        const [recipientName, categoryId, type] = fieldKey.split('__');
-        const rawValue = valueObj.raw;
-
-        // Check if this is an empty value
-        if (rawValue === '') {
-          // If there's already a saved value for this recipient+category+type, we need to explicitly remove it
-          if (
-            customized &&
-            customized.recipients &&
-            customized.recipients[recipientName] &&
-            customized.recipients[recipientName][categoryId] &&
-            customized.recipients[recipientName][categoryId][type] !== undefined
-          ) {
-            delete customized.recipients[recipientName][categoryId][type];
-
-            // Clean up empty objects
-            if (Object.keys(customized.recipients[recipientName][categoryId]).length === 0) {
-              delete customized.recipients[recipientName][categoryId];
-            }
-            if (
-              customized.recipients[recipientName] &&
-              Object.keys(customized.recipients[recipientName]).length === 0
-            ) {
-              delete customized.recipients[recipientName];
-            }
-            if (customized.recipients && Object.keys(customized.recipients).length === 0) {
-              delete customized.recipients;
-            }
-          }
-          return;
-        }
-
-        // Process valid numbers
-        if (rawValue !== '-' && rawValue !== '.' && !rawValue.endsWith('.') && !isNaN(Number(rawValue))) {
-          // Get default value if it exists
-          let defaultValue;
-          try {
-            const recipient = allRecipients.find((r) => r.name === recipientName);
-            if (recipient && recipient.categories && recipient.categories[categoryId]) {
-              defaultValue = recipient.categories[categoryId][type];
-            }
-          } catch (e) {
-            // If anything goes wrong, just proceed without a default value
-            console.error('Error getting default value:', e);
-          }
-
-          // Clean the value and convert to number
-          const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
-          const numValue = Number(cleanValue);
-
-          // Skip if the value matches the default or if it's zero (for both costPerLife and multiplier)
-          if (numValue === 0 || (defaultValue !== undefined && numValue === defaultValue)) {
-            // If there's already a saved value, we need to explicitly remove it
-            if (
-              customized &&
-              customized.recipients &&
-              customized.recipients[recipientName] &&
-              customized.recipients[recipientName][categoryId] &&
-              customized.recipients[recipientName][categoryId][type] !== undefined
-            ) {
-              delete customized.recipients[recipientName][categoryId][type];
-
-              // Clean up empty objects
-              if (Object.keys(customized.recipients[recipientName][categoryId]).length === 0) {
-                delete customized.recipients[recipientName][categoryId];
-              }
-              if (
-                customized.recipients[recipientName] &&
-                Object.keys(customized.recipients[recipientName]).length === 0
-              ) {
-                delete customized.recipients[recipientName];
-              }
-              if (customized.recipients && Object.keys(customized.recipients).length === 0) {
-                delete customized.recipients;
-              }
-            }
-            return;
-          }
-
-          // Initialize recipients object if it doesn't exist anymore
-          if (!customized.recipients) {
-            customized.recipients = {};
-          }
-
-          // Initialize nested objects if needed
-          if (!customized.recipients[recipientName]) {
-            customized.recipients[recipientName] = {};
-          }
-          if (!customized.recipients[recipientName][categoryId]) {
-            customized.recipients[recipientName][categoryId] = {};
-          }
-
-          // Store numeric value
-          customized.recipients[recipientName][categoryId][type] = numValue;
-
-          // When setting multiplier, ensure costPerLife is cleared and vice versa
-          if (type === 'multiplier') {
-            delete customized.recipients[recipientName][categoryId].costPerLife;
-          } else if (type === 'costPerLife') {
-            delete customized.recipients[recipientName][categoryId].multiplier;
-          }
-        }
-      });
-    }
-
-    // If there are any category customizations, update the object
-    if (Object.keys(categoryOnlyCustomized).length > 0) {
-      Object.assign(customized, categoryOnlyCustomized);
-      updateValues(customized);
-    } else if (customized.recipients && Object.keys(customized.recipients).length > 0) {
-      // If we have no category customizations but do have recipients, just keep recipients
-      updateValues(customized);
-    } else {
-      // If no customizations at all, reset to defaults
-      resetToDefaults();
-    }
+    });
 
     closeModal();
   };
@@ -680,45 +441,15 @@ const CostPerLifeEditor = () => {
       setCategoryFormValues(defaultCategoryValues);
       setCategoryErrors({});
     } else if (formType === 'recipients') {
-      // Just clear the form values for recipients
+      // Clear all recipient custom values using context methods
+      Object.keys(recipientFormValues).forEach((fieldKey) => {
+        const [recipientName, categoryId, type] = fieldKey.split('__');
+        updateRecipientValue(recipientName, categoryId, type, '');
+      });
+
+      // Clear the form values
       setRecipientFormValues({});
       setRecipientErrors({});
-
-      if (customValues) {
-        // Create a new customValues object without recipients
-        const newCustomValues = { ...customValues };
-        delete newCustomValues.recipients;
-
-        // Only update if there are remaining category customizations
-        if (Object.keys(newCustomValues).length > 0) {
-          updateValues(newCustomValues);
-        } else {
-          // If there were only recipient customizations, we'll need to reset to null
-          // but then immediately repopulate with any category values
-          resetToDefaults();
-
-          // Check if we have custom category values in the form
-          const categoryCustomValues = {};
-          Object.entries(categoryFormValues).forEach(([key, valueObj]) => {
-            const defaultValue = allCategories[key].costPerLife;
-            const rawValue = valueObj.raw;
-
-            // Skip if value is default
-            if (Number(rawValue) === defaultValue) return;
-
-            // Only consider valid number inputs
-            const processedValue = Number(rawValue);
-            if (!isNaN(processedValue)) {
-              categoryCustomValues[key] = processedValue;
-            }
-          });
-
-          // If we have category customizations, update with those
-          if (Object.keys(categoryCustomValues).length > 0) {
-            updateValues(categoryCustomValues);
-          }
-        }
-      }
     }
   };
 
@@ -887,7 +618,7 @@ const CostPerLifeEditor = () => {
                 formValues={recipientFormValues}
                 errors={recipientErrors}
                 allCategories={allCategories}
-                customValues={customValues}
+                getCustomRecipientValue={getRecipientValue}
                 onChange={handleRecipientFormChange}
                 onSearch={handleSearchChange}
                 searchTerm={searchTerm}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
+import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
 import { formatNumber, formatNumberWithCommas, formatWithCursorHandling } from '../utils/formatters';
@@ -35,9 +36,11 @@ const CostPerLifeEditor = () => {
     // Convert to format expected by the component
     const categories = {};
     getAllCategories().forEach((category) => {
+      // Calculate cost per life from effects
+      const costPerLife = calculateCategoryBaseCostPerLife(category, category.id);
       categories[category.id] = {
         name: category.name,
-        costPerLife: category.costPerLife,
+        costPerLife: costPerLife,
       };
     });
     return categories;

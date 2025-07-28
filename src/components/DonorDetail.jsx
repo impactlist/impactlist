@@ -201,14 +201,19 @@ const DonorDetail = () => {
         }
 
         if (!categoryLivesSaved[categoryName]) {
+          // Calculate virtual multiplier from actual effects
+          const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+          const virtualMultiplier = baseCostPerLife / costPerLife;
+          const hasVirtualMultiplier = Math.abs(virtualMultiplier - 1.0) > 0.01; // Show if significantly different from 1.0
+
           categoryLivesSaved[categoryName] = {
             name: categoryName,
             value: 0,
             categoryId: categoryId,
             costPerLife: costPerLife,
-            // Store multiplier info for the tooltip
-            hasMultiplier: categoryData.multiplier !== undefined,
-            multiplier: categoryData.multiplier,
+            // Store virtual multiplier info for the tooltip (calculated from actual effects)
+            hasMultiplier: hasVirtualMultiplier,
+            multiplier: hasVirtualMultiplier ? virtualMultiplier : undefined,
           };
         }
 

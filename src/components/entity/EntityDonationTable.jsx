@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SortableTable from '../SortableTable';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
-import { getEffectiveCostPerLife } from '../../utils/donationDataHelpers';
+import { getEffectiveCostPerLifeFromCombined } from '../../utils/combinedAssumptions';
 
 /**
  * Displays a table of donations for a donor or recipient entity.
  */
-const EntityDonationTable = ({ donations, entityType, className = '', customValues = null }) => {
+const EntityDonationTable = ({ donations, entityType, className = '', combinedAssumptions = null }) => {
   const isDonor = entityType === 'donor';
 
   // Define columns based on entity type
@@ -117,7 +117,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', customValu
           {donation.totalLivesSaved === 0 ? (
             <span className="text-2xl">∞</span>
           ) : (
-            formatCurrency(getEffectiveCostPerLife(donation, customValues))
+            formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, donation))
           )}
         </div>
       ),
@@ -208,7 +208,7 @@ EntityDonationTable.propTypes = {
   donations: PropTypes.array.isRequired,
   entityType: PropTypes.oneOf(['donor', 'recipient']).isRequired,
   className: PropTypes.string,
-  customValues: PropTypes.object,
+  combinedAssumptions: PropTypes.object,
 };
 
 export default React.memo(EntityDonationTable);

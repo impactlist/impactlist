@@ -374,3 +374,34 @@ export const getActualCostPerLifeForCategoryDataFromCombined = (
 
   return baseCostPerLife;
 };
+
+/**
+ * Get the effective cost per life for any entity using combined assumptions
+ * @param {Object} combinedAssumptions - Combined assumptions object
+ * @param {Object} entity - The entity to calculate cost per life for
+ * @returns {number} The effective cost per life
+ */
+export const getEffectiveCostPerLifeFromCombined = (combinedAssumptions, entity) => {
+  assertExists(combinedAssumptions, 'combinedAssumptions');
+
+  if (!entity) {
+    return 0;
+  }
+
+  // If entity has a direct costPerLife field, use it
+  if (entity.costPerLife !== undefined) {
+    return entity.costPerLife;
+  }
+
+  // If entity has recipientId, calculate for recipient
+  if (entity.recipientId) {
+    return getCostPerLifeForRecipientFromCombined(combinedAssumptions, entity.recipientId);
+  }
+
+  // If entity has categoryId, get cost per life for category
+  if (entity.categoryId) {
+    return getCostPerLifeFromCombined(combinedAssumptions, entity.categoryId);
+  }
+
+  throw new Error('No valid calculation method found for cost per life.');
+};

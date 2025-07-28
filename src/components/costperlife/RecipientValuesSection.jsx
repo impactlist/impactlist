@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../utils/formatters';
+import {
+  getRecipientId,
+  getRecipientDefaultMultiplier,
+  getRecipientDefaultCostPerLife,
+} from '../../utils/donationDataHelpers';
 
 /**
  * Component for managing recipient-specific cost per life values.
@@ -84,15 +89,22 @@ const RecipientValuesSection = ({
                 <div key={recipient.name} className={`border border-gray-200 rounded-md p-3 ${bgColorClass}`}>
                   <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
                   <div className="space-y-3">
-                    {recipientCategories.map(([categoryId, categoryData]) => {
+                    {recipientCategories.map(([categoryId]) => {
                       const categoryName = allCategories[categoryId]?.name || categoryId;
 
                       // Calculate base values
                       const baseCostPerLife = allCategories[categoryId]?.costPerLife || 0;
 
-                      // Get existing values
-                      const defaultMultiplier = categoryData?.multiplier;
-                      const defaultCostPerLife = categoryData?.costPerLife;
+                      // Get recipient ID for lookups
+                      const recipientId = getRecipientId(recipient);
+
+                      // Get default values from effects (if any)
+                      const defaultMultiplier = recipientId
+                        ? getRecipientDefaultMultiplier(recipientId, categoryId)
+                        : null;
+                      const defaultCostPerLife = recipientId
+                        ? getRecipientDefaultCostPerLife(recipientId, categoryId)
+                        : null;
 
                       // Get custom values
                       const customMultiplier = getCustomRecipientValue(recipient.name, categoryId, 'multiplier');
@@ -129,11 +141,11 @@ const RecipientValuesSection = ({
                               placeholder={
                                 customCostPerLife !== '' || getFormValue(formValues, costPerLifeKey, '') !== ''
                                   ? 'None'
-                                  : defaultMultiplier !== undefined
+                                  : defaultMultiplier !== null
                                     ? defaultMultiplier.toString()
                                     : 'None'
                               }
-                              value={getFormValue(formValues, multiplierKey, defaultMultiplier)}
+                              value={getFormValue(formValues, multiplierKey, customMultiplier || '')}
                               onChange={(e) => {
                                 // Clear cost per life field if this field has a value
                                 if (e.target.value.trim() !== '') {
@@ -169,15 +181,11 @@ const RecipientValuesSection = ({
                               </div>
                             )}
                             {/* Show default value indicator */}
-                            {defaultMultiplier !== undefined &&
-                              ((formValues[multiplierKey]?.raw &&
-                                Number(formValues[multiplierKey].raw.replace(/,/g, '')) !==
-                                  Number(defaultMultiplier)) ||
-                                getFormValue(formValues, costPerLifeKey, defaultCostPerLife) !== '') && (
-                                <div className="text-xs text-gray-500 mt-0.5">
-                                  Default: {formatNumberWithCommas(defaultMultiplier)}
-                                </div>
-                              )}
+                            {defaultMultiplier !== null && (
+                              <div className="text-xs text-gray-500 mt-0.5">
+                                Default: {formatNumberWithCommas(defaultMultiplier)}
+                              </div>
+                            )}
                           </div>
 
                           {/* Direct cost per life input */}
@@ -190,7 +198,7 @@ const RecipientValuesSection = ({
                             </label>
                             <CurrencyInput
                               id={`cost-per-life-${recipient.name}-${categoryId}`}
-                              value={getFormValue(formValues, costPerLifeKey, defaultCostPerLife)}
+                              value={getFormValue(formValues, costPerLifeKey, customCostPerLife || '')}
                               onChange={(value) => {
                                 // Clear multiplier field if this field has a value
                                 if (value.trim() !== '') {
@@ -201,7 +209,7 @@ const RecipientValuesSection = ({
                               placeholder={
                                 customMultiplier !== '' || getFormValue(formValues, multiplierKey, '') !== ''
                                   ? 'None'
-                                  : defaultCostPerLife !== undefined
+                                  : defaultCostPerLife !== null
                                     ? 'Default'
                                     : 'None'
                               }
@@ -210,15 +218,11 @@ const RecipientValuesSection = ({
                               validateOnBlur={true} // Only validate on blur, not while typing
                             />
                             {/* Show default value indicator */}
-                            {defaultCostPerLife !== undefined &&
-                              ((formValues[costPerLifeKey]?.raw &&
-                                Number(formValues[costPerLifeKey].raw.replace(/,/g, '')) !==
-                                  Number(defaultCostPerLife)) ||
-                                getFormValue(formValues, multiplierKey, defaultMultiplier) !== '') && (
-                                <div className="text-xs text-gray-500 mt-0.5">
-                                  Default: ${formatNumberWithCommas(defaultCostPerLife)}
-                                </div>
-                              )}
+                            {defaultCostPerLife !== null && (
+                              <div className="text-xs text-gray-500 mt-0.5">
+                                Default: ${formatNumberWithCommas(defaultCostPerLife)}
+                              </div>
+                            )}
                           </div>
                         </div>
                       );

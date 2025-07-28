@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useCostPerLife } from './CostPerLifeContext';
-import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
+import {
+  getAllRecipients,
+  getAllCategories,
+  getRecipientId,
+  recipientHasEffectOverrides,
+} from '../utils/donationDataHelpers';
 import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
@@ -83,9 +88,12 @@ const CostPerLifeEditor = () => {
         // When no search term, filter to only show recipients with custom values
         filtered = filtered.filter((recipient) => {
           // Check if recipient has built-in overrides
-          const hasBuiltInOverrides = Object.values(recipient.categories || {}).some(
-            (cat) => cat.multiplier !== undefined || cat.costPerLife !== undefined
-          );
+          const recipientId = getRecipientId(recipient);
+          const hasBuiltInOverrides =
+            recipientId &&
+            Object.keys(recipient.categories || {}).some((categoryId) =>
+              recipientHasEffectOverrides(recipientId, categoryId)
+            );
 
           // Check if recipient has meaningful custom overrides from context
           let hasCustomOverrides = false;

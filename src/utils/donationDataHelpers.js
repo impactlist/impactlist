@@ -8,7 +8,11 @@ import {
   validateRecipient,
   crashInsteadOfFallback,
 } from './dataValidation';
-import { calculateCategoryBaseCostPerLife, applyRecipientEffectModifications } from './effectsCalculation';
+import {
+  calculateCategoryBaseCostPerLife,
+  applyRecipientEffectModifications,
+  effectToCostPerLife,
+} from './effectsCalculation';
 
 // Helper to get category by ID
 export const getCategoryById = (categoryId) => {
@@ -456,6 +460,105 @@ export const calculateDonorStats = (customValues = null) => {
     ...donor,
     rank: index + 1,
   }));
+};
+
+/**
+ * Check if a recipient has effect overrides for a specific category
+ * @param {string} recipientId - The recipient ID
+ * @param {string} categoryId - The category ID
+ * @returns {boolean} True if the recipient has effect overrides for this category
+ */
+export const recipientHasEffectOverrides = (recipientId, categoryId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient || !recipient.categories) {
+    return false;
+  }
+
+  const categoryData = recipient.categories[categoryId];
+  if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
+    return false;
+  }
+
+  // Check if any effect has overrides or multipliers
+  return categoryData.effects.some((effect) => {
+    const hasOverrides =
+      effect.overrides && typeof effect.overrides === 'object' && Object.keys(effect.overrides).length > 0;
+    const hasMultipliers =
+      effect.multipliers && typeof effect.multipliers === 'object' && Object.keys(effect.multipliers).length > 0;
+    return hasOverrides || hasMultipliers;
+  });
+};
+
+/**
+ * Get the default multiplier for a recipient category from effects
+ * @param {string} recipientId - The recipient ID
+ * @param {string} categoryId - The category ID
+ * @returns {number|null} The effective multiplier, or null if none
+ */
+export const getRecipientDefaultMultiplier = (recipientId, categoryId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient || !recipient.categories) {
+    return null;
+  }
+
+  const categoryData = recipient.categories[categoryId];
+  if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
+    return null;
+  }
+
+  // Get the category's base effect to compare against
+  const category = categoriesById[categoryId];
+  if (!category || !category.effects || category.effects.length === 0) {
+    return null;
+  }
+
+  const baseEffect = category.effects[0]; // Use first effect
+  const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
+
+  if (!recipientEffect || !recipientEffect.multipliers) {
+    return null;
+  }
+
+  // Calculate effective multiplier based on the type of effect
+  if (recipientEffect.multipliers.costPerQALY !== undefined) {
+    // For QALY multipliers, a lower value means more effective (inverted)
+    return 1 / recipientEffect.multipliers.costPerQALY;
+  } else if (recipientEffect.multipliers.costPerMicroprobability !== undefined) {
+    // For microprobability multipliers, a lower value means more effective (inverted)
+    return 1 / recipientEffect.multipliers.costPerMicroprobability;
+  }
+
+  return null;
+};
+
+/**
+ * Get the default cost per life for a recipient category from effects
+ * @param {string} recipientId - The recipient ID
+ * @param {string} categoryId - The category ID
+ * @returns {number|null} The effective cost per life override, or null if none
+ */
+export const getRecipientDefaultCostPerLife = (recipientId, categoryId) => {
+  const recipient = recipientsById[recipientId];
+  if (!recipient || !recipient.categories) {
+    return null;
+  }
+
+  const categoryData = recipient.categories[categoryId];
+  if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
+    return null;
+  }
+
+  // If there's an override, calculate the cost per life from it
+  const recipientEffect = categoryData.effects[0]; // Use first effect
+  if (recipientEffect && recipientEffect.overrides) {
+    if (recipientEffect.overrides.costPerQALY !== undefined) {
+      return effectToCostPerLife({ costPerQALY: recipientEffect.overrides.costPerQALY });
+    }
+    // Note: For costPerMicroprobability overrides, we'd need more data (population params)
+    // so we skip those for now
+  }
+
+  return null;
 };
 
 /**

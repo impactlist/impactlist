@@ -88,6 +88,80 @@ export const effectToCostPerLife = (effect) => {
 };
 
 /**
+ * Calculate the sum of a discounted geometric series from year start to year end
+ * Sum from t=start to t=end-1 of 1/(1+r)^t
+ * @param {number} discountRate - Annual discount rate (e.g., 0.02 for 2%)
+ * @param {number} start - Start year (inclusive)
+ * @param {number} end - End year (exclusive)
+ * @returns {number} Sum of discounted values
+ */
+const calculateDiscountedSum = (discountRate, start, end) => {
+  if (start >= end) return 0;
+
+  // For the sum from t=start to t=end-1 of (1/(1+r))^t
+  // This equals (1/(1+r))^start * (1 - (1/(1+r))^(end-start)) / (1 - 1/(1+r))
+  // Which simplifies to: (1/(1+r))^start * (1 - (1/(1+r))^(end-start)) / (r/(1+r))
+
+  const discountFactor = 1 / (1 + discountRate);
+  const startDiscount = Math.pow(discountFactor, start);
+  const periodDiscount = 1 - Math.pow(discountFactor, end - start);
+
+  // Handle the case where discount rate is effectively zero
+  if (Math.abs(discountRate) < 1e-10) {
+    return end - start;
+  }
+
+  return (startDiscount * periodDiscount) / (discountRate / (1 + discountRate));
+};
+
+/**
+ * Calculate cost per life from multiple effects with time windows
+ * @param {Array} effects - Array of effect objects with time windows
+ * @param {string} categoryId - Category ID for context
+ * @returns {number} Weighted average cost per life
+ */
+const calculateMultiEffectCostPerLife = (effects, categoryId) => {
+  assertNonEmptyArray(effects, 'effects', `in category "${categoryId}"`);
+
+  // Get global parameters for discounting
+  assertExists(globalParameters, 'globalParameters');
+  assertPositiveNumber(globalParameters.discountRate, 'discountRate', 'in globalParameters');
+  assertPositiveNumber(globalParameters.timeLimit, 'timeLimit', 'in globalParameters');
+
+  const discountRate = globalParameters.discountRate;
+  const timeLimit = globalParameters.timeLimit;
+
+  // Calculate total discounted impact for each effect
+  let totalDiscountedCost = 0;
+  let totalDiscountedLives = 0;
+
+  effects.forEach((effect) => {
+    assertExists(effect.startTime, 'startTime', `in effect ${effect.effectId}`);
+    assertPositiveNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
+
+    const costPerLife = effectToCostPerLife(effect);
+    const startYear = effect.startTime;
+    const endYear = Math.min(startYear + effect.windowLength, timeLimit);
+
+    // Calculate discounted sum for this time window
+    const discountedYears = calculateDiscountedSum(discountRate, startYear, endYear);
+
+    // With $1/year spending, lives saved per year = 1/costPerLife
+    const livesPerYear = 1 / costPerLife;
+
+    totalDiscountedCost += discountedYears; // $1/year * discountedYears
+    totalDiscountedLives += livesPerYear * discountedYears;
+  });
+
+  // Return weighted average cost per life
+  if (totalDiscountedLives === 0) {
+    throw new Error(`No lives saved calculated for category "${categoryId}" with multiple effects`);
+  }
+
+  return totalDiscountedCost / totalDiscountedLives;
+};
+
+/**
  * Calculate cost per life for a category from its effects
  * @param {Object} category - The category object with effects array
  * @param {string} categoryId - The category ID for context
@@ -104,12 +178,7 @@ export const calculateCategoryBaseCostPerLife = (category, categoryId) => {
   }
 
   // Multiple effects - calculate weighted average based on time windows
-  // For now, just use the first effect as a simplification
-  // TODO: Implement proper multi-effect calculation
-  console.warn(
-    `Category "${categoryId}" has ${effects.length} effects. Using first effect for now. Multi-effect calculation not yet implemented.`
-  );
-  return effectToCostPerLife(effects[0]);
+  return calculateMultiEffectCostPerLife(effects, categoryId);
 };
 
 /**

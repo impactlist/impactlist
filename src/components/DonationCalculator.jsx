@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BackButton from './BackButton';
+import { getAllCategories } from '../utils/donationDataHelpers';
 import {
-  getAllCategories,
-  calculateLivesSavedForCategory,
-  getDefaultCostPerLifeForCategory,
-  getCostPerLifeForRecipient,
-  getEffectiveCostPerLife,
-} from '../utils/donationDataHelpers';
+  getCostPerLifeFromCombined,
+  getCostPerLifeForRecipientFromCombined,
+  calculateLivesSavedForCategoryFromCombined,
+} from '../utils/combinedAssumptions';
 import { recipientsById } from '../data/generatedData';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -36,72 +35,69 @@ const DonationCalculator = () => {
     twoBelow: null,
     twoAbove: null,
   });
-  const { customValues, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useCostPerLife();
 
   // For specific donation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDonation, setEditingDonation] = useState(null);
 
   // Calculate donor rank based on lives saved - now wrapped in useCallback
-  const calculateDonorRank = useCallback(
-    (lives) => {
-      // This would use actual donor data, for now it's a placeholder
-      // Ideally, it would compare the lives saved against all donors' lives saved
-      // and determine where this user would rank
+  const calculateDonorRank = useCallback((lives) => {
+    // This would use actual donor data, for now it's a placeholder
+    // Ideally, it would compare the lives saved against all donors' lives saved
+    // and determine where this user would rank
 
-      // Sample implementation:
-      import('./SortableTable')
-        .then(() => {
-          import('../utils/donationDataHelpers').then(({ calculateDonorStats }) => {
-            const donorStats = calculateDonorStats(customValues);
+    // Sample implementation:
+    import('./SortableTable')
+      .then(() => {
+        import('../utils/donationDataHelpers').then(({ calculateDonorStats }) => {
+          const donorStats = calculateDonorStats();
 
-            // Find where the user would rank
-            let rank = 1;
-            let donorAbove = null;
-            let donorBelow = null;
-            let twoBelow = null;
-            let twoAbove = null;
+          // Find where the user would rank
+          let rank = 1;
+          let donorAbove = null;
+          let donorBelow = null;
+          let twoBelow = null;
+          let twoAbove = null;
 
-            // Donors are sorted by lives saved in descending order
-            for (let i = 0; i < donorStats.length; i++) {
-              const donor = donorStats[i];
+          // Donors are sorted by lives saved in descending order
+          for (let i = 0; i < donorStats.length; i++) {
+            const donor = donorStats[i];
 
-              if (lives <= donor.totalLivesSaved) {
-                rank++;
-                // This donor would be above the user
-                donorAbove = donor;
-                // If we're at the bottom, get the donor two positions above
-                if (!donorBelow && i > 0) {
-                  twoAbove = donorStats[i - 1];
-                }
-              } else {
-                // This donor would be below the user
-                donorBelow = i < donorStats.length ? donor : null;
-                // Get the donor two positions below if we're at the top
-                if (rank === 1 && i + 2 < donorStats.length) {
-                  twoBelow = donorStats[i + 2];
-                }
-                break;
+            if (lives <= donor.totalLivesSaved) {
+              rank++;
+              // This donor would be above the user
+              donorAbove = donor;
+              // If we're at the bottom, get the donor two positions above
+              if (!donorBelow && i > 0) {
+                twoAbove = donorStats[i - 1];
               }
+            } else {
+              // This donor would be below the user
+              donorBelow = i < donorStats.length ? donor : null;
+              // Get the donor two positions below if we're at the top
+              if (rank === 1 && i + 2 < donorStats.length) {
+                twoBelow = donorStats[i + 2];
+              }
+              break;
             }
+          }
 
-            setDonorRank(rank);
-            setNeighboringDonors({
-              above: donorAbove,
-              below: donorBelow,
-              twoBelow: twoBelow,
-              twoAbove: twoAbove,
-            });
+          setDonorRank(rank);
+          setNeighboringDonors({
+            above: donorAbove,
+            below: donorBelow,
+            twoBelow: twoBelow,
+            twoAbove: twoAbove,
           });
-        })
-        .catch((error) => {
-          console.error('Error calculating donor rank:', error);
-          setDonorRank(null);
-          setNeighboringDonors({ above: null, below: null, twoBelow: null, twoAbove: null });
         });
-    },
-    [customValues]
-  );
+      })
+      .catch((error) => {
+        console.error('Error calculating donor rank:', error);
+        setDonorRank(null);
+        setNeighboringDonors({ above: null, below: null, twoBelow: null, twoAbove: null });
+      });
+  }, []);
 
   // Initialize categories and load saved donation values on component mount
   useEffect(() => {
@@ -128,10 +124,13 @@ const DonationCalculator = () => {
     }
   }, []);
 
-  // Calculate lives saved when donations, specificDonations, or customValues change
+  // Calculate lives saved when donations, specificDonations, or combinedAssumptions change
   useEffect(() => {
     // Skip calculation if no categories loaded yet
     if (categories.length === 0) return;
+    if (!combinedAssumptions) {
+      throw new Error('combinedAssumptions is required but does not exist.');
+    }
 
     let totalAmount = 0;
     let totalLives = 0;
@@ -144,8 +143,8 @@ const DonationCalculator = () => {
       const donationAmount = Number(amount);
       totalAmount += donationAmount;
 
-      // Calculate lives saved for this category
-      const livesSaved = calculateLivesSavedForCategory(categoryId, donationAmount, customValues);
+      // Calculate lives saved for this category using combined assumptions
+      const livesSaved = calculateLivesSavedForCategoryFromCombined(combinedAssumptions, categoryId, donationAmount);
       totalLives += livesSaved;
     });
 
@@ -165,11 +164,11 @@ const DonationCalculator = () => {
           costPerLife = donation.costPerLife;
         } else if (donation.multiplier) {
           // Apply multiplier to the category's cost per life
-          const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+          const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId);
           costPerLife = baseCostPerLife / donation.multiplier;
         } else {
           // Use category default
-          costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+          costPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId);
         }
 
         livesSaved = donation.amount / costPerLife;
@@ -183,8 +182,8 @@ const DonationCalculator = () => {
           throw new Error(`Could not find ID for recipient: ${donation.recipientName}`);
         }
 
-        // Get actual cost per life for this recipient
-        const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+        // Get actual cost per life for this recipient using combined assumptions
+        const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
         livesSaved = donation.amount / recipientCostPerLife;
       }
 
@@ -207,7 +206,7 @@ const DonationCalculator = () => {
     } else {
       setDonorRank(null);
     }
-  }, [donations, specificDonations, customValues, categories, calculateDonorRank]);
+  }, [donations, specificDonations, combinedAssumptions, categories, calculateDonorRank]);
 
   // Save donations to localStorage when they change
   useEffect(() => {
@@ -250,7 +249,7 @@ const DonationCalculator = () => {
     if (!amount || isNaN(Number(amount))) return 0;
 
     const donationAmount = Number(amount);
-    return calculateLivesSavedForCategory(categoryId, donationAmount, customValues);
+    return calculateLivesSavedForCategoryFromCombined(combinedAssumptions, categoryId, donationAmount);
   };
 
   // Open modal to add or edit a specific donation
@@ -287,11 +286,11 @@ const DonationCalculator = () => {
         costPerLife = donation.costPerLife;
       } else if (donation.multiplier) {
         // Apply multiplier to the category's cost per life
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId);
         costPerLife = baseCostPerLife / donation.multiplier;
       } else {
         // Use category default
-        costPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        costPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId);
       }
 
       return donation.amount / costPerLife;
@@ -304,8 +303,8 @@ const DonationCalculator = () => {
         throw new Error(`Could not find ID for recipient: ${donation.recipientName}`);
       }
 
-      // Get actual cost per life for this recipient
-      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+      // Get actual cost per life for this recipient using combined assumptions
+      const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
       return donation.amount / recipientCostPerLife;
     }
   };
@@ -317,16 +316,16 @@ const DonationCalculator = () => {
       if (donation.costPerLife) {
         return donation.costPerLife;
       } else if (donation.multiplier) {
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId);
         return baseCostPerLife / donation.multiplier;
       } else {
-        return getDefaultCostPerLifeForCategory(donation.categoryId, customValues);
+        return getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId);
       }
     } else {
-      // For existing recipients, add recipientId to the donation object for the helper
+      // For existing recipients, get cost per life using combined assumptions
       const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === donation.recipientName);
       if (recipientId) {
-        return getEffectiveCostPerLife({ ...donation, recipientId }, customValues);
+        return getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
       } else {
         return 0;
       }
@@ -426,7 +425,7 @@ const DonationCalculator = () => {
             onDonationChange={handleDonationChange}
             onReset={resetDonations}
             getLivesSavedForCategory={getLivesSavedForCategory}
-            getCostPerLifeForCategory={(categoryId) => getDefaultCostPerLifeForCategory(categoryId, customValues)}
+            getCostPerLifeForCategory={(categoryId) => getCostPerLifeFromCombined(combinedAssumptions, categoryId)}
           />
         </motion.div>
 

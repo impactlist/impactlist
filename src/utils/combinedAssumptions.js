@@ -223,3 +223,21 @@ export const calculateLivesSavedForDonationFromCombined = (combinedAssumptions, 
   const creditedAmount = donation.amount * credit;
   return creditedAmount / validCostPerLife;
 };
+
+/**
+ * Calculate lives saved for a category donation using combined assumptions
+ * @param {Object} combinedAssumptions - Combined assumptions object
+ * @param {string} categoryId - Category ID
+ * @param {number} amount - Donation amount
+ * @returns {number} Lives saved for this category donation
+ */
+export const calculateLivesSavedForCategoryFromCombined = (combinedAssumptions, categoryId, amount) => {
+  assertExists(combinedAssumptions, 'combinedAssumptions');
+  assertExists(categoryId, 'categoryId');
+  assertPositiveNumber(amount, 'amount');
+
+  const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+  const validCostPerLife = assertNonZeroNumber(costPerLife, 'costPerLife', `for category ${categoryId}`);
+
+  return amount / validCostPerLife;
+};

@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  calculateDonorStats,
-  getCostPerLifeForRecipient,
   getPrimaryCategoryId,
   getDonationsForRecipient,
   getCategoryById,
   getAllRecipients,
   getTotalAmountForRecipient,
-  calculateLivesSavedForDonation,
   getRecipientId,
 } from '../utils/donationDataHelpers';
+import {
+  calculateDonorStatsFromCombined,
+  getCostPerLifeForRecipientFromCombined,
+  calculateLivesSavedForDonationFromCombined,
+} from '../utils/combinedAssumptions';
 import SortableTable from './SortableTable';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -22,11 +24,15 @@ import AdjustAssumptionsButton from './AdjustAssumptionsButton';
 const DonorList = () => {
   const [donorStats, setDonorStats] = useState([]);
   const [, setRecipientStats] = useState([]);
-  const { customValues, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useCostPerLife();
 
   useEffect(() => {
+    if (!combinedAssumptions) {
+      throw new Error('combinedAssumptions is required but does not exist.');
+    }
+
     // Calculate donor statistics on component mount
-    const stats = calculateDonorStats(customValues);
+    const stats = calculateDonorStatsFromCombined(combinedAssumptions);
     setDonorStats(stats);
 
     // Calculate recipient statistics
@@ -42,7 +48,7 @@ const DonorList = () => {
         }
 
         const totalReceived = getTotalAmountForRecipient(recipientId);
-        const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+        const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
 
         // Get the primary category for display
         const primaryCategoryId = getPrimaryCategoryId(recipientId);
@@ -57,7 +63,7 @@ const DonorList = () => {
         // Calculate total lives saved for this recipient
         const recipientDonations = getDonationsForRecipient(recipientId);
         const totalLivesSaved = recipientDonations.reduce(
-          (sum, donation) => sum + calculateLivesSavedForDonation(donation, customValues),
+          (sum, donation) => sum + calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation),
           0
         );
 
@@ -75,7 +81,7 @@ const DonorList = () => {
       .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
 
     setRecipientStats(recipientStats);
-  }, [customValues]);
+  }, [combinedAssumptions]);
 
   // Donor table columns configuration
   const donorColumns = [

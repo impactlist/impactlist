@@ -3,16 +3,18 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from './BackButton';
 import {
-  getCostPerLifeForRecipient,
   getPrimaryCategoryId,
   getCategoryBreakdown,
-  getDefaultCostPerLifeForCategory,
-  getActualCostPerLifeForCategoryData,
   getRecipientById,
   getDonationsForRecipient,
   getCategoryById,
-  calculateLivesSavedForDonation,
 } from '../utils/donationDataHelpers';
+import {
+  getCostPerLifeForRecipientFromCombined,
+  getCostPerLifeFromCombined,
+  getActualCostPerLifeForCategoryDataFromCombined,
+  calculateLivesSavedForDonationFromCombined,
+} from '../utils/combinedAssumptions';
 import { ImpactChartToggle } from './ImpactBarChart';
 import { useCostPerLife } from './CostPerLifeContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
@@ -34,7 +36,7 @@ const RecipientDetail = () => {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
-  const { customValues, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useCostPerLife();
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -44,6 +46,10 @@ const RecipientDetail = () => {
   };
 
   useEffect(() => {
+    if (!combinedAssumptions) {
+      throw new Error('combinedAssumptions is required but does not exist.');
+    }
+
     // Get recipient info
     const recipient = getRecipientById(recipientId);
 
@@ -51,7 +57,7 @@ const RecipientDetail = () => {
       throw new Error(`Invalid recipient ID: ${recipientId}. This recipient does not exist.`);
     }
 
-    const costPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+    const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
 
     // Get primary category and category breakdown
     const primaryCategoryId = getPrimaryCategoryId(recipientId);
@@ -59,7 +65,7 @@ const RecipientDetail = () => {
     const primaryCategoryName = primaryCategory.name;
 
     // Get cost per life for the primary category
-    const categoryCostPerLife = getDefaultCostPerLifeForCategory(primaryCategoryId, customValues);
+    const categoryCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, primaryCategoryId);
 
     // Get formatted breakdown for bar chart with required properties
     const categoryBreakdown = getCategoryBreakdown(recipientId).map((category) => {
@@ -79,7 +85,7 @@ const RecipientDetail = () => {
     const recipientDonationsList = getDonationsForRecipient(recipientId)
       .map((donation) => {
         // Calculate lives saved for this donation
-        const totalLivesSaved = calculateLivesSavedForDonation(donation, customValues);
+        const totalLivesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
 
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
@@ -115,7 +121,12 @@ const RecipientDetail = () => {
         const categoryName = category.name;
 
         // Get category-specific cost per life
-        const catCostPerLife = getActualCostPerLifeForCategoryData(recipientId, categoryId, categoryData, customValues);
+        const catCostPerLife = getActualCostPerLifeForCategoryDataFromCombined(
+          combinedAssumptions,
+          recipientId,
+          categoryId,
+          categoryData
+        );
 
         // Calculate donation amount and lives saved for this category
         const categoryAmount = donation.creditedAmount * fraction;
@@ -200,7 +211,7 @@ const RecipientDetail = () => {
     setRecipientContent(recipient.content);
 
     setRecipientDonations(recipientDonationsList);
-  }, [recipientId, customValues]);
+  }, [recipientId, combinedAssumptions]);
 
   // Prepare the initial sorted data once
   useEffect(() => {
@@ -245,7 +256,7 @@ const RecipientDetail = () => {
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transitionStage, chartView, customValues]); // Include customValues in dependencies
+  }, [transitionStage, chartView, combinedAssumptions]); // Include combinedAssumptions in dependencies
 
   // Initialize chart view on rawChartData load
   useEffect(() => {
@@ -274,7 +285,7 @@ const RecipientDetail = () => {
 
       setChartData(sortedData);
     }
-  }, [rawChartData, customValues, chartView, transitionStage, shouldAnimate]); // Include all dependencies
+  }, [rawChartData, combinedAssumptions, chartView, transitionStage, shouldAnimate]); // Include all dependencies
 
   // Separate effect to handle animation timing
   useEffect(() => {
@@ -369,7 +380,7 @@ const RecipientDetail = () => {
             }
             entityType="recipient"
             containerHeight={calculateChartHeight(chartData)}
-            customValues={customValues}
+            combinedAssumptions={combinedAssumptions}
           />
         )}
 
@@ -377,7 +388,11 @@ const RecipientDetail = () => {
         <MarkdownContent content={recipientContent} className="mt-8 mb-8" />
 
         {/* Donations list */}
-        <EntityDonationTable donations={recipientDonations} entityType="recipient" customValues={customValues} />
+        <EntityDonationTable
+          donations={recipientDonations}
+          entityType="recipient"
+          combinedAssumptions={combinedAssumptions}
+        />
       </motion.div>
     </motion.div>
   );

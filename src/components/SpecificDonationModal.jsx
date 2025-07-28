@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-import {
-  getAllRecipients,
-  getAllCategories,
-  getDefaultCostPerLifeForCategory,
-  getCostPerLifeForRecipient,
-  getRecipientId,
-} from '../utils/donationDataHelpers';
+import { getAllRecipients, getAllCategories, getRecipientId } from '../utils/donationDataHelpers';
+import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/combinedAssumptions';
 import { formatNumber, formatLives } from '../utils/formatters';
 import { useCostPerLife } from './CostPerLifeContext';
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
-  const { customValues } = useCostPerLife();
+  const { combinedAssumptions } = useCostPerLife();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [customRecipientName, setCustomRecipientName] = useState('');
@@ -258,6 +253,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       return 0;
     }
 
+    if (!combinedAssumptions) {
+      throw new Error('combinedAssumptions is required but does not exist.');
+    }
+
     const cleanedAmount = Number(cleanNumberInput(amount));
 
     if (isExistingRecipient && selectedRecipient) {
@@ -267,20 +266,20 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         throw new Error(`Could not find ID for recipient: ${selectedRecipient.name}`);
       }
 
-      // Get actual cost per life for this recipient
-      const recipientCostPerLife = getCostPerLifeForRecipient(recipientId, customValues);
+      // Get actual cost per life for this recipient using combined assumptions
+      const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
       return cleanedAmount / recipientCostPerLife;
     } else if (!isExistingRecipient && selectedCategory) {
       let effectiveCostPerLife;
 
       if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
         const multiplierValue = Number(cleanNumberInput(multiplier));
-        const baseCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
+        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory);
         effectiveCostPerLife = baseCostPerLife / multiplierValue;
       } else if (costPerLife && !isNaN(Number(cleanNumberInput(costPerLife)))) {
         effectiveCostPerLife = Number(cleanNumberInput(costPerLife));
       } else {
-        effectiveCostPerLife = getDefaultCostPerLifeForCategory(selectedCategory, customValues);
+        effectiveCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory);
       }
 
       return cleanedAmount / effectiveCostPerLife;
@@ -295,10 +294,14 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const getRecipientCostPerLife = () => {
     if (!isExistingRecipient || !selectedRecipient) return null;
 
+    if (!combinedAssumptions) {
+      throw new Error('combinedAssumptions is required but does not exist.');
+    }
+
     const recipientId = getRecipientId(selectedRecipient);
     if (!recipientId) return null;
 
-    return getCostPerLifeForRecipient(recipientId, customValues);
+    return getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
   };
 
   const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
@@ -458,7 +461,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
                       Default cost per life: $
-                      {formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))}
+                      {formatNumber(getCostPerLifeFromCombined(combinedAssumptions, selectedCategory))}
                     </p>
                   )}
                 </div>
@@ -489,7 +492,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       <p className="mt-1 text-xs text-gray-500">
                         Cost per life: $
                         {formatNumber(
-                          getDefaultCostPerLifeForCategory(selectedCategory, customValues) /
+                          getCostPerLifeFromCombined(combinedAssumptions, selectedCategory) /
                             Number(cleanNumberInput(multiplier))
                         )}
                       </p>
@@ -511,7 +514,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         }}
                         placeholder={
                           selectedCategory
-                            ? formatNumber(getDefaultCostPerLifeForCategory(selectedCategory, customValues))
+                            ? formatNumber(getCostPerLifeFromCombined(combinedAssumptions, selectedCategory))
                             : '0'
                         }
                         className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${

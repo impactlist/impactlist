@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -n \"$CLAUDE_EDITED_FILE\" ]; then npx prettier --write \"$CLAUDE_EDITED_FILE\" && npx eslint --fix \"$CLAUDE_EDITED_FILE\"; fi"
+            "command": "jq -r '.tool_input.file_path' | { read file_path; if echo \"$file_path\" | grep -qE '\\.(js|jsx)$'; then npx prettier --write \"$file_path\" && npx eslint --fix \"$file_path\"; fi; }"
           }
         ]
       }

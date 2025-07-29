@@ -1,0 +1,113 @@
+/**
+ * Form validation utilities for the assumptions editor
+ * This handles user input validation with friendly error messages,
+ * as opposed to dataValidation.js which does runtime data structure validation
+ */
+
+/**
+ * Validates category form values
+ * @param {Object} formValues - The form values to validate
+ * @param {Object} allCategories - All category data with default values
+ * @returns {Object} - { errors: Object, hasErrors: boolean }
+ */
+export const validateCategoryValues = (formValues, allCategories) => {
+  const errors = {};
+  let hasErrors = false;
+
+  Object.entries(formValues).forEach(([key, valueObj]) => {
+    const defaultValue = allCategories[key].costPerLife;
+    const rawValue = valueObj.raw;
+
+    // Skip validation if value is the same as default or if empty (empty = use default)
+    if (Number(rawValue) === defaultValue) return;
+
+    // Empty values are valid - they'll use the default value
+    if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
+      return;
+    }
+
+    // Allow minus sign only during input, not for saving
+    if (rawValue === '-') {
+      errors[key] = 'Please enter a complete number';
+      hasErrors = true;
+      return;
+    }
+
+    // Remove commas before converting to number
+    const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+    const numValue = Number(cleanValue);
+
+    // Check if it's a valid number
+    if (isNaN(numValue)) {
+      errors[key] = 'Invalid number';
+      hasErrors = true;
+    }
+    // Check if value is zero
+    else if (numValue === 0) {
+      errors[key] = 'Value cannot be zero';
+      hasErrors = true;
+    }
+  });
+
+  return { errors, hasErrors };
+};
+
+/**
+ * Validates recipient form values
+ * @param {Object} formValues - The form values to validate
+ * @returns {Object} - { errors: Object, hasErrors: boolean }
+ */
+export const validateRecipientValues = (formValues) => {
+  const errors = {};
+  let hasErrors = false;
+
+  Object.entries(formValues).forEach(([fieldKey, valueObj]) => {
+    const [recipientName, categoryId, type] = fieldKey.split('__');
+    const rawValue = valueObj.raw;
+
+    // Skip empty values - for recipients, empty is allowed
+    if (rawValue === null || rawValue === undefined || rawValue === '') return;
+
+    // Remove commas before checking validity
+    const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+
+    // Check for intermediate states or invalid numbers
+    if (cleanValue === '-' || cleanValue === '.' || cleanValue.endsWith('.') || isNaN(Number(cleanValue))) {
+      if (!errors[recipientName]) {
+        errors[recipientName] = {};
+      }
+      if (!errors[recipientName][categoryId]) {
+        errors[recipientName][categoryId] = {};
+      }
+
+      const errorMessage = cleanValue === '-' ? 'Please enter a complete number' : 'Invalid number';
+      errors[recipientName][categoryId][type] = errorMessage;
+      hasErrors = true;
+    }
+    // Check if value is zero (neither costPerLife nor multiplier can be zero)
+    else if (Number(cleanValue) === 0) {
+      if (!errors[recipientName]) {
+        errors[recipientName] = {};
+      }
+      if (!errors[recipientName][categoryId]) {
+        errors[recipientName][categoryId] = {};
+      }
+      errors[recipientName][categoryId][type] = 'Value cannot be zero';
+      hasErrors = true;
+    }
+  });
+
+  return { errors, hasErrors };
+};
+
+/**
+ * Scrolls to the first error element if any errors exist
+ */
+export const scrollToFirstError = () => {
+  setTimeout(() => {
+    const errorElement = document.querySelector('.border-red-300');
+    if (errorElement) {
+      errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+};

@@ -12,7 +12,7 @@ import CategoryDetail from './components/CategoryDetail';
 import DonationCalculator from './components/DonationCalculator';
 import FAQ from './components/FAQ';
 import { CostPerLifeProvider } from './components/CostPerLifeContext';
-import CostPerLifeEditor from './components/CostPerLifeEditor';
+import AssumptionsEditor from './components/AssumptionsEditor';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { validateDataOnStartup } from './utils/startupValidation';
@@ -172,7 +172,7 @@ const App = () => {
       <CostPerLifeProvider>
         <Router>
           <AppContent />
-          <CostPerLifeEditor />
+          <AssumptionsEditor />
         </Router>
       </CostPerLifeProvider>
     </ErrorBoundary>

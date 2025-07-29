@@ -2,9 +2,9 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import { getCategoryById, getDefaultCostPerLifeForCategory, getRecipientById } from '../utils/donationDataHelpers';
+import { getCategoryById, getRecipientById } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { getCostPerLifeFromCombined } from '../utils/combinedAssumptions';
+import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/combinedAssumptions';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import { donations } from '../data/generatedData';
@@ -26,7 +26,8 @@ const CategoryDetail = () => {
     // Get cost per life for this category using combined assumptions
     const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
     // Get default cost per life (without custom values)
-    const defaultCostPerLife = getDefaultCostPerLifeForCategory(categoryId, null);
+    const defaultCombinedAssumptions = createCombinedAssumptions(null);
+    const defaultCostPerLife = getCostPerLifeFromCombined(defaultCombinedAssumptions, categoryId);
 
     // Calculate total donated to this category and lives saved
     let totalDonated = 0;

@@ -5,13 +5,16 @@ import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import {
   validateCategoryValues,
   validateRecipientValues,
+  validateGlobalParameterValues,
   scrollToFirstError,
 } from '../utils/assumptionsFormValidation';
 import { useCategoryForm, useRecipientForm, useRecipientSearch } from '../hooks/useAssumptionsForm';
+import { useGlobalForm } from '../hooks/useGlobalForm';
 
 // Import shared components
 import DefaultValuesSection from './assumptions/DefaultValuesSection';
 import RecipientValuesSection from './assumptions/RecipientValuesSection';
+import GlobalValuesSection from './assumptions/GlobalValuesSection';
 import Modal from './assumptions/Modal';
 import TabNavigation from './assumptions/TabNavigation';
 import FormActions from './assumptions/FormActions';
@@ -21,13 +24,15 @@ const AssumptionsEditor = () => {
     combinedAssumptions,
     updateCategoryValue,
     updateRecipientValue,
+    updateGlobalParameter,
     getCategoryValue,
     getRecipientValue,
+    getGlobalParameter,
     isModalOpen,
     closeModal,
   } = useCostPerLife();
 
-  const [activeTab, setActiveTab] = useState('categories');
+  const [activeTab, setActiveTab] = useState('global');
 
   const allRecipients = useMemo(() => getAllRecipients(), []);
   const allCategories = useMemo(() => {
@@ -45,6 +50,7 @@ const AssumptionsEditor = () => {
   }, []);
 
   // Use custom hooks for form state management
+  const globalForm = useGlobalForm(combinedAssumptions.globalParameters, getGlobalParameter, isModalOpen);
   const categoryForm = useCategoryForm(allCategories, getCategoryValue, isModalOpen);
   const recipientForm = useRecipientForm();
   const recipientSearch = useRecipientSearch(
@@ -82,6 +88,10 @@ const AssumptionsEditor = () => {
 
   // Validate all values before submission
   const validateAllValues = () => {
+    // Validate global parameter values
+    const globalValidation = validateGlobalParameterValues(globalForm.formValues, combinedAssumptions.globalParameters);
+    globalForm.setErrors(globalValidation.errors);
+
     // Validate category values
     const categoryValidation = validateCategoryValues(categoryForm.formValues, allCategories);
     categoryForm.setErrors(categoryValidation.errors);
@@ -90,7 +100,7 @@ const AssumptionsEditor = () => {
     const recipientValidation = validateRecipientValues(recipientForm.formValues);
     recipientForm.setErrors(recipientValidation.errors);
 
-    const hasErrors = categoryValidation.hasErrors || recipientValidation.hasErrors;
+    const hasErrors = globalValidation.hasErrors || categoryValidation.hasErrors || recipientValidation.hasErrors;
 
     // Show alert if there are errors
     if (hasErrors) {
@@ -108,6 +118,22 @@ const AssumptionsEditor = () => {
     if (!validateAllValues()) {
       return; // Stop if there are errors
     }
+
+    // Update global parameter values using context methods
+    Object.entries(globalForm.formValues).forEach(([paramKey, valueObj]) => {
+      const rawValue = valueObj.raw;
+      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+
+      if (cleanValue.trim() === '') {
+        // Empty value - clear any custom override
+        updateGlobalParameter(paramKey, '');
+      } else {
+        const numValue = Number(cleanValue);
+        if (!isNaN(numValue)) {
+          updateGlobalParameter(paramKey, numValue);
+        }
+      }
+    });
 
     // Update category values using context methods
     Object.entries(categoryForm.formValues).forEach(([categoryId, valueObj]) => {
@@ -145,6 +171,11 @@ const AssumptionsEditor = () => {
     closeModal();
   };
 
+  // Handle reset button for global parameters
+  const handleGlobalReset = () => {
+    globalForm.reset();
+  };
+
   // Handle reset button for categories
   const handleCategoryReset = () => {
     categoryForm.reset();
@@ -161,14 +192,19 @@ const AssumptionsEditor = () => {
   };
 
   const tabs = [
+    { id: 'global', label: 'Global' },
     { id: 'categories', label: 'Categories' },
     { id: 'recipients', label: 'Recipients' },
   ];
 
   const getDescription = () => {
-    return activeTab === 'categories'
-      ? 'Customize the cost per life values for different cause categories. These values represent the estimated cost in dollars to save one life.'
-      : "Customize how specific recipients' cost per life values differ from their category defaults. You can set a multiplier or specify a direct cost per life value.";
+    if (activeTab === 'global') {
+      return 'Customize global parameters that affect all calculations.';
+    } else if (activeTab === 'categories') {
+      return 'Customize the cost per life values for different cause categories. These values represent the estimated cost in dollars to save one life.';
+    } else {
+      return "Customize how specific recipients' cost per life values differ from their category defaults. You can set a multiplier or specify a direct cost per life value.";
+    }
   };
 
   return (
@@ -180,10 +216,22 @@ const AssumptionsEditor = () => {
           </div>
           <div className="order-1 sm:order-2">
             <FormActions
-              onReset={activeTab === 'categories' ? handleCategoryReset : handleResetRecipients}
+              onReset={
+                activeTab === 'global'
+                  ? handleGlobalReset
+                  : activeTab === 'categories'
+                    ? handleCategoryReset
+                    : handleResetRecipients
+              }
               onCancel={closeModal}
               onSave={handleSubmit}
-              resetLabel={activeTab === 'categories' ? 'Reset Categories' : 'Reset Recipients'}
+              resetLabel={
+                activeTab === 'global'
+                  ? 'Reset Global'
+                  : activeTab === 'categories'
+                    ? 'Reset Categories'
+                    : 'Reset Recipients'
+              }
             />
           </div>
         </div>
@@ -191,7 +239,16 @@ const AssumptionsEditor = () => {
 
       {/* Tab content container */}
       <div className="overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]">
-        {activeTab === 'categories' ? (
+        {activeTab === 'global' ? (
+          <form onSubmit={handleSubmit}>
+            <GlobalValuesSection
+              globalParameters={combinedAssumptions.globalParameters}
+              formValues={globalForm.formValues}
+              errors={globalForm.errors}
+              onChange={globalForm.handleChange}
+            />
+          </form>
+        ) : activeTab === 'categories' ? (
           <form onSubmit={handleSubmit}>
             <DefaultValuesSection
               allCategories={allCategories}

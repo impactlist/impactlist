@@ -101,6 +101,79 @@ export const validateRecipientValues = (formValues) => {
 };
 
 /**
+ * Validates global parameter form values
+ * @param {Object} formValues - The form values to validate
+ * @param {Object} globalParameters - Global parameters with default values
+ * @returns {Object} - { errors: Object, hasErrors: boolean }
+ */
+export const validateGlobalParameterValues = (formValues, globalParameters) => {
+  const errors = {};
+  let hasErrors = false;
+
+  Object.entries(formValues).forEach(([paramKey, valueObj]) => {
+    const defaultValue = globalParameters[paramKey];
+    const rawValue = valueObj.raw;
+
+    // Skip validation if value is the same as default or if empty (empty = use default)
+    if (Number(rawValue) === defaultValue) return;
+
+    // Empty values are valid - they'll use the default value
+    if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
+      return;
+    }
+
+    // Allow minus sign only during input, not for saving
+    if (rawValue === '-') {
+      errors[paramKey] = 'Please enter a complete number';
+      hasErrors = true;
+      return;
+    }
+
+    // Clean the value
+    const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+    const numValue = Number(cleanValue);
+
+    // Check if it's a valid number
+    if (isNaN(numValue)) {
+      errors[paramKey] = 'Invalid number';
+      hasErrors = true;
+    }
+    // Parameter-specific validations
+    else if (paramKey === 'discountRate') {
+      // Discount rate must be no greater than 100%, but can be lower than -100%
+      if (numValue > 1) {
+        errors[paramKey] = 'Discount rate must be no greater than 100%';
+        hasErrors = true;
+      }
+    } else if (paramKey === 'populationGrowthRate') {
+      // No restrictions on population growth rate
+    } else if (paramKey === 'timeLimit') {
+      if (numValue <= 0) {
+        errors[paramKey] = 'Time limit must be positive';
+        hasErrors = true;
+      }
+    } else if (paramKey === 'populationLimit') {
+      if (numValue <= 0) {
+        errors[paramKey] = 'Population limit must be positive';
+        hasErrors = true;
+      }
+    } else if (paramKey === 'currentPopulation') {
+      if (numValue <= 0) {
+        errors[paramKey] = 'Current population must be positive';
+        hasErrors = true;
+      }
+    } else if (paramKey === 'yearsPerLife') {
+      if (numValue <= 0) {
+        errors[paramKey] = 'Years per life must be positive';
+        hasErrors = true;
+      }
+    }
+  });
+
+  return { errors, hasErrors };
+};
+
+/**
  * Scrolls to the first error element if any errors exist
  */
 export const scrollToFirstError = () => {

@@ -185,6 +185,48 @@ export const CostPerLifeProvider = ({ children }) => {
     setCustomData(newData);
   };
 
+  // Update a specific global parameter value
+  const updateGlobalParameter = (parameterKey, value) => {
+    setCustomData((prev) => {
+      const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
+
+      if (value === '' || value === null) {
+        // Remove the parameter override
+        if (newData.globalParameters && newData.globalParameters[parameterKey]) {
+          delete newData.globalParameters[parameterKey];
+        }
+
+        // Clean up empty globalParameters object
+        if (newData.globalParameters && Object.keys(newData.globalParameters).length === 0) {
+          delete newData.globalParameters;
+        }
+
+        // Clean up completely empty objects
+        if (Object.keys(newData).length === 0) {
+          return null;
+        }
+
+        return newData;
+      } else {
+        // Set the global parameter value
+        if (!newData.globalParameters) {
+          newData.globalParameters = {};
+        }
+
+        newData.globalParameters[parameterKey] = Number(value);
+        return newData;
+      }
+    });
+  };
+
+  // Get global parameter custom value for display
+  const getGlobalParameter = (parameterKey) => {
+    if (!customData || !customData.globalParameters || !customData.globalParameters[parameterKey]) {
+      return null;
+    }
+    return customData.globalParameters[parameterKey];
+  };
+
   // Get recipient custom value for display (converts from effects back to simple value)
   const getRecipientValue = (recipientName, categoryId, type) => {
     if (!customData || !customData.recipients) {
@@ -262,9 +304,11 @@ export const CostPerLifeProvider = ({ children }) => {
     resetToDefaults,
     updateCategoryValue,
     updateRecipientValue,
+    updateGlobalParameter,
     updateValues,
     getRecipientValue,
     getCategoryValue,
+    getGlobalParameter,
     isModalOpen,
     openModal,
     closeModal,

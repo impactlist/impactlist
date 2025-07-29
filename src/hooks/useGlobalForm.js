@@ -1,0 +1,141 @@
+import { useState, useEffect } from 'react';
+
+/**
+ * Custom hook for managing global parameter form state
+ * @param {Object} globalParameters - Global parameters from combinedAssumptions
+ * @param {Function} getGlobalParameter - Function to get custom global parameter value
+ * @param {boolean} isModalOpen - Whether the modal is open
+ * @returns {Object} Form state and handlers
+ */
+export const useGlobalForm = (globalParameters, getGlobalParameter, isModalOpen) => {
+  const [formValues, setFormValues] = useState({});
+  const [errors, setErrors] = useState({});
+
+  // Initialize form values when modal opens
+  useEffect(() => {
+    if (isModalOpen && globalParameters) {
+      const initialValues = {};
+
+      // Initialize all global parameter fields
+      Object.keys(globalParameters).forEach((paramKey) => {
+        const customValue = getGlobalParameter(paramKey);
+        const value = customValue !== null ? customValue : '';
+
+        initialValues[paramKey] = {
+          raw: value,
+          formatted: formatValue(value, getParameterFormat(paramKey)),
+        };
+      });
+
+      setFormValues(initialValues);
+      setErrors({});
+    }
+  }, [isModalOpen, globalParameters, getGlobalParameter]);
+
+  // Get the format type for a parameter
+  const getParameterFormat = (paramKey) => {
+    if (paramKey === 'discountRate' || paramKey === 'populationGrowthRate') {
+      return 'percentage';
+    }
+    return 'number';
+  };
+
+  // Format value for display
+  const formatValue = (value, format) => {
+    if (value === '' || value === null || value === undefined) {
+      return '';
+    }
+
+    if (format === 'percentage') {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue)) {
+        return (numValue * 100).toFixed(2);
+      }
+    }
+
+    if (format === 'number') {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue)) {
+        // Don't use thousand separators in input fields
+        return numValue.toString();
+      }
+    }
+
+    return value.toString();
+  };
+
+  // Parse value from user input
+  const parseValue = (inputValue, format) => {
+    // Remove commas and trim whitespace
+    const cleanValue = inputValue.replace(/,/g, '').trim();
+
+    if (cleanValue === '') {
+      return '';
+    }
+
+    if (format === 'percentage') {
+      // Remove % sign if present
+      const percentValue = cleanValue.replace('%', '').trim();
+      if (percentValue === '') {
+        return '';
+      }
+      const numValue = parseFloat(percentValue);
+      if (!isNaN(numValue)) {
+        return numValue / 100; // Convert percentage to decimal
+      }
+    }
+
+    if (format === 'number') {
+      const numValue = parseFloat(cleanValue);
+      if (!isNaN(numValue)) {
+        return numValue;
+      }
+    }
+
+    return cleanValue;
+  };
+
+  // Handle form value changes
+  const handleChange = (paramKey, inputValue) => {
+    const format = getParameterFormat(paramKey);
+    const parsedValue = parseValue(inputValue, format);
+
+    setFormValues((prev) => ({
+      ...prev,
+      [paramKey]: {
+        raw: parsedValue,
+        formatted: inputValue,
+      },
+    }));
+
+    // Clear error for this field
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[paramKey];
+      return newErrors;
+    });
+  };
+
+  // Reset form to default values
+  const reset = () => {
+    const resetValues = {};
+
+    Object.keys(globalParameters).forEach((paramKey) => {
+      resetValues[paramKey] = {
+        raw: '',
+        formatted: '',
+      };
+    });
+
+    setFormValues(resetValues);
+    setErrors({});
+  };
+
+  return {
+    formValues,
+    errors,
+    setErrors,
+    handleChange,
+    reset,
+  };
+};

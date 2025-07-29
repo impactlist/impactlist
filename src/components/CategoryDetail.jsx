@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from './BackButton';
 import { getCategoryById, getDefaultCostPerLifeForCategory, getRecipientById } from '../utils/donationDataHelpers';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useAssumptions } from './AssumptionsContext';
 import { getCostPerLifeFromCombined } from '../utils/combinedAssumptions';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
@@ -13,7 +13,7 @@ import MarkdownContent from './MarkdownContent';
 const CategoryDetail = () => {
   const { categoryId } = useParams();
   const [categoryInfo, setCategoryInfo] = useState(null);
-  const { combinedAssumptions, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useAssumptions();
 
   useEffect(() => {
     // Get category info

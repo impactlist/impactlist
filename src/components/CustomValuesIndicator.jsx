@@ -1,8 +1,8 @@
 import React from 'react';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useAssumptions } from './AssumptionsContext';
 
 const CustomValuesIndicator = ({ className = '' }) => {
-  const { isUsingCustomValues } = useCostPerLife();
+  const { isUsingCustomValues } = useAssumptions();
 
   if (!isUsingCustomValues) return null;
 

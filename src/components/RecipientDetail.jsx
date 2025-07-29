@@ -16,7 +16,7 @@ import {
   calculateLivesSavedForDonationFromCombined,
 } from '../utils/combinedAssumptions';
 import { ImpactChartToggle } from './ImpactBarChart';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useAssumptions } from './AssumptionsContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import EntityStatistics from './entity/EntityStatistics';
 import EntityChartSection from './entity/EntityChartSection';
@@ -36,7 +36,7 @@ const RecipientDetail = () => {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
-  const { combinedAssumptions, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useAssumptions();
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {

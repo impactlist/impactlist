@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useAssumptions } from './AssumptionsContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import {
@@ -30,7 +30,7 @@ const AssumptionsEditor = () => {
     getGlobalParameter,
     isModalOpen,
     closeModal,
-  } = useCostPerLife();
+  } = useAssumptions();
 
   const [activeTab, setActiveTab] = useState('global');
 

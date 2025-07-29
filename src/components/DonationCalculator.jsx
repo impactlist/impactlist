@@ -8,7 +8,7 @@ import {
   calculateLivesSavedForCategoryFromCombined,
 } from '../utils/combinedAssumptions';
 import { recipientsById } from '../data/generatedData';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useAssumptions } from './AssumptionsContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import SpecificDonationModal from './SpecificDonationModal';
 import PageHeader from './PageHeader';
@@ -35,7 +35,7 @@ const DonationCalculator = () => {
     twoBelow: null,
     twoAbove: null,
   });
-  const { combinedAssumptions, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useAssumptions();
 
   // For specific donation modal
   const [isModalOpen, setIsModalOpen] = useState(false);

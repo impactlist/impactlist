@@ -10,7 +10,7 @@ import {
 } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, calculateLivesSavedForDonationFromCombined } from '../utils/combinedAssumptions';
 import SortableTable from './SortableTable';
-import { useCostPerLife } from './CostPerLifeContext';
+import { useAssumptions } from './AssumptionsContext';
 import CustomValuesIndicator from './CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from './PageHeader';
@@ -18,7 +18,7 @@ import AdjustAssumptionsButton from './AdjustAssumptionsButton';
 
 const CategoryList = () => {
   const [categoryStats, setCategoryStats] = useState([]);
-  const { combinedAssumptions, openModal } = useCostPerLife();
+  const { combinedAssumptions, openModal } = useAssumptions();
 
   useEffect(() => {
     // Get all categories

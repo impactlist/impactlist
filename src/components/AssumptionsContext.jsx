@@ -5,19 +5,19 @@ import { categoriesById, recipientsById } from '../data/generatedData';
 /* global localStorage */
 
 // Create context
-const CostPerLifeContext = createContext();
+const AssumptionsContext = createContext();
 
 // Custom hook to use the context
-export const useCostPerLife = () => {
-  const context = useContext(CostPerLifeContext);
+export const useAssumptions = () => {
+  const context = useContext(AssumptionsContext);
   if (!context) {
-    throw new Error('useCostPerLife must be used within a CostPerLifeProvider');
+    throw new Error('useAssumptions must be used within an AssumptionsProvider');
   }
   return context;
 };
 
 // Provider component
-export const CostPerLifeProvider = ({ children }) => {
+export const AssumptionsProvider = ({ children }) => {
   // Initialize state from localStorage or defaults (new format)
   const [customData, setCustomData] = useState(() => {
     // Clean up old format data
@@ -314,7 +314,7 @@ export const CostPerLifeProvider = ({ children }) => {
     closeModal,
   };
 
-  return <CostPerLifeContext.Provider value={contextValue}>{children}</CostPerLifeContext.Provider>;
+  return <AssumptionsContext.Provider value={contextValue}>{children}</AssumptionsContext.Provider>;
 };
 
-export default CostPerLifeContext;
+export default AssumptionsContext;

@@ -11,7 +11,7 @@ import CategoryList from './components/CategoryList';
 import CategoryDetail from './components/CategoryDetail';
 import DonationCalculator from './components/DonationCalculator';
 import FAQ from './components/FAQ';
-import { CostPerLifeProvider } from './components/CostPerLifeContext';
+import { AssumptionsProvider } from './components/AssumptionsContext';
 import AssumptionsEditor from './components/AssumptionsEditor';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -169,12 +169,12 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <CostPerLifeProvider>
+      <AssumptionsProvider>
         <Router>
           <AppContent />
           <AssumptionsEditor />
         </Router>
-      </CostPerLifeProvider>
+      </AssumptionsProvider>
     </ErrorBoundary>
   );
 };

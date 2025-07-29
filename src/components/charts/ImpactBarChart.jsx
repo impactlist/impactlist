@@ -7,7 +7,7 @@ import {
   CHART_LARGE_WIDTH_THRESHOLD,
   CHART_MEDIUM_WIDTH_THRESHOLD,
   CHART_DEFAULT_WIDTH,
-} from '../utils/constants';
+} from '../../utils/constants';
 
 // Optional chart toggle component that both DonorDetail and RecipientDetail can use
 export const ImpactChartToggle = ({ chartView, onToggle, disabled }) => {

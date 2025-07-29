@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import PageHeader from './PageHeader';
-import BackButton from './BackButton';
+import PageHeader from '../components/shared/PageHeader';
+import BackButton from '../components/shared/BackButton';
 
 const FAQ = () => {
   return (

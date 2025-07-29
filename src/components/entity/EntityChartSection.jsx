@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ImpactBarChart from '../ImpactBarChart';
-import ChartContainer from '../shared/ChartContainer';
+import ImpactBarChart from '../charts/ImpactBarChart';
+import ChartContainer from '../charts/ChartContainer';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/combinedAssumptions';
 

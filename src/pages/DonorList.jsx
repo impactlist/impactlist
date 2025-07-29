@@ -14,12 +14,12 @@ import {
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForDonationFromCombined,
 } from '../utils/combinedAssumptions';
-import SortableTable from './SortableTable';
-import { useAssumptions } from './AssumptionsContext';
-import CustomValuesIndicator from './CustomValuesIndicator';
+import SortableTable from '../components/shared/SortableTable';
+import { useAssumptions } from '../contexts/AssumptionsContext';
+import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
-import PageHeader from './PageHeader';
-import AdjustAssumptionsButton from './AdjustAssumptionsButton';
+import PageHeader from '../components/shared/PageHeader';
+import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
 
 const DonorList = () => {
   const [donorStats, setDonorStats] = useState([]);

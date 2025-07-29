@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAssumptions } from './AssumptionsContext';
+import { useAssumptions } from '../../contexts/AssumptionsContext';
 
 const CustomValuesIndicator = ({ className = '' }) => {
   const { isUsingCustomValues } = useAssumptions();

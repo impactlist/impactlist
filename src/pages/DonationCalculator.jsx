@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import BackButton from './BackButton';
+import BackButton from '../components/shared/BackButton';
 import { getAllCategories } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeFromCombined,
@@ -8,16 +8,16 @@ import {
   calculateLivesSavedForCategoryFromCombined,
 } from '../utils/combinedAssumptions';
 import { recipientsById } from '../data/generatedData';
-import { useAssumptions } from './AssumptionsContext';
-import CustomValuesIndicator from './CustomValuesIndicator';
-import SpecificDonationModal from './SpecificDonationModal';
-import PageHeader from './PageHeader';
-import AdjustAssumptionsButton from './AdjustAssumptionsButton';
+import { useAssumptions } from '../contexts/AssumptionsContext';
+import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
+import SpecificDonationModal from '../components/SpecificDonationModal';
+import PageHeader from '../components/shared/PageHeader';
+import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
 
 // Import new components
-import CalculatorStats from './calculator/CalculatorStats';
-import CalculatorForm from './calculator/CalculatorForm';
-import RecipientTable from './calculator/RecipientTable';
+import CalculatorStats from '../components/calculator/CalculatorStats';
+import CalculatorForm from '../components/calculator/CalculatorForm';
+import RecipientTable from '../components/calculator/RecipientTable';
 
 /* global localStorage */
 
@@ -48,7 +48,7 @@ const DonationCalculator = () => {
     // and determine where this user would rank
 
     // Sample implementation:
-    import('./SortableTable')
+    import('../components/shared/SortableTable')
       .then(() => {
         import('../utils/donationDataHelpers').then(({ calculateDonorStats }) => {
           const donorStats = calculateDonorStats();

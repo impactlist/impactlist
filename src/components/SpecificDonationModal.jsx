@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { getAllRecipients, getAllCategories, getRecipientId } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/combinedAssumptions';
 import { formatNumber, formatLives } from '../utils/formatters';
-import { useAssumptions } from './AssumptionsContext';
+import { useAssumptions } from '../contexts/AssumptionsContext';
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
   const { combinedAssumptions } = useAssumptions();

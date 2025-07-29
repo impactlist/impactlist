@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import BackButton from './BackButton';
+import BackButton from '../components/shared/BackButton';
 import {
   getPrimaryCategoryId,
   getCategoryBreakdown,
@@ -15,13 +15,13 @@ import {
   getActualCostPerLifeForCategoryDataFromCombined,
   calculateLivesSavedForDonationFromCombined,
 } from '../utils/combinedAssumptions';
-import { ImpactChartToggle } from './ImpactBarChart';
-import { useAssumptions } from './AssumptionsContext';
-import CustomValuesIndicator from './CustomValuesIndicator';
-import EntityStatistics from './entity/EntityStatistics';
-import EntityChartSection from './entity/EntityChartSection';
-import EntityDonationTable from './entity/EntityDonationTable';
-import MarkdownContent from './MarkdownContent';
+import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
+import { useAssumptions } from '../contexts/AssumptionsContext';
+import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
+import EntityStatistics from '../components/entity/EntityStatistics';
+import EntityChartSection from '../components/entity/EntityChartSection';
+import EntityDonationTable from '../components/entity/EntityDonationTable';
+import MarkdownContent from '../components/shared/MarkdownContent';
 import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
 const RecipientDetail = () => {

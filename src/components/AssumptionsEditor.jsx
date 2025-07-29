@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useAssumptions } from './AssumptionsContext';
+import { useAssumptions } from '../contexts/AssumptionsContext';
 import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import {

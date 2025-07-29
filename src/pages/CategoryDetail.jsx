@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import BackButton from './BackButton';
+import BackButton from '../components/shared/BackButton';
 import { getCategoryById, getDefaultCostPerLifeForCategory, getRecipientById } from '../utils/donationDataHelpers';
-import { useAssumptions } from './AssumptionsContext';
+import { useAssumptions } from '../contexts/AssumptionsContext';
 import { getCostPerLifeFromCombined } from '../utils/combinedAssumptions';
-import CustomValuesIndicator from './CustomValuesIndicator';
-import EntityStatistics from './entity/EntityStatistics';
+import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
+import EntityStatistics from '../components/entity/EntityStatistics';
 import { donations } from '../data/generatedData';
-import MarkdownContent from './MarkdownContent';
+import MarkdownContent from '../components/shared/MarkdownContent';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import BackButton from './BackButton';
+import BackButton from '../components/shared/BackButton';
 import {
   getPrimaryCategoryId,
   getCategoryBreakdown,
@@ -14,12 +14,12 @@ import {
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForDonationFromCombined,
 } from '../utils/combinedAssumptions';
-import SortableTable from './SortableTable';
-import { useAssumptions } from './AssumptionsContext';
-import CustomValuesIndicator from './CustomValuesIndicator';
+import SortableTable from '../components/shared/SortableTable';
+import { useAssumptions } from '../contexts/AssumptionsContext';
+import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
-import PageHeader from './PageHeader';
-import AdjustAssumptionsButton from './AdjustAssumptionsButton';
+import PageHeader from '../components/shared/PageHeader';
+import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
 
 const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);

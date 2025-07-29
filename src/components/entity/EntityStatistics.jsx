@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import StatisticsCard from '../shared/StatisticsCard';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
-import AdjustAssumptionsButton from '../AdjustAssumptionsButton';
+import AdjustAssumptionsButton from '../shared/AdjustAssumptionsButton';
 
 /**
  * Displays key statistics for donors or recipients with consistent styling.

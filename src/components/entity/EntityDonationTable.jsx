@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import SortableTable from '../SortableTable';
+import SortableTable from '../shared/SortableTable';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/combinedAssumptions';
 

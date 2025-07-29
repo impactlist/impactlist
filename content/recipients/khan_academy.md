@@ -9,4 +9,3 @@ categories:
         multipliers:
           costPerQALY: 10
 ---
-

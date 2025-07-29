@@ -9,4 +9,3 @@ categories:
         overrides:
           costPerQALY: 750
 ---
-

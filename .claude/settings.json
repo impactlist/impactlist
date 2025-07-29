@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$CLAUDE_EDITED_FILE\" ]; then npx prettier --write \"$CLAUDE_EDITED_FILE\" && npx eslint --fix \"$CLAUDE_EDITED_FILE\"; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

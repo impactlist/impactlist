@@ -63,19 +63,22 @@ const AssumptionsEditor = () => {
     }
   };
 
+  // Destructure to avoid infinite loops
+  const { filterRecipients, searchTerm } = recipientSearch;
+
   // Initialize filtered recipients when modal opens
   useEffect(() => {
     if (isModalOpen && activeTab === 'recipients') {
-      recipientSearch.filterRecipients(recipientSearch.searchTerm, recipientSearch.searchTerm === '');
+      filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [isModalOpen, activeTab, recipientSearch]);
+  }, [isModalOpen, activeTab, filterRecipients, searchTerm]);
 
   // Update filtered recipients when tab changes
   useEffect(() => {
     if (activeTab === 'recipients') {
-      recipientSearch.filterRecipients(recipientSearch.searchTerm, recipientSearch.searchTerm === '');
+      filterRecipients(searchTerm, searchTerm === '');
     }
-  }, [activeTab, recipientSearch]);
+  }, [activeTab, filterRecipients, searchTerm]);
 
   // Validate all values before submission
   const validateAllValues = () => {

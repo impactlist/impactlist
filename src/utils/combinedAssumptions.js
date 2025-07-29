@@ -313,7 +313,11 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
   // Filter out donors with no donations and sort by lives saved
   const filteredStats = donorStats
     .filter((donor) => donor.totalDonated > 0)
-    .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
+    .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved)
+    .map((donor, index) => ({
+      ...donor,
+      rank: index + 1,
+    }));
 
   return filteredStats;
 };

@@ -10,8 +10,8 @@ import {
 import { useCategoryForm, useRecipientForm, useRecipientSearch } from '../hooks/useAssumptionsForm';
 
 // Import shared components
-import DefaultValuesSection from './costperlife/DefaultValuesSection';
-import RecipientValuesSection from './costperlife/RecipientValuesSection';
+import DefaultValuesSection from './assumptions/DefaultValuesSection';
+import RecipientValuesSection from './assumptions/RecipientValuesSection';
 import Modal from './assumptions/Modal';
 import TabNavigation from './assumptions/TabNavigation';
 import FormActions from './assumptions/FormActions';

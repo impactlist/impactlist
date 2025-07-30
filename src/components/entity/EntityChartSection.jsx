@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ImpactBarChart from '../charts/ImpactBarChart';
 import ChartContainer from '../charts/ChartContainer';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
-import { getEffectiveCostPerLifeFromCombined } from '../../utils/combinedAssumptions';
+import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 
 /**
  * A reusable chart section for displaying entity impact data.

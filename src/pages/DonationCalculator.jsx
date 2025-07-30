@@ -6,7 +6,7 @@ import {
   getCostPerLifeFromCombined,
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForCategoryFromCombined,
-} from '../utils/combinedAssumptions';
+} from '../utils/assumptionsDataHelpers';
 import { recipientsById } from '../data/generatedData';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
@@ -51,7 +51,7 @@ const DonationCalculator = () => {
       // Sample implementation:
       import('../components/shared/SortableTable')
         .then(() => {
-          import('../utils/combinedAssumptions').then(({ calculateDonorStatsFromCombined }) => {
+          import('../utils/assumptionsDataHelpers').then(({ calculateDonorStatsFromCombined }) => {
             const donorStats = calculateDonorStatsFromCombined(combinedAssumptions);
 
             // Find where the user would rank

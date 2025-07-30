@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SortableTable from '../shared/SortableTable';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
-import { getEffectiveCostPerLifeFromCombined } from '../../utils/combinedAssumptions';
+import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 
 /**
  * Displays a table of donations for a donor or recipient entity.

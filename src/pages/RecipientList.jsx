@@ -13,7 +13,7 @@ import {
 import {
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForDonationFromCombined,
-} from '../utils/combinedAssumptions';
+} from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';

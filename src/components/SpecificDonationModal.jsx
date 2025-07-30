@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { getAllRecipients, getAllCategories, getRecipientId } from '../utils/donationDataHelpers';
-import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/combinedAssumptions';
+import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
 import { formatNumber, formatLives } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 

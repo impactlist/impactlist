@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import { getCategoryById, getRecipientById } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/combinedAssumptions';
+import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/assumptionsDataHelpers';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import { donations } from '../data/generatedData';

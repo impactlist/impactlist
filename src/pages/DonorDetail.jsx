@@ -15,7 +15,7 @@ import {
   getCostPerLifeFromCombined,
   getActualCostPerLifeForCategoryDataFromCombined,
   calculateLivesSavedForDonationFromCombined,
-} from '../utils/combinedAssumptions';
+} from '../utils/assumptionsDataHelpers';
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';

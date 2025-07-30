@@ -1,5 +1,5 @@
-// Combined assumptions utilities
-// This creates a unified data structure that combines default data with custom overrides
+// Assumptions data helpers
+// Utilities for managing default, user, and combined assumption data structures
 import { globalParameters, categoriesById, recipientsById, donorsById } from '../data/generatedData';
 import { calculateCategoryBaseCostPerLife, applyRecipientEffectModifications } from './effectsCalculation';
 import {

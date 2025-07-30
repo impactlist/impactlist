@@ -4,7 +4,7 @@ import {
   createCombinedAssumptions,
   costPerLifeToEffect,
   effectToCostPerLife,
-} from '../utils/combinedAssumptions';
+} from '../utils/assumptionsDataHelpers';
 import { categoriesById, recipientsById } from '../data/generatedData';
 
 /* global localStorage */

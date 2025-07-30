@@ -8,7 +8,10 @@ import {
   getDonationsForRecipient,
   getRecipientId,
 } from '../utils/donationDataHelpers';
-import { getCostPerLifeFromCombined, calculateLivesSavedForDonationFromCombined } from '../utils/combinedAssumptions';
+import {
+  getCostPerLifeFromCombined,
+  calculateLivesSavedForDonationFromCombined,
+} from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';

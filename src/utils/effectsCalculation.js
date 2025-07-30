@@ -182,6 +182,78 @@ export const calculateCategoryBaseCostPerLife = (category, categoryId) => {
 };
 
 /**
+ * Validate that an effect doesn't have both override and multiplier for the same field
+ * @param {Object} effect - The effect object to validate
+ * @param {string} context - Context for error messages
+ */
+const validateEffectOverridesMultipliers = (effect, context) => {
+  if (!effect.overrides || !effect.multipliers) {
+    return; // No conflict possible
+  }
+
+  Object.keys(effect.overrides).forEach((field) => {
+    if (effect.multipliers[field] !== undefined) {
+      throw new Error(`Effect has both override and multiplier for field "${field}" ${context}`);
+    }
+  });
+};
+
+/**
+ * Apply multipliers to effect fields and return modified effect
+ * @param {Object} baseEffect - The base effect object
+ * @param {Object} multipliers - Object containing field multipliers
+ * @param {string} context - Context for error messages
+ * @returns {Object} New effect with multiplied values
+ */
+const applyEffectMultipliers = (baseEffect, multipliers, context) => {
+  const modifiedEffect = { ...baseEffect };
+
+  Object.entries(multipliers).forEach(([field, multiplier]) => {
+    if (baseEffect[field] !== undefined && typeof baseEffect[field] === 'number') {
+      const validMultiplier = assertExists(multiplier, `multipliers.${field}`, context);
+      modifiedEffect[field] = baseEffect[field] * validMultiplier;
+    }
+  });
+
+  return modifiedEffect;
+};
+
+/**
+ * Apply recipient effect modifications to a base effect object
+ * @param {Object} baseEffect - The base effect from category
+ * @param {Object} recipientEffect - The recipient's effect modification (with overrides/multipliers)
+ * @param {string} context - Context for error messages
+ * @returns {Object} Modified effect object
+ */
+export const applyRecipientEffectToBase = (baseEffect, recipientEffect, context) => {
+  assertExists(baseEffect, 'baseEffect', context);
+  assertExists(recipientEffect, 'recipientEffect', context);
+
+  if (recipientEffect.effectId !== baseEffect.effectId) {
+    throw new Error(
+      `Effect ID mismatch ${context}: expected "${baseEffect.effectId}", got "${recipientEffect.effectId}"`
+    );
+  }
+
+  // Validate structure
+  validateEffectOverridesMultipliers(recipientEffect, context);
+
+  let result = { ...baseEffect };
+
+  // Apply overrides first
+  if (recipientEffect.overrides) {
+    result = { ...result, ...recipientEffect.overrides };
+  }
+
+  // Apply multipliers
+  if (recipientEffect.multipliers) {
+    result = applyEffectMultipliers(result, recipientEffect.multipliers, context);
+  }
+
+  return result;
+};
+
+/**
  * Apply recipient effect modifications (overrides/multipliers) to a base cost per life
  * @param {number} baseCostPerLife - The base cost per life from category
  * @param {Object} recipientEffect - The recipient's effect modification
@@ -193,66 +265,21 @@ export const applyRecipientEffectModifications = (baseCostPerLife, recipientEffe
   assertNonZeroNumber(baseCostPerLife, 'baseCostPerLife', context);
   assertExists(recipientEffect, 'recipientEffect', context);
 
-  if (recipientEffect.effectId !== effectId) {
-    throw new Error(`Effect ID mismatch ${context}: expected "${effectId}", got "${recipientEffect.effectId}"`);
+  // Convert cost per life back to a minimal effect object
+  const baseEffect = {
+    effectId: effectId,
+    costPerQALY: baseCostPerLife / globalParameters.yearsPerLife,
+  };
+
+  // Apply modifications using the unified function
+  const modifiedEffect = applyRecipientEffectToBase(baseEffect, recipientEffect, context);
+
+  // Convert back to cost per life
+  if (modifiedEffect.costPerMicroprobability !== undefined) {
+    // If it became a population effect, calculate accordingly
+    return populationEffectToCostPerLife(modifiedEffect);
+  } else {
+    // Standard QALY-based calculation
+    return qalyEffectToCostPerLife(modifiedEffect);
   }
-
-  let result = baseCostPerLife;
-
-  // Apply overrides first (completely replace base values)
-  if (recipientEffect.overrides) {
-    if (recipientEffect.overrides.costPerQALY !== undefined) {
-      const qalyEffect = {
-        costPerQALY: assertNonZeroNumber(recipientEffect.overrides.costPerQALY, 'overrides.costPerQALY', context),
-      };
-      result = qalyEffectToCostPerLife(qalyEffect);
-    }
-
-    if (recipientEffect.overrides.costPerMicroprobability !== undefined) {
-      // For overrides of population effects, we need all the population parameters
-      const popEffect = {
-        costPerMicroprobability: assertNonZeroNumber(
-          recipientEffect.overrides.costPerMicroprobability,
-          'overrides.costPerMicroprobability',
-          context
-        ),
-        populationFractionAffected: assertPositiveNumber(
-          recipientEffect.overrides.populationFractionAffected,
-          'overrides.populationFractionAffected',
-          context
-        ),
-        qalyImprovementPerYear: assertNonZeroNumber(
-          recipientEffect.overrides.qalyImprovementPerYear,
-          'overrides.qalyImprovementPerYear',
-          context
-        ),
-      };
-      result = populationEffectToCostPerLife(popEffect);
-    }
-  }
-
-  // Apply multipliers (modify the base or overridden values)
-  if (recipientEffect.multipliers) {
-    if (recipientEffect.multipliers.costPerQALY !== undefined) {
-      const multiplier = assertPositiveNumber(
-        recipientEffect.multipliers.costPerQALY,
-        'multipliers.costPerQALY',
-        context
-      );
-      // Higher multiplier means more effective (lower cost per life)
-      result = result / multiplier;
-    }
-
-    if (recipientEffect.multipliers.costPerMicroprobability !== undefined) {
-      const multiplier = assertPositiveNumber(
-        recipientEffect.multipliers.costPerMicroprobability,
-        'multipliers.costPerMicroprobability',
-        context
-      );
-      // Higher multiplier means more effective (lower cost per life)
-      result = result / multiplier;
-    }
-  }
-
-  return result;
 };

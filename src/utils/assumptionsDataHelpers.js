@@ -1,7 +1,11 @@
 // Assumptions data helpers
 // Utilities for managing default, user, and combined assumption data structures
 import { globalParameters, categoriesById, recipientsById, donorsById } from '../data/generatedData';
-import { calculateCategoryBaseCostPerLife, applyRecipientEffectModifications } from './effectsCalculation';
+import {
+  calculateCategoryBaseCostPerLife,
+  applyRecipientEffectModifications,
+  applyRecipientEffectToBase,
+} from './effectsCalculation';
 import {
   assertExists,
   assertPositiveNumber,
@@ -43,6 +47,84 @@ export const createDefaultAssumptions = () => {
   });
 
   return defaults;
+};
+
+/**
+ * Merge recipient effect with user overrides, applying precedence rules
+ * @param {Object} defaultEffect - Default recipient effect (with overrides/multipliers structure)
+ * @param {Object} userEffect - User effect override
+ * @returns {Object} Merged effect with proper precedence
+ */
+const mergeRecipientEffectWithUser = (defaultEffect, userEffect) => {
+  if (!userEffect) {
+    return defaultEffect;
+  }
+
+  // Start with a copy of the default effect
+  const merged = { ...defaultEffect };
+
+  // If user has overrides, they completely replace default overrides/multipliers
+  if (userEffect.overrides) {
+    merged.overrides = { ...userEffect.overrides };
+    // Remove any default multipliers for fields that now have user overrides
+    if (merged.multipliers) {
+      Object.keys(userEffect.overrides).forEach((field) => {
+        delete merged.multipliers[field];
+      });
+    }
+  }
+
+  // If user has multipliers, they completely replace default overrides/multipliers
+  if (userEffect.multipliers) {
+    if (!merged.multipliers) {
+      merged.multipliers = {};
+    }
+    // Add user multipliers
+    Object.entries(userEffect.multipliers).forEach(([field, value]) => {
+      merged.multipliers[field] = value;
+      // Remove any override for this field since user specified a multiplier
+      if (merged.overrides) {
+        delete merged.overrides[field];
+      }
+    });
+  }
+
+  return merged;
+};
+
+/**
+ * Merge recipient effects arrays (handles overrides/multipliers structure)
+ * @param {Array} defaultEffects - Default recipient effects array
+ * @param {Array} userEffects - User effect overrides (can be null/undefined)
+ * @returns {Array} Merged effects array
+ */
+const mergeRecipientEffects = (defaultEffects, userEffects) => {
+  if (!defaultEffects || defaultEffects.length === 0) {
+    throw new Error('Default effects are required but not provided');
+  }
+
+  if (!userEffects || userEffects.length === 0) {
+    return defaultEffects;
+  }
+
+  // Create a map of user effects by effectId
+  const userEffectsMap = {};
+  userEffects.forEach((effect) => {
+    if (effect.effectId) {
+      userEffectsMap[effect.effectId] = effect;
+    }
+  });
+
+  // Merge each default effect with corresponding user effect
+  return defaultEffects
+    .map((defaultEffect) => {
+      const userEffect = userEffectsMap[defaultEffect.effectId];
+      if (userEffect && userEffect.windowLength === 0) {
+        return null; // Remove this effect
+      }
+      return mergeRecipientEffectWithUser(defaultEffect, userEffect);
+    })
+    .filter(Boolean);
 };
 
 /**
@@ -144,9 +226,9 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
       // Start with default category data
       let processedCategoryData = { ...categoryData };
 
-      // Merge user effects with default effects
+      // Merge user effects with default effects (use recipient-specific merge)
       if (userRecipientCategoryData?.effects && categoryData.effects) {
-        processedCategoryData.effects = mergeEffects(categoryData.effects, userRecipientCategoryData.effects);
+        processedCategoryData.effects = mergeRecipientEffects(categoryData.effects, userRecipientCategoryData.effects);
       }
 
       recipientCategories[categoryId] = processedCategoryData;
@@ -261,15 +343,33 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
       throw new Error(`Category ${categoryId} not found in combined assumptions`);
     }
 
-    let costPerLife = calculateCategoryBaseCostPerLife(category, categoryId);
+    let costPerLife;
 
+    // If recipient has effect modifications, apply them
     if (categoryData.effects && category.effects && category.effects.length > 0) {
       const categoryEffect = category.effects[0];
       const recipientEffect = categoryData.effects.find((e) => e.effectId === categoryEffect.effectId);
+
       if (recipientEffect) {
+        // Apply recipient modifications to the category effect
         const context = `for recipient ${recipient.name} category ${categoryId}`;
-        costPerLife = applyRecipientEffectModifications(costPerLife, recipientEffect, categoryEffect.effectId, context);
+        const modifiedEffect = applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
+
+        // Calculate cost per life from the modified effect
+        costPerLife = calculateCategoryBaseCostPerLife(
+          {
+            name: category.name,
+            effects: [modifiedEffect],
+          },
+          categoryId
+        );
+      } else {
+        // No recipient modifications, use base calculation
+        costPerLife = calculateCategoryBaseCostPerLife(category, categoryId);
       }
+    } else {
+      // No effects at all, use base calculation
+      costPerLife = calculateCategoryBaseCostPerLife(category, categoryId);
     }
 
     const validCostPerLife = assertNonZeroNumber(

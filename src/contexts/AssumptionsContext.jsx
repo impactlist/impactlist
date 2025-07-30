@@ -5,7 +5,7 @@ import {
   costPerLifeToEffect,
   effectToCostPerLife,
 } from '../utils/assumptionsDataHelpers';
-import { categoriesById, recipientsById } from '../data/generatedData';
+import { categoriesById, recipientsById, globalParameters } from '../data/generatedData';
 
 /* global localStorage */
 
@@ -178,16 +178,21 @@ export const AssumptionsProvider = ({ children }) => {
 
         let newEffect;
         if (type === 'costPerLife') {
-          // Direct cost per life override - preserve original effectId
+          // Create an override structure for cost per life
+          const costPerQALY = numValue / globalParameters.yearsPerLife;
           newEffect = {
-            ...costPerLifeToEffect(numValue),
             effectId: baseEffect.effectId,
+            overrides: {
+              costPerQALY: costPerQALY,
+            },
           };
         } else if (type === 'multiplier') {
-          // Apply multiplier to base effect's costPerQALY - preserve original effectId
+          // Create a multiplier structure
           newEffect = {
-            ...baseEffect,
-            costPerQALY: baseEffect.costPerQALY * numValue,
+            effectId: baseEffect.effectId,
+            multipliers: {
+              costPerQALY: numValue,
+            },
           };
         }
 

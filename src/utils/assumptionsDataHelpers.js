@@ -46,6 +46,63 @@ export const createDefaultAssumptions = () => {
 };
 
 /**
+ * Merge user effect overrides with default effects
+ * @param {Array} defaultEffects - Default effects array
+ * @param {Array} userEffects - User effect overrides (can be null/undefined)
+ * @returns {Array} Merged effects array
+ */
+const mergeEffects = (defaultEffects, userEffects) => {
+  // Default effects should always exist
+  if (!defaultEffects || defaultEffects.length === 0) {
+    throw new Error('Default effects are required but not provided');
+  }
+
+  // If no user effects, return defaults
+  if (!userEffects || userEffects.length === 0) {
+    return defaultEffects;
+  }
+
+  // Create a map of user effects by effectId for easy lookup
+  const userEffectsMap = {};
+  userEffects.forEach((effect) => {
+    if (effect.effectId) {
+      userEffectsMap[effect.effectId] = effect;
+    }
+  });
+
+  // Merge effects: for each default effect, use user override if available
+  const mergedEffects = defaultEffects
+    .map((defaultEffect) => {
+      const userOverride = userEffectsMap[defaultEffect.effectId];
+
+      if (userOverride) {
+        // If user set windowLength to 0, remove this effect
+        if (userOverride.windowLength === 0) {
+          return null;
+        }
+
+        // Merge user fields with default fields (user values take precedence)
+        return {
+          ...defaultEffect,
+          ...userOverride,
+        };
+      }
+
+      return defaultEffect;
+    })
+    .filter(Boolean); // Remove null entries (effects with windowLength 0)
+
+  // Add any user effects that don't exist in defaults (unless windowLength is 0)
+  userEffects.forEach((userEffect) => {
+    if (!defaultEffects.find((def) => def.effectId === userEffect.effectId) && userEffect.windowLength !== 0) {
+      mergedEffects.push(userEffect);
+    }
+  });
+
+  return mergedEffects;
+};
+
+/**
  * Create a combined assumptions object that merges default data with custom overrides
  * @param {Object|null} defaultAssumptions - Default assumptions (if null, will be created)
  * @param {Object|null} userAssumptions - User's custom overrides in effects format (can be null)
@@ -71,8 +128,8 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
 
     combined.categories[categoryId] = {
       ...categoryData,
-      // Apply user effects if they exist, otherwise keep default effects
-      effects: userCategoryData?.effects || categoryData.effects,
+      // Merge user effects with default effects
+      effects: mergeEffects(categoryData.effects, userCategoryData?.effects),
     };
   });
 
@@ -87,9 +144,9 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
       // Start with default category data
       let processedCategoryData = { ...categoryData };
 
-      // Apply user effects if they exist
-      if (userRecipientCategoryData?.effects) {
-        processedCategoryData.effects = userRecipientCategoryData.effects;
+      // Merge user effects with default effects
+      if (userRecipientCategoryData?.effects && categoryData.effects) {
+        processedCategoryData.effects = mergeEffects(categoryData.effects, userRecipientCategoryData.effects);
       }
 
       recipientCategories[categoryId] = processedCategoryData;

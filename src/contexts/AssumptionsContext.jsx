@@ -79,7 +79,18 @@ export const AssumptionsProvider = ({ children }) => {
       } else {
         // Convert cost per life to effects format
         const costPerLife = Number(value);
-        const effect = costPerLifeToEffect(costPerLife);
+
+        // Get the base category to preserve effectId
+        const baseCategory = categoriesById[categoryKey];
+        if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
+          throw new Error(`Category ${categoryKey} has no base effects to override`);
+        }
+
+        const baseEffect = baseCategory.effects[0];
+        const effect = {
+          ...costPerLifeToEffect(costPerLife),
+          effectId: baseEffect.effectId,
+        };
 
         if (!newData.categories) {
           newData.categories = {};
@@ -167,13 +178,15 @@ export const AssumptionsProvider = ({ children }) => {
 
         let newEffect;
         if (type === 'costPerLife') {
-          // Direct cost per life override
-          newEffect = costPerLifeToEffect(numValue);
+          // Direct cost per life override - preserve original effectId
+          newEffect = {
+            ...costPerLifeToEffect(numValue),
+            effectId: baseEffect.effectId,
+          };
         } else if (type === 'multiplier') {
-          // Apply multiplier to base effect's costPerQALY
+          // Apply multiplier to base effect's costPerQALY - preserve original effectId
           newEffect = {
             ...baseEffect,
-            effectId: 'user-override',
             costPerQALY: baseEffect.costPerQALY * numValue,
           };
         }

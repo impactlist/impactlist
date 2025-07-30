@@ -5,7 +5,7 @@ effects:
   - effectId: standard
     startTime: 0
     windowLength: 1
-    costPerQALY: 1_250
+    costPerQALY: 625
 ---
 
 # Justification of cost per life

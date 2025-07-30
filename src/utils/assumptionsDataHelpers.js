@@ -3,8 +3,8 @@
 import { globalParameters, categoriesById, recipientsById, donorsById } from '../data/generatedData';
 import {
   calculateCategoryBaseCostPerLife,
-  applyRecipientEffectModifications,
   applyRecipientEffectToBase,
+  effectToCostPerLife as effectToCostPerLifeWithEffects,
 } from './effectsCalculation';
 import {
   assertExists,
@@ -259,7 +259,7 @@ export const getCostPerLifeFromCombined = (combinedAssumptions, categoryId) => {
   }
 
   // Calculate cost per life from the effects data
-  return calculateCategoryBaseCostPerLife(category, categoryId);
+  return calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
 };
 
 /**
@@ -283,33 +283,20 @@ export const getRecipientFromCombined = (combinedAssumptions, recipientId) => {
 /**
  * Convert a simple cost per life value to effects format
  * @param {number} costPerLife - The cost per life value
+ * @param {Object} globalParams - Global parameters object
  * @returns {Object} Effect object in new format
  */
-export const costPerLifeToEffect = (costPerLife) => {
+export const costPerLifeToEffect = (costPerLife, globalParams) => {
   assertExists(costPerLife, 'costPerLife');
-  assertExists(globalParameters, 'globalParameters');
-  assertExists(globalParameters.yearsPerLife, 'globalParameters.yearsPerLife');
+  assertExists(globalParams, 'globalParams');
+  assertExists(globalParams.yearsPerLife, 'globalParams.yearsPerLife');
 
   return {
     effectId: 'user-override',
     startTime: 0,
     windowLength: 1,
-    costPerQALY: costPerLife / globalParameters.yearsPerLife,
+    costPerQALY: costPerLife / globalParams.yearsPerLife,
   };
-};
-
-/**
- * Convert an effects object back to simple cost per life for display
- * @param {Object} effect - The effect object
- * @returns {number} Cost per life value
- */
-export const effectToCostPerLife = (effect) => {
-  assertExists(effect, 'effect');
-  assertExists(effect.costPerQALY, 'effect.costPerQALY');
-  assertExists(globalParameters, 'globalParameters');
-  assertExists(globalParameters.yearsPerLife, 'globalParameters.yearsPerLife');
-
-  return effect.costPerQALY * globalParameters.yearsPerLife;
 };
 
 /**
@@ -361,15 +348,16 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
             name: category.name,
             effects: [modifiedEffect],
           },
-          categoryId
+          categoryId,
+          combinedAssumptions.globalParameters
         );
       } else {
         // No recipient modifications, use base calculation
-        costPerLife = calculateCategoryBaseCostPerLife(category, categoryId);
+        costPerLife = calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
       }
     } else {
       // No effects at all, use base calculation
-      costPerLife = calculateCategoryBaseCostPerLife(category, categoryId);
+      costPerLife = calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
     }
 
     const validCostPerLife = assertNonZeroNumber(
@@ -540,10 +528,12 @@ export const getActualCostPerLifeForCategoryDataFromCombined = (
     `for category ${categoryId} in recipient ${recipientId}`
   );
 
-  // Get base cost per life from combined assumptions
-  let baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+  // Get the category and check for recipient-specific effect modifications
+  const category = combinedAssumptions.categories[categoryId];
+  if (!category || !category.effects || category.effects.length === 0) {
+    return getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+  }
 
-  // Check for recipient-specific effect modifications
   const recipient = combinedAssumptions.recipients[recipientId];
   if (
     recipient &&
@@ -552,25 +542,21 @@ export const getActualCostPerLifeForCategoryDataFromCombined = (
     recipient.categories[categoryId].effects
   ) {
     const recipientCategoryData = recipient.categories[categoryId];
-    const category = combinedAssumptions.categories[categoryId];
+    const categoryEffect = category.effects[0];
+    const recipientEffect = recipientCategoryData.effects.find((re) => re.effectId === categoryEffect.effectId);
 
-    if (category && category.effects && category.effects.length > 0 && recipientCategoryData.effects.length > 0) {
-      const categoryEffect = category.effects[0];
-      const recipientEffect = recipientCategoryData.effects.find((re) => re.effectId === categoryEffect.effectId);
+    if (recipientEffect) {
+      // Apply recipient modifications to the category effect
+      const context = `for recipient ${recipientId} category ${categoryId}`;
+      const modifiedEffect = applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
 
-      if (recipientEffect) {
-        const context = `for recipient ${recipientId} category ${categoryId}`;
-        baseCostPerLife = applyRecipientEffectModifications(
-          baseCostPerLife,
-          recipientEffect,
-          categoryEffect.effectId,
-          context
-        );
-      }
+      // Convert the modified effect to cost per life
+      return effectToCostPerLifeWithEffects(modifiedEffect, combinedAssumptions.globalParameters);
     }
   }
 
-  return baseCostPerLife;
+  // No recipient modifications, use base calculation
+  return getCostPerLifeFromCombined(combinedAssumptions, categoryId);
 };
 
 /**

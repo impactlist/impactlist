@@ -3,8 +3,8 @@ import {
   createDefaultAssumptions,
   createCombinedAssumptions,
   costPerLifeToEffect,
-  effectToCostPerLife,
 } from '../utils/assumptionsDataHelpers';
+import { effectToCostPerLife } from '../utils/effectsCalculation';
 import { categoriesById, recipientsById, globalParameters } from '../data/generatedData';
 
 /* global localStorage */
@@ -88,7 +88,7 @@ export const AssumptionsProvider = ({ children }) => {
 
         const baseEffect = baseCategory.effects[0];
         const effect = {
-          ...costPerLifeToEffect(costPerLife),
+          ...costPerLifeToEffect(costPerLife, defaultAssumptions.globalParameters),
           effectId: baseEffect.effectId,
         };
 
@@ -282,7 +282,7 @@ export const AssumptionsProvider = ({ children }) => {
 
     if (type === 'costPerLife') {
       // Convert effect back to cost per life for display
-      return effectToCostPerLife(effect);
+      return effectToCostPerLife(effect, combinedAssumptions.globalParameters);
     } else if (type === 'multiplier') {
       // For multipliers, we need to compare against the base effect
       const baseCategory = categoriesById[categoryId];
@@ -312,7 +312,7 @@ export const AssumptionsProvider = ({ children }) => {
       return null;
     }
 
-    return effectToCostPerLife(effect);
+    return effectToCostPerLife(effect, combinedAssumptions.globalParameters);
   };
 
   // Determine if custom values are being used

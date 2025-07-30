@@ -40,14 +40,14 @@ const AssumptionsEditor = () => {
     const categories = {};
     getAllCategories().forEach((category) => {
       // Calculate cost per life from effects
-      const costPerLife = calculateCategoryBaseCostPerLife(category, category.id);
+      const costPerLife = calculateCategoryBaseCostPerLife(category, category.id, combinedAssumptions.globalParameters);
       categories[category.id] = {
         name: category.name,
         costPerLife: costPerLife,
       };
     });
     return categories;
-  }, []);
+  }, [combinedAssumptions.globalParameters]);
 
   // Use custom hooks for form state management
   const globalForm = useGlobalForm(combinedAssumptions.globalParameters, getGlobalParameter, isModalOpen);

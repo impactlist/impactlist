@@ -1,6 +1,5 @@
 // Effects-based calculation utilities
 // Converts the new effects data structure to cost-per-life calculations
-import { globalParameters } from '../data/generatedData';
 import {
   assertExists,
   assertPositiveNumber,
@@ -12,17 +11,18 @@ import {
 /**
  * Convert a QALY-based effect to cost per life
  * @param {Object} effect - The effect with costPerQALY
+ * @param {Object} globalParams - Global parameters object
  * @returns {number} Cost per life
  */
-const qalyEffectToCostPerLife = (effect) => {
+const qalyEffectToCostPerLife = (effect, globalParams) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerQALY, 'costPerQALY', 'in QALY effect');
 
   // Use global parameter for average life expectancy remaining
   // Assume 1 QALY per year of life (could be made configurable)
-  assertExists(globalParameters, 'globalParameters');
-  assertPositiveNumber(globalParameters.yearsPerLife, 'yearsPerLife', 'in globalParameters');
-  const avgLifeYears = globalParameters.yearsPerLife;
+  assertExists(globalParams, 'globalParams');
+  assertPositiveNumber(globalParams.yearsPerLife, 'yearsPerLife', 'in globalParams');
+  const avgLifeYears = globalParams.yearsPerLife;
   const qalyPerLife = avgLifeYears * 1.0;
 
   return effect.costPerQALY * qalyPerLife;
@@ -31,40 +31,54 @@ const qalyEffectToCostPerLife = (effect) => {
 /**
  * Convert a population-based effect to cost per life
  * @param {Object} effect - The effect with costPerMicroprobability and population data
+ * @param {Object} globalParams - Global parameters object
  * @returns {number} Cost per life
  */
-const populationEffectToCostPerLife = (effect) => {
+const populationEffectToCostPerLife = (effect, globalParams) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerMicroprobability, 'costPerMicroprobability', 'in population effect');
-  assertPositiveNumber(effect.populationFractionAffected, 'populationFractionAffected', 'in population effect');
-  assertNonZeroNumber(effect.qalyImprovementPerYear, 'qalyImprovementPerYear', 'in population effect');
+  assertPositiveNumber(effect.populationFractionImpacted, 'populationFractionImpacted', 'in population effect');
+  assertNonZeroNumber(effect.rawQALYImprovementPerYear, 'rawQALYImprovementPerYear', 'in population effect');
+  assertExists(effect.startTime, 'startTime', 'in population effect');
+  assertPositiveNumber(effect.windowLength, 'windowLength', 'in population effect');
 
   // Get global parameters
-  assertExists(globalParameters, 'globalParameters');
-  assertPositiveNumber(globalParameters.currentPopulation, 'currentPopulation', 'in globalParameters');
-  assertPositiveNumber(globalParameters.discountRate, 'discountRate', 'in globalParameters');
-  assertPositiveNumber(globalParameters.timeLimit, 'timeLimit', 'in globalParameters');
+  assertExists(globalParams, 'globalParams');
+  assertPositiveNumber(globalParams.currentPopulation, 'currentPopulation', 'in globalParams');
+  assertPositiveNumber(globalParams.populationGrowthRate, 'populationGrowthRate', 'in globalParams');
+  assertPositiveNumber(globalParams.populationLimit, 'populationLimit', 'in globalParams');
+  assertPositiveNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
+  assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
+  assertPositiveNumber(globalParams.yearsPerLife, 'yearsPerLife', 'in globalParams');
 
-  const currentPopulation = globalParameters.currentPopulation;
-  const discountRate = globalParameters.discountRate;
-  const timeLimit = globalParameters.timeLimit;
+  const startYear = effect.startTime;
+  const endYear = Math.min(startYear + effect.windowLength, globalParams.timeLimit);
 
-  // Calculate affected population
-  const affectedPopulation = currentPopulation * effect.populationFractionAffected;
-
-  // Calculate total QALYs over time with discounting
+  // Calculate total QALYs over the effect window with population growth and discounting
   let totalQALYs = 0;
-  for (let year = 0; year < timeLimit; year++) {
-    const discountFactor = Math.pow(1 / (1 + discountRate), year);
-    totalQALYs += affectedPopulation * effect.qalyImprovementPerYear * discountFactor;
+  for (let year = startYear; year < endYear; year++) {
+    // Calculate population at this year with growth, capped at limit
+    const populationGrowthFactor = Math.pow(1 + globalParams.populationGrowthRate, year);
+    const population = Math.min(
+      globalParams.currentPopulation * populationGrowthFactor,
+      globalParams.populationLimit * 1e9 // Convert billions to actual number
+    );
+
+    // Calculate affected population
+    const affectedPopulation = population * effect.populationFractionImpacted;
+
+    // Apply discounting
+    const discountFactor = Math.pow(1 / (1 + globalParams.discountRate), year);
+
+    // Add QALYs for this year
+    totalQALYs += affectedPopulation * effect.rawQALYImprovementPerYear * discountFactor;
   }
 
   // Convert micropropability to probability (1 micropropability = 1/1,000,000)
   const probability = 1 / 1_000_000;
 
   // Cost per life = cost per micropropability / (probability * total QALYs / average life QALYs)
-  assertPositiveNumber(globalParameters.yearsPerLife, 'yearsPerLife', 'in globalParameters');
-  const avgLifeQALYs = globalParameters.yearsPerLife; // Same assumption as above
+  const avgLifeQALYs = globalParams.yearsPerLife;
   const livesSavedPerMicroprobability = (probability * totalQALYs) / avgLifeQALYs;
 
   return effect.costPerMicroprobability / livesSavedPerMicroprobability;
@@ -73,15 +87,17 @@ const populationEffectToCostPerLife = (effect) => {
 /**
  * Convert any effect to cost per life
  * @param {Object} effect - The effect object
+ * @param {Object} globalParams - Global parameters object
  * @returns {number} Cost per life
  */
-export const effectToCostPerLife = (effect) => {
+export const effectToCostPerLife = (effect, globalParams) => {
   assertExists(effect, 'effect');
+  assertExists(globalParams, 'globalParams');
 
   if (effect.costPerQALY !== undefined) {
-    return qalyEffectToCostPerLife(effect);
+    return qalyEffectToCostPerLife(effect, globalParams);
   } else if (effect.costPerMicroprobability !== undefined) {
-    return populationEffectToCostPerLife(effect);
+    return populationEffectToCostPerLife(effect, globalParams);
   } else {
     throw new Error('Effect must have either costPerQALY or costPerMicroprobability');
   }
@@ -118,18 +134,19 @@ const calculateDiscountedSum = (discountRate, start, end) => {
  * Calculate cost per life from multiple effects with time windows
  * @param {Array} effects - Array of effect objects with time windows
  * @param {string} categoryId - Category ID for context
+ * @param {Object} globalParams - Global parameters object
  * @returns {number} Weighted average cost per life
  */
-const calculateMultiEffectCostPerLife = (effects, categoryId) => {
+const calculateMultiEffectCostPerLife = (effects, categoryId, globalParams) => {
   assertNonEmptyArray(effects, 'effects', `in category "${categoryId}"`);
 
   // Get global parameters for discounting
-  assertExists(globalParameters, 'globalParameters');
-  assertPositiveNumber(globalParameters.discountRate, 'discountRate', 'in globalParameters');
-  assertPositiveNumber(globalParameters.timeLimit, 'timeLimit', 'in globalParameters');
+  assertExists(globalParams, 'globalParams');
+  assertPositiveNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
+  assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
 
-  const discountRate = globalParameters.discountRate;
-  const timeLimit = globalParameters.timeLimit;
+  const discountRate = globalParams.discountRate;
+  const timeLimit = globalParams.timeLimit;
 
   // Calculate total discounted impact for each effect
   let totalDiscountedCost = 0;
@@ -139,7 +156,7 @@ const calculateMultiEffectCostPerLife = (effects, categoryId) => {
     assertExists(effect.startTime, 'startTime', `in effect ${effect.effectId}`);
     assertPositiveNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
 
-    const costPerLife = effectToCostPerLife(effect);
+    const costPerLife = effectToCostPerLife(effect, globalParams);
     const startYear = effect.startTime;
     const endYear = Math.min(startYear + effect.windowLength, timeLimit);
 
@@ -165,20 +182,22 @@ const calculateMultiEffectCostPerLife = (effects, categoryId) => {
  * Calculate cost per life for a category from its effects
  * @param {Object} category - The category object with effects array
  * @param {string} categoryId - The category ID for context
+ * @param {Object} globalParams - Global parameters object
  * @returns {number} Cost per life for the category
  */
-export const calculateCategoryBaseCostPerLife = (category, categoryId) => {
+export const calculateCategoryBaseCostPerLife = (category, categoryId, globalParams) => {
   validateCategory(category, categoryId);
+  assertExists(globalParams, 'globalParams');
 
   const effects = assertNonEmptyArray(category.effects, 'effects', `in category "${categoryId}"`);
 
   if (effects.length === 1) {
     // Single effect - simple case
-    return effectToCostPerLife(effects[0]);
+    return effectToCostPerLife(effects[0], globalParams);
   }
 
   // Multiple effects - calculate weighted average based on time windows
-  return calculateMultiEffectCostPerLife(effects, categoryId);
+  return calculateMultiEffectCostPerLife(effects, categoryId, globalParams);
 };
 
 /**
@@ -251,35 +270,4 @@ export const applyRecipientEffectToBase = (baseEffect, recipientEffect, context)
   }
 
   return result;
-};
-
-/**
- * Apply recipient effect modifications (overrides/multipliers) to a base cost per life
- * @param {number} baseCostPerLife - The base cost per life from category
- * @param {Object} recipientEffect - The recipient's effect modification
- * @param {string} effectId - The effect ID for validation
- * @param {string} context - Context for error messages
- * @returns {number} Modified cost per life
- */
-export const applyRecipientEffectModifications = (baseCostPerLife, recipientEffect, effectId, context) => {
-  assertNonZeroNumber(baseCostPerLife, 'baseCostPerLife', context);
-  assertExists(recipientEffect, 'recipientEffect', context);
-
-  // Convert cost per life back to a minimal effect object
-  const baseEffect = {
-    effectId: effectId,
-    costPerQALY: baseCostPerLife / globalParameters.yearsPerLife,
-  };
-
-  // Apply modifications using the unified function
-  const modifiedEffect = applyRecipientEffectToBase(baseEffect, recipientEffect, context);
-
-  // Convert back to cost per life
-  if (modifiedEffect.costPerMicroprobability !== undefined) {
-    // If it became a population effect, calculate accordingly
-    return populationEffectToCostPerLife(modifiedEffect);
-  } else {
-    // Standard QALY-based calculation
-    return qalyEffectToCostPerLife(modifiedEffect);
-  }
 };

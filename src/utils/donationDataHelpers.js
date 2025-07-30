@@ -1,5 +1,5 @@
 // Helper functions for donation and impact calculations
-import { categoriesById, donorsById, recipientsById, donations } from '../data/generatedData';
+import { globalParameters, categoriesById, donorsById, recipientsById, donations } from '../data/generatedData';
 import { effectToCostPerLife } from './effectsCalculation';
 
 // Helper to get category by ID
@@ -252,7 +252,7 @@ export const getRecipientDefaultCostPerLife = (recipientId, categoryId) => {
   const recipientEffect = categoryData.effects[0]; // Use first effect
   if (recipientEffect && recipientEffect.overrides) {
     if (recipientEffect.overrides.costPerQALY !== undefined) {
-      return effectToCostPerLife({ costPerQALY: recipientEffect.overrides.costPerQALY });
+      return effectToCostPerLife({ costPerQALY: recipientEffect.overrides.costPerQALY }, globalParameters);
     }
     // Note: For costPerMicroprobability overrides, we'd need more data (population params)
     // so we skip those for now

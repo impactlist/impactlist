@@ -13,46 +13,83 @@ import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
 import { getAllDonors, getDonationsForDonor } from './donationDataHelpers';
 
 /**
+ * Create a default assumptions object from the base data
+ * @returns {Object} Default assumptions object with all data in unified format
+ */
+export const createDefaultAssumptions = () => {
+  const defaults = {
+    globalParameters: { ...globalParameters },
+    categories: {},
+    recipients: {},
+  };
+
+  // Process categories - use default effects data
+  Object.entries(categoriesById).forEach(([categoryId, categoryData]) => {
+    defaults.categories[categoryId] = { ...categoryData };
+  });
+
+  // Process recipients - use default category data
+  Object.entries(recipientsById).forEach(([recipientId, recipientData]) => {
+    const recipientCategories = {};
+
+    Object.entries(recipientData.categories).forEach(([categoryId, categoryData]) => {
+      recipientCategories[categoryId] = { ...categoryData };
+    });
+
+    defaults.recipients[recipientId] = {
+      ...recipientData,
+      categories: recipientCategories,
+    };
+  });
+
+  return defaults;
+};
+
+/**
  * Create a combined assumptions object that merges default data with custom overrides
- * @param {Object|null} customData - Custom data from user input in effects format (can be null)
+ * @param {Object|null} defaultAssumptions - Default assumptions (if null, will be created)
+ * @param {Object|null} userAssumptions - User's custom overrides in effects format (can be null)
  * @returns {Object} Combined assumptions object with all raw data unified
  */
-export const createCombinedAssumptions = (customData = null) => {
-  // Start with global parameters, applying any custom overrides
+export const createCombinedAssumptions = (defaultAssumptions = null, userAssumptions = null) => {
+  // If no default assumptions provided, create them
+  const defaults = defaultAssumptions || createDefaultAssumptions();
+
+  // Start with default global parameters, applying any user overrides
   const combined = {
     globalParameters: {
-      ...globalParameters,
-      ...(customData?.globalParameters || {}),
+      ...defaults.globalParameters,
+      ...(userAssumptions?.globalParameters || {}),
     },
     categories: {},
     recipients: {},
   };
 
-  // Process categories - combine default effects data with custom effect overrides
-  Object.entries(categoriesById).forEach(([categoryId, categoryData]) => {
-    const customCategoryData = customData?.categories?.[categoryId];
+  // Process categories - combine default effects data with user effect overrides
+  Object.entries(defaults.categories).forEach(([categoryId, categoryData]) => {
+    const userCategoryData = userAssumptions?.categories?.[categoryId];
 
     combined.categories[categoryId] = {
       ...categoryData,
-      // Apply custom effects if they exist, otherwise keep default effects
-      effects: customCategoryData?.effects || categoryData.effects,
+      // Apply user effects if they exist, otherwise keep default effects
+      effects: userCategoryData?.effects || categoryData.effects,
     };
   });
 
-  // Process recipients - combine default category data with custom effect overrides
-  Object.entries(recipientsById).forEach(([recipientId, recipientData]) => {
-    const customRecipientData = customData?.recipients?.[recipientId];
+  // Process recipients - combine default category data with user effect overrides
+  Object.entries(defaults.recipients).forEach(([recipientId, recipientData]) => {
+    const userRecipientData = userAssumptions?.recipients?.[recipientId];
     const recipientCategories = {};
 
     Object.entries(recipientData.categories).forEach(([categoryId, categoryData]) => {
-      const customRecipientCategoryData = customRecipientData?.categories?.[categoryId];
+      const userRecipientCategoryData = userRecipientData?.categories?.[categoryId];
 
       // Start with default category data
       let processedCategoryData = { ...categoryData };
 
-      // Apply custom effects if they exist
-      if (customRecipientCategoryData?.effects) {
-        processedCategoryData.effects = customRecipientCategoryData.effects;
+      // Apply user effects if they exist
+      if (userRecipientCategoryData?.effects) {
+        processedCategoryData.effects = userRecipientCategoryData.effects;
       }
 
       recipientCategories[categoryId] = processedCategoryData;
@@ -408,4 +445,67 @@ export const getEffectiveCostPerLifeFromCombined = (combinedAssumptions, entity)
   }
 
   throw new Error('No valid calculation method found for cost per life.');
+};
+
+/**
+ * Check if a category has custom user values
+ * @param {Object|null} userAssumptions - User's custom overrides
+ * @param {string} categoryId - Category ID to check
+ * @returns {boolean} True if category has custom values
+ */
+export const isCategoryCustomized = (userAssumptions, categoryId) => {
+  return !!userAssumptions?.categories?.[categoryId]?.effects;
+};
+
+/**
+ * Check if a recipient category has custom user values
+ * @param {Object|null} userAssumptions - User's custom overrides
+ * @param {string} recipientId - Recipient ID
+ * @param {string} categoryId - Category ID
+ * @returns {boolean} True if recipient category has custom values
+ */
+export const isRecipientCategoryCustomized = (userAssumptions, recipientId, categoryId) => {
+  return !!userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+};
+
+/**
+ * Check if a global parameter has custom user value
+ * @param {Object|null} userAssumptions - User's custom overrides
+ * @param {string} parameterKey - Parameter key to check
+ * @returns {boolean} True if parameter has custom value
+ */
+export const isGlobalParameterCustomized = (userAssumptions, parameterKey) => {
+  return !!userAssumptions?.globalParameters?.[parameterKey];
+};
+
+/**
+ * Get all customized categories
+ * @param {Object|null} userAssumptions - User's custom overrides
+ * @returns {string[]} Array of customized category IDs
+ */
+export const getCustomizedCategories = (userAssumptions) => {
+  if (!userAssumptions?.categories) return [];
+  return Object.keys(userAssumptions.categories).filter(
+    (categoryId) => userAssumptions.categories[categoryId]?.effects
+  );
+};
+
+/**
+ * Get all customized recipients
+ * @param {Object|null} userAssumptions - User's custom overrides
+ * @returns {string[]} Array of customized recipient IDs
+ */
+export const getCustomizedRecipients = (userAssumptions) => {
+  if (!userAssumptions?.recipients) return [];
+  return Object.keys(userAssumptions.recipients);
+};
+
+/**
+ * Get all customized global parameters
+ * @param {Object|null} userAssumptions - User's custom overrides
+ * @returns {string[]} Array of customized parameter keys
+ */
+export const getCustomizedGlobalParameters = (userAssumptions) => {
+  if (!userAssumptions?.globalParameters) return [];
+  return Object.keys(userAssumptions.globalParameters);
 };

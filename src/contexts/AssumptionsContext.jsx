@@ -1,5 +1,10 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
-import { createCombinedAssumptions, costPerLifeToEffect, effectToCostPerLife } from '../utils/combinedAssumptions';
+import {
+  createDefaultAssumptions,
+  createCombinedAssumptions,
+  costPerLifeToEffect,
+  effectToCostPerLife,
+} from '../utils/combinedAssumptions';
 import { categoriesById, recipientsById } from '../data/generatedData';
 
 /* global localStorage */
@@ -18,8 +23,11 @@ export const useAssumptions = () => {
 
 // Provider component
 export const AssumptionsProvider = ({ children }) => {
-  // Initialize state from localStorage or defaults (new format)
-  const [customData, setCustomData] = useState(() => {
+  // Create default assumptions once
+  const defaultAssumptions = useMemo(() => createDefaultAssumptions(), []);
+
+  // Initialize user assumptions from localStorage or defaults (new format)
+  const [userAssumptions, setUserAssumptions] = useState(() => {
     // Clean up old format data
     localStorage.removeItem('customCostPerLifeValues');
 
@@ -29,28 +37,28 @@ export const AssumptionsProvider = ({ children }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Create combined assumptions whenever customData changes
+  // Create combined assumptions whenever userAssumptions changes
   const combinedAssumptions = useMemo(() => {
-    return createCombinedAssumptions(customData);
-  }, [customData]);
+    return createCombinedAssumptions(defaultAssumptions, userAssumptions);
+  }, [defaultAssumptions, userAssumptions]);
 
-  // Save to localStorage when customData changes
+  // Save to localStorage when userAssumptions changes
   useEffect(() => {
-    if (customData) {
-      localStorage.setItem('customEffectsData', JSON.stringify(customData));
+    if (userAssumptions) {
+      localStorage.setItem('customEffectsData', JSON.stringify(userAssumptions));
     } else {
       localStorage.removeItem('customEffectsData');
     }
-  }, [customData]);
+  }, [userAssumptions]);
 
   // Reset to default values
   const resetToDefaults = () => {
-    setCustomData(null);
+    setUserAssumptions(null);
   };
 
   // Update a specific category value (converts simple cost per life to effects format)
   const updateCategoryValue = (categoryKey, value) => {
-    setCustomData((prev) => {
+    setUserAssumptions((prev) => {
       const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
 
       if (value === '' || isNaN(value) || value === null) {
@@ -101,7 +109,7 @@ export const AssumptionsProvider = ({ children }) => {
       throw new Error(`Invalid type '${type}'. Must be 'multiplier' or 'costPerLife'`);
     }
 
-    setCustomData((prev) => {
+    setUserAssumptions((prev) => {
       const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
 
       // Find the recipient ID by name
@@ -182,12 +190,12 @@ export const AssumptionsProvider = ({ children }) => {
 
   // Update multiple values at once (expects new effects format)
   const updateValues = (newData) => {
-    setCustomData(newData);
+    setUserAssumptions(newData);
   };
 
   // Update a specific global parameter value
   const updateGlobalParameter = (parameterKey, value) => {
-    setCustomData((prev) => {
+    setUserAssumptions((prev) => {
       const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
 
       if (value === '' || value === null) {
@@ -221,15 +229,15 @@ export const AssumptionsProvider = ({ children }) => {
 
   // Get global parameter custom value for display
   const getGlobalParameter = (parameterKey) => {
-    if (!customData || !customData.globalParameters || !customData.globalParameters[parameterKey]) {
+    if (!userAssumptions || !userAssumptions.globalParameters || !userAssumptions.globalParameters[parameterKey]) {
       return null;
     }
-    return customData.globalParameters[parameterKey];
+    return userAssumptions.globalParameters[parameterKey];
   };
 
   // Get recipient custom value for display (converts from effects back to simple value)
   const getRecipientValue = (recipientName, categoryId, type) => {
-    if (!customData || !customData.recipients) {
+    if (!userAssumptions || !userAssumptions.recipients) {
       return null;
     }
 
@@ -239,7 +247,7 @@ export const AssumptionsProvider = ({ children }) => {
       return null;
     }
 
-    const recipientData = customData.recipients[recipientId];
+    const recipientData = userAssumptions.recipients[recipientId];
     if (
       !recipientData ||
       !recipientData.categories ||
@@ -273,15 +281,15 @@ export const AssumptionsProvider = ({ children }) => {
   // Get category custom value for display (converts from effects back to simple cost per life)
   const getCategoryValue = (categoryId) => {
     if (
-      !customData ||
-      !customData.categories ||
-      !customData.categories[categoryId] ||
-      !customData.categories[categoryId].effects
+      !userAssumptions ||
+      !userAssumptions.categories ||
+      !userAssumptions.categories[categoryId] ||
+      !userAssumptions.categories[categoryId].effects
     ) {
       return null;
     }
 
-    const effect = customData.categories[categoryId].effects[0]; // Use first effect
+    const effect = userAssumptions.categories[categoryId].effects[0]; // Use first effect
     if (!effect) {
       return null;
     }
@@ -290,7 +298,7 @@ export const AssumptionsProvider = ({ children }) => {
   };
 
   // Determine if custom values are being used
-  const isUsingCustomValues = customData !== null;
+  const isUsingCustomValues = userAssumptions !== null;
 
   // Open/close the edit modal
   const openModal = () => setIsModalOpen(true);
@@ -298,7 +306,8 @@ export const AssumptionsProvider = ({ children }) => {
 
   // Context value
   const contextValue = {
-    customData,
+    defaultAssumptions,
+    userAssumptions,
     combinedAssumptions,
     isUsingCustomValues,
     resetToDefaults,

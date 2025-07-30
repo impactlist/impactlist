@@ -2,6 +2,7 @@
 // Converts the new effects data structure to cost-per-life calculations
 import {
   assertExists,
+  assertNumber,
   assertPositiveNumber,
   assertNonZeroNumber,
   assertNonEmptyArray,
@@ -47,7 +48,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   assertPositiveNumber(globalParams.currentPopulation, 'currentPopulation', 'in globalParams');
   assertPositiveNumber(globalParams.populationGrowthRate, 'populationGrowthRate', 'in globalParams');
   assertPositiveNumber(globalParams.populationLimit, 'populationLimit', 'in globalParams');
-  assertPositiveNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
+  assertNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
   assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
   assertPositiveNumber(globalParams.yearsPerLife, 'yearsPerLife', 'in globalParams');
 
@@ -142,7 +143,7 @@ const calculateMultiEffectCostPerLife = (effects, categoryId, globalParams) => {
 
   // Get global parameters for discounting
   assertExists(globalParams, 'globalParams');
-  assertPositiveNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
+  assertNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
   assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
 
   const discountRate = globalParams.discountRate;
@@ -191,12 +192,7 @@ export const calculateCategoryBaseCostPerLife = (category, categoryId, globalPar
 
   const effects = assertNonEmptyArray(category.effects, 'effects', `in category "${categoryId}"`);
 
-  if (effects.length === 1) {
-    // Single effect - simple case
-    return effectToCostPerLife(effects[0], globalParams);
-  }
-
-  // Multiple effects - calculate weighted average based on time windows
+  // Always use the multi-effect calculation to ensure time windows and discounting are applied
   return calculateMultiEffectCostPerLife(effects, categoryId, globalParams);
 };
 

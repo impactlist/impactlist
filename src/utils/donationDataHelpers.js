@@ -1,6 +1,6 @@
 // Helper functions for donation and impact calculations
 import { globalParameters, categoriesById, donorsById, recipientsById, donations } from '../data/generatedData';
-import { effectToCostPerLife } from './effectsCalculation';
+import { calculateCategoryBaseCostPerLife, applyRecipientEffectToBase } from './effectsCalculation';
 
 // Helper to get category by ID
 export const getCategoryById = (categoryId) => {
@@ -206,29 +206,43 @@ export const getRecipientDefaultMultiplier = (recipientId, categoryId) => {
     return null;
   }
 
-  // Get the category's base effect to compare against
+  // Get the category's base effects to compare against
   const category = categoriesById[categoryId];
   if (!category || !category.effects || category.effects.length === 0) {
     return null;
   }
 
-  const baseEffect = category.effects[0]; // Use first effect
-  const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
+  // Check if any of the recipient effects have multipliers
+  const hasMultipliers = categoryData.effects.some(
+    (effect) => effect.multipliers && Object.keys(effect.multipliers).length > 0
+  );
 
-  if (!recipientEffect || !recipientEffect.multipliers) {
+  if (!hasMultipliers) {
     return null;
   }
 
-  // Calculate effective multiplier based on the type of effect
-  if (recipientEffect.multipliers.costPerQALY !== undefined) {
-    // For QALY multipliers, a lower value means more effective (inverted)
-    return 1 / recipientEffect.multipliers.costPerQALY;
-  } else if (recipientEffect.multipliers.costPerMicroprobability !== undefined) {
-    // For microprobability multipliers, a lower value means more effective (inverted)
-    return 1 / recipientEffect.multipliers.costPerMicroprobability;
-  }
+  // Calculate base cost per life for the category
+  const baseCostPerLife = calculateCategoryBaseCostPerLife(category, categoryId, globalParameters);
 
-  return null;
+  // Apply recipient modifications to all effects
+  const modifiedEffects = category.effects.map((baseEffect) => {
+    const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
+    if (recipientEffect) {
+      const context = `for recipient ${recipient.name} category ${categoryId}`;
+      return applyRecipientEffectToBase(baseEffect, recipientEffect, context);
+    }
+    return baseEffect;
+  });
+
+  // Calculate modified cost per life
+  const modifiedCategory = {
+    name: category.name,
+    effects: modifiedEffects,
+  };
+  const modifiedCostPerLife = calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, globalParameters);
+
+  // Multiplier is the ratio (inverted because lower cost per life = higher multiplier)
+  return baseCostPerLife / modifiedCostPerLife;
 };
 
 /**
@@ -248,15 +262,35 @@ export const getRecipientDefaultCostPerLife = (recipientId, categoryId) => {
     return null;
   }
 
-  // If there's an override, calculate the cost per life from it
-  const recipientEffect = categoryData.effects[0]; // Use first effect
-  if (recipientEffect && recipientEffect.overrides) {
-    if (recipientEffect.overrides.costPerQALY !== undefined) {
-      return effectToCostPerLife({ costPerQALY: recipientEffect.overrides.costPerQALY }, globalParameters);
-    }
-    // Note: For costPerMicroprobability overrides, we'd need more data (population params)
-    // so we skip those for now
+  // Get the category's base effects
+  const category = categoriesById[categoryId];
+  if (!category || !category.effects || category.effects.length === 0) {
+    return null;
   }
 
-  return null;
+  // Check if any of the recipient effects have overrides
+  const hasOverrides = categoryData.effects.some(
+    (effect) => effect.overrides && Object.keys(effect.overrides).length > 0
+  );
+
+  if (!hasOverrides) {
+    return null;
+  }
+
+  // Apply recipient modifications to all effects
+  const modifiedEffects = category.effects.map((baseEffect) => {
+    const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
+    if (recipientEffect && recipientEffect.overrides) {
+      const context = `for recipient ${recipient.name} category ${categoryId}`;
+      return applyRecipientEffectToBase(baseEffect, recipientEffect, context);
+    }
+    return baseEffect;
+  });
+
+  // Calculate cost per life from all modified effects
+  const modifiedCategory = {
+    name: category.name,
+    effects: modifiedEffects,
+  };
+  return calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, globalParameters);
 };

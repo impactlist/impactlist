@@ -332,31 +332,29 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
 
     let costPerLife;
 
-    // If recipient has effect modifications, apply them
+    // If recipient has effect modifications, apply them to all effects
     if (categoryData.effects && category.effects && category.effects.length > 0) {
-      const categoryEffect = category.effects[0];
-      const recipientEffect = categoryData.effects.find((e) => e.effectId === categoryEffect.effectId);
+      // Apply recipient modifications to all effects
+      const modifiedEffects = category.effects.map((categoryEffect) => {
+        const recipientEffect = categoryData.effects.find((e) => e.effectId === categoryEffect.effectId);
+        if (recipientEffect) {
+          const context = `for recipient ${recipient.name} category ${categoryId}`;
+          return applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
+        }
+        return categoryEffect;
+      });
 
-      if (recipientEffect) {
-        // Apply recipient modifications to the category effect
-        const context = `for recipient ${recipient.name} category ${categoryId}`;
-        const modifiedEffect = applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
-
-        // Calculate cost per life from the modified effect
-        costPerLife = calculateCategoryBaseCostPerLife(
-          {
-            name: category.name,
-            effects: [modifiedEffect],
-          },
-          categoryId,
-          combinedAssumptions.globalParameters
-        );
-      } else {
-        // No recipient modifications, use base calculation
-        costPerLife = calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
-      }
+      // Calculate cost per life from all modified effects
+      costPerLife = calculateCategoryBaseCostPerLife(
+        {
+          name: category.name,
+          effects: modifiedEffects,
+        },
+        categoryId,
+        combinedAssumptions.globalParameters
+      );
     } else {
-      // No effects at all, use base calculation
+      // No recipient effect modifications, use base calculation
       costPerLife = calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
     }
 

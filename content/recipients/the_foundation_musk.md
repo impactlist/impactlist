@@ -7,5 +7,5 @@ categories:
     effects:
       - effectId: standard
         multipliers:
-          costPerQALY: 5
+          costPerQALY: 0.2
 ---

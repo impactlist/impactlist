@@ -54,7 +54,7 @@ export const getPrimaryCategoryForRecipient = (combinedAssumptions, recipientId)
 
 // Helper to find recipient ID by recipient object
 export const getRecipientId = (recipientObj) => {
-  return Object.keys(recipientsById).find((id) => recipientsById[id] === recipientObj);
+  return recipientObj?.id;
 };
 
 // Get the primary (highest weight) category for a recipient

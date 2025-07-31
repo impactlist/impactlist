@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { getAllRecipients, getAllCategories, getRecipientId } from '../utils/donationDataHelpers';
+import { getRecipientId } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
 import { formatNumber, formatLives } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
@@ -21,8 +21,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  const allRecipients = useMemo(() => getAllRecipients(), []);
-  const allCategories = useMemo(() => getAllCategories(), []);
+  const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
+  const allCategories = useMemo(() => combinedAssumptions.getAllCategories(), [combinedAssumptions]);
 
   // State to control dropdown visibility
   const [showDropdown, setShowDropdown] = useState(false);

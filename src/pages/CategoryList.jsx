@@ -2,12 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import {
-  getAllCategories,
-  getAllRecipients,
-  getDonationsForRecipient,
-  getRecipientId,
-} from '../utils/donationDataHelpers';
+import { getDonationsForRecipient, getRecipientId } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeFromCombined,
   calculateLivesSavedForDonationFromCombined,
@@ -25,10 +20,10 @@ const CategoryList = () => {
 
   useEffect(() => {
     // Get all categories
-    const categories = getAllCategories();
+    const categories = combinedAssumptions.getAllCategories();
 
     // Get all recipients and their donations to calculate totals by category
-    const recipients = getAllRecipients();
+    const recipients = combinedAssumptions.getAllRecipients();
 
     // Initialize totals
     const categoryTotals = {};

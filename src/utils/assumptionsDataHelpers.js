@@ -254,6 +254,22 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
     return combined.recipients[recipientId] || null;
   };
 
+  // Get all recipients as an array with id included
+  combined.getAllRecipients = () => {
+    return Object.entries(combined.recipients).map(([id, data]) => ({
+      ...data,
+      id, // Include the ID in the object
+    }));
+  };
+
+  // Get all categories as an array with id included
+  combined.getAllCategories = () => {
+    return Object.entries(combined.categories).map(([id, data]) => ({
+      ...data,
+      id, // Include the ID in the object
+    }));
+  };
+
   return combined;
 };
 

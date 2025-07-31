@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import { getAllCategories } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeFromCombined,
   getCostPerLifeForRecipientFromCombined,
@@ -89,7 +88,7 @@ const DonationCalculator = () => {
 
   // Initialize categories and load saved donation values on component mount
   useEffect(() => {
-    const categoriesData = getAllCategories();
+    const categoriesData = combinedAssumptions.getAllCategories();
     // Sort categories alphabetically by name
     const sortedCategories = [...categoriesData].sort((a, b) => a.name.localeCompare(b.name));
     setCategories(sortedCategories);
@@ -110,7 +109,7 @@ const DonationCalculator = () => {
     if (savedSpecificDonations) {
       setSpecificDonations(JSON.parse(savedSpecificDonations));
     }
-  }, []);
+  }, [combinedAssumptions]);
 
   // Calculate lives saved when donations, specificDonations, or combinedAssumptions change
   useEffect(() => {

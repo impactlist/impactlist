@@ -1,23 +1,5 @@
 // Helper functions for donation and impact calculations
-import { globalParameters, categoriesById, donorsById, recipientsById, donations } from '../data/generatedData';
-import { calculateCategoryBaseCostPerLife, applyRecipientEffectToBase } from './effectsCalculation';
-
-// Helper to get category by ID
-export const getCategoryById = (categoryId) => {
-  if (!categoryId) return null;
-  return categoriesById[categoryId] || null;
-};
-
-// Helper to get recipient by ID
-export const getRecipientById = (recipientId) => {
-  if (!recipientId) return null;
-
-  const recipient = recipientsById[recipientId];
-  if (!recipient) {
-    throw new Error(`Invalid recipient: ${recipientId}. This recipient does not exist in recipientsById.`);
-  }
-  return recipient;
-};
+import { donorsById, recipientsById, donations } from '../data/generatedData';
 
 // Helper to get donor by ID
 export const getDonorById = (donorId) => {
@@ -25,15 +7,12 @@ export const getDonorById = (donorId) => {
   return donorsById[donorId] || null;
 };
 
-// Helper to get all recipients as an array
-export const getAllRecipients = () => Object.values(recipientsById);
-
 // Helper to get all donors as an array
 export const getAllDonors = () => Object.values(donorsById);
 
 // Get primary category for a recipient
-export const getPrimaryCategoryForRecipient = (recipientId) => {
-  const recipient = recipientsById[recipientId];
+export const getPrimaryCategoryForRecipient = (combinedAssumptions, recipientId) => {
+  const recipient = combinedAssumptions.getRecipientById(recipientId);
   if (!recipient || !recipient.categories) {
     return { categoryId: null, categoryName: 'Unknown', count: 0 };
   }
@@ -46,7 +25,7 @@ export const getPrimaryCategoryForRecipient = (recipientId) => {
   } else if (categoryCount === 1) {
     // Single category
     const categoryId = Object.keys(categories)[0];
-    const category = getCategoryById(categoryId);
+    const category = combinedAssumptions.getCategoryById(categoryId);
     return {
       categoryId,
       categoryName: category?.name || categoryId,
@@ -64,7 +43,7 @@ export const getPrimaryCategoryForRecipient = (recipientId) => {
       }
     }
 
-    const primaryCategory = getCategoryById(primaryCategoryId);
+    const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId);
     return {
       categoryId: primaryCategoryId,
       categoryName: primaryCategory?.name || primaryCategoryId,
@@ -73,23 +52,14 @@ export const getPrimaryCategoryForRecipient = (recipientId) => {
   }
 };
 
-// Helper to get all categories as an array
-export const getAllCategories = () => {
-  // Convert to array of objects with id included
-  return Object.entries(categoriesById).map(([id, data]) => ({
-    ...data,
-    id, // Include the ID in the object
-  }));
-};
-
 // Helper to find recipient ID by recipient object
 export const getRecipientId = (recipientObj) => {
   return Object.keys(recipientsById).find((id) => recipientsById[id] === recipientObj);
 };
 
 // Get the primary (highest weight) category for a recipient
-export const getPrimaryCategoryId = (recipientId) => {
-  const recipient = recipientsById[recipientId];
+export const getPrimaryCategoryId = (combinedAssumptions, recipientId) => {
+  const recipient = combinedAssumptions.getRecipientById(recipientId);
   if (!recipient || !recipient.categories) {
     throw new Error(`Invalid recipient: ${recipientId}. Recipient not found or missing categories.`);
   }
@@ -115,8 +85,8 @@ export const getPrimaryCategoryId = (recipientId) => {
 };
 
 // Get a breakdown of categories for a recipient
-export const getCategoryBreakdown = (recipientId) => {
-  const recipient = recipientsById[recipientId];
+export const getCategoryBreakdown = (combinedAssumptions, recipientId) => {
+  const recipient = combinedAssumptions.getRecipientById(recipientId);
   if (!recipient || !recipient.categories) {
     throw new Error(`Invalid recipient: ${recipientId}. Recipient not found or missing categories.`);
   }
@@ -164,12 +134,13 @@ export const getTotalAmountForRecipient = (recipientId) => {
 
 /**
  * Check if a recipient has effect overrides for a specific category
+ * @param {Object} combinedAssumptions - The combined assumptions object
  * @param {string} recipientId - The recipient ID
  * @param {string} categoryId - The category ID
  * @returns {boolean} True if the recipient has effect overrides for this category
  */
-export const recipientHasEffectOverrides = (recipientId, categoryId) => {
-  const recipient = recipientsById[recipientId];
+export const recipientHasEffectOverrides = (combinedAssumptions, recipientId, categoryId) => {
+  const recipient = combinedAssumptions.getRecipientById(recipientId);
   if (!recipient || !recipient.categories) {
     return false;
   }
@@ -187,110 +158,4 @@ export const recipientHasEffectOverrides = (recipientId, categoryId) => {
       effect.multipliers && typeof effect.multipliers === 'object' && Object.keys(effect.multipliers).length > 0;
     return hasOverrides || hasMultipliers;
   });
-};
-
-/**
- * Get the default multiplier for a recipient category from effects
- * @param {string} recipientId - The recipient ID
- * @param {string} categoryId - The category ID
- * @returns {number|null} The effective multiplier, or null if none
- */
-export const getRecipientDefaultMultiplier = (recipientId, categoryId) => {
-  const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    return null;
-  }
-
-  const categoryData = recipient.categories[categoryId];
-  if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
-    return null;
-  }
-
-  // Get the category's base effects to compare against
-  const category = categoriesById[categoryId];
-  if (!category || !category.effects || category.effects.length === 0) {
-    return null;
-  }
-
-  // Check if any of the recipient effects have multipliers
-  const hasMultipliers = categoryData.effects.some(
-    (effect) => effect.multipliers && Object.keys(effect.multipliers).length > 0
-  );
-
-  if (!hasMultipliers) {
-    return null;
-  }
-
-  // Calculate base cost per life for the category
-  const baseCostPerLife = calculateCategoryBaseCostPerLife(category, categoryId, globalParameters);
-
-  // Apply recipient modifications to all effects
-  const modifiedEffects = category.effects.map((baseEffect) => {
-    const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
-    if (recipientEffect) {
-      const context = `for recipient ${recipient.name} category ${categoryId}`;
-      return applyRecipientEffectToBase(baseEffect, recipientEffect, context);
-    }
-    return baseEffect;
-  });
-
-  // Calculate modified cost per life
-  const modifiedCategory = {
-    name: category.name,
-    effects: modifiedEffects,
-  };
-  const modifiedCostPerLife = calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, globalParameters);
-
-  // Multiplier is the ratio (inverted because lower cost per life = higher multiplier)
-  return baseCostPerLife / modifiedCostPerLife;
-};
-
-/**
- * Get the default cost per life for a recipient category from effects
- * @param {string} recipientId - The recipient ID
- * @param {string} categoryId - The category ID
- * @returns {number|null} The effective cost per life override, or null if none
- */
-export const getRecipientDefaultCostPerLife = (recipientId, categoryId) => {
-  const recipient = recipientsById[recipientId];
-  if (!recipient || !recipient.categories) {
-    return null;
-  }
-
-  const categoryData = recipient.categories[categoryId];
-  if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
-    return null;
-  }
-
-  // Get the category's base effects
-  const category = categoriesById[categoryId];
-  if (!category || !category.effects || category.effects.length === 0) {
-    return null;
-  }
-
-  // Check if any of the recipient effects have overrides
-  const hasOverrides = categoryData.effects.some(
-    (effect) => effect.overrides && Object.keys(effect.overrides).length > 0
-  );
-
-  if (!hasOverrides) {
-    return null;
-  }
-
-  // Apply recipient modifications to all effects
-  const modifiedEffects = category.effects.map((baseEffect) => {
-    const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
-    if (recipientEffect && recipientEffect.overrides) {
-      const context = `for recipient ${recipient.name} category ${categoryId}`;
-      return applyRecipientEffectToBase(baseEffect, recipientEffect, context);
-    }
-    return baseEffect;
-  });
-
-  // Calculate cost per life from all modified effects
-  const modifiedCategory = {
-    name: category.name,
-    effects: modifiedEffects,
-  };
-  return calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, globalParameters);
 };

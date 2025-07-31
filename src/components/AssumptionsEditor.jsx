@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { getAllRecipients, getAllCategories } from '../utils/donationDataHelpers';
 import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import {
   validateCategoryValues,
@@ -34,11 +33,11 @@ const AssumptionsEditor = () => {
 
   const [activeTab, setActiveTab] = useState('global');
 
-  const allRecipients = useMemo(() => getAllRecipients(), []);
+  const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
   const allCategories = useMemo(() => {
     // Convert to format expected by the component
     const categories = {};
-    getAllCategories().forEach((category) => {
+    combinedAssumptions.getAllCategories().forEach((category) => {
       // Calculate cost per life from effects
       const costPerLife = calculateCategoryBaseCostPerLife(category, category.id, combinedAssumptions.globalParameters);
       categories[category.id] = {
@@ -47,7 +46,7 @@ const AssumptionsEditor = () => {
       };
     });
     return categories;
-  }, [combinedAssumptions.globalParameters]);
+  }, [combinedAssumptions]);
 
   // Use custom hooks for form state management
   const globalForm = useGlobalForm(combinedAssumptions.globalParameters, getGlobalParameter, isModalOpen);
@@ -267,6 +266,7 @@ const AssumptionsEditor = () => {
             onChange={recipientForm.handleChange}
             onSearch={recipientSearch.handleSearchChange}
             searchTerm={recipientSearch.searchTerm}
+            combinedAssumptions={combinedAssumptions}
           />
         )}
       </div>

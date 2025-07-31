@@ -4,10 +4,7 @@ import { motion } from 'framer-motion';
 import {
   getPrimaryCategoryId,
   getDonationsForRecipient,
-  getCategoryById,
-  getAllRecipients,
   getTotalAmountForRecipient,
-  getRecipientId,
 } from '../utils/donationDataHelpers';
 import {
   calculateDonorStatsFromCombined,
@@ -36,23 +33,18 @@ const DonorList = () => {
     setDonorStats(stats);
 
     // Calculate recipient statistics
-    const recipientStats = getAllRecipients()
+    const recipientStats = combinedAssumptions
+      .getAllRecipients()
       .map((recipient) => {
-        // Find the recipient ID
-        const recipientId = getRecipientId(recipient);
-
-        if (!recipientId) {
-          throw new Error(
-            `Could not find ID for recipient ${recipient.name}. This recipient exists in the data but has no ID mapping.`
-          );
-        }
+        // Use the recipient ID directly (now included in the object)
+        const recipientId = recipient.id;
 
         const totalReceived = getTotalAmountForRecipient(recipientId);
         const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
 
         // Get the primary category for display
-        const primaryCategoryId = getPrimaryCategoryId(recipientId);
-        const primaryCategory = getCategoryById(primaryCategoryId);
+        const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
+        const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId);
 
         if (!primaryCategory) {
           throw new Error(

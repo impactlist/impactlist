@@ -33,7 +33,7 @@ const CategoryDisplay = ({ donation, categories, combinedAssumptions }) => {
   }
 
   // Get primary category info
-  const { categoryName, categoryId, count } = getPrimaryCategoryForRecipient(recipientId);
+  const { categoryName, categoryId, count } = getPrimaryCategoryForRecipient(combinedAssumptions, recipientId);
 
   if (count <= 1) {
     return (

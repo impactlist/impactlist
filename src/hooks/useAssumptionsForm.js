@@ -184,7 +184,7 @@ export const useRecipientSearch = (allRecipients, combinedAssumptions, recipient
           const hasBuiltInOverrides =
             recipientId &&
             Object.keys(recipient.categories || {}).some((categoryId) =>
-              recipientHasEffectOverrides(recipientId, categoryId)
+              recipientHasEffectOverrides(combinedAssumptions, recipientId, categoryId)
             );
 
           let hasCustomOverrides = false;

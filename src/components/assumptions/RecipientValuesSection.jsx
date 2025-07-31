@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../utils/formatters';
-import {
-  getRecipientId,
-  getRecipientDefaultMultiplier,
-  getRecipientDefaultCostPerLife,
-} from '../../utils/donationDataHelpers';
+import { getRecipientId } from '../../utils/donationDataHelpers';
+import { calculateCategoryBaseCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
 
 /**
  * Component for managing recipient-specific cost per life values.
@@ -21,6 +18,7 @@ const RecipientValuesSection = ({
   onChange,
   onSearch,
   searchTerm,
+  combinedAssumptions,
 }) => {
   // Helper function to get form value or default
   const getFormValue = (formValues, key, defaultValue) => {
@@ -28,6 +26,110 @@ const RecipientValuesSection = ({
       return formValues[key].formatted;
     }
     return defaultValue !== undefined ? formatNumberWithCommas(defaultValue) : '';
+  };
+
+  // Recreate getRecipientDefaultMultiplier functionality using combinedAssumptions
+  const getRecipientDefaultMultiplier = (recipientId, categoryId) => {
+    const recipient = combinedAssumptions.getRecipientById(recipientId);
+    if (!recipient || !recipient.categories) {
+      return null;
+    }
+
+    const categoryData = recipient.categories[categoryId];
+    if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
+      return null;
+    }
+
+    // Get the category's base effects to compare against
+    const category = combinedAssumptions.getCategoryById(categoryId);
+    if (!category || !category.effects || category.effects.length === 0) {
+      return null;
+    }
+
+    // Check if any of the recipient effects have multipliers
+    const hasMultipliers = categoryData.effects.some(
+      (effect) => effect.multipliers && Object.keys(effect.multipliers).length > 0
+    );
+
+    if (!hasMultipliers) {
+      return null;
+    }
+
+    // Calculate base cost per life for the category
+    const baseCostPerLife = calculateCategoryBaseCostPerLife(
+      category,
+      categoryId,
+      combinedAssumptions.globalParameters
+    );
+
+    // Apply recipient modifications to all effects
+    const modifiedEffects = category.effects.map((baseEffect) => {
+      const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
+      if (recipientEffect) {
+        const context = `for recipient ${recipient.name} category ${categoryId}`;
+        return applyRecipientEffectToBase(baseEffect, recipientEffect, context);
+      }
+      return baseEffect;
+    });
+
+    // Calculate modified cost per life
+    const modifiedCategory = {
+      name: category.name,
+      effects: modifiedEffects,
+    };
+    const modifiedCostPerLife = calculateCategoryBaseCostPerLife(
+      modifiedCategory,
+      categoryId,
+      combinedAssumptions.globalParameters
+    );
+
+    // Multiplier is the ratio (inverted because lower cost per life = higher multiplier)
+    return baseCostPerLife / modifiedCostPerLife;
+  };
+
+  // Recreate getRecipientDefaultCostPerLife functionality using combinedAssumptions
+  const getRecipientDefaultCostPerLife = (recipientId, categoryId) => {
+    const recipient = combinedAssumptions.getRecipientById(recipientId);
+    if (!recipient || !recipient.categories) {
+      return null;
+    }
+
+    const categoryData = recipient.categories[categoryId];
+    if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
+      return null;
+    }
+
+    // Get the category's base effects
+    const category = combinedAssumptions.getCategoryById(categoryId);
+    if (!category || !category.effects || category.effects.length === 0) {
+      return null;
+    }
+
+    // Check if any of the recipient effects have overrides
+    const hasOverrides = categoryData.effects.some(
+      (effect) => effect.overrides && Object.keys(effect.overrides).length > 0
+    );
+
+    if (!hasOverrides) {
+      return null;
+    }
+
+    // Apply recipient modifications to all effects
+    const modifiedEffects = category.effects.map((baseEffect) => {
+      const recipientEffect = categoryData.effects.find((e) => e.effectId === baseEffect.effectId);
+      if (recipientEffect && recipientEffect.overrides) {
+        const context = `for recipient ${recipient.name} category ${categoryId}`;
+        return applyRecipientEffectToBase(baseEffect, recipientEffect, context);
+      }
+      return baseEffect;
+    });
+
+    // Calculate cost per life from all modified effects
+    const modifiedCategory = {
+      name: category.name,
+      effects: modifiedEffects,
+    };
+    return calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, combinedAssumptions.globalParameters);
   };
 
   return (
@@ -246,6 +348,7 @@ RecipientValuesSection.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,
+  combinedAssumptions: PropTypes.object.isRequired,
 };
 
 export default React.memo(RecipientValuesSection);

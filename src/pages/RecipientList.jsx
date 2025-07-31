@@ -2,14 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import {
-  getPrimaryCategoryId,
-  getCategoryBreakdown,
-  getAllRecipients,
-  getDonationsForRecipient,
-  getCategoryById,
-  getRecipientId,
-} from '../utils/donationDataHelpers';
+import { getPrimaryCategoryId, getCategoryBreakdown, getDonationsForRecipient } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForDonationFromCombined,
@@ -31,14 +24,9 @@ const RecipientList = () => {
     }
 
     // Calculate recipient statistics
-    const recipientStats = getAllRecipients().map((recipient) => {
-      const recipientId = getRecipientId(recipient);
-
-      if (!recipientId) {
-        throw new Error(
-          `Could not find ID for recipient ${recipient.name}. Please check that this recipient has a valid ID.`
-        );
-      }
+    const recipientStats = combinedAssumptions.getAllRecipients().map((recipient) => {
+      // Use the recipient ID directly (now included in the object)
+      const recipientId = recipient.id;
 
       const recipientDonations = getDonationsForRecipient(recipientId);
       const totalReceived = recipientDonations.reduce((sum, d) => {
@@ -48,7 +36,7 @@ const RecipientList = () => {
       const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
 
       // Get the primary category and all categories for display
-      const primaryCategoryId = getPrimaryCategoryId(recipientId);
+      const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
 
       if (!primaryCategoryId) {
         throw new Error(
@@ -56,7 +44,7 @@ const RecipientList = () => {
         );
       }
 
-      const primaryCategory = getCategoryById(primaryCategoryId);
+      const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId);
 
       if (!primaryCategory) {
         throw new Error(
@@ -64,11 +52,11 @@ const RecipientList = () => {
         );
       }
 
-      const categoryBreakdown = getCategoryBreakdown(recipientId);
+      const categoryBreakdown = getCategoryBreakdown(combinedAssumptions, recipientId);
 
       // Get category names from breakdown
       const categoryNames = categoryBreakdown.map((category) => {
-        const categoryObj = getCategoryById(category.categoryId);
+        const categoryObj = combinedAssumptions.getCategoryById(category.categoryId);
 
         if (!categoryObj) {
           throw new Error(

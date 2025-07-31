@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import { getCategoryById, getRecipientById } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/assumptionsDataHelpers';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
@@ -17,7 +16,7 @@ const CategoryDetail = () => {
 
   useEffect(() => {
     // Get category info
-    const category = getCategoryById(categoryId);
+    const category = combinedAssumptions.getCategoryById(categoryId);
 
     if (!category) {
       throw new Error(`Invalid category ID: ${categoryId}. This category does not exist.`);
@@ -36,7 +35,7 @@ const CategoryDetail = () => {
     // Loop through all donations and add up amounts for this category
     donations.forEach((donation) => {
       const recipientId = donation.recipientId;
-      const recipient = getRecipientById(recipientId);
+      const recipient = combinedAssumptions.getRecipientById(recipientId);
 
       if (recipient && recipient.categories && recipient.categories[categoryId]) {
         // This recipient donates to our category

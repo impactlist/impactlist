@@ -2,13 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import {
-  getPrimaryCategoryId,
-  getDonorById,
-  getCategoryById,
-  getRecipientById,
-  getDonationsForDonor,
-} from '../utils/donationDataHelpers';
+import { getPrimaryCategoryId, getDonorById, getDonationsForDonor } from '../utils/donationDataHelpers';
 import {
   calculateDonorStatsFromCombined,
   getCostPerLifeForRecipientFromCombined,
@@ -64,7 +58,7 @@ const DonorDetail = () => {
     const donorDonationsList = getDonationsForDonor(donorId)
       .map((donation) => {
         const recipientId = donation.recipientId;
-        const recipient = getRecipientById(recipientId);
+        const recipient = combinedAssumptions.getRecipientById(recipientId);
 
         // Throw error if recipient doesn't exist in our database
         if (!recipient) {
@@ -77,8 +71,8 @@ const DonorDetail = () => {
         const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
 
         // Get the primary category ID for this recipient
-        const primaryCategoryId = getPrimaryCategoryId(recipientId);
-        const primaryCategory = getCategoryById(primaryCategoryId) || { name: 'Other' };
+        const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
+        const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId) || { name: 'Other' };
 
         // Apply credit multiplier if it exists
         const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
@@ -143,7 +137,7 @@ const DonorDetail = () => {
     const donationsWithCategoryCount = donorDonationsList.map((donation) => {
       if (donation.isUnknown) return donation;
 
-      const recipient = getRecipientById(donation.recipientId);
+      const recipient = combinedAssumptions.getRecipientById(donation.recipientId);
       const categoryCount = recipient ? Object.keys(recipient.categories).length : 1;
 
       return {
@@ -167,13 +161,13 @@ const DonorDetail = () => {
 
       // Get the recipient and its categories
       const recipientId = donation.recipientId;
-      const recipient = getRecipientById(recipientId);
+      const recipient = combinedAssumptions.getRecipientById(recipientId);
       if (!recipient) return;
 
       // Process each category this recipient belongs to
       Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
         const fraction = categoryData.fraction;
-        const category = getCategoryById(categoryId);
+        const category = combinedAssumptions.getCategoryById(categoryId);
         const categoryName = category.name;
 
         // Get the costPerLife with multiplier properly applied

@@ -2,13 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import {
-  getPrimaryCategoryId,
-  getCategoryBreakdown,
-  getRecipientById,
-  getDonationsForRecipient,
-  getCategoryById,
-} from '../utils/donationDataHelpers';
+import { getPrimaryCategoryId, getCategoryBreakdown, getDonationsForRecipient } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeForRecipientFromCombined,
   getCostPerLifeFromCombined,
@@ -51,7 +45,7 @@ const RecipientDetail = () => {
     }
 
     // Get recipient info
-    const recipient = getRecipientById(recipientId);
+    const recipient = combinedAssumptions.getRecipientById(recipientId);
 
     if (!recipient) {
       throw new Error(`Invalid recipient ID: ${recipientId}. This recipient does not exist.`);
@@ -60,16 +54,16 @@ const RecipientDetail = () => {
     const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
 
     // Get primary category and category breakdown
-    const primaryCategoryId = getPrimaryCategoryId(recipientId);
-    const primaryCategory = getCategoryById(primaryCategoryId) || { name: 'Other' };
+    const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
+    const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId) || { name: 'Other' };
     const primaryCategoryName = primaryCategory.name;
 
     // Get cost per life for the primary category
     const categoryCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, primaryCategoryId);
 
     // Get formatted breakdown for bar chart with required properties
-    const categoryBreakdown = getCategoryBreakdown(recipientId).map((category) => {
-      const categoryInfo = getCategoryById(category.categoryId);
+    const categoryBreakdown = getCategoryBreakdown(combinedAssumptions, recipientId).map((category) => {
+      const categoryInfo = combinedAssumptions.getCategoryById(category.categoryId);
       if (!categoryInfo) {
         throw new Error(`Invalid category ID: ${category.categoryId}. This category does not exist.`);
       }
@@ -114,7 +108,7 @@ const RecipientDetail = () => {
       // Process each category this donation belongs to
       Object.entries(recipient.categories || { other: { fraction: 1 } }).forEach(([categoryId, categoryData]) => {
         const fraction = categoryData.fraction || 1;
-        const category = getCategoryById(categoryId);
+        const category = combinedAssumptions.getCategoryById(categoryId);
         if (!category) {
           throw new Error(`Invalid category ID: ${categoryId}. This category does not exist.`);
         }

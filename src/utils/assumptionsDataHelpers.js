@@ -119,9 +119,6 @@ const mergeRecipientEffects = (defaultEffects, userEffects) => {
   return defaultEffects
     .map((defaultEffect) => {
       const userEffect = userEffectsMap[defaultEffect.effectId];
-      if (userEffect && userEffect.windowLength === 0) {
-        return null; // Remove this effect
-      }
       return mergeRecipientEffectWithUser(defaultEffect, userEffect);
     })
     .filter(Boolean);
@@ -158,11 +155,6 @@ const mergeEffects = (defaultEffects, userEffects) => {
       const userOverride = userEffectsMap[defaultEffect.effectId];
 
       if (userOverride) {
-        // If user set windowLength to 0, remove this effect
-        if (userOverride.windowLength === 0) {
-          return null;
-        }
-
         // Merge user fields with default fields (user values take precedence)
         return {
           ...defaultEffect,
@@ -172,11 +164,11 @@ const mergeEffects = (defaultEffects, userEffects) => {
 
       return defaultEffect;
     })
-    .filter(Boolean); // Remove null entries (effects with windowLength 0)
+    .filter(Boolean); // Remove null entries
 
-  // Add any user effects that don't exist in defaults (unless windowLength is 0)
+  // Add any user effects that don't exist in defaults
   userEffects.forEach((userEffect) => {
-    if (!defaultEffects.find((def) => def.effectId === userEffect.effectId) && userEffect.windowLength !== 0) {
+    if (!defaultEffects.find((def) => def.effectId === userEffect.effectId)) {
       mergedEffects.push(userEffect);
     }
   });

@@ -3,8 +3,9 @@ import {
   createDefaultAssumptions,
   createCombinedAssumptions,
   costPerLifeToEffect,
+  getCostPerLifeFromCombined,
+  getActualCostPerLifeForCategoryDataFromCombined,
 } from '../utils/assumptionsDataHelpers';
-import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import { categoriesById, recipientsById, globalParameters } from '../data/generatedData';
 
 /* global localStorage */
@@ -265,51 +266,41 @@ export const AssumptionsProvider = ({ children }) => {
       return null;
     }
 
+    // Check if this recipient/category has custom effects in user assumptions
     const recipientData = userAssumptions.recipients[recipientId];
     if (
       !recipientData ||
       !recipientData.categories ||
       !recipientData.categories[categoryId] ||
-      !recipientData.categories[categoryId].effects
+      !recipientData.categories[categoryId].effects ||
+      recipientData.categories[categoryId].effects.length === 0
     ) {
       return null;
     }
 
-    const recipientEffects = recipientData.categories[categoryId].effects;
-    if (!recipientEffects || recipientEffects.length === 0) {
-      return null;
-    }
-
     if (type === 'costPerLife') {
-      // Calculate cost per life from all effects using the proper calculation
-      const category = {
-        name: `Recipient ${recipientData.name} - Category ${categoryId}`,
-        effects: recipientEffects,
-      };
-      return calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
-    } else if (type === 'multiplier') {
-      // For multipliers, we need to compare the overall cost per life
-      const baseCategory = categoriesById[categoryId];
-      if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
-        return null;
-      }
+      // Get the recipient data from combined assumptions (which has proper names and structure)
+      const recipient = combinedAssumptions.recipients[recipientId];
+      const categoryData = recipient.categories[categoryId];
 
-      // Calculate cost per life for base category
-      const baseCostPerLife = calculateCategoryBaseCostPerLife(
-        baseCategory,
+      // Calculate the actual cost per life for this recipient/category using the combined data
+      return getActualCostPerLifeForCategoryDataFromCombined(
+        combinedAssumptions,
+        recipientId,
         categoryId,
-        combinedAssumptions.globalParameters
+        categoryData
       );
+    } else if (type === 'multiplier') {
+      // Calculate multiplier by comparing base category vs recipient-specific cost per life
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
 
-      // Calculate cost per life for recipient category
-      const recipientCategory = {
-        name: `Recipient ${recipientData.name} - Category ${categoryId}`,
-        effects: recipientEffects,
-      };
-      const recipientCostPerLife = calculateCategoryBaseCostPerLife(
-        recipientCategory,
+      const recipient = combinedAssumptions.recipients[recipientId];
+      const categoryData = recipient.categories[categoryId];
+      const recipientCostPerLife = getActualCostPerLifeForCategoryDataFromCombined(
+        combinedAssumptions,
+        recipientId,
         categoryId,
-        combinedAssumptions.globalParameters
+        categoryData
       );
 
       // Multiplier is the ratio (inverted because lower cost per life = higher multiplier)
@@ -335,9 +326,8 @@ export const AssumptionsProvider = ({ children }) => {
       return null;
     }
 
-    // Calculate cost per life from all effects using the proper calculation
-    const category = userAssumptions.categories[categoryId];
-    return calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
+    // Use the combined assumptions which has the proper merged data with names
+    return getCostPerLifeFromCombined(combinedAssumptions, categoryId);
   };
 
   // Determine if custom values are being used

@@ -6,7 +6,7 @@ import { getRecipientId, recipientHasEffectOverrides } from '../utils/donationDa
 /**
  * Custom hook for managing category form state
  */
-export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen) => {
+export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, defaultCategories) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -67,8 +67,11 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen) =>
   );
 
   const reset = useCallback(() => {
+    if (!defaultCategories) {
+      throw new Error('defaultCategories is required for reset functionality');
+    }
     const defaultValues = {};
-    Object.entries(allCategories).forEach(([key, category]) => {
+    Object.entries(defaultCategories).forEach(([key, category]) => {
       defaultValues[key] = {
         raw: category.costPerLife.toString(),
         display: formatNumberWithCommas(category.costPerLife),
@@ -76,7 +79,7 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen) =>
     });
     setFormValues(defaultValues);
     setErrors({});
-  }, [allCategories]);
+  }, [defaultCategories]);
 
   return {
     formValues,

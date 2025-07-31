@@ -380,3 +380,17 @@ export const applyRecipientEffectToBase = (baseEffect, recipientEffect, context)
 
   return result;
 };
+
+/**
+ * Get the base cost per life from an effect without discounting
+ * @param {Object} effect - The effect object
+ * @param {number} yearsPerLife - Years per life from global parameters
+ * @returns {number|null} Base cost per life or null if not calculable
+ */
+export const getBaseCostPerLife = (effect, yearsPerLife) => {
+  if (effect.costPerQALY !== undefined) {
+    return effect.costPerQALY * yearsPerLife;
+  }
+  // TODO: Handle costPerMicroprobability effects if needed
+  return null;
+};

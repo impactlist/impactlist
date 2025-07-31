@@ -316,7 +316,7 @@ export const costPerLifeToEffect = (costPerLife, globalParams) => {
   return {
     effectId: 'user-override',
     startTime: 0,
-    windowLength: 1,
+    windowLength: 0,
     costPerQALY: costPerLife / globalParams.yearsPerLife,
   };
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
+import { getBaseCostPerLife } from '../utils/effectsCalculation';
 import {
   validateCategoryValues,
   validateRecipientValues,
@@ -39,8 +39,17 @@ const AssumptionsEditor = () => {
     // Convert to format expected by the component
     const categories = {};
     combinedAssumptions.getAllCategories().forEach((category) => {
-      // Calculate cost per life from effects
-      const costPerLife = calculateCategoryBaseCostPerLife(category, category.id, combinedAssumptions.globalParameters);
+      // Use base cost per life (without discounting) for display
+      let costPerLife = null;
+      if (category.effects && category.effects.length > 0) {
+        const baseEffect = category.effects[0];
+        costPerLife = getBaseCostPerLife(baseEffect, combinedAssumptions.globalParameters.yearsPerLife);
+      }
+
+      if (costPerLife === null) {
+        throw new Error(`Could not calculate base cost per life for category ${category.id}`);
+      }
+
       categories[category.id] = {
         name: category.name,
         costPerLife: costPerLife,
@@ -55,12 +64,18 @@ const AssumptionsEditor = () => {
     combinedAssumptions.getAllCategories().forEach((category) => {
       // Get the default category data (without user overrides)
       const defaultCategory = defaultAssumptions.categories[category.id];
-      // Calculate cost per life from effects using default global parameters
-      const costPerLife = calculateCategoryBaseCostPerLife(
-        defaultCategory,
-        category.id,
-        defaultAssumptions.globalParameters
-      );
+
+      // Use base cost per life (without discounting) for display
+      let costPerLife = null;
+      if (defaultCategory.effects && defaultCategory.effects.length > 0) {
+        const baseEffect = defaultCategory.effects[0];
+        costPerLife = getBaseCostPerLife(baseEffect, defaultAssumptions.globalParameters.yearsPerLife);
+      }
+
+      if (costPerLife === null) {
+        throw new Error(`Could not calculate base cost per life for default category ${category.id}`);
+      }
+
       categories[category.id] = {
         name: category.name,
         costPerLife: costPerLife,
@@ -71,7 +86,7 @@ const AssumptionsEditor = () => {
 
   // Use custom hooks for form state management
   const globalForm = useGlobalForm(combinedAssumptions.globalParameters, getGlobalParameter, isModalOpen);
-  const categoryForm = useCategoryForm(allCategories, getCategoryValue, isModalOpen);
+  const categoryForm = useCategoryForm(allCategories, getCategoryValue, isModalOpen, defaultCategories);
   const recipientForm = useRecipientForm();
   const recipientSearch = useRecipientSearch(
     allRecipients,

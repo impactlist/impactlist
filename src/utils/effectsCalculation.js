@@ -137,18 +137,14 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   const isCapLimit = globalParams.populationLimit >= 1;
 
   if (g === 0) {
-    // Zero growth: population stays constant at P0, but respect the limit
-    if (isCapLimit && P0 > populationLimitNumerical) {
-      yearToHitLimit = 0; // Already above cap
-    } else if (!isCapLimit && P0 < populationLimitNumerical) {
-      yearToHitLimit = 0; // Already below floor
-    }
+    // Zero growth: population stays constant at P0, limit doesn't matter
+    yearToHitLimit = Infinity;
   } else if (g > 0) {
     // Positive growth
     if (isCapLimit) {
       // Can hit a cap with positive growth
       if (P0 >= populationLimitNumerical) {
-        yearToHitLimit = 0; // Already at or above cap
+        yearToHitLimit = Infinity; // Already at or above limit
       } else {
         yearToHitLimit = Math.log(populationLimitNumerical / P0) / g;
       }
@@ -159,7 +155,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
     if (!isCapLimit) {
       // Can hit a floor with negative growth
       if (P0 <= populationLimitNumerical) {
-        yearToHitLimit = 0; // Already at or below floor
+        yearToHitLimit = Infinity; // Already at or below limit
       } else {
         yearToHitLimit = Math.log(populationLimitNumerical / P0) / g;
       }
@@ -167,17 +163,11 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
     // If it's a cap (populationLimit > 1), negative growth never hits it
   }
 
-  // Helper function to get population at a given time, respecting limit
+  // Helper function to get population at a given time
   const getPopulationAt = (time) => {
     if (g === 0) {
-      // Constant population, but respect limit
-      if (isCapLimit && P0 > populationLimitNumerical) {
-        return populationLimitNumerical; // Apply cap
-      } else if (!isCapLimit && P0 < populationLimitNumerical) {
-        return populationLimitNumerical; // Apply floor
-      } else {
-        return P0; // Within limits
-      }
+      // Constant population, limit doesn't matter
+      return P0;
     }
 
     const pop = P0 * Math.exp(g * time);

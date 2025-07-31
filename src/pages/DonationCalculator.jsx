@@ -6,6 +6,7 @@ import {
   getCostPerLifeFromCombined,
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForCategoryFromCombined,
+  calculateDonorStatsFromCombined,
 } from '../utils/assumptionsDataHelpers';
 import { recipientsById } from '../data/generatedData';
 import { useAssumptions } from '../contexts/AssumptionsContext';
@@ -44,60 +45,45 @@ const DonationCalculator = () => {
   // Calculate donor rank based on lives saved - now wrapped in useCallback
   const calculateDonorRank = useCallback(
     (lives) => {
-      // This would use actual donor data, for now it's a placeholder
-      // Ideally, it would compare the lives saved against all donors' lives saved
-      // and determine where this user would rank
+      const donorStats = calculateDonorStatsFromCombined(combinedAssumptions);
 
-      // Sample implementation:
-      import('../components/shared/SortableTable')
-        .then(() => {
-          import('../utils/assumptionsDataHelpers').then(({ calculateDonorStatsFromCombined }) => {
-            const donorStats = calculateDonorStatsFromCombined(combinedAssumptions);
+      // Find where the user would rank
+      let rank = 1;
+      let donorAbove = null;
+      let donorBelow = null;
+      let twoBelow = null;
+      let twoAbove = null;
 
-            // Find where the user would rank
-            let rank = 1;
-            let donorAbove = null;
-            let donorBelow = null;
-            let twoBelow = null;
-            let twoAbove = null;
+      // Donors are sorted by lives saved in descending order
+      for (let i = 0; i < donorStats.length; i++) {
+        const donor = donorStats[i];
 
-            // Donors are sorted by lives saved in descending order
-            for (let i = 0; i < donorStats.length; i++) {
-              const donor = donorStats[i];
+        if (lives <= donor.totalLivesSaved) {
+          rank++;
+          // This donor would be above the user
+          donorAbove = donor;
+          // If we're at the bottom, get the donor two positions above
+          if (!donorBelow && i > 0) {
+            twoAbove = donorStats[i - 1];
+          }
+        } else {
+          // This donor would be below the user
+          donorBelow = i < donorStats.length ? donor : null;
+          // Get the donor two positions below if we're at the top
+          if (rank === 1 && i + 2 < donorStats.length) {
+            twoBelow = donorStats[i + 2];
+          }
+          break;
+        }
+      }
 
-              if (lives <= donor.totalLivesSaved) {
-                rank++;
-                // This donor would be above the user
-                donorAbove = donor;
-                // If we're at the bottom, get the donor two positions above
-                if (!donorBelow && i > 0) {
-                  twoAbove = donorStats[i - 1];
-                }
-              } else {
-                // This donor would be below the user
-                donorBelow = i < donorStats.length ? donor : null;
-                // Get the donor two positions below if we're at the top
-                if (rank === 1 && i + 2 < donorStats.length) {
-                  twoBelow = donorStats[i + 2];
-                }
-                break;
-              }
-            }
-
-            setDonorRank(rank);
-            setNeighboringDonors({
-              above: donorAbove,
-              below: donorBelow,
-              twoBelow: twoBelow,
-              twoAbove: twoAbove,
-            });
-          });
-        })
-        .catch((error) => {
-          console.error('Error calculating donor rank:', error);
-          setDonorRank(null);
-          setNeighboringDonors({ above: null, below: null, twoBelow: null, twoAbove: null });
-        });
+      setDonorRank(rank);
+      setNeighboringDonors({
+        above: donorAbove,
+        below: donorBelow,
+        twoBelow: twoBelow,
+        twoAbove: twoAbove,
+      });
     },
     [combinedAssumptions]
   );

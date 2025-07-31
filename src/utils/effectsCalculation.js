@@ -10,6 +10,33 @@ import {
 } from './dataValidation';
 
 /**
+ * Calculate the sum of a discounted geometric series from year start to year end
+ * Sum from t=start to t=end-1 of 1/(1+r)^t
+ * @param {number} discountRate - Annual discount rate (e.g., 0.02 for 2%)
+ * @param {number} start - Start year (inclusive)
+ * @param {number} end - End year (exclusive)
+ * @returns {number} Sum of discounted values
+ */
+const calculateDiscountedSum = (discountRate, start, end) => {
+  if (start >= end) return 0;
+
+  // For the sum from t=start to t=end-1 of (1/(1+r))^t
+  // This equals (1/(1+r))^start * (1 - (1/(1+r))^(end-start)) / (1 - 1/(1+r))
+  // Which simplifies to: (1/(1+r))^start * (1 - (1/(1+r))^(end-start)) / (r/(1+r))
+
+  const discountFactor = 1 / (1 + discountRate);
+  const startDiscount = Math.pow(discountFactor, start);
+  const periodDiscount = 1 - Math.pow(discountFactor, end - start);
+
+  // Handle the case where discount rate is effectively zero
+  if (Math.abs(discountRate) < 1e-10) {
+    return end - start;
+  }
+
+  return (startDiscount * periodDiscount) / (discountRate / (1 + discountRate));
+};
+
+/**
  * Convert a QALY-based effect to cost per life
  * @param {Object} effect - The effect with costPerQALY
  * @param {Object} globalParams - Global parameters object
@@ -18,15 +45,32 @@ import {
 const qalyEffectToCostPerLife = (effect, globalParams) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerQALY, 'costPerQALY', 'in QALY effect');
+  assertExists(effect.startTime, 'startTime', 'in QALY effect');
+  assertPositiveNumber(effect.windowLength, 'windowLength', 'in QALY effect');
 
-  // Use global parameter for average life expectancy remaining
-  // Assume 1 QALY per year of life (could be made configurable)
+  // Get global parameters
   assertExists(globalParams, 'globalParams');
   assertPositiveNumber(globalParams.yearsPerLife, 'yearsPerLife', 'in globalParams');
+  assertNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
+  assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
+
+  const startYear = effect.startTime;
+  const endYear = Math.min(startYear + effect.windowLength, globalParams.timeLimit);
+
+  // Calculate discounted sum for this time window
+  const discountedYears = calculateDiscountedSum(globalParams.discountRate, startYear, endYear);
+
+  // Average QALYs per life, considering discounting over the effect window
   const avgLifeYears = globalParams.yearsPerLife;
   const qalyPerLife = avgLifeYears * 1.0;
 
-  return effect.costPerQALY * qalyPerLife;
+  // Adjust cost per QALY for the discounted time window
+  // If we save 1 QALY per year for discountedYears, that's discountedYears QALYs total
+  // So the effective cost per life is costPerQALY * qalyPerLife / discountedYears * (endYear - startYear)
+  // This accounts for the fact that we're only applying the effect during a specific time window
+  const timeWindowAdjustment = (endYear - startYear) / discountedYears;
+
+  return effect.costPerQALY * qalyPerLife * timeWindowAdjustment;
 };
 
 /**
@@ -144,33 +188,6 @@ export const effectToCostPerLife = (effect, globalParams) => {
   } else {
     throw new Error('Effect must have either costPerQALY or costPerMicroprobability');
   }
-};
-
-/**
- * Calculate the sum of a discounted geometric series from year start to year end
- * Sum from t=start to t=end-1 of 1/(1+r)^t
- * @param {number} discountRate - Annual discount rate (e.g., 0.02 for 2%)
- * @param {number} start - Start year (inclusive)
- * @param {number} end - End year (exclusive)
- * @returns {number} Sum of discounted values
- */
-const calculateDiscountedSum = (discountRate, start, end) => {
-  if (start >= end) return 0;
-
-  // For the sum from t=start to t=end-1 of (1/(1+r))^t
-  // This equals (1/(1+r))^start * (1 - (1/(1+r))^(end-start)) / (1 - 1/(1+r))
-  // Which simplifies to: (1/(1+r))^start * (1 - (1/(1+r))^(end-start)) / (r/(1+r))
-
-  const discountFactor = 1 / (1 + discountRate);
-  const startDiscount = Math.pow(discountFactor, start);
-  const periodDiscount = 1 - Math.pow(discountFactor, end - start);
-
-  // Handle the case where discount rate is effectively zero
-  if (Math.abs(discountRate) < 1e-10) {
-    return end - start;
-  }
-
-  return (startDiscount * periodDiscount) / (discountRate / (1 + discountRate));
 };
 
 /**

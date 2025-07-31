@@ -1,6 +1,6 @@
 // Assumptions data helpers
 // Utilities for managing default, user, and combined assumption data structures
-import { globalParameters, categoriesById, recipientsById, donorsById } from '../data/generatedData';
+import { globalParameters, categoriesById, recipientsById } from '../data/generatedData';
 import {
   calculateCategoryBaseCostPerLife,
   applyRecipientEffectToBase,
@@ -14,7 +14,7 @@ import {
   crashInsteadOfFallback,
 } from './dataValidation';
 import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
-import { getAllDonors, getDonationsForDonor } from './donationDataHelpers';
+import { getAllDonors, getDonationsForDonor, getDonorId } from './donationDataHelpers';
 
 /**
  * Create a default assumptions object from the base data
@@ -462,7 +462,7 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
   assertExists(combinedAssumptions, 'combinedAssumptions');
 
   const donorStats = getAllDonors().map((donor) => {
-    const donorId = Object.keys(donorsById).find((id) => donorsById[id] === donor);
+    const donorId = getDonorId(donor);
     if (!donorId) {
       throw new Error(`Could not find ID for donor ${donor.name}`);
     }

@@ -8,7 +8,7 @@ export const getDonorById = (donorId) => {
 };
 
 // Helper to get all donors as an array
-export const getAllDonors = () => Object.values(donorsById);
+export const getAllDonors = () => Object.entries(donorsById).map(([id, donor]) => ({ ...donor, id }));
 
 // Get primary category for a recipient
 export const getPrimaryCategoryForRecipient = (combinedAssumptions, recipientId) => {
@@ -55,6 +55,11 @@ export const getPrimaryCategoryForRecipient = (combinedAssumptions, recipientId)
 // Helper to find recipient ID by recipient object
 export const getRecipientId = (recipientObj) => {
   return recipientObj?.id;
+};
+
+// Helper to find donor ID by donor object
+export const getDonorId = (donorObj) => {
+  return donorObj?.id;
 };
 
 // Get the primary (highest weight) category for a recipient

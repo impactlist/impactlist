@@ -126,14 +126,57 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
 
   let totalQALYs;
 
-  // Check if we hit population limit
-  const yearToHitLimit = g > 0 ? Math.log(populationLimitActual / P0) / g : Infinity;
+  // Check if and when we hit population limit
+  let yearToHitLimit = Infinity;
+
+  // Handle the various cases of population limits
+  if (g === 0) {
+    // Zero growth: population stays constant at P0, but respect the limit
+    // Population is at limit immediately if P0 is beyond it
+    yearToHitLimit = P0 > populationLimitActual || P0 < populationLimitActual ? 0 : Infinity;
+  } else if (g > 0) {
+    // Positive growth
+    if (P0 >= populationLimitActual) {
+      // Already at or above limit
+      yearToHitLimit = 0;
+    } else {
+      // Will reach limit in the future
+      yearToHitLimit = Math.log(populationLimitActual / P0) / g;
+    }
+  } else {
+    // g < 0
+    // Negative growth (decline)
+    if (P0 <= populationLimitActual) {
+      // Already at or below limit (limit acts as floor)
+      yearToHitLimit = 0;
+    } else {
+      // Will reach limit in the future
+      yearToHitLimit = Math.log(populationLimitActual / P0) / g;
+    }
+  }
+
+  // Helper function to get population at a given time, capped at limit
+  const getPopulationAt = (time) => {
+    if (g === 0) {
+      // Constant population, but clamp to limit
+      // The limit could be acting as either a cap or a floor
+      if (P0 > populationLimitActual) {
+        return populationLimitActual; // Cap
+      } else if (P0 < populationLimitActual) {
+        return P0; // No floor effect when not growing/declining
+      } else {
+        return P0; // Already at limit
+      }
+    }
+    const pop = P0 * Math.exp(g * time);
+    return g > 0 ? Math.min(pop, populationLimitActual) : Math.max(pop, populationLimitActual);
+  };
 
   if (effect.windowLength === 0) {
     // raw Window length being zero --> instantaneous pulse
-    const currentPopulation = yearToHitLimit > startYear ? P0 * Math.exp(g * startYear) : populationLimitActual;
+    const currentPopulation = getPopulationAt(startYear);
     totalQALYs = currentPopulation * fraction * qalyPerYear * Math.exp(-r * startYear);
-  } else if (yearToHitLimit >= startYear + windowLength) {
+  } else if (yearToHitLimit < 0 || yearToHitLimit >= startYear + windowLength) {
     // Population doesn't hit limit during the effect window
     // Integral from t=startYear to t=startYear+windowLength of:
     // P0 * e^(g*t) * fraction * qalyPerYear * e^(-r*t) dt
@@ -146,12 +189,13 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
       totalQALYs = P0 * fraction * qalyPerYear * windowLength;
     } else {
       // General case: integral of e^((g-r)*t)
+      // Use numerically stable computation: expEnd - expStart = expStart * expm1(combinedRate * windowLength)
       const expStart = Math.exp(combinedRate * startYear);
-      const expEnd = Math.exp(combinedRate * (startYear + windowLength));
-      totalQALYs = (P0 * fraction * qalyPerYear * (expEnd - expStart)) / combinedRate;
+      const expDiff = expStart * Math.expm1(combinedRate * windowLength);
+      totalQALYs = (P0 * fraction * qalyPerYear * expDiff) / combinedRate;
     }
   } else if (yearToHitLimit <= startYear) {
-    // Population already at limit for entire effect window
+    // Population already at limit at start of effect window
     // Use continuous discounting formula similar to qalyEffectToCostPerLife
     let discountFactor;
     if (r === 0) {
@@ -174,9 +218,10 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
       // When g ≈ r, the exponentials cancel out
       totalBeforeLimit = P0 * fraction * qalyPerYear * timeToLimit;
     } else {
+      // Use numerically stable computation: expLimit - expStart = expStart * expm1(combinedRate * timeToLimit)
       const expStart = Math.exp(combinedRate * startYear);
-      const expLimit = Math.exp(combinedRate * yearToHitLimit);
-      totalBeforeLimit = (P0 * fraction * qalyPerYear * (expLimit - expStart)) / combinedRate;
+      const expDiff = expStart * Math.expm1(combinedRate * timeToLimit);
+      totalBeforeLimit = (P0 * fraction * qalyPerYear * expDiff) / combinedRate;
     }
 
     // After hitting limit (yearToHitLimit to startYear + windowLength)

@@ -54,25 +54,67 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
 
   const startYear = effect.startTime;
   const endYear = Math.min(startYear + effect.windowLength, globalParams.timeLimit);
+  const populationLimitActual = globalParams.populationLimit * 1e9; // Convert billions to actual number
 
-  // Calculate total QALYs over the effect window with population growth and discounting
-  let totalQALYs = 0;
-  for (let year = startYear; year < endYear; year++) {
-    // Calculate population at this year with growth, capped at limit
-    const populationGrowthFactor = Math.pow(1 + globalParams.populationGrowthRate, year);
-    const population = Math.min(
-      globalParams.currentPopulation * populationGrowthFactor,
-      globalParams.populationLimit * 1e9 // Convert billions to actual number
-    );
+  // Calculate total QALYs using closed-form solution
+  const g = globalParams.populationGrowthRate;
+  const r = globalParams.discountRate;
+  const P0 = globalParams.currentPopulation;
+  const fraction = effect.populationFractionImpacted;
+  const qalyPerYear = effect.rawQALYImprovementPerYear;
 
-    // Calculate affected population
-    const affectedPopulation = population * effect.populationFractionImpacted;
+  let totalQALYs;
 
-    // Apply discounting
-    const discountFactor = Math.pow(1 / (1 + globalParams.discountRate), year);
+  // Check if we hit population limit
+  const yearToHitLimit = g > 0 ? Math.log(populationLimitActual / P0) / Math.log(1 + g) : Infinity;
 
-    // Add QALYs for this year
-    totalQALYs += affectedPopulation * effect.rawQALYImprovementPerYear * discountFactor;
+  if (yearToHitLimit >= endYear) {
+    // Population doesn't hit limit during the effect window
+    // Sum from year=startYear to year=endYear-1 of:
+    // P0 * (1+g)^year * fraction * qalyPerYear * (1/(1+r))^year
+    // = P0 * fraction * qalyPerYear * sum((1+g)/(1+r))^year
+
+    const combinedRate = (1 + g) / (1 + r) - 1;
+
+    if (Math.abs(combinedRate) < 1e-10) {
+      // Special case when growth rate equals discount rate
+      totalQALYs =
+        (P0 * fraction * qalyPerYear * (endYear - startYear) * Math.pow(1 + g, startYear)) / Math.pow(1 + r, startYear);
+    } else {
+      // General case: geometric series
+      const base = (1 + g) / (1 + r);
+      const firstTerm = Math.pow(base, startYear);
+      const lastTerm = Math.pow(base, endYear);
+      totalQALYs = (P0 * fraction * qalyPerYear * (firstTerm - lastTerm)) / (1 - base);
+    }
+  } else if (yearToHitLimit <= startYear) {
+    // Population already at limit for entire effect window
+    const discountedSum = calculateDiscountedSum(r, startYear, endYear);
+    totalQALYs = populationLimitActual * fraction * qalyPerYear * discountedSum;
+  } else {
+    // Population hits limit during effect window - need to split calculation
+    const limitYear = Math.ceil(yearToHitLimit);
+
+    // Before hitting limit (startYear to limitYear)
+    const combinedRate = (1 + g) / (1 + r) - 1;
+    let totalBeforeLimit;
+
+    if (Math.abs(combinedRate) < 1e-10) {
+      totalBeforeLimit =
+        (P0 * fraction * qalyPerYear * (limitYear - startYear) * Math.pow(1 + g, startYear)) /
+        Math.pow(1 + r, startYear);
+    } else {
+      const base = (1 + g) / (1 + r);
+      const firstTerm = Math.pow(base, startYear);
+      const lastTerm = Math.pow(base, limitYear);
+      totalBeforeLimit = (P0 * fraction * qalyPerYear * (firstTerm - lastTerm)) / (1 - base);
+    }
+
+    // After hitting limit (limitYear to endYear)
+    const discountedSum = calculateDiscountedSum(r, limitYear, endYear);
+    const totalAfterLimit = populationLimitActual * fraction * qalyPerYear * discountedSum;
+
+    totalQALYs = totalBeforeLimit + totalAfterLimit;
   }
 
   // Convert micropropability to probability (1 micropropability = 1/1,000,000)

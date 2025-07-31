@@ -247,7 +247,11 @@ export const AssumptionsProvider = ({ children }) => {
 
   // Get global parameter custom value for display
   const getGlobalParameter = (parameterKey) => {
-    if (!userAssumptions || !userAssumptions.globalParameters || !userAssumptions.globalParameters[parameterKey]) {
+    if (
+      !userAssumptions ||
+      !userAssumptions.globalParameters ||
+      userAssumptions.globalParameters[parameterKey] === undefined
+    ) {
       return null;
     }
     return userAssumptions.globalParameters[parameterKey];

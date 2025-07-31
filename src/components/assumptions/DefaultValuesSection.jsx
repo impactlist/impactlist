@@ -7,7 +7,7 @@ import { formatNumberWithCommas } from '../../utils/formatters';
 /**
  * Component for managing default cost per life values for categories.
  */
-const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, className = '' }) => {
+const DefaultValuesSection = ({ allCategories, defaultCategories, formValues, errors, onChange, className = '' }) => {
   // Get form value with formatting
   const getFormValue = (formValues, key, defaultValue) => {
     const formValue = formValues[key];
@@ -31,7 +31,7 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
       {Object.entries(allCategories)
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
         .map(([key, category]) => {
-          const defaultValue = category.costPerLife;
+          const defaultValue = defaultCategories[key].costPerLife;
           const valueObj = formValues[key] || { raw: '', display: '' };
           const hasError = errors[key];
 
@@ -91,6 +91,7 @@ const DefaultValuesSection = ({ allCategories, formValues, errors, onChange, cla
 
 DefaultValuesSection.propTypes = {
   allCategories: PropTypes.object.isRequired,
+  defaultCategories: PropTypes.object.isRequired,
   formValues: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,

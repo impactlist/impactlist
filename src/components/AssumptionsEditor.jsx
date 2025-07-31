@@ -21,6 +21,7 @@ import FormActions from './assumptions/FormActions';
 const AssumptionsEditor = () => {
   const {
     combinedAssumptions,
+    defaultAssumptions,
     updateCategoryValue,
     updateRecipientValue,
     updateGlobalParameter,
@@ -47,6 +48,26 @@ const AssumptionsEditor = () => {
     });
     return categories;
   }, [combinedAssumptions]);
+
+  const defaultCategories = useMemo(() => {
+    // Get default categories without user overrides
+    const categories = {};
+    combinedAssumptions.getAllCategories().forEach((category) => {
+      // Get the default category data (without user overrides)
+      const defaultCategory = defaultAssumptions.categories[category.id];
+      // Calculate cost per life from effects using default global parameters
+      const costPerLife = calculateCategoryBaseCostPerLife(
+        defaultCategory,
+        category.id,
+        defaultAssumptions.globalParameters
+      );
+      categories[category.id] = {
+        name: category.name,
+        costPerLife: costPerLife,
+      };
+    });
+    return categories;
+  }, [combinedAssumptions, defaultAssumptions]);
 
   // Use custom hooks for form state management
   const globalForm = useGlobalForm(combinedAssumptions.globalParameters, getGlobalParameter, isModalOpen);
@@ -242,6 +263,7 @@ const AssumptionsEditor = () => {
           <form onSubmit={handleSubmit}>
             <GlobalValuesSection
               globalParameters={combinedAssumptions.globalParameters}
+              defaultGlobalParameters={defaultAssumptions.globalParameters}
               formValues={globalForm.formValues}
               errors={globalForm.errors}
               onChange={globalForm.handleChange}
@@ -251,6 +273,7 @@ const AssumptionsEditor = () => {
           <form onSubmit={handleSubmit}>
             <DefaultValuesSection
               allCategories={allCategories}
+              defaultCategories={defaultCategories}
               formValues={categoryForm.formValues}
               errors={categoryForm.errors}
               onChange={categoryForm.handleChange}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GlobalValuesSection = ({ globalParameters, formValues, errors, onChange }) => {
+const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
   const parameters = [
     {
       id: 'discountRate',
@@ -62,7 +62,7 @@ const GlobalValuesSection = ({ globalParameters, formValues, errors, onChange })
       {parameters.map((param) => {
         const value = formValues[param.id]?.formatted || '';
         const hasError = errors[param.id];
-        const defaultValue = globalParameters[param.id];
+        const defaultValue = defaultGlobalParameters[param.id];
 
         return (
           <div key={param.id} className="space-y-2">

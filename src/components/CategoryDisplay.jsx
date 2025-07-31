@@ -6,7 +6,7 @@ import { getPrimaryCategoryForRecipient } from '../utils/donationDataHelpers';
  * A reusable component for displaying category information consistently across the app.
  * This handles both custom recipients with a specified category and existing recipients with their categories.
  */
-const CategoryDisplay = ({ donation, categories, recipientsById }) => {
+const CategoryDisplay = ({ donation, categories, combinedAssumptions }) => {
   // For custom recipients, show the specified category and any effectiveness info
   if (donation.isCustomRecipient && donation.categoryId) {
     const category = categories.find((c) => c.id === donation.categoryId);
@@ -26,7 +26,7 @@ const CategoryDisplay = ({ donation, categories, recipientsById }) => {
   }
 
   // For existing recipients, look up their categories
-  const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === donation.recipientName);
+  const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);
 
   if (!recipientId) {
     return <span className="text-sm text-slate-700">Unknown</span>;

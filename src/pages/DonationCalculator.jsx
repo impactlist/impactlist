@@ -8,7 +8,6 @@ import {
   calculateLivesSavedForCategoryFromCombined,
   calculateDonorStatsFromCombined,
 } from '../utils/assumptionsDataHelpers';
-import { recipientsById } from '../data/generatedData';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import SpecificDonationModal from '../components/SpecificDonationModal';
@@ -163,9 +162,7 @@ const DonationCalculator = () => {
         livesSaved = donation.amount / costPerLife;
       } else {
         // For existing recipients, find the appropriate recipient ID
-        const recipientId = Object.keys(recipientsById).find(
-          (id) => recipientsById[id].name === donation.recipientName
-        );
+        const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);
 
         if (!recipientId) {
           throw new Error(`Could not find ID for recipient: ${donation.recipientName}`);
@@ -286,7 +283,7 @@ const DonationCalculator = () => {
     } else {
       // For existing recipients, find the recipient in our data
       // Find the appropriate recipient ID by matching name
-      const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === donation.recipientName);
+      const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);
 
       if (!recipientId) {
         throw new Error(`Could not find ID for recipient: ${donation.recipientName}`);
@@ -312,7 +309,7 @@ const DonationCalculator = () => {
       }
     } else {
       // For existing recipients, get cost per life using combined assumptions
-      const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === donation.recipientName);
+      const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);
       if (recipientId) {
         return getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
       } else {
@@ -373,7 +370,7 @@ const DonationCalculator = () => {
             <RecipientTable
               donations={specificDonations}
               categories={categories}
-              recipientsById={recipientsById}
+              combinedAssumptions={combinedAssumptions}
               onAddClick={() => openDonationModal()}
               onEditClick={(donation) => openDonationModal(donation)}
               onDeleteClick={handleDeleteSpecificDonation}

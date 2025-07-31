@@ -6,7 +6,6 @@ import {
   getCostPerLifeFromCombined,
   getActualCostPerLifeForCategoryDataFromCombined,
 } from '../utils/assumptionsDataHelpers';
-import { categoriesById, recipientsById, globalParameters } from '../data/generatedData';
 
 /* global localStorage */
 
@@ -82,14 +81,14 @@ export const AssumptionsProvider = ({ children }) => {
         const costPerLife = Number(value);
 
         // Get the base category to preserve effectId
-        const baseCategory = categoriesById[categoryKey];
+        const baseCategory = combinedAssumptions.getCategoryById(categoryKey);
         if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
           throw new Error(`Category ${categoryKey} has no base effects to override`);
         }
 
         const baseEffect = baseCategory.effects[0];
         const effect = {
-          ...costPerLifeToEffect(costPerLife, defaultAssumptions.globalParameters),
+          ...costPerLifeToEffect(costPerLife, combinedAssumptions.globalParameters),
           effectId: baseEffect.effectId,
         };
 
@@ -125,7 +124,7 @@ export const AssumptionsProvider = ({ children }) => {
       const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
 
       // Find the recipient ID by name
-      const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === recipientName);
+      const recipientId = combinedAssumptions.findRecipientId(recipientName);
       if (!recipientId) {
         throw new Error(`Recipient ${recipientName} not found`);
       }
@@ -170,7 +169,7 @@ export const AssumptionsProvider = ({ children }) => {
         const numValue = Number(value);
 
         // Get the base category effect to use as template
-        const baseCategory = categoriesById[categoryId];
+        const baseCategory = combinedAssumptions.getCategoryById(categoryId);
         if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
           throw new Error(`Category ${categoryId} has no base effects to override`);
         }
@@ -180,7 +179,7 @@ export const AssumptionsProvider = ({ children }) => {
         let newEffect;
         if (type === 'costPerLife') {
           // Create an override structure for cost per life
-          const costPerQALY = numValue / globalParameters.yearsPerLife;
+          const costPerQALY = numValue / combinedAssumptions.globalParameters.yearsPerLife;
           newEffect = {
             effectId: baseEffect.effectId,
             overrides: {
@@ -261,7 +260,7 @@ export const AssumptionsProvider = ({ children }) => {
     }
 
     // Find the recipient ID by name
-    const recipientId = Object.keys(recipientsById).find((id) => recipientsById[id].name === recipientName);
+    const recipientId = combinedAssumptions.findRecipientId(recipientName);
     if (!recipientId) {
       return null;
     }

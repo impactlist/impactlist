@@ -12,7 +12,7 @@ import { formatCurrency, formatLives } from '../../utils/formatters';
 const RecipientTable = ({
   donations,
   categories,
-  recipientsById,
+  combinedAssumptions,
   onAddClick,
   onEditClick,
   onDeleteClick,
@@ -70,8 +70,7 @@ const RecipientTable = ({
                   ) : (
                     <Link
                       to={`/recipient/${encodeURIComponent(
-                        Object.keys(recipientsById).find((id) => recipientsById[id].name === donation.recipientName) ||
-                          ''
+                        combinedAssumptions.findRecipientId(donation.recipientName) || ''
                       )}`}
                       className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
                     >
@@ -85,7 +84,11 @@ const RecipientTable = ({
               key: 'category',
               label: 'Category',
               render: (donation) => (
-                <CategoryDisplay donation={donation} categories={categories} recipientsById={recipientsById} />
+                <CategoryDisplay
+                  donation={donation}
+                  categories={categories}
+                  combinedAssumptions={combinedAssumptions}
+                />
               ),
             },
             {
@@ -170,7 +173,7 @@ const RecipientTable = ({
 RecipientTable.propTypes = {
   donations: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
-  recipientsById: PropTypes.object.isRequired,
+  combinedAssumptions: PropTypes.object.isRequired,
   onAddClick: PropTypes.func.isRequired,
   onEditClick: PropTypes.func,
   onDeleteClick: PropTypes.func,

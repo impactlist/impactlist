@@ -240,6 +240,20 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
     };
   });
 
+  // Add helper functions to avoid direct access to raw data
+  combined.findRecipientId = (recipientName) => {
+    if (!recipientName) return null;
+    return Object.keys(combined.recipients).find((id) => combined.recipients[id].name === recipientName);
+  };
+
+  combined.getCategoryById = (categoryId) => {
+    return combined.categories[categoryId] || null;
+  };
+
+  combined.getRecipientById = (recipientId) => {
+    return combined.recipients[recipientId] || null;
+  };
+
   return combined;
 };
 

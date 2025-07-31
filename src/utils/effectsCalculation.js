@@ -208,34 +208,33 @@ const calculateMultiEffectCostPerLife = (effects, categoryId, globalParams) => {
   const discountRate = globalParams.discountRate;
   const timeLimit = globalParams.timeLimit;
 
-  // Calculate total discounted impact for each effect
-  let totalDiscountedCost = 0;
-  let totalDiscountedLives = 0;
+  // Calculate weighted average of already-discounted cost per life values
+  let totalWeight = 0;
+  let weightedSum = 0;
 
   effects.forEach((effect) => {
     assertExists(effect.startTime, 'startTime', `in effect ${effect.effectId}`);
     assertPositiveNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
 
+    // Get the already-discounted cost per life from the effect
     const costPerLife = effectToCostPerLife(effect, globalParams);
+
     const startYear = effect.startTime;
     const endYear = Math.min(startYear + effect.windowLength, timeLimit);
 
-    // Calculate discounted sum for this time window
-    const discountedYears = calculateDiscountedSum(discountRate, startYear, endYear);
+    // Weight by the discounted time window
+    const weight = calculateDiscountedSum(discountRate, startYear, endYear);
 
-    // With $1/year spending, lives saved per year = 1/costPerLife
-    const livesPerYear = 1 / costPerLife;
-
-    totalDiscountedCost += discountedYears; // $1/year * discountedYears
-    totalDiscountedLives += livesPerYear * discountedYears;
+    totalWeight += weight;
+    weightedSum += costPerLife * weight;
   });
 
   // Return weighted average cost per life
-  if (totalDiscountedLives === 0) {
-    throw new Error(`No lives saved calculated for category "${categoryId}" with multiple effects`);
+  if (totalWeight === 0) {
+    throw new Error(`No weight calculated for category "${categoryId}" with multiple effects`);
   }
 
-  return totalDiscountedCost / totalDiscountedLives;
+  return weightedSum / totalWeight;
 };
 
 /**

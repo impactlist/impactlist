@@ -58,6 +58,14 @@ export const assertNonZeroNumber = (value, fieldName, context = '') => {
   return value;
 };
 
+export const assertNonNegativeNumber = (value, fieldName, context = '') => {
+  assertNumber(value, fieldName, context);
+  if (value < 0) {
+    throw new Error(`Field ${fieldName} cannot be negative${context ? ` ${context}` : ''}, got: ${value}`);
+  }
+  return value;
+};
+
 /**
  * Assert that a value is an array
  * @param {*} value - The value to check

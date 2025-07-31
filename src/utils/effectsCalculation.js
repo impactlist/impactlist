@@ -5,6 +5,7 @@ import {
   assertNumber,
   assertPositiveNumber,
   assertNonZeroNumber,
+  assertNonNegativeNumber,
   assertNonEmptyArray,
   validateCategory,
 } from './dataValidation';
@@ -45,32 +46,43 @@ const calculateDiscountedSum = (discountRate, start, end) => {
 const qalyEffectToCostPerLife = (effect, globalParams) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerQALY, 'costPerQALY', 'in QALY effect');
-  assertExists(effect.startTime, 'startTime', 'in QALY effect');
-  assertPositiveNumber(effect.windowLength, 'windowLength', 'in QALY effect');
+  assertNonNegativeNumber(effect.startTime, 'startTime', 'in QALY effect');
+  assertNonNegativeNumber(effect.windowLength, 'windowLength', 'in QALY effect');
 
   // Get global parameters
   assertExists(globalParams, 'globalParams');
   assertPositiveNumber(globalParams.yearsPerLife, 'yearsPerLife', 'in globalParams');
-  assertNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
+  assertNonNegativeNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
   assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
 
   const startYear = effect.startTime;
-  const endYear = Math.min(startYear + effect.windowLength, globalParams.timeLimit);
+  const windowLength = Math.min(effect.windowLength, globalParams.timeLimit - startYear);
 
-  // Calculate discounted sum for this time window
-  const discountedYears = calculateDiscountedSum(globalParams.discountRate, startYear, endYear);
+  if (startYear >= globalParams.timeLimit || (windowLength === 0 && effect.windowLength !== 0)) {
+    // If the window length is 0 but only because of trimming, don't treat it as a pulse.
+    return Infinity;
+  }
 
-  // Average QALYs per life, considering discounting over the effect window
-  const avgLifeYears = globalParams.yearsPerLife;
-  const qalyPerLife = avgLifeYears * 1.0;
+  // We can get the discounted cost per QALY by dividing the raw cost per QALY by a discount factor.
+  // The formula we base this on is:
+  // discountedQALYs = (amount donated)/(costperQALY) * e^(-discountRate * startTime) * (1 - e^(-discountRate * windowLength))/(discountRate*windowLength)
+  // So we need to divide the raw cost per QALY by everything after it in the expression.
+  let discountDivisor;
+  const r = globalParams.discountRate;
+  if (effect.windowLength === 0) {
+    // window length of 0 is a special case, meaning an instantaneous pulse
+    discountDivisor = Math.exp(-r * startYear);
+  } else if (r === 0) {
+    discountDivisor = 1;
+  } else {
+    // Numerically stable fixed-window kernel
+    const x = r * windowLength;
+    const numerator = -Math.expm1(-x); // 1 - e^(-x) without loss of precision
+    discountDivisor = (Math.exp(-r * startYear) * numerator) / x;
+  }
 
-  // Adjust cost per QALY for the discounted time window
-  // If we save 1 QALY per year for discountedYears, that's discountedYears QALYs total
-  // So the effective cost per life is costPerQALY * qalyPerLife / discountedYears * (endYear - startYear)
-  // This accounts for the fact that we're only applying the effect during a specific time window
-  const timeWindowAdjustment = (endYear - startYear) / discountedYears;
-
-  return effect.costPerQALY * qalyPerLife * timeWindowAdjustment;
+  const costPerLife = effect.costPerQALY * globalParams.yearsPerLife;
+  return costPerLife / discountDivisor;
 };
 
 /**

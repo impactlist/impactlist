@@ -1,7 +1,14 @@
 // Startup validation to ensure data integrity
 // This runs when the app starts to catch data structure issues early
 import { categoriesById, recipientsById, donorsById, donations, globalParameters } from '../data/generatedData';
-import { validateCategory, validateRecipient, assertExists, assertPositiveNumber } from './dataValidation';
+import {
+  validateCategory,
+  validateRecipient,
+  assertExists,
+  assertPositiveNumber,
+  assertNonNegativeNumber,
+  assertNumber,
+} from './dataValidation';
 
 /**
  * Validate all categories in the data
@@ -124,8 +131,8 @@ const validateAllDonations = () => {
 const validateGlobalParameters = () => {
   assertExists(globalParameters, 'globalParameters');
 
-  assertPositiveNumber(globalParameters.discountRate, 'globalParameters.discountRate');
-  assertPositiveNumber(globalParameters.populationGrowthRate, 'globalParameters.populationGrowthRate');
+  assertNonNegativeNumber(globalParameters.discountRate, 'globalParameters.discountRate');
+  assertNumber(globalParameters.populationGrowthRate, 'globalParameters.populationGrowthRate');
   assertPositiveNumber(globalParameters.timeLimit, 'globalParameters.timeLimit');
   assertPositiveNumber(globalParameters.populationLimit, 'globalParameters.populationLimit');
   assertPositiveNumber(globalParameters.currentPopulation, 'globalParameters.currentPopulation');

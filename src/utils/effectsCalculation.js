@@ -130,7 +130,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   const yearToHitLimit = g > 0 ? Math.log(populationLimitActual / P0) / g : Infinity;
 
   if (effect.windowLength === 0) {
-    // Instantaneous pulse
+    // raw Window length being zero --> instantaneous pulse
     const currentPopulation = yearToHitLimit > startYear ? P0 * Math.exp(g * startYear) : populationLimitActual;
     totalQALYs = currentPopulation * fraction * qalyPerYear * Math.exp(-r * startYear);
   } else if (yearToHitLimit >= startYear + windowLength) {
@@ -142,8 +142,8 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
     const combinedRate = g - r;
 
     if (Math.abs(combinedRate) < 1e-10) {
-      // Special case when growth rate equals discount rate
-      totalQALYs = P0 * fraction * qalyPerYear * windowLength * Math.exp(g * startYear);
+      // Special case when growth rate equals discount rate - exponentials cancel
+      totalQALYs = P0 * fraction * qalyPerYear * windowLength;
     } else {
       // General case: integral of e^((g-r)*t)
       const expStart = Math.exp(combinedRate * startYear);
@@ -171,7 +171,8 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
     let totalBeforeLimit;
 
     if (Math.abs(combinedRate) < 1e-10) {
-      totalBeforeLimit = P0 * fraction * qalyPerYear * timeToLimit * Math.exp(g * startYear);
+      // When g ≈ r, the exponentials cancel out
+      totalBeforeLimit = P0 * fraction * qalyPerYear * timeToLimit;
     } else {
       const expStart = Math.exp(combinedRate * startYear);
       const expLimit = Math.exp(combinedRate * yearToHitLimit);

@@ -4,7 +4,7 @@ name: 'Nuclear'
 effects:
   - effectId: standard
     startTime: 0
-    windowLength: 1
+    windowLength: 0
     costPerQALY: 37.5
 ---
 

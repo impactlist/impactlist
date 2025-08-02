@@ -4,7 +4,7 @@ name: 'Population'
 effects:
   - effectId: standard
     startTime: 0
-    windowLength: 1
+    windowLength: 0
     costPerQALY: 6_250
 ---
 

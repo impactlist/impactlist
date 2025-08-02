@@ -4,7 +4,7 @@ name: 'Political'
 effects:
   - effectId: standard
     startTime: 0
-    windowLength: 1
+    windowLength: 0
     costPerQALY: 12_500
 ---
 

@@ -4,7 +4,7 @@ name: 'Meta and Theory'
 effects:
   - effectId: standard
     startTime: 0
-    windowLength: 1
+    windowLength: 0
     costPerQALY: 21.25
 ---
 

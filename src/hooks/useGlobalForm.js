@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 /**
  * Custom hook for managing global parameter form state
  * @param {Object} globalParameters - Global parameters from combinedAssumptions
+ * @param {Object} defaultGlobalParameters - Default global parameters
  * @param {Function} getGlobalParameter - Function to get custom global parameter value
  * @param {boolean} isModalOpen - Whether the modal is open
  * @returns {Object} Form state and handlers
  */
-export const useGlobalForm = (globalParameters, getGlobalParameter, isModalOpen) => {
+export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlobalParameter, isModalOpen) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -19,7 +20,7 @@ export const useGlobalForm = (globalParameters, getGlobalParameter, isModalOpen)
       // Initialize all global parameter fields
       Object.keys(globalParameters).forEach((paramKey) => {
         const customValue = getGlobalParameter(paramKey);
-        const value = customValue !== null ? customValue : '';
+        const value = customValue !== null ? customValue : globalParameters[paramKey];
 
         initialValues[paramKey] = {
           raw: value,
@@ -118,12 +119,17 @@ export const useGlobalForm = (globalParameters, getGlobalParameter, isModalOpen)
 
   // Reset form to default values
   const reset = () => {
+    if (!defaultGlobalParameters) {
+      throw new Error('defaultGlobalParameters is required for reset functionality');
+    }
+
     const resetValues = {};
 
     Object.keys(globalParameters).forEach((paramKey) => {
+      const defaultValue = defaultGlobalParameters[paramKey];
       resetValues[paramKey] = {
-        raw: '',
-        formatted: '',
+        raw: defaultValue,
+        formatted: formatValue(defaultValue, getParameterFormat(paramKey)),
       };
     });
 

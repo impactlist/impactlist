@@ -85,7 +85,12 @@ const AssumptionsEditor = () => {
   }, [combinedAssumptions, defaultAssumptions]);
 
   // Use custom hooks for form state management
-  const globalForm = useGlobalForm(combinedAssumptions.globalParameters, getGlobalParameter, isModalOpen);
+  const globalForm = useGlobalForm(
+    combinedAssumptions.globalParameters,
+    defaultAssumptions.globalParameters,
+    getGlobalParameter,
+    isModalOpen
+  );
   const categoryForm = useCategoryForm(allCategories, getCategoryValue, isModalOpen, defaultCategories);
   const recipientForm = useRecipientForm();
   const recipientSearch = useRecipientSearch(
@@ -208,11 +213,22 @@ const AssumptionsEditor = () => {
 
   // Handle reset button for global parameters
   const handleGlobalReset = () => {
+    // First reset the form to show empty values (defaults)
     globalForm.reset();
+
+    // Then clear all global parameter custom values using context methods
+    // We do this after reset to avoid the form re-initializing with old values
+    Object.keys(globalForm.formValues).forEach((paramKey) => {
+      updateGlobalParameter(paramKey, '');
+    });
   };
 
   // Handle reset button for categories
   const handleCategoryReset = () => {
+    // Clear all category custom values using context methods
+    Object.keys(categoryForm.formValues).forEach((categoryId) => {
+      updateCategoryValue(categoryId, '');
+    });
     categoryForm.reset();
   };
 

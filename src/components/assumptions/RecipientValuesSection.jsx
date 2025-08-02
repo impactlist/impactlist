@@ -41,16 +41,17 @@ const RecipientValuesSection = ({
   };
 
   // Helper function to get the display value for an input
-  const getInputDisplayValue = (formValues, key, customValue, defaultValue) => {
-    // First check if user has typed something (form value exists)
-    const formValue = getFormValue(formValues, key);
-    if (formValue !== '') return formValue;
+  const getInputDisplayValue = (formValues, key, customValue, defaultValue, shouldShowDefault = true) => {
+    // If form value exists (even if empty), it means user has interacted
+    if (formValues[key] !== undefined) {
+      return getFormValue(formValues, key);
+    }
 
     // Then check for custom value
     if (customValue !== null) return formatNumberWithCommas(customValue);
 
-    // Finally fall back to default
-    if (defaultValue !== null) return formatNumberWithCommas(defaultValue);
+    // Finally fall back to default if allowed
+    if (shouldShowDefault && defaultValue !== null) return formatNumberWithCommas(defaultValue);
 
     return '';
   };
@@ -268,7 +269,7 @@ const RecipientValuesSection = ({
                               type="text"
                               inputMode="text"
                               placeholder={
-                                customCostPerLife !== '' || getFormValue(formValues, costPerLifeKey, '') !== ''
+                                customCostPerLife || getFormValue(formValues, costPerLifeKey) !== ''
                                   ? 'None'
                                   : defaultMultiplier !== null
                                     ? defaultMultiplier.toString()
@@ -278,13 +279,12 @@ const RecipientValuesSection = ({
                                 formValues,
                                 multiplierKey,
                                 customMultiplier,
-                                defaultMultiplier
+                                defaultMultiplier,
+                                getFormValue(formValues, costPerLifeKey) === ''
                               )}
                               onChange={(e) => {
-                                // Clear cost per life field if this field has a value
-                                if (e.target.value.trim() !== '') {
-                                  onChange(costPerLifeKey, '');
-                                }
+                                // Clear cost per life field immediately when user types in multiplier
+                                onChange(costPerLifeKey, '');
 
                                 // Get the current input element and cursor position
                                 const inputElement = e.target;
@@ -336,17 +336,16 @@ const RecipientValuesSection = ({
                                 formValues,
                                 costPerLifeKey,
                                 customCostPerLife,
-                                defaultCostPerLife
+                                defaultCostPerLife,
+                                getFormValue(formValues, multiplierKey) === ''
                               )}
                               onChange={(value) => {
-                                // Clear multiplier field if this field has a value
-                                if (value.trim() !== '') {
-                                  onChange(multiplierKey, '');
-                                }
+                                // Clear multiplier field immediately when user types in cost per life
+                                onChange(multiplierKey, '');
                                 onChange(costPerLifeKey, value);
                               }}
                               placeholder={
-                                customMultiplier !== '' || getFormValue(formValues, multiplierKey, '') !== ''
+                                customMultiplier || getFormValue(formValues, multiplierKey) !== ''
                                   ? 'None'
                                   : defaultCostPerLife !== null
                                     ? 'Default'

@@ -51,6 +51,27 @@ export const AssumptionsProvider = ({ children }) => {
     }
   }, [userAssumptions]);
 
+  // Helper function to clone user assumptions or create empty object
+  const cloneUserAssumptions = (prev) => {
+    return prev ? JSON.parse(JSON.stringify(prev)) : {};
+  };
+
+  // Helper function to clean up empty nested objects and return null if completely empty
+  const cleanupEmptyAssumptions = (data) => {
+    if (!data || Object.keys(data).length === 0) {
+      return null;
+    }
+
+    // Remove empty nested objects
+    ['categories', 'recipients', 'globalParameters'].forEach((key) => {
+      if (data[key] && Object.keys(data[key]).length === 0) {
+        delete data[key];
+      }
+    });
+
+    return Object.keys(data).length > 0 ? data : null;
+  };
+
   // Reset to default values
   const resetToDefaults = () => {
     setUserAssumptions(null);
@@ -59,7 +80,7 @@ export const AssumptionsProvider = ({ children }) => {
   // Update a specific category value (converts simple cost per life to effects format)
   const updateCategoryValue = (categoryKey, value) => {
     setUserAssumptions((prev) => {
-      const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
+      const newData = cloneUserAssumptions(prev);
 
       if (value === '' || isNaN(value) || value === null) {
         // Remove the category override
@@ -67,15 +88,7 @@ export const AssumptionsProvider = ({ children }) => {
           delete newData.categories[categoryKey];
         }
 
-        // Clean up empty objects
-        if (newData.categories && Object.keys(newData.categories).length === 0) {
-          delete newData.categories;
-        }
-        if (newData.recipients && Object.keys(newData.recipients).length === 0) {
-          delete newData.recipients;
-        }
-
-        return Object.keys(newData).length > 0 ? newData : null;
+        return cleanupEmptyAssumptions(newData);
       } else {
         // Convert cost per life to effects format
         const costPerLife = Number(value);
@@ -121,7 +134,7 @@ export const AssumptionsProvider = ({ children }) => {
     }
 
     setUserAssumptions((prev) => {
-      const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
+      const newData = cloneUserAssumptions(prev);
 
       // Find the recipient ID by name
       const recipientId = combinedAssumptions.findRecipientId(recipientName);
@@ -202,7 +215,7 @@ export const AssumptionsProvider = ({ children }) => {
       }
 
       // Return updated object
-      return Object.keys(newData).length > 0 ? newData : null;
+      return cleanupEmptyAssumptions(newData);
     });
   };
 
@@ -214,7 +227,7 @@ export const AssumptionsProvider = ({ children }) => {
   // Update a specific global parameter value
   const updateGlobalParameter = (parameterKey, value) => {
     setUserAssumptions((prev) => {
-      const newData = prev ? JSON.parse(JSON.stringify(prev)) : { categories: {}, recipients: {} };
+      const newData = cloneUserAssumptions(prev);
 
       if (value === '' || value === null) {
         // Remove the parameter override
@@ -222,17 +235,7 @@ export const AssumptionsProvider = ({ children }) => {
           delete newData.globalParameters[parameterKey];
         }
 
-        // Clean up empty globalParameters object
-        if (newData.globalParameters && Object.keys(newData.globalParameters).length === 0) {
-          delete newData.globalParameters;
-        }
-
-        // Clean up completely empty objects
-        if (Object.keys(newData).length === 0) {
-          return null;
-        }
-
-        return newData;
+        return cleanupEmptyAssumptions(newData);
       } else {
         // Set the global parameter value
         if (!newData.globalParameters) {
@@ -333,8 +336,19 @@ export const AssumptionsProvider = ({ children }) => {
     return getCostPerLifeFromCombined(combinedAssumptions, categoryId);
   };
 
+  // Helper function to check if userAssumptions contains any actual overrides
+  const hasCustomValues = (assumptions) => {
+    if (!assumptions) return false;
+
+    return (
+      (assumptions.globalParameters && Object.keys(assumptions.globalParameters).length > 0) ||
+      (assumptions.categories && Object.keys(assumptions.categories).length > 0) ||
+      (assumptions.recipients && Object.keys(assumptions.recipients).length > 0)
+    );
+  };
+
   // Determine if custom values are being used
-  const isUsingCustomValues = userAssumptions !== null;
+  const isUsingCustomValues = hasCustomValues(userAssumptions);
 
   // Open/close the edit modal
   const openModal = () => setIsModalOpen(true);

@@ -234,10 +234,13 @@ const AssumptionsEditor = () => {
 
   // Handle reset button for recipients - only resets recipient data, preserves category values
   const handleResetRecipients = () => {
-    // Clear all recipient custom values using context methods
-    Object.keys(recipientForm.formValues).forEach((fieldKey) => {
-      const [recipientName, categoryId, type] = fieldKey.split('__');
-      updateRecipientValue(recipientName, categoryId, type, '');
+    // Clear all custom values for filtered recipients
+    recipientSearch.filteredRecipients.forEach((recipient) => {
+      Object.keys(recipient.categories || {}).forEach((categoryId) => {
+        // Clear both multiplier and costPerLife for each category
+        updateRecipientValue(recipient.name, categoryId, 'multiplier', '');
+        updateRecipientValue(recipient.name, categoryId, 'costPerLife', '');
+      });
     });
     recipientForm.reset();
   };

@@ -158,7 +158,8 @@ export const AssumptionsProvider = ({ children }) => {
       }
 
       // Handle special cases for valid inputs in intermediate states
-      const isIntermediateState = value === '-' || value === '.' || value.endsWith('.');
+      const valueStr = String(value);
+      const isIntermediateState = valueStr === '-' || valueStr === '.' || valueStr.endsWith('.');
 
       // Update values
       if (value === '' || isIntermediateState) {

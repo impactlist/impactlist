@@ -20,12 +20,39 @@ const RecipientValuesSection = ({
   searchTerm,
   combinedAssumptions,
 }) => {
-  // Helper function to get form value or default
-  const getFormValue = (formValues, key, defaultValue) => {
-    if (formValues[key] && formValues[key].formatted !== undefined) {
-      return formValues[key].formatted;
+  // Helper function to get form value
+  const getFormValue = (formValues, key) => {
+    // If we have a form value (user has interacted), return it
+    if (formValues[key] !== undefined) {
+      // Handle both formatted and display properties for compatibility
+      if (formValues[key].display !== undefined) {
+        return formValues[key].display;
+      }
+      if (formValues[key].formatted !== undefined) {
+        return formValues[key].formatted;
+      }
+      // If it's just a raw value, use it
+      if (formValues[key].raw !== undefined) {
+        return formValues[key].raw;
+      }
     }
-    return defaultValue !== undefined ? formatNumberWithCommas(defaultValue) : '';
+    // Return empty string if no form value
+    return '';
+  };
+
+  // Helper function to get the display value for an input
+  const getInputDisplayValue = (formValues, key, customValue, defaultValue) => {
+    // First check if user has typed something (form value exists)
+    const formValue = getFormValue(formValues, key);
+    if (formValue !== '') return formValue;
+
+    // Then check for custom value
+    if (customValue !== null) return formatNumberWithCommas(customValue);
+
+    // Finally fall back to default
+    if (defaultValue !== null) return formatNumberWithCommas(defaultValue);
+
+    return '';
   };
 
   // Recreate getRecipientDefaultMultiplier functionality using combinedAssumptions
@@ -247,7 +274,12 @@ const RecipientValuesSection = ({
                                     ? defaultMultiplier.toString()
                                     : 'None'
                               }
-                              value={getFormValue(formValues, multiplierKey, customMultiplier || '')}
+                              value={getInputDisplayValue(
+                                formValues,
+                                multiplierKey,
+                                customMultiplier,
+                                defaultMultiplier
+                              )}
                               onChange={(e) => {
                                 // Clear cost per life field if this field has a value
                                 if (e.target.value.trim() !== '') {
@@ -300,7 +332,12 @@ const RecipientValuesSection = ({
                             </label>
                             <CurrencyInput
                               id={`cost-per-life-${recipient.name}-${categoryId}`}
-                              value={getFormValue(formValues, costPerLifeKey, customCostPerLife || '')}
+                              value={getInputDisplayValue(
+                                formValues,
+                                costPerLifeKey,
+                                customCostPerLife,
+                                defaultCostPerLife
+                              )}
                               onChange={(value) => {
                                 // Clear multiplier field if this field has a value
                                 if (value.trim() !== '') {

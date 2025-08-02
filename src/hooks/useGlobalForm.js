@@ -14,7 +14,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
 
   // Initialize form values when modal opens
   useEffect(() => {
-    if (isModalOpen && globalParameters) {
+    if (isModalOpen && globalParameters && Object.keys(formValues).length === 0) {
       const initialValues = {};
 
       // Initialize all global parameter fields
@@ -31,7 +31,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
       setFormValues(initialValues);
       setErrors({});
     }
-  }, [isModalOpen, globalParameters, getGlobalParameter]);
+  }, [isModalOpen, globalParameters, getGlobalParameter, formValues]);
 
   // Get the format type for a parameter
   const getParameterFormat = (paramKey) => {

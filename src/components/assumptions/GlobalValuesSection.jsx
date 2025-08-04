@@ -1,4 +1,5 @@
 import React from 'react';
+import Tooltip from '../shared/Tooltip';
 
 const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
   const parameters = [
@@ -58,54 +59,69 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {parameters.map((param) => {
         const value = formValues[param.id]?.formatted || '';
         const hasError = errors[param.id];
         const defaultValue = defaultGlobalParameters[param.id];
+        const currentValue = formValues[param.id]?.raw || '';
+        const showDefault = currentValue !== '' && Number(currentValue) !== defaultValue;
 
         return (
-          <div key={param.id} className="space-y-2">
-            <label htmlFor={param.id} className="block text-sm font-medium text-gray-700">
-              {param.label}
-            </label>
-            <p className="text-sm text-gray-600">{param.description}</p>
-            <div className="relative">
-              <input
-                type="text"
-                id={param.id}
-                name={param.id}
-                value={value}
-                onChange={(e) => onChange(param.id, e.target.value)}
-                placeholder={formatDisplayValue(defaultValue, param.format)}
-                className={`
-                  block w-full rounded-md shadow-sm
-                  ${
-                    hasError
-                      ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                  }
-                  sm:text-sm px-3 py-2
-                `}
-              />
-              {hasError && (
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+          <div key={param.id}>
+            <div className="flex flex-wrap items-center gap-2">
+              <label htmlFor={param.id} className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                {param.label}
+                <Tooltip content={param.description}>
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
-                      fillRule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                      clipRule="evenodd"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                </div>
-              )}
+                </Tooltip>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  id={param.id}
+                  name={param.id}
+                  value={value}
+                  onChange={(e) => onChange(param.id, e.target.value)}
+                  placeholder={formatDisplayValue(defaultValue, param.format)}
+                  className={`
+                    block w-32 rounded-md shadow-sm
+                    ${
+                      hasError
+                        ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                    }
+                    sm:text-sm px-3 py-2
+                  `}
+                />
+                {hasError && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
             </div>
             {hasError && (
               <p className="mt-1 text-sm text-red-600" role="alert">
                 {errors[param.id]}
               </p>
             )}
-            <p className="text-xs text-gray-500">Default: {formatDisplayValue(defaultValue, param.format)}</p>
+            {showDefault && (
+              <p className="text-xs text-gray-500 mt-1">Default: {formatDisplayValue(defaultValue, param.format)}</p>
+            )}
           </div>
         );
       })}

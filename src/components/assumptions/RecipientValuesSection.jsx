@@ -300,7 +300,7 @@ const RecipientValuesSection = ({
                               className={`w-full py-1 px-1.5 text-sm border rounded ${
                                 errors[recipient.name]?.[categoryId]?.multiplier
                                   ? 'border-red-300 text-red-700 bg-red-50'
-                                  : (customMultiplier !== undefined && customMultiplier !== defaultMultiplier) ||
+                                  : (customMultiplier !== null && customMultiplier !== defaultMultiplier) ||
                                       (formValues[multiplierKey] &&
                                         formValues[multiplierKey].raw !== '' &&
                                         Number(formValues[multiplierKey].raw) !== defaultMultiplier)
@@ -354,6 +354,12 @@ const RecipientValuesSection = ({
                               error={errors[recipient.name]?.[categoryId]?.costPerLife}
                               className="w-full"
                               validateOnBlur={true} // Only validate on blur, not while typing
+                              isCustom={
+                                (customCostPerLife !== null && customCostPerLife !== defaultCostPerLife) ||
+                                (formValues[costPerLifeKey] &&
+                                  formValues[costPerLifeKey].raw !== '' &&
+                                  Number(formValues[costPerLifeKey].raw) !== defaultCostPerLife)
+                              }
                             />
                             {/* Show default value indicator */}
                             {defaultCostPerLife !== null && (

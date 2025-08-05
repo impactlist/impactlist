@@ -16,6 +16,7 @@ const CurrencyInput = ({
   error,
   disabled = false,
   validateOnBlur = false, // If true, only validates when input loses focus
+  isCustom = false, // If true, highlights field to show custom value
 }) => {
   const [localValue, setLocalValue] = useState('');
   const [cursorPosition, setCursorPosition] = useState(null);
@@ -122,8 +123,10 @@ const CurrencyInput = ({
           aria-errormessage={error ? `${id}-error` : undefined}
           className={`w-full pl-5 py-1 text-sm border rounded focus:ring-1 focus:outline-none ${
             error
-              ? 'border-red-300 text-red-700 focus:ring-red-500 focus:border-red-500'
-              : 'border-slate-300 focus:ring-indigo-500 focus:border-indigo-500'
+              ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
+              : isCustom
+                ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
+                : 'border-slate-300 focus:ring-indigo-500 focus:border-indigo-500'
           } ${disabled ? 'bg-gray-100 text-gray-500' : ''}`}
         />
       </div>
@@ -146,6 +149,7 @@ CurrencyInput.propTypes = {
   error: PropTypes.string,
   disabled: PropTypes.bool,
   validateOnBlur: PropTypes.bool,
+  isCustom: PropTypes.bool,
 };
 
 export default React.memo(CurrencyInput);

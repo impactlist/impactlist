@@ -43,7 +43,7 @@ const AssumptionsEditor = () => {
       let costPerLife = null;
       if (category.effects && category.effects.length > 0) {
         const baseEffect = category.effects[0];
-        costPerLife = getBaseCostPerLife(baseEffect, combinedAssumptions.globalParameters.yearsPerLife);
+        costPerLife = getBaseCostPerLife(baseEffect, combinedAssumptions.globalParameters);
       }
 
       if (costPerLife === null) {
@@ -69,7 +69,7 @@ const AssumptionsEditor = () => {
       let costPerLife = null;
       if (defaultCategory.effects && defaultCategory.effects.length > 0) {
         const baseEffect = defaultCategory.effects[0];
-        costPerLife = getBaseCostPerLife(baseEffect, defaultAssumptions.globalParameters.yearsPerLife);
+        costPerLife = getBaseCostPerLife(baseEffect, defaultAssumptions.globalParameters);
       }
 
       if (costPerLife === null) {

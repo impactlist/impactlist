@@ -383,6 +383,11 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
       `for category ${categoryId} in recipient ${recipient.name}`
     );
 
+    // Skip categories with infinite cost (no lives can be saved)
+    if (validCostPerLife === Infinity) {
+      return; // Skip this category
+    }
+
     totalLivesSaved += (spendingTotal * weight) / validCostPerLife;
   });
 
@@ -395,7 +400,8 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
   }
 
   if (totalLivesSaved === 0) {
-    crashInsteadOfFallback(`Total lives saved calculation resulted in zero for recipient ${recipient.name}`);
+    // All categories have infinite cost (no lives can be saved within time limit)
+    return Infinity;
   }
 
   return spendingTotal / totalLivesSaved;
@@ -421,6 +427,12 @@ export const calculateLivesSavedForDonationFromCombined = (combinedAssumptions, 
   }
 
   const creditedAmount = donation.amount * credit;
+
+  // If cost per life is infinite, no lives can be saved
+  if (validCostPerLife === Infinity) {
+    return 0;
+  }
+
   return creditedAmount / validCostPerLife;
 };
 

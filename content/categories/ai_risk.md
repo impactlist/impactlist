@@ -2,10 +2,13 @@
 id: ai-risk
 name: 'AI Existential Risk'
 effects:
-  - effectId: standard
-    startTime: 0
-    windowLength: 0
-    costPerQALY: 0.3125
+  - effectId: population
+    startTime: 10
+    windowLength: 1_000_000_000_000
+    costPerMicroprobability: 100_000
+    populationFractionAffected: 1.0
+    qalyImprovementPerYear: 1.0
+
 ---
 
 # Justification of cost per life

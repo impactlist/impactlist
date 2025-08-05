@@ -68,8 +68,8 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
 const populationEffectToCostPerLife = (effect, globalParams) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerMicroprobability, 'costPerMicroprobability', 'in population effect');
-  assertPositiveNumber(effect.populationFractionImpacted, 'populationFractionImpacted', 'in population effect');
-  assertNonZeroNumber(effect.rawQALYImprovementPerYear, 'rawQALYImprovementPerYear', 'in population effect');
+  assertPositiveNumber(effect.populationFractionAffected, 'populationFractionAffected', 'in population effect');
+  assertNonZeroNumber(effect.qalyImprovementPerYear, 'qalyImprovementPerYear', 'in population effect');
   assertNonNegativeNumber(effect.startTime, 'startTime', 'in population effect');
   assertNonNegativeNumber(effect.windowLength, 'windowLength', 'in population effect');
 
@@ -94,8 +94,8 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   const g = globalParams.populationGrowthRate;
   const r = globalParams.discountRate;
   const P0 = globalParams.currentPopulation;
-  const fraction = effect.populationFractionImpacted;
-  const qalyPerYear = effect.rawQALYImprovementPerYear;
+  const fraction = effect.populationFractionAffected;
+  const qalyPerYear = effect.qalyImprovementPerYear;
 
   const populationLimitNumerical = globalParams.populationLimit * P0; // Population limit as multiple of current population
 
@@ -384,13 +384,33 @@ export const applyRecipientEffectToBase = (baseEffect, recipientEffect, context)
 /**
  * Get the base cost per life from an effect without discounting
  * @param {Object} effect - The effect object
- * @param {number} yearsPerLife - Years per life from global parameters
+ * @param {Object} globalParams - Global parameters object
  * @returns {number|null} Base cost per life or null if not calculable
  */
-export const getBaseCostPerLife = (effect, yearsPerLife) => {
+export const getBaseCostPerLife = (effect, globalParams) => {
   if (effect.costPerQALY !== undefined) {
-    return effect.costPerQALY * yearsPerLife;
+    return effect.costPerQALY * globalParams.yearsPerLife;
   }
-  // TODO: Handle costPerMicroprobability effects if needed
+
+  if (effect.costPerMicroprobability !== undefined) {
+    // For population effects, calculate a simplified base cost
+    // This is a rough approximation for display purposes
+    const probability = 1 / 1_000_000;
+    const fraction = effect.populationFractionAffected;
+    const qalyPerYear = effect.qalyImprovementPerYear;
+    const startYear = effect.startTime || 0;
+    const windowLength = Math.min(effect.windowLength, Math.max(0, globalParams.timeLimit - startYear));
+
+    if (windowLength === 0) {
+      return Infinity;
+    }
+
+    // Simplified calculation without discounting for display
+    const totalQALYs = fraction * qalyPerYear * windowLength;
+    const livesSaved = (probability * totalQALYs) / globalParams.yearsPerLife;
+
+    return effect.costPerMicroprobability / livesSaved;
+  }
+
   return null;
 };

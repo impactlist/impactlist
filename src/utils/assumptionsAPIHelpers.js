@@ -36,19 +36,48 @@ export const setCategoryFieldOverride = (
 
   const effect = newData.categories[categoryId].effects[effectIndex];
 
-  // Set override
-  if (!effect.overrides) effect.overrides = {};
-  effect.overrides[fieldName] = value;
+  // Check if the value matches the default field value
+  const defaultFieldValue = defaultEffect[fieldName];
 
-  // Remove any multiplier for the same field
-  if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
-    delete effect.multipliers[fieldName];
-    if (Object.keys(effect.multipliers).length === 0) {
-      delete effect.multipliers;
+  if (defaultFieldValue !== undefined && value === defaultFieldValue) {
+    // Value matches default - remove the custom value entirely
+    // For categories, we store custom values as overrides in userAssumptions
+    if (effect.overrides && effect.overrides[fieldName] !== undefined) {
+      delete effect.overrides[fieldName];
+      if (Object.keys(effect.overrides).length === 0) {
+        delete effect.overrides;
+      }
     }
-  }
 
-  return newData;
+    // Clean up empty effect if needed
+    if (!effect.overrides && !effect.multipliers) {
+      newData.categories[categoryId].effects.splice(effectIndex, 1);
+    }
+
+    // Clean up empty structures
+    if (newData.categories[categoryId].effects.length === 0) {
+      delete newData.categories[categoryId];
+      if (Object.keys(newData.categories).length === 0) {
+        delete newData.categories;
+      }
+    }
+
+    return Object.keys(newData).length > 0 ? newData : null;
+  } else {
+    // Value differs from default - store as override
+    if (!effect.overrides) effect.overrides = {};
+    effect.overrides[fieldName] = value;
+
+    // Categories shouldn't have multipliers, but clean up just in case
+    if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
+      delete effect.multipliers[fieldName];
+      if (Object.keys(effect.multipliers).length === 0) {
+        delete effect.multipliers;
+      }
+    }
+
+    return newData;
+  }
 };
 
 /**
@@ -160,19 +189,50 @@ export const setRecipientFieldOverride = (
 
   const effect = effects[effectIndex];
 
-  // Set override
-  if (!effect.overrides) effect.overrides = {};
-  effect.overrides[fieldName] = value;
+  // Check if the value matches the default override
+  const defaultOverrideValue = defaultEffect.overrides?.[fieldName];
 
-  // Remove any multiplier for the same field
-  if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
-    delete effect.multipliers[fieldName];
-    if (Object.keys(effect.multipliers).length === 0) {
-      delete effect.multipliers;
+  if (defaultOverrideValue !== undefined && value === defaultOverrideValue) {
+    // Value matches default - remove the override entirely
+    if (effect.overrides && effect.overrides[fieldName] !== undefined) {
+      delete effect.overrides[fieldName];
+      if (Object.keys(effect.overrides).length === 0) {
+        delete effect.overrides;
+      }
     }
-  }
 
-  return newData;
+    // Clean up empty effect if needed
+    if (!effect.overrides && !effect.multipliers) {
+      effects.splice(effectIndex, 1);
+    }
+
+    // Clean up empty structures
+    if (effects.length === 0) {
+      delete newData.recipients[recipientId].categories[categoryId];
+      if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
+        delete newData.recipients[recipientId];
+        if (Object.keys(newData.recipients).length === 0) {
+          delete newData.recipients;
+        }
+      }
+    }
+
+    return Object.keys(newData).length > 0 ? newData : null;
+  } else {
+    // Value differs from default - set the override
+    if (!effect.overrides) effect.overrides = {};
+    effect.overrides[fieldName] = value;
+
+    // Remove any multiplier for the same field
+    if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
+      delete effect.multipliers[fieldName];
+      if (Object.keys(effect.multipliers).length === 0) {
+        delete effect.multipliers;
+      }
+    }
+
+    return newData;
+  }
 };
 
 /**
@@ -216,19 +276,50 @@ export const setRecipientFieldMultiplier = (
 
   const effect = effects[effectIndex];
 
-  // Set multiplier
-  if (!effect.multipliers) effect.multipliers = {};
-  effect.multipliers[fieldName] = multiplier;
+  // Check if the multiplier matches the default multiplier
+  const defaultMultiplierValue = defaultEffect.multipliers?.[fieldName];
 
-  // Remove any override for the same field
-  if (effect.overrides && effect.overrides[fieldName] !== undefined) {
-    delete effect.overrides[fieldName];
-    if (Object.keys(effect.overrides).length === 0) {
-      delete effect.overrides;
+  if (defaultMultiplierValue !== undefined && multiplier === defaultMultiplierValue) {
+    // Value matches default - remove the multiplier entirely
+    if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
+      delete effect.multipliers[fieldName];
+      if (Object.keys(effect.multipliers).length === 0) {
+        delete effect.multipliers;
+      }
     }
-  }
 
-  return newData;
+    // Clean up empty effect if needed
+    if (!effect.overrides && !effect.multipliers) {
+      effects.splice(effectIndex, 1);
+    }
+
+    // Clean up empty structures
+    if (effects.length === 0) {
+      delete newData.recipients[recipientId].categories[categoryId];
+      if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
+        delete newData.recipients[recipientId];
+        if (Object.keys(newData.recipients).length === 0) {
+          delete newData.recipients;
+        }
+      }
+    }
+
+    return Object.keys(newData).length > 0 ? newData : null;
+  } else {
+    // Value differs from default - set the multiplier
+    if (!effect.multipliers) effect.multipliers = {};
+    effect.multipliers[fieldName] = multiplier;
+
+    // Remove any override for the same field
+    if (effect.overrides && effect.overrides[fieldName] !== undefined) {
+      delete effect.overrides[fieldName];
+      if (Object.keys(effect.overrides).length === 0) {
+        delete effect.overrides;
+      }
+    }
+
+    return newData;
+  }
 };
 
 /**

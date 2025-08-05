@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatNumberWithCommas } from '../utils/formatters';
 
 /**
  * Custom hook for managing global parameter form state
@@ -50,16 +51,15 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
     if (format === 'percentage') {
       const numValue = parseFloat(value);
       if (!isNaN(numValue)) {
-        return (numValue * 100).toFixed(2);
+        // Convert to percentage and format with commas
+        const percentValue = (numValue * 100).toString();
+        return formatNumberWithCommas(percentValue);
       }
     }
 
     if (format === 'number') {
-      const numValue = parseFloat(value);
-      if (!isNaN(numValue)) {
-        // Don't use thousand separators in input fields
-        return numValue.toString();
-      }
+      // Format with thousand separators
+      return formatNumberWithCommas(value.toString());
     }
 
     return value.toString();

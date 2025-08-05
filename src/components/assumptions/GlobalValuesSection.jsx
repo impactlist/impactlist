@@ -1,5 +1,6 @@
 import React from 'react';
 import Tooltip from '../shared/Tooltip';
+import { formatWithCursorHandling, formatNumberWithCommas } from '../../utils/formatters';
 
 const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
   const parameters = [
@@ -47,12 +48,14 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
     }
 
     if (format === 'percentage') {
-      return (parseFloat(value) * 100).toFixed(2) + '%';
+      // For percentage, multiply by 100 and format with commas
+      const percentValue = parseFloat(value) * 100;
+      return formatNumberWithCommas(percentValue.toString());
     }
 
     if (format === 'number') {
-      // Format large numbers with commas
-      return parseFloat(value).toLocaleString();
+      // Format numbers with commas
+      return formatNumberWithCommas(value.toString());
     }
 
     return value;
@@ -89,10 +92,21 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   id={param.id}
                   name={param.id}
                   value={value}
-                  onChange={(e) => onChange(param.id, e.target.value)}
+                  onChange={(e) => {
+                    // Get the current input element and cursor position
+                    const inputElement = e.target;
+                    const newValue = e.target.value;
+                    const currentPosition = e.target.selectionStart;
+
+                    // Format with commas while preserving cursor position
+                    const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
+
+                    // Pass the formatted value to parent
+                    onChange(param.id, result.value);
+                  }}
                   placeholder={formatDisplayValue(defaultValue, param.format)}
                   className={`
-                    block w-32 rounded-md shadow-sm
+                    block w-40 rounded-md shadow-sm
                     ${
                       hasError
                         ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'

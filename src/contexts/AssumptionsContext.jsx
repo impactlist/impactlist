@@ -2,10 +2,10 @@ import React, { createContext, useState, useContext, useEffect, useMemo } from '
 import {
   createDefaultAssumptions,
   createCombinedAssumptions,
-  costPerLifeToEffect,
   getCostPerLifeFromCombined,
   getActualCostPerLifeForCategoryDataFromCombined,
 } from '../utils/assumptionsDataHelpers';
+import * as apiHelpers from '../utils/assumptionsAPIHelpers';
 
 /* global localStorage */
 
@@ -51,74 +51,112 @@ export const AssumptionsProvider = ({ children }) => {
     }
   }, [userAssumptions]);
 
-  // Helper function to clone user assumptions or create empty object
-  const cloneUserAssumptions = (prev) => {
-    return prev ? JSON.parse(JSON.stringify(prev)) : {};
+  // ============ CATEGORY OPERATIONS ============
+  // Update category field with override value
+  const updateCategoryFieldOverride = (categoryId, effectId, fieldName, value) => {
+    setUserAssumptions((prev) =>
+      apiHelpers.setCategoryFieldOverride(prev, defaultAssumptions, categoryId, effectId, fieldName, value)
+    );
   };
 
-  // Helper function to clean up empty nested objects and return null if completely empty
-  const cleanupEmptyAssumptions = (data) => {
-    if (!data || Object.keys(data).length === 0) {
-      return null;
+  // Update category field with multiplier
+  const updateCategoryFieldMultiplier = (categoryId, effectId, fieldName, multiplier) => {
+    setUserAssumptions((prev) =>
+      apiHelpers.setCategoryFieldMultiplier(prev, defaultAssumptions, categoryId, effectId, fieldName, multiplier)
+    );
+  };
+
+  // Reset category to defaults
+  const resetCategoryToDefaults = (categoryId) => {
+    setUserAssumptions((prev) => apiHelpers.clearCategoryOverrides(prev, categoryId));
+  };
+
+  // ============ RECIPIENT OPERATIONS ============
+  // Update recipient field with override value (handles name to ID conversion)
+  const updateRecipientFieldOverride = (recipientName, categoryId, effectId, fieldName, value) => {
+    const recipientId = combinedAssumptions.findRecipientId(recipientName);
+    if (!recipientId) {
+      console.error(`Recipient ${recipientName} not found`);
+      return;
     }
-
-    // Remove empty nested objects
-    ['categories', 'recipients', 'globalParameters'].forEach((key) => {
-      if (data[key] && Object.keys(data[key]).length === 0) {
-        delete data[key];
-      }
-    });
-
-    return Object.keys(data).length > 0 ? data : null;
+    setUserAssumptions((prev) =>
+      apiHelpers.setRecipientFieldOverride(
+        prev,
+        defaultAssumptions,
+        recipientId,
+        categoryId,
+        effectId,
+        fieldName,
+        value
+      )
+    );
   };
 
-  // Reset to default values
+  // Update recipient field with multiplier (handles name to ID conversion)
+  const updateRecipientFieldMultiplier = (recipientName, categoryId, effectId, fieldName, multiplier) => {
+    const recipientId = combinedAssumptions.findRecipientId(recipientName);
+    if (!recipientId) {
+      console.error(`Recipient ${recipientName} not found`);
+      return;
+    }
+    setUserAssumptions((prev) =>
+      apiHelpers.setRecipientFieldMultiplier(
+        prev,
+        defaultAssumptions,
+        recipientId,
+        categoryId,
+        effectId,
+        fieldName,
+        multiplier
+      )
+    );
+  };
+
+  // Reset recipient to defaults (handles name to ID conversion)
+  const resetRecipientToDefaults = (recipientName) => {
+    const recipientId = combinedAssumptions.findRecipientId(recipientName);
+    if (!recipientId) {
+      console.error(`Recipient ${recipientName} not found`);
+      return;
+    }
+    setUserAssumptions((prev) => apiHelpers.clearRecipientOverrides(prev, recipientId));
+  };
+
+  // ============ GLOBAL PARAMETER OPERATIONS ============
+  const updateGlobalParameterValue = (parameterName, value) => {
+    setUserAssumptions((prev) => apiHelpers.setGlobalParameter(prev, parameterName, value));
+  };
+
+  const resetGlobalParameter = (parameterName) => {
+    setUserAssumptions((prev) => apiHelpers.clearGlobalParameter(prev, parameterName));
+  };
+
+  const resetAllGlobalParameters = () => {
+    setUserAssumptions((prev) => apiHelpers.clearAllGlobalParameters(prev));
+  };
+
+  // Reset all to default values
   const resetToDefaults = () => {
-    setUserAssumptions(null);
+    setUserAssumptions(apiHelpers.clearAllOverrides());
   };
 
-  // Update a specific category value (converts simple cost per life to effects format)
+  // Legacy wrapper: Update a specific category value (converts simple cost per life to effects format)
   const updateCategoryValue = (categoryKey, value) => {
-    setUserAssumptions((prev) => {
-      const newData = cloneUserAssumptions(prev);
-
-      if (value === '' || isNaN(value) || value === null) {
-        // Remove the category override
-        if (newData.categories && newData.categories[categoryKey]) {
-          delete newData.categories[categoryKey];
-        }
-
-        return cleanupEmptyAssumptions(newData);
-      } else {
-        // Convert cost per life to effects format
-        const costPerLife = Number(value);
-
-        // Get the base category to preserve effectId
-        const baseCategory = combinedAssumptions.getCategoryById(categoryKey);
-        if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
-          throw new Error(`Category ${categoryKey} has no base effects to override`);
-        }
-
-        const baseEffect = baseCategory.effects[0];
-        const effect = {
-          ...costPerLifeToEffect(costPerLife, combinedAssumptions.globalParameters),
-          effectId: baseEffect.effectId,
-        };
-
-        if (!newData.categories) {
-          newData.categories = {};
-        }
-
-        newData.categories[categoryKey] = {
-          effects: [effect],
-        };
-
-        return newData;
+    if (value === '' || isNaN(value) || value === null) {
+      resetCategoryToDefaults(categoryKey);
+    } else {
+      // Get the base category to preserve effectId
+      const baseCategory = combinedAssumptions.getCategoryById(categoryKey);
+      if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
+        throw new Error(`Category ${categoryKey} has no base effects to override`);
       }
-    });
+      const effectId = baseCategory.effects[0].effectId;
+      const costPerQALY = Number(value) / combinedAssumptions.globalParameters.yearsPerLife;
+      updateCategoryFieldOverride(categoryKey, effectId, 'costPerQALY', costPerQALY);
+    }
   };
 
-  // Update a recipient's override values - type can be 'multiplier' or 'costPerLife'
+  // Legacy wrapper: Update a recipient's override values - type can be 'multiplier' or 'costPerLife'
   const updateRecipientValue = (recipientName, categoryId, type, value) => {
     if (!recipientName) {
       throw new Error("Required parameter 'recipientName' is missing");
@@ -133,91 +171,35 @@ export const AssumptionsProvider = ({ children }) => {
       throw new Error(`Invalid type '${type}'. Must be 'multiplier' or 'costPerLife'`);
     }
 
-    setUserAssumptions((prev) => {
-      const newData = cloneUserAssumptions(prev);
+    // Handle special cases for valid inputs in intermediate states
+    const valueStr = String(value);
+    const isIntermediateState = valueStr === '-' || valueStr === '.' || valueStr.endsWith('.');
 
-      // Find the recipient ID by name
+    if (value === '' || isIntermediateState) {
+      // For empty or intermediate states, remove the override
       const recipientId = combinedAssumptions.findRecipientId(recipientName);
-      if (!recipientId) {
-        throw new Error(`Recipient ${recipientName} not found`);
+      if (recipientId) {
+        setUserAssumptions((prev) => apiHelpers.clearRecipientCategoryOverrides(prev, recipientId, categoryId));
+      }
+    } else if (!isNaN(Number(value))) {
+      const numValue = Number(value);
+
+      // Get the base category effect to use as template
+      const baseCategory = combinedAssumptions.getCategoryById(categoryId);
+      if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
+        throw new Error(`Category ${categoryId} has no base effects to override`);
       }
 
-      // Initialize the recipients field if it doesn't exist
-      if (!newData.recipients) {
-        newData.recipients = {};
+      const effectId = baseCategory.effects[0].effectId;
+
+      if (type === 'costPerLife') {
+        // Convert cost per life to cost per QALY
+        const costPerQALY = numValue / combinedAssumptions.globalParameters.yearsPerLife;
+        updateRecipientFieldOverride(recipientName, categoryId, effectId, 'costPerQALY', costPerQALY);
+      } else if (type === 'multiplier') {
+        updateRecipientFieldMultiplier(recipientName, categoryId, effectId, 'costPerQALY', numValue);
       }
-
-      // Initialize the recipient entry if it doesn't exist
-      if (!newData.recipients[recipientId]) {
-        newData.recipients[recipientId] = { categories: {} };
-      }
-
-      // Initialize the category entry if it doesn't exist
-      if (!newData.recipients[recipientId].categories[categoryId]) {
-        newData.recipients[recipientId].categories[categoryId] = {};
-      }
-
-      // Handle special cases for valid inputs in intermediate states
-      const valueStr = String(value);
-      const isIntermediateState = valueStr === '-' || valueStr === '.' || valueStr.endsWith('.');
-
-      // Update values
-      if (value === '' || isIntermediateState) {
-        // For empty or intermediate states, remove the override for now
-        // We could handle intermediate states differently if needed
-        if (newData.recipients[recipientId].categories[categoryId].effects) {
-          delete newData.recipients[recipientId].categories[categoryId].effects;
-        }
-
-        // Clean up empty objects
-        if (Object.keys(newData.recipients[recipientId].categories[categoryId]).length === 0) {
-          delete newData.recipients[recipientId].categories[categoryId];
-        }
-        if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
-          delete newData.recipients[recipientId];
-        }
-        if (Object.keys(newData.recipients).length === 0) {
-          delete newData.recipients;
-        }
-      } else if (!isNaN(Number(value))) {
-        const numValue = Number(value);
-
-        // Get the base category effect to use as template
-        const baseCategory = combinedAssumptions.getCategoryById(categoryId);
-        if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
-          throw new Error(`Category ${categoryId} has no base effects to override`);
-        }
-
-        const baseEffect = baseCategory.effects[0]; // Use first effect as template
-
-        let newEffect;
-        if (type === 'costPerLife') {
-          // Create an override structure for cost per life
-          const costPerQALY = numValue / combinedAssumptions.globalParameters.yearsPerLife;
-          newEffect = {
-            effectId: baseEffect.effectId,
-            overrides: {
-              costPerQALY: costPerQALY,
-            },
-          };
-        } else if (type === 'multiplier') {
-          // Create a multiplier structure
-          newEffect = {
-            effectId: baseEffect.effectId,
-            multipliers: {
-              costPerQALY: numValue,
-            },
-          };
-        }
-
-        newData.recipients[recipientId].categories[categoryId] = {
-          effects: [newEffect],
-        };
-      }
-
-      // Return updated object
-      return cleanupEmptyAssumptions(newData);
-    });
+    }
   };
 
   // Update multiple values at once (expects new effects format)
@@ -225,28 +207,13 @@ export const AssumptionsProvider = ({ children }) => {
     setUserAssumptions(newData);
   };
 
-  // Update a specific global parameter value
+  // Legacy wrapper: Update a specific global parameter value
   const updateGlobalParameter = (parameterKey, value) => {
-    setUserAssumptions((prev) => {
-      const newData = cloneUserAssumptions(prev);
-
-      if (value === '' || value === null) {
-        // Remove the parameter override
-        if (newData.globalParameters && newData.globalParameters[parameterKey]) {
-          delete newData.globalParameters[parameterKey];
-        }
-
-        return cleanupEmptyAssumptions(newData);
-      } else {
-        // Set the global parameter value
-        if (!newData.globalParameters) {
-          newData.globalParameters = {};
-        }
-
-        newData.globalParameters[parameterKey] = Number(value);
-        return newData;
-      }
-    });
+    if (value === '' || value === null) {
+      resetGlobalParameter(parameterKey);
+    } else {
+      updateGlobalParameterValue(parameterKey, Number(value));
+    }
   };
 
   // Get global parameter custom value for display
@@ -355,12 +322,31 @@ export const AssumptionsProvider = ({ children }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  // Context value
+  // Context value - exposing both new API and legacy wrappers
   const contextValue = {
+    // Direct data access (read-only by convention)
     defaultAssumptions,
     userAssumptions,
     combinedAssumptions,
+
+    // State flags
     isUsingCustomValues,
+    isModalOpen,
+    openModal,
+    closeModal,
+
+    // New API functions
+    updateCategoryFieldOverride,
+    updateCategoryFieldMultiplier,
+    resetCategoryToDefaults,
+    updateRecipientFieldOverride,
+    updateRecipientFieldMultiplier,
+    resetRecipientToDefaults,
+    updateGlobalParameterValue,
+    resetGlobalParameter,
+    resetAllGlobalParameters,
+
+    // Legacy wrappers for backward compatibility
     resetToDefaults,
     updateCategoryValue,
     updateRecipientValue,
@@ -369,9 +355,6 @@ export const AssumptionsProvider = ({ children }) => {
     getRecipientValue,
     getCategoryValue,
     getGlobalParameter,
-    isModalOpen,
-    openModal,
-    closeModal,
   };
 
   return <AssumptionsContext.Provider value={contextValue}>{children}</AssumptionsContext.Provider>;

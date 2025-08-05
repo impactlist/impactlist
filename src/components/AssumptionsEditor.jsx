@@ -319,11 +319,13 @@ const AssumptionsEditor = () => {
             formValues={recipientForm.formValues}
             errors={recipientForm.errors}
             allCategories={allCategories}
+            defaultCategories={defaultCategories}
             getCustomRecipientValue={getRecipientValue}
             onChange={recipientForm.handleChange}
             onSearch={recipientSearch.handleSearchChange}
             searchTerm={recipientSearch.searchTerm}
             combinedAssumptions={combinedAssumptions}
+            defaultAssumptions={defaultAssumptions}
           />
         )}
       </div>

@@ -14,11 +14,12 @@ const RecipientValuesSection = ({
   formValues,
   errors,
   allCategories,
+  defaultCategories,
   getCustomRecipientValue,
   onChange,
   onSearch,
   searchTerm,
-  combinedAssumptions,
+  defaultAssumptions,
 }) => {
   // Helper function to get form value
   const getFormValue = (formValues, key) => {
@@ -56,9 +57,9 @@ const RecipientValuesSection = ({
     return '';
   };
 
-  // Recreate getRecipientDefaultMultiplier functionality using combinedAssumptions
+  // Recreate getRecipientDefaultMultiplier functionality using defaultAssumptions
   const getRecipientDefaultMultiplier = (recipientId, categoryId) => {
-    const recipient = combinedAssumptions.getRecipientById(recipientId);
+    const recipient = defaultAssumptions.recipients?.[recipientId];
     if (!recipient || !recipient.categories) {
       return null;
     }
@@ -69,7 +70,7 @@ const RecipientValuesSection = ({
     }
 
     // Get the category's base effects to compare against
-    const category = combinedAssumptions.getCategoryById(categoryId);
+    const category = defaultAssumptions.categories?.[categoryId];
     if (!category || !category.effects || category.effects.length === 0) {
       return null;
     }
@@ -84,11 +85,7 @@ const RecipientValuesSection = ({
     }
 
     // Calculate base cost per life for the category
-    const baseCostPerLife = calculateCategoryBaseCostPerLife(
-      category,
-      categoryId,
-      combinedAssumptions.globalParameters
-    );
+    const baseCostPerLife = calculateCategoryBaseCostPerLife(category, categoryId, defaultAssumptions.globalParameters);
 
     // Apply recipient modifications to all effects
     const modifiedEffects = category.effects.map((baseEffect) => {
@@ -108,17 +105,18 @@ const RecipientValuesSection = ({
     const modifiedCostPerLife = calculateCategoryBaseCostPerLife(
       modifiedCategory,
       categoryId,
-      combinedAssumptions.globalParameters
+      defaultAssumptions.globalParameters
     );
 
     // Multiplier represents how much more expensive (less effective) the recipient is
     // A multiplier of 10 means 10x the cost (10x less effective)
-    return modifiedCostPerLife / baseCostPerLife;
+    const multiplier = modifiedCostPerLife / baseCostPerLife;
+    return multiplier;
   };
 
-  // Recreate getRecipientDefaultCostPerLife functionality using combinedAssumptions
+  // Recreate getRecipientDefaultCostPerLife functionality using defaultAssumptions
   const getRecipientDefaultCostPerLife = (recipientId, categoryId) => {
-    const recipient = combinedAssumptions.getRecipientById(recipientId);
+    const recipient = defaultAssumptions.recipients?.[recipientId];
     if (!recipient || !recipient.categories) {
       return null;
     }
@@ -129,7 +127,7 @@ const RecipientValuesSection = ({
     }
 
     // Get the category's base effects
-    const category = combinedAssumptions.getCategoryById(categoryId);
+    const category = defaultAssumptions.categories?.[categoryId];
     if (!category || !category.effects || category.effects.length === 0) {
       return null;
     }
@@ -158,7 +156,7 @@ const RecipientValuesSection = ({
       name: category.name,
       effects: modifiedEffects,
     };
-    return calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, combinedAssumptions.globalParameters);
+    return calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, defaultAssumptions.globalParameters);
   };
 
   return (
@@ -223,8 +221,8 @@ const RecipientValuesSection = ({
                     {recipientCategories.map(([categoryId]) => {
                       const categoryName = allCategories[categoryId]?.name || categoryId;
 
-                      // Calculate base values
-                      const baseCostPerLife = allCategories[categoryId]?.costPerLife || 0;
+                      // Calculate base values - use defaultCategories for true default
+                      const baseCostPerLife = defaultCategories[categoryId]?.costPerLife || 0;
 
                       // Get recipient ID for lookups
                       const recipientId = getRecipientId(recipient);
@@ -395,11 +393,13 @@ RecipientValuesSection.propTypes = {
   formValues: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   allCategories: PropTypes.object.isRequired,
+  defaultCategories: PropTypes.object.isRequired,
   getCustomRecipientValue: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,
   combinedAssumptions: PropTypes.object.isRequired,
+  defaultAssumptions: PropTypes.object.isRequired,
 };
 
 export default React.memo(RecipientValuesSection);

@@ -21,29 +21,23 @@ import { getAllDonors, getDonationsForDonor, getDonorId } from './donationDataHe
  * @returns {Object} Default assumptions object with all data in unified format
  */
 export const createDefaultAssumptions = () => {
+  // Create a deep copy of the imported data to prevent mutations
   const defaults = {
     globalParameters: { ...globalParameters },
     categories: {},
     recipients: {},
   };
 
-  // Process categories - use default effects data
+  // Process categories - use deep copies of default effects data
   Object.entries(categoriesById).forEach(([categoryId, categoryData]) => {
-    defaults.categories[categoryId] = { ...categoryData };
+    // Deep copy to prevent mutation of shared references
+    defaults.categories[categoryId] = JSON.parse(JSON.stringify(categoryData));
   });
 
-  // Process recipients - use default category data
+  // Process recipients - use deep copies of default category data
   Object.entries(recipientsById).forEach(([recipientId, recipientData]) => {
-    const recipientCategories = {};
-
-    Object.entries(recipientData.categories).forEach(([categoryId, categoryData]) => {
-      recipientCategories[categoryId] = { ...categoryData };
-    });
-
-    defaults.recipients[recipientId] = {
-      ...recipientData,
-      categories: recipientCategories,
-    };
+    // Deep copy to prevent mutation of shared references
+    defaults.recipients[recipientId] = JSON.parse(JSON.stringify(recipientData));
   });
 
   return defaults;
@@ -57,11 +51,12 @@ export const createDefaultAssumptions = () => {
  */
 const mergeRecipientEffectWithUser = (defaultEffect, userEffect) => {
   if (!userEffect) {
-    return defaultEffect;
+    // Return a deep copy to avoid mutation
+    return JSON.parse(JSON.stringify(defaultEffect));
   }
 
-  // Start with a copy of the default effect
-  const merged = { ...defaultEffect };
+  // Start with a DEEP copy of the default effect to avoid mutations
+  const merged = JSON.parse(JSON.stringify(defaultEffect));
 
   // If user has overrides, they completely replace default overrides/multipliers
   if (userEffect.overrides) {
@@ -104,7 +99,8 @@ const mergeRecipientEffects = (defaultEffects, userEffects) => {
   }
 
   if (!userEffects || userEffects.length === 0) {
-    return defaultEffects;
+    // Return a deep copy to avoid mutation
+    return JSON.parse(JSON.stringify(defaultEffects));
   }
 
   // Create a map of user effects by effectId
@@ -136,9 +132,9 @@ const mergeEffects = (defaultEffects, userEffects) => {
     throw new Error('Default effects are required but not provided');
   }
 
-  // If no user effects, return defaults
+  // If no user effects, return a deep copy of defaults to avoid mutation
   if (!userEffects || userEffects.length === 0) {
-    return defaultEffects;
+    return JSON.parse(JSON.stringify(defaultEffects));
   }
 
   // Create a map of user effects by effectId for easy lookup
@@ -155,14 +151,15 @@ const mergeEffects = (defaultEffects, userEffects) => {
       const userOverride = userEffectsMap[defaultEffect.effectId];
 
       if (userOverride) {
-        // Merge user fields with default fields (user values take precedence)
+        // Deep merge user fields with default fields (user values take precedence)
         return {
-          ...defaultEffect,
+          ...JSON.parse(JSON.stringify(defaultEffect)),
           ...userOverride,
         };
       }
 
-      return defaultEffect;
+      // Return a deep copy to avoid mutations
+      return JSON.parse(JSON.stringify(defaultEffect));
     })
     .filter(Boolean); // Remove null entries
 

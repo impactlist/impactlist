@@ -127,9 +127,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                 ${
                   hasError
                     ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-                    : isCustom
-                      ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
-                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                 }
               `}
             />

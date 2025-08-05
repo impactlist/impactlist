@@ -351,7 +351,7 @@ const RecipientValuesSection = ({
                                 customMultiplier || getFormValue(formValues, multiplierKey) !== ''
                                   ? 'None'
                                   : defaultCostPerLife !== null
-                                    ? 'Default'
+                                    ? formatNumberWithCommas(defaultCostPerLife)
                                     : 'None'
                               }
                               error={errors[recipient.name]?.[categoryId]?.costPerLife}

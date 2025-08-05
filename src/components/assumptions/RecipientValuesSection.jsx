@@ -111,8 +111,9 @@ const RecipientValuesSection = ({
       combinedAssumptions.globalParameters
     );
 
-    // Multiplier is the ratio (inverted because lower cost per life = higher multiplier)
-    return baseCostPerLife / modifiedCostPerLife;
+    // Multiplier represents how much more expensive (less effective) the recipient is
+    // A multiplier of 10 means 10x the cost (10x less effective)
+    return modifiedCostPerLife / baseCostPerLife;
   };
 
   // Recreate getRecipientDefaultCostPerLife functionality using combinedAssumptions
@@ -314,12 +315,16 @@ const RecipientValuesSection = ({
                                 {errors[recipient.name][categoryId].multiplier}
                               </div>
                             )}
-                            {/* Show default value indicator */}
-                            {defaultMultiplier !== null && (
-                              <div className="text-xs text-gray-500 mt-0.5">
-                                Default: {formatNumberWithCommas(defaultMultiplier)}
-                              </div>
-                            )}
+                            {/* Show default value indicator only when value differs from default */}
+                            {defaultMultiplier !== null &&
+                              ((customMultiplier !== null && customMultiplier !== defaultMultiplier) ||
+                                (formValues[multiplierKey] &&
+                                  formValues[multiplierKey].raw !== '' &&
+                                  Number(formValues[multiplierKey].raw) !== defaultMultiplier)) && (
+                                <div className="text-xs text-gray-500 mt-0.5">
+                                  Default: {formatNumberWithCommas(defaultMultiplier)}
+                                </div>
+                              )}
                           </div>
 
                           {/* Direct cost per life input */}
@@ -361,12 +366,16 @@ const RecipientValuesSection = ({
                                   Number(formValues[costPerLifeKey].raw) !== defaultCostPerLife)
                               }
                             />
-                            {/* Show default value indicator */}
-                            {defaultCostPerLife !== null && (
-                              <div className="text-xs text-gray-500 mt-0.5">
-                                Default: ${formatNumberWithCommas(defaultCostPerLife)}
-                              </div>
-                            )}
+                            {/* Show default value indicator only when value differs from default */}
+                            {defaultCostPerLife !== null &&
+                              ((customCostPerLife !== null && customCostPerLife !== defaultCostPerLife) ||
+                                (formValues[costPerLifeKey] &&
+                                  formValues[costPerLifeKey].raw !== '' &&
+                                  Number(formValues[costPerLifeKey].raw) !== defaultCostPerLife)) && (
+                                <div className="text-xs text-gray-500 mt-0.5">
+                                  Default: ${formatNumberWithCommas(defaultCostPerLife)}
+                                </div>
+                              )}
                           </div>
                         </div>
                       );

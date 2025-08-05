@@ -62,17 +62,22 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
   };
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {parameters.map((param) => {
         const value = formValues[param.id]?.formatted || '';
         const hasError = errors[param.id];
         const defaultValue = defaultGlobalParameters[param.id];
         const currentValue = formValues[param.id]?.raw || '';
-        const showDefault = currentValue !== '' && Number(currentValue) !== defaultValue;
+        const isCustom = currentValue !== '' && Number(currentValue) !== defaultValue;
 
         return (
-          <div key={param.id}>
-            <div className="flex flex-wrap items-center gap-2">
+          <div
+            key={param.id}
+            className={`py-2 px-3 rounded border ${
+              hasError ? 'border-red-300 bg-red-50' : isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'
+            }`}
+          >
+            <div className="flex justify-between items-start mb-2">
               <label htmlFor={param.id} className="text-sm font-medium text-gray-700 flex items-center gap-1">
                 {param.label}
                 <Tooltip content={param.description}>
@@ -86,55 +91,55 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   </svg>
                 </Tooltip>
               </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  id={param.id}
-                  name={param.id}
-                  value={value}
-                  onChange={(e) => {
-                    // Get the current input element and cursor position
-                    const inputElement = e.target;
-                    const newValue = e.target.value;
-                    const currentPosition = e.target.selectionStart;
-
-                    // Format with commas while preserving cursor position
-                    const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
-
-                    // Pass the formatted value to parent
-                    onChange(param.id, result.value);
+              {isCustom && (
+                <button
+                  type="button"
+                  className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
+                  onClick={() => {
+                    const formattedValue = formatDisplayValue(defaultValue, param.format);
+                    onChange(param.id, formattedValue);
                   }}
-                  placeholder={formatDisplayValue(defaultValue, param.format)}
-                  className={`
-                    block w-40 rounded-md shadow-sm
-                    ${
-                      hasError
-                        ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                    }
-                    sm:text-sm px-3 py-2
-                  `}
-                />
-                {hasError && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </div>
+                >
+                  Reset
+                </button>
+              )}
             </div>
+            <input
+              type="text"
+              id={param.id}
+              name={param.id}
+              value={value}
+              onChange={(e) => {
+                // Get the current input element and cursor position
+                const inputElement = e.target;
+                const newValue = e.target.value;
+                const currentPosition = e.target.selectionStart;
+
+                // Format with commas while preserving cursor position
+                const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
+
+                // Pass the formatted value to parent
+                onChange(param.id, result.value);
+              }}
+              placeholder={formatDisplayValue(defaultValue, param.format)}
+              className={`
+                w-full px-2 py-1 text-sm border rounded focus:ring-1 focus:outline-none
+                ${
+                  hasError
+                    ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
+                    : isCustom
+                      ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
+                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                }
+              `}
+            />
             {hasError && (
               <p className="mt-1 text-sm text-red-600" role="alert">
                 {errors[param.id]}
               </p>
             )}
-            {showDefault && (
-              <p className="text-xs text-gray-500 mt-1">Default: {formatDisplayValue(defaultValue, param.format)}</p>
+            {isCustom && !hasError && (
+              <p className="text-xs text-gray-500 mt-0.5">Default: {formatDisplayValue(defaultValue, param.format)}</p>
             )}
           </div>
         );

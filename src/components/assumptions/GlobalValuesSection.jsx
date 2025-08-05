@@ -5,13 +5,13 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
   const parameters = [
     {
       id: 'discountRate',
-      label: 'Discount Rate',
+      label: 'Discount Rate (%)',
       description: 'Annual discount rate for future effects',
       format: 'percentage',
     },
     {
       id: 'populationGrowthRate',
-      label: 'Population Growth Rate',
+      label: 'Population Growth Rate (%)',
       description: 'Annual population growth rate',
       format: 'percentage',
     },
@@ -23,8 +23,8 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
     },
     {
       id: 'populationLimit',
-      label: 'Population Limit',
-      description: "Maximum population as a multiple of today's population",
+      label: 'Population Limit Factor',
+      description: "Maximum or minimum population as a multiple of today's population",
       format: 'number',
     },
     {
@@ -36,7 +36,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
     {
       id: 'yearsPerLife',
       label: 'Years Per Life',
-      description: 'Average years of life saved per intervention',
+      description: 'Number of years of human life that we consider equal to one life saved',
       format: 'number',
     },
   ];

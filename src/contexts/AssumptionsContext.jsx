@@ -52,19 +52,19 @@ export const AssumptionsProvider = ({ children }) => {
   }, [userAssumptions]);
 
   // ============ CATEGORY OPERATIONS ============
-  // Update category field with override value
-  const updateCategoryFieldOverride = (categoryId, effectId, fieldName, value) => {
+  // Update category field with a custom value
+  const updateCategoryFieldValue = (categoryId, effectId, fieldName, value) => {
     // Validate required parameters
     if (!categoryId || !effectId || !fieldName) {
       throw new Error(
-        `Missing required parameters for updateCategoryFieldOverride: categoryId=${categoryId}, effectId=${effectId}, fieldName=${fieldName}`
+        `Missing required parameters for updateCategoryFieldValue: categoryId=${categoryId}, effectId=${effectId}, fieldName=${fieldName}`
       );
     }
 
     // Validate value is a number (can be negative, but not NaN)
     if (typeof value !== 'number' || isNaN(value)) {
       throw new Error(
-        `Invalid value for category field override ${categoryId}.${effectId}.${fieldName}: expected number, got ${typeof value} (${value})`
+        `Invalid value for category field ${categoryId}.${effectId}.${fieldName}: expected number, got ${typeof value} (${value})`
       );
     }
 
@@ -174,7 +174,7 @@ export const AssumptionsProvider = ({ children }) => {
       }
       const effectId = baseCategory.effects[0].effectId;
       const costPerQALY = Number(value) / combinedAssumptions.globalParameters.yearsPerLife;
-      updateCategoryFieldOverride(categoryKey, effectId, 'costPerQALY', costPerQALY);
+      updateCategoryFieldValue(categoryKey, effectId, 'costPerQALY', costPerQALY);
     }
   };
 
@@ -358,7 +358,7 @@ export const AssumptionsProvider = ({ children }) => {
     closeModal,
 
     // New API functions
-    updateCategoryFieldOverride,
+    updateCategoryFieldValue,
     updateCategoryEffect,
     resetCategoryToDefaults,
     updateRecipientFieldOverride,

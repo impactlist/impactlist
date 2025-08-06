@@ -184,7 +184,7 @@ const AssumptionsEditor = () => {
       const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
 
       if (cleanValue.trim() === '') {
-        // Empty value - clear any custom override
+        // Empty value - clear any custom value
         updateCategoryValue(categoryId, '');
       } else {
         const numValue = Number(cleanValue);

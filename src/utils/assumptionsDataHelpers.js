@@ -151,11 +151,21 @@ const mergeEffects = (defaultEffects, userEffects) => {
       const userOverride = userEffectsMap[defaultEffect.effectId];
 
       if (userOverride) {
-        // Deep merge user fields with default fields (user values take precedence)
-        return {
-          ...JSON.parse(JSON.stringify(defaultEffect)),
-          ...userOverride,
-        };
+        // Start with a deep copy of the default effect
+        const merged = JSON.parse(JSON.stringify(defaultEffect));
+
+        // Apply overrides to actual field values
+        if (userOverride.overrides) {
+          Object.entries(userOverride.overrides).forEach(([fieldName, value]) => {
+            merged[fieldName] = value;
+          });
+        }
+
+        // Note: Categories don't use multipliers, only overrides
+        // Keep the overrides object for reference if needed
+        merged.overrides = userOverride.overrides;
+
+        return merged;
       }
 
       // Return a deep copy to avoid mutations

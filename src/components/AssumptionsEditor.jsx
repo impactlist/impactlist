@@ -255,34 +255,53 @@ const AssumptionsEditor = () => {
 
   // Handle saving category effects
   const handleSaveCategoryEffects = (updatedEffects) => {
-    // The updatedEffects contains the merged values (defaults + overrides already applied)
-    // We need to save the actual field values, not the metadata objects
+    // Get the default category to compare against
+    const defaultCategory = defaultAssumptions.categories[editingCategoryId];
+    if (!defaultCategory || !defaultCategory.effects) {
+      throw new Error(`Default category ${editingCategoryId} not found`);
+    }
+
+    // The updatedEffects contains the edited values from the UI
     updatedEffects.forEach((effect) => {
-      Object.keys(effect).forEach((fieldName) => {
-        // Skip effectId (it's an identifier, not a value to save)
-        if (fieldName === 'effectId') return;
+      // Find the corresponding default effect
+      const defaultEffect = defaultCategory.effects.find((e) => e.effectId === effect.effectId);
+      if (!defaultEffect) {
+        throw new Error(`Default effect ${effect.effectId} not found in category ${editingCategoryId}`);
+      }
 
-        const rawValue = effect[fieldName];
+      // Determine which fields are valid for this effect type (excluding metadata)
+      const validFields = [];
+      if (effect.costPerQALY !== undefined && typeof effect.costPerQALY !== 'object') {
+        // QALY-based effect
+        validFields.push('costPerQALY');
+      }
+      if (effect.costPerMicroprobability !== undefined && typeof effect.costPerMicroprobability !== 'object') {
+        // Population-based effect
+        validFields.push('costPerMicroprobability');
+        if (
+          effect.microprobabilityOfLiveSaved !== undefined &&
+          typeof effect.microprobabilityOfLiveSaved !== 'object'
+        ) {
+          validFields.push('microprobabilityOfLiveSaved');
+        }
+      }
 
-        // Skip metadata objects (like 'overrides' or 'multipliers')
-        // These are internal bookkeeping, not actual effect values
-        if (typeof rawValue === 'object' && rawValue !== null) return;
+      // Save each valid field
+      validFields.forEach((fieldName) => {
+        const newValue = effect[fieldName];
 
-        // Skip undefined/null values
-        if (rawValue === undefined || rawValue === null) return;
+        // Convert to number if needed
+        const numValue = typeof newValue === 'string' ? parseFloat(newValue) : newValue;
 
-        // Convert strings to numbers if needed
-        const newValue = typeof rawValue === 'string' ? parseFloat(rawValue) : rawValue;
-
-        // Validate the value is a proper number
-        if (typeof newValue !== 'number' || isNaN(newValue)) {
+        // Validate the value
+        if (typeof numValue !== 'number' || isNaN(numValue)) {
           throw new Error(
-            `Invalid value for ${editingCategoryId}.${effect.effectId}.${fieldName}: expected number, got ${typeof rawValue} (${rawValue})`
+            `Invalid value for ${editingCategoryId}.${effect.effectId}.${fieldName}: expected number, got ${typeof newValue} (${newValue})`
           );
         }
 
-        // Pass to API helper which will compare to defaults and store as override if different
-        updateCategoryFieldOverride(editingCategoryId, effect.effectId, fieldName, newValue);
+        // Always update the field - the API helper will handle whether to store as override or clear
+        updateCategoryFieldOverride(editingCategoryId, effect.effectId, fieldName, numValue);
       });
     });
 

@@ -122,7 +122,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   if (!category) return null;
 
   return (
-    <div className="h-full p-4">
+    <div className="h-full p-2">
       <div className="h-full flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200">
@@ -146,15 +146,15 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         </div>
 
         {/* Effects List */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto px-3 py-3">
+          <div className="space-y-3">
             {tempEffects.map((effect, index) => {
               const effectType = getEffectType(effect);
               const costPerLife = effectCostPerLife[index];
 
               return (
-                <div key={index} className="border border-gray-200 rounded-lg p-4">
-                  <div className="mb-3 flex justify-between items-start">
+                <div key={index} className="border border-gray-200 rounded-lg p-3">
+                  <div className="mb-2 flex justify-between items-start">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900">
                         Effect {index + 1}: {effect.effectId}

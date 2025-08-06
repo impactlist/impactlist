@@ -14,6 +14,7 @@ import { useGlobalForm } from '../hooks/useGlobalForm';
 import DefaultValuesSection from './assumptions/DefaultValuesSection';
 import RecipientValuesSection from './assumptions/RecipientValuesSection';
 import GlobalValuesSection from './assumptions/GlobalValuesSection';
+import CategoryEffectEditor from './assumptions/CategoryEffectEditor';
 import Modal from './assumptions/Modal';
 import TabNavigation from './assumptions/TabNavigation';
 import FormActions from './assumptions/FormActions';
@@ -23,6 +24,7 @@ const AssumptionsEditor = () => {
     combinedAssumptions,
     defaultAssumptions,
     updateCategoryValue,
+    updateCategoryFieldOverride,
     updateRecipientValue,
     updateGlobalParameter,
     getCategoryValue,
@@ -33,6 +35,7 @@ const AssumptionsEditor = () => {
   } = useAssumptions();
 
   const [activeTab, setActiveTab] = useState('global');
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
 
   const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
   const allCategories = useMemo(() => {
@@ -245,6 +248,36 @@ const AssumptionsEditor = () => {
     recipientForm.reset();
   };
 
+  // Handle editing a category's effects
+  const handleEditCategory = (categoryId) => {
+    setEditingCategoryId(categoryId);
+  };
+
+  // Handle saving category effects
+  const handleSaveCategoryEffects = (updatedEffects) => {
+    const category = combinedAssumptions.getCategoryById(editingCategoryId);
+
+    // Compare and update only changed fields
+    updatedEffects.forEach((effect, index) => {
+      const originalEffect = category.effects[index];
+
+      // Update each field that has changed
+      Object.keys(effect).forEach((fieldName) => {
+        if (fieldName !== 'effectId' && effect[fieldName] !== originalEffect[fieldName]) {
+          updateCategoryFieldOverride(editingCategoryId, effect.effectId, fieldName, effect[fieldName]);
+        }
+      });
+    });
+
+    // Return to category list view
+    setEditingCategoryId(null);
+  };
+
+  // Handle canceling category edit
+  const handleCancelCategoryEdit = () => {
+    setEditingCategoryId(null);
+  };
+
   const tabs = [
     { id: 'global', label: 'Global' },
     { id: 'categories', label: 'Categories' },
@@ -263,37 +296,52 @@ const AssumptionsEditor = () => {
 
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal} title="Edit Assumptions" description={getDescription()}>
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
-          <div className="order-2 sm:order-1">
-            <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
-          </div>
-          <div className="order-1 sm:order-2">
-            <FormActions
-              onReset={
-                activeTab === 'global'
-                  ? handleGlobalReset
-                  : activeTab === 'categories'
-                    ? handleCategoryReset
-                    : handleResetRecipients
-              }
-              onCancel={closeModal}
-              onSave={handleSubmit}
-              resetLabel={
-                activeTab === 'global'
-                  ? 'Reset Global'
-                  : activeTab === 'categories'
-                    ? 'Reset Categories'
-                    : 'Reset Recipients'
-              }
-            />
+      {!editingCategoryId && (
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
+            <div className="order-2 sm:order-1">
+              <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
+            </div>
+            <div className="order-1 sm:order-2">
+              <FormActions
+                onReset={
+                  activeTab === 'global'
+                    ? handleGlobalReset
+                    : activeTab === 'categories'
+                      ? handleCategoryReset
+                      : handleResetRecipients
+                }
+                onCancel={closeModal}
+                onSave={handleSubmit}
+                resetLabel={
+                  activeTab === 'global'
+                    ? 'Reset Global'
+                    : activeTab === 'categories'
+                      ? 'Reset Categories'
+                      : 'Reset Recipients'
+                }
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Tab content container */}
-      <div className="overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]">
-        {activeTab === 'global' ? (
+      <div
+        className={
+          editingCategoryId ? 'flex-grow' : 'overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]'
+        }
+      >
+        {editingCategoryId ? (
+          // Show category effect editor when editing a category
+          <CategoryEffectEditor
+            category={combinedAssumptions.getCategoryById(editingCategoryId)}
+            categoryId={editingCategoryId}
+            globalParameters={combinedAssumptions.globalParameters}
+            onSave={handleSaveCategoryEffects}
+            onCancel={handleCancelCategoryEdit}
+          />
+        ) : activeTab === 'global' ? (
           <form onSubmit={handleSubmit}>
             <GlobalValuesSection
               globalParameters={combinedAssumptions.globalParameters}
@@ -311,6 +359,7 @@ const AssumptionsEditor = () => {
               formValues={categoryForm.formValues}
               errors={categoryForm.errors}
               onChange={categoryForm.handleChange}
+              onEditCategory={handleEditCategory}
             />
           </form>
         ) : (

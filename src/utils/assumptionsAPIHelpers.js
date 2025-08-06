@@ -3,8 +3,8 @@
 // They handle the complex nested structure of effects with overrides and multipliers
 
 /**
- * Set an override for a specific field in a category effect
- * Removes any existing multiplier for the same field
+ * Set a custom value for a specific field in a category effect
+ * The value is stored directly on the effect field, not in an overrides object
  */
 export const setCategoryFieldOverride = (
   userAssumptions,
@@ -41,16 +41,14 @@ export const setCategoryFieldOverride = (
 
   if (defaultFieldValue !== undefined && value === defaultFieldValue) {
     // Value matches default - remove the custom value entirely
-    // For categories, we store custom values as overrides in userAssumptions
-    if (effect.overrides && effect.overrides[fieldName] !== undefined) {
-      delete effect.overrides[fieldName];
-      if (Object.keys(effect.overrides).length === 0) {
-        delete effect.overrides;
-      }
+    // Check if this field exists in the user effect
+    if (effect[fieldName] !== undefined) {
+      delete effect[fieldName];
     }
 
-    // Clean up empty effect if needed
-    if (!effect.overrides && !effect.multipliers) {
+    // Clean up empty effect if needed (only keep effectId and actual field values)
+    const hasCustomFields = Object.keys(effect).some((key) => key !== 'effectId');
+    if (!hasCustomFields) {
       newData.categories[categoryId].effects.splice(effectIndex, 1);
     }
 
@@ -64,17 +62,8 @@ export const setCategoryFieldOverride = (
 
     return Object.keys(newData).length > 0 ? newData : null;
   } else {
-    // Value differs from default - store as override
-    if (!effect.overrides) effect.overrides = {};
-    effect.overrides[fieldName] = value;
-
-    // Categories shouldn't have multipliers, but clean up just in case
-    if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
-      delete effect.multipliers[fieldName];
-      if (Object.keys(effect.multipliers).length === 0) {
-        delete effect.multipliers;
-      }
-    }
+    // Value differs from default - store directly as field value
+    effect[fieldName] = value;
 
     return newData;
   }

@@ -122,6 +122,7 @@ const mergeRecipientEffects = (defaultEffects, userEffects) => {
 
 /**
  * Merge user effect overrides with default effects
+ * For categories: User values directly replace default field values
  * @param {Array} defaultEffects - Default effects array
  * @param {Array} userEffects - User effect overrides (can be null/undefined)
  * @returns {Array} Merged effects array
@@ -145,25 +146,23 @@ const mergeEffects = (defaultEffects, userEffects) => {
     }
   });
 
-  // Merge effects: for each default effect, use user override if available
+  // Merge effects: for each default effect, merge with user values if available
   const mergedEffects = defaultEffects
     .map((defaultEffect) => {
-      const userOverride = userEffectsMap[defaultEffect.effectId];
+      const userEffect = userEffectsMap[defaultEffect.effectId];
 
-      if (userOverride) {
+      if (userEffect) {
         // Start with a deep copy of the default effect
         const merged = JSON.parse(JSON.stringify(defaultEffect));
 
-        // Apply overrides to actual field values
-        if (userOverride.overrides) {
-          Object.entries(userOverride.overrides).forEach(([fieldName, value]) => {
+        // For categories, user values are stored directly as field values
+        // Simply overlay all user field values onto the default
+        Object.entries(userEffect).forEach(([fieldName, value]) => {
+          // Skip effectId as it's just an identifier
+          if (fieldName !== 'effectId') {
             merged[fieldName] = value;
-          });
-        }
-
-        // Note: Categories don't use multipliers, only overrides
-        // Keep the overrides object for reference if needed
-        merged.overrides = userOverride.overrides;
+          }
+        });
 
         return merged;
       }

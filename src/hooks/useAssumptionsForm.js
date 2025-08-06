@@ -10,9 +10,9 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, de
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
-  // Initialize form values when modal opens
+  // Initialize form values when modal opens or categories change
   useEffect(() => {
-    if (isModalOpen && Object.keys(formValues).length === 0) {
+    if (isModalOpen) {
       const initialValues = {};
       Object.entries(allCategories).forEach(([key, category]) => {
         const customValue = getCategoryValue(key);
@@ -26,7 +26,7 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, de
       setFormValues(initialValues);
       setErrors({});
     }
-  }, [isModalOpen, allCategories, getCategoryValue, formValues]);
+  }, [isModalOpen, allCategories, getCategoryValue]);
 
   const clearError = useCallback(
     (key) => {

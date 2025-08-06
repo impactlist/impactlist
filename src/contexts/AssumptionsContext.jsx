@@ -73,6 +73,21 @@ export const AssumptionsProvider = ({ children }) => {
     );
   };
 
+  // Update all fields of a category effect at once (batch update)
+  const updateCategoryEffect = (categoryId, effectId, effectData) => {
+    // Validate required parameters
+    if (!categoryId || !effectId || !effectData) {
+      throw new Error(
+        `Missing required parameters for updateCategoryEffect: categoryId=${categoryId}, effectId=${effectId}, effectData=${effectData}`
+      );
+    }
+
+    setUserAssumptions((prev) => {
+      const newData = apiHelpers.setCategoryEffect(prev, defaultAssumptions, categoryId, effectId, effectData);
+      return newData;
+    });
+  };
+
   // Reset category to defaults
   const resetCategoryToDefaults = (categoryId) => {
     setUserAssumptions((prev) => apiHelpers.clearCategoryCustomValues(prev, categoryId));
@@ -344,6 +359,7 @@ export const AssumptionsProvider = ({ children }) => {
 
     // New API functions
     updateCategoryFieldOverride,
+    updateCategoryEffect,
     resetCategoryToDefaults,
     updateRecipientFieldOverride,
     updateRecipientFieldMultiplier,

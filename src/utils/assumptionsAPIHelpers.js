@@ -63,6 +63,70 @@ export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categ
 };
 
 /**
+ * Set all custom values for a category effect at once (batch update)
+ * Only stores fields that differ from defaults
+ */
+export const setCategoryEffect = (userAssumptions, defaultAssumptions, categoryId, effectId, effectData) => {
+  // Validate that the effect exists in defaults
+  const defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
+  if (!defaultEffect) {
+    throw new Error(`Effect ${effectId} not found in category ${categoryId}`);
+  }
+
+  // Deep clone or create new structure
+  const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
+
+  // Initialize nested structure if needed
+  if (!newData.categories) newData.categories = {};
+  if (!newData.categories[categoryId]) newData.categories[categoryId] = { effects: [] };
+
+  // Find or create the effect
+  let effectIndex = newData.categories[categoryId].effects.findIndex((e) => e.effectId === effectId);
+  if (effectIndex === -1) {
+    newData.categories[categoryId].effects.push({ effectId });
+    effectIndex = newData.categories[categoryId].effects.length - 1;
+  }
+
+  const userEffect = newData.categories[categoryId].effects[effectIndex];
+
+  // Clear existing fields (except effectId)
+  Object.keys(userEffect).forEach((key) => {
+    if (key !== 'effectId') {
+      delete userEffect[key];
+    }
+  });
+
+  // Add only fields that differ from defaults
+  let hasCustomFields = false;
+  Object.keys(effectData).forEach((fieldName) => {
+    if (fieldName !== 'effectId' && effectData[fieldName] !== undefined) {
+      const defaultValue = defaultEffect[fieldName];
+      const newValue = effectData[fieldName];
+
+      // Only store if different from default
+      if (newValue !== defaultValue) {
+        userEffect[fieldName] = newValue;
+        hasCustomFields = true;
+      }
+    }
+  });
+
+  // Clean up if no custom fields
+  if (!hasCustomFields) {
+    newData.categories[categoryId].effects.splice(effectIndex, 1);
+    if (newData.categories[categoryId].effects.length === 0) {
+      delete newData.categories[categoryId];
+      if (Object.keys(newData.categories).length === 0) {
+        delete newData.categories;
+      }
+    }
+    return Object.keys(newData).length > 0 ? newData : null;
+  }
+
+  return newData;
+};
+
+/**
  * Clear all custom values for a category (reset to defaults)
  */
 export const clearCategoryCustomValues = (userAssumptions, categoryId) => {

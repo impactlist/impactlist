@@ -24,7 +24,7 @@ const AssumptionsEditor = () => {
     combinedAssumptions,
     defaultAssumptions,
     updateCategoryValue,
-    updateCategoryFieldOverride,
+    updateCategoryEffect,
     updateRecipientValue,
     updateGlobalParameter,
     getCategoryValue,
@@ -261,7 +261,7 @@ const AssumptionsEditor = () => {
       throw new Error(`Default category ${editingCategoryId} not found`);
     }
 
-    // The updatedEffects contains the edited values from the UI
+    // Process each effect using batch update
     updatedEffects.forEach((effect) => {
       // Find the corresponding default effect
       const defaultEffect = defaultCategory.effects.find((e) => e.effectId === effect.effectId);
@@ -269,40 +269,22 @@ const AssumptionsEditor = () => {
         throw new Error(`Default effect ${effect.effectId} not found in category ${editingCategoryId}`);
       }
 
-      // Determine which fields are valid for this effect type (excluding metadata)
-      const validFields = [];
-      if (effect.costPerQALY !== undefined && typeof effect.costPerQALY !== 'object') {
-        // QALY-based effect
-        validFields.push('costPerQALY');
-      }
-      if (effect.costPerMicroprobability !== undefined && typeof effect.costPerMicroprobability !== 'object') {
-        // Population-based effect
-        validFields.push('costPerMicroprobability');
-        if (
-          effect.microprobabilityOfLiveSaved !== undefined &&
-          typeof effect.microprobabilityOfLiveSaved !== 'object'
-        ) {
-          validFields.push('microprobabilityOfLiveSaved');
+      // Create an object with only the numeric fields (skip metadata)
+      const effectData = {};
+      Object.keys(effect).forEach((fieldName) => {
+        if (fieldName !== 'effectId' && fieldName !== 'overrides' && fieldName !== 'multipliers') {
+          const value = effect[fieldName];
+          // Convert strings to numbers for numeric fields
+          if (typeof value === 'string' && !isNaN(parseFloat(value))) {
+            effectData[fieldName] = parseFloat(value);
+          } else if (typeof value === 'number') {
+            effectData[fieldName] = value;
+          }
         }
-      }
-
-      // Save each valid field
-      validFields.forEach((fieldName) => {
-        const newValue = effect[fieldName];
-
-        // Convert to number if needed
-        const numValue = typeof newValue === 'string' ? parseFloat(newValue) : newValue;
-
-        // Validate the value
-        if (typeof numValue !== 'number' || isNaN(numValue)) {
-          throw new Error(
-            `Invalid value for ${editingCategoryId}.${effect.effectId}.${fieldName}: expected number, got ${typeof newValue} (${newValue})`
-          );
-        }
-
-        // Always update the field - the API helper will handle whether to store as override or clear
-        updateCategoryFieldOverride(editingCategoryId, effect.effectId, fieldName, numValue);
       });
+
+      // Use the new batch save function
+      updateCategoryEffect(editingCategoryId, effect.effectId, effectData);
     });
 
     // Return to category list view

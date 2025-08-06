@@ -134,12 +134,14 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
             </svg>
           </button>
         </div>
-        <div className="mt-2 text-sm text-gray-600">
-          Combined Cost per Life:{' '}
-          <span className="font-semibold">
-            ${combinedCostPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(combinedCostPerLife))}
-          </span>
-        </div>
+        {tempEffects.length > 1 && (
+          <div className="mt-2 text-sm text-gray-600">
+            Combined Cost per Life:{' '}
+            <span className="font-semibold">
+              ${combinedCostPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(combinedCostPerLife))}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Effects List */}
@@ -156,14 +158,6 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                     <h4 className="text-sm font-medium text-gray-900">
                       Effect {index + 1}: {effect.effectId}
                     </h4>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Type:{' '}
-                      {effectType === 'qaly'
-                        ? 'QALY-based'
-                        : effectType === 'population'
-                          ? 'Population-based'
-                          : 'Unknown'}
-                    </p>
                   </div>
                   <div className="text-sm text-gray-600">
                     Cost per Life:{' '}

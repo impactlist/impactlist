@@ -126,7 +126,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Edit Effects for {category.name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Editing assumptions for category: {category.name}</h3>
           <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-500">
             <span className="sr-only">Back to categories</span>
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

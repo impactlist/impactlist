@@ -324,9 +324,9 @@ const AssumptionsEditor = () => {
     if (activeTab === 'global') {
       return 'Customize global parameters that affect all calculations.';
     } else if (activeTab === 'categories') {
-      return 'Customize the cost per life values for different cause categories. These values represent the estimated cost in dollars to save one life.';
+      return 'Customize the parameters for different cause categories which go into the computation of the cost in dollars to save one life.';
     } else {
-      return "Customize how specific recipients' cost per life values differ from their category defaults. You can set a multiplier or specify a direct cost per life value.";
+      return "Customize how specific recipients' parameter values differ from their category defaults. These parameters are used to compute the cost in dollars to save one life. You can set a multiplier or override for each parameter value.";
     }
   };
 

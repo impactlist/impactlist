@@ -14,6 +14,7 @@ const DefaultValuesSection = ({
   errors,
   onChange,
   onEditCategory,
+  onResetCategory,
   className = '',
 }) => {
   // Get form value with formatting
@@ -69,9 +70,13 @@ const DefaultValuesSection = ({
                     type="button"
                     className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
                     onClick={() => {
+                      // Reset both the form display and the actual category data
                       const value = defaultValue;
                       const formattedValue = formatNumberWithCommas(value);
                       onChange(key, formattedValue);
+                      if (onResetCategory) {
+                        onResetCategory(key);
+                      }
                     }}
                   >
                     Reset

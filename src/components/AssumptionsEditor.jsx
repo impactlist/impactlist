@@ -25,6 +25,7 @@ const AssumptionsEditor = () => {
     defaultAssumptions,
     updateCategoryValue,
     updateCategoryEffect,
+    resetCategoryToDefaults,
     updateRecipientValue,
     updateGlobalParameter,
     getCategoryValue,
@@ -378,6 +379,7 @@ const AssumptionsEditor = () => {
               errors={categoryForm.errors}
               onChange={categoryForm.handleChange}
               onEditCategory={handleEditCategory}
+              onResetCategory={resetCategoryToDefaults}
             />
           </form>
         ) : (

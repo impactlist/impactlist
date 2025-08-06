@@ -122,100 +122,102 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   if (!category) return null;
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Editing assumptions for category: {category.name}</h3>
-          <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-500">
-            <span className="sr-only">Back to categories</span>
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        {tempEffects.length > 1 && (
-          <div className="mt-2 text-sm text-gray-600">
-            Combined Cost per Life:{' '}
-            <span className="font-semibold">
-              ${combinedCostPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(combinedCostPerLife))}
-            </span>
+    <div className="h-full p-4">
+      <div className="h-full flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">Editing assumptions for category: {category.name}</h3>
+            <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-500">
+              <span className="sr-only">Back to categories</span>
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-        )}
-      </div>
+          {tempEffects.length > 1 && (
+            <div className="mt-2 text-sm text-gray-600">
+              Combined Cost per Life:{' '}
+              <span className="font-semibold">
+                ${combinedCostPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(combinedCostPerLife))}
+              </span>
+            </div>
+          )}
+        </div>
 
-      {/* Effects List */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
-        <div className="space-y-6">
-          {tempEffects.map((effect, index) => {
-            const effectType = getEffectType(effect);
-            const costPerLife = effectCostPerLife[index];
+        {/* Effects List */}
+        <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="space-y-6">
+            {tempEffects.map((effect, index) => {
+              const effectType = getEffectType(effect);
+              const costPerLife = effectCostPerLife[index];
 
-            return (
-              <div key={index} className="border border-gray-200 rounded-lg p-4">
-                <div className="mb-3 flex justify-between items-start">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-900">
-                      Effect {index + 1}: {effect.effectId}
-                    </h4>
+              return (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div className="mb-3 flex justify-between items-start">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900">
+                        Effect {index + 1}: {effect.effectId}
+                      </h4>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Cost per Life:{' '}
+                      <span className="font-medium">
+                        ${costPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(costPerLife))}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    Cost per Life:{' '}
-                    <span className="font-medium">
-                      ${costPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(costPerLife))}
-                    </span>
-                  </div>
+
+                  {effectType === 'qaly' ? (
+                    <QalyEffectInputs
+                      effect={effect}
+                      effectIndex={index}
+                      defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
+                      errors={errors}
+                      onChange={updateEffectField}
+                    />
+                  ) : effectType === 'population' ? (
+                    <PopulationEffectInputs
+                      effect={effect}
+                      effectIndex={index}
+                      defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
+                      errors={errors}
+                      onChange={updateEffectField}
+                    />
+                  ) : (
+                    <div className="text-sm text-red-600">Unknown effect type</div>
+                  )}
                 </div>
-
-                {effectType === 'qaly' ? (
-                  <QalyEffectInputs
-                    effect={effect}
-                    effectIndex={index}
-                    defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
-                    errors={errors}
-                    onChange={updateEffectField}
-                  />
-                ) : effectType === 'population' ? (
-                  <PopulationEffectInputs
-                    effect={effect}
-                    effectIndex={index}
-                    defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
-                    errors={errors}
-                    onChange={updateEffectField}
-                  />
-                ) : (
-                  <div className="text-sm text-red-600">Unknown effect type</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Footer Actions */}
-      <div className="px-6 py-4 border-t border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="text-sm">
-            {hasErrors && <span className="text-red-600">Please fix errors before saving</span>}
+              );
+            })}
           </div>
-          <div className="flex space-x-3">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={hasErrors}
-              className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                hasErrors ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
-              }`}
-            >
-              Save Changes
-            </button>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="px-6 py-4 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="text-sm">
+              {hasErrors && <span className="text-red-600">Please fix errors before saving</span>}
+            </div>
+            <div className="flex space-x-3">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={hasErrors}
+                className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                  hasErrors ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+                }`}
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -56,11 +56,23 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   const effectCostPerLife = useMemo(() => {
     return tempEffects.map((effect) => {
       try {
+        // Check for invalid values that would cause calculation errors
+        const effectType = getEffectType(effect);
+        if (effectType === 'qaly' && (effect.costPerQALY === 0 || effect.costPerQALY === undefined)) {
+          return Infinity; // Invalid but don't throw error during editing
+        }
+        if (
+          effectType === 'population' &&
+          (effect.costPerMicroprobability === 0 || effect.costPerMicroprobability === undefined)
+        ) {
+          return Infinity; // Invalid but don't throw error during editing
+        }
+
         return effectToCostPerLife(effect, globalParameters);
-      } catch (error) {
-        // Re-throw the error to fail loudly for debugging
-        console.error(`Error calculating effect cost per life:`, error);
-        throw error;
+      } catch {
+        // During editing, return Infinity for invalid calculations instead of throwing
+        // This allows users to type without errors appearing for temporary invalid states
+        return Infinity;
       }
     });
   }, [tempEffects, globalParameters]);
@@ -95,13 +107,13 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
       // Type-specific validations
       if (effectType === 'qaly') {
-        if (!effect.costPerQALY || effect.costPerQALY <= 0) {
-          newErrors[`${index}-costPerQALY`] = 'Cost per QALY must be positive';
+        if (effect.costPerQALY === 0 || effect.costPerQALY === undefined) {
+          newErrors[`${index}-costPerQALY`] = 'Cost per QALY cannot be zero';
           isValid = false;
         }
       } else if (effectType === 'population') {
-        if (!effect.costPerMicroprobability || effect.costPerMicroprobability <= 0) {
-          newErrors[`${index}-costPerMicroprobability`] = 'Cost per microprobability must be positive';
+        if (effect.costPerMicroprobability === 0 || effect.costPerMicroprobability === undefined) {
+          newErrors[`${index}-costPerMicroprobability`] = 'Cost per microprobability cannot be zero';
           isValid = false;
         }
         if (
@@ -148,7 +160,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         <div className="mt-2 text-sm text-gray-600">
           Combined Cost per Life:{' '}
           <span className="font-semibold">
-            ${combinedCostPerLife === Infinity ? 'Invalid' : formatNumberWithCommas(Math.round(combinedCostPerLife))}
+            ${combinedCostPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(combinedCostPerLife))}
           </span>
         </div>
       </div>
@@ -179,7 +191,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                   <div className="text-sm text-gray-600">
                     Cost per Life:{' '}
                     <span className="font-medium">
-                      ${costPerLife === Infinity ? 'Invalid' : formatNumberWithCommas(Math.round(costPerLife))}
+                      ${costPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(costPerLife))}
                     </span>
                   </div>
                 </div>

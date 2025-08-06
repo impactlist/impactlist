@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import NumericInput from '../../shared/NumericInput';
+import FormField from '../../shared/FormField';
 
 /**
  * Input fields for QALY-based effects
  */
-const QalyEffectInputs = ({ effect, effectIndex, errors, onChange }) => {
-  const handleChange = (fieldName, value) => {
+const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange }) => {
+  const handleChange = (fieldName) => (value) => {
     onChange(effectIndex, fieldName, value);
   };
 
@@ -15,36 +15,36 @@ const QalyEffectInputs = ({ effect, effectIndex, errors, onChange }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      {/* Cost per QALY */}
-      <NumericInput
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <FormField
         id={`effect-${effectIndex}-costPerQALY`}
         label="Cost per QALY"
+        description="Cost to produce one quality-adjusted life year"
         value={effect.costPerQALY}
-        onChange={(value) => handleChange('costPerQALY', value)}
+        defaultValue={defaultEffect?.costPerQALY}
+        onChange={handleChange('costPerQALY')}
         error={getError('costPerQALY')}
-        placeholder="0"
         prefix="$"
       />
 
-      {/* Start Time */}
-      <NumericInput
+      <FormField
         id={`effect-${effectIndex}-startTime`}
         label="Start Time (years)"
+        description="When the effect starts relative to the intervention"
         value={effect.startTime}
-        onChange={(value) => handleChange('startTime', value)}
+        defaultValue={defaultEffect?.startTime}
+        onChange={handleChange('startTime')}
         error={getError('startTime')}
-        placeholder="0"
       />
 
-      {/* Window Length */}
-      <NumericInput
+      <FormField
         id={`effect-${effectIndex}-windowLength`}
         label="Window Length (years)"
+        description="Duration of the effect window"
         value={effect.windowLength}
-        onChange={(value) => handleChange('windowLength', value)}
+        defaultValue={defaultEffect?.windowLength}
+        onChange={handleChange('windowLength')}
         error={getError('windowLength')}
-        placeholder="0"
       />
     </div>
   );
@@ -52,11 +52,16 @@ const QalyEffectInputs = ({ effect, effectIndex, errors, onChange }) => {
 
 QalyEffectInputs.propTypes = {
   effect: PropTypes.shape({
+    costPerQALY: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    startTime: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    windowLength: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }).isRequired,
+  effectIndex: PropTypes.number.isRequired,
+  defaultEffect: PropTypes.shape({
     costPerQALY: PropTypes.number,
     startTime: PropTypes.number,
     windowLength: PropTypes.number,
-  }).isRequired,
-  effectIndex: PropTypes.number.isRequired,
+  }),
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
 };

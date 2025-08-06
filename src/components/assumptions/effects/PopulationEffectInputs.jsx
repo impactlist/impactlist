@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import NumericInput from '../../shared/NumericInput';
+import FormField from '../../shared/FormField';
 
 /**
  * Input fields for population-based effects
  */
-const PopulationEffectInputs = ({ effect, effectIndex, errors, onChange }) => {
-  const handleChange = (fieldName, value) => {
+const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange }) => {
+  const handleChange = (fieldName) => (value) => {
     onChange(effectIndex, fieldName, value);
   };
 
@@ -15,59 +15,59 @@ const PopulationEffectInputs = ({ effect, effectIndex, errors, onChange }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {/* Cost per Microprobability */}
-        <NumericInput
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <FormField
           id={`effect-${effectIndex}-costPerMicroprobability`}
           label="Cost per Microprobability"
+          description="Cost to change the probability of saving a life by one in a million"
           value={effect.costPerMicroprobability}
-          onChange={(value) => handleChange('costPerMicroprobability', value)}
+          defaultValue={defaultEffect?.costPerMicroprobability}
+          onChange={handleChange('costPerMicroprobability')}
           error={getError('costPerMicroprobability')}
-          placeholder="0"
           prefix="$"
         />
 
-        {/* Population Fraction Affected */}
-        <NumericInput
+        <FormField
           id={`effect-${effectIndex}-populationFractionAffected`}
-          label="Population Fraction Affected (0-1)"
+          label="Population Fraction Affected"
+          description="Fraction of the population affected (0-1)"
           value={effect.populationFractionAffected}
-          onChange={(value) => handleChange('populationFractionAffected', value)}
+          defaultValue={defaultEffect?.populationFractionAffected}
+          onChange={handleChange('populationFractionAffected')}
           error={getError('populationFractionAffected')}
-          placeholder="1"
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {/* QALY Improvement per Year */}
-        <NumericInput
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <FormField
           id={`effect-${effectIndex}-qalyImprovementPerYear`}
           label="QALY Improvement/Year"
+          description="Quality-adjusted life years improved per year"
           value={effect.qalyImprovementPerYear}
-          onChange={(value) => handleChange('qalyImprovementPerYear', value)}
+          defaultValue={defaultEffect?.qalyImprovementPerYear}
+          onChange={handleChange('qalyImprovementPerYear')}
           error={getError('qalyImprovementPerYear')}
-          placeholder="1"
         />
 
-        {/* Start Time */}
-        <NumericInput
+        <FormField
           id={`effect-${effectIndex}-startTime`}
           label="Start Time (years)"
+          description="When the effect starts relative to the intervention"
           value={effect.startTime}
-          onChange={(value) => handleChange('startTime', value)}
+          defaultValue={defaultEffect?.startTime}
+          onChange={handleChange('startTime')}
           error={getError('startTime')}
-          placeholder="0"
         />
 
-        {/* Window Length */}
-        <NumericInput
+        <FormField
           id={`effect-${effectIndex}-windowLength`}
           label="Window Length (years)"
+          description="Duration of the effect window"
           value={effect.windowLength}
-          onChange={(value) => handleChange('windowLength', value)}
+          defaultValue={defaultEffect?.windowLength}
+          onChange={handleChange('windowLength')}
           error={getError('windowLength')}
-          placeholder="0"
         />
       </div>
     </div>
@@ -76,13 +76,20 @@ const PopulationEffectInputs = ({ effect, effectIndex, errors, onChange }) => {
 
 PopulationEffectInputs.propTypes = {
   effect: PropTypes.shape({
+    costPerMicroprobability: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    populationFractionAffected: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    qalyImprovementPerYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    startTime: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    windowLength: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }).isRequired,
+  effectIndex: PropTypes.number.isRequired,
+  defaultEffect: PropTypes.shape({
     costPerMicroprobability: PropTypes.number,
     populationFractionAffected: PropTypes.number,
     qalyImprovementPerYear: PropTypes.number,
     startTime: PropTypes.number,
     windowLength: PropTypes.number,
-  }).isRequired,
-  effectIndex: PropTypes.number.isRequired,
+  }),
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
 };

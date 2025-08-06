@@ -5,14 +5,24 @@ import PopulationEffectInputs from './effects/PopulationEffectInputs';
 import { effectToCostPerLife } from '../../utils/effectsCalculation';
 import { formatNumberWithCommas } from '../../utils/formatters';
 import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
+import { useAssumptions } from '../../contexts/AssumptionsContext';
 
 /**
  * Component for editing all effects of a category
  */
-// eslint-disable-next-line no-unused-vars
+
 const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, onCancel }) => {
   const [tempEffects, setTempEffects] = useState([]);
   const [errors, setErrors] = useState({});
+  const { defaultAssumptions } = useAssumptions();
+
+  // Get default effects for comparison
+  const defaultEffects = useMemo(() => {
+    if (!defaultAssumptions?.categories?.[categoryId]?.effects) {
+      return [];
+    }
+    return defaultAssumptions.categories[categoryId].effects;
+  }, [defaultAssumptions, categoryId]);
 
   // Initialize temp effects from category
   useEffect(() => {
@@ -164,11 +174,18 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                 </div>
 
                 {effectType === 'qaly' ? (
-                  <QalyEffectInputs effect={effect} effectIndex={index} errors={errors} onChange={updateEffectField} />
+                  <QalyEffectInputs
+                    effect={effect}
+                    effectIndex={index}
+                    defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
+                    errors={errors}
+                    onChange={updateEffectField}
+                  />
                 ) : effectType === 'population' ? (
                   <PopulationEffectInputs
                     effect={effect}
                     effectIndex={index}
+                    defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
                     errors={errors}
                     onChange={updateEffectField}
                   />

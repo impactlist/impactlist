@@ -69,20 +69,13 @@ export const AssumptionsProvider = ({ children }) => {
     }
 
     setUserAssumptions((prev) =>
-      apiHelpers.setCategoryFieldOverride(prev, defaultAssumptions, categoryId, effectId, fieldName, value)
-    );
-  };
-
-  // Update category field with multiplier
-  const updateCategoryFieldMultiplier = (categoryId, effectId, fieldName, multiplier) => {
-    setUserAssumptions((prev) =>
-      apiHelpers.setCategoryFieldMultiplier(prev, defaultAssumptions, categoryId, effectId, fieldName, multiplier)
+      apiHelpers.setCategoryFieldValue(prev, defaultAssumptions, categoryId, effectId, fieldName, value)
     );
   };
 
   // Reset category to defaults
   const resetCategoryToDefaults = (categoryId) => {
-    setUserAssumptions((prev) => apiHelpers.clearCategoryOverrides(prev, categoryId));
+    setUserAssumptions((prev) => apiHelpers.clearCategoryCustomValues(prev, categoryId));
   };
 
   // ============ RECIPIENT OPERATIONS ============
@@ -351,7 +344,6 @@ export const AssumptionsProvider = ({ children }) => {
 
     // New API functions
     updateCategoryFieldOverride,
-    updateCategoryFieldMultiplier,
     resetCategoryToDefaults,
     updateRecipientFieldOverride,
     updateRecipientFieldMultiplier,

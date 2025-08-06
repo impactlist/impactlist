@@ -6,14 +6,7 @@
  * Set a custom value for a specific field in a category effect
  * The value is stored directly on the effect field, not in an overrides object
  */
-export const setCategoryFieldOverride = (
-  userAssumptions,
-  defaultAssumptions,
-  categoryId,
-  effectId,
-  fieldName,
-  value
-) => {
+export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categoryId, effectId, fieldName, value) => {
   // Validate that the effect exists in defaults
   const defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
   if (!defaultEffect) {
@@ -70,58 +63,9 @@ export const setCategoryFieldOverride = (
 };
 
 /**
- * Set a multiplier for a specific field in a category effect
- * Removes any existing override for the same field
+ * Clear all custom values for a category (reset to defaults)
  */
-export const setCategoryFieldMultiplier = (
-  userAssumptions,
-  defaultAssumptions,
-  categoryId,
-  effectId,
-  fieldName,
-  multiplier
-) => {
-  // Validate that the effect exists in defaults
-  const defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
-  if (!defaultEffect) {
-    throw new Error(`Effect ${effectId} not found in category ${categoryId}`);
-  }
-
-  // Deep clone or create new structure
-  const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
-
-  // Initialize nested structure if needed
-  if (!newData.categories) newData.categories = {};
-  if (!newData.categories[categoryId]) newData.categories[categoryId] = { effects: [] };
-
-  // Find or create the effect
-  let effectIndex = newData.categories[categoryId].effects.findIndex((e) => e.effectId === effectId);
-  if (effectIndex === -1) {
-    newData.categories[categoryId].effects.push({ effectId });
-    effectIndex = newData.categories[categoryId].effects.length - 1;
-  }
-
-  const effect = newData.categories[categoryId].effects[effectIndex];
-
-  // Set multiplier
-  if (!effect.multipliers) effect.multipliers = {};
-  effect.multipliers[fieldName] = multiplier;
-
-  // Remove any override for the same field
-  if (effect.overrides && effect.overrides[fieldName] !== undefined) {
-    delete effect.overrides[fieldName];
-    if (Object.keys(effect.overrides).length === 0) {
-      delete effect.overrides;
-    }
-  }
-
-  return newData;
-};
-
-/**
- * Clear all overrides and multipliers for a category
- */
-export const clearCategoryOverrides = (userAssumptions, categoryId) => {
+export const clearCategoryCustomValues = (userAssumptions, categoryId) => {
   if (!userAssumptions?.categories?.[categoryId]) {
     return userAssumptions;
   }

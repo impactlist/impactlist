@@ -1,0 +1,161 @@
+/**
+ * Shared validation utilities for effect fields
+ */
+
+/**
+ * Detect the type of an effect based on its fields
+ */
+export const getEffectType = (effect) => {
+  if (!effect) return 'unknown';
+  if (effect.costPerQALY !== undefined) return 'qaly';
+  if (effect.costPerMicroprobability !== undefined) return 'population';
+  return 'unknown';
+};
+
+/**
+ * Check if a value is a partial input state (user is still typing)
+ */
+export const isPartialInput = (value) => {
+  return value === '' || value === '-' || value === '.' || value === '-.';
+};
+
+/**
+ * Validate a single effect field
+ * @param {string} fieldName - The name of the field being validated
+ * @param {any} value - The value to validate
+ * @param {string} effectType - The type of effect ('qaly' or 'population')
+ * @returns {string|null} Error message if validation fails, null if valid
+ */
+export const validateEffectField = (fieldName, value, effectType) => {
+  // Common validations for all effect types
+  if (fieldName === 'startTime') {
+    const numValue = typeof value === 'number' ? value : parseFloat(value);
+    if (isPartialInput(value)) {
+      return 'Start time is required';
+    }
+    if (isNaN(numValue) || numValue < 0) {
+      return 'Start time must be non-negative';
+    }
+  }
+
+  if (fieldName === 'windowLength') {
+    const numValue = typeof value === 'number' ? value : parseFloat(value);
+    if (isPartialInput(value)) {
+      return 'Window length is required';
+    }
+    if (isNaN(numValue) || numValue < 0) {
+      return 'Window length must be non-negative';
+    }
+  }
+
+  // QALY-specific validations
+  if (effectType === 'qaly' && fieldName === 'costPerQALY') {
+    const numValue = typeof value === 'number' ? value : parseFloat(value);
+    if (isPartialInput(value)) {
+      return 'Cost per QALY is required';
+    }
+    if (isNaN(numValue)) {
+      return 'Cost per QALY must be a valid number';
+    }
+    if (numValue === 0) {
+      return 'Cost per QALY cannot be zero';
+    }
+  }
+
+  // Population-specific validations
+  if (effectType === 'population') {
+    if (fieldName === 'costPerMicroprobability') {
+      const numValue = typeof value === 'number' ? value : parseFloat(value);
+      if (isPartialInput(value)) {
+        return 'Cost per microprobability is required';
+      }
+      if (isNaN(numValue)) {
+        return 'Cost per microprobability must be a valid number';
+      }
+      if (numValue === 0) {
+        return 'Cost per microprobability cannot be zero';
+      }
+    }
+
+    if (fieldName === 'populationFractionAffected') {
+      const numValue = typeof value === 'number' ? value : parseFloat(value);
+      if (isPartialInput(value)) {
+        return 'Population fraction is required';
+      }
+      if (isNaN(numValue)) {
+        return 'Population fraction must be a valid number';
+      }
+      if (numValue <= 0 || numValue > 1) {
+        return 'Population fraction must be between 0 and 1';
+      }
+    }
+
+    if (fieldName === 'qalyImprovementPerYear') {
+      const numValue = typeof value === 'number' ? value : parseFloat(value);
+      if (isPartialInput(value)) {
+        return 'QALY improvement is required';
+      }
+      if (isNaN(numValue)) {
+        return 'QALY improvement must be a valid number';
+      }
+      if (numValue === 0) {
+        return 'QALY improvement cannot be zero';
+      }
+    }
+  }
+
+  return null; // No error
+};
+
+/**
+ * Validate all fields of an effect
+ * @param {Object} effect - The effect object to validate
+ * @param {number} effectIndex - The index of this effect (for error keys)
+ * @returns {Object} Object with errors (keyed by field) and isValid boolean
+ */
+export const validateEffect = (effect, effectIndex = 0) => {
+  const errors = {};
+  const effectType = getEffectType(effect);
+
+  // Get all fields that need validation based on effect type
+  const fieldsToValidate = ['startTime', 'windowLength'];
+
+  if (effectType === 'qaly') {
+    fieldsToValidate.push('costPerQALY');
+  } else if (effectType === 'population') {
+    fieldsToValidate.push('costPerMicroprobability', 'populationFractionAffected', 'qalyImprovementPerYear');
+  }
+
+  // Validate each field
+  fieldsToValidate.forEach((fieldName) => {
+    const error = validateEffectField(fieldName, effect[fieldName], effectType);
+    if (error) {
+      errors[`${effectIndex}-${fieldName}`] = error;
+    }
+  });
+
+  return {
+    errors,
+    isValid: Object.keys(errors).length === 0,
+  };
+};
+
+/**
+ * Validate multiple effects
+ * @param {Array} effects - Array of effect objects
+ * @returns {Object} Object with combined errors and isValid boolean
+ */
+export const validateEffects = (effects) => {
+  let allErrors = {};
+  let isValid = true;
+
+  effects.forEach((effect, index) => {
+    const validation = validateEffect(effect, index);
+    allErrors = { ...allErrors, ...validation.errors };
+    if (!validation.isValid) {
+      isValid = false;
+    }
+  });
+
+  return { errors: allErrors, isValid };
+};

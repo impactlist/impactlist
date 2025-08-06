@@ -4,15 +4,7 @@ import QalyEffectInputs from './effects/QalyEffectInputs';
 import PopulationEffectInputs from './effects/PopulationEffectInputs';
 import { effectToCostPerLife } from '../../utils/effectsCalculation';
 import { formatNumberWithCommas } from '../../utils/formatters';
-
-/**
- * Detect the type of an effect based on its fields
- */
-const getEffectType = (effect) => {
-  if (effect.costPerQALY !== undefined) return 'qaly';
-  if (effect.costPerMicroprobability !== undefined) return 'population';
-  return 'unknown';
-};
+import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
 
 /**
  * Component for editing all effects of a category
@@ -30,6 +22,14 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     }
   }, [category]);
 
+  // Validate all effects on mount and when effects change
+  useEffect(() => {
+    if (tempEffects.length > 0) {
+      const validation = validateEffects(tempEffects);
+      setErrors(validation.errors);
+    }
+  }, [tempEffects]);
+
   // Update a specific field of an effect
   const updateEffectField = (effectIndex, fieldName, value) => {
     setTempEffects((prev) => {
@@ -41,15 +41,21 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       return newEffects;
     });
 
-    // Clear error for this field
+    // Validate this field immediately
+    const effect = { ...tempEffects[effectIndex], [fieldName]: value };
+    const effectType = getEffectType(effect);
+    const error = validateEffectField(fieldName, value, effectType);
     const errorKey = `${effectIndex}-${fieldName}`;
-    if (errors[errorKey]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
+
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      if (error) {
+        newErrors[errorKey] = error;
+      } else {
         delete newErrors[errorKey];
-        return newErrors;
-      });
-    }
+      }
+      return newErrors;
+    });
   };
 
   // Calculate cost per life for each effect
@@ -87,58 +93,19 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     return harmonicMean;
   }, [effectCostPerLife]);
 
-  // Validate all effects
-  const validateEffects = () => {
-    const newErrors = {};
-    let isValid = true;
-
-    tempEffects.forEach((effect, index) => {
-      const effectType = getEffectType(effect);
-
-      // Common validations
-      if (effect.startTime < 0) {
-        newErrors[`${index}-startTime`] = 'Start time must be non-negative';
-        isValid = false;
-      }
-      if (effect.windowLength < 0) {
-        newErrors[`${index}-windowLength`] = 'Window length must be non-negative';
-        isValid = false;
-      }
-
-      // Type-specific validations
-      if (effectType === 'qaly') {
-        if (effect.costPerQALY === 0 || effect.costPerQALY === undefined) {
-          newErrors[`${index}-costPerQALY`] = 'Cost per QALY cannot be zero';
-          isValid = false;
-        }
-      } else if (effectType === 'population') {
-        if (effect.costPerMicroprobability === 0 || effect.costPerMicroprobability === undefined) {
-          newErrors[`${index}-costPerMicroprobability`] = 'Cost per microprobability cannot be zero';
-          isValid = false;
-        }
-        if (
-          !effect.populationFractionAffected ||
-          effect.populationFractionAffected <= 0 ||
-          effect.populationFractionAffected > 1
-        ) {
-          newErrors[`${index}-populationFractionAffected`] = 'Population fraction must be between 0 and 1';
-          isValid = false;
-        }
-        if (effect.qalyImprovementPerYear === 0) {
-          newErrors[`${index}-qalyImprovementPerYear`] = 'QALY improvement cannot be zero';
-          isValid = false;
-        }
-      }
-    });
-
-    setErrors(newErrors);
-    return isValid;
-  };
+  // Check if there are any validation errors
+  const hasErrors = useMemo(() => {
+    return Object.keys(errors).length > 0;
+  }, [errors]);
 
   // Handle save
   const handleSave = () => {
-    if (validateEffects()) {
+    // Re-validate all effects before saving
+    const validation = validateEffects(tempEffects);
+    if (validation.isValid) {
       onSave(tempEffects);
+    } else {
+      setErrors(validation.errors);
     }
   };
 
@@ -215,21 +182,31 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       </div>
 
       {/* Footer Actions */}
-      <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={handleSave}
-          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Save Changes
-        </button>
+      <div className="px-6 py-4 border-t border-gray-200">
+        <div className="flex items-center justify-between">
+          <div className="text-sm">
+            {hasErrors && <span className="text-red-600">Please fix errors before saving</span>}
+          </div>
+          <div className="flex space-x-3">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={hasErrors}
+              className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                hasErrors ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+              }`}
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -255,17 +255,34 @@ const AssumptionsEditor = () => {
 
   // Handle saving category effects
   const handleSaveCategoryEffects = (updatedEffects) => {
-    const category = combinedAssumptions.getCategoryById(editingCategoryId);
-
-    // Compare and update only changed fields
-    updatedEffects.forEach((effect, index) => {
-      const originalEffect = category.effects[index];
-
-      // Update each field that has changed
+    // The updatedEffects contains the merged values (defaults + overrides already applied)
+    // We need to save the actual field values, not the metadata objects
+    updatedEffects.forEach((effect) => {
       Object.keys(effect).forEach((fieldName) => {
-        if (fieldName !== 'effectId' && effect[fieldName] !== originalEffect[fieldName]) {
-          updateCategoryFieldOverride(editingCategoryId, effect.effectId, fieldName, effect[fieldName]);
+        // Skip effectId (it's an identifier, not a value to save)
+        if (fieldName === 'effectId') return;
+
+        const rawValue = effect[fieldName];
+
+        // Skip metadata objects (like 'overrides' or 'multipliers')
+        // These are internal bookkeeping, not actual effect values
+        if (typeof rawValue === 'object' && rawValue !== null) return;
+
+        // Skip undefined/null values
+        if (rawValue === undefined || rawValue === null) return;
+
+        // Convert strings to numbers if needed
+        const newValue = typeof rawValue === 'string' ? parseFloat(rawValue) : rawValue;
+
+        // Validate the value is a proper number
+        if (typeof newValue !== 'number' || isNaN(newValue)) {
+          throw new Error(
+            `Invalid value for ${editingCategoryId}.${effect.effectId}.${fieldName}: expected number, got ${typeof rawValue} (${rawValue})`
+          );
         }
+
+        // Pass to API helper which will compare to defaults and store as override if different
+        updateCategoryFieldOverride(editingCategoryId, effect.effectId, fieldName, newValue);
       });
     });
 

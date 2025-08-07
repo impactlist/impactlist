@@ -15,6 +15,7 @@ const DefaultValuesSection = ({
   onChange,
   onEditCategory,
   onResetCategory,
+  categoriesWithCustomValues,
   className = '',
 }) => {
   // Get form value with formatting
@@ -41,13 +42,10 @@ const DefaultValuesSection = ({
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
         .map(([key, category]) => {
           const defaultValue = defaultCategories[key].costPerLife;
-          const valueObj = formValues[key] || { raw: '', display: '' };
           const hasError = errors[key];
 
-          // Check if value is custom (different from default)
-          // Remove commas before comparing numeric values
-          const rawWithoutCommas = valueObj.raw ? valueObj.raw.toString().replace(/,/g, '') : '';
-          const isCustom = rawWithoutCommas !== '' && Number(rawWithoutCommas) !== defaultValue;
+          // Check if this category has any custom effect parameters
+          const isCustom = categoriesWithCustomValues && categoriesWithCustomValues.has(key);
 
           return (
             <div

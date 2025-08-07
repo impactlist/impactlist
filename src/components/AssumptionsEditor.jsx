@@ -23,6 +23,7 @@ const AssumptionsEditor = () => {
   const {
     combinedAssumptions,
     defaultAssumptions,
+    userAssumptions,
     updateCategoryValue,
     updateCategoryEffect,
     resetCategoryToDefaults,
@@ -39,6 +40,18 @@ const AssumptionsEditor = () => {
   const [editingCategoryId, setEditingCategoryId] = useState(null);
 
   const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
+
+  // Track which categories have custom effect values
+  const categoriesWithCustomValues = useMemo(() => {
+    const customCategories = new Set();
+    if (userAssumptions?.categories) {
+      Object.keys(userAssumptions.categories).forEach((categoryId) => {
+        customCategories.add(categoryId);
+      });
+    }
+    return customCategories;
+  }, [userAssumptions]);
+
   const allCategories = useMemo(() => {
     // Convert to format expected by the component
     const categories = {};
@@ -380,6 +393,7 @@ const AssumptionsEditor = () => {
               onChange={categoryForm.handleChange}
               onEditCategory={handleEditCategory}
               onResetCategory={resetCategoryToDefaults}
+              categoriesWithCustomValues={categoriesWithCustomValues}
             />
           </form>
         ) : (

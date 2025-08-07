@@ -309,25 +309,6 @@ export const getRecipientFromCombined = (combinedAssumptions, recipientId) => {
 };
 
 /**
- * Convert a simple cost per life value to effects format
- * @param {number} costPerLife - The cost per life value
- * @param {Object} globalParams - Global parameters object
- * @returns {Object} Effect object in new format
- */
-export const costPerLifeToEffect = (costPerLife, globalParams) => {
-  assertExists(costPerLife, 'costPerLife');
-  assertExists(globalParams, 'globalParams');
-  assertExists(globalParams.yearsPerLife, 'globalParams.yearsPerLife');
-
-  return {
-    effectId: 'user-override',
-    startTime: 0,
-    windowLength: 0,
-    costPerQALY: costPerLife / globalParams.yearsPerLife,
-  };
-};
-
-/**
  * Calculate weighted cost per life for a recipient using combined assumptions
  * @param {Object} combinedAssumptions - The combined assumptions object
  * @param {string} recipientId - Recipient ID

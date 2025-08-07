@@ -24,7 +24,6 @@ const AssumptionsEditor = () => {
     combinedAssumptions,
     defaultAssumptions,
     userAssumptions,
-    updateCategoryValue,
     updateCategoryEffect,
     resetCategoryToDefaults,
     updateRecipientValue,
@@ -192,21 +191,8 @@ const AssumptionsEditor = () => {
       }
     });
 
-    // Update category values using context methods
-    Object.entries(categoryForm.formValues).forEach(([categoryId, valueObj]) => {
-      const rawValue = valueObj.raw;
-      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
-
-      if (cleanValue.trim() === '') {
-        // Empty value - clear any custom value
-        updateCategoryValue(categoryId, '');
-      } else {
-        const numValue = Number(cleanValue);
-        if (!isNaN(numValue) && numValue > 0) {
-          updateCategoryValue(categoryId, numValue);
-        }
-      }
-    });
+    // Categories are read-only in the main form and can only be edited through CategoryEffectEditor
+    // So we don't process category form values here
 
     // Update recipient values using context methods
     Object.entries(recipientForm.formValues).forEach(([fieldKey, valueObj]) => {
@@ -244,7 +230,7 @@ const AssumptionsEditor = () => {
   const handleCategoryReset = () => {
     // Clear all category custom values using context methods
     Object.keys(categoryForm.formValues).forEach((categoryId) => {
-      updateCategoryValue(categoryId, '');
+      resetCategoryToDefaults(categoryId);
     });
     categoryForm.reset();
   };

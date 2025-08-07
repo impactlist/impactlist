@@ -162,20 +162,12 @@ export const AssumptionsProvider = ({ children }) => {
     setUserAssumptions(apiHelpers.clearAllOverrides());
   };
 
-  // Legacy wrapper: Update a specific category value (converts simple cost per life to effects format)
+  // Legacy wrapper: Reset category to defaults when cleared
   const updateCategoryValue = (categoryKey, value) => {
     if (value === '' || isNaN(value) || value === null) {
       resetCategoryToDefaults(categoryKey);
-    } else {
-      // Get the base category to preserve effectId
-      const baseCategory = combinedAssumptions.getCategoryById(categoryKey);
-      if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
-        throw new Error(`Category ${categoryKey} has no base effects to override`);
-      }
-      const effectId = baseCategory.effects[0].effectId;
-      const costPerQALY = Number(value) / combinedAssumptions.globalParameters.yearsPerLife;
-      updateCategoryFieldValue(categoryKey, effectId, 'costPerQALY', costPerQALY);
     }
+    // Don't do anything else - categories should only be edited through CategoryEffectEditor
   };
 
   // Legacy wrapper: Update a recipient's override values - type can be 'multiplier' or 'costPerLife'
@@ -215,9 +207,9 @@ export const AssumptionsProvider = ({ children }) => {
       const effectId = baseCategory.effects[0].effectId;
 
       if (type === 'costPerLife') {
-        // Convert cost per life to cost per QALY
-        const costPerQALY = numValue / combinedAssumptions.globalParameters.yearsPerLife;
-        updateRecipientFieldOverride(recipientName, categoryId, effectId, 'costPerQALY', costPerQALY);
+        // Skip - costPerLife is a calculated value, not a direct parameter
+        // The recipients tab will be updated to use actual parameters instead
+        return;
       } else if (type === 'multiplier') {
         updateRecipientFieldMultiplier(recipientName, categoryId, effectId, 'costPerQALY', numValue);
       }

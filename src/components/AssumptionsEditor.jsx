@@ -143,6 +143,18 @@ const AssumptionsEditor = () => {
 
   // Validate all values before submission
   const validateAllValues = () => {
+    // Check if there are any existing errors from real-time validation
+    const hasExistingErrors =
+      Object.keys(globalForm.errors).length > 0 ||
+      Object.keys(categoryForm.errors).length > 0 ||
+      Object.keys(recipientForm.errors).length > 0;
+
+    if (hasExistingErrors) {
+      scrollToFirstError();
+      return false;
+    }
+
+    // Also run full validation to catch any edge cases
     // Validate global parameter values
     const globalValidation = validateGlobalParameterValues(globalForm.formValues, combinedAssumptions.globalParameters);
     globalForm.setErrors(globalValidation.errors);
@@ -334,6 +346,11 @@ const AssumptionsEditor = () => {
                     : activeTab === 'categories'
                       ? 'Reset Categories'
                       : 'Reset Recipients'
+                }
+                hasErrors={
+                  Object.keys(globalForm.errors).length > 0 ||
+                  Object.keys(categoryForm.errors).length > 0 ||
+                  Object.keys(recipientForm.errors).length > 0
                 }
               />
             </div>

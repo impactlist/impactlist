@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const FormActions = ({ onReset, onCancel, onSave, resetLabel }) => {
+const FormActions = ({ onReset, onCancel, onSave, resetLabel, hasErrors = false }) => {
   return (
     <div className="flex justify-end space-x-2">
       <button
@@ -21,7 +21,10 @@ const FormActions = ({ onReset, onCancel, onSave, resetLabel }) => {
       <button
         type="button"
         onClick={onSave}
-        className="px-3 py-1.5 bg-indigo-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        disabled={hasErrors}
+        className={`px-3 py-1.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+          hasErrors ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+        }`}
       >
         Save
       </button>
@@ -34,6 +37,7 @@ FormActions.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   resetLabel: PropTypes.string.isRequired,
+  hasErrors: PropTypes.bool,
 };
 
 export default FormActions;

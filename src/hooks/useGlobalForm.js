@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatNumberWithCommas } from '../utils/formatters';
+import { validateGlobalField } from '../utils/effectValidation';
 
 /**
  * Custom hook for managing global parameter form state
@@ -30,7 +31,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
       });
 
       setFormValues(initialValues);
-      setErrors({});
+      setErrors({}); // Start with no errors - data should be valid
     }
   }, [isModalOpen, globalParameters, getGlobalParameter, formValues]);
 
@@ -109,10 +110,16 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
       },
     }));
 
-    // Clear error for this field
+    // Validate this field immediately
+    const error = validateGlobalField(paramKey, inputValue);
+
     setErrors((prev) => {
       const newErrors = { ...prev };
-      delete newErrors[paramKey];
+      if (error) {
+        newErrors[paramKey] = error;
+      } else {
+        delete newErrors[paramKey];
+      }
       return newErrors;
     });
   };

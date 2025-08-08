@@ -187,3 +187,52 @@ export const validateEffects = (effects) => {
 
   return { errors: allErrors, isValid };
 };
+
+/**
+ * Validate a single global parameter field
+ * @param {string} fieldName - The name of the field being validated
+ * @param {any} value - The value to validate
+ * @returns {string|null} Error message if validation fails, null if valid
+ */
+export const validateGlobalField = (fieldName, value) => {
+  // Use cleanAndParseValue to properly validate the entire string
+  const { cleanValue, numValue } = cleanAndParseValue(value);
+
+  // Allow partial inputs during typing
+  if (isPartialInput(cleanValue)) {
+    return null; // Don't show error for partial inputs
+  }
+
+  // Check if it's a valid number
+  if (isNaN(numValue)) {
+    return 'Invalid number';
+  }
+
+  // Parameter-specific validations
+  if (fieldName === 'discountRate') {
+    // Discount rate must be no greater than 100%, but can be lower than -100%
+    if (numValue > 1) {
+      return 'Discount rate must be no greater than 100%';
+    }
+  } else if (fieldName === 'populationGrowthRate') {
+    // No restrictions on population growth rate
+  } else if (fieldName === 'timeLimit') {
+    if (numValue <= 0) {
+      return 'Time limit must be positive';
+    }
+  } else if (fieldName === 'populationLimit') {
+    if (numValue <= 0) {
+      return 'Population limit must be positive';
+    }
+  } else if (fieldName === 'currentPopulation') {
+    if (numValue <= 0) {
+      return 'Current population must be positive';
+    }
+  } else if (fieldName === 'yearsPerLife') {
+    if (numValue <= 0) {
+      return 'Years per life must be positive';
+    }
+  }
+
+  return null; // No error
+};

@@ -7,6 +7,7 @@ import {
   validateGlobalParameterValues,
   scrollToFirstError,
 } from '../utils/assumptionsFormValidation';
+import { cleanAndParseValue } from '../utils/effectValidation';
 import { useCategoryForm, useRecipientForm, useRecipientSearch } from '../hooks/useAssumptionsForm';
 import { useGlobalForm } from '../hooks/useGlobalForm';
 
@@ -176,13 +177,12 @@ const AssumptionsEditor = () => {
     // Update global parameter values using context methods
     Object.entries(globalForm.formValues).forEach(([paramKey, valueObj]) => {
       const rawValue = valueObj.raw;
-      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
 
-      if (cleanValue.trim() === '') {
+      if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
         // Empty value - clear any custom override
         updateGlobalParameter(paramKey, '');
       } else {
-        const numValue = Number(cleanValue);
+        const { numValue } = cleanAndParseValue(rawValue);
         if (!isNaN(numValue)) {
           updateGlobalParameter(paramKey, numValue);
         }
@@ -196,13 +196,12 @@ const AssumptionsEditor = () => {
     Object.entries(recipientForm.formValues).forEach(([fieldKey, valueObj]) => {
       const [recipientName, categoryId, type] = fieldKey.split('__');
       const rawValue = valueObj.raw;
-      const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
 
-      if (cleanValue.trim() === '') {
+      if (rawValue === null || rawValue === undefined || rawValue === '') {
         // Empty value - clear any custom override
         updateRecipientValue(recipientName, categoryId, type, '');
       } else {
-        const numValue = Number(cleanValue);
+        const { numValue } = cleanAndParseValue(rawValue);
         if (!isNaN(numValue) && numValue > 0) {
           updateRecipientValue(recipientName, categoryId, type, numValue);
         }

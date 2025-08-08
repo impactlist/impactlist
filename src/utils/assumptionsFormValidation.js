@@ -4,6 +4,8 @@
  * as opposed to dataValidation.js which does runtime data structure validation
  */
 
+import { cleanAndParseValue } from './effectValidation';
+
 /**
  * Validates category form values
  * @param {Object} formValues - The form values to validate
@@ -33,9 +35,8 @@ export const validateCategoryValues = (formValues, allCategories) => {
       return;
     }
 
-    // Remove commas before converting to number
-    const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
-    const numValue = Number(cleanValue);
+    // Use cleanAndParseValue to properly validate the entire string
+    const { numValue } = cleanAndParseValue(rawValue);
 
     // Check if it's a valid number
     if (isNaN(numValue)) {
@@ -68,11 +69,11 @@ export const validateRecipientValues = (formValues) => {
     // Skip empty values - for recipients, empty is allowed
     if (rawValue === null || rawValue === undefined || rawValue === '') return;
 
-    // Remove commas before checking validity
-    const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
+    // Use cleanAndParseValue to properly validate the entire string
+    const { cleanValue, numValue } = cleanAndParseValue(rawValue);
 
     // Check for intermediate states or invalid numbers
-    if (cleanValue === '-' || cleanValue === '.' || cleanValue.endsWith('.') || isNaN(Number(cleanValue))) {
+    if (cleanValue === '-' || cleanValue === '.' || cleanValue.endsWith('.') || isNaN(numValue)) {
       if (!errors[recipientName]) {
         errors[recipientName] = {};
       }
@@ -85,7 +86,7 @@ export const validateRecipientValues = (formValues) => {
       hasErrors = true;
     }
     // Check if value is zero (neither costPerLife nor multiplier can be zero)
-    else if (Number(cleanValue) === 0) {
+    else if (numValue === 0) {
       if (!errors[recipientName]) {
         errors[recipientName] = {};
       }
@@ -129,9 +130,8 @@ export const validateGlobalParameterValues = (formValues, globalParameters) => {
       return;
     }
 
-    // Clean the value
-    const cleanValue = typeof rawValue === 'string' ? rawValue.replace(/,/g, '') : String(rawValue);
-    const numValue = Number(cleanValue);
+    // Use cleanAndParseValue to properly validate the entire string
+    const { numValue } = cleanAndParseValue(rawValue);
 
     // Check if it's a valid number
     if (isNaN(numValue)) {

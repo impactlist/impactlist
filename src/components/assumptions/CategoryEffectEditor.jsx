@@ -4,7 +4,7 @@ import QalyEffectInputs from './effects/QalyEffectInputs';
 import PopulationEffectInputs from './effects/PopulationEffectInputs';
 import { effectToCostPerLife } from '../../utils/effectsCalculation';
 import { formatNumberWithCommas } from '../../utils/formatters';
-import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
+import { getEffectType, validateEffectField, validateEffects, cleanAndParseValue } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 
 /**
@@ -42,6 +42,8 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Update a specific field of an effect
   const updateEffectField = (effectIndex, fieldName, value) => {
+    // Store the value as-is (string with formatting)
+    // The validation will clean it when checking
     setTempEffects((prev) => {
       const newEffects = [...prev];
       newEffects[effectIndex] = {
@@ -72,22 +74,36 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   const effectCostPerLife = useMemo(() => {
     return tempEffects.map((effect) => {
       try {
+        // Convert string values to numbers for calculation
+        const cleanedEffect = { ...effect };
+        Object.keys(cleanedEffect).forEach((key) => {
+          if (typeof cleanedEffect[key] === 'string' && key !== 'effectId') {
+            const { cleanValue, numValue } = cleanAndParseValue(cleanedEffect[key]);
+            // For display calculation, allow partial inputs
+            if (cleanValue === '' || cleanValue === '-' || cleanValue === '.' || cleanValue === '-.') {
+              cleanedEffect[key] = 0; // Use 0 for partial inputs in calculation
+            } else if (!isNaN(numValue)) {
+              cleanedEffect[key] = numValue;
+            }
+          }
+        });
+
         // Check for invalid values that would cause calculation errors
-        const effectType = getEffectType(effect);
-        if (effectType === 'qaly' && (effect.costPerQALY === 0 || effect.costPerQALY === undefined)) {
+        const effectType = getEffectType(cleanedEffect);
+        if (effectType === 'qaly' && (cleanedEffect.costPerQALY === 0 || cleanedEffect.costPerQALY === undefined)) {
           return Infinity; // Invalid but don't throw error during editing
         }
         if (
           effectType === 'population' &&
-          (effect.costPerMicroprobability === 0 || effect.costPerMicroprobability === undefined)
+          (cleanedEffect.costPerMicroprobability === 0 || cleanedEffect.costPerMicroprobability === undefined)
         ) {
           return Infinity; // Invalid but don't throw error during editing
         }
 
-        return effectToCostPerLife(effect, globalParameters);
+        return effectToCostPerLife(cleanedEffect, globalParameters);
       } catch {
-        // During editing, return Infinity for invalid calculations instead of throwing
-        // This allows users to type without errors appearing for temporary invalid states
+        // During editing, return Infinity for invalid calculations
+        // This is only for display - actual save will throw if invalid
         return Infinity;
       }
     });
@@ -110,10 +126,32 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Handle save
   const handleSave = () => {
+    // Convert any string values to numbers before saving
+    const cleanedEffects = tempEffects.map((effect, effectIndex) => {
+      const cleanedEffect = { ...effect };
+      Object.keys(cleanedEffect).forEach((key) => {
+        if (typeof cleanedEffect[key] === 'string' && key !== 'effectId') {
+          // cleanAndParseValue returns both cleanValue and numValue, but only numValue is needed here.
+          // To avoid the unused variable error, destructure only numValue.
+          const { numValue } = cleanAndParseValue(cleanedEffect[key]);
+
+          // Fail immediately if conversion fails
+          if (isNaN(numValue)) {
+            throw new Error(
+              `Failed to convert ${key} to number in effect ${effectIndex}. Value: "${cleanedEffect[key]}"`
+            );
+          }
+
+          cleanedEffect[key] = numValue;
+        }
+      });
+      return cleanedEffect;
+    });
+
     // Re-validate all effects before saving
-    const validation = validateEffects(tempEffects);
+    const validation = validateEffects(cleanedEffects);
     if (validation.isValid) {
-      onSave(tempEffects);
+      onSave(cleanedEffects);
     } else {
       setErrors(validation.errors);
     }

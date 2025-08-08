@@ -20,6 +20,24 @@ export const isPartialInput = (value) => {
 };
 
 /**
+ * Clean and parse a value that might be a formatted string
+ * @param {string|number} value - The value to clean and parse
+ * @returns {Object} Object with cleanValue (string) and numValue (number)
+ */
+export const cleanAndParseValue = (value) => {
+  // If already a number, return it
+  if (typeof value === 'number') {
+    return { cleanValue: value, numValue: value };
+  }
+
+  // Clean the string (remove commas and dollar signs)
+  const cleanValue = value.replace(/[,$]/g, '');
+  const numValue = parseFloat(cleanValue);
+
+  return { cleanValue, numValue };
+};
+
+/**
  * Validate a single effect field
  * @param {string} fieldName - The name of the field being validated
  * @param {any} value - The value to validate
@@ -29,8 +47,8 @@ export const isPartialInput = (value) => {
 export const validateEffectField = (fieldName, value, effectType) => {
   // Common validations for all effect types
   if (fieldName === 'startTime') {
-    const numValue = typeof value === 'number' ? value : parseFloat(value);
-    if (isPartialInput(value)) {
+    const { cleanValue, numValue } = cleanAndParseValue(value);
+    if (isPartialInput(cleanValue)) {
       return 'Start time is required';
     }
     if (isNaN(numValue) || numValue < 0) {
@@ -39,8 +57,8 @@ export const validateEffectField = (fieldName, value, effectType) => {
   }
 
   if (fieldName === 'windowLength') {
-    const numValue = typeof value === 'number' ? value : parseFloat(value);
-    if (isPartialInput(value)) {
+    const { cleanValue, numValue } = cleanAndParseValue(value);
+    if (isPartialInput(cleanValue)) {
       return 'Window length is required';
     }
     if (isNaN(numValue) || numValue < 0) {
@@ -50,8 +68,8 @@ export const validateEffectField = (fieldName, value, effectType) => {
 
   // QALY-specific validations
   if (effectType === 'qaly' && fieldName === 'costPerQALY') {
-    const numValue = typeof value === 'number' ? value : parseFloat(value);
-    if (isPartialInput(value)) {
+    const { cleanValue, numValue } = cleanAndParseValue(value);
+    if (isPartialInput(cleanValue)) {
       return 'Cost per QALY is required';
     }
     if (isNaN(numValue)) {
@@ -65,8 +83,8 @@ export const validateEffectField = (fieldName, value, effectType) => {
   // Population-specific validations
   if (effectType === 'population') {
     if (fieldName === 'costPerMicroprobability') {
-      const numValue = typeof value === 'number' ? value : parseFloat(value);
-      if (isPartialInput(value)) {
+      const { cleanValue, numValue } = cleanAndParseValue(value);
+      if (isPartialInput(cleanValue)) {
         return 'Cost per microprobability is required';
       }
       if (isNaN(numValue)) {
@@ -78,8 +96,8 @@ export const validateEffectField = (fieldName, value, effectType) => {
     }
 
     if (fieldName === 'populationFractionAffected') {
-      const numValue = typeof value === 'number' ? value : parseFloat(value);
-      if (isPartialInput(value)) {
+      const { cleanValue, numValue } = cleanAndParseValue(value);
+      if (isPartialInput(cleanValue)) {
         return 'Population fraction is required';
       }
       if (isNaN(numValue)) {
@@ -91,8 +109,8 @@ export const validateEffectField = (fieldName, value, effectType) => {
     }
 
     if (fieldName === 'qalyImprovementPerYear') {
-      const numValue = typeof value === 'number' ? value : parseFloat(value);
-      if (isPartialInput(value)) {
+      const { cleanValue, numValue } = cleanAndParseValue(value);
+      if (isPartialInput(cleanValue)) {
         return 'QALY improvement is required';
       }
       if (isNaN(numValue)) {

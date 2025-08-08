@@ -85,9 +85,6 @@ export const formatNumberWithCommas = (value) => {
   // If the value is empty, just return it
   if (value === '') return '';
 
-  // Handle minus sign
-  const isNegative = value.startsWith('-');
-
   // If it's just a minus sign, return it as is
   if (value === '-') return '-';
 
@@ -95,20 +92,45 @@ export const formatNumberWithCommas = (value) => {
   const cleanValue = value.replace(/,/g, '');
 
   // If it's not a valid number format (could be in-progress typing), return as is
-  if (!/^-?\d*$/.test(cleanValue)) {
+  // Allow digits, minus sign, and decimal point
+  if (!/^-?\d*\.?\d*$/.test(cleanValue)) {
     return value;
   }
 
   // If it's empty after cleaning, return empty string
-  if (cleanValue === '' || cleanValue === '-') {
+  if (cleanValue === '' || cleanValue === '-' || cleanValue === '.' || cleanValue === '-.') {
     return cleanValue;
   }
 
   // Parse the numeric value
   const numericValue = parseFloat(cleanValue);
 
-  // Format with commas
-  return isNegative ? '-' + Math.abs(numericValue).toLocaleString('en-US') : numericValue.toLocaleString('en-US');
+  // If it's NaN, return the clean value (for partial inputs like "1.")
+  if (isNaN(numericValue)) {
+    return cleanValue;
+  }
+
+  // Format with commas - preserve decimal places if present
+  const hasDecimal = cleanValue.includes('.');
+  if (hasDecimal) {
+    // Split on decimal to handle integer and decimal parts separately
+    const parts = cleanValue.split('.');
+    let integerPart = parts[0];
+
+    // Only format the integer part if it has actual digits
+    if (integerPart && integerPart !== '' && integerPart !== '-') {
+      const intValue = parseInt(integerPart);
+      if (!isNaN(intValue)) {
+        integerPart = intValue.toLocaleString('en-US');
+      }
+    }
+
+    const decimalPart = parts[1] || '';
+    return integerPart + '.' + decimalPart;
+  } else {
+    // No decimal, format normally
+    return numericValue.toLocaleString('en-US');
+  }
 };
 
 /**
@@ -129,40 +151,59 @@ export const calculateCursorPosition = (oldValue, newValue, oldPosition) => {
   // Extract text before the cursor
   const valueBeforeCursor = oldValue.substring(0, oldPosition);
 
-  // Count digits and determine if there's a minus sign before the cursor
-  const digitsBeforeCursor = valueBeforeCursor.replace(/[^\d-]/g, '').length;
+  // Count digits, decimal points, and determine if there's a minus sign before the cursor
+  const digitsBeforeCursor = valueBeforeCursor.replace(/[^\d]/g, '').length;
   const hasMinusBeforeCursor = valueBeforeCursor.includes('-');
+  const hasDecimalBeforeCursor = valueBeforeCursor.includes('.');
 
   // Special case: if cursor is just after the minus sign
-  if (hasMinusBeforeCursor && digitsBeforeCursor === 1) {
+  if (hasMinusBeforeCursor && digitsBeforeCursor === 0 && !hasDecimalBeforeCursor) {
     return 1; // Position right after the minus sign
+  }
+
+  // Special case: if cursor is just after a decimal point
+  if (hasDecimalBeforeCursor && valueBeforeCursor.endsWith('.')) {
+    // Find the position of the decimal in the new value
+    const decimalPos = newValue.indexOf('.');
+    return decimalPos >= 0 ? decimalPos + 1 : newValue.length;
   }
 
   // Find position in new formatted value with same number of digits
   let newPosition = 0;
   let digitCount = 0;
-  let foundMinus = false;
+  let foundDecimal = false;
 
   // Find corresponding position in formatted value
   for (let i = 0; i < newValue.length; i++) {
     if (newValue[i] === '-') {
-      foundMinus = true;
-      if (hasMinusBeforeCursor) {
-        continue; // Skip counting minus if it was already counted
+      continue;
+    }
+
+    if (newValue[i] === '.') {
+      foundDecimal = true;
+      // If we had a decimal before cursor and we've counted all digits before it
+      if (hasDecimalBeforeCursor && digitCount === digitsBeforeCursor) {
+        newPosition = i + 1;
+        break;
       }
+      continue;
     }
 
     if (/\d/.test(newValue[i])) {
       digitCount++;
-      if (digitCount === digitsBeforeCursor && (!hasMinusBeforeCursor || foundMinus)) {
-        newPosition = i + 1;
-        break;
+      // Check if we've reached the right position
+      if (digitCount === digitsBeforeCursor) {
+        // If there was a decimal before cursor in old value, we need to be past the decimal in new value
+        if (!hasDecimalBeforeCursor || foundDecimal) {
+          newPosition = i + 1;
+          break;
+        }
       }
     }
   }
 
   // If we didn't find the right position (e.g., cursor was at the end)
-  if (newPosition === 0 && digitsBeforeCursor > 0) {
+  if (newPosition === 0 && (digitsBeforeCursor > 0 || hasDecimalBeforeCursor)) {
     newPosition = newValue.length;
   }
 

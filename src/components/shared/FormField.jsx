@@ -29,6 +29,11 @@ const FormField = ({
       return '';
     }
 
+    // If it's already a formatted string, return it as is
+    if (typeof val === 'string' && val.includes(',')) {
+      return val;
+    }
+
     if (format === 'percentage') {
       // For percentage, multiply by 100 and format with commas
       const percentValue = parseFloat(val) * 100;
@@ -59,23 +64,9 @@ const FormField = ({
     // Format with commas while preserving cursor position
     const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
 
-    // Parse the formatted value to extract the numeric value
-    const cleanValue = result.value.replace(/[,$]/g, '');
-
-    // Allow partial input states
-    if (cleanValue === '' || cleanValue === '-' || cleanValue === '.' || cleanValue === '-.') {
-      onChange(cleanValue);
-      return;
-    }
-
-    let numValue = parseFloat(cleanValue);
-
-    // For percentage format, divide by 100 to get the actual value
-    if (format === 'percentage' && !isNaN(numValue)) {
-      numValue = numValue / 100;
-    }
-
-    onChange(isNaN(numValue) ? cleanValue : numValue);
+    // Pass the formatted value directly to the parent
+    // Let the parent component handle any numeric conversion when needed
+    onChange(result.value);
   };
 
   // Handle reset button click

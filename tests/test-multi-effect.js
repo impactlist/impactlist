@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // Test script for multi-effect calculation
-import { calculateCategoryBaseCostPerLife } from '../src/utils/effectsCalculation.js';
+import { calculateCostPerLife } from '../src/utils/effectsCalculation.js';
 
 // Test 1: Single effect (should work as before)
 const singleEffectCategory = {
@@ -16,7 +16,11 @@ const singleEffectCategory = {
 
 console.log('Test 1 - Single effect:');
 try {
-  const result = calculateCategoryBaseCostPerLife(singleEffectCategory, 'test-category-1');
+  const result = calculateCostPerLife(
+    singleEffectCategory.effects,
+    { yearsPerLife: 80, discountRate: 0, timeLimit: 100 },
+    'test-category-1'
+  );
   console.log(`  Cost per life: $${result.toLocaleString()}`);
   console.log(`  Expected: $${(100 * 80).toLocaleString()} (costPerQALY * yearsPerLife)`);
 } catch (error) {
@@ -43,7 +47,11 @@ const multiEffectCategory = {
 
 console.log('\nTest 2 - Multiple effects:');
 try {
-  const result = calculateCategoryBaseCostPerLife(multiEffectCategory, 'test-category-2');
+  const result = calculateCostPerLife(
+    multiEffectCategory.effects,
+    { yearsPerLife: 80, discountRate: 0.02, timeLimit: 100 },
+    'test-category-2'
+  );
   console.log(`  Cost per life: $${result.toLocaleString()}`);
   console.log('  (Should be between $4,000 and $8,000 with discounting)');
 } catch (error) {
@@ -70,7 +78,11 @@ const overlappingEffectCategory = {
 
 console.log('\nTest 3 - Overlapping effects:');
 try {
-  const result = calculateCategoryBaseCostPerLife(overlappingEffectCategory, 'test-category-3');
+  const result = calculateCostPerLife(
+    overlappingEffectCategory.effects,
+    { yearsPerLife: 80, discountRate: 0.02, timeLimit: 100 },
+    'test-category-3'
+  );
   console.log(`  Cost per life: $${result.toLocaleString()}`);
   console.log('  (Should account for both effects during overlap period)');
 } catch (error) {

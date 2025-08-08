@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../utils/formatters';
 import { getRecipientId } from '../../utils/donationDataHelpers';
-import { calculateCategoryBaseCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
+import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
 
 /**
  * Component for managing recipient-specific cost per life values.
@@ -85,7 +85,7 @@ const RecipientValuesSection = ({
     }
 
     // Calculate base cost per life for the category
-    const baseCostPerLife = calculateCategoryBaseCostPerLife(category, categoryId, defaultAssumptions.globalParameters);
+    const baseCostPerLife = calculateCostPerLife(category.effects, defaultAssumptions.globalParameters, categoryId);
 
     // Apply recipient modifications to all effects
     const modifiedEffects = category.effects.map((baseEffect) => {
@@ -102,10 +102,10 @@ const RecipientValuesSection = ({
       name: category.name,
       effects: modifiedEffects,
     };
-    const modifiedCostPerLife = calculateCategoryBaseCostPerLife(
-      modifiedCategory,
-      categoryId,
-      defaultAssumptions.globalParameters
+    const modifiedCostPerLife = calculateCostPerLife(
+      modifiedCategory.effects,
+      defaultAssumptions.globalParameters,
+      categoryId
     );
 
     // Multiplier represents how much more expensive (less effective) the recipient is
@@ -156,7 +156,7 @@ const RecipientValuesSection = ({
       name: category.name,
       effects: modifiedEffects,
     };
-    return calculateCategoryBaseCostPerLife(modifiedCategory, categoryId, defaultAssumptions.globalParameters);
+    return calculateCostPerLife(modifiedCategory.effects, defaultAssumptions.globalParameters, categoryId);
   };
 
   return (

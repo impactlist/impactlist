@@ -7,7 +7,6 @@ import {
   assertNonZeroNumber,
   assertNonNegativeNumber,
   assertNonEmptyArray,
-  validateCategory,
 } from './dataValidation';
 
 /**
@@ -255,12 +254,12 @@ export const effectToCostPerLife = (effect, globalParams) => {
 /**
  * Calculate cost per life from multiple effects with time windows
  * @param {Array} effects - Array of effect objects with time windows
- * @param {string} categoryId - Category ID for context
  * @param {Object} globalParams - Global parameters object
+ * @param {string} contextId - Context ID for error messages (e.g., categoryId, recipientId)
  * @returns {number} Weighted average cost per life
  */
-const calculateMultiEffectCostPerLife = (effects, categoryId, globalParams) => {
-  assertNonEmptyArray(effects, 'effects', `in category "${categoryId}"`);
+export const calculateCostPerLife = (effects, globalParams, contextId = 'unknown') => {
+  assertNonEmptyArray(effects, 'effects', `in context "${contextId}"`);
 
   // Get global parameters for discounting
   assertExists(globalParams, 'globalParams');
@@ -286,27 +285,10 @@ const calculateMultiEffectCostPerLife = (effects, categoryId, globalParams) => {
 
   // Return weighted average cost per life
   if (totalWeight === 0) {
-    throw new Error(`No weight calculated for category "${categoryId}" with multiple effects`);
+    throw new Error(`No weight calculated for context "${contextId}" with multiple effects`);
   }
 
   return weightedSum / totalWeight;
-};
-
-/**
- * Calculate cost per life for a category from its effects
- * @param {Object} category - The category object with effects array
- * @param {string} categoryId - The category ID for context
- * @param {Object} globalParams - Global parameters object
- * @returns {number} Cost per life for the category
- */
-export const calculateCategoryBaseCostPerLife = (category, categoryId, globalParams) => {
-  validateCategory(category, categoryId);
-  assertExists(globalParams, 'globalParams');
-
-  const effects = assertNonEmptyArray(category.effects, 'effects', `in category "${categoryId}"`);
-
-  // Always use the multi-effect calculation to ensure time windows and discounting are applied
-  return calculateMultiEffectCostPerLife(effects, categoryId, globalParams);
 };
 
 /**

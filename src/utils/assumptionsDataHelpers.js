@@ -2,7 +2,7 @@
 // Utilities for managing default, user, and combined assumption data structures
 import { globalParameters, categoriesById, recipientsById } from '../data/generatedData';
 import {
-  calculateCategoryBaseCostPerLife,
+  calculateCostPerLife,
   applyRecipientEffectToBase,
   effectToCostPerLife as effectToCostPerLifeWithEffects,
 } from './effectsCalculation';
@@ -287,7 +287,7 @@ export const getCostPerLifeFromCombined = (combinedAssumptions, categoryId) => {
   }
 
   // Calculate cost per life from the effects data
-  return calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
+  return calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, categoryId);
 };
 
 /**
@@ -354,17 +354,10 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
       });
 
       // Calculate cost per life from all modified effects
-      costPerLife = calculateCategoryBaseCostPerLife(
-        {
-          name: category.name,
-          effects: modifiedEffects,
-        },
-        categoryId,
-        combinedAssumptions.globalParameters
-      );
+      costPerLife = calculateCostPerLife(modifiedEffects, combinedAssumptions.globalParameters, categoryId);
     } else {
       // No recipient effect modifications, use base calculation
-      costPerLife = calculateCategoryBaseCostPerLife(category, categoryId, combinedAssumptions.globalParameters);
+      costPerLife = calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, categoryId);
     }
 
     const validCostPerLife = assertNonZeroNumber(

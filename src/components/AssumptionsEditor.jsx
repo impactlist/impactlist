@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
+import { calculateCostPerLife } from '../utils/effectsCalculation';
 import {
   validateCategoryValues,
   validateRecipientValues,
@@ -58,7 +58,7 @@ const AssumptionsEditor = () => {
       // Use full cost per life calculation with discounting and population growth
       let costPerLife = null;
       if (category.effects && category.effects.length > 0) {
-        costPerLife = calculateCategoryBaseCostPerLife(category, category.id, combinedAssumptions.globalParameters);
+        costPerLife = calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, category.id);
       }
 
       if (costPerLife === null) {
@@ -83,11 +83,7 @@ const AssumptionsEditor = () => {
       // Use full cost per life calculation with discounting and population growth
       let costPerLife = null;
       if (defaultCategory.effects && defaultCategory.effects.length > 0) {
-        costPerLife = calculateCategoryBaseCostPerLife(
-          defaultCategory,
-          category.id,
-          defaultAssumptions.globalParameters
-        );
+        costPerLife = calculateCostPerLife(defaultCategory.effects, defaultAssumptions.globalParameters, category.id);
       }
 
       if (costPerLife === null) {

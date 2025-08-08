@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { getBaseCostPerLife } from '../utils/effectsCalculation';
+import { calculateCategoryBaseCostPerLife } from '../utils/effectsCalculation';
 import {
   validateCategoryValues,
   validateRecipientValues,
@@ -55,15 +55,14 @@ const AssumptionsEditor = () => {
     // Convert to format expected by the component
     const categories = {};
     combinedAssumptions.getAllCategories().forEach((category) => {
-      // Use base cost per life (without discounting) for display
+      // Use full cost per life calculation with discounting and population growth
       let costPerLife = null;
       if (category.effects && category.effects.length > 0) {
-        const baseEffect = category.effects[0];
-        costPerLife = getBaseCostPerLife(baseEffect, combinedAssumptions.globalParameters);
+        costPerLife = calculateCategoryBaseCostPerLife(category, category.id, combinedAssumptions.globalParameters);
       }
 
       if (costPerLife === null) {
-        throw new Error(`Could not calculate base cost per life for category ${category.id}`);
+        throw new Error(`Could not calculate cost per life for category ${category.id}`);
       }
 
       categories[category.id] = {
@@ -81,15 +80,18 @@ const AssumptionsEditor = () => {
       // Get the default category data (without user overrides)
       const defaultCategory = defaultAssumptions.categories[category.id];
 
-      // Use base cost per life (without discounting) for display
+      // Use full cost per life calculation with discounting and population growth
       let costPerLife = null;
       if (defaultCategory.effects && defaultCategory.effects.length > 0) {
-        const baseEffect = defaultCategory.effects[0];
-        costPerLife = getBaseCostPerLife(baseEffect, defaultAssumptions.globalParameters);
+        costPerLife = calculateCategoryBaseCostPerLife(
+          defaultCategory,
+          category.id,
+          defaultAssumptions.globalParameters
+        );
       }
 
       if (costPerLife === null) {
-        throw new Error(`Could not calculate base cost per life for default category ${category.id}`);
+        throw new Error(`Could not calculate cost per life for default category ${category.id}`);
       }
 
       categories[category.id] = {

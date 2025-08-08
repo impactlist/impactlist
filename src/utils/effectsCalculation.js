@@ -280,8 +280,8 @@ const calculateMultiEffectCostPerLife = (effects, categoryId, globalParams) => {
 
     // Weight by the discounted time window
 
-    totalWeight = 1;
-    weightedSum += costPerLife * totalWeight;
+    totalWeight += 1;
+    weightedSum += costPerLife * 1;
   });
 
   // Return weighted average cost per life
@@ -379,38 +379,4 @@ export const applyRecipientEffectToBase = (baseEffect, recipientEffect, context)
   }
 
   return result;
-};
-
-/**
- * Get the base cost per life from an effect without discounting
- * @param {Object} effect - The effect object
- * @param {Object} globalParams - Global parameters object
- * @returns {number|null} Base cost per life or null if not calculable
- */
-export const getBaseCostPerLife = (effect, globalParams) => {
-  if (effect.costPerQALY !== undefined) {
-    return effect.costPerQALY * globalParams.yearsPerLife;
-  }
-
-  if (effect.costPerMicroprobability !== undefined) {
-    // For population effects, calculate a simplified base cost
-    // This is a rough approximation for display purposes
-    const probability = 1 / 1_000_000;
-    const fraction = effect.populationFractionAffected;
-    const qalyPerYear = effect.qalyImprovementPerYear;
-    const startYear = effect.startTime || 0;
-    const windowLength = Math.min(effect.windowLength, Math.max(0, globalParams.timeLimit - startYear));
-
-    if (windowLength === 0) {
-      return Infinity;
-    }
-
-    // Simplified calculation without discounting for display
-    const totalQALYs = fraction * qalyPerYear * windowLength;
-    const livesSaved = (probability * totalQALYs) / globalParams.yearsPerLife;
-
-    return effect.costPerMicroprobability / livesSaved;
-  }
-
-  return null;
 };

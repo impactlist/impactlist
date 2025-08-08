@@ -32,6 +32,16 @@ export const cleanAndParseValue = (value) => {
 
   // Clean the string (remove commas and dollar signs)
   const cleanValue = value.replace(/[,$]/g, '');
+
+  // Check if the entire cleaned value is a valid number format
+  // This regex allows: integers, decimals, negative numbers, and scientific notation
+  const validNumberPattern = /^-?(\d+\.?\d*|\d*\.?\d+)([eE][+-]?\d+)?$/;
+
+  if (!validNumberPattern.test(cleanValue) && !isPartialInput(cleanValue)) {
+    // Return NaN for invalid formats like "10550000dff"
+    return { cleanValue, numValue: NaN };
+  }
+
   const numValue = parseFloat(cleanValue);
 
   return { cleanValue, numValue };

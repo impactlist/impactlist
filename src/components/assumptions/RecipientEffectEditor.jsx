@@ -1,0 +1,322 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import RecipientQalyEffectInputs from './effects/RecipientQalyEffectInputs';
+import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffectInputs';
+import Modal from './Modal';
+import EffectCostDisplay from '../shared/EffectCostDisplay';
+import EffectEditorFooter from '../shared/EffectEditorFooter';
+import { applyRecipientEffectToBase } from '../../utils/effectsCalculation';
+import {
+  calculateEffectCostPerLife,
+  calculateCombinedCostPerLife,
+  formatCostForDisplay,
+} from '../../utils/effectEditorUtils';
+import {
+  getEffectType,
+  validateRecipientEffectField,
+  validateRecipientEffects,
+  cleanAndParseValue,
+} from '../../utils/effectValidation';
+import { useAssumptions } from '../../contexts/AssumptionsContext';
+
+/**
+ * Component for editing all effects of a recipient's category
+ */
+const RecipientEffectEditor = ({
+  recipient,
+  recipientId,
+  category,
+  categoryId,
+  globalParameters,
+  onSave,
+  onCancel,
+}) => {
+  const [tempEffects, setTempEffects] = useState([]);
+  const [errors, setErrors] = useState({});
+  const { defaultAssumptions } = useAssumptions();
+
+  // Get default effects for this recipient category
+  const defaultRecipientEffects = useMemo(() => {
+    if (!defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects) {
+      return [];
+    }
+    return defaultAssumptions.recipients[recipientId].categories[categoryId].effects;
+  }, [defaultAssumptions, recipientId, categoryId]);
+
+  // Get base category effects for reference
+  const baseCategoryEffects = useMemo(() => {
+    if (!category?.effects) {
+      return [];
+    }
+    return category.effects;
+  }, [category]);
+
+  // Initialize temp effects from recipient's current effects
+  useEffect(() => {
+    if (!recipient || !recipient.categories || !recipient.categories[categoryId]) {
+      // If no custom effects, start with base category effects structure
+      const initialEffects = baseCategoryEffects.map((effect) => ({
+        effectId: effect.effectId,
+        overrides: {},
+        multipliers: {},
+        // Keep base values for reference during editing
+        _baseEffect: effect,
+      }));
+      setTempEffects(initialEffects);
+      return;
+    }
+
+    const recipientCategory = recipient.categories[categoryId];
+    if (recipientCategory.effects) {
+      // Deep clone the effects and ensure structure
+      const clonedEffects = recipientCategory.effects.map((effect) => {
+        const baseEffect = baseCategoryEffects.find((e) => e.effectId === effect.effectId);
+        return {
+          ...JSON.parse(JSON.stringify(effect)),
+          overrides: effect.overrides || {},
+          multipliers: effect.multipliers || {},
+          _baseEffect: baseEffect,
+        };
+      });
+      setTempEffects(clonedEffects);
+    } else {
+      // No effects defined, start fresh
+      const initialEffects = baseCategoryEffects.map((effect) => ({
+        effectId: effect.effectId,
+        overrides: {},
+        multipliers: {},
+        _baseEffect: effect,
+      }));
+      setTempEffects(initialEffects);
+    }
+  }, [recipient, recipientId, categoryId, baseCategoryEffects]);
+
+  // Validate all effects on mount and when effects change
+  useEffect(() => {
+    if (tempEffects.length > 0) {
+      const validation = validateRecipientEffects(tempEffects);
+      setErrors(validation.errors);
+    }
+  }, [tempEffects]);
+
+  // Update a specific field of an effect
+  const updateEffectField = (effectIndex, fieldName, type, value) => {
+    setTempEffects((prev) => {
+      const newEffects = [...prev];
+      const effect = { ...newEffects[effectIndex] };
+
+      // Initialize objects if needed
+      if (!effect.overrides) effect.overrides = {};
+      if (!effect.multipliers) effect.multipliers = {};
+
+      if (type === 'override') {
+        effect.overrides = { ...effect.overrides, [fieldName]: value };
+        // Clear multiplier when setting override
+        if (value !== '' && value !== null && value !== undefined) {
+          effect.multipliers = { ...effect.multipliers };
+          delete effect.multipliers[fieldName];
+        }
+      } else if (type === 'multiplier') {
+        effect.multipliers = { ...effect.multipliers, [fieldName]: value };
+        // Clear override when setting multiplier
+        if (value !== '' && value !== null && value !== undefined) {
+          effect.overrides = { ...effect.overrides };
+          delete effect.overrides[fieldName];
+        }
+      }
+
+      // Clean up empty values
+      if (value === '' || value === null || value === undefined) {
+        if (type === 'override') {
+          delete effect.overrides[fieldName];
+        } else {
+          delete effect.multipliers[fieldName];
+        }
+      }
+
+      newEffects[effectIndex] = effect;
+      return newEffects;
+    });
+
+    // Validate this field immediately
+    const error = validateRecipientEffectField(
+      fieldName,
+      value,
+      type,
+      getEffectType(tempEffects[effectIndex]._baseEffect)
+    );
+    const errorKey = `${effectIndex}-${fieldName}-${type}`;
+
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      if (error) {
+        newErrors[errorKey] = error;
+      } else {
+        delete newErrors[errorKey];
+      }
+      return newErrors;
+    });
+  };
+
+  // Calculate cost per life for each effect
+  const effectCostPerLife = useMemo(() => {
+    return tempEffects.map((effect) => {
+      const baseEffect = effect._baseEffect;
+      if (!baseEffect) return Infinity;
+
+      // Create modified effect with overrides/multipliers applied
+      const modifiedEffect = applyRecipientEffectToBase(baseEffect, effect, `effect ${effect.effectId}`);
+      return calculateEffectCostPerLife(modifiedEffect, globalParameters);
+    });
+  }, [tempEffects, globalParameters]);
+
+  // Calculate combined cost per life
+  const combinedCostPerLife = useMemo(() => {
+    return calculateCombinedCostPerLife(effectCostPerLife);
+  }, [effectCostPerLife]);
+
+  // Check if there are any errors
+  const hasErrors = useMemo(() => {
+    return Object.keys(errors).length > 0;
+  }, [errors]);
+
+  // Handle save
+  const handleSave = () => {
+    if (hasErrors) {
+      return;
+    }
+
+    // Clean up effects for saving
+    const effectsToSave = tempEffects
+      .map((effect) => {
+        const cleanEffect = {
+          effectId: effect.effectId,
+          overrides: {},
+          multipliers: {},
+        };
+
+        // Process overrides - convert strings to numbers
+        if (effect.overrides) {
+          Object.entries(effect.overrides).forEach(([fieldName, value]) => {
+            if (value !== null && value !== undefined && value !== '') {
+              const { numValue } = cleanAndParseValue(value);
+              if (!isNaN(numValue)) {
+                cleanEffect.overrides[fieldName] = numValue;
+              } else {
+                throw new Error(
+                  `Failed to convert override ${fieldName} to number in effect ${effect.effectId}. Value: "${value}"`
+                );
+              }
+            }
+          });
+        }
+
+        // Process multipliers - convert strings to numbers
+        if (effect.multipliers) {
+          Object.entries(effect.multipliers).forEach(([fieldName, value]) => {
+            if (value !== null && value !== undefined && value !== '') {
+              const { numValue } = cleanAndParseValue(value);
+              if (!isNaN(numValue)) {
+                cleanEffect.multipliers[fieldName] = numValue;
+              } else {
+                throw new Error(
+                  `Failed to convert multiplier ${fieldName} to number in effect ${effect.effectId}. Value: "${value}"`
+                );
+              }
+            }
+          });
+        }
+
+        // Only include effect if it has overrides or multipliers
+        if (Object.keys(cleanEffect.overrides).length > 0 || Object.keys(cleanEffect.multipliers).length > 0) {
+          return cleanEffect;
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    onSave(effectsToSave);
+  };
+
+  return (
+    <Modal
+      isOpen={true}
+      onClose={onCancel}
+      title={`Edit Effects: ${recipient.name} - ${category.name}`}
+      description="Set override values or multipliers for each parameter. Typing in one field clears the other."
+    >
+      <div className="px-6 py-4 max-h-[60vh] overflow-y-auto">
+        {/* Cost per life display */}
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-700">Combined Cost per Life:</span>
+            <span
+              className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
+            >
+              ${formatCostForDisplay(combinedCostPerLife, false)}
+            </span>
+          </div>
+        </div>
+
+        {/* Effects */}
+        <div className="space-y-6">
+          {tempEffects.map((effect, index) => {
+            const baseEffect = effect._baseEffect;
+            const effectType = getEffectType(baseEffect);
+            const costPerLife = effectCostPerLife[index];
+            const defaultEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
+
+            return (
+              <div key={effect.effectId} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-lg font-medium text-gray-800">
+                    Effect {index + 1}: {effectType === 'qaly' ? 'QALY' : 'Population'}
+                  </h3>
+                  <EffectCostDisplay cost={costPerLife} showInfinity={false} className="text-sm" />
+                </div>
+
+                <div>
+                  {effectType === 'qaly' ? (
+                    <RecipientQalyEffectInputs
+                      effectIndex={index}
+                      defaultEffect={defaultEffect || baseEffect}
+                      errors={errors}
+                      overrides={effect.overrides}
+                      multipliers={effect.multipliers}
+                      onChange={updateEffectField}
+                    />
+                  ) : effectType === 'population' ? (
+                    <RecipientPopulationEffectInputs
+                      effectIndex={index}
+                      defaultEffect={defaultEffect || baseEffect}
+                      errors={errors}
+                      overrides={effect.overrides}
+                      multipliers={effect.multipliers}
+                      onChange={updateEffectField}
+                    />
+                  ) : (
+                    <div className="text-sm text-red-600">Unknown effect type</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} />
+    </Modal>
+  );
+};
+
+RecipientEffectEditor.propTypes = {
+  recipient: PropTypes.object.isRequired,
+  recipientId: PropTypes.string.isRequired,
+  category: PropTypes.object.isRequired,
+  categoryId: PropTypes.string.isRequired,
+  globalParameters: PropTypes.object.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
+
+export default RecipientEffectEditor;

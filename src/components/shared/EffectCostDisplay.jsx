@@ -1,0 +1,27 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { formatCostForDisplay } from '../../utils/effectEditorUtils';
+
+/**
+ * Shared component for displaying cost per life in effect editors
+ */
+const EffectCostDisplay = ({ cost, label = 'Cost per Life:', showInfinity = true, className = '' }) => {
+  const isInvalid = cost === Infinity;
+  const formattedCost = formatCostForDisplay(cost, showInfinity);
+
+  return (
+    <div className={`text-sm text-gray-600 ${className}`}>
+      <span>{label} </span>
+      <span className={`font-medium ${isInvalid ? 'text-red-600' : 'text-green-600'}`}>${formattedCost}</span>
+    </div>
+  );
+};
+
+EffectCostDisplay.propTypes = {
+  cost: PropTypes.number.isRequired,
+  label: PropTypes.string,
+  showInfinity: PropTypes.bool,
+  className: PropTypes.string,
+};
+
+export default EffectCostDisplay;

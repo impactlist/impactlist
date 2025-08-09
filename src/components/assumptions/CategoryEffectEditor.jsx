@@ -2,9 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import QalyEffectInputs from './effects/QalyEffectInputs';
 import PopulationEffectInputs from './effects/PopulationEffectInputs';
-import { effectToCostPerLife } from '../../utils/effectsCalculation';
-import { formatNumberWithCommas } from '../../utils/formatters';
-import { getEffectType, validateEffectField, validateEffects, cleanAndParseValue } from '../../utils/effectValidation';
+import EffectCostDisplay from '../shared/EffectCostDisplay';
+import EffectEditorHeader from '../shared/EffectEditorHeader';
+import EffectEditorFooter from '../shared/EffectEditorFooter';
+import {
+  calculateEffectCostPerLife,
+  calculateCombinedCostPerLife,
+  cleanEffectsForSave,
+} from '../../utils/effectEditorUtils';
+import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 
 /**
@@ -72,51 +78,12 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Calculate cost per life for each effect
   const effectCostPerLife = useMemo(() => {
-    return tempEffects.map((effect) => {
-      try {
-        // Convert string values to numbers for calculation
-        const cleanedEffect = { ...effect };
-        Object.keys(cleanedEffect).forEach((key) => {
-          if (typeof cleanedEffect[key] === 'string' && key !== 'effectId') {
-            const { cleanValue, numValue } = cleanAndParseValue(cleanedEffect[key]);
-            // For display calculation, allow partial inputs
-            if (cleanValue === '' || cleanValue === '-' || cleanValue === '.' || cleanValue === '-.') {
-              cleanedEffect[key] = 0; // Use 0 for partial inputs in calculation
-            } else if (!isNaN(numValue)) {
-              cleanedEffect[key] = numValue;
-            }
-          }
-        });
-
-        // Check for invalid values that would cause calculation errors
-        const effectType = getEffectType(cleanedEffect);
-        if (effectType === 'qaly' && (cleanedEffect.costPerQALY === 0 || cleanedEffect.costPerQALY === undefined)) {
-          return Infinity; // Invalid but don't throw error during editing
-        }
-        if (
-          effectType === 'population' &&
-          (cleanedEffect.costPerMicroprobability === 0 || cleanedEffect.costPerMicroprobability === undefined)
-        ) {
-          return Infinity; // Invalid but don't throw error during editing
-        }
-
-        return effectToCostPerLife(cleanedEffect, globalParameters);
-      } catch {
-        // During editing, return Infinity for invalid calculations
-        // This is only for display - actual save will throw if invalid
-        return Infinity;
-      }
-    });
+    return tempEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters));
   }, [tempEffects, globalParameters]);
 
   // Calculate combined cost per life
   const combinedCostPerLife = useMemo(() => {
-    const validCosts = effectCostPerLife.filter((cost) => cost !== Infinity && cost > 0);
-    if (validCosts.length === 0) return Infinity;
-
-    // Use harmonic mean for combining multiple effects
-    const harmonicMean = validCosts.length / validCosts.reduce((sum, cost) => sum + 1 / cost, 0);
-    return harmonicMean;
+    return calculateCombinedCostPerLife(effectCostPerLife);
   }, [effectCostPerLife]);
 
   // Check if there are any validation errors
@@ -126,34 +93,20 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Handle save
   const handleSave = () => {
-    // Convert any string values to numbers before saving
-    const cleanedEffects = tempEffects.map((effect, effectIndex) => {
-      const cleanedEffect = { ...effect };
-      Object.keys(cleanedEffect).forEach((key) => {
-        if (typeof cleanedEffect[key] === 'string' && key !== 'effectId') {
-          // cleanAndParseValue returns both cleanValue and numValue, but only numValue is needed here.
-          // To avoid the unused variable error, destructure only numValue.
-          const { numValue } = cleanAndParseValue(cleanedEffect[key]);
+    try {
+      const cleanedEffects = cleanEffectsForSave(tempEffects);
 
-          // Fail immediately if conversion fails
-          if (isNaN(numValue)) {
-            throw new Error(
-              `Failed to convert ${key} to number in effect ${effectIndex}. Value: "${cleanedEffect[key]}"`
-            );
-          }
-
-          cleanedEffect[key] = numValue;
-        }
-      });
-      return cleanedEffect;
-    });
-
-    // Re-validate all effects before saving
-    const validation = validateEffects(cleanedEffects);
-    if (validation.isValid) {
-      onSave(cleanedEffects);
-    } else {
-      setErrors(validation.errors);
+      // Re-validate all effects before saving
+      const validation = validateEffects(cleanedEffects);
+      if (validation.isValid) {
+        onSave(cleanedEffects);
+      } else {
+        setErrors(validation.errors);
+      }
+    } catch (error) {
+      console.error('Error cleaning effects for save:', error);
+      // Fail hard and loud - throw the error to prevent silent failures
+      throw error;
     }
   };
 
@@ -162,26 +115,12 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   return (
     <div className="h-full p-2">
       <div className="h-full flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Editing assumptions for category: {category.name}</h3>
-            <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-500">
-              <span className="sr-only">Back to categories</span>
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          {tempEffects.length > 1 && (
-            <div className="mt-2 text-sm text-gray-600">
-              Combined Cost per Life:{' '}
-              <span className="font-semibold">
-                ${combinedCostPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(combinedCostPerLife))}
-              </span>
-            </div>
-          )}
-        </div>
+        <EffectEditorHeader
+          title={`Editing assumptions for category: ${category.name}`}
+          combinedCostPerLife={tempEffects.length > 1 ? combinedCostPerLife : undefined}
+          showCombinedCost={tempEffects.length > 1}
+          onClose={onCancel}
+        />
 
         {/* Effects List */}
         <div className="flex-1 overflow-y-auto px-3 py-3">
@@ -198,12 +137,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                         Effect {index + 1}: {effect.effectId}
                       </h4>
                     </div>
-                    <div className="text-sm text-gray-600">
-                      Cost per Life:{' '}
-                      <span className="font-medium">
-                        ${costPerLife === Infinity ? '∞' : formatNumberWithCommas(Math.round(costPerLife))}
-                      </span>
-                    </div>
+                    <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm" />
                   </div>
 
                   {effectType === 'qaly' ? (
@@ -231,33 +165,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              {hasErrors && <span className="text-red-600">Please fix errors before saving</span>}
-            </div>
-            <div className="flex space-x-3">
-              <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={hasErrors}
-                className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                  hasErrors ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
-                }`}
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
+        <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} />
       </div>
     </div>
   );

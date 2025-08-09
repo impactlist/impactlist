@@ -236,3 +236,96 @@ export const validateGlobalField = (fieldName, value) => {
 
   return null; // No error
 };
+
+/**
+ * Validate a recipient effect field (override or multiplier)
+ * @param {string} fieldName - The name of the field being validated
+ * @param {any} value - The value to validate
+ * @param {string} type - 'override' or 'multiplier'
+ * @param {string} effectType - 'qaly' or 'population'
+ * @returns {string|null} Error message if validation fails, null if valid
+ */
+export const validateRecipientEffectField = (fieldName, value, type, effectType) => {
+  // Use cleanAndParseValue to properly validate the entire string
+  const { cleanValue, numValue } = cleanAndParseValue(value);
+
+  // Allow partial inputs during typing
+  if (isPartialInput(cleanValue)) {
+    return null; // Don't show error for partial inputs
+  }
+
+  // Check if it's a valid number
+  if (isNaN(numValue)) {
+    return 'Invalid number';
+  }
+
+  // For multipliers, value cannot be zero
+  if (type === 'multiplier') {
+    if (numValue === 0) {
+      return 'Multiplier cannot be zero';
+    }
+  }
+
+  // For overrides, use the same validation as regular effect fields
+  if (type === 'override') {
+    return validateEffectField(fieldName, value, effectType);
+  }
+
+  return null; // No error
+};
+
+/**
+ * Validate all recipient effects for a category
+ * @param {Array} effects - Array of effect objects with overrides/multipliers
+ * @returns {Object} Object with combined errors and isValid boolean
+ */
+export const validateRecipientEffects = (effects) => {
+  let allErrors = {};
+  let isValid = true;
+
+  effects.forEach((effect, index) => {
+    // Validate overrides
+    if (effect.overrides) {
+      Object.entries(effect.overrides).forEach(([fieldName, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          const effectType = effect.costPerQALY !== undefined ? 'qaly' : 'population';
+          const error = validateRecipientEffectField(fieldName, value, 'override', effectType);
+          if (error) {
+            allErrors[`${index}-${fieldName}-override`] = error;
+            isValid = false;
+          }
+        }
+      });
+    }
+
+    // Validate multipliers
+    if (effect.multipliers) {
+      Object.entries(effect.multipliers).forEach(([fieldName, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          const effectType = effect.costPerQALY !== undefined ? 'qaly' : 'population';
+          const error = validateRecipientEffectField(fieldName, value, 'multiplier', effectType);
+          if (error) {
+            allErrors[`${index}-${fieldName}-multiplier`] = error;
+            isValid = false;
+          }
+        }
+      });
+    }
+
+    // Check that no field has both override and multiplier
+    if (effect.overrides && effect.multipliers) {
+      Object.keys(effect.overrides).forEach((fieldName) => {
+        if (
+          effect.multipliers[fieldName] !== null &&
+          effect.multipliers[fieldName] !== undefined &&
+          effect.multipliers[fieldName] !== ''
+        ) {
+          allErrors[`${index}-${fieldName}-conflict`] = `Cannot have both override and multiplier for ${fieldName}`;
+          isValid = false;
+        }
+      });
+    }
+  });
+
+  return { errors: allErrors, isValid };
+};

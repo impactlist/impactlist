@@ -144,6 +144,69 @@ export const AssumptionsProvider = ({ children }) => {
     setUserAssumptions((prev) => apiHelpers.clearRecipientOverrides(prev, recipientId));
   };
 
+  // Update a recipient's effect with multiple field overrides/multipliers at once
+  // effectData should be an object with 'overrides' and/or 'multipliers' objects
+  const updateRecipientEffect = (recipientName, categoryId, effectId, effectData) => {
+    const recipientId = combinedAssumptions.findRecipientId(recipientName);
+    if (!recipientId) {
+      console.error(`Recipient ${recipientName} not found`);
+      return;
+    }
+
+    setUserAssumptions((prev) => {
+      let newData = prev;
+
+      // Process overrides
+      if (effectData.overrides) {
+        Object.entries(effectData.overrides).forEach(([fieldName, value]) => {
+          if (value !== null && value !== undefined && value !== '') {
+            newData = apiHelpers.setRecipientFieldOverride(
+              newData,
+              defaultAssumptions,
+              recipientId,
+              categoryId,
+              effectId,
+              fieldName,
+              value
+            );
+          }
+        });
+      }
+
+      // Process multipliers
+      if (effectData.multipliers) {
+        Object.entries(effectData.multipliers).forEach(([fieldName, value]) => {
+          if (value !== null && value !== undefined && value !== '') {
+            newData = apiHelpers.setRecipientFieldMultiplier(
+              newData,
+              defaultAssumptions,
+              recipientId,
+              categoryId,
+              effectId,
+              fieldName,
+              value
+            );
+          }
+        });
+      }
+
+      return newData;
+    });
+  };
+
+  // Clear all overrides/multipliers for a specific recipient effect
+  const clearRecipientEffect = (recipientName, categoryId) => {
+    const recipientId = combinedAssumptions.findRecipientId(recipientName);
+    if (!recipientId) {
+      console.error(`Recipient ${recipientName} not found`);
+      return;
+    }
+
+    // Clear the entire category for this recipient if it only has this effect
+    // Otherwise we'd need to clear field by field which isn't available in the API
+    setUserAssumptions((prev) => apiHelpers.clearRecipientCategoryOverrides(prev, recipientId, categoryId));
+  };
+
   // ============ GLOBAL PARAMETER OPERATIONS ============
   const updateGlobalParameterValue = (parameterName, value) => {
     setUserAssumptions((prev) => apiHelpers.setGlobalParameter(prev, parameterName, value));
@@ -355,6 +418,8 @@ export const AssumptionsProvider = ({ children }) => {
     resetCategoryToDefaults,
     updateRecipientFieldOverride,
     updateRecipientFieldMultiplier,
+    updateRecipientEffect,
+    clearRecipientEffect,
     resetRecipientToDefaults,
     updateGlobalParameterValue,
     resetGlobalParameter,

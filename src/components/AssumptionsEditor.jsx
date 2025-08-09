@@ -16,6 +16,7 @@ import DefaultValuesSection from './assumptions/DefaultValuesSection';
 import RecipientValuesSection from './assumptions/RecipientValuesSection';
 import GlobalValuesSection from './assumptions/GlobalValuesSection';
 import CategoryEffectEditor from './assumptions/CategoryEffectEditor';
+import RecipientEffectEditor from './assumptions/RecipientEffectEditor';
 import Modal from './assumptions/Modal';
 import TabNavigation from './assumptions/TabNavigation';
 import FormActions from './assumptions/FormActions';
@@ -28,6 +29,8 @@ const AssumptionsEditor = () => {
     updateCategoryEffect,
     resetCategoryToDefaults,
     updateRecipientValue,
+    updateRecipientEffect,
+    clearRecipientEffect,
     updateGlobalParameter,
     getCategoryValue,
     getRecipientValue,
@@ -38,6 +41,7 @@ const AssumptionsEditor = () => {
 
   const [activeTab, setActiveTab] = useState('global');
   const [editingCategoryId, setEditingCategoryId] = useState(null);
+  const [editingRecipient, setEditingRecipient] = useState(null);
 
   const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
 
@@ -262,6 +266,12 @@ const AssumptionsEditor = () => {
     setEditingCategoryId(categoryId);
   };
 
+  // Handle editing a recipient's effects
+  const handleEditRecipient = (recipient, recipientId, categoryId) => {
+    const category = combinedAssumptions.getCategoryById(categoryId);
+    setEditingRecipient({ recipient, recipientId, categoryId, category });
+  };
+
   // Handle saving category effects
   const handleSaveCategoryEffects = (updatedEffects) => {
     // Get the default category to compare against
@@ -305,6 +315,32 @@ const AssumptionsEditor = () => {
     setEditingCategoryId(null);
   };
 
+  // Handle saving recipient effects
+  const handleSaveRecipientEffects = (updatedEffects) => {
+    if (!editingRecipient) return;
+
+    const { recipient, categoryId } = editingRecipient;
+
+    // Clear existing effects for this category first
+    clearRecipientEffect(recipient.name, categoryId, null);
+
+    // Then save the new effects
+    updatedEffects.forEach((effect) => {
+      updateRecipientEffect(recipient.name, categoryId, effect.effectId, {
+        overrides: effect.overrides || {},
+        multipliers: effect.multipliers || {},
+      });
+    });
+
+    // Close the editor
+    setEditingRecipient(null);
+  };
+
+  // Handle canceling recipient edit
+  const handleCancelRecipientEdit = () => {
+    setEditingRecipient(null);
+  };
+
   const tabs = [
     { id: 'global', label: 'Global' },
     { id: 'categories', label: 'Categories' },
@@ -317,7 +353,7 @@ const AssumptionsEditor = () => {
     } else if (activeTab === 'categories') {
       return 'Customize the parameters for different cause categories which go into the computation of the cost in dollars to save one life.';
     } else {
-      return "Customize how specific recipients' parameter values differ from their category defaults. These parameters are used to compute the cost in dollars to save one life. You can set a multiplier or override for each parameter value.";
+      return "Customize how specific recipients' effect parameters differ from their category defaults. For each effect parameter, you can set either an override value (replaces the default) or a multiplier (scales the default). Click Edit on any recipient to modify their effects.";
     }
   };
 
@@ -399,19 +435,28 @@ const AssumptionsEditor = () => {
         ) : (
           <RecipientValuesSection
             filteredRecipients={recipientSearch.filteredRecipients}
-            formValues={recipientForm.formValues}
-            errors={recipientForm.errors}
             allCategories={allCategories}
             defaultCategories={defaultCategories}
-            getCustomRecipientValue={getRecipientValue}
-            onChange={recipientForm.handleChange}
             onSearch={recipientSearch.handleSearchChange}
             searchTerm={recipientSearch.searchTerm}
-            combinedAssumptions={combinedAssumptions}
             defaultAssumptions={defaultAssumptions}
+            onEditRecipient={handleEditRecipient}
           />
         )}
       </div>
+
+      {/* Recipient Effect Editor Modal */}
+      {editingRecipient && (
+        <RecipientEffectEditor
+          recipient={editingRecipient.recipient}
+          recipientId={editingRecipient.recipientId}
+          category={editingRecipient.category}
+          categoryId={editingRecipient.categoryId}
+          globalParameters={combinedAssumptions.globalParameters}
+          onSave={handleSaveRecipientEffects}
+          onCancel={handleCancelRecipientEdit}
+        />
+      )}
     </Modal>
   );
 };

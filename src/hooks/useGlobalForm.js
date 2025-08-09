@@ -14,9 +14,13 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
-  // Initialize form values when modal opens
+  // Initialize form values when modal opens, clear when it closes
   useEffect(() => {
-    if (isModalOpen && globalParameters && Object.keys(formValues).length === 0) {
+    if (!isModalOpen) {
+      // Clear form state when modal closes to discard unsaved changes
+      setFormValues({});
+      setErrors({});
+    } else if (isModalOpen && globalParameters && Object.keys(formValues).length === 0) {
       const initialValues = {};
 
       // Initialize all global parameter fields

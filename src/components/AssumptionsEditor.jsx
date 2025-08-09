@@ -43,6 +43,15 @@ const AssumptionsEditor = () => {
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editingRecipient, setEditingRecipient] = useState(null);
 
+  // Clear editing states when modal closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      setActiveTab('global');
+      setEditingCategoryId(null);
+      setEditingRecipient(null);
+    }
+  }, [isModalOpen]);
+
   const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
 
   // Track which categories have custom effect values
@@ -111,12 +120,13 @@ const AssumptionsEditor = () => {
     isModalOpen
   );
   const categoryForm = useCategoryForm(allCategories, getCategoryValue, isModalOpen, defaultCategories);
-  const recipientForm = useRecipientForm();
+  const recipientForm = useRecipientForm(isModalOpen);
   const recipientSearch = useRecipientSearch(
     allRecipients,
     combinedAssumptions,
     recipientForm.formValues,
-    getRecipientValue
+    getRecipientValue,
+    isModalOpen
   );
 
   // Handle tab switching

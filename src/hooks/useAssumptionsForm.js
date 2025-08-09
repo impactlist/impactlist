@@ -10,9 +10,13 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, de
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
-  // Initialize form values when modal opens or categories change
+  // Initialize form values when modal opens, clear when it closes
   useEffect(() => {
-    if (isModalOpen) {
+    if (!isModalOpen) {
+      // Clear form state when modal closes to discard unsaved changes
+      setFormValues({});
+      setErrors({});
+    } else if (isModalOpen) {
       const initialValues = {};
       Object.entries(allCategories).forEach(([key, category]) => {
         const customValue = getCategoryValue(key);
@@ -93,9 +97,17 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, de
 /**
  * Custom hook for managing recipient form state
  */
-export const useRecipientForm = () => {
+export const useRecipientForm = (isModalOpen) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
+
+  // Clear form state when modal closes to discard unsaved changes
+  useEffect(() => {
+    if (!isModalOpen) {
+      setFormValues({});
+      setErrors({});
+    }
+  }, [isModalOpen]);
 
   const clearError = useCallback(
     (fieldKey) => {
@@ -164,10 +176,25 @@ export const useRecipientForm = () => {
 /**
  * Custom hook for managing recipient search and filtering
  */
-export const useRecipientSearch = (allRecipients, combinedAssumptions, recipientFormValues, getRecipientValue) => {
+export const useRecipientSearch = (
+  allRecipients,
+  combinedAssumptions,
+  recipientFormValues,
+  getRecipientValue,
+  isModalOpen
+) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRecipients, setFilteredRecipients] = useState([]);
   const [showOnlyCustom, setShowOnlyCustom] = useState(true);
+
+  // Clear search state when modal closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      setSearchTerm('');
+      setFilteredRecipients([]);
+      setShowOnlyCustom(true);
+    }
+  }, [isModalOpen]);
 
   const filterRecipients = useCallback(
     (term, onlyCustom) => {

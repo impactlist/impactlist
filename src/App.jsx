@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
 import DonorList from './pages/DonorList';
 import DonorDetail from './pages/DonorDetail';
 import RecipientDetail from './pages/RecipientDetail';
@@ -12,7 +11,7 @@ import CategoryDetail from './pages/CategoryDetail';
 import DonationCalculator from './pages/DonationCalculator';
 import FAQ from './pages/FAQ';
 import { AssumptionsProvider } from './contexts/AssumptionsContext';
-import AssumptionsEditor from './components/AssumptionsEditor';
+import AssumptionsEditorWrapper from './components/AssumptionsEditorWrapper';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { validateDataOnStartup } from './utils/startupValidation';
@@ -99,18 +98,16 @@ const AppContent = () => {
           isFAQ={isFAQ}
         />
         <div className="flex-grow bg-slate-50">
-          <AnimatePresence mode="wait">
-            <Routes>
-              <Route path="/" element={<DonorList />} />
-              <Route path="/donor/:donorId" element={<DonorDetail />} />
-              <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
-              <Route path="/category/:categoryId" element={<CategoryDetail />} />
-              <Route path="/categories" element={<CategoryList />} />
-              <Route path="/recipients" element={<RecipientList />} />
-              <Route path="/calculator" element={<DonationCalculator />} />
-              <Route path="/faq" element={<FAQ />} />
-            </Routes>
-          </AnimatePresence>
+          <Routes>
+            <Route path="/" element={<DonorList />} />
+            <Route path="/donor/:donorId" element={<DonorDetail />} />
+            <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
+            <Route path="/category/:categoryId" element={<CategoryDetail />} />
+            <Route path="/categories" element={<CategoryList />} />
+            <Route path="/recipients" element={<RecipientList />} />
+            <Route path="/calculator" element={<DonationCalculator />} />
+            <Route path="/faq" element={<FAQ />} />
+          </Routes>
         </div>
         <Footer />
       </div>
@@ -172,7 +169,7 @@ const App = () => {
       <AssumptionsProvider>
         <Router>
           <AppContent />
-          <AssumptionsEditor />
+          <AssumptionsEditorWrapper />
         </Router>
       </AssumptionsProvider>
     </ErrorBoundary>

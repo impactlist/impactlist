@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { formatNumber, formatNumberWithCommas, formatWithCursorHandling } from '../utils/formatters';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
 import { getRecipientId, recipientHasEffectOverrides } from '../utils/donationDataHelpers';
@@ -187,6 +187,12 @@ export const useRecipientSearch = (
   const [filteredRecipients, setFilteredRecipients] = useState([]);
   const [showOnlyCustom, setShowOnlyCustom] = useState(true);
 
+  // Use a ref to store recipientFormValues to avoid dependency issues
+  const recipientFormValuesRef = useRef(recipientFormValues);
+  useEffect(() => {
+    recipientFormValuesRef.current = recipientFormValues;
+  }, [recipientFormValues]);
+
   // Clear search state when modal closes
   useEffect(() => {
     if (!isModalOpen) {
@@ -226,9 +232,9 @@ export const useRecipientSearch = (
             });
           }
 
-          const hasFormCustomValues = Object.keys(recipientFormValues).some((fieldKey) => {
+          const hasFormCustomValues = Object.keys(recipientFormValuesRef.current).some((fieldKey) => {
             if (fieldKey.startsWith(`${recipient.name}__`)) {
-              const value = recipientFormValues[fieldKey];
+              const value = recipientFormValuesRef.current[fieldKey];
               if (value && value.raw !== '') {
                 const [, categoryId, type] = fieldKey.split('__');
 
@@ -271,7 +277,7 @@ export const useRecipientSearch = (
 
       setFilteredRecipients(filtered);
     },
-    [allRecipients, combinedAssumptions, recipientFormValues, getRecipientValue]
+    [allRecipients, combinedAssumptions, getRecipientValue]
   );
 
   const handleSearchChange = useCallback(

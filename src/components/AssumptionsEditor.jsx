@@ -12,7 +12,7 @@ import { useCategoryForm, useRecipientForm, useRecipientSearch } from '../hooks/
 import { useGlobalForm } from '../hooks/useGlobalForm';
 
 // Import shared components
-import DefaultValuesSection from './assumptions/DefaultValuesSection';
+import CategoryValuesSection from './assumptions/CategoryValuesSection';
 import RecipientValuesSection from './assumptions/RecipientValuesSection';
 import GlobalValuesSection from './assumptions/GlobalValuesSection';
 import CategoryEffectEditor from './assumptions/CategoryEffectEditor';
@@ -421,7 +421,7 @@ const AssumptionsEditor = () => {
           </form>
         ) : activeTab === 'categories' ? (
           <form onSubmit={handleSubmit}>
-            <DefaultValuesSection
+            <CategoryValuesSection
               allCategories={allCategories}
               defaultCategories={defaultCategories}
               formValues={categoryForm.formValues}

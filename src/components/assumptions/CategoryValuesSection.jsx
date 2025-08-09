@@ -2,12 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
+import SectionCard from '../shared/SectionCard';
+import CustomValueIndicator from '../shared/CustomValueIndicator';
 import { formatNumberWithCommas } from '../../utils/formatters';
+import { getFormValue } from '../../utils/formUtils';
 
 /**
- * Component for managing default cost per life values for categories.
+ * Component for managing cost per life values for categories.
  */
-const DefaultValuesSection = ({
+const CategoryValuesSection = ({
   allCategories,
   defaultCategories,
   formValues,
@@ -18,24 +21,6 @@ const DefaultValuesSection = ({
   categoriesWithCustomValues,
   className = '',
 }) => {
-  // Get form value with formatting
-  const getFormValue = (formValues, key, defaultValue) => {
-    const formValue = formValues[key];
-
-    // If we have a form value, return its display value
-    if (formValue) {
-      return formValue.display;
-    }
-
-    // Otherwise check if there's a fallback value
-    if (defaultValue !== undefined && defaultValue !== null && defaultValue !== '') {
-      return formatNumberWithCommas(defaultValue);
-    }
-
-    // Return empty string if no value found
-    return '';
-  };
-
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 ${className}`}>
       {Object.entries(allCategories)
@@ -48,12 +33,7 @@ const DefaultValuesSection = ({
           const isCustom = categoriesWithCustomValues && categoriesWithCustomValues.has(key);
 
           return (
-            <div
-              key={key}
-              className={`py-1.5 px-2 rounded border ${
-                hasError ? 'border-red-300 bg-red-50' : isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'
-              }`}
-            >
+            <SectionCard key={key} hasError={hasError} isCustom={isCustom} padding="sm">
               <div className="flex justify-between items-start mb-2">
                 <label className="text-sm font-medium truncate pr-2" htmlFor={`category-${key}`} title={category.name}>
                   <Link
@@ -63,23 +43,19 @@ const DefaultValuesSection = ({
                     {category.name}
                   </Link>
                 </label>
-                {isCustom && (
-                  <button
-                    type="button"
-                    className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
-                    onClick={() => {
-                      // Reset both the form display and the actual category data
-                      const value = defaultValue;
-                      const formattedValue = formatNumberWithCommas(value);
-                      onChange(key, formattedValue);
-                      if (onResetCategory) {
-                        onResetCategory(key);
-                      }
-                    }}
-                  >
-                    Reset
-                  </button>
-                )}
+                <CustomValueIndicator
+                  isCustom={isCustom}
+                  hasError={hasError}
+                  onReset={() => {
+                    // Reset both the form display and the actual category data
+                    const value = defaultValue;
+                    const formattedValue = formatNumberWithCommas(value);
+                    onChange(key, formattedValue);
+                    if (onResetCategory) {
+                      onResetCategory(key);
+                    }
+                  }}
+                />
               </div>
               <div className="relative">
                 <CurrencyInput
@@ -108,14 +84,14 @@ const DefaultValuesSection = ({
               {isCustom && !hasError && (
                 <div className="text-xs text-gray-500 mt-0.5">Default: ${formatNumberWithCommas(defaultValue)}</div>
               )}
-            </div>
+            </SectionCard>
           );
         })}
     </div>
   );
 };
 
-DefaultValuesSection.propTypes = {
+CategoryValuesSection.propTypes = {
   allCategories: PropTypes.object.isRequired,
   defaultCategories: PropTypes.object.isRequired,
   formValues: PropTypes.object.isRequired,
@@ -125,4 +101,4 @@ DefaultValuesSection.propTypes = {
   className: PropTypes.string,
 };
 
-export default React.memo(DefaultValuesSection);
+export default React.memo(CategoryValuesSection);

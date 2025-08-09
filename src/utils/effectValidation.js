@@ -211,6 +211,7 @@ export const validateGlobalField = (fieldName, value) => {
   // Parameter-specific validations
   if (fieldName === 'discountRate') {
     // Discount rate must be no greater than 100%, but can be lower than -100%
+    // Note: numValue is already in decimal form (0.1 = 10%)
     if (numValue > 1) {
       return 'Discount rate must be no greater than 100%';
     }

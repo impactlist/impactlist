@@ -110,8 +110,8 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
       },
     }));
 
-    // Validate this field immediately
-    const error = validateGlobalField(paramKey, inputValue);
+    // Validate this field immediately - use the parsed (raw) value for validation
+    const error = validateGlobalField(paramKey, parsedValue);
 
     setErrors((prev) => {
       const newErrors = { ...prev };

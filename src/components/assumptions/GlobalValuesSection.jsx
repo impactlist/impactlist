@@ -1,8 +1,30 @@
 import React from 'react';
 import Tooltip from '../shared/Tooltip';
+import SectionCard from '../shared/SectionCard';
+import CustomValueIndicator from '../shared/CustomValueIndicator';
 import { formatWithCursorHandling, formatNumberWithCommas } from '../../utils/formatters';
 
 const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
+  // Format display value based on parameter type
+  const formatDisplayValue = (value, format) => {
+    if (value === null || value === undefined || value === '') {
+      return '';
+    }
+
+    if (format === 'percentage') {
+      // For percentage, multiply by 100 and format with commas
+      const percentValue = parseFloat(value) * 100;
+      return formatNumberWithCommas(percentValue.toString());
+    }
+
+    if (format === 'number') {
+      // Format numbers with commas
+      return formatNumberWithCommas(value.toString());
+    }
+
+    return value;
+  };
+
   const parameters = [
     {
       id: 'discountRate',
@@ -42,41 +64,22 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
     },
   ];
 
-  const formatDisplayValue = (value, format) => {
-    if (value === null || value === undefined || value === '') {
-      return '';
-    }
-
-    if (format === 'percentage') {
-      // For percentage, multiply by 100 and format with commas
-      const percentValue = parseFloat(value) * 100;
-      return formatNumberWithCommas(percentValue.toString());
-    }
-
-    if (format === 'number') {
-      // Format numbers with commas
-      return formatNumberWithCommas(value.toString());
-    }
-
-    return value;
-  };
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {parameters.map((param) => {
         const value = formValues[param.id]?.formatted || '';
         const hasError = errors[param.id];
         const defaultValue = defaultGlobalParameters[param.id];
-        const currentValue = formValues[param.id]?.raw || '';
-        const isCustom = currentValue !== '' && Number(currentValue) !== defaultValue;
+        const currentValue = formValues[param.id]?.raw;
+        // Check if value is custom - handle both undefined/empty and actual value comparison
+        const isCustom =
+          currentValue !== undefined &&
+          currentValue !== '' &&
+          currentValue !== null &&
+          Math.abs(Number(currentValue) - Number(defaultValue)) > 0.0000001;
 
         return (
-          <div
-            key={param.id}
-            className={`py-2 px-3 rounded border ${
-              hasError ? 'border-red-300 bg-red-50' : isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'
-            }`}
-          >
+          <SectionCard key={param.id} hasError={hasError} isCustom={isCustom} padding="default">
             <div className="flex justify-between items-start mb-2">
               <label htmlFor={param.id} className="text-sm font-medium text-gray-700 flex items-center gap-1">
                 {param.label}
@@ -91,18 +94,14 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   </svg>
                 </Tooltip>
               </label>
-              {isCustom && (
-                <button
-                  type="button"
-                  className={`text-xs ${hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'} font-medium`}
-                  onClick={() => {
-                    const formattedValue = formatDisplayValue(defaultValue, param.format);
-                    onChange(param.id, formattedValue);
-                  }}
-                >
-                  Reset
-                </button>
-              )}
+              <CustomValueIndicator
+                isCustom={isCustom}
+                hasError={hasError}
+                onReset={() => {
+                  const formattedValue = formatDisplayValue(defaultValue, param.format);
+                  onChange(param.id, formattedValue);
+                }}
+              />
             </div>
             <input
               type="text"
@@ -139,7 +138,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
             {isCustom && !hasError && (
               <p className="text-xs text-gray-500 mt-0.5">Default: {formatDisplayValue(defaultValue, param.format)}</p>
             )}
-          </div>
+          </SectionCard>
         );
       })}
     </div>

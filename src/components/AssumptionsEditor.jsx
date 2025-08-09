@@ -37,16 +37,17 @@ const AssumptionsEditor = () => {
     getGlobalParameter,
     isModalOpen,
     closeModal,
+    activeTab,
+    setActiveTab,
   } = useAssumptions();
 
-  const [activeTab, setActiveTab] = useState('global');
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editingRecipient, setEditingRecipient] = useState(null);
 
-  // Clear editing states when modal closes
+  // Clear editing states when modal closes (but preserve activeTab)
   useEffect(() => {
     if (!isModalOpen) {
-      setActiveTab('global');
+      // Don't reset activeTab - let it persist
       setEditingCategoryId(null);
       setEditingRecipient(null);
     }

@@ -181,9 +181,10 @@ export const useRecipientSearch = (
   combinedAssumptions,
   recipientFormValues,
   getRecipientValue,
-  isModalOpen
+  isModalOpen,
+  searchTerm,
+  setSearchTerm
 ) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [filteredRecipients, setFilteredRecipients] = useState([]);
   const [showOnlyCustom, setShowOnlyCustom] = useState(true);
 
@@ -193,10 +194,10 @@ export const useRecipientSearch = (
     recipientFormValuesRef.current = recipientFormValues;
   }, [recipientFormValues]);
 
-  // Clear search state when modal closes
+  // Clear search state when modal closes (but keep searchTerm)
   useEffect(() => {
     if (!isModalOpen) {
-      setSearchTerm('');
+      // Don't clear searchTerm - it's now managed in context
       setFilteredRecipients([]);
       setShowOnlyCustom(true);
     }
@@ -288,7 +289,7 @@ export const useRecipientSearch = (
       setShowOnlyCustom(shouldShowOnlyCustom);
       filterRecipients(term, shouldShowOnlyCustom);
     },
-    [filterRecipients]
+    [filterRecipients, setSearchTerm]
   );
 
   return {

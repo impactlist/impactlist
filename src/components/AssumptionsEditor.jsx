@@ -39,6 +39,8 @@ const AssumptionsEditor = () => {
     closeModal,
     activeTab,
     setActiveTab,
+    recipientSearchTerm,
+    setRecipientSearchTerm,
   } = useAssumptions();
 
   const [editingCategoryId, setEditingCategoryId] = useState(null);
@@ -127,7 +129,9 @@ const AssumptionsEditor = () => {
     combinedAssumptions,
     recipientForm.formValues,
     getRecipientValue,
-    isModalOpen
+    isModalOpen,
+    recipientSearchTerm,
+    setRecipientSearchTerm
   );
 
   // Handle tab switching

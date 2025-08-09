@@ -37,6 +37,7 @@ export const AssumptionsProvider = ({ children }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('global');
+  const [recipientSearchTerm, setRecipientSearchTerm] = useState('');
 
   // Create combined assumptions whenever userAssumptions changes
   const combinedAssumptions = useMemo(() => {
@@ -414,6 +415,8 @@ export const AssumptionsProvider = ({ children }) => {
     closeModal,
     activeTab,
     setActiveTab,
+    recipientSearchTerm,
+    setRecipientSearchTerm,
 
     // New API functions
     updateCategoryFieldValue,

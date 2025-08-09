@@ -374,8 +374,8 @@ const AssumptionsEditor = () => {
                       ? handleCategoryReset
                       : handleResetRecipients
                 }
-                onCancel={closeModal}
                 onSave={handleSubmit}
+                showSave={activeTab === 'global'}
                 resetLabel={
                   activeTab === 'global'
                     ? 'Reset Global'

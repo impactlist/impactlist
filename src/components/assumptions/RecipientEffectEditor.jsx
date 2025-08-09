@@ -2,8 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import RecipientQalyEffectInputs from './effects/RecipientQalyEffectInputs';
 import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffectInputs';
-import Modal from './Modal';
 import EffectCostDisplay from '../shared/EffectCostDisplay';
+import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import { applyRecipientEffectToBase } from '../../utils/effectsCalculation';
 import {
@@ -239,73 +239,79 @@ const RecipientEffectEditor = ({
   };
 
   return (
-    <Modal
-      isOpen={true}
-      onClose={onCancel}
-      title={`Edit Effects: ${recipient.name} - ${category.name}`}
-      description="Set override values or multipliers for each parameter. Typing in one field clears the other."
-    >
-      <div className="px-6 py-4 max-h-[60vh] overflow-y-auto">
-        {/* Cost per life display */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700">Combined Cost per Life:</span>
-            <span
-              className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
-            >
-              ${formatCostForDisplay(combinedCostPerLife, false)}
-            </span>
+    <div className="flex flex-col h-full p-2">
+      <div className="flex flex-col flex-1 min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
+        <EffectEditorHeader
+          title={`Edit Effects: ${recipient.name} - ${category.name}`}
+          description="Set override values or multipliers for each parameter. Typing in one field clears the other."
+          combinedCostPerLife={combinedCostPerLife}
+          showCombinedCost={false}
+          onClose={onCancel}
+        />
+
+        {/* Effects List */}
+        <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-200px)]">
+          {/* Cost per life display */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-gray-700">Combined Cost per Life:</span>
+              <span
+                className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
+              >
+                ${formatCostForDisplay(combinedCostPerLife, false)}
+              </span>
+            </div>
+          </div>
+
+          {/* Effects */}
+          <div className="space-y-6">
+            {tempEffects.map((effect, index) => {
+              const baseEffect = effect._baseEffect;
+              const effectType = getEffectType(baseEffect);
+              const costPerLife = effectCostPerLife[index];
+              const defaultEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
+
+              return (
+                <div key={effect.effectId} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-lg font-medium text-gray-800">
+                      Effect {index + 1}: {effectType === 'qaly' ? 'QALY' : 'Population'}
+                    </h3>
+                    <EffectCostDisplay cost={costPerLife} showInfinity={false} className="text-sm" />
+                  </div>
+
+                  <div>
+                    {effectType === 'qaly' ? (
+                      <RecipientQalyEffectInputs
+                        effectIndex={index}
+                        defaultEffect={defaultEffect || baseEffect}
+                        errors={errors}
+                        overrides={effect.overrides}
+                        multipliers={effect.multipliers}
+                        onChange={updateEffectField}
+                      />
+                    ) : effectType === 'population' ? (
+                      <RecipientPopulationEffectInputs
+                        effectIndex={index}
+                        defaultEffect={defaultEffect || baseEffect}
+                        errors={errors}
+                        overrides={effect.overrides}
+                        multipliers={effect.multipliers}
+                        onChange={updateEffectField}
+                      />
+                    ) : (
+                      <div className="text-sm text-red-600">Unknown effect type</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Effects */}
-        <div className="space-y-6">
-          {tempEffects.map((effect, index) => {
-            const baseEffect = effect._baseEffect;
-            const effectType = getEffectType(baseEffect);
-            const costPerLife = effectCostPerLife[index];
-            const defaultEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
-
-            return (
-              <div key={effect.effectId} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-medium text-gray-800">
-                    Effect {index + 1}: {effectType === 'qaly' ? 'QALY' : 'Population'}
-                  </h3>
-                  <EffectCostDisplay cost={costPerLife} showInfinity={false} className="text-sm" />
-                </div>
-
-                <div>
-                  {effectType === 'qaly' ? (
-                    <RecipientQalyEffectInputs
-                      effectIndex={index}
-                      defaultEffect={defaultEffect || baseEffect}
-                      errors={errors}
-                      overrides={effect.overrides}
-                      multipliers={effect.multipliers}
-                      onChange={updateEffectField}
-                    />
-                  ) : effectType === 'population' ? (
-                    <RecipientPopulationEffectInputs
-                      effectIndex={index}
-                      defaultEffect={defaultEffect || baseEffect}
-                      errors={errors}
-                      overrides={effect.overrides}
-                      multipliers={effect.multipliers}
-                      onChange={updateEffectField}
-                    />
-                  ) : (
-                    <div className="text-sm text-red-600">Unknown effect type</div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} />
       </div>
-
-      <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} />
-    </Modal>
+    </div>
   );
 };
 

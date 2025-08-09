@@ -123,7 +123,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         />
 
         {/* Effects List */}
-        <div className="flex-1 overflow-y-auto px-3 py-3">
+        <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-200px)]">
           <div className="space-y-3">
             {tempEffects.map((effect, index) => {
               const effectType = getEffectType(effect);

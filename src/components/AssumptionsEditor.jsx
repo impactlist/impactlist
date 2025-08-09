@@ -359,7 +359,7 @@ const AssumptionsEditor = () => {
 
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal} title="Edit Assumptions" description={getDescription()}>
-      {!editingCategoryId && (
+      {!editingCategoryId && !editingRecipient && (
         <div className="p-6 border-b border-gray-200">
           <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
             <div className="order-2 sm:order-1">
@@ -397,7 +397,9 @@ const AssumptionsEditor = () => {
       {/* Tab content container */}
       <div
         className={
-          editingCategoryId ? 'flex-grow' : 'overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]'
+          editingCategoryId || editingRecipient
+            ? 'flex flex-col flex-grow min-h-0 overflow-hidden'
+            : 'overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]'
         }
       >
         {editingCategoryId ? (
@@ -408,6 +410,17 @@ const AssumptionsEditor = () => {
             globalParameters={combinedAssumptions.globalParameters}
             onSave={handleSaveCategoryEffects}
             onCancel={handleCancelCategoryEdit}
+          />
+        ) : editingRecipient ? (
+          // Show recipient effect editor when editing a recipient
+          <RecipientEffectEditor
+            recipient={editingRecipient.recipient}
+            recipientId={editingRecipient.recipientId}
+            category={editingRecipient.category}
+            categoryId={editingRecipient.categoryId}
+            globalParameters={combinedAssumptions.globalParameters}
+            onSave={handleSaveRecipientEffects}
+            onCancel={handleCancelRecipientEdit}
           />
         ) : activeTab === 'global' ? (
           <form onSubmit={handleSubmit}>
@@ -444,19 +457,6 @@ const AssumptionsEditor = () => {
           />
         )}
       </div>
-
-      {/* Recipient Effect Editor Modal */}
-      {editingRecipient && (
-        <RecipientEffectEditor
-          recipient={editingRecipient.recipient}
-          recipientId={editingRecipient.recipientId}
-          category={editingRecipient.category}
-          categoryId={editingRecipient.categoryId}
-          globalParameters={combinedAssumptions.globalParameters}
-          onSave={handleSaveRecipientEffects}
-          onCancel={handleCancelRecipientEdit}
-        />
-      )}
     </Modal>
   );
 };

@@ -250,7 +250,7 @@ const RecipientEffectEditor = ({
         />
 
         {/* Effects List */}
-        <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-200px)]">
+        <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-300px)]">
           {/* Cost per life display */}
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <div className="flex justify-between items-center">

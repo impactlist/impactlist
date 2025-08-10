@@ -274,7 +274,7 @@ const RecipientEffectEditor = ({
       <div className="flex flex-col flex-1 min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={`Edit Effects: ${recipient.name} - ${category.name}`}
-          description="Set override values or multipliers for each parameter. Typing in one field clears the other."
+          description="Set at most one value (override or multiplier) for each parameter."
           combinedCostPerLife={combinedCostPerLife}
           showCombinedCost={false}
           onClose={onCancel}
@@ -285,7 +285,7 @@ const RecipientEffectEditor = ({
           {/* Cost per life display */}
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">Combined Cost per Life:</span>
+              <span className="text-sm font-medium text-gray-700">Combined cost per life:</span>
               <span
                 className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
               >

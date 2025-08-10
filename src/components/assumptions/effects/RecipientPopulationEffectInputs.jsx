@@ -55,7 +55,7 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
       label: 'QALY Improvement per Year',
       tooltip: 'Quality-adjusted life years improved per year for affected population',
     },
-    { name: 'startYear', label: 'Start Year', tooltip: 'Years until the effect begins' },
+    { name: 'startTime', label: 'Start Year', tooltip: 'Years until the effect begins' },
     { name: 'windowLength', label: 'Window Length', tooltip: 'Duration of the effect in years' },
   ];
 
@@ -131,8 +131,12 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
                 {multiplierError && <p className="mt-1 text-xs text-red-600">{multiplierError}</p>}
                 {multiplierValue &&
                   multiplierValue !== '' &&
-                  parseFloat(multiplierValue.toString().replace(/,/g, '')) !== 1.0 && (
-                    <p className="text-xs text-gray-500 mt-1">Default: 1.0</p>
+                  defaultEffect?.multipliers?.[field.name] !== undefined &&
+                  parseFloat(multiplierValue.toString().replace(/,/g, '')) !==
+                    defaultEffect.multipliers[field.name] && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Default: {formatNumberWithCommas(defaultEffect.multipliers[field.name])}
+                    </p>
                   )}
               </div>
             </div>

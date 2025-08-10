@@ -19,8 +19,8 @@ const FormField = ({
   prefix,
   format = 'number', // 'number', 'percentage'
 }) => {
-  // Determine if this is a custom value
-  const isCustom = value !== undefined && value !== null && value !== '' && value !== defaultValue;
+  // Determine if this is a custom value (different from default, including empty)
+  const isCustom = value !== undefined && value !== null && value !== defaultValue;
   const hasError = Boolean(error);
 
   // Format display value based on type
@@ -103,9 +103,7 @@ const FormField = ({
         {isCustom && (
           <button
             type="button"
-            className={`text-xs ${
-              hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800'
-            } font-medium`}
+            className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
             onClick={handleReset}
           >
             Reset

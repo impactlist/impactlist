@@ -10,6 +10,13 @@ import {
 import { cleanAndParseValue } from '../utils/effectValidation';
 import { useCategoryForm, useRecipientForm, useRecipientSearch } from '../hooks/useAssumptionsForm';
 import { useGlobalForm } from '../hooks/useGlobalForm';
+import {
+  getAllCategoriesFromDefaults,
+  getAllRecipientsFromDefaults,
+  mergeGlobalParameters,
+  getCategoryFromDefaults,
+  calculateCategoryEffectCostPerLife,
+} from '../utils/assumptionsEditorHelpers';
 
 // Import shared components
 import CategoryValuesSection from './assumptions/CategoryValuesSection';
@@ -23,7 +30,6 @@ import FormActions from './assumptions/FormActions';
 
 const AssumptionsEditor = () => {
   const {
-    combinedAssumptions,
     defaultAssumptions,
     userAssumptions,
     updateCategoryEffect,
@@ -55,7 +61,7 @@ const AssumptionsEditor = () => {
     }
   }, [isModalOpen]);
 
-  const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
+  const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
 
   // Track which categories have custom effect values
   const categoriesWithCustomValues = useMemo(() => {
@@ -68,19 +74,23 @@ const AssumptionsEditor = () => {
     return customCategories;
   }, [userAssumptions]);
 
+  // Merge global parameters once
+  const mergedGlobalParameters = useMemo(
+    () => mergeGlobalParameters(defaultAssumptions.globalParameters, userAssumptions?.globalParameters),
+    [defaultAssumptions.globalParameters, userAssumptions]
+  );
+
   const allCategories = useMemo(() => {
     // Convert to format expected by the component
     const categories = {};
-    combinedAssumptions.getAllCategories().forEach((category) => {
+    getAllCategoriesFromDefaults(defaultAssumptions).forEach((category) => {
       // Use full cost per life calculation with discounting and population growth
-      let costPerLife = null;
-      if (category.effects && category.effects.length > 0) {
-        costPerLife = calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, category.id);
-      }
-
-      if (costPerLife === null) {
-        throw new Error(`Could not calculate cost per life for category ${category.id}`);
-      }
+      const costPerLife = calculateCategoryEffectCostPerLife(
+        category.id,
+        defaultAssumptions,
+        userAssumptions,
+        mergedGlobalParameters
+      );
 
       categories[category.id] = {
         name: category.name,
@@ -88,12 +98,12 @@ const AssumptionsEditor = () => {
       };
     });
     return categories;
-  }, [combinedAssumptions]);
+  }, [defaultAssumptions, userAssumptions, mergedGlobalParameters]);
 
   const defaultCategories = useMemo(() => {
     // Get default categories without user overrides
     const categories = {};
-    combinedAssumptions.getAllCategories().forEach((category) => {
+    getAllCategoriesFromDefaults(defaultAssumptions).forEach((category) => {
       // Get the default category data (without user overrides)
       const defaultCategory = defaultAssumptions.categories[category.id];
 
@@ -113,11 +123,11 @@ const AssumptionsEditor = () => {
       };
     });
     return categories;
-  }, [combinedAssumptions, defaultAssumptions]);
+  }, [defaultAssumptions]);
 
   // Use custom hooks for form state management
   const globalForm = useGlobalForm(
-    combinedAssumptions.globalParameters,
+    mergedGlobalParameters,
     defaultAssumptions.globalParameters,
     getGlobalParameter,
     isModalOpen
@@ -126,7 +136,8 @@ const AssumptionsEditor = () => {
   const recipientForm = useRecipientForm(isModalOpen);
   const recipientSearch = useRecipientSearch(
     allRecipients,
-    combinedAssumptions,
+    defaultAssumptions,
+    userAssumptions,
     recipientForm.formValues,
     getRecipientValue,
     isModalOpen,
@@ -168,7 +179,7 @@ const AssumptionsEditor = () => {
 
     // Also run full validation to catch any edge cases
     // Validate global parameter values
-    const globalValidation = validateGlobalParameterValues(globalForm.formValues, combinedAssumptions.globalParameters);
+    const globalValidation = validateGlobalParameterValues(globalForm.formValues, mergedGlobalParameters);
     globalForm.setErrors(globalValidation.errors);
 
     // Validate category values
@@ -276,7 +287,7 @@ const AssumptionsEditor = () => {
 
   // Handle editing a recipient's effects
   const handleEditRecipient = (recipient, recipientId, categoryId) => {
-    const category = combinedAssumptions.getCategoryById(categoryId);
+    const category = getCategoryFromDefaults(defaultAssumptions, categoryId);
     setEditingRecipient({ recipient, recipientId, categoryId, category });
   };
 
@@ -413,9 +424,9 @@ const AssumptionsEditor = () => {
         {editingCategoryId ? (
           // Show category effect editor when editing a category
           <CategoryEffectEditor
-            category={combinedAssumptions.getCategoryById(editingCategoryId)}
+            category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}
             categoryId={editingCategoryId}
-            globalParameters={combinedAssumptions.globalParameters}
+            globalParameters={mergedGlobalParameters}
             onSave={handleSaveCategoryEffects}
             onCancel={handleCancelCategoryEdit}
           />
@@ -426,14 +437,14 @@ const AssumptionsEditor = () => {
             recipientId={editingRecipient.recipientId}
             category={editingRecipient.category}
             categoryId={editingRecipient.categoryId}
-            globalParameters={combinedAssumptions.globalParameters}
+            globalParameters={mergedGlobalParameters}
             onSave={handleSaveRecipientEffects}
             onCancel={handleCancelRecipientEdit}
           />
         ) : activeTab === 'global' ? (
           <form onSubmit={handleSubmit}>
             <GlobalValuesSection
-              globalParameters={combinedAssumptions.globalParameters}
+              globalParameters={mergedGlobalParameters}
               defaultGlobalParameters={defaultAssumptions.globalParameters}
               formValues={globalForm.formValues}
               errors={globalForm.errors}

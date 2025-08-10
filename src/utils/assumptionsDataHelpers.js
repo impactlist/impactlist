@@ -1,20 +1,20 @@
 // Assumptions data helpers
 // Utilities for managing default, user, and combined assumption data structures
-import { globalParameters, categoriesById, recipientsById } from '../data/generatedData';
+import { globalParameters, categoriesById, recipientsById } from '../data/generatedData.js';
 import {
   calculateCostPerLife,
   applyRecipientEffectToBase,
   effectToCostPerLife as effectToCostPerLifeWithEffects,
-} from './effectsCalculation';
+} from './effectsCalculation.js';
 import {
   assertExists,
   assertPositiveNumber,
   assertNonZeroNumber,
   validateRecipient,
   crashInsteadOfFallback,
-} from './dataValidation';
-import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
-import { getAllDonors, getDonationsForDonor, getDonorId } from './donationDataHelpers';
+} from './dataValidation.js';
+import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants.js';
+import { getAllDonors, getDonationsForDonor, getDonorId } from './donationDataHelpers.js';
 
 /**
  * Create a default assumptions object from the base data
@@ -93,7 +93,7 @@ const mergeRecipientEffectWithUser = (defaultEffect, userEffect) => {
  * @param {Array} userEffects - User effect overrides (can be null/undefined)
  * @returns {Array} Merged effects array
  */
-const mergeRecipientEffects = (defaultEffects, userEffects) => {
+export const mergeRecipientEffects = (defaultEffects, userEffects) => {
   if (!defaultEffects || defaultEffects.length === 0) {
     throw new Error('Default effects are required but not provided');
   }
@@ -357,22 +357,33 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
 
     let costPerLife;
 
-    // If recipient has effect modifications, apply them to all effects
-    if (categoryData.effects && category.effects && category.effects.length > 0) {
-      // Apply recipient modifications to all effects
-      const modifiedEffects = category.effects.map((categoryEffect) => {
-        const recipientEffect = categoryData.effects.find((e) => e.effectId === categoryEffect.effectId);
-        if (recipientEffect) {
-          const context = `for recipient ${recipient.name} category ${categoryId}`;
-          return applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
-        }
-        return categoryEffect;
-      });
+    // Check if recipient has effect modifications (overrides or multipliers)
+    if (categoryData.effects && categoryData.effects.length > 0) {
+      // Recipient has custom effects - apply them to the category's base effects
+      const baseEffects = category.effects || [];
 
-      // Calculate cost per life from all modified effects
-      costPerLife = calculateCostPerLife(modifiedEffects, combinedAssumptions.globalParameters, categoryId);
+      if (baseEffects.length > 0) {
+        // Apply recipient modifications to all base effects
+        const modifiedEffects = baseEffects.map((categoryEffect) => {
+          const recipientEffect = categoryData.effects.find((e) => e.effectId === categoryEffect.effectId);
+          if (recipientEffect) {
+            const context = `for recipient ${recipient.name} category ${categoryId}`;
+            return applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
+          }
+          return categoryEffect;
+        });
+
+        // Calculate cost per life from modified effects
+        costPerLife = calculateCostPerLife(modifiedEffects, combinedAssumptions.globalParameters, categoryId);
+      } else {
+        // No base effects to modify - this shouldn't happen in practice
+        throw new Error(`Category ${categoryId} has no base effects to apply recipient modifications to`);
+      }
     } else {
-      // No recipient effect modifications, use base calculation
+      // No recipient effect modifications, use base category calculation
+      if (!category.effects || category.effects.length === 0) {
+        throw new Error(`Category ${categoryId} has no effects defined`);
+      }
       costPerLife = calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, categoryId);
     }
 

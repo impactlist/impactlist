@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { formatNumber, formatNumberWithCommas, formatWithCursorHandling } from '../utils/formatters';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
-import { getRecipientId, recipientHasEffectOverrides } from '../utils/donationDataHelpers';
+import { getRecipientId } from '../utils/donationDataHelpers';
+import { recipientHasEffectOverrides as recipientHasOverrides } from '../utils/assumptionsEditorHelpers';
 
 /**
  * Custom hook for managing category form state
@@ -178,7 +179,8 @@ export const useRecipientForm = (isModalOpen) => {
  */
 export const useRecipientSearch = (
   allRecipients,
-  combinedAssumptions,
+  defaultAssumptions,
+  userAssumptions,
   recipientFormValues,
   getRecipientValue,
   isModalOpen,
@@ -221,7 +223,7 @@ export const useRecipientSearch = (
           const hasBuiltInOverrides =
             recipientId &&
             Object.keys(recipient.categories || {}).some((categoryId) =>
-              recipientHasEffectOverrides(combinedAssumptions, recipientId, categoryId)
+              recipientHasOverrides(defaultAssumptions, userAssumptions, recipientId, categoryId)
             );
 
           let hasCustomOverrides = false;
@@ -248,12 +250,16 @@ export const useRecipientSearch = (
                   defaultValue = recipient.categories[categoryId][type];
                 }
 
+                // Check if there's a saved custom value in userAssumptions
+                // Note: userAssumptions uses recipient IDs, not names
+                const recipientIdForSaved = getRecipientId(recipient);
                 const savedCustomValue =
-                  combinedAssumptions &&
-                  combinedAssumptions.recipients &&
-                  combinedAssumptions.recipients[recipient.name] &&
-                  combinedAssumptions.recipients[recipient.name][categoryId] &&
-                  combinedAssumptions.recipients[recipient.name][categoryId][type];
+                  userAssumptions &&
+                  userAssumptions.recipients &&
+                  userAssumptions.recipients[recipientIdForSaved] &&
+                  userAssumptions.recipients[recipientIdForSaved].categories &&
+                  userAssumptions.recipients[recipientIdForSaved].categories[categoryId] &&
+                  userAssumptions.recipients[recipientIdForSaved].categories[categoryId][type];
 
                 if (savedCustomValue !== undefined) {
                   if (
@@ -278,7 +284,7 @@ export const useRecipientSearch = (
 
       setFilteredRecipients(filtered);
     },
-    [allRecipients, combinedAssumptions, getRecipientValue]
+    [allRecipients, defaultAssumptions, userAssumptions, getRecipientValue]
   );
 
   const handleSearchChange = useCallback(

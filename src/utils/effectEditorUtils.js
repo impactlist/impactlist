@@ -62,24 +62,9 @@ export const calculateCombinedCostPerLife = (effectCosts) => {
   const validCosts = effectCosts.filter((cost) => cost !== Infinity && cost !== 0);
   if (validCosts.length === 0) return Infinity;
 
-  // Separate positive and negative costs
-  const positiveCosts = validCosts.filter((cost) => cost > 0);
-  const negativeCosts = validCosts.filter((cost) => cost < 0);
-
-  // If all costs have the same sign, use harmonic mean
-  if (negativeCosts.length === 0) {
-    // All positive - standard harmonic mean
-    const harmonicSum = positiveCosts.reduce((sum, cost) => sum + 1 / cost, 0);
-    return positiveCosts.length / harmonicSum;
-  } else if (positiveCosts.length === 0) {
-    // All negative - use harmonic mean on absolute values, then negate
-    const harmonicSum = negativeCosts.reduce((sum, cost) => sum + 1 / Math.abs(cost), 0);
-    return -(negativeCosts.length / harmonicSum);
-  } else {
-    // Mixed positive and negative - this is complex, return 0 as a neutral value
-    // In practice, this shouldn't happen as effects typically don't mix harm and benefit
-    return 0;
-  }
+  // Use harmonic mean for combining multiple effects
+  const harmonicSum = validCosts.reduce((sum, cost) => sum + 1 / cost, 0);
+  return validCosts.length / harmonicSum;
 };
 
 /**

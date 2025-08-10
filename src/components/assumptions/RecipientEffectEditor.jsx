@@ -284,7 +284,15 @@ const RecipientEffectEditor = ({
               const baseEffect = effect._baseEffect;
               const effectType = getEffectType(baseEffect);
               const costPerLife = effectCostPerLife[index];
-              const defaultEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
+
+              // Get all the different effect sources for the input components
+              const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
+              const defaultCategoryEffect = defaultAssumptions?.categories?.[categoryId]?.effects?.find(
+                (e) => e.effectId === effect.effectId
+              );
+              const userCategoryEffect = userAssumptions?.categories?.[categoryId]?.effects?.find(
+                (e) => e.effectId === effect.effectId
+              );
 
               return (
                 <div key={effect.effectId} className="border border-gray-200 rounded-lg p-4">
@@ -299,7 +307,9 @@ const RecipientEffectEditor = ({
                     {effectType === 'qaly' ? (
                       <RecipientQalyEffectInputs
                         effectIndex={index}
-                        defaultEffect={defaultEffect || baseEffect}
+                        defaultCategoryEffect={defaultCategoryEffect}
+                        userCategoryEffect={userCategoryEffect}
+                        defaultRecipientEffect={defaultRecipientEffect}
                         errors={errors}
                         overrides={effect.overrides}
                         multipliers={effect.multipliers}
@@ -308,7 +318,9 @@ const RecipientEffectEditor = ({
                     ) : effectType === 'population' ? (
                       <RecipientPopulationEffectInputs
                         effectIndex={index}
-                        defaultEffect={defaultEffect || baseEffect}
+                        defaultCategoryEffect={defaultCategoryEffect}
+                        userCategoryEffect={userCategoryEffect}
+                        defaultRecipientEffect={defaultRecipientEffect}
                         errors={errors}
                         overrides={effect.overrides}
                         multipliers={effect.multipliers}

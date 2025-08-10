@@ -1,12 +1,22 @@
 import React from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
+import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
 
 /**
  * Component for editing Population effect overrides/multipliers for recipients
  * Each field has two inputs: one for override value, one for multiplier
  * Typing in one clears the other
  */
-const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, overrides, multipliers, onChange }) => {
+const RecipientPopulationEffectInputs = ({
+  effectIndex,
+  defaultCategoryEffect,
+  userCategoryEffect,
+  defaultRecipientEffect,
+  errors,
+  overrides,
+  multipliers,
+  onChange,
+}) => {
   // Helper to handle the mutual exclusivity of override/multiplier
   const handleOverrideChange = (fieldName, value) => {
     // When typing in override, clear the multiplier
@@ -64,9 +74,18 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
       {fields.map((field) => {
         const overrideError = errors[`${effectIndex}-${field.name}-override`];
         const multiplierError = errors[`${effectIndex}-${field.name}-multiplier`];
-        const defaultValue = defaultEffect ? defaultEffect[field.name] : null;
         const overrideValue = getOverrideValue(field.name);
         const multiplierValue = getMultiplierValue(field.name);
+
+        // Get placeholder values using helper functions
+        const overridePlaceholder = getOverridePlaceholderValue(field.name, {
+          defaultCategoryEffect,
+          userCategoryEffect,
+          defaultRecipientEffect,
+        });
+        const multiplierPlaceholder = getMultiplierPlaceholderValue(field.name, {
+          defaultRecipientEffect,
+        });
 
         return (
           <div key={field.name} className="space-y-2">
@@ -96,7 +115,7 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
                     const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
                     handleOverrideChange(field.name, result.value);
                   }}
-                  placeholder={defaultValue !== null ? formatNumberWithCommas(defaultValue) : 'None'}
+                  placeholder={overridePlaceholder !== null ? formatNumberWithCommas(overridePlaceholder) : 'None'}
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
                     overrideError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
                   }`}
@@ -104,9 +123,9 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
                 {overrideError && <p className="mt-1 text-xs text-red-600">{overrideError}</p>}
                 {overrideValue &&
                   overrideValue !== '' &&
-                  defaultValue !== null &&
-                  parseFloat(overrideValue.toString().replace(/,/g, '')) !== parseFloat(defaultValue) && (
-                    <p className="text-xs text-gray-500 mt-1">Default: {formatNumberWithCommas(defaultValue)}</p>
+                  overridePlaceholder !== null &&
+                  parseFloat(overrideValue.toString().replace(/,/g, '')) !== parseFloat(overridePlaceholder) && (
+                    <p className="text-xs text-gray-500 mt-1">Default: {formatNumberWithCommas(overridePlaceholder)}</p>
                   )}
               </div>
 
@@ -123,11 +142,7 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
                     const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
                     handleMultiplierChange(field.name, result.value);
                   }}
-                  placeholder={
-                    defaultEffect?.multipliers?.[field.name] !== undefined
-                      ? formatNumberWithCommas(defaultEffect.multipliers[field.name])
-                      : 'None'
-                  }
+                  placeholder={multiplierPlaceholder !== null ? formatNumberWithCommas(multiplierPlaceholder) : 'None'}
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
                     multiplierError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
                   }`}
@@ -135,11 +150,10 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
                 {multiplierError && <p className="mt-1 text-xs text-red-600">{multiplierError}</p>}
                 {multiplierValue &&
                   multiplierValue !== '' &&
-                  defaultEffect?.multipliers?.[field.name] !== undefined &&
-                  parseFloat(multiplierValue.toString().replace(/,/g, '')) !==
-                    defaultEffect.multipliers[field.name] && (
+                  multiplierPlaceholder !== null &&
+                  parseFloat(multiplierValue.toString().replace(/,/g, '')) !== multiplierPlaceholder && (
                     <p className="text-xs text-gray-500 mt-1">
-                      Default: {formatNumberWithCommas(defaultEffect.multipliers[field.name])}
+                      Default: {formatNumberWithCommas(multiplierPlaceholder)}
                     </p>
                   )}
               </div>

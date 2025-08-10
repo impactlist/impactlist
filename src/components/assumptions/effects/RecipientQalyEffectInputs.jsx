@@ -43,16 +43,6 @@ const RecipientQalyEffectInputs = ({ effectIndex, defaultEffect, errors, overrid
     { name: 'costPerQALY', label: 'Cost per QALY', tooltip: 'Cost to provide one quality-adjusted life year' },
     { name: 'startYear', label: 'Start Year', tooltip: 'Years until the effect begins' },
     { name: 'windowLength', label: 'Window Length', tooltip: 'Duration of the effect in years' },
-    {
-      name: 'populationFractionAffected',
-      label: 'Population Fraction Affected',
-      tooltip: 'Fraction of the population affected by this intervention',
-    },
-    {
-      name: 'qalyImprovementPerYear',
-      label: 'QALY Improvement per Year',
-      tooltip: 'Quality-adjusted life years improved per year for affected population',
-    },
   ];
 
   return (

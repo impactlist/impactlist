@@ -45,13 +45,18 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
       label: 'Cost per Microprobability',
       tooltip: 'Cost to prevent one microprobability (1 in a million chance) of extinction',
     },
-    { name: 'startYear', label: 'Start Year', tooltip: 'Years until the effect begins' },
-    { name: 'windowLength', label: 'Window Length', tooltip: 'Duration of the effect in years' },
     {
       name: 'populationFractionAffected',
       label: 'Population Fraction Affected',
       tooltip: 'Fraction of the population affected by this intervention',
     },
+    {
+      name: 'qalyImprovementPerYear',
+      label: 'QALY Improvement per Year',
+      tooltip: 'Quality-adjusted life years improved per year for affected population',
+    },
+    { name: 'startYear', label: 'Start Year', tooltip: 'Years until the effect begins' },
+    { name: 'windowLength', label: 'Window Length', tooltip: 'Duration of the effect in years' },
   ];
 
   return (

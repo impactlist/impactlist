@@ -109,7 +109,11 @@ const RecipientQalyEffectInputs = ({ effectIndex, defaultEffect, errors, overrid
                     const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
                     handleMultiplierChange(field.name, result.value);
                   }}
-                  placeholder="None"
+                  placeholder={
+                    defaultEffect?.multipliers?.[field.name] !== undefined
+                      ? formatNumberWithCommas(defaultEffect.multipliers[field.name])
+                      : 'None'
+                  }
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
                     multiplierError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
                   }`}

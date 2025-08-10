@@ -55,13 +55,18 @@ const RecipientEffectEditor = ({
   useEffect(() => {
     if (!recipient || !recipient.categories || !recipient.categories[categoryId]) {
       // If no custom effects, start with base category effects structure
-      const initialEffects = baseCategoryEffects.map((effect) => ({
-        effectId: effect.effectId,
-        overrides: {},
-        multipliers: {},
-        // Keep base values for reference during editing
-        _baseEffect: effect,
-      }));
+      // But include any default recipient multipliers/overrides if they exist
+      const initialEffects = baseCategoryEffects.map((effect) => {
+        const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
+        return {
+          effectId: effect.effectId,
+          overrides: defaultRecipientEffect?.overrides || {},
+          multipliers: defaultRecipientEffect?.multipliers || {},
+          // Keep base values for reference during editing
+          _baseEffect: effect,
+          _defaultRecipientEffect: defaultRecipientEffect,
+        };
+      });
       setTempEffects(initialEffects);
       return;
     }
@@ -71,25 +76,31 @@ const RecipientEffectEditor = ({
       // Deep clone the effects and ensure structure
       const clonedEffects = recipientCategory.effects.map((effect) => {
         const baseEffect = baseCategoryEffects.find((e) => e.effectId === effect.effectId);
+        const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
         return {
           ...JSON.parse(JSON.stringify(effect)),
           overrides: effect.overrides || {},
           multipliers: effect.multipliers || {},
           _baseEffect: baseEffect,
+          _defaultRecipientEffect: defaultRecipientEffect,
         };
       });
       setTempEffects(clonedEffects);
     } else {
-      // No effects defined, start fresh
-      const initialEffects = baseCategoryEffects.map((effect) => ({
-        effectId: effect.effectId,
-        overrides: {},
-        multipliers: {},
-        _baseEffect: effect,
-      }));
+      // No effects defined, start fresh but include defaults
+      const initialEffects = baseCategoryEffects.map((effect) => {
+        const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
+        return {
+          effectId: effect.effectId,
+          overrides: defaultRecipientEffect?.overrides || {},
+          multipliers: defaultRecipientEffect?.multipliers || {},
+          _baseEffect: effect,
+          _defaultRecipientEffect: defaultRecipientEffect,
+        };
+      });
       setTempEffects(initialEffects);
     }
-  }, [recipient, recipientId, categoryId, baseCategoryEffects]);
+  }, [recipient, recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects]);
 
   // Validate all effects on mount and when effects change
   useEffect(() => {
@@ -164,8 +175,39 @@ const RecipientEffectEditor = ({
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
 
+      // Merge with default recipient effect for any empty fields
+      const effectToApply = {
+        effectId: effect.effectId,
+        overrides: {},
+        multipliers: {},
+      };
+
+      // For overrides: use user value if non-empty, otherwise use default
+      if (effect._defaultRecipientEffect?.overrides) {
+        Object.assign(effectToApply.overrides, effect._defaultRecipientEffect.overrides);
+      }
+      if (effect.overrides) {
+        Object.entries(effect.overrides).forEach(([field, value]) => {
+          if (value !== '' && value !== null && value !== undefined) {
+            effectToApply.overrides[field] = value;
+          }
+        });
+      }
+
+      // For multipliers: use user value if non-empty, otherwise use default
+      if (effect._defaultRecipientEffect?.multipliers) {
+        Object.assign(effectToApply.multipliers, effect._defaultRecipientEffect.multipliers);
+      }
+      if (effect.multipliers) {
+        Object.entries(effect.multipliers).forEach(([field, value]) => {
+          if (value !== '' && value !== null && value !== undefined) {
+            effectToApply.multipliers[field] = value;
+          }
+        });
+      }
+
       // Create modified effect with overrides/multipliers applied
-      const modifiedEffect = applyRecipientEffectToBase(baseEffect, effect, `effect ${effect.effectId}`);
+      const modifiedEffect = applyRecipientEffectToBase(baseEffect, effectToApply, `effect ${effect.effectId}`);
       return calculateEffectCostPerLife(modifiedEffect, globalParameters);
     });
   }, [tempEffects, globalParameters]);

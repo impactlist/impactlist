@@ -97,7 +97,11 @@ const RecipientQalyEffectInputs = ({
                   }}
                   placeholder={overridePlaceholder !== null ? formatNumberWithCommas(overridePlaceholder) : 'None'}
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
-                    overrideError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
+                    overrideError
+                      ? 'border-red-300 focus:ring-red-500'
+                      : overrideValue && overrideValue !== ''
+                        ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
+                        : 'border-gray-300 focus:ring-indigo-500'
                   }`}
                 />
                 {overrideError && <p className="mt-1 text-xs text-red-600">{overrideError}</p>}
@@ -124,7 +128,11 @@ const RecipientQalyEffectInputs = ({
                   }}
                   placeholder={multiplierPlaceholder !== null ? formatNumberWithCommas(multiplierPlaceholder) : 'None'}
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
-                    multiplierError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
+                    multiplierError
+                      ? 'border-red-300 focus:ring-red-500'
+                      : multiplierValue && multiplierValue !== ''
+                        ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
+                        : 'border-gray-300 focus:ring-indigo-500'
                   }`}
                 />
                 {multiplierError && <p className="mt-1 text-xs text-red-600">{multiplierError}</p>}

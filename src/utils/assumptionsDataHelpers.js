@@ -224,10 +224,26 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
       // Start with default category data
       let processedCategoryData = { ...categoryData };
 
-      // Merge user effects with default effects (use recipient-specific merge)
-      if (userRecipientCategoryData?.effects && categoryData.effects) {
-        processedCategoryData.effects = mergeRecipientEffects(categoryData.effects, userRecipientCategoryData.effects);
+      // Merge user effects with default effects
+      if (userRecipientCategoryData?.effects) {
+        // User has overrides for this recipient+category
+        let baseEffects;
+
+        if (categoryData.effects) {
+          // Recipient has custom default effects - use those as base
+          baseEffects = categoryData.effects;
+        } else {
+          // Recipient doesn't have custom effects - use category defaults as base
+          baseEffects = combined.categories[categoryId]?.effects || [];
+        }
+
+        // Merge user overrides with the base effects
+        processedCategoryData.effects = mergeRecipientEffects(baseEffects, userRecipientCategoryData.effects);
+      } else if (categoryData.effects) {
+        // No user overrides but recipient has custom default effects
+        processedCategoryData.effects = categoryData.effects;
       }
+      // If neither user overrides nor custom defaults, effects remain undefined (uses category defaults)
 
       recipientCategories[categoryId] = processedCategoryData;
     });

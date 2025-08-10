@@ -159,9 +159,16 @@ export const setRecipientFieldOverride = (
   value
 ) => {
   // Validate that the effect exists in defaults
-  const defaultEffect = defaultAssumptions.recipients[recipientId]?.categories?.[categoryId]?.effects?.find(
+  // First check if recipient has custom effects, otherwise fall back to category defaults
+  let defaultEffect = defaultAssumptions.recipients[recipientId]?.categories?.[categoryId]?.effects?.find(
     (e) => e.effectId === effectId
   );
+
+  // If recipient doesn't have custom effects, check the category's default effects
+  if (!defaultEffect) {
+    defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
+  }
+
   if (!defaultEffect) {
     throw new Error(`Effect ${effectId} not found for recipient ${recipientId} category ${categoryId}`);
   }
@@ -246,9 +253,16 @@ export const setRecipientFieldMultiplier = (
   multiplier
 ) => {
   // Validate that the effect exists in defaults
-  const defaultEffect = defaultAssumptions.recipients[recipientId]?.categories?.[categoryId]?.effects?.find(
+  // First check if recipient has custom effects, otherwise fall back to category defaults
+  let defaultEffect = defaultAssumptions.recipients[recipientId]?.categories?.[categoryId]?.effects?.find(
     (e) => e.effectId === effectId
   );
+
+  // If recipient doesn't have custom effects, check the category's default effects
+  if (!defaultEffect) {
+    defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
+  }
+
   if (!defaultEffect) {
     throw new Error(`Effect ${effectId} not found for recipient ${recipientId} category ${categoryId}`);
   }

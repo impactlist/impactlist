@@ -19,19 +19,13 @@ const RecipientQalyEffectInputs = ({
 }) => {
   // Helper to handle the mutual exclusivity of override/multiplier
   const handleOverrideChange = (fieldName, value) => {
-    // When typing in override, clear the multiplier
+    // The parent component handles clearing the multiplier
     onChange(effectIndex, fieldName, 'override', value);
-    if (value !== '' && value !== null && value !== undefined) {
-      onChange(effectIndex, fieldName, 'multiplier', '');
-    }
   };
 
   const handleMultiplierChange = (fieldName, value) => {
-    // When typing in multiplier, clear the override
+    // The parent component handles clearing the override
     onChange(effectIndex, fieldName, 'multiplier', value);
-    if (value !== '' && value !== null && value !== undefined) {
-      onChange(effectIndex, fieldName, 'override', '');
-    }
   };
 
   // Get the display value for a field (from overrides or multipliers)

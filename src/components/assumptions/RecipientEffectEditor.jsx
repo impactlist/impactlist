@@ -155,25 +155,41 @@ const RecipientEffectEditor = ({
         multipliers: {},
       };
 
-      // For overrides: use user value if non-empty, otherwise use default
-      if (effect._defaultRecipientEffect?.overrides) {
-        Object.assign(effectToApply.overrides, effect._defaultRecipientEffect.overrides);
-      }
+      // Build a set of fields that have user overrides
+      const userOverrideFields = new Set();
       if (effect.overrides) {
         Object.entries(effect.overrides).forEach(([field, value]) => {
           if (value !== '' && value !== null && value !== undefined) {
+            effectToApply.overrides[field] = value;
+            userOverrideFields.add(field);
+          }
+        });
+      }
+
+      // Build a set of fields that have user multipliers
+      const userMultiplierFields = new Set();
+      if (effect.multipliers) {
+        Object.entries(effect.multipliers).forEach(([field, value]) => {
+          if (value !== '' && value !== null && value !== undefined) {
+            effectToApply.multipliers[field] = value;
+            userMultiplierFields.add(field);
+          }
+        });
+      }
+
+      // Add default overrides for fields that don't have user values
+      if (effect._defaultRecipientEffect?.overrides) {
+        Object.entries(effect._defaultRecipientEffect.overrides).forEach(([field, value]) => {
+          if (!userOverrideFields.has(field) && !userMultiplierFields.has(field)) {
             effectToApply.overrides[field] = value;
           }
         });
       }
 
-      // For multipliers: use user value if non-empty, otherwise use default
+      // Add default multipliers for fields that don't have user values
       if (effect._defaultRecipientEffect?.multipliers) {
-        Object.assign(effectToApply.multipliers, effect._defaultRecipientEffect.multipliers);
-      }
-      if (effect.multipliers) {
-        Object.entries(effect.multipliers).forEach(([field, value]) => {
-          if (value !== '' && value !== null && value !== undefined) {
+        Object.entries(effect._defaultRecipientEffect.multipliers).forEach(([field, value]) => {
+          if (!userOverrideFields.has(field) && !userMultiplierFields.has(field)) {
             effectToApply.multipliers[field] = value;
           }
         });

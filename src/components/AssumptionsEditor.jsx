@@ -320,11 +320,11 @@ const AssumptionsEditor = () => {
 
   const getDescription = () => {
     if (activeTab === 'global') {
-      return 'Customize global parameters that affect all calculations.';
+      return 'Customize global parameters that affect the calculations of the cost to save one life for each category or recipient.';
     } else if (activeTab === 'categories') {
-      return 'Customize the parameters for different cause categories which go into the computation of the cost in dollars to save one life.';
+      return 'Customize the parameters for different cause categories which go into the computation of the cost to save one life.';
     } else {
-      return "Customize how specific recipients' effect parameters differ from their category defaults. For each effect parameter, you can set either an override value (replaces the default) or a multiplier (scales the default). Click Edit on any recipient to modify their effects.";
+      return "Customize how specific recipients' parameters differ from their category defaults.";
     }
   };
 

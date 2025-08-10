@@ -274,7 +274,7 @@ const RecipientEffectEditor = ({
       <div className="flex flex-col flex-1 min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={`Edit Effects: ${recipient.name} - ${category.name}`}
-          description="Set at most one value (override or multiplier) for each parameter."
+          description="Set at most one value (override or multiplier) for each parameter. These are the underlying parameters that are used to compute the cost per life."
           combinedCostPerLife={combinedCostPerLife}
           showCombinedCost={false}
           onClose={onCancel}

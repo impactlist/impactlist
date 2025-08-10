@@ -368,7 +368,7 @@ const AssumptionsEditor = () => {
 
           {/* Tab description */}
           <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
-            <p className="text-sm text-gray-600">{getDescription()}</p>
+            <p className="text-base font-semibold text-gray-700">{getDescription()}</p>
           </div>
         </>
       )}

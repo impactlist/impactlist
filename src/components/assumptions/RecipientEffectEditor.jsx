@@ -33,7 +33,7 @@ const RecipientEffectEditor = ({
 }) => {
   const [tempEffects, setTempEffects] = useState([]);
   const [errors, setErrors] = useState({});
-  const { defaultAssumptions } = useAssumptions();
+  const { defaultAssumptions, userAssumptions } = useAssumptions();
 
   // Get default effects for this recipient category
   const defaultRecipientEffects = useMemo(() => {
@@ -53,54 +53,27 @@ const RecipientEffectEditor = ({
 
   // Initialize temp effects from recipient's current effects
   useEffect(() => {
-    if (!recipient || !recipient.categories || !recipient.categories[categoryId]) {
-      // If no custom effects, start with base category effects structure
-      // But include any default recipient multipliers/overrides if they exist
-      const initialEffects = baseCategoryEffects.map((effect) => {
-        const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
-        return {
-          effectId: effect.effectId,
-          overrides: defaultRecipientEffect?.overrides || {},
-          multipliers: defaultRecipientEffect?.multipliers || {},
-          // Keep base values for reference during editing
-          _baseEffect: effect,
-          _defaultRecipientEffect: defaultRecipientEffect,
-        };
-      });
-      setTempEffects(initialEffects);
-      return;
-    }
+    // Get user's actual values (not merged with defaults)
+    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
 
-    const recipientCategory = recipient.categories[categoryId];
-    if (recipientCategory.effects) {
-      // Deep clone the effects and ensure structure
-      const clonedEffects = recipientCategory.effects.map((effect) => {
-        const baseEffect = baseCategoryEffects.find((e) => e.effectId === effect.effectId);
-        const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
-        return {
-          ...JSON.parse(JSON.stringify(effect)),
-          overrides: effect.overrides || {},
-          multipliers: effect.multipliers || {},
-          _baseEffect: baseEffect,
-          _defaultRecipientEffect: defaultRecipientEffect,
-        };
-      });
-      setTempEffects(clonedEffects);
-    } else {
-      // No effects defined, start fresh but include defaults
-      const initialEffects = baseCategoryEffects.map((effect) => {
-        const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
-        return {
-          effectId: effect.effectId,
-          overrides: defaultRecipientEffect?.overrides || {},
-          multipliers: defaultRecipientEffect?.multipliers || {},
-          _baseEffect: effect,
-          _defaultRecipientEffect: defaultRecipientEffect,
-        };
-      });
-      setTempEffects(initialEffects);
-    }
-  }, [recipient, recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects]);
+    // Always start with base structure
+    const initialEffects = baseCategoryEffects.map((effect) => {
+      const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
+      const userEffect = userRecipientEffects?.find((e) => e.effectId === effect.effectId);
+
+      return {
+        effectId: effect.effectId,
+        // Only use user values if they exist, otherwise empty (defaults show as placeholders)
+        overrides: userEffect?.overrides || {},
+        multipliers: userEffect?.multipliers || {},
+        // Keep base values for reference during editing
+        _baseEffect: effect,
+        _defaultRecipientEffect: defaultRecipientEffect,
+      };
+    });
+
+    setTempEffects(initialEffects);
+  }, [recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects, userAssumptions]);
 
   // Validate all effects on mount and when effects change
   useEffect(() => {

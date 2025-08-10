@@ -320,49 +320,57 @@ const AssumptionsEditor = () => {
 
   const getDescription = () => {
     if (activeTab === 'global') {
-      return 'Customize global parameters that affect the calculations of the cost to save one life for each category or recipient.';
+      return 'Global parameters that affect the calculations of the cost to save one life for each category or recipient:';
     } else if (activeTab === 'categories') {
-      return 'Customize the parameters for different cause categories which go into the computation of the cost to save one life.';
+      return 'Cost to save a life for each cause category:';
     } else {
-      return "Customize how specific recipients' parameters differ from their category defaults.";
+      return 'Cost to save a life for each recipient:';
     }
   };
 
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal} title="Edit Assumptions" description={getDescription()}>
+    <Modal isOpen={isModalOpen} onClose={closeModal} title="Edit Assumptions">
       {!editingCategoryId && !editingRecipient && (
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
-            <div className="order-2 sm:order-1">
-              <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
-            </div>
-            <div className="order-1 sm:order-2">
-              <FormActions
-                onReset={
-                  activeTab === 'global'
-                    ? handleGlobalReset
-                    : activeTab === 'categories'
-                      ? handleCategoryReset
-                      : handleResetRecipients
-                }
-                onSave={handleSubmit}
-                showSave={activeTab === 'global'}
-                resetLabel={
-                  activeTab === 'global'
-                    ? 'Reset Global'
-                    : activeTab === 'categories'
-                      ? 'Reset Categories'
-                      : 'Reset Recipients'
-                }
-                hasErrors={
-                  Object.keys(globalForm.errors).length > 0 ||
-                  Object.keys(categoryForm.errors).length > 0 ||
-                  Object.keys(recipientForm.errors).length > 0
-                }
-              />
+        <>
+          {/* Tabs and actions bar */}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
+              <div className="order-2 sm:order-1">
+                <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
+              </div>
+              <div className="order-1 sm:order-2">
+                <FormActions
+                  onReset={
+                    activeTab === 'global'
+                      ? handleGlobalReset
+                      : activeTab === 'categories'
+                        ? handleCategoryReset
+                        : handleResetRecipients
+                  }
+                  onSave={handleSubmit}
+                  showSave={activeTab === 'global'}
+                  resetLabel={
+                    activeTab === 'global'
+                      ? 'Reset Global'
+                      : activeTab === 'categories'
+                        ? 'Reset Categories'
+                        : 'Reset Recipients'
+                  }
+                  hasErrors={
+                    Object.keys(globalForm.errors).length > 0 ||
+                    Object.keys(categoryForm.errors).length > 0 ||
+                    Object.keys(recipientForm.errors).length > 0
+                  }
+                />
+              </div>
             </div>
           </div>
-        </div>
+
+          {/* Tab description */}
+          <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
+            <p className="text-sm text-gray-600">{getDescription()}</p>
+          </div>
+        </>
       )}
 
       {/* Tab content container */}
@@ -370,7 +378,7 @@ const AssumptionsEditor = () => {
         className={
           editingCategoryId || editingRecipient
             ? 'flex flex-col flex-grow min-h-0 overflow-hidden'
-            : 'overflow-y-auto p-3 flex-grow h-[calc(100vh-15rem)] min-h-[400px]'
+            : 'overflow-y-auto p-3 flex-grow h-[calc(100vh-18rem)] min-h-[400px]'
         }
       >
         {editingCategoryId ? (

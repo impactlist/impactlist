@@ -104,9 +104,9 @@ const RecipientValuesSection = ({
               const bgColorClass = isEven ? 'bg-white' : 'bg-gray-100';
 
               return (
-                <div key={recipient.name} className={`border border-gray-200 rounded-md p-3 ${bgColorClass}`}>
-                  <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
-                  <div className="space-y-3">
+                <div key={recipient.name} className={`border border-gray-200 rounded-md p-4 ${bgColorClass}`}>
+                  <h3 className="font-medium text-gray-800 mb-3">{recipient.name}</h3>
+                  <div className="space-y-2">
                     {recipientCategories.map(([categoryId]) => {
                       const category = defaultAssumptions?.categories?.[categoryId];
                       const categoryName = category?.name || categoryId;
@@ -131,24 +131,24 @@ const RecipientValuesSection = ({
                         recipientCostPerLife && Math.round(recipientCostPerLife) !== Math.round(categoryCostPerLife);
 
                       return (
-                        <div key={categoryId} className="flex items-center gap-3 bg-gray-50 p-2 rounded">
-                          {/* Category name with optional category cost below */}
-                          <div className="min-w-0">
+                        <div key={categoryId} className="flex flex-wrap items-center gap-3 bg-gray-50 p-2 rounded">
+                          {/* Category name with inline category cost when different */}
+                          <div className="flex-1 min-w-[200px]">
                             <Link
                               to={`/explore/${categoryId}`}
-                              className="text-sm font-medium text-indigo-600 hover:text-indigo-800 whitespace-nowrap"
+                              className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
                             >
                               {categoryName}
                             </Link>
                             {recipientCostDiffers && (
-                              <div className="text-xs text-gray-400 mt-0.5">
-                                (category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))})
-                              </div>
+                              <span className="text-sm text-gray-400 ml-2 whitespace-nowrap">
+                                • category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))}
+                              </span>
                             )}
                           </div>
 
-                          {/* Cost per life input with Edit button - matching Categories tab style */}
-                          <div className="flex-1 relative">
+                          {/* Cost per life input with Edit button - responsive width */}
+                          <div className="relative w-full sm:w-64">
                             <CurrencyInput
                               id={`recipient-${recipientId}-${categoryId}`}
                               value={formatNumberWithCommas(Math.round(recipientCostPerLife || categoryCostPerLife))}

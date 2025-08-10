@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import SearchInput from '../shared/SearchInput';
+import CurrencyInput from '../shared/CurrencyInput';
 import { formatNumberWithCommas } from '../../utils/formatters';
 import { getRecipientId } from '../../utils/donationDataHelpers';
 import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
@@ -68,22 +69,6 @@ const RecipientValuesSection = ({
     return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, categoryId);
   };
 
-  // Check if recipient has any custom values for a category
-  const hasCustomValues = (recipientId, categoryId) => {
-    // Check if user has set custom values for this recipient
-    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-
-    if (!userRecipientEffects || userRecipientEffects.length === 0) {
-      return false;
-    }
-
-    return userRecipientEffects.some((effect) => {
-      const hasOverrides = effect.overrides && Object.keys(effect.overrides).length > 0;
-      const hasMultipliers = effect.multipliers && Object.keys(effect.multipliers).length > 0;
-      return hasOverrides || hasMultipliers;
-    });
-  };
-
   return (
     <div>
       <div className="mb-4 flex flex-col space-y-2">
@@ -141,40 +126,45 @@ const RecipientValuesSection = ({
                         ? getRecipientCostPerLife(recipientId, recipient, categoryId)
                         : null;
 
-                      // Check if recipient has custom values
-                      const hasCustom = hasCustomValues(recipientId, categoryId);
-
                       // Show category cost in parentheses if recipient cost differs
                       const recipientCostDiffers =
                         recipientCostPerLife && Math.round(recipientCostPerLife) !== Math.round(categoryCostPerLife);
 
                       return (
-                        <div key={categoryId} className="flex items-center justify-between bg-gray-50 p-2 rounded">
-                          <div className="flex-1">
+                        <div key={categoryId} className="flex items-center gap-3 bg-gray-50 p-2 rounded">
+                          {/* Category name with optional category cost below */}
+                          <div className="min-w-0">
                             <Link
                               to={`/explore/${categoryId}`}
-                              className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                              className="text-sm font-medium text-indigo-600 hover:text-indigo-800 whitespace-nowrap"
                             >
                               {categoryName}
                             </Link>
-                            <div className="mt-1 text-sm text-gray-600">
-                              Cost per Life:{' '}
-                              <span className={`font-medium ${hasCustom ? 'text-indigo-600' : 'text-gray-900'}`}>
-                                ${formatNumberWithCommas(Math.round(recipientCostPerLife || categoryCostPerLife))}
-                              </span>
-                              {recipientCostDiffers && (
-                                <span className="text-gray-400 ml-2">
-                                  (category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))})
-                                </span>
-                              )}
-                            </div>
+                            {recipientCostDiffers && (
+                              <div className="text-xs text-gray-400 mt-0.5">
+                                (category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))})
+                              </div>
+                            )}
                           </div>
-                          <button
-                            onClick={() => onEditRecipient(recipient, recipientId, categoryId)}
-                            className="ml-4 px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          >
-                            Edit
-                          </button>
+
+                          {/* Cost per life input with Edit button - matching Categories tab style */}
+                          <div className="flex-1 relative">
+                            <CurrencyInput
+                              id={`recipient-${recipientId}-${categoryId}`}
+                              value={formatNumberWithCommas(Math.round(recipientCostPerLife || categoryCostPerLife))}
+                              onChange={() => {}} // Read-only, no-op
+                              className="w-full pr-10"
+                              disabled={true}
+                              placeholder={formatNumberWithCommas(Math.round(categoryCostPerLife))}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => onEditRecipient(recipient, recipientId, categoryId)}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                            >
+                              Edit
+                            </button>
+                          </div>
                         </div>
                       );
                     })}

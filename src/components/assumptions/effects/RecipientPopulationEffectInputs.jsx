@@ -84,7 +84,7 @@ const RecipientPopulationEffectInputs = ({
         return (
           <div key={field.name} className="space-y-2">
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700">{field.label}</label>
+              <label className="text-sm font-medium text-gray-900">{field.label}</label>
               {field.tooltip && (
                 <div className="group relative inline-block">
                   <span className="text-xs text-gray-500 cursor-help">ⓘ</span>

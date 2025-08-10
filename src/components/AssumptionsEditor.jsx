@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { calculateCostPerLife } from '../utils/effectsCalculation';
 import {
   validateCategoryValues,
   validateRecipientValues,
@@ -11,11 +10,9 @@ import { cleanAndParseValue } from '../utils/effectValidation';
 import { useCategoryForm, useRecipientForm, useRecipientSearch } from '../hooks/useAssumptionsForm';
 import { useGlobalForm } from '../hooks/useGlobalForm';
 import {
-  getAllCategoriesFromDefaults,
   getAllRecipientsFromDefaults,
   mergeGlobalParameters,
   getCategoryFromDefaults,
-  calculateCategoryEffectCostPerLife,
 } from '../utils/assumptionsEditorHelpers';
 
 // Import shared components
@@ -80,51 +77,6 @@ const AssumptionsEditor = () => {
     [defaultAssumptions.globalParameters, userAssumptions]
   );
 
-  const allCategories = useMemo(() => {
-    // Convert to format expected by the component
-    const categories = {};
-    getAllCategoriesFromDefaults(defaultAssumptions).forEach((category) => {
-      // Use full cost per life calculation with discounting and population growth
-      const costPerLife = calculateCategoryEffectCostPerLife(
-        category.id,
-        defaultAssumptions,
-        userAssumptions,
-        mergedGlobalParameters
-      );
-
-      categories[category.id] = {
-        name: category.name,
-        costPerLife: costPerLife,
-      };
-    });
-    return categories;
-  }, [defaultAssumptions, userAssumptions, mergedGlobalParameters]);
-
-  const defaultCategories = useMemo(() => {
-    // Get default categories without user overrides
-    const categories = {};
-    getAllCategoriesFromDefaults(defaultAssumptions).forEach((category) => {
-      // Get the default category data (without user overrides)
-      const defaultCategory = defaultAssumptions.categories[category.id];
-
-      // Use full cost per life calculation with discounting and population growth
-      let costPerLife = null;
-      if (defaultCategory.effects && defaultCategory.effects.length > 0) {
-        costPerLife = calculateCostPerLife(defaultCategory.effects, defaultAssumptions.globalParameters, category.id);
-      }
-
-      if (costPerLife === null) {
-        throw new Error(`Could not calculate cost per life for default category ${category.id}`);
-      }
-
-      categories[category.id] = {
-        name: category.name,
-        costPerLife: costPerLife,
-      };
-    });
-    return categories;
-  }, [defaultAssumptions]);
-
   // Use custom hooks for form state management
   const globalForm = useGlobalForm(
     mergedGlobalParameters,
@@ -132,7 +84,7 @@ const AssumptionsEditor = () => {
     getGlobalParameter,
     isModalOpen
   );
-  const categoryForm = useCategoryForm(allCategories, getCategoryValue, isModalOpen, defaultCategories);
+  const categoryForm = useCategoryForm(defaultAssumptions, userAssumptions, getCategoryValue, isModalOpen);
   const recipientForm = useRecipientForm(isModalOpen);
   const recipientSearch = useRecipientSearch(
     allRecipients,
@@ -183,7 +135,7 @@ const AssumptionsEditor = () => {
     globalForm.setErrors(globalValidation.errors);
 
     // Validate category values
-    const categoryValidation = validateCategoryValues(categoryForm.formValues, allCategories);
+    const categoryValidation = validateCategoryValues(categoryForm.formValues, defaultAssumptions);
     categoryForm.setErrors(categoryValidation.errors);
 
     // Validate recipient form values
@@ -454,8 +406,8 @@ const AssumptionsEditor = () => {
         ) : activeTab === 'categories' ? (
           <form onSubmit={handleSubmit}>
             <CategoryValuesSection
-              allCategories={allCategories}
-              defaultCategories={defaultCategories}
+              defaultAssumptions={defaultAssumptions}
+              userAssumptions={userAssumptions}
               formValues={categoryForm.formValues}
               errors={categoryForm.errors}
               onChange={categoryForm.handleChange}
@@ -467,8 +419,6 @@ const AssumptionsEditor = () => {
         ) : (
           <RecipientValuesSection
             filteredRecipients={recipientSearch.filteredRecipients}
-            allCategories={allCategories}
-            defaultCategories={defaultCategories}
             onSearch={recipientSearch.handleSearchChange}
             searchTerm={recipientSearch.searchTerm}
             defaultAssumptions={defaultAssumptions}

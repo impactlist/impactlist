@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
@@ -6,13 +6,15 @@ import SectionCard from '../shared/SectionCard';
 import CustomValueIndicator from '../shared/CustomValueIndicator';
 import { formatNumberWithCommas } from '../../utils/formatters';
 import { getFormValue } from '../../utils/formUtils';
+import { calculateCostPerLife } from '../../utils/effectsCalculation';
+import { calculateCategoryEffectCostPerLife } from '../../utils/assumptionsEditorHelpers';
 
 /**
  * Component for managing cost per life values for categories.
  */
 const CategoryValuesSection = ({
-  allCategories,
-  defaultCategories,
+  defaultAssumptions,
+  userAssumptions,
   formValues,
   errors,
   onChange,
@@ -21,12 +23,42 @@ const CategoryValuesSection = ({
   categoriesWithCustomValues,
   className = '',
 }) => {
+  // Get categories from defaultAssumptions and calculate their costs
+  const categoriesData = useMemo(() => {
+    const result = {};
+    if (!defaultAssumptions?.categories) return result;
+
+    Object.entries(defaultAssumptions.categories).forEach(([categoryId, category]) => {
+      // Calculate default cost per life from effects
+      const defaultCostPerLife = calculateCostPerLife(
+        category.effects,
+        defaultAssumptions.globalParameters,
+        categoryId
+      );
+
+      // Calculate current cost per life (with user overrides if any)
+      const currentCostPerLife = calculateCategoryEffectCostPerLife(
+        categoryId,
+        defaultAssumptions,
+        userAssumptions,
+        defaultAssumptions.globalParameters
+      );
+
+      result[categoryId] = {
+        name: category.name,
+        defaultCostPerLife,
+        currentCostPerLife,
+      };
+    });
+
+    return result;
+  }, [defaultAssumptions, userAssumptions]);
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 ${className}`}>
-      {Object.entries(allCategories)
+      {Object.entries(categoriesData)
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
-        .map(([key, category]) => {
-          const defaultValue = defaultCategories[key].costPerLife;
+        .map(([key, categoryData]) => {
+          const defaultValue = categoryData.defaultCostPerLife;
           const hasError = errors[key];
 
           // Check if this category has any custom effect parameters
@@ -35,12 +67,16 @@ const CategoryValuesSection = ({
           return (
             <SectionCard key={key} hasError={hasError} isCustom={isCustom} padding="sm">
               <div className="flex justify-between items-start mb-2">
-                <label className="text-sm font-medium truncate pr-2" htmlFor={`category-${key}`} title={category.name}>
+                <label
+                  className="text-sm font-medium truncate pr-2"
+                  htmlFor={`category-${key}`}
+                  title={categoryData.name}
+                >
                   <Link
                     to={`/category/${encodeURIComponent(key)}`}
                     className="text-indigo-600 hover:text-indigo-800 hover:underline"
                   >
-                    {category.name}
+                    {categoryData.name}
                   </Link>
                 </label>
                 <CustomValueIndicator
@@ -92,12 +128,14 @@ const CategoryValuesSection = ({
 };
 
 CategoryValuesSection.propTypes = {
-  allCategories: PropTypes.object.isRequired,
-  defaultCategories: PropTypes.object.isRequired,
+  defaultAssumptions: PropTypes.object.isRequired,
+  userAssumptions: PropTypes.object,
   formValues: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onEditCategory: PropTypes.func,
+  onResetCategory: PropTypes.func,
+  categoriesWithCustomValues: PropTypes.object,
   className: PropTypes.string,
 };
 

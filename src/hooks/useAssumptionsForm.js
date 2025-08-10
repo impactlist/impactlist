@@ -1,15 +1,42 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { formatNumber, formatNumberWithCommas, formatWithCursorHandling } from '../utils/formatters';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
 import { getRecipientId } from '../utils/donationDataHelpers';
-import { recipientHasEffectOverrides as recipientHasOverrides } from '../utils/assumptionsEditorHelpers';
+import {
+  recipientHasEffectOverrides as recipientHasOverrides,
+  calculateCategoryEffectCostPerLife,
+} from '../utils/assumptionsEditorHelpers';
+import { calculateCostPerLife } from '../utils/effectsCalculation';
 
 /**
  * Custom hook for managing category form state
  */
-export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, defaultCategories) => {
+export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategoryValue, isModalOpen) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
+
+  // Calculate category data from defaultAssumptions
+  const categoriesData = useMemo(() => {
+    const result = {};
+    if (!defaultAssumptions?.categories) return result;
+
+    Object.entries(defaultAssumptions.categories).forEach(([categoryId, category]) => {
+      // Calculate current cost per life (with user overrides if any)
+      const currentCostPerLife = calculateCategoryEffectCostPerLife(
+        categoryId,
+        defaultAssumptions,
+        userAssumptions,
+        defaultAssumptions.globalParameters
+      );
+
+      result[categoryId] = {
+        name: category.name,
+        costPerLife: currentCostPerLife,
+      };
+    });
+
+    return result;
+  }, [defaultAssumptions, userAssumptions]);
 
   // Initialize form values when modal opens, clear when it closes
   useEffect(() => {
@@ -19,7 +46,7 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, de
       setErrors({});
     } else if (isModalOpen) {
       const initialValues = {};
-      Object.entries(allCategories).forEach(([key, category]) => {
+      Object.entries(categoriesData).forEach(([key, category]) => {
         const customValue = getCategoryValue(key);
         const value = customValue !== null ? customValue : category.costPerLife;
         const formattedValue = formatNumber(value);
@@ -31,7 +58,7 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, de
       setFormValues(initialValues);
       setErrors({});
     }
-  }, [isModalOpen, allCategories, getCategoryValue]);
+  }, [isModalOpen, categoriesData, getCategoryValue]);
 
   const clearError = useCallback(
     (key) => {
@@ -72,19 +99,26 @@ export const useCategoryForm = (allCategories, getCategoryValue, isModalOpen, de
   );
 
   const reset = useCallback(() => {
-    if (!defaultCategories) {
-      throw new Error('defaultCategories is required for reset functionality');
+    if (!defaultAssumptions?.categories) {
+      throw new Error('defaultAssumptions is required for reset functionality');
     }
     const defaultValues = {};
-    Object.entries(defaultCategories).forEach(([key, category]) => {
-      defaultValues[key] = {
-        raw: category.costPerLife.toString(),
-        display: formatNumberWithCommas(category.costPerLife),
+    Object.entries(defaultAssumptions.categories).forEach(([categoryId, category]) => {
+      // Calculate default cost per life from effects
+      const defaultCostPerLife = calculateCostPerLife(
+        category.effects,
+        defaultAssumptions.globalParameters,
+        categoryId
+      );
+
+      defaultValues[categoryId] = {
+        raw: defaultCostPerLife.toString(),
+        display: formatNumberWithCommas(defaultCostPerLife),
       };
     });
     setFormValues(defaultValues);
     setErrors({});
-  }, [defaultCategories]);
+  }, [defaultAssumptions]);
 
   return {
     formValues,

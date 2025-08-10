@@ -5,19 +5,24 @@
  */
 
 import { cleanAndParseValue } from './effectValidation';
+import { calculateCostPerLife } from './effectsCalculation';
 
 /**
  * Validates category form values
  * @param {Object} formValues - The form values to validate
- * @param {Object} allCategories - All category data with default values
+ * @param {Object} defaultAssumptions - Default assumptions with category data
  * @returns {Object} - { errors: Object, hasErrors: boolean }
  */
-export const validateCategoryValues = (formValues, allCategories) => {
+export const validateCategoryValues = (formValues, defaultAssumptions) => {
   const errors = {};
   let hasErrors = false;
 
   Object.entries(formValues).forEach(([key, valueObj]) => {
-    const defaultValue = allCategories[key].costPerLife;
+    const category = defaultAssumptions?.categories?.[key];
+    if (!category) return;
+
+    // Calculate default cost per life from effects
+    const defaultValue = calculateCostPerLife(category.effects, defaultAssumptions.globalParameters, key);
     const rawValue = valueObj.raw;
 
     // Skip validation if value is the same as default or if empty (empty = use default)

@@ -13,8 +13,6 @@ import { mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
  */
 const RecipientValuesSection = ({
   filteredRecipients,
-  allCategories,
-  defaultCategories,
   onSearch,
   searchTerm,
   defaultAssumptions,
@@ -29,7 +27,9 @@ const RecipientValuesSection = ({
 
   // Calculate the cost per life for a recipient's category
   const getRecipientCostPerLife = (recipientId, recipient, categoryId) => {
-    const category = defaultCategories[categoryId];
+    // Get the actual category data with effects from defaultAssumptions
+    const category = defaultAssumptions?.categories?.[categoryId];
+
     if (!category || !category.effects || category.effects.length === 0) {
       return null;
     }
@@ -123,8 +123,18 @@ const RecipientValuesSection = ({
                   <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
                   <div className="space-y-3">
                     {recipientCategories.map(([categoryId]) => {
-                      const categoryName = allCategories[categoryId]?.name || categoryId;
-                      const baseCostPerLife = defaultCategories[categoryId]?.costPerLife || 0;
+                      const category = defaultAssumptions?.categories?.[categoryId];
+                      const categoryName = category?.name || categoryId;
+
+                      // Calculate base cost per life from default category effects
+                      let baseCostPerLife = 0;
+                      if (category?.effects && category.effects.length > 0) {
+                        baseCostPerLife = calculateCostPerLife(
+                          category.effects,
+                          defaultAssumptions.globalParameters,
+                          categoryId
+                        );
+                      }
                       const customCostPerLife = recipientId
                         ? getRecipientCostPerLife(recipientId, recipient, categoryId)
                         : null;
@@ -172,8 +182,6 @@ const RecipientValuesSection = ({
 
 RecipientValuesSection.propTypes = {
   filteredRecipients: PropTypes.array.isRequired,
-  allCategories: PropTypes.object.isRequired,
-  defaultCategories: PropTypes.object.isRequired,
   onSearch: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,
   defaultAssumptions: PropTypes.object.isRequired,

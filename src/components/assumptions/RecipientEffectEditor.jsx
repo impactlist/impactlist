@@ -282,17 +282,19 @@ const RecipientEffectEditor = ({
 
         {/* Effects List */}
         <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-300px)]">
-          {/* Cost per life display */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">Combined cost per life:</span>
-              <span
-                className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
-              >
-                ${formatCostForDisplay(combinedCostPerLife, false)}
-              </span>
+          {/* Cost per life display - only show when there are multiple effects */}
+          {tempEffects.length > 1 && (
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-700">Combined cost per life:</span>
+                <span
+                  className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
+                >
+                  ${formatCostForDisplay(combinedCostPerLife, false)}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Effects */}
           <div className="space-y-6">

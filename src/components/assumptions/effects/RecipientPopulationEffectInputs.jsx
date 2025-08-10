@@ -91,7 +91,7 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
                     const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
                     handleOverrideChange(field.name, result.value);
                   }}
-                  placeholder={defaultValue !== null ? formatNumberWithCommas(defaultValue) : '0'}
+                  placeholder={defaultValue !== null ? formatNumberWithCommas(defaultValue) : 'None'}
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
                     overrideError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
                   }`}
@@ -118,7 +118,7 @@ const RecipientPopulationEffectInputs = ({ effectIndex, defaultEffect, errors, o
                     const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
                     handleMultiplierChange(field.name, result.value);
                   }}
-                  placeholder="1.0"
+                  placeholder="None"
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
                     multiplierError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
                   }`}

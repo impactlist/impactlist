@@ -44,9 +44,9 @@ const RecipientQalyEffectInputs = ({
   };
 
   const fields = [
-    { name: 'costPerQALY', label: 'Cost per QALY', tooltip: 'Cost to provide one quality-adjusted life year' },
-    { name: 'startTime', label: 'Start Year', tooltip: 'Years until the effect begins' },
-    { name: 'windowLength', label: 'Window Length', tooltip: 'Duration of the effect in years' },
+    { name: 'costPerQALY', label: 'Cost per QALY:', tooltip: 'Cost to provide one quality-adjusted life year' },
+    { name: 'startTime', label: 'Start Year:', tooltip: 'Years until the effect begins' },
+    { name: 'windowLength', label: 'Window Length:', tooltip: 'Duration of the effect in years' },
   ];
 
   return (

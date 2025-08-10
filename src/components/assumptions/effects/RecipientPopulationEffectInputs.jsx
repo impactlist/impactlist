@@ -46,21 +46,21 @@ const RecipientPopulationEffectInputs = ({
   const fields = [
     {
       name: 'costPerMicroprobability',
-      label: 'Cost per Microprobability',
+      label: 'Cost per Microprobability:',
       tooltip: 'Cost to prevent one microprobability (1 in a million chance) of extinction',
     },
     {
       name: 'populationFractionAffected',
-      label: 'Population Fraction Affected',
+      label: 'Population Fraction Affected:',
       tooltip: 'Fraction of the population affected by this intervention',
     },
     {
       name: 'qalyImprovementPerYear',
-      label: 'QALY Improvement per Year',
+      label: 'QALY Improvement per Year:',
       tooltip: 'Quality-adjusted life years improved per year for affected population',
     },
-    { name: 'startTime', label: 'Start Year', tooltip: 'Years until the effect begins' },
-    { name: 'windowLength', label: 'Window Length', tooltip: 'Duration of the effect in years' },
+    { name: 'startTime', label: 'Start Year:', tooltip: 'Years until the effect begins' },
+    { name: 'windowLength', label: 'Window Length:', tooltip: 'Duration of the effect in years' },
   ];
 
   return (

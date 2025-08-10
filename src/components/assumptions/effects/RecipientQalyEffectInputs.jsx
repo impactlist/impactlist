@@ -84,7 +84,18 @@ const RecipientQalyEffectInputs = ({
             <div className="grid grid-cols-2 gap-4">
               {/* Override input */}
               <div>
-                <label className="text-xs text-gray-600 block mb-1">Override</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-xs text-gray-600">Override</label>
+                  {overrideValue && overrideValue !== '' && (
+                    <button
+                      type="button"
+                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                      onClick={() => handleOverrideChange(field.name, '')}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={formatNumberWithCommas(overrideValue)}
@@ -115,7 +126,18 @@ const RecipientQalyEffectInputs = ({
 
               {/* Multiplier input */}
               <div>
-                <label className="text-xs text-gray-600 block mb-1">Multiplier</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-xs text-gray-600">Multiplier</label>
+                  {multiplierValue && multiplierValue !== '' && (
+                    <button
+                      type="button"
+                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                      onClick={() => handleMultiplierChange(field.name, '')}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={formatNumberWithCommas(multiplierValue)}

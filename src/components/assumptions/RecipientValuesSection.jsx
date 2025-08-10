@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import SearchInput from '../shared/SearchInput';
 import { formatNumberWithCommas } from '../../utils/formatters';
 import { getRecipientId } from '../../utils/donationDataHelpers';
 import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
+import { mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
 
 /**
  * Component for displaying recipient-specific cost per life values.
@@ -17,8 +18,15 @@ const RecipientValuesSection = ({
   onSearch,
   searchTerm,
   defaultAssumptions,
+  userAssumptions,
   onEditRecipient,
 }) => {
+  // Merge global parameters once
+  const mergedGlobalParameters = useMemo(
+    () => mergeGlobalParameters(defaultAssumptions?.globalParameters, userAssumptions?.globalParameters),
+    [defaultAssumptions?.globalParameters, userAssumptions]
+  );
+
   // Calculate the cost per life for a recipient's category
   const getRecipientCostPerLife = (recipientId, recipient, categoryId) => {
     const category = defaultCategories[categoryId];
@@ -26,16 +34,30 @@ const RecipientValuesSection = ({
       return null;
     }
 
-    // Check if recipient has custom effects
-    const recipientCategory = recipient.categories?.[categoryId];
-    if (!recipientCategory || !recipientCategory.effects || recipientCategory.effects.length === 0) {
-      // No custom effects, return base category cost
-      return calculateCostPerLife(category.effects, defaultAssumptions.globalParameters, categoryId);
+    // Get default recipient effects if they exist
+    const defaultRecipientEffects = defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+
+    // Get user overrides if they exist
+    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+
+    // Determine which effects to use (user overrides default)
+    let effectsToApply = null;
+    if (userRecipientEffects && userRecipientEffects.length > 0) {
+      // User has overrides, use them
+      effectsToApply = userRecipientEffects;
+    } else if (defaultRecipientEffects && defaultRecipientEffects.length > 0) {
+      // No user overrides but recipient has default effects (like Anthropic's multiplier)
+      effectsToApply = defaultRecipientEffects;
+    }
+
+    // If no recipient effects at all, return base category cost
+    if (!effectsToApply) {
+      return calculateCostPerLife(category.effects, mergedGlobalParameters, categoryId);
     }
 
     // Apply recipient effects to base category effects
     const modifiedEffects = category.effects.map((baseEffect) => {
-      const recipientEffect = recipientCategory.effects.find((e) => e.effectId === baseEffect.effectId);
+      const recipientEffect = effectsToApply.find((e) => e.effectId === baseEffect.effectId);
       if (recipientEffect && (recipientEffect.overrides || recipientEffect.multipliers)) {
         return applyRecipientEffectToBase(baseEffect, recipientEffect, `recipient ${recipient.name}`);
       }
@@ -43,17 +65,19 @@ const RecipientValuesSection = ({
     });
 
     // Calculate cost per life from modified effects
-    return calculateCostPerLife(modifiedEffects, defaultAssumptions.globalParameters, categoryId);
+    return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, categoryId);
   };
 
   // Check if recipient has any custom values for a category
-  const hasCustomValues = (recipient, categoryId) => {
-    const recipientCategory = recipient.categories?.[categoryId];
-    if (!recipientCategory || !recipientCategory.effects) {
+  const hasCustomValues = (recipientId, categoryId) => {
+    // Check if user has set custom values for this recipient
+    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+
+    if (!userRecipientEffects || userRecipientEffects.length === 0) {
       return false;
     }
 
-    return recipientCategory.effects.some((effect) => {
+    return userRecipientEffects.some((effect) => {
       const hasOverrides = effect.overrides && Object.keys(effect.overrides).length > 0;
       const hasMultipliers = effect.multipliers && Object.keys(effect.multipliers).length > 0;
       return hasOverrides || hasMultipliers;
@@ -104,7 +128,7 @@ const RecipientValuesSection = ({
                       const customCostPerLife = recipientId
                         ? getRecipientCostPerLife(recipientId, recipient, categoryId)
                         : null;
-                      const hasCustom = hasCustomValues(recipient, categoryId);
+                      const hasCustom = hasCustomValues(recipientId, categoryId);
 
                       return (
                         <div key={categoryId} className="flex items-center justify-between bg-gray-50 p-2 rounded">
@@ -153,6 +177,7 @@ RecipientValuesSection.propTypes = {
   onSearch: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,
   defaultAssumptions: PropTypes.object.isRequired,
+  userAssumptions: PropTypes.object,
   onEditRecipient: PropTypes.func.isRequired,
 };
 

@@ -472,6 +472,7 @@ const AssumptionsEditor = () => {
             onSearch={recipientSearch.handleSearchChange}
             searchTerm={recipientSearch.searchTerm}
             defaultAssumptions={defaultAssumptions}
+            userAssumptions={userAssumptions}
             onEditRecipient={handleEditRecipient}
           />
         )}

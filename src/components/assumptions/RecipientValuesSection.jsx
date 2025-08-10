@@ -126,19 +126,27 @@ const RecipientValuesSection = ({
                       const category = defaultAssumptions?.categories?.[categoryId];
                       const categoryName = category?.name || categoryId;
 
-                      // Calculate base cost per life from default category effects
-                      let baseCostPerLife = 0;
+                      // Calculate base category cost per life (without recipient modifications)
+                      let categoryCostPerLife = 0;
                       if (category?.effects && category.effects.length > 0) {
-                        baseCostPerLife = calculateCostPerLife(
+                        categoryCostPerLife = calculateCostPerLife(
                           category.effects,
                           defaultAssumptions.globalParameters,
                           categoryId
                         );
                       }
-                      const customCostPerLife = recipientId
+
+                      // Calculate recipient's actual cost per life (with any modifications)
+                      const recipientCostPerLife = recipientId
                         ? getRecipientCostPerLife(recipientId, recipient, categoryId)
                         : null;
+
+                      // Check if recipient has custom values
                       const hasCustom = hasCustomValues(recipientId, categoryId);
+
+                      // Show category cost in parentheses if recipient cost differs
+                      const recipientCostDiffers =
+                        recipientCostPerLife && Math.round(recipientCostPerLife) !== Math.round(categoryCostPerLife);
 
                       return (
                         <div key={categoryId} className="flex items-center justify-between bg-gray-50 p-2 rounded">
@@ -152,11 +160,11 @@ const RecipientValuesSection = ({
                             <div className="mt-1 text-sm text-gray-600">
                               Cost per Life:{' '}
                               <span className={`font-medium ${hasCustom ? 'text-indigo-600' : 'text-gray-900'}`}>
-                                ${formatNumberWithCommas(Math.round(customCostPerLife || baseCostPerLife))}
+                                ${formatNumberWithCommas(Math.round(recipientCostPerLife || categoryCostPerLife))}
                               </span>
-                              {hasCustom && (
-                                <span className="text-xs text-gray-500 ml-2">
-                                  (base: ${formatNumberWithCommas(Math.round(baseCostPerLife))})
+                              {recipientCostDiffers && (
+                                <span className="text-gray-400 ml-2">
+                                  (category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))})
                                 </span>
                               )}
                             </div>

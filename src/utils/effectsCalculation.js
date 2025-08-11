@@ -252,11 +252,33 @@ export const effectToCostPerLife = (effect, globalParams) => {
 };
 
 /**
- * Calculate cost per life from multiple effects with time windows
+ * Calculate combined cost per life from multiple effects
+ * Based on total lives saved per dollar: Σ(1/C_i) where C_i is cost per life
+ * Combined cost per life = 1 / Σ(1/C_i)
+ * @param {number[]} effectCosts - Array of individual effect costs
+ * @returns {number} Combined cost per life or Infinity if no valid costs
+ */
+export const calculateCombinedCostPerLife = (effectCosts) => {
+  // Filter out Infinity but keep both positive and negative costs
+  const validCosts = effectCosts.filter((cost) => cost !== Infinity && cost !== 0);
+  if (validCosts.length === 0) return Infinity;
+
+  // Calculate total lives saved per dollar across all effects
+  const harmonicSum = validCosts.reduce((sum, cost) => sum + 1 / cost, 0);
+
+  // If effects perfectly cancel out, return Infinity
+  if (harmonicSum === 0) return Infinity;
+
+  // Return cost per life (reciprocal of lives per dollar)
+  return 1 / harmonicSum;
+};
+
+/**
+ * Calculate combined cost per life from multiple effects with time windows
  * @param {Array} effects - Array of effect objects with time windows
  * @param {Object} globalParams - Global parameters object
  * @param {string} contextId - Context ID for error messages (e.g., categoryId, recipientId)
- * @returns {number} Weighted average cost per life
+ * @returns {number} Combined cost per life
  */
 export const calculateCostPerLife = (effects, globalParams, contextId = 'unknown') => {
   assertNonEmptyArray(effects, 'effects', `in context "${contextId}"`);
@@ -266,29 +288,17 @@ export const calculateCostPerLife = (effects, globalParams, contextId = 'unknown
   assertNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
   assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
 
-  // Calculate weighted average of already-discounted cost per life values
-  let totalWeight = 0;
-  let weightedSum = 0;
-
-  effects.forEach((effect) => {
+  // Calculate individual cost per life for each effect
+  const effectCosts = effects.map((effect) => {
     assertExists(effect.startTime, 'startTime', `in effect ${effect.effectId}`);
     assertNonNegativeNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
 
     // Get the already-discounted cost per life from the effect
-    const costPerLife = effectToCostPerLife(effect, globalParams);
-
-    // Weight by the discounted time window
-
-    totalWeight += 1;
-    weightedSum += costPerLife * 1;
+    return effectToCostPerLife(effect, globalParams);
   });
 
-  // Return weighted average cost per life
-  if (totalWeight === 0) {
-    throw new Error(`No weight calculated for context "${contextId}" with multiple effects`);
-  }
-
-  return weightedSum / totalWeight;
+  // Combine the individual costs using the correct formula
+  return calculateCombinedCostPerLife(effectCosts);
 };
 
 /**

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { calculateEffectCostPerLife, calculateCombinedCostPerLife } from '../utils/effectEditorUtils';
+import { calculateEffectCostPerLife } from '../utils/effectEditorUtils';
+import { calculateCombinedCostPerLife } from '../utils/effectsCalculation';
 import { validateEffects, validateRecipientEffects } from '../utils/effectValidation';
 
 /**

@@ -5,9 +5,9 @@ categories:
   - id: ai-capabilities
     fraction: 1
     effects:
-      - effectId: standard
+      - effectId: population
         multipliers:
-          costPerQALY: 4
+          costPerMicroprobability: 4
 ---
 
 # Notes

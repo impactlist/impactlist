@@ -53,28 +53,6 @@ export const calculateEffectCostPerLife = (effect, globalParameters) => {
 };
 
 /**
- * Calculate combined cost per life from multiple effects
- * Based on total lives saved per dollar: Σ(1/C_i) where C_i is cost per life
- * Combined cost per life = 1 / Σ(1/C_i)
- * @param {number[]} effectCosts - Array of individual effect costs
- * @returns {number} Combined cost per life or Infinity if no valid costs
- */
-export const calculateCombinedCostPerLife = (effectCosts) => {
-  // Filter out Infinity but keep both positive and negative costs
-  const validCosts = effectCosts.filter((cost) => cost !== Infinity && cost !== 0);
-  if (validCosts.length === 0) return Infinity;
-
-  // Calculate total lives saved per dollar across all effects
-  const harmonicSum = validCosts.reduce((sum, cost) => sum + 1 / cost, 0);
-
-  // If effects perfectly cancel out, return Infinity
-  if (harmonicSum === 0) return Infinity;
-
-  // Return cost per life (reciprocal of lives per dollar)
-  return 1 / harmonicSum;
-};
-
-/**
  * Clean effects for saving by converting string values to numbers
  * @param {Object[]} effects - Array of effects to clean
  * @returns {Object[]} Cleaned effects ready for saving

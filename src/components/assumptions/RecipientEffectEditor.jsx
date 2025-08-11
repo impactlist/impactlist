@@ -5,8 +5,8 @@ import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffect
 import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
-import { applyRecipientEffectToBase } from '../../utils/effectsCalculation';
-import { calculateEffectCostPerLife, calculateCombinedCostPerLife } from '../../utils/effectEditorUtils';
+import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
+import { calculateEffectCostPerLife } from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
 import {
   getEffectType,

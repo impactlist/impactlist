@@ -5,11 +5,8 @@ import PopulationEffectInputs from './effects/PopulationEffectInputs';
 import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
-import {
-  calculateEffectCostPerLife,
-  calculateCombinedCostPerLife,
-  cleanEffectsForSave,
-} from '../../utils/effectEditorUtils';
+import { calculateEffectCostPerLife, cleanEffectsForSave } from '../../utils/effectEditorUtils';
+import { calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
 import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { mergeEffects } from '../../utils/assumptionsDataHelpers';

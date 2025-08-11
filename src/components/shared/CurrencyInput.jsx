@@ -127,7 +127,7 @@ const CurrencyInput = ({
               : isCustom
                 ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
                 : 'border-slate-300 focus:ring-indigo-500 focus:border-indigo-500'
-          } ${disabled ? 'bg-gray-100 text-gray-500' : ''}`}
+          } ${disabled && !isCustom ? 'bg-gray-100 text-gray-500' : disabled ? 'text-gray-600' : ''}`}
         />
       </div>
       {error && (

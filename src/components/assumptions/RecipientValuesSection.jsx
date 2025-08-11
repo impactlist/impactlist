@@ -126,28 +126,25 @@ const RecipientValuesSection = ({
                         ? getRecipientCostPerLife(recipientId, recipient, categoryId)
                         : null;
 
+                      // Check if recipient has user custom values
+                      const hasUserCustomValues =
+                        userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects?.length > 0;
+
                       // Show category cost in parentheses if recipient cost differs
                       const recipientCostDiffers =
                         recipientCostPerLife && Math.round(recipientCostPerLife) !== Math.round(categoryCostPerLife);
 
                       return (
-                        <div key={categoryId} className="flex flex-wrap items-center gap-3 bg-gray-50 p-2 rounded">
-                          {/* Category name with inline category cost when different */}
-                          <div className="flex-1 min-w-[200px]">
-                            <Link
-                              to={`/explore/${categoryId}`}
-                              className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
-                            >
-                              {categoryName}
-                            </Link>
-                            {recipientCostDiffers && (
-                              <span className="text-sm text-gray-400 ml-2 whitespace-nowrap">
-                                • category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))}
-                              </span>
-                            )}
-                          </div>
+                        <div key={categoryId} className="flex flex-wrap items-center gap-3">
+                          {/* Category name */}
+                          <Link
+                            to={`/explore/${categoryId}`}
+                            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 min-w-[200px]"
+                          >
+                            {categoryName}
+                          </Link>
 
-                          {/* Cost per life input with Edit button - responsive width */}
+                          {/* Cost per life input with Edit button */}
                           <div className="relative w-full sm:w-64">
                             <CurrencyInput
                               id={`recipient-${recipientId}-${categoryId}`}
@@ -155,6 +152,7 @@ const RecipientValuesSection = ({
                               onChange={() => {}} // Read-only, no-op
                               className="w-full pr-10"
                               disabled={true}
+                              isCustom={hasUserCustomValues}
                               placeholder={formatNumberWithCommas(Math.round(categoryCostPerLife))}
                             />
                             <button
@@ -165,6 +163,13 @@ const RecipientValuesSection = ({
                               Edit
                             </button>
                           </div>
+
+                          {/* Show category cost at end of line if different */}
+                          {recipientCostDiffers && (
+                            <div className="text-xs text-gray-400">
+                              (category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))})
+                            </div>
+                          )}
                         </div>
                       );
                     })}

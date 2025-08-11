@@ -293,11 +293,9 @@ const RecipientEffectEditor = ({
           {/* Cost per life display - only show when there are multiple effects */}
           {tempEffects.length > 1 && (
             <div className="mb-3 p-2 bg-gray-50 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-700">Combined cost per life:</span>
-                <span
-                  className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
-                >
+              <div className="text-lg font-medium text-gray-800">
+                Combined cost per life:{' '}
+                <span className={combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}>
                   ${combinedCostPerLife === Infinity ? 'Invalid' : formatCurrency(combinedCostPerLife).replace('$', '')}
                 </span>
               </div>

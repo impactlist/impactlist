@@ -7,7 +7,7 @@ import CustomValueIndicator from '../shared/CustomValueIndicator';
 import { formatCurrency } from '../../utils/formatters';
 import { getFormValue } from '../../utils/formUtils';
 import { calculateCostPerLife } from '../../utils/effectsCalculation';
-import { calculateCategoryEffectCostPerLife } from '../../utils/assumptionsEditorHelpers';
+import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
 
 /**
  * Component for managing cost per life values for categories.
@@ -23,6 +23,12 @@ const CategoryValuesSection = ({
   categoriesWithCustomValues,
   className = '',
 }) => {
+  // Merge global parameters once for consistent calculations
+  const mergedGlobalParameters = useMemo(
+    () => mergeGlobalParameters(defaultAssumptions?.globalParameters, userAssumptions?.globalParameters),
+    [defaultAssumptions?.globalParameters, userAssumptions]
+  );
+
   // Get categories from defaultAssumptions and calculate their costs
   const categoriesData = useMemo(() => {
     const result = {};
@@ -30,18 +36,14 @@ const CategoryValuesSection = ({
 
     Object.entries(defaultAssumptions.categories).forEach(([categoryId, category]) => {
       // Calculate default cost per life from effects
-      const defaultCostPerLife = calculateCostPerLife(
-        category.effects,
-        defaultAssumptions.globalParameters,
-        categoryId
-      );
+      const defaultCostPerLife = calculateCostPerLife(category.effects, mergedGlobalParameters, categoryId);
 
       // Calculate current cost per life (with user overrides if any)
       const currentCostPerLife = calculateCategoryEffectCostPerLife(
         categoryId,
         defaultAssumptions,
         userAssumptions,
-        defaultAssumptions.globalParameters
+        mergedGlobalParameters
       );
 
       result[categoryId] = {
@@ -52,7 +54,7 @@ const CategoryValuesSection = ({
     });
 
     return result;
-  }, [defaultAssumptions, userAssumptions]);
+  }, [defaultAssumptions, userAssumptions, mergedGlobalParameters]);
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 ${className}`}>
       {Object.entries(categoriesData)

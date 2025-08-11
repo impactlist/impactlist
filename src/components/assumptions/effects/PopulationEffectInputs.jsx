@@ -20,7 +20,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
         <FormField
           id={`effect-${effectIndex}-costPerMicroprobability`}
           label="Cost per Microprobability"
-          description="Cost to change the probability of saving a life by one in a million"
+          description="Cost to change the probability of an event happening by one in a million"
           value={effect.costPerMicroprobability}
           defaultValue={defaultEffect?.costPerMicroprobability}
           onChange={handleChange('costPerMicroprobability')}
@@ -43,7 +43,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
         <FormField
           id={`effect-${effectIndex}-qalyImprovementPerYear`}
           label="QALY Improvement/Year"
-          description="Quality-adjusted life years improved per year"
+          description="Quality-adjusted life years improved per person per year"
           value={effect.qalyImprovementPerYear}
           defaultValue={defaultEffect?.qalyImprovementPerYear}
           onChange={handleChange('qalyImprovementPerYear')}

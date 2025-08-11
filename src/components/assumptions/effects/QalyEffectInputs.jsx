@@ -18,7 +18,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <FormField
         id={`effect-${effectIndex}-costPerQALY`}
-        label="Cost per QALY"
+        label="Cost per life-year"
         description="Cost to produce one quality-adjusted life year"
         value={effect.costPerQALY}
         defaultValue={defaultEffect?.costPerQALY}

@@ -46,7 +46,7 @@ const RecipientPopulationEffectInputs = ({
   const fields = [
     {
       name: 'costPerMicroprobability',
-      label: 'Cost per Microprobability:',
+      label: 'Cost per microprobability:',
       tooltip: 'Cost to prevent one microprobability (1 in a million chance) of extinction',
     },
     {
@@ -56,7 +56,7 @@ const RecipientPopulationEffectInputs = ({
     },
     {
       name: 'qalyImprovementPerYear',
-      label: 'QALY Improvement per Year:',
+      label: 'Life-year improvement per year:',
       tooltip: 'Quality-adjusted life years improved per year for affected population',
     },
     { name: 'startTime', label: 'Start Year:', tooltip: 'Years until the effect begins' },

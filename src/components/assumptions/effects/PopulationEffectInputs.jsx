@@ -19,7 +19,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <FormField
           id={`effect-${effectIndex}-costPerMicroprobability`}
-          label="Cost per Microprobability"
+          label="Cost per microprobability"
           description="Cost to change the probability of an event happening by one in a million"
           value={effect.costPerMicroprobability}
           defaultValue={defaultEffect?.costPerMicroprobability}
@@ -30,7 +30,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
 
         <FormField
           id={`effect-${effectIndex}-populationFractionAffected`}
-          label="Population Fraction Affected"
+          label="Population fraction affected"
           description="Fraction of the population affected (0-1)"
           value={effect.populationFractionAffected}
           defaultValue={defaultEffect?.populationFractionAffected}
@@ -42,7 +42,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <FormField
           id={`effect-${effectIndex}-qalyImprovementPerYear`}
-          label="QALY Improvement/Year"
+          label="Life-year improvement/year"
           description="Quality-adjusted life years improved per person per year"
           value={effect.qalyImprovementPerYear}
           defaultValue={defaultEffect?.qalyImprovementPerYear}
@@ -52,7 +52,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
 
         <FormField
           id={`effect-${effectIndex}-startTime`}
-          label="Start Time (years)"
+          label="Start time (years)"
           description="When the effect starts relative to the intervention"
           value={effect.startTime}
           defaultValue={defaultEffect?.startTime}
@@ -62,7 +62,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
 
         <FormField
           id={`effect-${effectIndex}-windowLength`}
-          label="Window Length (years)"
+          label="Window length (years)"
           description="Duration of the effect window"
           value={effect.windowLength}
           defaultValue={defaultEffect?.windowLength}

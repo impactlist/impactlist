@@ -313,7 +313,7 @@ const RecipientEffectEditor = ({
                 <div key={effect.effectId} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-lg font-medium text-gray-800">
-                      Effect {index + 1}: {effectType === 'qaly' ? 'QALY' : 'Population'}
+                      Effect {index + 1} {effectType === 'qaly' ? '(standard effect)' : '(population-level effect)'}
                     </h3>
                     <EffectCostDisplay cost={costPerLife} showInfinity={false} className="text-sm" />
                   </div>

@@ -5,7 +5,7 @@ import { formatCurrency } from '../../utils/formatters';
 /**
  * Shared component for displaying cost per life in effect editors
  */
-const EffectCostDisplay = ({ cost, label = 'Cost per Life:', showInfinity = true, className = '' }) => {
+const EffectCostDisplay = ({ cost, label = 'Cost per life:', showInfinity = true, className = '' }) => {
   const isInvalid = cost === Infinity;
   const formattedCost = isInvalid ? (showInfinity ? '∞' : 'Invalid') : formatCurrency(cost).replace('$', '');
 

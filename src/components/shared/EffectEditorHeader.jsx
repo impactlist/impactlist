@@ -24,7 +24,7 @@ const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombi
       </div>
       {showCombinedCost && combinedCostPerLife !== undefined && (
         <div className="mt-2">
-          <EffectCostDisplay cost={combinedCostPerLife} label="Combined Cost per Life:" showInfinity={false} />
+          <EffectCostDisplay cost={combinedCostPerLife} label="Combined cost per life:" showInfinity={false} />
         </div>
       )}
     </div>

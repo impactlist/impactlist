@@ -12,6 +12,7 @@ import {
 } from '../../utils/effectEditorUtils';
 import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
+import { mergeEffects } from '../../utils/assumptionsDataHelpers';
 
 /**
  * Component for editing all effects of a category
@@ -20,7 +21,7 @@ import { useAssumptions } from '../../contexts/AssumptionsContext';
 const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, onCancel }) => {
   const [tempEffects, setTempEffects] = useState([]);
   const [errors, setErrors] = useState({});
-  const { defaultAssumptions } = useAssumptions();
+  const { defaultAssumptions, userAssumptions } = useAssumptions();
 
   // Get default effects for comparison
   const defaultEffects = useMemo(() => {
@@ -30,13 +31,19 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     return defaultAssumptions.categories[categoryId].effects;
   }, [defaultAssumptions, categoryId]);
 
-  // Initialize temp effects from category
+  // Initialize temp effects from category with user overrides if they exist
   useEffect(() => {
     if (category && category.effects) {
-      // Deep clone the effects to avoid mutations
-      setTempEffects(JSON.parse(JSON.stringify(category.effects)));
+      // Get user effects if they exist
+      const userEffects = userAssumptions?.categories?.[categoryId]?.effects;
+
+      // Use the existing mergeEffects function to properly merge user and default effects
+      const mergedEffects = mergeEffects(category.effects, userEffects);
+
+      // Set the merged effects (already deep cloned by mergeEffects)
+      setTempEffects(mergedEffects);
     }
-  }, [category]);
+  }, [category, categoryId, userAssumptions]);
 
   // Validate all effects on mount and when effects change
   useEffect(() => {

@@ -127,7 +127,7 @@ export const mergeRecipientEffects = (defaultEffects, userEffects) => {
  * @param {Array} userEffects - User effect overrides (can be null/undefined)
  * @returns {Array} Merged effects array
  */
-const mergeEffects = (defaultEffects, userEffects) => {
+export const mergeEffects = (defaultEffects, userEffects) => {
   // Default effects should always exist
   if (!defaultEffects || defaultEffects.length === 0) {
     throw new Error('Default effects are required but not provided');

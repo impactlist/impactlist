@@ -108,8 +108,19 @@ export const calculateCategoryEffectCostPerLife = (
   // Get user effects if they exist
   const userEffects = userAssumptions?.categories?.[categoryId]?.effects;
 
-  // If user has custom effects, use them; otherwise use defaults
-  const effectsToUse = userEffects || defaultCategory.effects;
+  // If user has custom effects, merge them with defaults; otherwise use defaults
+  let effectsToUse = defaultCategory.effects;
+  if (userEffects && userEffects.length > 0) {
+    // Merge user effects with defaults to ensure all required fields are present
+    effectsToUse = defaultCategory.effects.map((defaultEffect) => {
+      const userEffect = userEffects.find((e) => e.effectId === defaultEffect.effectId);
+      if (userEffect) {
+        // Start with default effect and overlay user values
+        return { ...defaultEffect, ...userEffect };
+      }
+      return defaultEffect;
+    });
+  }
 
   if (!effectsToUse || effectsToUse.length === 0) {
     throw new Error(`No effects found for category ${categoryId}`);

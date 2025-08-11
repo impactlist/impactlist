@@ -137,7 +137,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
               const costPerLife = effectCostPerLife[index];
 
               return (
-                <div key={index} className="border border-gray-200 rounded-lg p-3">
+                <div key={index} className="border border-gray-400 rounded-lg p-3">
                   <div className="mb-2 flex justify-between items-start">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900">

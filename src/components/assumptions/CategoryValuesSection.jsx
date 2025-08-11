@@ -5,7 +5,6 @@ import CurrencyInput from '../shared/CurrencyInput';
 import SectionCard from '../shared/SectionCard';
 import CustomValueIndicator from '../shared/CustomValueIndicator';
 import { formatCurrency } from '../../utils/formatters';
-import { getFormValue } from '../../utils/formUtils';
 import { calculateCostPerLife } from '../../utils/effectsCalculation';
 import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
 
@@ -15,7 +14,6 @@ import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../..
 const CategoryValuesSection = ({
   defaultAssumptions,
   userAssumptions,
-  formValues,
   errors,
   onChange,
   onEditCategory,
@@ -101,7 +99,7 @@ const CategoryValuesSection = ({
               <div className="relative">
                 <CurrencyInput
                   id={`category-${key}`}
-                  value={getFormValue(formValues, key, formattedCurrent)} // Use formatted current value
+                  value={formattedCurrent} // Use calculated value directly (no form state needed for read-only)
                   onChange={(value) => onChange(key, value)}
                   error={hasError}
                   className="w-full pr-10"
@@ -135,7 +133,6 @@ const CategoryValuesSection = ({
 CategoryValuesSection.propTypes = {
   defaultAssumptions: PropTypes.object.isRequired,
   userAssumptions: PropTypes.object,
-  formValues: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onEditCategory: PropTypes.func,

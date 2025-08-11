@@ -360,8 +360,7 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     // Format as $1.23e-4 for better readability
     formattedValue = `$${absAmount.toExponential(2)}`;
   } else {
-    // For values < 10 but >= 0.0001, show at most 2 significant digits
-    const significantDigits = absAmount < 1 ? 1 : 2;
+    const significantDigits = 2;
     const multiplier = Math.pow(10, significantDigits - Math.floor(Math.log10(absAmount)) - 1);
     const roundedAmount = Math.round(absAmount * multiplier) / multiplier;
     formattedValue = `$${roundedAmount}`;

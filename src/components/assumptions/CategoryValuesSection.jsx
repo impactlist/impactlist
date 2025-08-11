@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
 import SectionCard from '../shared/SectionCard';
 import CustomValueIndicator from '../shared/CustomValueIndicator';
-import { formatNumberWithCommas } from '../../utils/formatters';
+import { formatCurrency } from '../../utils/formatters';
 import { getFormValue } from '../../utils/formUtils';
 import { calculateCostPerLife } from '../../utils/effectsCalculation';
 import { calculateCategoryEffectCostPerLife } from '../../utils/assumptionsEditorHelpers';
@@ -59,10 +59,15 @@ const CategoryValuesSection = ({
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
         .map(([key, categoryData]) => {
           const defaultValue = categoryData.defaultCostPerLife;
+          const currentValue = categoryData.currentCostPerLife;
           const hasError = errors[key];
 
           // Check if this category has any custom effect parameters
           const isCustom = categoriesWithCustomValues && categoriesWithCustomValues.has(key);
+
+          // Format values for display (strip $ sign since CurrencyInput adds it)
+          const formattedDefault = formatCurrency(defaultValue).replace('$', '');
+          const formattedCurrent = formatCurrency(currentValue).replace('$', '');
 
           return (
             <SectionCard key={key} hasError={hasError} isCustom={isCustom} padding="sm">
@@ -84,9 +89,7 @@ const CategoryValuesSection = ({
                   hasError={hasError}
                   onReset={() => {
                     // Reset both the form display and the actual category data
-                    const value = defaultValue;
-                    const formattedValue = formatNumberWithCommas(value);
-                    onChange(key, formattedValue);
+                    onChange(key, formattedDefault);
                     if (onResetCategory) {
                       onResetCategory(key);
                     }
@@ -96,12 +99,12 @@ const CategoryValuesSection = ({
               <div className="relative">
                 <CurrencyInput
                   id={`category-${key}`}
-                  value={getFormValue(formValues, key, defaultValue)} // Never use default as value
+                  value={getFormValue(formValues, key, formattedCurrent)} // Use formatted current value
                   onChange={(value) => onChange(key, value)}
                   error={hasError}
                   className="w-full pr-10"
                   validateOnBlur={true} // Only validate on blur, not while typing
-                  placeholder={formatNumberWithCommas(defaultValue)} // Use default as placeholder
+                  placeholder={formattedDefault} // Use formatted default as placeholder
                   disabled={true} // Make read-only
                 />
                 <button
@@ -118,7 +121,7 @@ const CategoryValuesSection = ({
                 </button>
               </div>
               {isCustom && !hasError && (
-                <div className="text-xs text-gray-500 mt-0.5">Default: ${formatNumberWithCommas(defaultValue)}</div>
+                <div className="text-xs text-gray-500 mt-0.5">Default: ${formattedDefault}</div>
               )}
             </SectionCard>
           );

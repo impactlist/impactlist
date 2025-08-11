@@ -6,11 +6,8 @@ import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import { applyRecipientEffectToBase } from '../../utils/effectsCalculation';
-import {
-  calculateEffectCostPerLife,
-  calculateCombinedCostPerLife,
-  formatCostForDisplay,
-} from '../../utils/effectEditorUtils';
+import { calculateEffectCostPerLife, calculateCombinedCostPerLife } from '../../utils/effectEditorUtils';
+import { formatCurrency } from '../../utils/formatters';
 import {
   getEffectType,
   validateRecipientEffectField,
@@ -290,7 +287,7 @@ const RecipientEffectEditor = ({
                 <span
                   className={`text-lg font-bold ${combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}`}
                 >
-                  ${formatCostForDisplay(combinedCostPerLife, false)}
+                  ${combinedCostPerLife === Infinity ? 'Invalid' : formatCurrency(combinedCostPerLife).replace('$', '')}
                 </span>
               </div>
             </div>

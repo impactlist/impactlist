@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { formatCostForDisplay } from '../../utils/effectEditorUtils';
+import { formatCurrency } from '../../utils/formatters';
 
 /**
  * Shared component for displaying cost per life in effect editors
  */
 const EffectCostDisplay = ({ cost, label = 'Cost per Life:', showInfinity = true, className = '' }) => {
   const isInvalid = cost === Infinity;
-  const formattedCost = formatCostForDisplay(cost, showInfinity);
+  const formattedCost = isInvalid ? (showInfinity ? '∞' : 'Invalid') : formatCurrency(cost).replace('$', '');
 
   return (
     <div className={`text-sm text-gray-600 ${className}`}>

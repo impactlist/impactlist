@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import SearchInput from '../shared/SearchInput';
 import CurrencyInput from '../shared/CurrencyInput';
-import { formatNumberWithCommas } from '../../utils/formatters';
+import { formatCurrency } from '../../utils/formatters';
 import { getRecipientId } from '../../utils/donationDataHelpers';
 import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
 import { mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
@@ -131,8 +131,12 @@ const RecipientValuesSection = ({
                         userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects?.length > 0;
 
                       // Show category cost in parentheses if recipient cost differs
-                      const recipientCostDiffers =
-                        recipientCostPerLife && Math.round(recipientCostPerLife) !== Math.round(categoryCostPerLife);
+                      // Compare formatted values to determine if they're visually different
+                      const formattedRecipientCost = formatCurrency(
+                        recipientCostPerLife || categoryCostPerLife
+                      ).replace('$', '');
+                      const formattedCategoryCost = formatCurrency(categoryCostPerLife).replace('$', '');
+                      const recipientCostDiffers = formattedRecipientCost !== formattedCategoryCost;
 
                       return (
                         <div key={categoryId} className="flex flex-wrap items-center gap-3">
@@ -148,12 +152,12 @@ const RecipientValuesSection = ({
                           <div className="relative w-full sm:w-64">
                             <CurrencyInput
                               id={`recipient-${recipientId}-${categoryId}`}
-                              value={formatNumberWithCommas(Math.round(recipientCostPerLife || categoryCostPerLife))}
+                              value={formattedRecipientCost}
                               onChange={() => {}} // Read-only, no-op
                               className="w-full pr-10"
                               disabled={true}
                               isCustom={hasUserCustomValues}
-                              placeholder={formatNumberWithCommas(Math.round(categoryCostPerLife))}
+                              placeholder={formattedCategoryCost}
                             />
                             <button
                               type="button"
@@ -166,9 +170,7 @@ const RecipientValuesSection = ({
 
                           {/* Show category cost at end of line if different */}
                           {recipientCostDiffers && (
-                            <div className="text-xs text-gray-400">
-                              (category: ${formatNumberWithCommas(Math.round(categoryCostPerLife))})
-                            </div>
+                            <div className="text-xs text-gray-400">(category: ${formattedCategoryCost})</div>
                           )}
                         </div>
                       );

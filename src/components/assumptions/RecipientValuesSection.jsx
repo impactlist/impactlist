@@ -89,7 +89,7 @@ const RecipientValuesSection = ({
             : 'No recipients with custom values found. Search for a specific recipient.'}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-2">
           {filteredRecipients
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((recipient, index) => {
@@ -104,9 +104,9 @@ const RecipientValuesSection = ({
               const bgColorClass = isEven ? 'bg-white' : 'bg-gray-100';
 
               return (
-                <div key={recipient.name} className={`border border-gray-200 rounded-md p-4 ${bgColorClass}`}>
-                  <h3 className="font-medium text-gray-800 mb-3">{recipient.name}</h3>
-                  <div className="space-y-2">
+                <div key={recipient.name} className={`border border-gray-200 rounded-md p-2 ${bgColorClass}`}>
+                  <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
+                  <div className="space-y-1">
                     {recipientCategories.map(([categoryId]) => {
                       const category = defaultAssumptions?.categories?.[categoryId];
                       const categoryName = category?.name || categoryId;
@@ -139,11 +139,11 @@ const RecipientValuesSection = ({
                       const recipientCostDiffers = formattedRecipientCost !== formattedCategoryCost;
 
                       return (
-                        <div key={categoryId} className="flex flex-wrap items-center gap-3">
+                        <div key={categoryId} className="flex flex-wrap items-center gap-2">
                           {/* Category name */}
                           <Link
                             to={`/explore/${categoryId}`}
-                            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 min-w-[200px]"
+                            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 min-w-[180px]"
                           >
                             {categoryName}
                           </Link>

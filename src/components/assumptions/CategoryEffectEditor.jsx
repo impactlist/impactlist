@@ -141,7 +141,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                   <div className="mb-2 flex justify-between items-start">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900">
-                        Effect {index + 1}: {effect.effectId}
+                        Effect {index + 1}: {effectType === 'qaly' ? 'Standard' : 'Population-level'}
                       </h4>
                     </div>
                     <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm" />

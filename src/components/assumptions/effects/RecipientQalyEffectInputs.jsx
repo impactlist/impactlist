@@ -50,7 +50,7 @@ const RecipientQalyEffectInputs = ({
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {fields.map((field) => {
         const overrideError = errors[`${effectIndex}-${field.name}-override`];
         const multiplierError = errors[`${effectIndex}-${field.name}-multiplier`];
@@ -68,7 +68,7 @@ const RecipientQalyEffectInputs = ({
         });
 
         return (
-          <div key={field.name} className="space-y-2">
+          <div key={field.name} className="space-y-1">
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-gray-900">{field.label}</label>
               {field.tooltip && (
@@ -81,7 +81,7 @@ const RecipientQalyEffectInputs = ({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {/* Override input */}
               <div>
                 <div className="flex justify-between items-center mb-1">

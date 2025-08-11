@@ -278,10 +278,10 @@ const RecipientEffectEditor = ({
         />
 
         {/* Effects List */}
-        <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-300px)]">
+        <div className="overflow-y-auto px-3 py-2 max-h-[calc(80vh-300px)]">
           {/* Cost per life display - only show when there are multiple effects */}
           {tempEffects.length > 1 && (
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <div className="mb-3 p-2 bg-gray-50 rounded-lg">
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-gray-700">Combined cost per life:</span>
                 <span
@@ -294,7 +294,7 @@ const RecipientEffectEditor = ({
           )}
 
           {/* Effects */}
-          <div className="space-y-6">
+          <div className="space-y-3">
             {tempEffects.map((effect, index) => {
               const baseEffect = effect._baseEffect;
               const effectType = getEffectType(baseEffect);
@@ -310,8 +310,8 @@ const RecipientEffectEditor = ({
               );
 
               return (
-                <div key={effect.effectId} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-4">
+                <div key={effect.effectId} className="border border-gray-200 rounded-lg p-3">
+                  <div className="flex justify-between items-start mb-2">
                     <h3 className="text-lg font-medium text-gray-800">
                       Effect {index + 1} {effectType === 'qaly' ? '(standard effect)' : '(population-level effect)'}
                     </h3>

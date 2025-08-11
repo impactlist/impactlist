@@ -198,6 +198,17 @@ const RecipientEffectEditor = ({
     });
   }, [tempEffects, globalParameters]);
 
+  // Calculate base cost per life for each effect (without recipient-specific overrides)
+  const baseEffectCostPerLife = useMemo(() => {
+    return tempEffects.map((effect) => {
+      const baseEffect = effect._baseEffect;
+      if (!baseEffect) return Infinity;
+
+      // Calculate cost using only the base category effect
+      return calculateEffectCostPerLife(baseEffect, globalParameters);
+    });
+  }, [tempEffects, globalParameters]);
+
   // Calculate combined cost per life
   const combinedCostPerLife = useMemo(() => {
     return calculateCombinedCostPerLife(effectCostPerLife);
@@ -299,6 +310,7 @@ const RecipientEffectEditor = ({
               const baseEffect = effect._baseEffect;
               const effectType = getEffectType(baseEffect);
               const costPerLife = effectCostPerLife[index];
+              const baseCost = baseEffectCostPerLife[index];
 
               // Get all the different effect sources for the input components
               const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
@@ -315,7 +327,12 @@ const RecipientEffectEditor = ({
                     <h3 className="text-lg font-medium text-gray-800">
                       Effect {index + 1} {effectType === 'qaly' ? '(standard effect)' : '(population-level effect)'}
                     </h3>
-                    <EffectCostDisplay cost={costPerLife} showInfinity={false} className="text-sm" />
+                    <EffectCostDisplay
+                      cost={costPerLife}
+                      baseCost={baseCost}
+                      showInfinity={false}
+                      className="text-sm"
+                    />
                   </div>
 
                   <div>

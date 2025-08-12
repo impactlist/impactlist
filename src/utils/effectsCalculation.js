@@ -169,11 +169,11 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
       // Special case when growth rate equals discount rate - exponentials cancel
       totalQALYs = P0 * fraction * qalyPerYear * windowLength;
     } else {
-      // General case: integral of e^((g-r)*t)
-      // Use numerically stable computation: expEnd - expStart = expStart * expm1(combinedRate * windowLength)
+      // General case: integral of (1 + combinedRate)^t
+      // Integral from a to b of (1 + c)^t dt = [(1 + c)^b - (1 + c)^a] / ln(1 + c)
       const startLevel = Math.pow(1 + combinedRate, startYear);
       const integratedGrowthFactor = startLevel * (Math.pow(1 + combinedRate, windowLength) - 1);
-      totalQALYs = (P0 * fraction * qalyPerYear * integratedGrowthFactor) / combinedRate;
+      totalQALYs = (P0 * fraction * qalyPerYear * integratedGrowthFactor) / Math.log(1 + combinedRate);
     }
   } else if (yearToHitLimit <= startYear) {
     // Population already at limit at start of effect window
@@ -185,7 +185,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
       const numerator = 1 - Math.pow(1 + r, -windowLength);
       discountFactor = numerator / Math.log1p(r);
     }
-    totalQALYs = populationLimitNumerical * fraction * qalyPerYear * Math.exp(-r * startYear) * discountFactor;
+    totalQALYs = populationLimitNumerical * fraction * qalyPerYear * Math.pow(1 + r, -startYear) * discountFactor;
   } else {
     // Population hits limit during effect window - need to split calculation
     const timeToLimit = yearToHitLimit - startYear;
@@ -198,24 +198,24 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
       // When g ≈ r, the exponentials cancel out
       totalBeforeLimit = P0 * fraction * qalyPerYear * timeToLimit;
     } else {
-      // Use numerically stable computation: expLimit - expStart = expStart * expm1(combinedRate * timeToLimit)
-      const expStart = Math.exp(combinedRate * startYear);
-      const expDiff = expStart * Math.expm1(combinedRate * timeToLimit);
-      totalBeforeLimit = (P0 * fraction * qalyPerYear * expDiff) / combinedRate;
+      // Integral of (1 + combinedRate)^t from startYear to yearToHitLimit
+      const startLevel = Math.pow(1 + combinedRate, startYear);
+      const limitLevel = Math.pow(1 + combinedRate, yearToHitLimit);
+      const expDiff = limitLevel - startLevel;
+      totalBeforeLimit = (P0 * fraction * qalyPerYear * expDiff) / Math.log(1 + combinedRate);
     }
 
     // After hitting limit (yearToHitLimit to startYear + windowLength)
     const remainingTime = windowLength - timeToLimit;
     let discountFactor;
-    if (r === 0) {
+    if (Math.abs(r) < 1e-10) {
       discountFactor = remainingTime;
     } else {
-      const x = r * remainingTime;
-      const numerator = -Math.expm1(-x); // 1 - e^(-x)
-      discountFactor = numerator / r;
+      const numerator = 1 - Math.pow(1 + r, -remainingTime);
+      discountFactor = numerator / Math.log1p(r);
     }
     const totalAfterLimit =
-      populationLimitNumerical * fraction * qalyPerYear * Math.exp(-r * yearToHitLimit) * discountFactor;
+      populationLimitNumerical * fraction * qalyPerYear * Math.pow(1 + r, -yearToHitLimit) * discountFactor;
 
     totalQALYs = totalBeforeLimit + totalAfterLimit;
   }

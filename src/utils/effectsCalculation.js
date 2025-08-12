@@ -44,7 +44,7 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   if (effect.windowLength === 0) {
     // window length of 0 is a special case, meaning an instantaneous pulse
     discountDivisor = Math.pow(1 + i, -startYear);
-  } else if (Math.abs(i) < 1e-15) {
+  } else if (Math.abs(i) < 1e-10) {
     discountDivisor = 1;
   } else {
     // Numerically stable fixed-window kernel
@@ -90,7 +90,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
     return Infinity;
   }
 
-  // Use continuous rates for growth and discounting
+  // Use discrete annual rates for growth and discounting
   const g = globalParams.populationGrowthRate;
   const r = globalParams.discountRate;
   const P0 = globalParams.currentPopulation;
@@ -143,7 +143,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
       return P0;
     }
 
-    const pop = P0 * Math.exp(g * time);
+    const pop = P0 * Math.pow(1 + g, time);
 
     if (globalParams.populationLimit > 1) {
       // populationLimit > 1: acts as cap
@@ -157,35 +157,33 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   if (effect.windowLength === 0) {
     // raw Window length being zero --> instantaneous pulse
     const currentPopulation = getPopulationAt(startYear);
-    totalQALYs = currentPopulation * fraction * qalyPerYear * Math.exp(-r * startYear);
+    totalQALYs = currentPopulation * fraction * qalyPerYear * Math.pow(1 + r, -startYear);
   } else if (yearToHitLimit < 0 || yearToHitLimit >= startYear + windowLength) {
     // Population doesn't hit limit during the effect window
     // Integral from t=startYear to t=startYear+windowLength of:
     // P0 * e^(g*t) * fraction * qalyPerYear * e^(-r*t) dt
     // = P0 * fraction * qalyPerYear * integral of e^((g-r)*t) dt
 
-    const combinedRate = g - r;
-
+    const combinedRate = (1 + g) / (1 + r) - 1;
     if (Math.abs(combinedRate) < 1e-10) {
       // Special case when growth rate equals discount rate - exponentials cancel
       totalQALYs = P0 * fraction * qalyPerYear * windowLength;
     } else {
       // General case: integral of e^((g-r)*t)
       // Use numerically stable computation: expEnd - expStart = expStart * expm1(combinedRate * windowLength)
-      const expStart = Math.exp(combinedRate * startYear);
-      const expDiff = expStart * Math.expm1(combinedRate * windowLength);
-      totalQALYs = (P0 * fraction * qalyPerYear * expDiff) / combinedRate;
+      const startLevel = Math.pow(1 + combinedRate, startYear);
+      const integratedGrowthFactor = startLevel * (Math.pow(1 + combinedRate, windowLength) - 1);
+      totalQALYs = (P0 * fraction * qalyPerYear * integratedGrowthFactor) / combinedRate;
     }
   } else if (yearToHitLimit <= startYear) {
     // Population already at limit at start of effect window
-    // Use continuous discounting formula similar to qalyEffectToCostPerLife
+    // Use discounting formula similar to qalyEffectToCostPerLife
     let discountFactor;
-    if (r === 0) {
+    if (Math.abs(r) < 1e-10) {
       discountFactor = windowLength;
     } else {
-      const x = r * windowLength;
-      const numerator = -Math.expm1(-x); // 1 - e^(-x)
-      discountFactor = numerator / r;
+      const numerator = 1 - Math.pow(1 + r, -windowLength);
+      discountFactor = numerator / Math.log1p(r);
     }
     totalQALYs = populationLimitNumerical * fraction * qalyPerYear * Math.exp(-r * startYear) * discountFactor;
   } else {
@@ -193,7 +191,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
     const timeToLimit = yearToHitLimit - startYear;
 
     // Before hitting limit (startYear to yearToHitLimit)
-    const combinedRate = g - r;
+    const combinedRate = (1 + g) / (1 + r) - 1;
     let totalBeforeLimit;
 
     if (Math.abs(combinedRate) < 1e-10) {

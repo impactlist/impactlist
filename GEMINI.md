@@ -1,6 +1,8 @@
-# CLAUDE.md
+# Gemini.md
 
 This file provides guidance to Gemini CLU when working with code in this repository.
+
+If you are Claude Code, ignore this file -- it's for another coding agent.
 
 ## Most Critical Instructions
 

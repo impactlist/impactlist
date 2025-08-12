@@ -1,5 +1,7 @@
 # Repository Guidelines
 
+- Ignore this file if you're Claude Code, it's for another coding agent
+
 ## Project Structure & Module Organization
 - Source: `src/` (components, pages, utils, hooks, contexts). Data generated to `src/data/generatedData.js`.
 - Content: `content/` (categories, donors, recipients, donations, `globalParameters.md`).

@@ -40,17 +40,18 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   // discountedQALYs = (amount donated)/(costperQALY) * e^(-discountRate * startTime) * (1 - e^(-discountRate * windowLength))/(discountRate*windowLength)
   // So we need to divide the raw cost per QALY by everything after it in the expression.
   let discountDivisor;
-  const r = globalParams.discountRate;
+  const i = globalParams.discountRate;
   if (effect.windowLength === 0) {
     // window length of 0 is a special case, meaning an instantaneous pulse
-    discountDivisor = Math.exp(-r * startYear);
-  } else if (r === 0) {
+    discountDivisor = Math.pow(1 + i, -startYear);
+  } else if (Math.abs(i) < 1e-15) {
     discountDivisor = 1;
   } else {
     // Numerically stable fixed-window kernel
-    const x = r * windowLength;
-    const numerator = -Math.expm1(-x); // 1 - e^(-x) without loss of precision
-    discountDivisor = (Math.exp(-r * startYear) * numerator) / x;
+    const r = Math.log1p(i); // stable ln(1+i)
+    const discountToWindowStart = Math.exp(-r * startYear); // == (1+i)^(-startYear)
+    const numerator = -Math.expm1(-r * windowLength); // == 1 - (1+i)^(-windowLength), stable
+    discountDivisor = (discountToWindowStart * numerator) / (r * windowLength);
   }
 
   const costPerLife = effect.costPerQALY * globalParams.yearsPerLife;
@@ -103,34 +104,33 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   // Check if and when we hit population limit
   let yearToHitLimit = Infinity;
 
-  // Handle the various cases of population limits
   // If populationLimit > 1, it acts as a cap (maximum)
   // If populationLimit < 1, it acts as a floor (minimum)
   // If populationLimit = 1, population stays at P0
-  const isCapLimit = globalParams.populationLimit >= 1;
 
   if (g === 0) {
     // Zero growth: population stays constant at P0, limit doesn't matter
     yearToHitLimit = Infinity;
   } else if (g > 0) {
     // Positive growth
-    if (isCapLimit) {
+    if (globalParams.populationLimit > 1) {
       // Can hit a cap with positive growth
       if (P0 >= populationLimitNumerical) {
         yearToHitLimit = Infinity; // Already at or above limit
       } else {
-        yearToHitLimit = Math.log(populationLimitNumerical / P0) / g;
+        // log(1 + g) because g is discrete growth rate
+        yearToHitLimit = Math.log(populationLimitNumerical / P0) / Math.log(1 + g);
       }
     }
     // If it's a floor (populationLimit < 1), positive growth never hits it
   } else {
     // g < 0 - Negative growth (decline)
-    if (!isCapLimit) {
+    if (globalParams.populationLimit < 1) {
       // Can hit a floor with negative growth
       if (P0 <= populationLimitNumerical) {
         yearToHitLimit = Infinity; // Already at or below limit
       } else {
-        yearToHitLimit = Math.log(populationLimitNumerical / P0) / g;
+        yearToHitLimit = Math.log(populationLimitNumerical / P0) / Math.log(1 + g);
       }
     }
     // If it's a cap (populationLimit > 1), negative growth never hits it
@@ -138,14 +138,14 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
 
   // Helper function to get population at a given time
   const getPopulationAt = (time) => {
-    if (g === 0) {
-      // Constant population, limit doesn't matter
+    if (g === 0 || globalParams.populationLimit === 1) {
+      // Constant population
       return P0;
     }
 
     const pop = P0 * Math.exp(g * time);
 
-    if (isCapLimit) {
+    if (globalParams.populationLimit > 1) {
       // populationLimit > 1: acts as cap
       return Math.min(pop, populationLimitNumerical);
     } else {

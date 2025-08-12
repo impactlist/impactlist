@@ -14,11 +14,11 @@ import {
 // ============================================================================
 
 /**
- * Calculate discrete discount factor for a time window
- * Used for discounting QALYs over a fixed time period with annual discount rate
+ * Calculate the sum of discrete discount factors for a time window
+ * Returns the present value of receiving $1 per year for windowLength years
  * @param {number} discountRate - Annual discount rate (e.g., 0.02 for 2%)
  * @param {number} windowLength - Length of time window in years
- * @returns {number} Discount factor to multiply by undiscounted amount
+ * @returns {number} Sum of discount factors: Σ(1/(1+r)^t) for t=0 to windowLength-1
  */
 const calculateDiscreteDiscountFactor = (discountRate, windowLength) => {
   if (Math.abs(discountRate) < 1e-10) {
@@ -120,22 +120,27 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
     return Infinity;
   }
 
-  // Calculate discount divisor for the effect window
-  let discountDivisor;
+  // Calculate average discount factor for the effect window
+  let averageDiscountFactor;
   const i = globalParams.discountRate;
 
   if (effect.windowLength === 0) {
     // Instantaneous pulse effect
-    discountDivisor = Math.pow(1 + i, -startYear);
+    averageDiscountFactor = Math.pow(1 + i, -startYear);
   } else {
     // Fixed window effect - use helper for discount factor
     const discountToWindowStart = Math.pow(1 + i, -startYear);
-    const windowDiscountFactor = calculateDiscreteDiscountFactor(i, windowLength);
-    discountDivisor = (discountToWindowStart * windowDiscountFactor) / windowLength;
+    const windowDiscountFactorSum = calculateDiscreteDiscountFactor(i, windowLength);
+    averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / windowLength;
   }
 
   const costPerLife = effect.costPerQALY * globalParams.yearsPerLife;
-  return costPerLife / discountDivisor;
+
+  // We divide by the average discount factor because:
+  // - A smaller discount factor means future QALYs are worth less
+  // - So we need MORE money today to achieve the same impact
+  // - Division by a number < 1 increases the cost appropriately
+  return costPerLife / averageDiscountFactor;
 };
 
 /**

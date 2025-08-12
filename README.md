@@ -65,3 +65,12 @@ Write:
 ```
 npx prettier --write .
 ```
+
+## Testing
+
+Test Scripts Available:
+
+- npm run test - Run tests in watch mode
+- npm run test:run - Run once and exit
+- npm run test:coverage - Generate coverage report
+- npm run test:watch - Explicit watch mode

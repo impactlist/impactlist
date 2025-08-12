@@ -18,10 +18,14 @@ import {
  * @returns {string} - Formatted number
  */
 export const formatNumberWithNoMoreThanOneDecimal = (num) => {
-  if (num < 100 && !Number.isInteger(num)) {
-    return num.toFixed(1);
+  // Round to 1 decimal place first
+  const rounded = Math.round(num * 10) / 10;
+
+  // If the rounded value is >= 100 or is effectively an integer, show as integer
+  if (rounded >= 100 || Number.isInteger(rounded)) {
+    return Math.round(rounded).toString();
   } else {
-    return Math.round(num).toString();
+    return rounded.toFixed(1);
   }
 };
 

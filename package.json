@@ -10,10 +10,17 @@
     "generate-data": "node scripts/generate-data-from-markdown.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch"
   },
   "lint-staged": {
-    "**/*.{js,jsx}": "eslint --max-warnings=0"
+    "**/*.{js,jsx}": [
+      "eslint --max-warnings=0",
+      "vitest related --run"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -31,7 +38,11 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.26.0",
     "@tailwindcss/typography": "^0.5.16",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^3.2.4",
     "autoprefixer": "^10.4.18",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.5",
@@ -42,10 +53,12 @@
     "glob": "^11.0.2",
     "gray-matter": "^4.0.3",
     "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
     "lint-staged": "^16.0.0",
     "postcss": "^8.4.35",
     "prettier": "^3.5.3",
     "tailwindcss": "^3.4.1",
-    "vite": "^6.2.6"
+    "vite": "^6.2.6",
+    "vitest": "^3.2.4"
   }
 }

@@ -14,17 +14,28 @@ import {
 // ============================================================================
 
 /**
+ * Calculate discount factor for a specific time point
+ * @param {number} rate - Annual discount rate (e.g., 0.02 for 2%)
+ * @param {number} time - Time in years
+ * @returns {number} Discount factor: (1+r)^(-time)
+ */
+const calculateDiscountToTime = (rate, time) => {
+  return Math.pow(1 + rate, -time);
+};
+
+/**
  * Calculate the sum of discrete discount factors for a time window
- * Returns the present value of receiving $1 per year for windowLength years
+ * Returns the sum of discount factors over the window (in years)
  * @param {number} discountRate - Annual discount rate (e.g., 0.02 for 2%)
  * @param {number} windowLength - Length of time window in years
- * @returns {number} Sum of discount factors: Σ(1/(1+r)^t) for t=0 to windowLength-1
+ * @returns {number} Sum of discount factors over window: Σ(1/(1+r)^t) for t=0 to windowLength-1
  */
-const calculateDiscreteDiscountFactor = (discountRate, windowLength) => {
+const calculateDiscountWindowSum = (discountRate, windowLength) => {
   if (Math.abs(discountRate) < 1e-10) {
     return windowLength;
   }
-  const numerator = 1 - Math.pow(1 + discountRate, -windowLength);
+  // Using expm1 for better numerical stability: 1 - (1+r)^(-n) = -expm1(-n*log1p(r))
+  const numerator = -Math.expm1(-windowLength * Math.log1p(discountRate));
   return numerator / Math.log1p(discountRate);
 };
 
@@ -61,7 +72,7 @@ const integrateDiscreteGrowth = (baseAmount, rate, startTime, duration) => {
   const endLevel = Math.pow(1 + rate, startTime + duration);
   const growthFactor = endLevel - startLevel;
 
-  return (baseAmount * growthFactor) / Math.log(1 + rate);
+  return (baseAmount * growthFactor) / Math.log1p(rate);
 };
 
 /**
@@ -92,7 +103,7 @@ const calculateYearToPopulationLimit = (currentPop, limitPop, growthRate) => {
   // Calculate time to hit limit using discrete growth formula
   // P(t) = P0 * (1 + g)^t = limitPop
   // t = log(limitPop / P0) / log(1 + g)
-  return Math.log(limitPop / currentPop) / Math.log(1 + growthRate);
+  return Math.log(limitPop / currentPop) / Math.log1p(growthRate);
 };
 
 /**
@@ -126,11 +137,11 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
 
   if (effect.windowLength === 0) {
     // Instantaneous pulse effect
-    averageDiscountFactor = Math.pow(1 + i, -startYear);
+    averageDiscountFactor = calculateDiscountToTime(i, startYear);
   } else {
     // Fixed window effect - use helper for discount factor
-    const discountToWindowStart = Math.pow(1 + i, -startYear);
-    const windowDiscountFactorSum = calculateDiscreteDiscountFactor(i, windowLength);
+    const discountToWindowStart = calculateDiscountToTime(i, startYear);
+    const windowDiscountFactorSum = calculateDiscountWindowSum(i, windowLength);
     averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / windowLength;
   }
 
@@ -213,35 +224,38 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   if (effect.windowLength === 0) {
     // raw Window length being zero --> instantaneous pulse
     const currentPopulation = getPopulationAt(startYear);
-    totalQALYs = currentPopulation * fraction * qalyPerYear * Math.pow(1 + r, -startYear);
+    totalQALYs = currentPopulation * fraction * qalyPerYear * calculateDiscountToTime(r, startYear);
   } else if (yearToHitLimit < 0 || yearToHitLimit >= startYear + windowLength) {
     // Population doesn't hit limit during the effect window
     // Integral from t=startYear to t=startYear+windowLength of:
-    // P0 * e^(g*t) * fraction * qalyPerYear * e^(-r*t) dt
-    // = P0 * fraction * qalyPerYear * integral of e^((g-r)*t) dt
+    // P0 * (1+g)^t * fraction * qalyPerYear * (1+r)^(-t) dt
+    // = P0 * fraction * qalyPerYear * integral of ((1+g)/(1+r))^t dt
 
-    const combinedRate = (1 + g) / (1 + r) - 1;
+    // Use stable net form: exp(log1p(g) - log1p(r)) - 1 = expm1(log1p(g) - log1p(r))
+    const netRate = Math.expm1(Math.log1p(g) - Math.log1p(r));
     const baseAmount = P0 * fraction * qalyPerYear;
-    totalQALYs = integrateDiscreteGrowth(baseAmount, combinedRate, startYear, windowLength);
+    totalQALYs = integrateDiscreteGrowth(baseAmount, netRate, startYear, windowLength);
   } else if (yearToHitLimit <= startYear) {
     // Population already at limit at start of effect window
     // Use discounting formula similar to qalyEffectToCostPerLife
-    const discountFactor = calculateDiscreteDiscountFactor(r, windowLength);
-    totalQALYs = populationLimitNumerical * fraction * qalyPerYear * Math.pow(1 + r, -startYear) * discountFactor;
+    const discountFactor = calculateDiscountWindowSum(r, windowLength);
+    totalQALYs =
+      populationLimitNumerical * fraction * qalyPerYear * calculateDiscountToTime(r, startYear) * discountFactor;
   } else {
     // Population hits limit during effect window - need to split calculation
     const timeToLimit = yearToHitLimit - startYear;
 
     // Before hitting limit (startYear to yearToHitLimit)
-    const combinedRate = (1 + g) / (1 + r) - 1;
+    // Use stable net form for combined rate
+    const netRate = Math.expm1(Math.log1p(g) - Math.log1p(r));
     const baseAmount = P0 * fraction * qalyPerYear;
-    const totalBeforeLimit = integrateDiscreteGrowth(baseAmount, combinedRate, startYear, timeToLimit);
+    const totalBeforeLimit = integrateDiscreteGrowth(baseAmount, netRate, startYear, timeToLimit);
 
     // After hitting limit (yearToHitLimit to startYear + windowLength)
     const remainingTime = windowLength - timeToLimit;
-    const discountFactor = calculateDiscreteDiscountFactor(r, remainingTime);
+    const discountFactor = calculateDiscountWindowSum(r, remainingTime);
     const totalAfterLimit =
-      populationLimitNumerical * fraction * qalyPerYear * Math.pow(1 + r, -yearToHitLimit) * discountFactor;
+      populationLimitNumerical * fraction * qalyPerYear * calculateDiscountToTime(r, yearToHitLimit) * discountFactor;
 
     totalQALYs = totalBeforeLimit + totalAfterLimit;
   }

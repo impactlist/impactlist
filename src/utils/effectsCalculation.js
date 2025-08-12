@@ -30,7 +30,7 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   const startYear = effect.startTime;
   const windowLength = Math.min(effect.windowLength, globalParams.timeLimit - startYear);
 
-  if (startYear >= globalParams.timeLimit || (windowLength === 0 && effect.windowLength !== 0)) {
+  if (startYear >= globalParams.timeLimit || windowLength < 0 || (windowLength === 0 && effect.windowLength !== 0)) {
     // If the window length is 0 but only because of trimming, don't treat it as a pulse.
     return Infinity;
   }
@@ -84,7 +84,7 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
   const startYear = effect.startTime;
   const windowLength = Math.min(effect.windowLength, globalParams.timeLimit - startYear);
 
-  if (startYear >= globalParams.timeLimit || (windowLength === 0 && effect.windowLength !== 0)) {
+  if (startYear >= globalParams.timeLimit || windowLength < 0 || (windowLength === 0 && effect.windowLength !== 0)) {
     // If the window length is 0 but only because of trimming, don't treat it as a pulse.
     return Infinity;
   }

@@ -3,8 +3,8 @@ id: human-rights
 name: 'Human Rights and Justice'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 2
+    windowLength: 30
     costPerQALY: 1_250
 ---
 

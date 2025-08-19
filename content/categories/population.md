@@ -3,8 +3,8 @@ id: population
 name: 'Population'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 10
+    windowLength: 80
     costPerQALY: 6_250
 ---
 

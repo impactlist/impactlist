@@ -3,8 +3,8 @@ id: global-health
 name: 'Global Health'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 1
+    windowLength: 40
     costPerQALY: 62.5
 ---
 

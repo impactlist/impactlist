@@ -3,8 +3,8 @@ id: political
 name: 'Political'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 2
+    windowLength: 10
     costPerQALY: 12_500
 ---
 

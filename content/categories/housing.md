@@ -3,9 +3,9 @@ id: housing
 name: 'Homelessness and Housing'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
-    costPerQALY: 15_000
+    startTime: 1
+    windowLength: 5
+    costPerQALY: 12_500
 ---
 
 # Justification of cost per life

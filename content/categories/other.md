@@ -3,9 +3,9 @@ id: other
 name: 'Other'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
-    costPerQALY: 12_500
+    startTime: 1
+    windowLength: 10
+    costPerQALY: 6_250
 ---
 
 # Justification of cost per life

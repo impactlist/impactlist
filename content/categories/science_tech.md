@@ -3,8 +3,8 @@ id: science-tech
 name: 'Science and Tech'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 5
+    windowLength: 30
     costPerQALY: 2_000
 ---
 

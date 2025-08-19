@@ -3,9 +3,9 @@ id: climate-change
 name: 'Climate Change'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
-    costPerQALY: 875
+    startTime: 5
+    windowLength: 100
+    costPerQALY: 500
 ---
 
 # Justification of cost per life

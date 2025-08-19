@@ -3,8 +3,8 @@ id: conflict-mitigation
 name: 'Conflict Mitigation'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 1
+    windowLength: 30
     costPerQALY: 7_500
 ---
 

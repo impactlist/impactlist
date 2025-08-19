@@ -3,8 +3,8 @@ id: longevity
 name: 'Longevity'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 10
+    windowLength: 80
     costPerQALY: 525
 ---
 

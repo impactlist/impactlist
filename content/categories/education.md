@@ -3,8 +3,8 @@ id: education
 name: 'Education'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 5
+    windowLength: 50
     costPerQALY: 1_000
 ---
 

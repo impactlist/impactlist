@@ -3,8 +3,8 @@ id: meta-theory
 name: 'Meta and Theory'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 3
+    windowLength: 50
     costPerQALY: 21.25
 ---
 

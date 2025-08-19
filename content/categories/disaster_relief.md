@@ -4,7 +4,7 @@ name: 'Disaster Relief'
 effects:
   - effectId: standard
     startTime: 0
-    windowLength: 0
+    windowLength: 2
     costPerQALY: 7_500
 ---
 

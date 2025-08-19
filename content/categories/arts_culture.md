@@ -3,8 +3,8 @@ id: arts-culture
 name: 'Arts, Culture, Heritage'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 1
+    windowLength: 60
     costPerQALY: 12_500
 ---
 

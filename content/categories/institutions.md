@@ -3,8 +3,8 @@ id: institutions
 name: 'Improving Institutions'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 5
+    windowLength: 40
     costPerQALY: 625
 ---
 

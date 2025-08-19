@@ -3,16 +3,15 @@ id: ai-capabilities
 name: 'AGI Development'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
-    costPerQALY: 62.5
+    startTime: 2
+    windowLength: 30
+    costPerQALY: 60
   - effectId: population
     startTime: 10
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 100_000
+    costPerMicroprobability: 200_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: -1.0
-
 ---
 
 # Justification of cost per life

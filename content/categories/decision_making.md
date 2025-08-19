@@ -3,8 +3,8 @@ id: decision-making
 name: 'Improving Decision Making'
 effects:
   - effectId: standard
-    startTime: 0
-    windowLength: 0
+    startTime: 3
+    windowLength: 30
     costPerQALY: 250
 ---
 

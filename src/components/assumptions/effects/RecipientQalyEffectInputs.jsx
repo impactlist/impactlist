@@ -67,6 +67,12 @@ const RecipientQalyEffectInputs = ({
           defaultRecipientEffect,
         });
 
+        // Get the category value (user customized or default)
+        const categoryValue =
+          userCategoryEffect?.[field.name] !== undefined
+            ? userCategoryEffect[field.name]
+            : defaultCategoryEffect[field.name];
+
         return (
           <div key={field.name} className="space-y-1">
             <div className="flex items-center gap-2">
@@ -121,6 +127,12 @@ const RecipientQalyEffectInputs = ({
                   overridePlaceholder !== null &&
                   parseFloat(overrideValue.toString().replace(/,/g, '')) !== parseFloat(overridePlaceholder) && (
                     <p className="text-xs text-gray-500 mt-1">Default: {formatNumberWithCommas(overridePlaceholder)}</p>
+                  )}
+                {!overrideValue &&
+                  overridePlaceholder !== null &&
+                  categoryValue !== undefined &&
+                  parseFloat(overridePlaceholder) !== parseFloat(categoryValue) && (
+                    <p className="text-xs text-gray-500 mt-1">Category: {formatNumberWithCommas(categoryValue)}</p>
                   )}
               </div>
 

@@ -149,29 +149,30 @@ const RecipientValuesSection = ({
                           </Link>
 
                           {/* Cost per life input with Edit button */}
-                          <div className="relative w-full sm:w-64">
-                            <CurrencyInput
-                              id={`recipient-${recipientId}-${categoryId}`}
-                              value={formattedRecipientCost}
-                              onChange={() => {}} // Read-only, no-op
-                              className="w-full pr-10"
-                              disabled={true}
-                              isCustom={hasUserCustomValues}
-                              placeholder={formattedCategoryCost}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => onEditRecipient(recipient, recipientId, categoryId)}
-                              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                            >
-                              Edit
-                            </button>
+                          <div className="w-full sm:w-64">
+                            <div className="relative">
+                              <CurrencyInput
+                                id={`recipient-${recipientId}-${categoryId}`}
+                                value={formattedRecipientCost}
+                                onChange={() => {}} // Read-only, no-op
+                                className="w-full pr-10"
+                                disabled={true}
+                                isCustom={hasUserCustomValues}
+                                placeholder={formattedCategoryCost}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => onEditRecipient(recipient, recipientId, categoryId)}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                              >
+                                Edit
+                              </button>
+                            </div>
+                            {/* Show category cost below input if different */}
+                            {recipientCostDiffers && (
+                              <p className="text-xs text-gray-500 mt-0.5">Category: ${formattedCategoryCost}</p>
+                            )}
                           </div>
-
-                          {/* Show category cost at end of line if different */}
-                          {recipientCostDiffers && (
-                            <div className="text-xs text-gray-400">(category: ${formattedCategoryCost})</div>
-                          )}
                         </div>
                       );
                     })}

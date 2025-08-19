@@ -39,15 +39,15 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
       format: 'percentage',
     },
     {
-      id: 'timeLimit',
-      label: 'Time Limit (years)',
-      description: "Time after which we don't consider effects on the future",
-      format: 'number',
-    },
-    {
       id: 'populationLimit',
       label: 'Population Limit Factor',
       description: "Maximum or minimum population as a multiple of today's population",
+      format: 'number',
+    },
+    {
+      id: 'timeLimit',
+      label: 'Time Limit (years)',
+      description: "Time after which we don't consider effects on the future",
       format: 'number',
     },
     {
@@ -55,12 +55,14 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
       label: 'Current Population',
       description: 'Current global population',
       format: 'number',
+      readonly: true,
     },
     {
       id: 'yearsPerLife',
       label: 'Years Per Life',
       description: 'Number of years of human life that we consider equal to one life saved',
       format: 'number',
+      readonly: true,
     },
   ];
 
@@ -94,21 +96,24 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   </svg>
                 </Tooltip>
               </label>
-              <CustomValueIndicator
-                isCustom={isCustom}
-                hasError={hasError}
-                onReset={() => {
-                  const formattedValue = formatDisplayValue(defaultValue, param.format);
-                  onChange(param.id, formattedValue);
-                }}
-              />
+              {!param.readonly && (
+                <CustomValueIndicator
+                  isCustom={isCustom}
+                  hasError={hasError}
+                  onReset={() => {
+                    const formattedValue = formatDisplayValue(defaultValue, param.format);
+                    onChange(param.id, formattedValue);
+                  }}
+                />
+              )}
             </div>
             <input
               type="text"
               id={param.id}
               name={param.id}
-              value={value}
+              value={param.readonly ? formatDisplayValue(defaultValue, param.format) : value}
               onChange={(e) => {
+                if (param.readonly) return;
                 // Get the current input element and cursor position
                 const inputElement = e.target;
                 const newValue = e.target.value;
@@ -120,13 +125,17 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                 // Pass the formatted value to parent
                 onChange(param.id, result.value);
               }}
+              readOnly={param.readonly}
+              disabled={param.readonly}
               placeholder={formatDisplayValue(defaultValue, param.format)}
               className={`
                 w-full px-2 py-1 text-sm border rounded focus:ring-1 focus:outline-none
                 ${
-                  hasError
-                    ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                  param.readonly
+                    ? 'bg-gray-100 border-gray-200 text-gray-600 cursor-not-allowed'
+                    : hasError
+                      ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
+                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                 }
               `}
             />

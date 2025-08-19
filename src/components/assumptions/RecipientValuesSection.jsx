@@ -89,22 +89,18 @@ const RecipientValuesSection = ({
             : 'No recipients with custom values found. Search for a specific recipient.'}
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="flex flex-wrap gap-3">
           {filteredRecipients
             .sort((a, b) => a.name.localeCompare(b.name))
-            .map((recipient, index) => {
+            .map((recipient) => {
               const recipientCategories = Object.entries(recipient.categories || {});
               if (recipientCategories.length === 0) return null;
 
               // Get recipient ID for lookups
               const recipientId = getRecipientId(recipient);
 
-              // Alternate row colors for better readability
-              const isEven = index % 2 === 0;
-              const bgColorClass = isEven ? 'bg-white' : 'bg-gray-100';
-
               return (
-                <div key={recipient.name} className={`border border-gray-200 rounded-md p-2 ${bgColorClass}`}>
+                <div key={recipient.name} className="border border-gray-400 rounded-md p-3 inline-block bg-white">
                   <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
                   <div className="space-y-1">
                     {recipientCategories.map(([categoryId]) => {
@@ -139,17 +135,17 @@ const RecipientValuesSection = ({
                       const recipientCostDiffers = formattedRecipientCost !== formattedCategoryCost;
 
                       return (
-                        <div key={categoryId} className="flex flex-wrap items-center gap-2">
+                        <div key={categoryId} className="flex items-start gap-4">
                           {/* Category name */}
                           <Link
                             to={`/explore/${categoryId}`}
-                            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 min-w-[180px]"
+                            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 flex-shrink-0 w-40 mt-1"
                           >
                             {categoryName}
                           </Link>
 
                           {/* Cost per life input with Edit button */}
-                          <div className="w-full sm:w-64">
+                          <div className="flex-1 max-w-xs">
                             <div className="relative">
                               <CurrencyInput
                                 id={`recipient-${recipientId}-${categoryId}`}

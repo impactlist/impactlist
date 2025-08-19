@@ -273,6 +273,30 @@ describe('effectsCalculation', () => {
 
         expect(withinCost).toBeLessThan(pastCost);
       });
+
+      it('should have same cost for different window lengths that both extend past time limit', () => {
+        const params = { ...baseGlobalParams, discountRate: 0.03, timeLimit: 40 };
+        const startTime = 30;
+
+        // Both effects start at year 30 and extend past the time limit of 40
+        // They should both be truncated to 10 years (40 - 30)
+        const window20 = createQALYEffect(1000, startTime, 20); // extends to year 50
+        const window30 = createQALYEffect(1000, startTime, 30); // extends to year 60
+        const window50 = createQALYEffect(1000, startTime, 50); // extends to year 80
+
+        const cost20 = effectToCostPerLife(window20, params);
+        const cost30 = effectToCostPerLife(window30, params);
+        const cost50 = effectToCostPerLife(window50, params);
+
+        // All should have the same cost since they're all truncated to 10 years
+        expect(cost20).toBeCloseTo(cost30, 10);
+        expect(cost30).toBeCloseTo(cost50, 10);
+
+        // Also test that they match a window that exactly fits the limit
+        const windowExact = createQALYEffect(1000, startTime, 10); // exactly to year 40
+        const costExact = effectToCostPerLife(windowExact, params);
+        expect(cost20).toBeCloseTo(costExact, 10);
+      });
     });
 
     describe('Population Growth Effects', () => {

@@ -5,7 +5,7 @@ import FormField from '../../shared/FormField';
 /**
  * Input fields for population-based effects
  */
-const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange }) => {
+const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange, globalParameters }) => {
   const handleChange = (fieldName) => (value) => {
     onChange(effectIndex, fieldName, value);
   };
@@ -13,6 +13,13 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
   const getError = (fieldName) => {
     return errors[`${effectIndex}-${fieldName}`];
   };
+
+  // Check if time limit would truncate the window
+  const timeLimit = globalParameters?.timeLimit;
+  // Parse values, removing commas from formatted strings
+  const startTime = parseFloat(String(effect.startTime).replace(/,/g, ''));
+  const windowLength = parseFloat(String(effect.windowLength).replace(/,/g, ''));
+  const showTimeLimitMessage = timeLimit && startTime + windowLength > timeLimit;
 
   return (
     <div className="space-y-3">
@@ -60,15 +67,20 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
           error={getError('startTime')}
         />
 
-        <FormField
-          id={`effect-${effectIndex}-windowLength`}
-          label="Window length (years)"
-          description="Duration of the effect window"
-          value={effect.windowLength}
-          defaultValue={defaultEffect?.windowLength}
-          onChange={handleChange('windowLength')}
-          error={getError('windowLength')}
-        />
+        <div className="flex flex-col">
+          <FormField
+            id={`effect-${effectIndex}-windowLength`}
+            label="Window length (years)"
+            description="Duration of the effect window"
+            value={effect.windowLength}
+            defaultValue={defaultEffect?.windowLength}
+            onChange={handleChange('windowLength')}
+            error={getError('windowLength')}
+          />
+          {showTimeLimitMessage && (
+            <p className="text-xs text-gray-500 mt-1 px-3 pb-1">Time limit: {timeLimit.toLocaleString()}</p>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -92,6 +104,7 @@ PopulationEffectInputs.propTypes = {
   }),
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  globalParameters: PropTypes.object,
 };
 
 export default PopulationEffectInputs;

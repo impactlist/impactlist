@@ -151,6 +151,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                       defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
                       errors={errors}
                       onChange={updateEffectField}
+                      globalParameters={globalParameters}
                     />
                   ) : effectType === 'population' ? (
                     <PopulationEffectInputs
@@ -159,6 +160,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                       defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
                       errors={errors}
                       onChange={updateEffectField}
+                      globalParameters={globalParameters}
                     />
                   ) : (
                     <div className="text-sm text-red-600">Unknown effect type</div>

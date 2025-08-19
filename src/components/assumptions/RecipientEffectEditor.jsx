@@ -344,6 +344,7 @@ const RecipientEffectEditor = ({
                         overrides={effect.overrides}
                         multipliers={effect.multipliers}
                         onChange={updateEffectField}
+                        globalParameters={globalParameters}
                       />
                     ) : effectType === 'population' ? (
                       <RecipientPopulationEffectInputs
@@ -355,6 +356,7 @@ const RecipientEffectEditor = ({
                         overrides={effect.overrides}
                         multipliers={effect.multipliers}
                         onChange={updateEffectField}
+                        globalParameters={globalParameters}
                       />
                     ) : (
                       <div className="text-sm text-red-600">Unknown effect type</div>

@@ -3,6 +3,38 @@ import { effectToCostPerLife } from './effectsCalculation';
 import { getEffectType } from './effectValidation';
 
 /**
+ * Parse a formatted number string (with commas) to a float
+ * @param {string|number} value - Value to parse
+ * @returns {number} Parsed number or NaN if invalid
+ */
+export const parseFormattedNumber = (value) => {
+  if (value === null || value === undefined || value === '') {
+    return NaN;
+  }
+  return parseFloat(String(value).replace(/,/g, ''));
+};
+
+/**
+ * Check if an effect window exceeds the global time limit
+ * @param {string|number} startTime - Start time value (may be formatted with commas)
+ * @param {string|number} windowLength - Window length value (may be formatted with commas)
+ * @param {number} timeLimit - Global time limit
+ * @returns {boolean} True if the window exceeds the time limit
+ */
+export const checkWindowExceedsTimeLimit = (startTime, windowLength, timeLimit) => {
+  if (!timeLimit) return false;
+
+  const parsedStartTime = parseFormattedNumber(startTime);
+  const parsedWindowLength = parseFormattedNumber(windowLength);
+
+  if (isNaN(parsedStartTime) || isNaN(parsedWindowLength)) {
+    return false;
+  }
+
+  return parsedStartTime + parsedWindowLength > timeLimit;
+};
+
+/**
  * Clean and convert effect fields from strings to numbers for calculation
  * @param {Object} effect - Effect with potentially string values
  * @returns {Object} Effect with numeric values

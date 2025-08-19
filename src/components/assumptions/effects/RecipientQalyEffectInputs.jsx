@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
+import TimeLimitMessage from '../../shared/TimeLimitMessage';
 
 /**
  * Component for editing QALY effect overrides/multipliers for recipients
@@ -16,6 +17,7 @@ const RecipientQalyEffectInputs = ({
   overrides,
   multipliers,
   onChange,
+  globalParameters,
 }) => {
   // Helper to handle the mutual exclusivity of override/multiplier
   const handleOverrideChange = (fieldName, value) => {
@@ -48,6 +50,23 @@ const RecipientQalyEffectInputs = ({
     { name: 'startTime', label: 'Start year:', tooltip: 'Years until the effect begins' },
     { name: 'windowLength', label: 'Window length:', tooltip: 'Duration of the effect in years' },
   ];
+
+  // Get effective values for time limit message
+  const effectiveStartTime =
+    getOverrideValue('startTime') ||
+    getOverridePlaceholderValue('startTime', {
+      defaultCategoryEffect,
+      userCategoryEffect,
+      defaultRecipientEffect,
+    });
+
+  const effectiveWindowLength =
+    getOverrideValue('windowLength') ||
+    getOverridePlaceholderValue('windowLength', {
+      defaultCategoryEffect,
+      userCategoryEffect,
+      defaultRecipientEffect,
+    });
 
   return (
     <div className="space-y-3">
@@ -180,6 +199,13 @@ const RecipientQalyEffectInputs = ({
                   )}
               </div>
             </div>
+            {field.name === 'windowLength' && (
+              <TimeLimitMessage
+                startTime={effectiveStartTime}
+                windowLength={effectiveWindowLength}
+                timeLimit={globalParameters?.timeLimit}
+              />
+            )}
           </div>
         );
       })}

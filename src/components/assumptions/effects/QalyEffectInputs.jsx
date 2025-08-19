@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FormField from '../../shared/FormField';
+import TimeLimitMessage from '../../shared/TimeLimitMessage';
 
 /**
  * Input fields for QALY-based effects
@@ -13,13 +14,6 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
   const getError = (fieldName) => {
     return errors[`${effectIndex}-${fieldName}`];
   };
-
-  // Check if time limit would truncate the window
-  const timeLimit = globalParameters?.timeLimit;
-  // Parse values, removing commas from formatted strings
-  const startTime = parseFloat(String(effect.startTime).replace(/,/g, ''));
-  const windowLength = parseFloat(String(effect.windowLength).replace(/,/g, ''));
-  const showTimeLimitMessage = timeLimit && startTime + windowLength > timeLimit;
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -54,9 +48,11 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
           onChange={handleChange('windowLength')}
           error={getError('windowLength')}
         />
-        {showTimeLimitMessage && (
-          <p className="text-xs text-gray-500 mt-1 px-3 pb-1">Time limit: {timeLimit.toLocaleString()}</p>
-        )}
+        <TimeLimitMessage
+          startTime={effect.startTime}
+          windowLength={effect.windowLength}
+          timeLimit={globalParameters?.timeLimit}
+        />
       </div>
     </div>
   );

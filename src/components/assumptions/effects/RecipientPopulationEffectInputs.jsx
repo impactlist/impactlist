@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
+import TimeLimitMessage from '../../shared/TimeLimitMessage';
 
 /**
  * Component for editing Population effect overrides/multipliers for recipients
@@ -16,6 +17,7 @@ const RecipientPopulationEffectInputs = ({
   overrides,
   multipliers,
   onChange,
+  globalParameters,
 }) => {
   // Helper to handle the mutual exclusivity of override/multiplier
   const handleOverrideChange = (fieldName, value) => {
@@ -62,6 +64,23 @@ const RecipientPopulationEffectInputs = ({
     { name: 'startTime', label: 'Start Year:', tooltip: 'Years until the effect begins' },
     { name: 'windowLength', label: 'Window Length:', tooltip: 'Duration of the effect in years' },
   ];
+
+  // Get effective values for time limit message
+  const effectiveStartTime =
+    getOverrideValue('startTime') ||
+    getOverridePlaceholderValue('startTime', {
+      defaultCategoryEffect,
+      userCategoryEffect,
+      defaultRecipientEffect,
+    });
+
+  const effectiveWindowLength =
+    getOverrideValue('windowLength') ||
+    getOverridePlaceholderValue('windowLength', {
+      defaultCategoryEffect,
+      userCategoryEffect,
+      defaultRecipientEffect,
+    });
 
   return (
     <div className="space-y-3">
@@ -194,6 +213,13 @@ const RecipientPopulationEffectInputs = ({
                   )}
               </div>
             </div>
+            {field.name === 'windowLength' && (
+              <TimeLimitMessage
+                startTime={effectiveStartTime}
+                windowLength={effectiveWindowLength}
+                timeLimit={globalParameters?.timeLimit}
+              />
+            )}
           </div>
         );
       })}

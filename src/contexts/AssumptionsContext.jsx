@@ -387,6 +387,9 @@ export const AssumptionsProvider = ({ children }) => {
   const hasCustomValues = (assumptions) => {
     if (!assumptions) return false;
 
+    // Check if the assumptions object itself is empty
+    if (Object.keys(assumptions).length === 0) return false;
+
     return (
       (assumptions.globalParameters && Object.keys(assumptions.globalParameters).length > 0) ||
       (assumptions.categories && Object.keys(assumptions.categories).length > 0) ||

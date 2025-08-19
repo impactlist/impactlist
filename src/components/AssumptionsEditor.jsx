@@ -35,6 +35,8 @@ const AssumptionsEditor = () => {
     updateRecipientEffect,
     clearRecipientEffect,
     updateGlobalParameter,
+    resetAllGlobalParameters,
+    resetRecipientToDefaults,
     getCategoryValue,
     getRecipientValue,
     getGlobalParameter,
@@ -164,6 +166,7 @@ const AssumptionsEditor = () => {
     // Update global parameter values using context methods
     Object.entries(globalForm.formValues).forEach(([paramKey, valueObj]) => {
       const rawValue = valueObj.raw;
+      const defaultValue = defaultAssumptions.globalParameters[paramKey];
 
       if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
         // Empty value - clear any custom override
@@ -171,7 +174,13 @@ const AssumptionsEditor = () => {
       } else {
         const { numValue } = cleanAndParseValue(rawValue);
         if (!isNaN(numValue)) {
-          updateGlobalParameter(paramKey, numValue);
+          // Only set if different from default
+          if (numValue !== defaultValue) {
+            updateGlobalParameter(paramKey, numValue);
+          } else {
+            // Value equals default - clear any custom override
+            updateGlobalParameter(paramKey, '');
+          }
         }
       }
     });
@@ -203,11 +212,8 @@ const AssumptionsEditor = () => {
     // First reset the form to show empty values (defaults)
     globalForm.reset();
 
-    // Then clear all global parameter custom values using context methods
-    // We do this after reset to avoid the form re-initializing with old values
-    Object.keys(globalForm.formValues).forEach((paramKey) => {
-      updateGlobalParameter(paramKey, '');
-    });
+    // Use the batch reset function to clear all global parameters at once
+    resetAllGlobalParameters();
   };
 
   // Handle reset button for categories
@@ -221,13 +227,9 @@ const AssumptionsEditor = () => {
 
   // Handle reset button for recipients - only resets recipient data, preserves category values
   const handleResetRecipients = () => {
-    // Clear all custom values for filtered recipients
+    // Clear all custom values for filtered recipients using batch reset
     recipientSearch.filteredRecipients.forEach((recipient) => {
-      Object.keys(recipient.categories || {}).forEach((categoryId) => {
-        // Clear both multiplier and costPerLife for each category
-        updateRecipientValue(recipient.name, categoryId, 'multiplier', '');
-        updateRecipientValue(recipient.name, categoryId, 'costPerLife', '');
-      });
+      resetRecipientToDefaults(recipient.name);
     });
     recipientForm.reset();
   };

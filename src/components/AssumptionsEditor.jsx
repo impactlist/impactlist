@@ -325,11 +325,9 @@ const AssumptionsEditor = () => {
   const getDescription = () => {
     if (activeTab === 'global') {
       return 'Global parameters that affect the calculations of the cost to save one life for each category or recipient:';
-    } else if (activeTab === 'categories') {
-      return `Cost to save a life in ${previewYear} for each cause category:`;
-    } else {
-      return `Cost to save a life in ${previewYear} for each recipient:`;
     }
+    // For categories and recipients, we'll render the description with inline year selector
+    return null;
   };
 
   return (
@@ -372,12 +370,21 @@ const AssumptionsEditor = () => {
 
           {/* Tab description */}
           <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
-            <div className="flex items-center justify-between">
+            {activeTab === 'global' ? (
               <p className="text-base font-semibold text-gray-700">{getDescription()}</p>
-              {activeTab !== 'global' && (
-                <YearSelector value={previewYear} onChange={setPreviewYear} id="assumptions-preview-year" />
-              )}
-            </div>
+            ) : (
+              <div className="flex items-center text-base font-semibold text-gray-700">
+                <span>Cost to save a life in</span>
+                <YearSelector
+                  value={previewYear}
+                  onChange={setPreviewYear}
+                  id="assumptions-preview-year"
+                  label=""
+                  className="mx-2"
+                />
+                <span>for each {activeTab === 'categories' ? 'cause category' : 'recipient'}:</span>
+              </div>
+            )}
           </div>
         </>
       )}

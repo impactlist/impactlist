@@ -150,8 +150,10 @@ const RecipientTable = ({
             },
           ]}
           data={donations}
-          defaultSortColumn="amount"
+          defaultSortColumn="date"
           defaultSortDirection="desc"
+          tiebreakColumn="recipientName"
+          tiebreakDirection="asc"
         />
       </div>
 

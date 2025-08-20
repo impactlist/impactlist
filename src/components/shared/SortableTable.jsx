@@ -12,6 +12,20 @@ const SortableTable = ({
   const [sortColumn, setSortColumn] = useState(defaultSortColumn);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
 
+  // Helper function to apply tiebreaker comparison
+  const applyTiebreaker = (a, b, tiebreakColumn, tiebreakDirection) => {
+    const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
+    const aTiebreakValue = a[tiebreakColumn];
+    const bTiebreakValue = b[tiebreakColumn];
+
+    // Use appropriate comparison for tiebreaker
+    if (typeof aTiebreakValue === 'string' && typeof bTiebreakValue === 'string') {
+      return tiebreakMultiplier * aTiebreakValue.localeCompare(bTiebreakValue);
+    } else {
+      return tiebreakMultiplier * (aTiebreakValue - bTiebreakValue);
+    }
+  };
+
   // Handle column header click for sorting
   const handleSort = (columnKey) => {
     if (sortColumn === columnKey) {
@@ -47,9 +61,7 @@ const SortableTable = ({
 
         // Use tiebreaker if values are equal and tiebreakColumn is provided
         if (result === 0 && tiebreakColumn) {
-          // Apply the tiebreaker based on the specified direction
-          const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
-          return tiebreakMultiplier * (a[tiebreakColumn] - b[tiebreakColumn]);
+          return applyTiebreaker(a, b, tiebreakColumn, tiebreakDirection);
         }
 
         return result;
@@ -72,9 +84,7 @@ const SortableTable = ({
 
       // Use tiebreaker if values are equal and tiebreakColumn is provided
       if (result === 0 && tiebreakColumn) {
-        // Apply the tiebreaker based on the specified direction
-        const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
-        return tiebreakMultiplier * (a[tiebreakColumn] - b[tiebreakColumn]);
+        return applyTiebreaker(a, b, tiebreakColumn, tiebreakDirection);
       }
 
       return result;
@@ -90,9 +100,7 @@ const SortableTable = ({
 
     // Use tiebreaker if values are equal and tiebreakColumn is provided
     if (result === 0 && tiebreakColumn) {
-      // Apply the tiebreaker based on the specified direction
-      const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
-      return tiebreakMultiplier * (a[tiebreakColumn] - b[tiebreakColumn]);
+      return applyTiebreaker(a, b, tiebreakColumn, tiebreakDirection);
     }
 
     return result;

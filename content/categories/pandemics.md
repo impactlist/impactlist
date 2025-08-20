@@ -6,6 +6,12 @@ effects:
     startTime: 3
     windowLength: 30
     costPerQALY: 50
+  - effectId: population
+    startTime: 3
+    windowLength: 30
+    costPerMicroprobability: 500_000
+    populationFractionAffected: 0.05
+    qalyImprovementPerYear: 1.0
 ---
 
 # Justification of cost per life

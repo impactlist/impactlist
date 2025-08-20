@@ -2,10 +2,12 @@
 id: nuclear
 name: 'Nuclear'
 effects:
-  - effectId: standard
-    startTime: 3
-    windowLength: 50
-    costPerQALY: 37.5
+  - effectId: population
+    startTime: 15
+    windowLength: 100
+    costPerMicroprobability: 500_000
+    populationFractionAffected: 0.1
+    qalyImprovementPerYear: 1.0
 ---
 
 # Justification of cost per life

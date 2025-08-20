@@ -5,7 +5,10 @@ categories:
   - id: ai-capabilities
     fraction: 1
     effects:
-      - effectId: population
+      - effectId: population-medium
+        multipliers:
+          costPerMicroprobability: 4
+      - effectId: population-late
         multipliers:
           costPerMicroprobability: 4
 ---

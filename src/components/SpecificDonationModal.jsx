@@ -47,6 +47,13 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     if (editingDonation) {
       setAmount(editingDonation.amount.toString());
 
+      // Set the year from the saved donation, or use current year as fallback
+      if (editingDonation.date) {
+        setDonationYear(editingDonation.date.toString());
+      } else {
+        setDonationYear(getCurrentYear().toString());
+      }
+
       if (editingDonation.isCustomRecipient) {
         setIsExistingRecipient(false);
         setCustomRecipientName(editingDonation.recipientName);

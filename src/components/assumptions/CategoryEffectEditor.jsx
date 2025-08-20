@@ -169,7 +169,10 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                       </h4>
                       {effect.validTimeInterval && (
                         <p className="text-xs text-gray-500 mt-1">
-                          Active: {effect.validTimeInterval[0]} - {effect.validTimeInterval[1] || 'present'}
+                          Active:{' '}
+                          {effect.validTimeInterval[0] === null
+                            ? `Until ${effect.validTimeInterval[1]}`
+                            : `${effect.validTimeInterval[0]} - ${effect.validTimeInterval[1] || 'present'}`}
                           {(previewYear < effect.validTimeInterval[0] ||
                             (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
                             <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>

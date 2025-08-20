@@ -395,11 +395,27 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
     }
   });
 
-  // Check all recipients reference valid categories
+  // Check all recipients reference valid categories and effect IDs
   Object.entries(recipients).forEach(([recipientId, recipient]) => {
-    Object.keys(recipient.categories).forEach((categoryId) => {
+    Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
+      // Check category exists
       if (!categories[categoryId]) {
         errors.push(`Error: Recipient "${recipientId}" references non-existent category ID "${categoryId}"`);
+        return; // Skip effect validation if category doesn't exist
+      }
+
+      // Check that effect IDs referenced by recipient exist in the base category
+      if (categoryData.effects && Array.isArray(categoryData.effects)) {
+        const categoryEffectIds = new Set(categories[categoryId].effects.map((effect) => effect.effectId));
+
+        categoryData.effects.forEach((recipientEffect) => {
+          if (!categoryEffectIds.has(recipientEffect.effectId)) {
+            errors.push(
+              `Error: Recipient "${recipientId}" references effect ID "${recipientEffect.effectId}" in category "${categoryId}" that doesn't exist in the base category. ` +
+                `Available effect IDs in category "${categoryId}": ${Array.from(categoryEffectIds).join(', ')}`
+            );
+          }
+        });
       }
     });
   });

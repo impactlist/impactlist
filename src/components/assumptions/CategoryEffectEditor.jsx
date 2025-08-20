@@ -165,8 +165,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                   <div className="mb-2 flex justify-between items-start">
                     <div>
                       <h4 className="text-sm font-medium text-gray-900">
-                        Effect {index + 1}: {effectType === 'qaly' ? 'Standard' : 'Population-level'}
-                        {effect.effectId && <span className="ml-2 text-xs text-gray-500">({effect.effectId})</span>}
+                        Effect {index + 1}: {effect.effectId}
                       </h4>
                       {effect.validTimeInterval && (
                         <p className="text-xs text-gray-500 mt-1">

@@ -11,7 +11,12 @@ const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombi
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-          {description && <p className="mt-1 text-sm text-gray-600">{description}</p>}
+          {description &&
+            (typeof description === 'string' ? (
+              <p className="mt-1 text-sm text-gray-600">{description}</p>
+            ) : (
+              <div className="mt-1 text-sm text-gray-600">{description}</div>
+            ))}
         </div>
         {onClose && (
           <button type="button" onClick={onClose} className="ml-4 text-gray-400 hover:text-gray-500">
@@ -33,7 +38,7 @@ const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombi
 
 EffectEditorHeader.propTypes = {
   title: PropTypes.string.isRequired,
-  description: PropTypes.string,
+  description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   combinedCostPerLife: PropTypes.number,
   showCombinedCost: PropTypes.bool,
   onClose: PropTypes.func,

@@ -299,7 +299,14 @@ const DonationCalculator = () => {
   // Helper function to get the year from a specific donation
   const getDonationYear = (donation) => {
     // Specific donations store year in 'date' field as a string
-    return donation.date ? parseInt(donation.date, 10) : getCurrentYear();
+    if (!donation.date) {
+      throw new Error(`Donation missing required date field: ${JSON.stringify(donation)}`);
+    }
+    const year = parseInt(donation.date, 10);
+    if (isNaN(year)) {
+      throw new Error(`Invalid year format in donation date field: "${donation.date}"`);
+    }
+    return year;
   };
 
   // Calculate lives saved for a specific donation

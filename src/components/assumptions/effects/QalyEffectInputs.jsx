@@ -20,7 +20,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
       <FormField
         id={`effect-${effectIndex}-costPerQALY`}
         label="Cost per life-year"
-        description="Cost to produce one quality-adjusted life year"
+        description="Cost to produce or save one quality-adjusted life year."
         value={effect.costPerQALY}
         defaultValue={defaultEffect?.costPerQALY}
         onChange={handleChange('costPerQALY')}
@@ -31,7 +31,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
       <FormField
         id={`effect-${effectIndex}-startTime`}
         label="Start Time (years)"
-        description="When the effect starts relative to the intervention"
+        description="Number of years after the intervention starts that the effect of that intervention starts."
         value={effect.startTime}
         defaultValue={defaultEffect?.startTime}
         onChange={handleChange('startTime')}
@@ -42,7 +42,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
         <FormField
           id={`effect-${effectIndex}-windowLength`}
           label="Window Length (years)"
-          description="Duration of the effect window"
+          description="Duration of the effect of the intervention. For instance if the intervention is a vaccine that provides protection for 10 years, the window length is 10 years."
           value={effect.windowLength}
           defaultValue={defaultEffect?.windowLength}
           onChange={handleChange('windowLength')}

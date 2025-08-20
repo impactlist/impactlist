@@ -21,7 +21,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
         <FormField
           id={`effect-${effectIndex}-costPerMicroprobability`}
           label="Cost per microprobability"
-          description="Cost to change the probability of an event happening by one in a million"
+          description="Cost to change the probability of an event happening by one in a million."
           value={effect.costPerMicroprobability}
           defaultValue={defaultEffect?.costPerMicroprobability}
           onChange={handleChange('costPerMicroprobability')}
@@ -32,7 +32,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
         <FormField
           id={`effect-${effectIndex}-populationFractionAffected`}
           label="Population fraction affected"
-          description="Fraction of the population affected (0-1)"
+          description="Fraction (0-1) of the population affected if the event happens. For instance if the event is a pandemic that kills 10% of the population, the population fraction affected is 0.1."
           value={effect.populationFractionAffected}
           defaultValue={defaultEffect?.populationFractionAffected}
           onChange={handleChange('populationFractionAffected')}
@@ -44,7 +44,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
         <FormField
           id={`effect-${effectIndex}-qalyImprovementPerYear`}
           label="Life-year improvement/year"
-          description="Quality-adjusted life years improved per person per year"
+          description="Quality-adjusted life years gained or lost per person per year if the event happens. For instance if the event kills everyone it affects, the life-year improvement per year is -1 (each person loses one life-year per year after they die)."
           value={effect.qalyImprovementPerYear}
           defaultValue={defaultEffect?.qalyImprovementPerYear}
           onChange={handleChange('qalyImprovementPerYear')}
@@ -54,7 +54,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
         <FormField
           id={`effect-${effectIndex}-startTime`}
           label="Start time (years)"
-          description="When the effect starts relative to the intervention"
+          description="Number of years after the intervention starts until the event is expected to happen, if it happens."
           value={effect.startTime}
           defaultValue={defaultEffect?.startTime}
           onChange={handleChange('startTime')}
@@ -65,7 +65,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
           <FormField
             id={`effect-${effectIndex}-windowLength`}
             label="Window length (years)"
-            description="Duration of the effect window"
+            description="Duration of the effect of the event, if it happens."
             value={effect.windowLength}
             defaultValue={defaultEffect?.windowLength}
             onChange={handleChange('windowLength')}

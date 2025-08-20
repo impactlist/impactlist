@@ -85,7 +85,9 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Calculate cost per life for each effect
   const effectCostPerLife = useMemo(() => {
-    return tempEditToEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters, previewYear));
+    // Use current year if previewYear is empty or invalid
+    const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
+    return tempEditToEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters, yearForCalculation));
   }, [tempEditToEffects, globalParameters, previewYear]);
 
   // Calculate combined cost per life

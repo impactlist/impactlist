@@ -25,7 +25,17 @@ const DonationCalculator = () => {
   const [categories, setCategories] = useState([]);
   const [donations, setDonations] = useState({});
   const [specificDonations, setSpecificDonations] = useState([]);
-  const [categoryYear, setCategoryYear] = useState(getCurrentYear());
+  const [categoryYear, setCategoryYear] = useState(() => {
+    // Initialize with saved value or current year
+    const savedCategoryYear = localStorage.getItem('categoryYear');
+    if (savedCategoryYear) {
+      const year = parseInt(savedCategoryYear, 10);
+      if (!isNaN(year)) {
+        return year;
+      }
+    }
+    return getCurrentYear();
+  });
   const [totalDonated, setTotalDonated] = useState(0);
   const [totalLivesSaved, setTotalLivesSaved] = useState(0);
   const [costPerLife, setCostPerLife] = useState(0);
@@ -110,15 +120,6 @@ const DonationCalculator = () => {
     const savedSpecificDonations = localStorage.getItem('specificDonations');
     if (savedSpecificDonations) {
       setSpecificDonations(JSON.parse(savedSpecificDonations));
-    }
-
-    // Load saved category year
-    const savedCategoryYear = localStorage.getItem('categoryYear');
-    if (savedCategoryYear) {
-      const year = parseInt(savedCategoryYear, 10);
-      if (!isNaN(year)) {
-        setCategoryYear(year);
-      }
     }
   }, [combinedAssumptions]);
 

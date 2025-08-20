@@ -56,9 +56,10 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
     if (format === 'percentage') {
       const numValue = parseFloat(value);
       if (!isNaN(numValue)) {
-        // Convert to percentage and format with commas
-        const percentValue = (numValue * 100).toString();
-        return formatNumberWithCommas(percentValue);
+        // Convert to percentage and round to avoid floating-point precision issues
+        // Round to 10 decimal places to preserve precision while removing artifacts
+        const percentValue = Math.round(numValue * 100 * 1e10) / 1e10;
+        return formatNumberWithCommas(percentValue.toString());
       }
     }
 

@@ -437,9 +437,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
                 )}
                 {selectedRecipient && recipientCostPerLife && (
-                  <p className="mt-1 text-xs text-gray-500">
-                    Default cost per life: {formatCurrency(recipientCostPerLife)}
-                  </p>
+                  <p className="mt-1 text-xs text-gray-500">Cost per life: {formatCurrency(recipientCostPerLife)}</p>
                 )}
               </div>
             ) : (

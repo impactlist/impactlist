@@ -9,7 +9,7 @@ const YearSelector = ({
   onChange,
   label = 'Preview year:',
   minYear = 1900,
-  maxYear = 2100,
+  maxYear = new Date().getFullYear(),
   className = '',
   id = 'year-selector',
 }) => {
@@ -24,20 +24,31 @@ const YearSelector = ({
 
     const year = parseInt(inputValue, 10);
 
-    // Validate year is a number and within range
+    // Just pass the value through if it's a valid number
+    // Don't clamp during typing to allow natural input
     if (!isNaN(year)) {
-      // Clamp to valid range
-      const clampedYear = Math.max(minYear, Math.min(maxYear, year));
-      onChange(clampedYear);
+      onChange(year);
     }
   };
 
   const handleBlur = (e) => {
-    // On blur, if empty or invalid, reset to current year
     const inputValue = e.target.value;
+
+    // If empty or not a number, reset to current year
     if (inputValue === '' || isNaN(parseInt(inputValue, 10))) {
       onChange(new Date().getFullYear());
+      return;
     }
+
+    const year = parseInt(inputValue, 10);
+
+    // Clamp to valid range on blur
+    if (year < minYear) {
+      onChange(minYear);
+    } else if (year > maxYear) {
+      onChange(maxYear);
+    }
+    // If within range, leave it as is (onChange already called in handleChange)
   };
 
   return (

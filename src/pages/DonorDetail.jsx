@@ -2,7 +2,13 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import { getPrimaryCategoryId, getDonorById, getDonationsForDonor } from '../utils/donationDataHelpers';
+import {
+  getPrimaryCategoryId,
+  getDonorById,
+  getDonationsForDonor,
+  getCurrentYear,
+  extractYearFromDonation,
+} from '../utils/donationDataHelpers';
 import {
   calculateDonorStatsFromCombined,
   getCostPerLifeForRecipientFromCombined,
@@ -68,7 +74,8 @@ const DonorDetail = () => {
         }
 
         // Normal flow when recipient exists
-        const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
+        const donationYear = extractYearFromDonation(donation);
+        const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, donationYear);
 
         // Get the primary category ID for this recipient
         const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
@@ -171,11 +178,13 @@ const DonorDetail = () => {
         const categoryName = category.name;
 
         // Get the costPerLife with multiplier properly applied
+        const donationYear = extractYearFromDonation(donation);
         const costPerLife = getActualCostPerLifeForCategoryDataFromCombined(
           combinedAssumptions,
           recipientId,
           categoryId,
-          categoryData
+          categoryData,
+          donationYear
         );
 
         // Calculate category-specific amount and lives saved
@@ -196,7 +205,7 @@ const DonorDetail = () => {
 
         if (!categoryLivesSaved[categoryName]) {
           // Calculate virtual multiplier from actual effects
-          const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+          const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear());
           const virtualMultiplier = baseCostPerLife / costPerLife;
           const hasVirtualMultiplier = Math.abs(virtualMultiplier - 1.0) > 0.01; // Show if significantly different from 1.0
 
@@ -250,7 +259,7 @@ const DonorDetail = () => {
             : 0,
         costPerLife:
           livesSavedEntry.costPerLife ||
-          (categoryId ? getCostPerLifeFromCombined(combinedAssumptions, categoryId) || 0 : 0),
+          (categoryId ? getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear()) || 0 : 0),
         hasMultiplier: livesSavedEntry.hasMultiplier,
         multiplier: livesSavedEntry.multiplier,
       };

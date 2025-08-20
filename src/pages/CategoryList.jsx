@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import { getDonationsForRecipient, getRecipientId } from '../utils/donationDataHelpers';
+import { getDonationsForRecipient, getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeFromCombined,
   calculateLivesSavedForDonationFromCombined,
@@ -67,12 +67,13 @@ const CategoryList = () => {
     });
 
     // Prepare the category stats for display
+    const currentYear = getCurrentYear();
     const stats = categories.map((category) => {
       return {
         id: category.id,
         name: category.name,
-        costPerLife: getCostPerLifeFromCombined(combinedAssumptions, category.id),
-        actualCostPerLife: getCostPerLifeFromCombined(combinedAssumptions, category.id),
+        costPerLife: getCostPerLifeFromCombined(combinedAssumptions, category.id, currentYear),
+        actualCostPerLife: getCostPerLifeFromCombined(combinedAssumptions, category.id, currentYear),
         totalDonated: categoryTotals[category.id] || 0,
         totalLivesSaved: categoryLivesSaved[category.id] || 0,
       };

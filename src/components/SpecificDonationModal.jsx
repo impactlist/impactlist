@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { getRecipientId } from '../utils/donationDataHelpers';
+import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
 import { formatNumber, formatLives } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
@@ -14,6 +14,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const [selectedCategory, setSelectedCategory] = useState('');
   const [multiplier, setMultiplier] = useState('');
   const [costPerLife, setCostPerLife] = useState('');
+  const [donationYear, setDonationYear] = useState(getCurrentYear().toString());
   const [errors, setErrors] = useState({});
   const [isExistingRecipient, setIsExistingRecipient] = useState(true);
 
@@ -83,6 +84,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     setSelectedCategory('');
     setMultiplier('');
     setCostPerLife('');
+    setDonationYear(getCurrentYear().toString());
     setErrors({});
     setIsExistingRecipient(true);
     setShowDropdown(false);
@@ -191,6 +193,14 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       newErrors.amount = 'Please enter a valid amount';
     }
 
+    // Validate year
+    const yearNum = parseInt(donationYear, 10);
+    if (!donationYear || isNaN(yearNum)) {
+      newErrors.year = 'Please enter a valid year';
+    } else if (yearNum < 1900 || yearNum > 2100) {
+      newErrors.year = 'Year must be between 1900 and 2100';
+    }
+
     // For custom recipients, validate category and at least one of multiplier or costPerLife
     if (!isExistingRecipient) {
       if (!selectedCategory) {
@@ -224,6 +234,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         id: editingDonation?.id || new Date().getTime().toString(),
         recipientName: isExistingRecipient ? selectedRecipient.name : customRecipientName,
         amount: Number(cleanNumberInput(amount)),
+        date: donationYear, // Store as string year (e.g., "2020")
         isCustomRecipient: !isExistingRecipient,
       };
 
@@ -267,19 +278,31 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       }
 
       // Get actual cost per life for this recipient using combined assumptions
-      const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
+      const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(
+        combinedAssumptions,
+        recipientId,
+        parseInt(donationYear, 10) || getCurrentYear()
+      );
       return cleanedAmount / recipientCostPerLife;
     } else if (!isExistingRecipient && selectedCategory) {
       let effectiveCostPerLife;
 
       if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
         const multiplierValue = Number(cleanNumberInput(multiplier));
-        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory);
+        const baseCostPerLife = getCostPerLifeFromCombined(
+          combinedAssumptions,
+          selectedCategory,
+          parseInt(donationYear, 10) || getCurrentYear()
+        );
         effectiveCostPerLife = baseCostPerLife / multiplierValue;
       } else if (costPerLife && !isNaN(Number(cleanNumberInput(costPerLife)))) {
         effectiveCostPerLife = Number(cleanNumberInput(costPerLife));
       } else {
-        effectiveCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory);
+        effectiveCostPerLife = getCostPerLifeFromCombined(
+          combinedAssumptions,
+          selectedCategory,
+          parseInt(donationYear, 10) || getCurrentYear()
+        );
       }
 
       return cleanedAmount / effectiveCostPerLife;
@@ -301,7 +324,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     const recipientId = getRecipientId(selectedRecipient);
     if (!recipientId) return null;
 
-    return getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
+    return getCostPerLifeForRecipientFromCombined(
+      combinedAssumptions,
+      recipientId,
+      parseInt(donationYear, 10) || getCurrentYear()
+    );
   };
 
   const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
@@ -461,7 +488,13 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
                       Default cost per life: $
-                      {formatNumber(getCostPerLifeFromCombined(combinedAssumptions, selectedCategory))}
+                      {formatNumber(
+                        getCostPerLifeFromCombined(
+                          combinedAssumptions,
+                          selectedCategory,
+                          parseInt(donationYear, 10) || getCurrentYear()
+                        )
+                      )}
                     </p>
                   )}
                 </div>
@@ -492,8 +525,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       <p className="mt-1 text-xs text-gray-500">
                         Cost per life: $
                         {formatNumber(
-                          getCostPerLifeFromCombined(combinedAssumptions, selectedCategory) /
-                            Number(cleanNumberInput(multiplier))
+                          getCostPerLifeFromCombined(
+                            combinedAssumptions,
+                            selectedCategory,
+                            parseInt(donationYear, 10) || getCurrentYear()
+                          ) / Number(cleanNumberInput(multiplier))
                         )}
                       </p>
                     )}
@@ -514,7 +550,13 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         }}
                         placeholder={
                           selectedCategory
-                            ? formatNumber(getCostPerLifeFromCombined(combinedAssumptions, selectedCategory))
+                            ? formatNumber(
+                                getCostPerLifeFromCombined(
+                                  combinedAssumptions,
+                                  selectedCategory,
+                                  parseInt(donationYear, 10) || getCurrentYear()
+                                )
+                              )
                             : '0'
                         }
                         className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
@@ -554,6 +596,21 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
               />
             </div>
             {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>}
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={donationYear}
+              onChange={(e) => setDonationYear(e.target.value)}
+              placeholder={getCurrentYear().toString()}
+              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                errors.year ? 'border-red-300' : 'border-gray-300'
+              }`}
+            />
+            {errors.year && <p className="mt-1 text-sm text-red-600">{errors.year}</p>}
           </div>
 
           {/* Lives saved preview */}

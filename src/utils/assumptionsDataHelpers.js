@@ -5,6 +5,7 @@ import {
   calculateCostPerLife,
   applyRecipientEffectToBase,
   effectToCostPerLife as effectToCostPerLifeWithEffects,
+  selectEffectsForYear,
 } from './effectsCalculation.js';
 import {
   assertExists,
@@ -14,7 +15,7 @@ import {
   crashInsteadOfFallback,
 } from './dataValidation.js';
 import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants.js';
-import { getAllDonors, getDonationsForDonor, getDonorId } from './donationDataHelpers.js';
+import { getAllDonors, getDonationsForDonor, getDonorId, extractYearFromDonation } from './donationDataHelpers.js';
 
 /**
  * Create a default assumptions object from the base data
@@ -291,9 +292,14 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
  * Get the effective cost per life for a category from combined assumptions
  * @param {Object} combinedAssumptions - The combined assumptions object
  * @param {string} categoryId - The category ID
+ * @param {number} calculationYear - Year to calculate for (required)
  * @returns {number} The effective cost per life calculated from effects
  */
-export const getCostPerLifeFromCombined = (combinedAssumptions, categoryId) => {
+export const getCostPerLifeFromCombined = (combinedAssumptions, categoryId, calculationYear) => {
+  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
+    throw new Error(`calculationYear must be an integer for getCostPerLifeFromCombined`);
+  }
+
   assertExists(combinedAssumptions, 'combinedAssumptions');
   assertExists(categoryId, 'categoryId');
 
@@ -303,7 +309,7 @@ export const getCostPerLifeFromCombined = (combinedAssumptions, categoryId) => {
   }
 
   // Calculate cost per life from the effects data
-  return calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, categoryId);
+  return calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, calculationYear);
 };
 
 /**
@@ -328,9 +334,13 @@ export const getRecipientFromCombined = (combinedAssumptions, recipientId) => {
  * Calculate weighted cost per life for a recipient using combined assumptions
  * @param {Object} combinedAssumptions - The combined assumptions object
  * @param {string} recipientId - Recipient ID
+ * @param {number} calculationYear - Year to calculate for (required)
  * @returns {number} Cost per life for the recipient
  */
-export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, recipientId) => {
+export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, recipientId, calculationYear) => {
+  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
+    throw new Error(`calculationYear must be an integer for recipient ${recipientId}`);
+  }
   assertExists(combinedAssumptions, 'combinedAssumptions');
   assertExists(recipientId, 'recipientId');
 
@@ -363,8 +373,11 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
       const baseEffects = category.effects || [];
 
       if (baseEffects.length > 0) {
-        // Apply recipient modifications to all base effects
-        const modifiedEffects = baseEffects.map((categoryEffect) => {
+        // Get base effects applicable for this year
+        const applicableBaseEffects = selectEffectsForYear(baseEffects, calculationYear);
+
+        // Apply recipient modifications to matching base effects
+        const modifiedEffects = applicableBaseEffects.map((categoryEffect) => {
           const recipientEffect = categoryData.effects.find((e) => e.effectId === categoryEffect.effectId);
           if (recipientEffect) {
             const context = `for recipient ${recipient.name} category ${categoryId}`;
@@ -374,7 +387,7 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
         });
 
         // Calculate cost per life from modified effects
-        costPerLife = calculateCostPerLife(modifiedEffects, combinedAssumptions.globalParameters, categoryId);
+        costPerLife = calculateCostPerLife(modifiedEffects, combinedAssumptions.globalParameters, calculationYear);
       } else {
         // No base effects to modify - this shouldn't happen in practice
         throw new Error(`Category ${categoryId} has no base effects to apply recipient modifications to`);
@@ -384,7 +397,7 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
       if (!category.effects || category.effects.length === 0) {
         throw new Error(`Category ${categoryId} has no effects defined`);
       }
-      costPerLife = calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, categoryId);
+      costPerLife = calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, calculationYear);
     }
 
     const validCostPerLife = assertNonZeroNumber(
@@ -428,7 +441,10 @@ export const calculateLivesSavedForDonationFromCombined = (combinedAssumptions, 
   assertExists(donation.recipientId, 'donation.recipientId');
   assertPositiveNumber(donation.amount, 'donation.amount');
 
-  const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, donation.recipientId);
+  // Extract year from donation date
+  const donationYear = extractYearFromDonation(donation);
+
+  const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, donation.recipientId, donationYear);
   const validCostPerLife = assertNonZeroNumber(costPerLife, 'costPerLife', `for recipient ${donation.recipientId}`);
 
   let credit = 1;
@@ -451,14 +467,20 @@ export const calculateLivesSavedForDonationFromCombined = (combinedAssumptions, 
  * @param {Object} combinedAssumptions - Combined assumptions object
  * @param {string} categoryId - Category ID
  * @param {number} amount - Donation amount
+ * @param {number} calculationYear - Year to calculate for (required)
  * @returns {number} Lives saved for this category donation
  */
-export const calculateLivesSavedForCategoryFromCombined = (combinedAssumptions, categoryId, amount) => {
+export const calculateLivesSavedForCategoryFromCombined = (
+  combinedAssumptions,
+  categoryId,
+  amount,
+  calculationYear
+) => {
   assertExists(combinedAssumptions, 'combinedAssumptions');
   assertExists(categoryId, 'categoryId');
   assertPositiveNumber(amount, 'amount');
 
-  const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+  const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, calculationYear);
   const validCostPerLife = assertNonZeroNumber(costPerLife, 'costPerLife', `for category ${categoryId}`);
 
   return amount / validCostPerLife;
@@ -549,13 +571,15 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
  * @param {string} recipientId - Recipient ID
  * @param {string} categoryId - Category ID
  * @param {Object} categoryData - Category data from recipient
+ * @param {number} calculationYear - Year to calculate for (required)
  * @returns {number} Cost per life for this category
  */
 export const getActualCostPerLifeForCategoryDataFromCombined = (
   combinedAssumptions,
   recipientId,
   categoryId,
-  categoryData
+  categoryData,
+  calculationYear
 ) => {
   assertExists(combinedAssumptions, 'combinedAssumptions');
   assertExists(recipientId, 'recipientId');
@@ -570,7 +594,7 @@ export const getActualCostPerLifeForCategoryDataFromCombined = (
   // Get the category and check for recipient-specific effect modifications
   const category = combinedAssumptions.categories[categoryId];
   if (!category || !category.effects || category.effects.length === 0) {
-    return getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+    return getCostPerLifeFromCombined(combinedAssumptions, categoryId, calculationYear);
   }
 
   const recipient = combinedAssumptions.recipients[recipientId];
@@ -595,16 +619,17 @@ export const getActualCostPerLifeForCategoryDataFromCombined = (
   }
 
   // No recipient modifications, use base calculation
-  return getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+  return getCostPerLifeFromCombined(combinedAssumptions, categoryId, calculationYear);
 };
 
 /**
  * Get the effective cost per life for any entity using combined assumptions
  * @param {Object} combinedAssumptions - Combined assumptions object
  * @param {Object} entity - The entity to calculate cost per life for
+ * @param {number} calculationYear - Year to calculate for (required)
  * @returns {number} The effective cost per life
  */
-export const getEffectiveCostPerLifeFromCombined = (combinedAssumptions, entity) => {
+export const getEffectiveCostPerLifeFromCombined = (combinedAssumptions, entity, calculationYear) => {
   assertExists(combinedAssumptions, 'combinedAssumptions');
 
   if (!entity) {
@@ -618,12 +643,12 @@ export const getEffectiveCostPerLifeFromCombined = (combinedAssumptions, entity)
 
   // If entity has recipientId, calculate for recipient
   if (entity.recipientId) {
-    return getCostPerLifeForRecipientFromCombined(combinedAssumptions, entity.recipientId);
+    return getCostPerLifeForRecipientFromCombined(combinedAssumptions, entity.recipientId, calculationYear);
   }
 
   // If entity has categoryId, get cost per life for category
   if (entity.categoryId) {
-    return getCostPerLifeFromCombined(combinedAssumptions, entity.categoryId);
+    return getCostPerLifeFromCombined(combinedAssumptions, entity.categoryId, calculationYear);
   }
 
   throw new Error('No valid calculation method found for cost per life.');

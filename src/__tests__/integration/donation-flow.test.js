@@ -28,7 +28,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, globalParams);
+      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
       const donationAmount = 10000;
       const livesSaved = donationAmount / costPerLife;
 
@@ -55,7 +55,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, globalParams);
+      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
       const donationAmount = 50000;
       const livesSaved = donationAmount / costPerLife;
 
@@ -74,7 +74,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, globalParams);
+      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
       const donationAmount = 100000;
       const livesSaved = donationAmount / costPerLife;
 
@@ -99,7 +99,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, globalParams);
+      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
       const donationAmount = 100000;
       const livesSaved = donationAmount / costPerLife;
 
@@ -119,7 +119,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, zeroDiscountParams);
+      const costPerLife = calculateCostPerLife(effects, zeroDiscountParams, 2020);
       expect(costPerLife).toBeGreaterThan(0);
       expect(costPerLife).toBeLessThan(Infinity);
     });
@@ -134,7 +134,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, globalParams);
+      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
       expect(costPerLife).toBeGreaterThan(0);
       expect(costPerLife).toBeLessThan(Infinity);
     });
@@ -149,7 +149,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, globalParams);
+      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
       expect(costPerLife).toBe(Infinity);
 
       const donationAmount = 100000;
@@ -175,7 +175,7 @@ describe('Donation Flow Integration', () => {
         },
       ];
 
-      const costPerLife = calculateCostPerLife(effects, globalParams);
+      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
       const donationAmount = 100000;
       const livesSaved = donationAmount / costPerLife;
 

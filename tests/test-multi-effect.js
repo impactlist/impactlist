@@ -19,7 +19,7 @@ try {
   const result = calculateCostPerLife(
     singleEffectCategory.effects,
     { yearsPerLife: 80, discountRate: 0, timeLimit: 100 },
-    'test-category-1'
+    2020
   );
   console.log(`  Cost per life: $${result.toLocaleString()}`);
   console.log(`  Expected: $${(100 * 80).toLocaleString()} (costPerQALY * yearsPerLife)`);
@@ -50,7 +50,7 @@ try {
   const result = calculateCostPerLife(
     multiEffectCategory.effects,
     { yearsPerLife: 80, discountRate: 0.02, timeLimit: 100 },
-    'test-category-2'
+    2020
   );
   console.log(`  Cost per life: $${result.toLocaleString()}`);
   console.log('  (Should be between $4,000 and $8,000 with discounting)');
@@ -81,7 +81,7 @@ try {
   const result = calculateCostPerLife(
     overlappingEffectCategory.effects,
     { yearsPerLife: 80, discountRate: 0.02, timeLimit: 100 },
-    'test-category-3'
+    2020
   );
   console.log(`  Cost per life: $${result.toLocaleString()}`);
   console.log('  (Should account for both effects during overlap period)');

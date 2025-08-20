@@ -10,6 +10,7 @@ import { calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
 import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { mergeEffects } from '../../utils/assumptionsDataHelpers';
+import { getCurrentYear } from '../../utils/donationDataHelpers';
 
 /**
  * Component for editing all effects of a category
@@ -18,6 +19,7 @@ import { mergeEffects } from '../../utils/assumptionsDataHelpers';
 const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, onCancel }) => {
   const [tempEffects, setTempEffects] = useState([]);
   const [errors, setErrors] = useState({});
+  const [previewYear] = useState(getCurrentYear());
   const { defaultAssumptions, userAssumptions } = useAssumptions();
 
   // Get default effects for comparison
@@ -82,8 +84,8 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Calculate cost per life for each effect
   const effectCostPerLife = useMemo(() => {
-    return tempEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters));
-  }, [tempEffects, globalParameters]);
+    return tempEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters, previewYear));
+  }, [tempEffects, globalParameters, previewYear]);
 
   // Calculate combined cost per life
   const combinedCostPerLife = useMemo(() => {
@@ -121,6 +123,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       <div className="h-full flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={`Editing assumptions for category: ${category.name}`}
+          subtitle={`Preview calculations for year ${previewYear}`}
           combinedCostPerLife={tempEffects.length > 1 ? combinedCostPerLife : undefined}
           showCombinedCost={tempEffects.length > 1}
           onClose={onCancel}
@@ -139,7 +142,17 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                     <div>
                       <h4 className="text-sm font-medium text-gray-900">
                         Effect {index + 1}: {effectType === 'qaly' ? 'Standard' : 'Population-level'}
+                        {effect.effectId && <span className="ml-2 text-xs text-gray-500">({effect.effectId})</span>}
                       </h4>
+                      {effect.validTimeInterval && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          Active: {effect.validTimeInterval[0]} - {effect.validTimeInterval[1] || 'present'}
+                          {(previewYear < effect.validTimeInterval[0] ||
+                            (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
+                            <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
+                          )}
+                        </p>
+                      )}
                     </div>
                     <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm" />
                   </div>

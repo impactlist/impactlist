@@ -136,6 +136,39 @@ export const validateEffectField = (fieldName, value, effectType) => {
 };
 
 /**
+ * Validate a time interval
+ * @param {Array} interval - The time interval [startYear, endYear]
+ * @param {string} effectId - The effect ID for error messages
+ * @returns {string|null} Error message if validation fails, null if valid
+ */
+export const validateTimeInterval = (interval, effectId) => {
+  if (!interval) return null; // Optional field
+
+  if (!Array.isArray(interval) || interval.length !== 2) {
+    return `Effect ${effectId}: validTimeInterval must be [startYear, endYear]`;
+  }
+
+  const [start, end] = interval;
+
+  // Start year can be null (meaning "from the beginning of time")
+  if (start !== null && !Number.isInteger(start)) {
+    return `Effect ${effectId}: Start year must be null or an integer, got ${start}`;
+  }
+
+  // End year can be null (meaning "to the present/future")
+  if (end !== null && !Number.isInteger(end)) {
+    return `Effect ${effectId}: End year must be null or an integer, got ${end}`;
+  }
+
+  // If both are specified, end must be >= start
+  if (start !== null && end !== null && end < start) {
+    return `Effect ${effectId}: End year (${end}) must be >= start year (${start})`;
+  }
+
+  return null;
+};
+
+/**
  * Validate all fields of an effect
  * @param {Object} effect - The effect object to validate
  * @param {number} effectIndex - The index of this effect (for error keys)
@@ -161,6 +194,14 @@ export const validateEffect = (effect, effectIndex = 0) => {
       errors[`${effectIndex}-${fieldName}`] = error;
     }
   });
+
+  // Validate time interval if present
+  if (effect.validTimeInterval) {
+    const intervalError = validateTimeInterval(effect.validTimeInterval, effect.effectId || `effect-${effectIndex}`);
+    if (intervalError) {
+      errors[`${effectIndex}-interval`] = intervalError;
+    }
+  }
 
   return {
     errors,

@@ -13,7 +13,16 @@ describe('effectsCalculation', () => {
 
   describe('calculateCostPerLife', () => {
     it('should throw for empty effects array', () => {
-      expect(() => calculateCostPerLife([], baseGlobalParams)).toThrow('Field effects cannot be empty');
+      expect(() => calculateCostPerLife([], baseGlobalParams, 2020)).toThrow('Field effects cannot be empty');
+    });
+
+    it('should throw when year is missing or invalid', () => {
+      const effects = [{ type: 'qaly', costPerQALY: 1000, startTime: 0, windowLength: 10 }];
+      expect(() => calculateCostPerLife(effects, baseGlobalParams)).toThrow('calculationYear must be an integer');
+      expect(() => calculateCostPerLife(effects, baseGlobalParams, null)).toThrow('calculationYear must be an integer');
+      expect(() => calculateCostPerLife(effects, baseGlobalParams, '2020')).toThrow(
+        'calculationYear must be an integer'
+      );
     });
 
     it('should handle single QALY effect', () => {
@@ -25,7 +34,7 @@ describe('effectsCalculation', () => {
           windowLength: 10,
         },
       ];
-      const result = calculateCostPerLife(effects, baseGlobalParams);
+      const result = calculateCostPerLife(effects, baseGlobalParams, 2020);
       expect(result).toBeGreaterThan(0);
       expect(result).toBeLessThan(Infinity);
     });
@@ -41,7 +50,7 @@ describe('effectsCalculation', () => {
           windowLength: 10,
         },
       ];
-      const result = calculateCostPerLife(effects, baseGlobalParams);
+      const result = calculateCostPerLife(effects, baseGlobalParams, 2020);
       expect(result).toBeGreaterThan(0);
       expect(result).toBeLessThan(Infinity);
     });
@@ -61,7 +70,7 @@ describe('effectsCalculation', () => {
           windowLength: 10,
         },
       ];
-      const result = calculateCostPerLife(effects, baseGlobalParams);
+      const result = calculateCostPerLife(effects, baseGlobalParams, 2020);
       expect(result).toBeGreaterThan(0);
       expect(result).toBeLessThan(Infinity);
     });
@@ -75,7 +84,7 @@ describe('effectsCalculation', () => {
           windowLength: 0, // Pulse effect
         },
       ];
-      const result = calculateCostPerLife(effects, baseGlobalParams);
+      const result = calculateCostPerLife(effects, baseGlobalParams, 2020);
       expect(result).toBeGreaterThan(0);
       expect(result).toBeLessThan(Infinity);
     });
@@ -89,7 +98,7 @@ describe('effectsCalculation', () => {
           windowLength: 10,
         },
       ];
-      const result = calculateCostPerLife(effects, baseGlobalParams);
+      const result = calculateCostPerLife(effects, baseGlobalParams, 2020);
       expect(result).toBe(Infinity);
     });
 
@@ -103,7 +112,7 @@ describe('effectsCalculation', () => {
           windowLength: 10,
         },
       ];
-      const result = calculateCostPerLife(effects, params);
+      const result = calculateCostPerLife(effects, params, 2020);
       expect(result).toBeGreaterThan(0);
       expect(result).toBeLessThan(Infinity);
     });
@@ -117,7 +126,7 @@ describe('effectsCalculation', () => {
           windowLength: 10,
         },
       ];
-      const result = calculateCostPerLife(effects, baseGlobalParams);
+      const result = calculateCostPerLife(effects, baseGlobalParams, 2020);
       expect(result).toBeLessThan(0);
     });
 

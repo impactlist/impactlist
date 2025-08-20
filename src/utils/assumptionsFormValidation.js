@@ -6,6 +6,7 @@
 
 import { cleanAndParseValue } from './effectValidation';
 import { calculateCostPerLife } from './effectsCalculation';
+import { getCurrentYear } from './donationDataHelpers';
 
 /**
  * Validates category form values
@@ -22,7 +23,7 @@ export const validateCategoryValues = (formValues, defaultAssumptions) => {
     if (!category) return;
 
     // Calculate default cost per life from effects
-    const defaultValue = calculateCostPerLife(category.effects, defaultAssumptions.globalParameters, key);
+    const defaultValue = calculateCostPerLife(category.effects, defaultAssumptions.globalParameters, getCurrentYear());
     const rawValue = valueObj.raw;
 
     // Skip validation if value is the same as default or if empty (empty = use default)

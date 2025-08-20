@@ -5,6 +5,7 @@ import {
   getCostPerLifeFromCombined,
   getActualCostPerLifeForCategoryDataFromCombined,
 } from '../utils/assumptionsDataHelpers';
+import { getCurrentYear } from '../utils/donationDataHelpers';
 import * as apiHelpers from '../utils/assumptionsAPIHelpers';
 
 /* global localStorage */
@@ -341,11 +342,12 @@ export const AssumptionsProvider = ({ children }) => {
         combinedAssumptions,
         recipientId,
         categoryId,
-        categoryData
+        categoryData,
+        getCurrentYear()
       );
     } else if (type === 'multiplier') {
       // Calculate multiplier by comparing base category vs recipient-specific cost per life
-      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear());
 
       const recipient = combinedAssumptions.recipients[recipientId];
       const categoryData = recipient.categories[categoryId];
@@ -353,7 +355,8 @@ export const AssumptionsProvider = ({ children }) => {
         combinedAssumptions,
         recipientId,
         categoryId,
-        categoryData
+        categoryData,
+        getCurrentYear()
       );
 
       // Multiplier is the ratio (inverted because lower cost per life = higher multiplier)
@@ -380,7 +383,7 @@ export const AssumptionsProvider = ({ children }) => {
     }
 
     // Use the combined assumptions which has the proper merged data with names
-    return getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+    return getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear());
   };
 
   // Helper function to check if userAssumptions contains any actual overrides

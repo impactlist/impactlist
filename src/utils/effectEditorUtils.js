@@ -59,11 +59,26 @@ export const cleanEffectForCalculation = (effect) => {
  * Calculate cost per life for a single effect, handling errors gracefully
  * @param {Object} effect - The effect to calculate
  * @param {Object} globalParameters - Global parameters for calculation
+ * @param {number} previewYear - Year to preview calculations for (required)
  * @returns {number} Cost per life or Infinity if invalid
  */
-export const calculateEffectCostPerLife = (effect, globalParameters) => {
+export const calculateEffectCostPerLife = (effect, globalParameters, previewYear) => {
+  // Enforce year requirement
+  if (typeof previewYear !== 'number' || !Number.isInteger(previewYear)) {
+    throw new Error('previewYear must be an integer for calculateEffectCostPerLife');
+  }
+
   try {
     const cleanedEffect = cleanEffectForCalculation(effect);
+
+    // Check if effect is applicable to preview year
+    if (effect.validTimeInterval) {
+      const [start, end] = effect.validTimeInterval;
+      // null start means "from beginning of time"
+      if (start !== null && previewYear < start) return Infinity;
+      // null end means "to present/future"
+      if (end !== null && previewYear > end) return Infinity;
+    }
 
     // Check for invalid values that would cause calculation errors
     const effectType = getEffectType(cleanedEffect);

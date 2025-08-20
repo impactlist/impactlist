@@ -138,6 +138,35 @@ export const getTotalAmountForRecipient = (recipientId) => {
 };
 
 /**
+ * Extract year from donation date string
+ * @param {Object} donation - Donation object with date field
+ * @returns {number} Year as integer
+ */
+export const extractYearFromDonation = (donation) => {
+  if (!donation || !donation.date) {
+    throw new Error(`Donation missing date: ${JSON.stringify(donation)}`);
+  }
+
+  // Handle both "YYYY-MM-DD" and "YYYY" formats
+  const dateStr = donation.date.toString();
+  const year = parseInt(dateStr.substring(0, 4), 10);
+
+  if (isNaN(year)) {
+    throw new Error(`Could not extract valid year from donation date "${donation.date}"`);
+  }
+
+  return year;
+};
+
+/**
+ * Get current year for UI calculations
+ * @returns {number} Current year
+ */
+export const getCurrentYear = () => {
+  return new Date().getFullYear();
+};
+
+/**
  * Check if a recipient has effect overrides for a specific category
  * @param {Object} combinedAssumptions - The combined assumptions object
  * @param {string} recipientId - The recipient ID

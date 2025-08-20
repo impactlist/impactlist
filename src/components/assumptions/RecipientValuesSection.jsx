@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import SearchInput from '../shared/SearchInput';
 import CurrencyInput from '../shared/CurrencyInput';
 import { formatCurrency } from '../../utils/formatters';
-import { getRecipientId } from '../../utils/donationDataHelpers';
+import { getRecipientId, getCurrentYear } from '../../utils/donationDataHelpers';
 import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
 import { mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
 
@@ -53,7 +53,7 @@ const RecipientValuesSection = ({
 
     // If no recipient effects at all, return base category cost
     if (!effectsToApply) {
-      return calculateCostPerLife(category.effects, mergedGlobalParameters, categoryId);
+      return calculateCostPerLife(category.effects, mergedGlobalParameters, getCurrentYear());
     }
 
     // Apply recipient effects to base category effects
@@ -66,7 +66,7 @@ const RecipientValuesSection = ({
     });
 
     // Calculate cost per life from modified effects
-    return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, categoryId);
+    return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, getCurrentYear());
   };
 
   return (
@@ -113,7 +113,7 @@ const RecipientValuesSection = ({
                         categoryCostPerLife = calculateCostPerLife(
                           category.effects,
                           defaultAssumptions.globalParameters,
-                          categoryId
+                          getCurrentYear()
                         );
                       }
 

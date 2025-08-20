@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/assumptionsDataHelpers';
+import { getCurrentYear } from '../utils/donationDataHelpers';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import { donations } from '../data/generatedData';
@@ -23,10 +24,11 @@ const CategoryDetail = () => {
     }
 
     // Get cost per life for this category using combined assumptions
-    const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId);
+    const currentYear = getCurrentYear();
+    const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, currentYear);
     // Get default cost per life (without custom values)
     const defaultCombinedAssumptions = createCombinedAssumptions(null);
-    const defaultCostPerLife = getCostPerLifeFromCombined(defaultCombinedAssumptions, categoryId);
+    const defaultCostPerLife = getCostPerLifeFromCombined(defaultCombinedAssumptions, categoryId, currentYear);
 
     // Calculate total donated to this category and lives saved
     let totalDonated = 0;

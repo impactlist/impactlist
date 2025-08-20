@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { formatNumber, formatNumberWithCommas, formatWithCursorHandling } from '../utils/formatters';
 import { DEFAULT_RESULTS_LIMIT } from '../utils/constants';
-import { getRecipientId } from '../utils/donationDataHelpers';
+import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import {
   recipientHasEffectOverrides as recipientHasOverrides,
   calculateCategoryEffectCostPerLife,
@@ -26,7 +26,8 @@ export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategory
         categoryId,
         defaultAssumptions,
         userAssumptions,
-        defaultAssumptions.globalParameters
+        defaultAssumptions.globalParameters,
+        getCurrentYear()
       );
 
       result[categoryId] = {
@@ -108,7 +109,7 @@ export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategory
       const defaultCostPerLife = calculateCostPerLife(
         category.effects,
         defaultAssumptions.globalParameters,
-        categoryId
+        getCurrentYear()
       );
 
       defaultValues[categoryId] = {

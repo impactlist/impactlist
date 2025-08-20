@@ -312,22 +312,66 @@ export const calculateCombinedCostPerLife = (effectCosts) => {
 };
 
 /**
+ * Select effects applicable to a specific year
+ * @param {Array} effects - Array of effect objects
+ * @param {number} calculationYear - Year to calculate for (e.g., 2020)
+ * @returns {Array} Effects applicable to the given year
+ */
+export const selectEffectsForYear = (effects, calculationYear) => {
+  // Basic validation - just ensure it's a number
+  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
+    throw new Error('calculationYear must be an integer');
+  }
+
+  const applicableEffects = effects.filter((effect) => {
+    if (!effect.validTimeInterval) {
+      // Legacy effects without intervals apply to all times
+      return true;
+    }
+
+    const [startYear, endYear] = effect.validTimeInterval;
+
+    // Check if calculation year falls within interval
+    // null start means "from beginning of time"
+    if (startYear !== null && calculationYear < startYear) return false;
+    // null end means "to present/future"
+    if (endYear !== null && calculationYear > endYear) return false;
+
+    return true;
+  });
+
+  if (applicableEffects.length === 0) {
+    throw new Error(`No applicable effects found for year ${calculationYear}`);
+  }
+
+  return applicableEffects;
+};
+
+/**
  * Calculate combined cost per life from multiple effects with time windows
  * @param {Array} effects - Array of effect objects with time windows
  * @param {Object} globalParams - Global parameters object
- * @param {string} contextId - Context ID for error messages (e.g., categoryId, recipientId)
+ * @param {number} calculationYear - Year to calculate for (required)
  * @returns {number} Combined cost per life
  */
-export const calculateCostPerLife = (effects, globalParams, contextId = 'unknown') => {
-  assertNonEmptyArray(effects, 'effects', `in context "${contextId}"`);
+export const calculateCostPerLife = (effects, globalParams, calculationYear) => {
+  // Enforce year requirement
+  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
+    throw new Error('calculationYear must be an integer');
+  }
+
+  assertNonEmptyArray(effects, 'effects');
 
   // Get global parameters for discounting
   assertExists(globalParams, 'globalParams');
   assertNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
   assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
 
+  // Select applicable effects based on calculation year
+  const applicableEffects = selectEffectsForYear(effects, calculationYear);
+
   // Calculate individual cost per life for each effect
-  const effectCosts = effects.map((effect) => {
+  const effectCosts = applicableEffects.map((effect) => {
     assertExists(effect.startTime, 'startTime', `in effect ${effect.effectId}`);
     assertNonNegativeNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
 

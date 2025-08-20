@@ -7,6 +7,7 @@ import CustomValueIndicator from '../shared/CustomValueIndicator';
 import { formatCurrency } from '../../utils/formatters';
 import { calculateCostPerLife } from '../../utils/effectsCalculation';
 import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
+import { getCurrentYear } from '../../utils/donationDataHelpers';
 
 /**
  * Component for managing cost per life values for categories.
@@ -34,14 +35,15 @@ const CategoryValuesSection = ({
 
     Object.entries(defaultAssumptions.categories).forEach(([categoryId, category]) => {
       // Calculate default cost per life from effects
-      const defaultCostPerLife = calculateCostPerLife(category.effects, mergedGlobalParameters, categoryId);
+      const defaultCostPerLife = calculateCostPerLife(category.effects, mergedGlobalParameters, getCurrentYear());
 
       // Calculate current cost per life (with user overrides if any)
       const currentCostPerLife = calculateCategoryEffectCostPerLife(
         categoryId,
         defaultAssumptions,
         userAssumptions,
-        mergedGlobalParameters
+        mergedGlobalParameters,
+        getCurrentYear()
       );
 
       result[categoryId] = {

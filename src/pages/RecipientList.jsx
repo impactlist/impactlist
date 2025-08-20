@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import { getPrimaryCategoryId, getCategoryBreakdown, getDonationsForRecipient } from '../utils/donationDataHelpers';
+import {
+  getPrimaryCategoryId,
+  getCategoryBreakdown,
+  getDonationsForRecipient,
+  getCurrentYear,
+} from '../utils/donationDataHelpers';
 import {
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForDonationFromCombined,
@@ -24,6 +29,7 @@ const RecipientList = () => {
     }
 
     // Calculate recipient statistics
+    const currentYear = getCurrentYear();
     const recipientStats = combinedAssumptions.getAllRecipients().map((recipient) => {
       // Use the recipient ID directly (now included in the object)
       const recipientId = recipient.id;
@@ -33,7 +39,7 @@ const RecipientList = () => {
         const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
         return sum + creditedAmount;
       }, 0);
-      const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
+      const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, currentYear);
 
       // Get the primary category and all categories for display
       const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);

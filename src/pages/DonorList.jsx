@@ -5,6 +5,7 @@ import {
   getPrimaryCategoryId,
   getDonationsForRecipient,
   getTotalAmountForRecipient,
+  getCurrentYear,
 } from '../utils/donationDataHelpers';
 import {
   calculateDonorStatsFromCombined,
@@ -40,7 +41,7 @@ const DonorList = () => {
         const recipientId = recipient.id;
 
         const totalReceived = getTotalAmountForRecipient(recipientId);
-        const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
+        const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, getCurrentYear());
 
         // Get the primary category for display
         const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);

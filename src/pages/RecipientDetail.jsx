@@ -2,7 +2,13 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
-import { getPrimaryCategoryId, getCategoryBreakdown, getDonationsForRecipient } from '../utils/donationDataHelpers';
+import {
+  getPrimaryCategoryId,
+  getCategoryBreakdown,
+  getDonationsForRecipient,
+  getCurrentYear,
+  extractYearFromDonation,
+} from '../utils/donationDataHelpers';
 import {
   getCostPerLifeForRecipientFromCombined,
   getCostPerLifeFromCombined,
@@ -51,7 +57,7 @@ const RecipientDetail = () => {
       throw new Error(`Invalid recipient ID: ${recipientId}. This recipient does not exist.`);
     }
 
-    const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId);
+    const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, getCurrentYear());
 
     // Get primary category and category breakdown
     const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
@@ -59,7 +65,7 @@ const RecipientDetail = () => {
     const primaryCategoryName = primaryCategory.name;
 
     // Get cost per life for the primary category
-    const categoryCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, primaryCategoryId);
+    const categoryCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, primaryCategoryId, getCurrentYear());
 
     // Get formatted breakdown for bar chart with required properties
     const categoryBreakdown = getCategoryBreakdown(combinedAssumptions, recipientId).map((category) => {
@@ -115,11 +121,13 @@ const RecipientDetail = () => {
         const categoryName = category.name;
 
         // Get category-specific cost per life
+        const donationYear = extractYearFromDonation(donation);
         const catCostPerLife = getActualCostPerLifeForCategoryDataFromCombined(
           combinedAssumptions,
           recipientId,
           categoryId,
-          categoryData
+          categoryData,
+          donationYear
         );
 
         // Calculate donation amount and lives saved for this category

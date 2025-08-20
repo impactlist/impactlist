@@ -92,13 +92,15 @@ export const findRecipientIdFromDefaults = (defaultAssumptions, recipientName) =
  * @param {Object} defaultAssumptions - Default assumptions
  * @param {Object|null} userAssumptions - User assumptions
  * @param {Object} globalParameters - Merged global parameters
+ * @param {number} calculationYear - Year to calculate for (required)
  * @returns {number} Cost per life
  */
 export const calculateCategoryEffectCostPerLife = (
   categoryId,
   defaultAssumptions,
   userAssumptions,
-  globalParameters
+  globalParameters,
+  calculationYear
 ) => {
   const defaultCategory = defaultAssumptions?.categories?.[categoryId];
   if (!defaultCategory) {
@@ -126,7 +128,7 @@ export const calculateCategoryEffectCostPerLife = (
     throw new Error(`No effects found for category ${categoryId}`);
   }
 
-  return calculateCostPerLife(effectsToUse, globalParameters, categoryId);
+  return calculateCostPerLife(effectsToUse, globalParameters, calculationYear);
 };
 
 /**

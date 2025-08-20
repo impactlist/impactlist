@@ -310,11 +310,10 @@ const RecipientEffectEditor = ({
               </p>
               {tempEditToEffects.length > 1 && hasTimeIntervals && (
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm">Preview calculations for year {previewYear}</span>
                   <YearSelector
                     value={previewYear}
                     onChange={setPreviewYear}
-                    label=""
+                    label="Preview calculations for year:"
                     id="recipient-effect-preview-year"
                     className=""
                   />

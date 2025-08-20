@@ -132,16 +132,15 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       <div className="h-full flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={`Editing assumptions for category: ${category.name}`}
-          subtitle={
+          description={
             tempEditToEffects.length > 1 && hasTimeIntervals ? (
               <div className="flex items-center gap-2">
-                <span>Preview calculations for year {previewYear}</span>
                 <YearSelector
                   value={previewYear}
                   onChange={setPreviewYear}
-                  label=""
+                  label="Preview calculations for year:"
                   id="category-effect-preview-year"
-                  className="ml-2"
+                  className=""
                 />
               </div>
             ) : (

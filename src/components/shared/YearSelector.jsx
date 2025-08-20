@@ -33,20 +33,19 @@ const YearSelector = ({
 
   const handleBlur = (e) => {
     const inputValue = e.target.value;
+    const currentYear = new Date().getFullYear();
 
     // If empty or not a number, reset to current year
     if (inputValue === '' || isNaN(parseInt(inputValue, 10))) {
-      onChange(new Date().getFullYear());
+      onChange(currentYear);
       return;
     }
 
     const year = parseInt(inputValue, 10);
 
-    // Clamp to valid range on blur
-    if (year < minYear) {
-      onChange(minYear);
-    } else if (year > maxYear) {
-      onChange(maxYear);
+    // If outside valid range, reset to current year
+    if (year < minYear || year > maxYear) {
+      onChange(currentYear);
     }
     // If within range, leave it as is (onChange already called in handleChange)
   };

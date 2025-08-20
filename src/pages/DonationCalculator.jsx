@@ -25,6 +25,7 @@ const DonationCalculator = () => {
   const [categories, setCategories] = useState([]);
   const [donations, setDonations] = useState({});
   const [specificDonations, setSpecificDonations] = useState([]);
+  const [categoryYear, setCategoryYear] = useState(getCurrentYear());
   const [totalDonated, setTotalDonated] = useState(0);
   const [totalLivesSaved, setTotalLivesSaved] = useState(0);
   const [costPerLife, setCostPerLife] = useState(0);
@@ -110,6 +111,15 @@ const DonationCalculator = () => {
     if (savedSpecificDonations) {
       setSpecificDonations(JSON.parse(savedSpecificDonations));
     }
+
+    // Load saved category year
+    const savedCategoryYear = localStorage.getItem('categoryYear');
+    if (savedCategoryYear) {
+      const year = parseInt(savedCategoryYear, 10);
+      if (!isNaN(year)) {
+        setCategoryYear(year);
+      }
+    }
   }, [combinedAssumptions]);
 
   // Calculate lives saved when donations, specificDonations, or combinedAssumptions change
@@ -148,11 +158,12 @@ const DonationCalculator = () => {
       totalAmount += donationAmount;
 
       // Calculate lives saved for this category using combined assumptions
+      const yearForCalc = categoryYear === '' || isNaN(categoryYear) ? getCurrentYear() : parseInt(categoryYear, 10);
       const livesSaved = calculateLivesSavedForCategoryFromCombined(
         combinedAssumptions,
         categoryId,
         donationAmount,
-        getCurrentYear()
+        yearForCalc
       );
       totalLives += livesSaved;
     });
@@ -204,7 +215,7 @@ const DonationCalculator = () => {
     } else {
       setDonorRank(null);
     }
-  }, [donations, specificDonations, combinedAssumptions, categories, calculateDonorRank]);
+  }, [donations, specificDonations, combinedAssumptions, categories, calculateDonorRank, categoryYear]);
 
   // Save donations to localStorage when they change
   useEffect(() => {
@@ -221,6 +232,11 @@ const DonationCalculator = () => {
 
     localStorage.setItem('specificDonations', JSON.stringify(specificDonations));
   }, [specificDonations, categories]);
+
+  // Save category year to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('categoryYear', categoryYear.toString());
+  }, [categoryYear]);
 
   // Handle donation input change
   const handleDonationChange = (categoryId, value) => {
@@ -243,15 +259,16 @@ const DonationCalculator = () => {
   };
 
   // Calculate lives saved for a specific category
-  const getLivesSavedForCategory = (categoryId, amount) => {
+  const getLivesSavedForCategory = (categoryId, amount, year = categoryYear) => {
     if (!amount || isNaN(Number(amount))) return 0;
 
     const donationAmount = Number(amount);
+    const yearForCalculation = year === '' || isNaN(year) ? getCurrentYear() : parseInt(year, 10);
     return calculateLivesSavedForCategoryFromCombined(
       combinedAssumptions,
       categoryId,
       donationAmount,
-      getCurrentYear()
+      yearForCalculation
     );
   };
 
@@ -416,9 +433,13 @@ const DonationCalculator = () => {
             onDonationChange={handleDonationChange}
             onReset={resetDonations}
             getLivesSavedForCategory={getLivesSavedForCategory}
-            getCostPerLifeForCategory={(categoryId) =>
-              getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear())
-            }
+            getCostPerLifeForCategory={(categoryId) => {
+              const yearForCalculation =
+                categoryYear === '' || isNaN(categoryYear) ? getCurrentYear() : parseInt(categoryYear, 10);
+              return getCostPerLifeFromCombined(combinedAssumptions, categoryId, yearForCalculation);
+            }}
+            categoryYear={categoryYear}
+            onYearChange={setCategoryYear}
           />
         </motion.div>
 

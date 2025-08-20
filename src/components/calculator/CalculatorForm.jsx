@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
+import YearSelector from '../shared/YearSelector';
 
 /**
  * Form component for the donation calculator to input category-based donations.
@@ -13,6 +14,8 @@ const CalculatorForm = ({
   onReset,
   getLivesSavedForCategory,
   getCostPerLifeForCategory,
+  categoryYear,
+  onYearChange,
   className = '',
 }) => {
   // Format for display
@@ -40,6 +43,17 @@ const CalculatorForm = ({
           </svg>
           Reset All Amounts
         </button>
+      </div>
+
+      {/* Year selector */}
+      <div className="mb-4">
+        <YearSelector
+          value={categoryYear}
+          onChange={onYearChange}
+          label="Assumed year:"
+          id="category-year-selector"
+          className=""
+        />
       </div>
 
       {/* Donation inputs grid */}
@@ -103,6 +117,8 @@ CalculatorForm.propTypes = {
   onReset: PropTypes.func.isRequired,
   getLivesSavedForCategory: PropTypes.func.isRequired,
   getCostPerLifeForCategory: PropTypes.func.isRequired,
+  categoryYear: PropTypes.number.isRequired,
+  onYearChange: PropTypes.func.isRequired,
   className: PropTypes.string,
 };
 

@@ -183,6 +183,21 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
         </div>
       ),
     },
+    {
+      key: 'costPerLife',
+      label: 'Cost/Life',
+      render: (donation) => (
+        <div className="text-sm text-slate-900">
+          {donation.totalLivesSaved === 0 ? (
+            <span className="text-2xl">∞</span>
+          ) : (
+            formatCurrency(
+              getEffectiveCostPerLifeFromCombined(combinedAssumptions, donation, extractYearFromDonation(donation))
+            )
+          )}
+        </div>
+      ),
+    },
   ];
 
   return (

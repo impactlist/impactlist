@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
-import { formatNumber, formatLives, formatCurrency } from '../utils/formatters';
+import { formatLives, formatCurrency } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
@@ -13,7 +13,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const [amount, setAmount] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [multiplier, setMultiplier] = useState('');
-  const [costPerLife, setCostPerLife] = useState('');
   const [donationYear, setDonationYear] = useState(getCurrentYear().toString());
   const [errors, setErrors] = useState({});
   const [isExistingRecipient, setIsExistingRecipient] = useState(true);
@@ -60,8 +59,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         setSelectedCategory(editingDonation.categoryId);
         if (editingDonation.multiplier) {
           setMultiplier(editingDonation.multiplier.toString());
-        } else if (editingDonation.costPerLife) {
-          setCostPerLife(editingDonation.costPerLife.toString());
         }
       } else {
         setIsExistingRecipient(true);
@@ -90,7 +87,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     setAmount('');
     setSelectedCategory('');
     setMultiplier('');
-    setCostPerLife('');
     setDonationYear(getCurrentYear().toString());
     setErrors({});
     setIsExistingRecipient(true);
@@ -208,25 +204,21 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       newErrors.year = 'Year must be between 1900 and 2100';
     }
 
-    // For custom recipients, validate category and at least one of multiplier or costPerLife
+    // For custom recipients, validate category
     if (!isExistingRecipient) {
       if (!selectedCategory) {
         newErrors.category = 'Please select a category';
       }
 
       const cleanedMultiplier = cleanNumberInput(multiplier);
-      const cleanedCostPerLife = cleanNumberInput(costPerLife);
 
-      if (cleanedMultiplier && isNaN(Number(cleanedMultiplier))) {
-        newErrors.multiplier = 'Please enter a valid multiplier';
-      }
-
-      if (cleanedCostPerLife) {
-        const costPerLifeNum = Number(cleanedCostPerLife);
-        if (isNaN(costPerLifeNum)) {
-          newErrors.costPerLife = 'Please enter a valid cost per life';
-        } else if (costPerLifeNum === 0) {
-          newErrors.costPerLife = 'Cost per life cannot be zero';
+      // Validate multiplier if provided
+      if (cleanedMultiplier) {
+        const multiplierNum = Number(cleanedMultiplier);
+        if (isNaN(multiplierNum)) {
+          newErrors.multiplier = 'Please enter a valid multiplier';
+        } else if (multiplierNum <= 0) {
+          newErrors.multiplier = 'Multiplier must be greater than zero';
         }
       }
     }
@@ -250,12 +242,9 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         donationData.categoryId = selectedCategory;
 
         const cleanedMultiplier = cleanNumberInput(multiplier);
-        const cleanedCostPerLife = cleanNumberInput(costPerLife);
 
         if (cleanedMultiplier) {
           donationData.multiplier = Number(cleanedMultiplier);
-        } else if (cleanedCostPerLife) {
-          donationData.costPerLife = Number(cleanedCostPerLife);
         }
       }
 
@@ -301,9 +290,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
           selectedCategory,
           parseInt(donationYear, 10) || getCurrentYear()
         );
-        effectiveCostPerLife = baseCostPerLife / multiplierValue;
-      } else if (costPerLife && !isNaN(Number(cleanNumberInput(costPerLife)))) {
-        effectiveCostPerLife = Number(cleanNumberInput(costPerLife));
+        effectiveCostPerLife = baseCostPerLife * multiplierValue;
       } else {
         effectiveCostPerLife = getCostPerLifeFromCombined(
           combinedAssumptions,
@@ -507,72 +494,36 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 </div>
 
                 <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-700 mb-2">Effectiveness</p>
-
-                  <div className="mb-3">
-                    <label className="block text-sm text-gray-600 mb-1">
-                      Multiplier (makes recipient more effective)
-                    </label>
-                    <input
-                      type="text"
-                      inputMode="text"
-                      value={formatWithCommas(multiplier)}
-                      onChange={(e) => {
-                        const newValue = e.target.value;
-                        setMultiplier(newValue);
-                        setCostPerLife(''); // Clear cost per life when editing multiplier
-                      }}
-                      placeholder="1.0"
-                      className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                        errors.multiplier ? 'border-red-300' : 'border-gray-300'
-                      }`}
-                    />
-                    {errors.multiplier && <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>}
-                    {multiplier && selectedCategory && !isNaN(Number(cleanNumberInput(multiplier))) && (
-                      <p className="mt-1 text-xs text-gray-500">
-                        Cost per life: $
-                        {formatNumber(
-                          getCostPerLifeFromCombined(
-                            combinedAssumptions,
-                            selectedCategory,
-                            parseInt(donationYear, 10) || getCurrentYear()
-                          ) / Number(cleanNumberInput(multiplier))
-                        )}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="block text-sm text-gray-600 mb-1">OR Direct Cost Per Life</label>
-                    <div className="flex items-center">
-                      <span className="mr-1 text-gray-600">$</span>
-                      <input
-                        type="text"
-                        inputMode="text"
-                        value={formatWithCommas(costPerLife)}
-                        onChange={(e) => {
-                          const newValue = e.target.value;
-                          setCostPerLife(newValue);
-                          setMultiplier(''); // Clear multiplier when editing cost per life
-                        }}
-                        placeholder={
-                          selectedCategory
-                            ? formatNumber(
-                                getCostPerLifeFromCombined(
-                                  combinedAssumptions,
-                                  selectedCategory,
-                                  parseInt(donationYear, 10) || getCurrentYear()
-                                )
-                              )
-                            : '0'
-                        }
-                        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                          errors.costPerLife ? 'border-red-300' : 'border-gray-300'
-                        }`}
-                      />
-                    </div>
-                    {errors.costPerLife && <p className="mt-1 text-sm text-red-600">{errors.costPerLife}</p>}
-                  </div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Cost per life multiplier</label>
+                  <input
+                    type="text"
+                    inputMode="text"
+                    value={formatWithCommas(multiplier)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      setMultiplier(newValue);
+                    }}
+                    placeholder="1.0"
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                      errors.multiplier ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  />
+                  {errors.multiplier && <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>}
+                  <p className="mt-1 text-xs text-gray-500">
+                    A multiplier of 2 means the recipient is half as effective (2x cost per life)
+                  </p>
+                  {multiplier && selectedCategory && !isNaN(Number(cleanNumberInput(multiplier))) && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Resulting cost per life:{' '}
+                      {formatCurrency(
+                        getCostPerLifeFromCombined(
+                          combinedAssumptions,
+                          selectedCategory,
+                          parseInt(donationYear, 10) || getCurrentYear()
+                        ) * Number(cleanNumberInput(multiplier))
+                      )}
+                    </p>
+                  )}
                 </div>
               </div>
             )}

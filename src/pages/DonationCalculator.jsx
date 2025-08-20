@@ -120,6 +120,21 @@ const DonationCalculator = () => {
       throw new Error('combinedAssumptions is required but does not exist.');
     }
 
+    // Helper function to calculate cost per life for custom recipients
+    const calculateCustomRecipientCostPerLife = (donation, currentYear) => {
+      if (!donation.isCustomRecipient || !donation.categoryId) {
+        return null;
+      }
+
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
+
+      if (donation.multiplier) {
+        return baseCostPerLife * donation.multiplier;
+      }
+
+      return baseCostPerLife;
+    };
+
     let totalAmount = 0;
     let totalLives = 0;
     const currentYear = getCurrentYear();
@@ -150,21 +165,8 @@ const DonationCalculator = () => {
       let livesSaved = 0;
 
       if (donation.isCustomRecipient && donation.categoryId) {
-        // For custom recipients, calculate based on the category and any overrides
-        let costPerLife;
-
-        if (donation.costPerLife) {
-          // Use directly provided cost per life
-          costPerLife = donation.costPerLife;
-        } else if (donation.multiplier) {
-          // Apply multiplier to the category's cost per life
-          const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
-          costPerLife = baseCostPerLife / donation.multiplier;
-        } else {
-          // Use category default
-          costPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
-        }
-
+        // For custom recipients, use the helper function
+        const costPerLife = calculateCustomRecipientCostPerLife(donation, currentYear);
         livesSaved = donation.amount / costPerLife;
       } else {
         // For existing recipients, find the appropriate recipient ID
@@ -280,21 +282,9 @@ const DonationCalculator = () => {
   const calculateLivesSavedForSpecificDonation = (donation) => {
     const currentYear = getCurrentYear();
     if (donation.isCustomRecipient && donation.categoryId) {
-      // For custom recipients, calculate based on the category and any overrides
-      let costPerLife;
-
-      if (donation.costPerLife) {
-        // Use directly provided cost per life
-        costPerLife = donation.costPerLife;
-      } else if (donation.multiplier) {
-        // Apply multiplier to the category's cost per life
-        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
-        costPerLife = baseCostPerLife / donation.multiplier;
-      } else {
-        // Use category default
-        costPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
-      }
-
+      // For custom recipients, calculate cost per life with multiplier
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
+      const costPerLife = donation.multiplier ? baseCostPerLife * donation.multiplier : baseCostPerLife;
       return donation.amount / costPerLife;
     } else {
       // For existing recipients, find the recipient in our data
@@ -318,16 +308,10 @@ const DonationCalculator = () => {
   // Get cost per life for a specific donation (for display in the table)
   const getCostPerLifeForSpecificDonation = (donation) => {
     const currentYear = getCurrentYear();
-    // For custom recipients, we need to handle multiplier and costPerLife overrides
+    // For custom recipients, calculate cost per life with multiplier
     if (donation.isCustomRecipient && donation.categoryId) {
-      if (donation.costPerLife) {
-        return donation.costPerLife;
-      } else if (donation.multiplier) {
-        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
-        return baseCostPerLife / donation.multiplier;
-      } else {
-        return getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
-      }
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
+      return donation.multiplier ? baseCostPerLife * donation.multiplier : baseCostPerLife;
     } else {
       // For existing recipients, get cost per life using combined assumptions
       const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);

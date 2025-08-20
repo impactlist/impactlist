@@ -148,7 +148,6 @@ const DonationCalculator = () => {
 
     let totalAmount = 0;
     let totalLives = 0;
-    const currentYear = getCurrentYear();
 
     // Calculate for each category
     Object.entries(donations).forEach(([categoryId, amount]) => {
@@ -175,10 +174,11 @@ const DonationCalculator = () => {
 
       // Calculate lives saved for each specific donation
       let livesSaved = 0;
+      const donationYear = getDonationYear(donation);
 
       if (donation.isCustomRecipient && donation.categoryId) {
         // For custom recipients, use the helper function
-        const costPerLife = calculateCustomRecipientCostPerLife(donation, currentYear);
+        const costPerLife = calculateCustomRecipientCostPerLife(donation, donationYear);
         livesSaved = donation.amount / costPerLife;
       } else {
         // For existing recipients, find the appropriate recipient ID
@@ -192,7 +192,7 @@ const DonationCalculator = () => {
         const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(
           combinedAssumptions,
           recipientId,
-          currentYear
+          donationYear
         );
         livesSaved = donation.amount / recipientCostPerLife;
       }
@@ -296,12 +296,18 @@ const DonationCalculator = () => {
     setSpecificDonations((prev) => prev.filter((item) => item.id !== id));
   };
 
+  // Helper function to get the year from a specific donation
+  const getDonationYear = (donation) => {
+    // Specific donations store year in 'date' field as a string
+    return donation.date ? parseInt(donation.date, 10) : getCurrentYear();
+  };
+
   // Calculate lives saved for a specific donation
   const calculateLivesSavedForSpecificDonation = (donation) => {
-    const currentYear = getCurrentYear();
+    const donationYear = getDonationYear(donation);
     if (donation.isCustomRecipient && donation.categoryId) {
       // For custom recipients, calculate cost per life with multiplier
-      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, donationYear);
       const costPerLife = donation.multiplier ? baseCostPerLife * donation.multiplier : baseCostPerLife;
       return donation.amount / costPerLife;
     } else {
@@ -317,7 +323,7 @@ const DonationCalculator = () => {
       const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(
         combinedAssumptions,
         recipientId,
-        currentYear
+        donationYear
       );
       return donation.amount / recipientCostPerLife;
     }
@@ -325,16 +331,16 @@ const DonationCalculator = () => {
 
   // Get cost per life for a specific donation (for display in the table)
   const getCostPerLifeForSpecificDonation = (donation) => {
-    const currentYear = getCurrentYear();
+    const donationYear = getDonationYear(donation);
     // For custom recipients, calculate cost per life with multiplier
     if (donation.isCustomRecipient && donation.categoryId) {
-      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, donationYear);
       return donation.multiplier ? baseCostPerLife * donation.multiplier : baseCostPerLife;
     } else {
       // For existing recipients, get cost per life using combined assumptions
       const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);
       if (recipientId) {
-        return getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, currentYear);
+        return getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, donationYear);
       } else {
         return 0;
       }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
-import { formatNumber, formatLives } from '../utils/formatters';
+import { formatNumber, formatLives, formatCurrency } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
@@ -451,7 +451,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 )}
                 {selectedRecipient && recipientCostPerLife && (
                   <p className="mt-1 text-xs text-gray-500">
-                    Default cost per life: ${formatNumber(recipientCostPerLife)}
+                    Default cost per life: {formatCurrency(recipientCostPerLife)}
                   </p>
                 )}
               </div>
@@ -494,8 +494,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
-                      Default cost per life: $
-                      {formatNumber(
+                      Default cost per life:{' '}
+                      {formatCurrency(
                         getCostPerLifeFromCombined(
                           combinedAssumptions,
                           selectedCategory,

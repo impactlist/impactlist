@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { formatNumber } from '../../utils/formatters';
+import { formatNumber, formatCurrency } from '../../utils/formatters';
 
 /**
  * Form component for the donation calculator to input category-based donations.
@@ -63,7 +63,7 @@ const CalculatorForm = ({
                     {category.name}
                   </Link>
                 </label>
-                <span className="text-xs text-slate-500">${formatNumber(costPerLife)}/life</span>
+                <span className="text-xs text-slate-500">{formatCurrency(costPerLife)}/life</span>
               </div>
               <div className="flex items-center mb-1">
                 <span className="text-slate-700 mr-1">$</span>

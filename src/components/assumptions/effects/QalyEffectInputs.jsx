@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FormField from '../../shared/FormField';
 import TimeLimitMessage from '../../shared/TimeLimitMessage';
+import { getEffectTooltip } from '../../../constants/effectTooltips';
 
 /**
  * Input fields for QALY-based effects
@@ -20,7 +21,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
       <FormField
         id={`effect-${effectIndex}-costPerQALY`}
         label="Cost per life-year"
-        description="Cost to produce or save one quality-adjusted life year."
+        description={getEffectTooltip('qaly', 'costPerQALY')}
         value={effect.costPerQALY}
         defaultValue={defaultEffect?.costPerQALY}
         onChange={handleChange('costPerQALY')}
@@ -31,7 +32,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
       <FormField
         id={`effect-${effectIndex}-startTime`}
         label="Start Time (years)"
-        description="Number of years after the intervention starts that the effect of that intervention starts."
+        description={getEffectTooltip('qaly', 'startTime')}
         value={effect.startTime}
         defaultValue={defaultEffect?.startTime}
         onChange={handleChange('startTime')}
@@ -42,7 +43,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
         <FormField
           id={`effect-${effectIndex}-windowLength`}
           label="Window Length (years)"
-          description="Duration of the effect of the intervention. For instance if the intervention is a vaccine that provides protection for 10 years, the window length is 10 years."
+          description={getEffectTooltip('qaly', 'windowLength')}
           value={effect.windowLength}
           defaultValue={defaultEffect?.windowLength}
           onChange={handleChange('windowLength')}

@@ -2,6 +2,7 @@ import React from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
 import TimeLimitMessage from '../../shared/TimeLimitMessage';
+import { getEffectTooltip } from '../../../constants/effectTooltips';
 
 /**
  * Component for editing QALY effect overrides/multipliers for recipients
@@ -46,9 +47,9 @@ const RecipientQalyEffectInputs = ({
   };
 
   const fields = [
-    { name: 'costPerQALY', label: 'Cost per life-year:', tooltip: 'Cost to provide one quality-adjusted life year' },
-    { name: 'startTime', label: 'Start year:', tooltip: 'Years until the effect begins' },
-    { name: 'windowLength', label: 'Window length:', tooltip: 'Duration of the effect in years' },
+    { name: 'costPerQALY', label: 'Cost per life-year:', tooltip: getEffectTooltip('qaly', 'costPerQALY') },
+    { name: 'startTime', label: 'Start year:', tooltip: getEffectTooltip('qaly', 'startTime') },
+    { name: 'windowLength', label: 'Window length:', tooltip: getEffectTooltip('qaly', 'windowLength') },
   ];
 
   // Get effective values for time limit message

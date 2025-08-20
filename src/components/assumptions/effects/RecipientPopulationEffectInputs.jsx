@@ -2,6 +2,7 @@ import React from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
 import TimeLimitMessage from '../../shared/TimeLimitMessage';
+import { getEffectTooltip } from '../../../constants/effectTooltips';
 
 /**
  * Component for editing Population effect overrides/multipliers for recipients
@@ -49,20 +50,20 @@ const RecipientPopulationEffectInputs = ({
     {
       name: 'costPerMicroprobability',
       label: 'Cost per microprobability:',
-      tooltip: 'Cost to prevent one microprobability (1 in a million chance) of extinction',
+      tooltip: getEffectTooltip('population', 'costPerMicroprobability'),
     },
     {
       name: 'populationFractionAffected',
       label: 'Population Fraction Affected:',
-      tooltip: 'Fraction of the population affected by this intervention',
+      tooltip: getEffectTooltip('population', 'populationFractionAffected'),
     },
     {
       name: 'qalyImprovementPerYear',
       label: 'Life-year improvement per year:',
-      tooltip: 'Quality-adjusted life years improved per year for affected population',
+      tooltip: getEffectTooltip('population', 'qalyImprovementPerYear'),
     },
-    { name: 'startTime', label: 'Start Year:', tooltip: 'Years until the effect begins' },
-    { name: 'windowLength', label: 'Window Length:', tooltip: 'Duration of the effect in years' },
+    { name: 'startTime', label: 'Start Year:', tooltip: getEffectTooltip('population', 'startTime') },
+    { name: 'windowLength', label: 'Window Length:', tooltip: getEffectTooltip('population', 'windowLength') },
   ];
 
   // Get effective values for time limit message

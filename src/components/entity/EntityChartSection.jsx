@@ -5,6 +5,7 @@ import ImpactBarChart from '../charts/ImpactBarChart';
 import ChartContainer from '../charts/ChartContainer';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
+import { getCurrentYear } from '../../utils/donationDataHelpers';
 
 /**
  * A reusable chart section for displaying entity impact data.
@@ -85,7 +86,8 @@ const EntityChartSection = ({
               {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 pt-1 border-t border-slate-100">
                   <p className="text-xs text-slate-600">
-                    Cost per life: {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry))}
+                    Cost per life:{' '}
+                    {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry, getCurrentYear()))}
                   </p>
                   <p className="text-xs text-slate-600">
                     Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}
@@ -102,7 +104,8 @@ const EntityChartSection = ({
               {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 pt-1 border-t border-slate-100">
                   <p className="text-xs text-slate-600">
-                    Cost per life: {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry))}
+                    Cost per life:{' '}
+                    {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry, getCurrentYear()))}
                   </p>
                   <p className="text-xs text-slate-600">Donation amount: {formatCurrency(entry.donationValue)}</p>
                 </div>

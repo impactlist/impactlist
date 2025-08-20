@@ -14,6 +14,7 @@ const EntityStatistics = ({
   className = '',
   customValuesIndicator = null,
   onAdjustAssumptions = null,
+  currentYear = null,
 }) => {
   const isDonor = entityType === 'donor';
 
@@ -55,7 +56,7 @@ const EntityStatistics = ({
           />
 
           <StatisticsCard
-            label="Cost Per Life"
+            label={currentYear && !isDonor ? `Cost Per Life (${currentYear})` : 'Cost Per Life'}
             value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
             valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
             subtext={
@@ -119,6 +120,7 @@ EntityStatistics.propTypes = {
   className: PropTypes.string,
   customValuesIndicator: PropTypes.node,
   onAdjustAssumptions: PropTypes.func,
+  currentYear: PropTypes.number,
 };
 
 export default React.memo(EntityStatistics);

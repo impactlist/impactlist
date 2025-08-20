@@ -364,6 +364,7 @@ const RecipientDetail = () => {
           entityType="recipient"
           customValuesIndicator={<CustomValuesIndicator />}
           onAdjustAssumptions={openModal}
+          currentYear={getCurrentYear()}
         />
 
         {/* Focus Areas chart with toggle */}

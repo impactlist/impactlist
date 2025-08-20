@@ -144,6 +144,9 @@ const RecipientEffectEditor = ({
 
   // Calculate cost per life for each effect
   const effectCostPerLife = useMemo(() => {
+    // Use current year if previewYear is empty or invalid
+    const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
+
     return tempEditToEffects.map((effect) => {
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
@@ -197,18 +200,21 @@ const RecipientEffectEditor = ({
 
       // Create modified effect with overrides/multipliers applied
       const modifiedEffect = applyRecipientEffectToBase(baseEffect, effectToApply, `effect ${effect.effectId}`);
-      return calculateEffectCostPerLife(modifiedEffect, globalParameters, previewYear);
+      return calculateEffectCostPerLife(modifiedEffect, globalParameters, yearForCalculation);
     });
   }, [tempEditToEffects, globalParameters, previewYear]);
 
   // Calculate base cost per life for each effect (without recipient-specific overrides)
   const baseEffectCostPerLife = useMemo(() => {
+    // Use current year if previewYear is empty or invalid
+    const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
+
     return tempEditToEffects.map((effect) => {
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
 
       // Calculate cost using only the base category effect
-      return calculateEffectCostPerLife(baseEffect, globalParameters, previewYear);
+      return calculateEffectCostPerLife(baseEffect, globalParameters, yearForCalculation);
     });
   }, [tempEditToEffects, globalParameters, previewYear]);
 

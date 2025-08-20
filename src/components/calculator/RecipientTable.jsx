@@ -61,6 +61,11 @@ const RecipientTable = ({
               ),
             },
             {
+              key: 'date',
+              label: 'Year',
+              render: (donation) => <div className="text-sm font-medium text-slate-700">{donation.date || 'N/A'}</div>,
+            },
+            {
               key: 'recipientName',
               label: 'Recipient',
               render: (donation) => (

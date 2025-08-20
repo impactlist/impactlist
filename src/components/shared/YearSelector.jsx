@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 const YearSelector = ({
   value,
   onChange,
-  label = 'Preview year:',
+  label = 'Assumed year:',
   minYear = 1900,
   maxYear = new Date().getFullYear(),
   className = '',

@@ -20,6 +20,7 @@ const CategoryValuesSection = ({
   onEditCategory,
   onResetCategory,
   categoriesWithCustomValues,
+  previewYear,
   className = '',
 }) => {
   // Merge global parameters once for consistent calculations
@@ -35,7 +36,11 @@ const CategoryValuesSection = ({
 
     Object.entries(defaultAssumptions.categories).forEach(([categoryId, category]) => {
       // Calculate default cost per life from effects
-      const defaultCostPerLife = calculateCostPerLife(category.effects, mergedGlobalParameters, getCurrentYear());
+      const defaultCostPerLife = calculateCostPerLife(
+        category.effects,
+        mergedGlobalParameters,
+        previewYear || getCurrentYear()
+      );
 
       // Calculate current cost per life (with user overrides if any)
       const currentCostPerLife = calculateCategoryEffectCostPerLife(
@@ -43,7 +48,7 @@ const CategoryValuesSection = ({
         defaultAssumptions,
         userAssumptions,
         mergedGlobalParameters,
-        getCurrentYear()
+        previewYear || getCurrentYear()
       );
 
       result[categoryId] = {
@@ -54,7 +59,7 @@ const CategoryValuesSection = ({
     });
 
     return result;
-  }, [defaultAssumptions, userAssumptions, mergedGlobalParameters]);
+  }, [defaultAssumptions, userAssumptions, mergedGlobalParameters, previewYear]);
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 ${className}`}>
       {Object.entries(categoriesData)
@@ -140,6 +145,7 @@ CategoryValuesSection.propTypes = {
   onEditCategory: PropTypes.func,
   onResetCategory: PropTypes.func,
   categoriesWithCustomValues: PropTypes.object,
+  previewYear: PropTypes.number,
   className: PropTypes.string,
 };
 

@@ -24,6 +24,7 @@ import RecipientEffectEditor from './assumptions/RecipientEffectEditor';
 import Modal from './assumptions/Modal';
 import TabNavigation from './assumptions/TabNavigation';
 import FormActions from './assumptions/FormActions';
+import YearSelector from './shared/YearSelector';
 
 const AssumptionsEditor = () => {
   const {
@@ -50,6 +51,7 @@ const AssumptionsEditor = () => {
 
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editingRecipient, setEditingRecipient] = useState(null);
+  const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
 
   // Clear editing states when modal closes (but preserve activeTab)
   useEffect(() => {
@@ -324,9 +326,9 @@ const AssumptionsEditor = () => {
     if (activeTab === 'global') {
       return 'Global parameters that affect the calculations of the cost to save one life for each category or recipient:';
     } else if (activeTab === 'categories') {
-      return 'Cost to save a life for each cause category:';
+      return `Cost to save a life in ${previewYear} for each cause category:`;
     } else {
-      return 'Cost to save a life for each recipient:';
+      return `Cost to save a life in ${previewYear} for each recipient:`;
     }
   };
 
@@ -370,7 +372,12 @@ const AssumptionsEditor = () => {
 
           {/* Tab description */}
           <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
-            <p className="text-base font-semibold text-gray-700">{getDescription()}</p>
+            <div className="flex items-center justify-between">
+              <p className="text-base font-semibold text-gray-700">{getDescription()}</p>
+              {activeTab !== 'global' && (
+                <YearSelector value={previewYear} onChange={setPreviewYear} id="assumptions-preview-year" />
+              )}
+            </div>
           </div>
         </>
       )}
@@ -424,6 +431,7 @@ const AssumptionsEditor = () => {
               onEditCategory={handleEditCategory}
               onResetCategory={resetCategoryToDefaults}
               categoriesWithCustomValues={categoriesWithCustomValues}
+              previewYear={previewYear}
             />
           </form>
         ) : (
@@ -434,6 +442,7 @@ const AssumptionsEditor = () => {
             defaultAssumptions={defaultAssumptions}
             userAssumptions={userAssumptions}
             onEditRecipient={handleEditRecipient}
+            previewYear={previewYear}
           />
         )}
       </div>

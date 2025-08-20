@@ -15,6 +15,8 @@ import {
   cleanAndParseValue,
 } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
+import { getCurrentYear } from '../../utils/donationDataHelpers';
+import YearSelector from '../shared/YearSelector';
 
 /**
  * Component for editing all effects of a recipient's category
@@ -28,8 +30,9 @@ const RecipientEffectEditor = ({
   onSave,
   onCancel,
 }) => {
-  const [tempEffects, setTempEffects] = useState([]);
+  const [tempEditToEffects, setTempEditToEffects] = useState([]);
   const [errors, setErrors] = useState({});
+  const [previewYear, setPreviewYear] = useState(getCurrentYear());
   const { defaultAssumptions, userAssumptions } = useAssumptions();
 
   // Get default effects for this recipient category
@@ -69,20 +72,20 @@ const RecipientEffectEditor = ({
       };
     });
 
-    setTempEffects(initialEffects);
+    setTempEditToEffects(initialEffects);
   }, [recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects, userAssumptions]);
 
   // Validate all effects on mount and when effects change
   useEffect(() => {
-    if (tempEffects.length > 0) {
-      const validation = validateRecipientEffects(tempEffects);
+    if (tempEditToEffects.length > 0) {
+      const validation = validateRecipientEffects(tempEditToEffects);
       setErrors(validation.errors);
     }
-  }, [tempEffects]);
+  }, [tempEditToEffects]);
 
   // Update a specific field of an effect
   const updateEffectField = (effectIndex, fieldName, type, value) => {
-    setTempEffects((prev) => {
+    setTempEditToEffects((prev) => {
       const newEffects = [...prev];
       const effect = { ...newEffects[effectIndex] };
 
@@ -124,7 +127,7 @@ const RecipientEffectEditor = ({
       fieldName,
       value,
       type,
-      getEffectType(tempEffects[effectIndex]._baseEffect)
+      getEffectType(tempEditToEffects[effectIndex]._baseEffect)
     );
     const errorKey = `${effectIndex}-${fieldName}-${type}`;
 
@@ -141,7 +144,7 @@ const RecipientEffectEditor = ({
 
   // Calculate cost per life for each effect
   const effectCostPerLife = useMemo(() => {
-    return tempEffects.map((effect) => {
+    return tempEditToEffects.map((effect) => {
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
 
@@ -194,25 +197,36 @@ const RecipientEffectEditor = ({
 
       // Create modified effect with overrides/multipliers applied
       const modifiedEffect = applyRecipientEffectToBase(baseEffect, effectToApply, `effect ${effect.effectId}`);
-      return calculateEffectCostPerLife(modifiedEffect, globalParameters);
+      return calculateEffectCostPerLife(modifiedEffect, globalParameters, previewYear);
     });
-  }, [tempEffects, globalParameters]);
+  }, [tempEditToEffects, globalParameters, previewYear]);
 
   // Calculate base cost per life for each effect (without recipient-specific overrides)
   const baseEffectCostPerLife = useMemo(() => {
-    return tempEffects.map((effect) => {
+    return tempEditToEffects.map((effect) => {
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
 
       // Calculate cost using only the base category effect
-      return calculateEffectCostPerLife(baseEffect, globalParameters);
+      return calculateEffectCostPerLife(baseEffect, globalParameters, previewYear);
     });
-  }, [tempEffects, globalParameters]);
+  }, [tempEditToEffects, globalParameters, previewYear]);
 
   // Calculate combined cost per life
   const combinedCostPerLife = useMemo(() => {
     return calculateCombinedCostPerLife(effectCostPerLife);
   }, [effectCostPerLife]);
+
+  // Check if any base effects have time intervals
+  const hasTimeIntervals = useMemo(() => {
+    return tempEditToEffects.some((effect) => {
+      const baseEffect = effect._baseEffect;
+      return (
+        baseEffect?.validTimeInterval &&
+        (baseEffect.validTimeInterval[0] !== null || baseEffect.validTimeInterval[1] !== null)
+      );
+    });
+  }, [tempEditToEffects]);
 
   // Check if there are any errors
   const hasErrors = useMemo(() => {
@@ -226,7 +240,7 @@ const RecipientEffectEditor = ({
     }
 
     // Clean up effects for saving
-    const effectsToSave = tempEffects
+    const effectsToSave = tempEditToEffects
       .map((effect) => {
         const cleanEffect = {
           effectId: effect.effectId,
@@ -282,7 +296,26 @@ const RecipientEffectEditor = ({
       <div className="flex flex-col flex-1 min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={`Edit Effects: ${recipient.name} - ${category.name}`}
-          description="Set at most one value (override or multiplier) for each parameter. These are the underlying parameters that are used to compute the cost per life."
+          description={
+            <div>
+              <p>
+                Set at most one value (override or multiplier) for each parameter. These are the underlying parameters
+                that are used to compute the cost per life.
+              </p>
+              {tempEditToEffects.length > 1 && hasTimeIntervals && (
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-sm">Preview calculations for year {previewYear}</span>
+                  <YearSelector
+                    value={previewYear}
+                    onChange={setPreviewYear}
+                    label=""
+                    id="recipient-effect-preview-year"
+                    className=""
+                  />
+                </div>
+              )}
+            </div>
+          }
           combinedCostPerLife={combinedCostPerLife}
           showCombinedCost={false}
           onClose={onCancel}
@@ -291,7 +324,7 @@ const RecipientEffectEditor = ({
         {/* Effects List */}
         <div className="overflow-y-auto px-3 py-2 max-h-[calc(80vh-300px)]">
           {/* Cost per life display - only show when there are multiple effects */}
-          {tempEffects.length > 1 && (
+          {tempEditToEffects.length > 1 && (
             <div className="mb-3 p-2 bg-gray-50 rounded-lg">
               <div className="text-lg font-medium text-gray-800">
                 Combined cost per life:{' '}
@@ -304,7 +337,7 @@ const RecipientEffectEditor = ({
 
           {/* Effects */}
           <div className="space-y-3">
-            {tempEffects.map((effect, index) => {
+            {tempEditToEffects.map((effect, index) => {
               const baseEffect = effect._baseEffect;
               const effectType = getEffectType(baseEffect);
               const costPerLife = effectCostPerLife[index];

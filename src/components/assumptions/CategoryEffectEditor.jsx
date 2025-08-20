@@ -11,15 +11,16 @@ import { getEffectType, validateEffectField, validateEffects } from '../../utils
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { mergeEffects } from '../../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
+import YearSelector from '../shared/YearSelector';
 
 /**
  * Component for editing all effects of a category
  */
 
 const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, onCancel }) => {
-  const [tempEffects, setTempEffects] = useState([]);
+  const [tempEditToEffects, setTempEditToEffects] = useState([]);
   const [errors, setErrors] = useState({});
-  const [previewYear] = useState(getCurrentYear());
+  const [previewYear, setPreviewYear] = useState(getCurrentYear());
   const { defaultAssumptions, userAssumptions } = useAssumptions();
 
   // Get default effects for comparison
@@ -40,23 +41,23 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       const mergedEffects = mergeEffects(category.effects, userEffects);
 
       // Set the merged effects (already deep cloned by mergeEffects)
-      setTempEffects(mergedEffects);
+      setTempEditToEffects(mergedEffects);
     }
   }, [category, categoryId, userAssumptions]);
 
   // Validate all effects on mount and when effects change
   useEffect(() => {
-    if (tempEffects.length > 0) {
-      const validation = validateEffects(tempEffects);
+    if (tempEditToEffects.length > 0) {
+      const validation = validateEffects(tempEditToEffects);
       setErrors(validation.errors);
     }
-  }, [tempEffects]);
+  }, [tempEditToEffects]);
 
   // Update a specific field of an effect
   const updateEffectField = (effectIndex, fieldName, value) => {
     // Store the value as-is (string with formatting)
     // The validation will clean it when checking
-    setTempEffects((prev) => {
+    setTempEditToEffects((prev) => {
       const newEffects = [...prev];
       newEffects[effectIndex] = {
         ...newEffects[effectIndex],
@@ -66,7 +67,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     });
 
     // Validate this field immediately
-    const effect = { ...tempEffects[effectIndex], [fieldName]: value };
+    const effect = { ...tempEditToEffects[effectIndex], [fieldName]: value };
     const effectType = getEffectType(effect);
     const error = validateEffectField(fieldName, value, effectType);
     const errorKey = `${effectIndex}-${fieldName}`;
@@ -84,13 +85,21 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Calculate cost per life for each effect
   const effectCostPerLife = useMemo(() => {
-    return tempEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters, previewYear));
-  }, [tempEffects, globalParameters, previewYear]);
+    return tempEditToEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters, previewYear));
+  }, [tempEditToEffects, globalParameters, previewYear]);
 
   // Calculate combined cost per life
   const combinedCostPerLife = useMemo(() => {
     return calculateCombinedCostPerLife(effectCostPerLife);
   }, [effectCostPerLife]);
+
+  // Check if any effects have time intervals
+  const hasTimeIntervals = useMemo(() => {
+    return tempEditToEffects.some(
+      (effect) =>
+        effect.validTimeInterval && (effect.validTimeInterval[0] !== null || effect.validTimeInterval[1] !== null)
+    );
+  }, [tempEditToEffects]);
 
   // Check if there are any validation errors
   const hasErrors = useMemo(() => {
@@ -100,7 +109,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   // Handle save
   const handleSave = () => {
     try {
-      const cleanedEffects = cleanEffectsForSave(tempEffects);
+      const cleanedEffects = cleanEffectsForSave(tempEditToEffects);
 
       // Re-validate all effects before saving
       const validation = validateEffects(cleanedEffects);
@@ -123,16 +132,31 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       <div className="h-full flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={`Editing assumptions for category: ${category.name}`}
-          subtitle={`Preview calculations for year ${previewYear}`}
-          combinedCostPerLife={tempEffects.length > 1 ? combinedCostPerLife : undefined}
-          showCombinedCost={tempEffects.length > 1}
+          subtitle={
+            tempEditToEffects.length > 1 && hasTimeIntervals ? (
+              <div className="flex items-center gap-2">
+                <span>Preview calculations for year {previewYear}</span>
+                <YearSelector
+                  value={previewYear}
+                  onChange={setPreviewYear}
+                  label=""
+                  id="category-effect-preview-year"
+                  className="ml-2"
+                />
+              </div>
+            ) : (
+              `Preview calculations for year ${previewYear}`
+            )
+          }
+          combinedCostPerLife={tempEditToEffects.length > 1 ? combinedCostPerLife : undefined}
+          showCombinedCost={tempEditToEffects.length > 1}
           onClose={onCancel}
         />
 
         {/* Effects List */}
         <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-300px)]">
           <div className="space-y-3">
-            {tempEffects.map((effect, index) => {
+            {tempEditToEffects.map((effect, index) => {
               const effectType = getEffectType(effect);
               const costPerLife = effectCostPerLife[index];
 

@@ -19,6 +19,7 @@ const RecipientValuesSection = ({
   defaultAssumptions,
   userAssumptions,
   onEditRecipient,
+  previewYear,
 }) => {
   // Merge global parameters once
   const mergedGlobalParameters = useMemo(
@@ -53,7 +54,7 @@ const RecipientValuesSection = ({
 
     // If no recipient effects at all, return base category cost
     if (!effectsToApply) {
-      return calculateCostPerLife(category.effects, mergedGlobalParameters, getCurrentYear());
+      return calculateCostPerLife(category.effects, mergedGlobalParameters, previewYear || getCurrentYear());
     }
 
     // Apply recipient effects to base category effects
@@ -66,7 +67,7 @@ const RecipientValuesSection = ({
     });
 
     // Calculate cost per life from modified effects
-    return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, getCurrentYear());
+    return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, previewYear || getCurrentYear());
   };
 
   return (
@@ -113,7 +114,7 @@ const RecipientValuesSection = ({
                         categoryCostPerLife = calculateCostPerLife(
                           category.effects,
                           defaultAssumptions.globalParameters,
-                          getCurrentYear()
+                          previewYear || getCurrentYear()
                         );
                       }
 
@@ -189,6 +190,7 @@ RecipientValuesSection.propTypes = {
   defaultAssumptions: PropTypes.object.isRequired,
   userAssumptions: PropTypes.object,
   onEditRecipient: PropTypes.func.isRequired,
+  previewYear: PropTypes.number,
 };
 
 export default RecipientValuesSection;

@@ -329,7 +329,7 @@ const RecipientEffectEditor = ({
               <div className="text-lg font-medium text-gray-800">
                 Combined cost per life:{' '}
                 <span className={combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}>
-                  ${combinedCostPerLife === Infinity ? 'Invalid' : formatCurrency(combinedCostPerLife).replace('$', '')}
+                  ${combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife).replace('$', '')}
                 </span>
               </div>
             </div>
@@ -355,15 +355,24 @@ const RecipientEffectEditor = ({
               return (
                 <div key={effect.effectId} className="border border-gray-400 rounded-lg p-3">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-medium text-gray-800">
-                      Effect {index + 1}: {effect.effectId}
-                    </h3>
-                    <EffectCostDisplay
-                      cost={costPerLife}
-                      baseCost={baseCost}
-                      showInfinity={false}
-                      className="text-sm"
-                    />
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800">
+                        Effect {index + 1}: {effect.effectId}
+                      </h3>
+                      {baseEffect?.validTimeInterval && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          Active:{' '}
+                          {baseEffect.validTimeInterval[0] === null
+                            ? `Until ${baseEffect.validTimeInterval[1]}`
+                            : `${baseEffect.validTimeInterval[0]} - ${baseEffect.validTimeInterval[1] || 'present'}`}
+                          {(previewYear < baseEffect.validTimeInterval[0] ||
+                            (baseEffect.validTimeInterval[1] && previewYear > baseEffect.validTimeInterval[1])) && (
+                            <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
+                          )}
+                        </p>
+                      )}
+                    </div>
+                    <EffectCostDisplay cost={costPerLife} baseCost={baseCost} showInfinity={true} className="text-sm" />
                   </div>
 
                   <div>

@@ -37,7 +37,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
       id: 'populationGrowthRate',
       label: 'Population Growth Rate (%)',
       description:
-        'Annual population growth rate starting at the current date and continuing indefinitely or until it hits the population limit (see: Population Limit Factor).',
+        'Annual population growth rate starting at the current date and continuing indefinitely or until it hits the population limit (see: Population Limit Factor). For donations in the past we use the historical growth rate until the current year.',
       format: 'percentage',
     },
     {

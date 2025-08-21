@@ -792,5 +792,31 @@ describe('effectsCalculation', () => {
       const percentDiff = Math.abs(mixedGrowth - noGrowth) / noGrowth;
       expect(percentDiff).toBeLessThan(0.05); // Less than 5% difference
     });
+    it('should properly truncate effects extending beyond timeLimit', () => {
+      const effect = createPopEffect(100, 0.1, 1, 80, 40); // Starts year 80, wants to run 40 years
+      const params = {
+        ...baseGlobalParams,
+        timeLimit: 100, // Time limit at year 100
+      };
+
+      // Effect should be truncated to 20 years (80 to 100)
+      const truncatedCost = effectToCostPerLife(effect, params, 2024);
+
+      // Compare with an effect that naturally runs for 20 years
+      const naturalEffect = createPopEffect(100, 0.1, 1, 80, 20);
+      const naturalCost = effectToCostPerLife(naturalEffect, params, 2024);
+
+      // Should be identical since both run from year 80-100
+      expect(truncatedCost).toBeCloseTo(naturalCost, 10);
+
+      // Test with past donation where effect spans past/future AND hits timeLimit
+      const pastEffect = createPopEffect(100, 0.1, 1, 50, 70); // Wants to run years 50-120
+      const pastDonation = effectToCostPerLife(pastEffect, params, 1960); // Donation from 1960
+
+      // Effect runs 2010-2030, but timeLimit truncates to 2010-2060 (100 years from 1960)
+      // So actual duration is 50 years, not 70
+      expect(pastDonation).toBeGreaterThan(0);
+      expect(pastDonation).toBeLessThan(Infinity);
+    });
   });
 });

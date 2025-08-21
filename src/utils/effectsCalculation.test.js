@@ -27,11 +27,9 @@ describe('effectsCalculation', () => {
 
     it('should throw when year is missing or invalid', () => {
       const effects = [{ type: 'qaly', costPerQALY: 1000, startTime: 0, windowLength: 10 }];
-      expect(() => calculateCostPerLife(effects, baseGlobalParams)).toThrow('calculationYear must be an integer');
-      expect(() => calculateCostPerLife(effects, baseGlobalParams, null)).toThrow('calculationYear must be an integer');
-      expect(() => calculateCostPerLife(effects, baseGlobalParams, '2020')).toThrow(
-        'calculationYear must be an integer'
-      );
+      expect(() => calculateCostPerLife(effects, baseGlobalParams)).toThrow('donationYear must be an integer');
+      expect(() => calculateCostPerLife(effects, baseGlobalParams, null)).toThrow('donationYear must be an integer');
+      expect(() => calculateCostPerLife(effects, baseGlobalParams, '2020')).toThrow('donationYear must be an integer');
     });
 
     it('should handle single QALY effect', () => {
@@ -792,6 +790,29 @@ describe('effectsCalculation', () => {
       const percentDiff = Math.abs(mixedGrowth - noGrowth) / noGrowth;
       expect(percentDiff).toBeLessThan(0.05); // Less than 5% difference
     });
+    it('should handle non-integer years to population limit', () => {
+      // Set up parameters where population limit is hit at a non-integer year
+      const effect = createPopEffect(100, 0.1, 1, 0, 30);
+      const params = {
+        ...baseGlobalParams,
+        currentPopulation: 8000000000,
+        populationGrowthRate: 0.02, // 2% growth
+        populationLimit: 1.3, // Will hit this at a non-integer year
+        timeLimit: 100,
+      };
+
+      // Calculate when limit is hit: log(1.3) / log(1.02) ≈ 13.17 years
+      const costWithLimit = effectToCostPerLife(effect, params, 2024);
+
+      // Should not crash and give reasonable result
+      expect(costWithLimit).toBeGreaterThan(0);
+      expect(costWithLimit).toBeLessThan(Infinity);
+
+      // Compare with no limit - should be more expensive with limit
+      const costNoLimit = effectToCostPerLife(effect, { ...params, populationLimit: 10 }, 2024);
+      expect(costWithLimit).toBeGreaterThan(costNoLimit);
+    });
+
     it('should properly truncate effects extending beyond timeLimit', () => {
       const effect = createPopEffect(100, 0.1, 1, 80, 40); // Starts year 80, wants to run 40 years
       const params = {

@@ -160,10 +160,10 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
  * Convert a population-based effect to cost per life
  * @param {Object} effect - The effect with costPerMicroprobability and population data
  * @param {Object} globalParams - Global parameters object
- * @param {number} calculationYear - Year for which to calculate (required for historical adjustments)
+ * @param {number} donationYear - Year when the donation was made (required for historical adjustments)
  * @returns {number} Cost per life
  */
-const populationEffectToCostPerLife = (effect, globalParams, calculationYear) => {
+const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerMicroprobability, 'costPerMicroprobability', 'in population effect');
   assertPositiveNumber(effect.populationFractionAffected, 'populationFractionAffected', 'in population effect');
@@ -189,7 +189,7 @@ const populationEffectToCostPerLife = (effect, globalParams, calculationYear) =>
 
   // Determine when the effect actually starts in absolute terms
   const currentYear = getCurrentYear();
-  const effectStartYear = calculationYear + startYear; // Absolute year when effect starts
+  const effectStartYear = donationYear + startYear; // Absolute year when effect starts
   const effectEndYear = effectStartYear + windowLength; // Absolute year when effect ends
 
   // Check if the effect spans the transition from past to future
@@ -198,7 +198,7 @@ const populationEffectToCostPerLife = (effect, globalParams, calculationYear) =>
 
   // Time is measured from the donation year (calculationYear)
   // startYear is years after donation, so we need to adjust for historical calculations
-  const yearsFromDonationToNow = currentYear - calculationYear;
+  const yearsFromDonationToNow = currentYear - donationYear;
 
   // Use discrete annual rates for growth and discounting
   const g = globalParams.populationGrowthRate;
@@ -229,7 +229,7 @@ const populationEffectToCostPerLife = (effect, globalParams, calculationYear) =>
 
   // Handle instantaneous pulse effect specially
   if (effect.windowLength === 0) {
-    const absoluteEffectYear = calculationYear + startYear;
+    const absoluteEffectYear = donationYear + startYear;
     let populationAtEffect;
 
     if (absoluteEffectYear <= currentYear) {
@@ -323,20 +323,20 @@ const populationEffectToCostPerLife = (effect, globalParams, calculationYear) =>
  * Convert any effect to cost per life
  * @param {Object} effect - The effect object
  * @param {Object} globalParams - Global parameters object
- * @param {number} calculationYear - Year for which to calculate
+ * @param {number} donationYear - Year when the donation was made
  * @returns {number} Cost per life
  */
-export const effectToCostPerLife = (effect, globalParams, calculationYear) => {
+export const effectToCostPerLife = (effect, globalParams, donationYear) => {
   assertExists(effect, 'effect');
   assertExists(globalParams, 'globalParams');
-  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
-    throw new Error('calculationYear must be an integer for effectToCostPerLife');
+  if (typeof donationYear !== 'number' || !Number.isInteger(donationYear)) {
+    throw new Error('donationYear must be an integer for effectToCostPerLife');
   }
 
   if (effect.costPerQALY !== undefined) {
     return qalyEffectToCostPerLife(effect, globalParams);
   } else if (effect.costPerMicroprobability !== undefined) {
-    return populationEffectToCostPerLife(effect, globalParams, calculationYear);
+    return populationEffectToCostPerLife(effect, globalParams, donationYear);
   } else {
     throw new Error('Effect must have either costPerQALY or costPerMicroprobability');
   }
@@ -367,13 +367,13 @@ export const calculateCombinedCostPerLife = (effectCosts) => {
 /**
  * Select effects applicable to a specific year
  * @param {Array} effects - Array of effect objects
- * @param {number} calculationYear - Year to calculate for (e.g., 2020)
+ * @param {number} donationYear - Year when the donation was made (e.g., 2020)
  * @returns {Array} Effects applicable to the given year
  */
-export const selectEffectsForYear = (effects, calculationYear) => {
+export const selectEffectsForYear = (effects, donationYear) => {
   // Basic validation - just ensure it's a number
-  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
-    throw new Error('calculationYear must be an integer');
+  if (typeof donationYear !== 'number' || !Number.isInteger(donationYear)) {
+    throw new Error('donationYear must be an integer');
   }
 
   const applicableEffects = effects.filter((effect) => {
@@ -384,17 +384,17 @@ export const selectEffectsForYear = (effects, calculationYear) => {
 
     const [startYear, endYear] = effect.validTimeInterval;
 
-    // Check if calculation year falls within interval
+    // Check if donation year falls within interval
     // null start means "from beginning of time"
-    if (startYear !== null && calculationYear < startYear) return false;
+    if (startYear !== null && donationYear < startYear) return false;
     // null end means "to present/future"
-    if (endYear !== null && calculationYear > endYear) return false;
+    if (endYear !== null && donationYear > endYear) return false;
 
     return true;
   });
 
   if (applicableEffects.length === 0) {
-    throw new Error(`No applicable effects found for year ${calculationYear}`);
+    throw new Error(`No applicable effects found for year ${donationYear}`);
   }
 
   return applicableEffects;
@@ -404,13 +404,13 @@ export const selectEffectsForYear = (effects, calculationYear) => {
  * Calculate combined cost per life from multiple effects with time windows
  * @param {Array} effects - Array of effect objects with time windows
  * @param {Object} globalParams - Global parameters object
- * @param {number} calculationYear - Year to calculate for (required)
+ * @param {number} donationYear - Year when the donation was made (required)
  * @returns {number} Combined cost per life
  */
-export const calculateCostPerLife = (effects, globalParams, calculationYear) => {
+export const calculateCostPerLife = (effects, globalParams, donationYear) => {
   // Enforce year requirement
-  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
-    throw new Error('calculationYear must be an integer');
+  if (typeof donationYear !== 'number' || !Number.isInteger(donationYear)) {
+    throw new Error('donationYear must be an integer');
   }
 
   assertNonEmptyArray(effects, 'effects');
@@ -420,8 +420,8 @@ export const calculateCostPerLife = (effects, globalParams, calculationYear) => 
   assertNumber(globalParams.discountRate, 'discountRate', 'in globalParams');
   assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
 
-  // Select applicable effects based on calculation year
-  const applicableEffects = selectEffectsForYear(effects, calculationYear);
+  // Select applicable effects based on donation year
+  const applicableEffects = selectEffectsForYear(effects, donationYear);
 
   // Calculate individual cost per life for each effect
   const effectCosts = applicableEffects.map((effect) => {
@@ -429,7 +429,7 @@ export const calculateCostPerLife = (effects, globalParams, calculationYear) => 
     assertNonNegativeNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
 
     // Get the already-discounted cost per life from the effect
-    return effectToCostPerLife(effect, globalParams, calculationYear);
+    return effectToCostPerLife(effect, globalParams, donationYear);
   });
 
   // Combine the individual costs using the correct formula

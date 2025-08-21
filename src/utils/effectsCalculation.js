@@ -8,6 +8,8 @@ import {
   assertNonNegativeNumber,
   assertNonEmptyArray,
 } from './dataValidation';
+import { HISTORICAL_POPULATION_GROWTH_RATE } from './constants';
+import { getCurrentYear } from './donationDataHelpers';
 
 // ============================================================================
 // Helper Functions
@@ -158,9 +160,10 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
  * Convert a population-based effect to cost per life
  * @param {Object} effect - The effect with costPerMicroprobability and population data
  * @param {Object} globalParams - Global parameters object
+ * @param {number} calculationYear - Year for which to calculate (required for historical adjustments)
  * @returns {number} Cost per life
  */
-const populationEffectToCostPerLife = (effect, globalParams) => {
+const populationEffectToCostPerLife = (effect, globalParams, calculationYear) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerMicroprobability, 'costPerMicroprobability', 'in population effect');
   assertPositiveNumber(effect.populationFractionAffected, 'populationFractionAffected', 'in population effect');
@@ -184,8 +187,22 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
     return Infinity;
   }
 
+  // Determine when the effect actually starts in absolute terms
+  const currentYear = getCurrentYear();
+  const effectStartYear = calculationYear + startYear; // Absolute year when effect starts
+  const effectEndYear = effectStartYear + windowLength; // Absolute year when effect ends
+
+  // Check if the effect spans the transition from past to future
+  const effectStartsInPast = effectStartYear < currentYear;
+  const effectEndsInPast = effectEndYear <= currentYear;
+
+  // Time is measured from the donation year (calculationYear)
+  // startYear is years after donation, so we need to adjust for historical calculations
+  const yearsFromDonationToNow = currentYear - calculationYear;
+
   // Use discrete annual rates for growth and discounting
   const g = globalParams.populationGrowthRate;
+  const historicalG = HISTORICAL_POPULATION_GROWTH_RATE;
   const r = globalParams.discountRate;
   const P0 = globalParams.currentPopulation;
   const fraction = effect.populationFractionAffected;
@@ -193,71 +210,103 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
 
   const populationLimitNumerical = globalParams.populationLimit * P0; // Population limit as multiple of current population
 
-  let totalQALYs;
+  // Helper function to calculate QALYs for a time window
+  // This encapsulates the complex logic for population growth, limits, and discounting
+  const calculateWindowQALYs = (windowStart, windowDuration, growthRate, basePopulation) => {
+    if (windowDuration <= 0) return 0;
 
-  // Calculate when/if we hit population limit
-  let yearToHitLimit = Infinity;
+    const baseAmount = basePopulation * fraction * qalyPerYear;
+    const netRate = Math.expm1(Math.log1p(growthRate) - Math.log1p(r));
 
-  // Only calculate if limit is relevant based on growth direction
-  if ((g > 0 && globalParams.populationLimit > 1) || (g < 0 && globalParams.populationLimit < 1)) {
-    yearToHitLimit = calculateYearToPopulationLimit(P0, populationLimitNumerical, g);
-  }
+    // Calculate the total QALYs for this window
+    const windowQALYs = integrateDiscreteGrowth(baseAmount, netRate, 0, windowDuration);
 
-  // Helper function to get population at a given time
-  const getPopulationAt = (time) => {
-    if (g === 0 || globalParams.populationLimit === 1) {
-      // Constant population
-      return P0;
-    }
-
-    const pop = P0 * Math.pow(1 + g, time);
-
-    if (globalParams.populationLimit > 1) {
-      // populationLimit > 1: acts as cap
-      return Math.min(pop, populationLimitNumerical);
-    } else {
-      // populationLimit < 1: acts as floor
-      return Math.max(pop, populationLimitNumerical);
-    }
+    // Apply discounting from donation time to window start
+    return windowQALYs * calculateDiscountToTime(r, windowStart);
   };
 
+  let totalQALYs = 0;
+
+  // Handle instantaneous pulse effect specially
   if (effect.windowLength === 0) {
-    // raw Window length being zero --> instantaneous pulse
-    const currentPopulation = getPopulationAt(startYear);
-    totalQALYs = currentPopulation * fraction * qalyPerYear * calculateDiscountToTime(r, startYear);
-  } else if (yearToHitLimit < 0 || yearToHitLimit >= startYear + windowLength) {
-    // Population doesn't hit limit during the effect window
-    // Integral from t=startYear to t=startYear+windowLength of:
-    // P0 * (1+g)^t * fraction * qalyPerYear * (1+r)^(-t) dt
-    // = P0 * fraction * qalyPerYear * integral of ((1+g)/(1+r))^t dt
+    const absoluteEffectYear = calculationYear + startYear;
+    let populationAtEffect;
 
-    // Use stable net form: exp(log1p(g) - log1p(r)) - 1 = expm1(log1p(g) - log1p(r))
-    const netRate = Math.expm1(Math.log1p(g) - Math.log1p(r));
-    const baseAmount = P0 * fraction * qalyPerYear;
-    totalQALYs = integrateDiscreteGrowth(baseAmount, netRate, startYear, windowLength);
-  } else if (yearToHitLimit <= startYear) {
-    // Population already at limit at start of effect window
-    // Use discounting formula similar to qalyEffectToCostPerLife
-    const discountFactor = calculateDiscountWindowSum(r, windowLength);
-    totalQALYs =
-      populationLimitNumerical * fraction * qalyPerYear * calculateDiscountToTime(r, startYear) * discountFactor;
+    if (absoluteEffectYear <= currentYear) {
+      // Historical: backtrack from current population
+      const yearsAgo = currentYear - absoluteEffectYear;
+      populationAtEffect = P0 / Math.pow(1 + historicalG, yearsAgo);
+    } else {
+      // Future: project from current population
+      const yearsAhead = absoluteEffectYear - currentYear;
+      populationAtEffect = P0 * Math.pow(1 + g, yearsAhead);
+      // Apply population limit
+      if (globalParams.populationLimit > 1) {
+        populationAtEffect = Math.min(populationAtEffect, populationLimitNumerical);
+      } else if (globalParams.populationLimit < 1) {
+        populationAtEffect = Math.max(populationAtEffect, populationLimitNumerical);
+      }
+    }
+
+    totalQALYs = populationAtEffect * fraction * qalyPerYear * calculateDiscountToTime(r, startYear);
   } else {
-    // Population hits limit during effect window - need to split calculation
-    const timeToLimit = yearToHitLimit - startYear;
+    // Handle extended window effects by splitting at current year if needed
 
-    // Before hitting limit (startYear to yearToHitLimit)
-    // Use stable net form for combined rate
-    const netRate = Math.expm1(Math.log1p(g) - Math.log1p(r));
-    const baseAmount = P0 * fraction * qalyPerYear;
-    const totalBeforeLimit = integrateDiscreteGrowth(baseAmount, netRate, startYear, timeToLimit);
+    // Calculate historical portion (if effect starts before current year)
+    if (effectStartsInPast) {
+      const historicalDuration = effectEndsInPast ? windowLength : currentYear - effectStartYear;
+      const yearsBackToStart = currentYear - effectStartYear;
+      const populationAtHistStart = P0 / Math.pow(1 + historicalG, yearsBackToStart);
 
-    // After hitting limit (yearToHitLimit to startYear + windowLength)
-    const remainingTime = windowLength - timeToLimit;
-    const discountFactor = calculateDiscountWindowSum(r, remainingTime);
-    const totalAfterLimit =
-      populationLimitNumerical * fraction * qalyPerYear * calculateDiscountToTime(r, yearToHitLimit) * discountFactor;
+      totalQALYs += calculateWindowQALYs(startYear, historicalDuration, historicalG, populationAtHistStart);
+    }
 
-    totalQALYs = totalBeforeLimit + totalAfterLimit;
+    // Calculate future portion (if effect extends beyond current year)
+    if (!effectEndsInPast) {
+      let futureStart, futureDuration, populationAtFutureStart;
+
+      if (effectStartsInPast) {
+        // Effect spans the boundary - future portion starts at current year
+        futureStart = yearsFromDonationToNow;
+        futureDuration = effectEndYear - currentYear;
+        populationAtFutureStart = P0; // Current population
+      } else {
+        // Effect entirely in future
+        futureStart = startYear;
+        futureDuration = windowLength;
+        // Project population to effect start
+        const yearsToEffectStart = effectStartYear - currentYear;
+        populationAtFutureStart = P0 * Math.pow(1 + g, yearsToEffectStart);
+        // Apply population limit
+        if (globalParams.populationLimit > 1) {
+          populationAtFutureStart = Math.min(populationAtFutureStart, populationLimitNumerical);
+        } else if (globalParams.populationLimit < 1) {
+          populationAtFutureStart = Math.max(populationAtFutureStart, populationLimitNumerical);
+        }
+      }
+
+      // Check if we'll hit population limit during future portion
+      const yearToHitLimit = calculateYearToPopulationLimit(populationAtFutureStart, populationLimitNumerical, g);
+
+      if (yearToHitLimit >= 0 && yearToHitLimit < futureDuration) {
+        // Split future portion at population limit
+        totalQALYs += calculateWindowQALYs(futureStart, yearToHitLimit, g, populationAtFutureStart);
+
+        // After hitting limit, population is constant
+        const remainingDuration = futureDuration - yearToHitLimit;
+        const limitStartTime = futureStart + yearToHitLimit;
+        const discountFactor = calculateDiscountWindowSum(r, remainingDuration);
+        totalQALYs +=
+          populationLimitNumerical *
+          fraction *
+          qalyPerYear *
+          calculateDiscountToTime(r, limitStartTime) *
+          discountFactor;
+      } else {
+        // No population limit hit during future portion
+        totalQALYs += calculateWindowQALYs(futureStart, futureDuration, g, populationAtFutureStart);
+      }
+    }
   }
 
   // Convert micropropability to probability (1 micropropability = 1/1,000,000)
@@ -274,16 +323,20 @@ const populationEffectToCostPerLife = (effect, globalParams) => {
  * Convert any effect to cost per life
  * @param {Object} effect - The effect object
  * @param {Object} globalParams - Global parameters object
+ * @param {number} calculationYear - Year for which to calculate
  * @returns {number} Cost per life
  */
-export const effectToCostPerLife = (effect, globalParams) => {
+export const effectToCostPerLife = (effect, globalParams, calculationYear) => {
   assertExists(effect, 'effect');
   assertExists(globalParams, 'globalParams');
+  if (typeof calculationYear !== 'number' || !Number.isInteger(calculationYear)) {
+    throw new Error('calculationYear must be an integer for effectToCostPerLife');
+  }
 
   if (effect.costPerQALY !== undefined) {
     return qalyEffectToCostPerLife(effect, globalParams);
   } else if (effect.costPerMicroprobability !== undefined) {
-    return populationEffectToCostPerLife(effect, globalParams);
+    return populationEffectToCostPerLife(effect, globalParams, calculationYear);
   } else {
     throw new Error('Effect must have either costPerQALY or costPerMicroprobability');
   }
@@ -376,7 +429,7 @@ export const calculateCostPerLife = (effects, globalParams, calculationYear) => 
     assertNonNegativeNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
 
     // Get the already-discounted cost per life from the effect
-    return effectToCostPerLife(effect, globalParams);
+    return effectToCostPerLife(effect, globalParams, calculationYear);
   });
 
   // Combine the individual costs using the correct formula

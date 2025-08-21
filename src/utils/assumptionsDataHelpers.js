@@ -614,7 +614,7 @@ export const getActualCostPerLifeForCategoryDataFromCombined = (
       const modifiedEffect = applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
 
       // Convert the modified effect to cost per life
-      return effectToCostPerLifeWithEffects(modifiedEffect, combinedAssumptions.globalParameters);
+      return effectToCostPerLifeWithEffects(modifiedEffect, combinedAssumptions.globalParameters, calculationYear);
     }
   }
 

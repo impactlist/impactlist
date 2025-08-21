@@ -92,7 +92,7 @@ export const calculateEffectCostPerLife = (effect, globalParameters, previewYear
       return Infinity;
     }
 
-    return effectToCostPerLife(cleanedEffect, globalParameters);
+    return effectToCostPerLife(cleanedEffect, globalParameters, previewYear);
   } catch {
     // During editing, return Infinity for invalid calculations
     return Infinity;

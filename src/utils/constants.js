@@ -7,6 +7,9 @@ export const SIMULATION_AMOUNT = 1e9; // 1 billion - used for cost calculations
 export const WEIGHT_NORMALIZATION_TOLERANCE = 0.01;
 export const DEFAULT_RESULTS_LIMIT = 10;
 
+// Historical population growth rate (approximate world average 1970-2024)
+export const HISTORICAL_POPULATION_GROWTH_RATE = 0.016; // 1.6% annual growth
+
 // Number formatting thresholds
 export const TRILLION = 1000000000000;
 export const BILLION = 1000000000;

@@ -198,10 +198,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
     // Validate year
     const yearNum = parseInt(donationYear, 10);
+    const currentYear = getCurrentYear();
     if (!donationYear || isNaN(yearNum)) {
       newErrors.year = 'Please enter a valid year';
-    } else if (yearNum < 1900 || yearNum > 2100) {
-      newErrors.year = 'Year must be between 1900 and 2100';
+    } else if (yearNum < 1900 || yearNum > currentYear) {
+      newErrors.year = `Year must be between 1900 and ${currentYear}`;
     }
 
     // For custom recipients, validate category

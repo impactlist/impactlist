@@ -189,11 +189,6 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
 
   // Determine when the effect actually starts in absolute terms
   const currentYear = getCurrentYear();
-
-  // Validate that donation isn't in the future
-  if (donationYear > currentYear) {
-    throw new Error(`Donation year ${donationYear} cannot be in the future (current year is ${currentYear})`);
-  }
   const effectStartYear = donationYear + startYear; // Absolute year when effect starts
   const effectEndYear = effectStartYear + windowLength; // Absolute year when effect ends
 
@@ -336,6 +331,12 @@ export const effectToCostPerLife = (effect, globalParams, donationYear) => {
   assertExists(globalParams, 'globalParams');
   if (typeof donationYear !== 'number' || !Number.isInteger(donationYear)) {
     throw new Error('donationYear must be an integer for effectToCostPerLife');
+  }
+
+  // Validate that donation isn't in the future
+  const currentYear = getCurrentYear();
+  if (donationYear > currentYear) {
+    throw new Error(`Donation year ${donationYear} cannot be in the future (current year is ${currentYear})`);
   }
 
   if (effect.costPerQALY !== undefined) {

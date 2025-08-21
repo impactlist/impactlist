@@ -189,6 +189,11 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
 
   // Determine when the effect actually starts in absolute terms
   const currentYear = getCurrentYear();
+
+  // Validate that donation isn't in the future
+  if (donationYear > currentYear) {
+    throw new Error(`Donation year ${donationYear} cannot be in the future (current year is ${currentYear})`);
+  }
   const effectStartYear = donationYear + startYear; // Absolute year when effect starts
   const effectEndYear = effectStartYear + windowLength; // Absolute year when effect ends
 

@@ -17,6 +17,14 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const [errors, setErrors] = useState({});
   const [isExistingRecipient, setIsExistingRecipient] = useState(true);
 
+  // Helper function to get a valid year for calculations
+  const getValidYearForCalculation = () => {
+    const yearNum = parseInt(donationYear, 10);
+    const currentYear = getCurrentYear();
+    // Use current year as fallback if year is invalid or in the future
+    return !donationYear || isNaN(yearNum) || yearNum < 1900 || yearNum > currentYear ? currentYear : yearNum;
+  };
+
   // References for search input and dropdown
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -266,6 +274,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     }
 
     const cleanedAmount = Number(cleanNumberInput(amount));
+    const yearToUse = getValidYearForCalculation();
 
     if (isExistingRecipient && selectedRecipient) {
       // For existing recipients, calculate based on their weighted categories
@@ -275,29 +284,17 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       }
 
       // Get actual cost per life for this recipient using combined assumptions
-      const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(
-        combinedAssumptions,
-        recipientId,
-        parseInt(donationYear, 10) || getCurrentYear()
-      );
+      const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, yearToUse);
       return cleanedAmount / recipientCostPerLife;
     } else if (!isExistingRecipient && selectedCategory) {
       let effectiveCostPerLife;
 
       if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
         const multiplierValue = Number(cleanNumberInput(multiplier));
-        const baseCostPerLife = getCostPerLifeFromCombined(
-          combinedAssumptions,
-          selectedCategory,
-          parseInt(donationYear, 10) || getCurrentYear()
-        );
+        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, yearToUse);
         effectiveCostPerLife = baseCostPerLife * multiplierValue;
       } else {
-        effectiveCostPerLife = getCostPerLifeFromCombined(
-          combinedAssumptions,
-          selectedCategory,
-          parseInt(donationYear, 10) || getCurrentYear()
-        );
+        effectiveCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, yearToUse);
       }
 
       return cleanedAmount / effectiveCostPerLife;
@@ -319,11 +316,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     const recipientId = getRecipientId(selectedRecipient);
     if (!recipientId) return null;
 
-    return getCostPerLifeForRecipientFromCombined(
-      combinedAssumptions,
-      recipientId,
-      parseInt(donationYear, 10) || getCurrentYear()
-    );
+    const yearToUse = getValidYearForCalculation();
+    return getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, yearToUse);
   };
 
   const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
@@ -482,11 +476,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     <p className="mt-1 text-xs text-gray-500">
                       Default cost per life:{' '}
                       {formatCurrency(
-                        getCostPerLifeFromCombined(
-                          combinedAssumptions,
-                          selectedCategory,
-                          parseInt(donationYear, 10) || getCurrentYear()
-                        )
+                        getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, getValidYearForCalculation())
                       )}
                     </p>
                   )}
@@ -518,7 +508,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         getCostPerLifeFromCombined(
                           combinedAssumptions,
                           selectedCategory,
-                          parseInt(donationYear, 10) || getCurrentYear()
+                          getValidYearForCalculation()
                         ) * Number(cleanNumberInput(multiplier))
                       )}
                     </p>

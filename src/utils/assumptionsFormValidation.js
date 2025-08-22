@@ -157,7 +157,11 @@ export const validateGlobalParameterValues = (formValues, globalParameters) => {
         hasErrors = true;
       }
     } else if (paramKey === 'populationGrowthRate') {
-      // No restrictions on population growth rate
+      // Population growth rate cannot be -100% or less (would cause immediate collapse)
+      if (numValue <= -1) {
+        errors[paramKey] = 'Population growth rate cannot be -100% or less';
+        hasErrors = true;
+      }
     } else if (paramKey === 'timeLimit') {
       if (numValue <= 0) {
         errors[paramKey] = 'Time limit must be positive';

@@ -70,6 +70,11 @@ const integrateDiscreteGrowth = (baseAmount, rate, startTime, duration) => {
     return baseAmount * duration;
   }
 
+  // Assert rate is greater than -1 to prevent Math.log1p from getting negative argument
+  if (rate <= -1) {
+    throw new Error(`Growth rate must be greater than -100% (got ${rate * 100}%)`);
+  }
+
   const startLevel = Math.pow(1 + rate, startTime);
   const endLevel = Math.pow(1 + rate, startTime + duration);
   const growthFactor = endLevel - startLevel;
@@ -92,6 +97,11 @@ const calculateYearToPopulationLimit = (currentPop, limitPop, growthRate) => {
   // Check if already at limit
   if (currentPop === limitPop) {
     return 0; // Already at limit
+  }
+
+  // Assert growth rate is valid
+  if (growthRate <= -1) {
+    throw new Error(`Growth rate must be greater than -100% (got ${growthRate * 100}%)`);
   }
 
   // Check if we're past the limit or growing away from it
@@ -215,6 +225,11 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
   const calculateWindowQALYs = (windowStart, windowDuration, growthRate, basePopulation) => {
     if (windowDuration <= 0) return 0;
 
+    // Assert growth rate is valid
+    if (growthRate <= -1) {
+      throw new Error(`Population growth rate must be greater than -100% (got ${growthRate * 100}%)`);
+    }
+
     const baseAmount = basePopulation * fraction * qalyPerYear;
     const netRate = Math.expm1(Math.log1p(growthRate) - Math.log1p(r));
 
@@ -239,6 +254,10 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
     } else {
       // Future: project from current population
       const yearsAhead = absoluteEffectYear - currentYear;
+      // Assert growth rate is valid
+      if (g <= -1) {
+        throw new Error(`Population growth rate must be greater than -100% (got ${g * 100}%)`);
+      }
       populationAtEffect = P0 * Math.pow(1 + g, yearsAhead);
       // Apply population limit
       if (globalParams.populationLimit > 1) {
@@ -276,6 +295,10 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
         futureDuration = windowLength;
         // Project population to effect start
         const yearsToEffectStart = effectStartYear - currentYear;
+        // Assert growth rate is valid
+        if (g <= -1) {
+          throw new Error(`Population growth rate must be greater than -100% (got ${g * 100}%)`);
+        }
         populationAtFutureStart = P0 * Math.pow(1 + g, yearsToEffectStart);
         // Apply population limit
         if (globalParams.populationLimit > 1) {

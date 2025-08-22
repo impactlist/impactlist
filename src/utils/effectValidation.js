@@ -260,7 +260,11 @@ export const validateGlobalField = (fieldName, value) => {
       return 'Discount rate must be no greater than 100%';
     }
   } else if (fieldName === 'populationGrowthRate') {
-    // No restrictions on population growth rate
+    // Population growth rate cannot be -100% or less (would cause immediate collapse)
+    // Note: numValue is already in decimal form (-1 = -100%)
+    if (numValue <= -1) {
+      return 'Population growth rate cannot be -100% or less';
+    }
   } else if (fieldName === 'timeLimit') {
     if (numValue <= 0) {
       return 'Time limit must be positive';

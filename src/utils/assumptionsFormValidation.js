@@ -4,7 +4,7 @@
  * as opposed to dataValidation.js which does runtime data structure validation
  */
 
-import { cleanAndParseValue } from './effectValidation';
+import { cleanAndParseValue, validateGlobalField } from './effectValidation';
 import { calculateCostPerLife } from './effectsCalculation';
 import { getCurrentYear } from './donationDataHelpers';
 
@@ -129,57 +129,11 @@ export const validateGlobalParameterValues = (formValues, globalParameters) => {
       return;
     }
 
-    // Allow minus sign only during input, not for saving
-    if (rawValue === '-') {
-      errors[paramKey] = 'Please enter a complete number';
+    // Use validateGlobalField for consistent validation
+    const validationError = validateGlobalField(paramKey, rawValue);
+    if (validationError) {
+      errors[paramKey] = validationError;
       hasErrors = true;
-      return;
-    }
-
-    // Use cleanAndParseValue to properly validate the entire string
-    const { numValue } = cleanAndParseValue(rawValue);
-
-    // Check if it's a valid number
-    if (isNaN(numValue)) {
-      errors[paramKey] = 'Invalid number';
-      hasErrors = true;
-    }
-    // Parameter-specific validations
-    else if (paramKey === 'discountRate') {
-      // Discount rate cannot be negative and must be no greater than 100%
-      if (numValue < 0) {
-        errors[paramKey] = 'Discount rate cannot be negative';
-        hasErrors = true;
-      } else if (numValue > 1) {
-        errors[paramKey] = 'Discount rate must be no greater than 100%';
-        hasErrors = true;
-      }
-    } else if (paramKey === 'populationGrowthRate') {
-      // Population growth rate cannot be -100% or less (would cause immediate collapse)
-      if (numValue <= -1) {
-        errors[paramKey] = 'Population growth rate cannot be -100% or less';
-        hasErrors = true;
-      }
-    } else if (paramKey === 'timeLimit') {
-      if (numValue <= 0) {
-        errors[paramKey] = 'Time limit must be positive';
-        hasErrors = true;
-      }
-    } else if (paramKey === 'populationLimit') {
-      if (numValue <= 0) {
-        errors[paramKey] = 'Population limit must be positive';
-        hasErrors = true;
-      }
-    } else if (paramKey === 'currentPopulation') {
-      if (numValue <= 0) {
-        errors[paramKey] = 'Current population must be positive';
-        hasErrors = true;
-      }
-    } else if (paramKey === 'yearsPerLife') {
-      if (numValue <= 0) {
-        errors[paramKey] = 'Years per life must be positive';
-        hasErrors = true;
-      }
     }
   });
 

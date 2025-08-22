@@ -22,6 +22,7 @@ import EntityStatistics from '../components/entity/EntityStatistics';
 import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
+import SampleDonationCalculator from '../components/shared/SampleDonationCalculator';
 import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
 const RecipientDetail = () => {
@@ -389,6 +390,9 @@ const RecipientDetail = () => {
 
         {/* Recipient markdown content */}
         <MarkdownContent content={recipientContent} className="mt-8 mb-8" />
+
+        {/* Sample donation calculator */}
+        <SampleDonationCalculator recipientId={recipientId} combinedAssumptions={combinedAssumptions} />
 
         {/* Donations list */}
         <EntityDonationTable

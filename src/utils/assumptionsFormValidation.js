@@ -144,15 +144,13 @@ export const validateGlobalParameterValues = (formValues, globalParameters) => {
       errors[paramKey] = 'Invalid number';
       hasErrors = true;
     }
-    // Special validation for discountRate - cannot be negative
-    else if (paramKey === 'discountRate' && numValue < 0) {
-      errors[paramKey] = 'Discount rate cannot be negative';
-      hasErrors = true;
-    }
     // Parameter-specific validations
     else if (paramKey === 'discountRate') {
-      // Discount rate must be no greater than 100%, but can be lower than -100%
-      if (numValue > 1) {
+      // Discount rate cannot be negative and must be no greater than 100%
+      if (numValue < 0) {
+        errors[paramKey] = 'Discount rate cannot be negative';
+        hasErrors = true;
+      } else if (numValue > 1) {
         errors[paramKey] = 'Discount rate must be no greater than 100%';
         hasErrors = true;
       }

@@ -43,7 +43,8 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
   const allEffects = [];
   Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
     const categoryWeight = categoryData.fraction || 0;
-    if (categoryWeight <= 0) return;
+    // Only skip if fraction is explicitly set to 0, not if undefined/null
+    if (categoryData.fraction === 0) return;
 
     const category = combinedAssumptions.categories[categoryId];
     if (!category || !category.effects) return;

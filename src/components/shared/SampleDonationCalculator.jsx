@@ -30,7 +30,7 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
   useEffect(() => {
     const amount = parseFloat(donationAmount.replace(/,/g, ''));
 
-    if (!isNaN(amount) && amount > 0 && costPerLife > 0 && costPerLife !== Infinity) {
+    if (!isNaN(amount) && amount > 0 && costPerLife !== 0 && costPerLife !== Infinity) {
       setLivesSaved(amount / costPerLife);
     } else {
       setLivesSaved(0);

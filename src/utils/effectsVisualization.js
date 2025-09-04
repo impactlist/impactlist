@@ -3,7 +3,7 @@
  * Uses sampling approach instead of complex decomposition
  */
 
-import { selectEffectsForYear, calculateCombinedCostPerLife } from './effectsCalculation';
+import { selectEffectsForYear, calculateCostPerLife } from './effectsCalculation';
 import { getCostPerLifeForRecipientFromCombined } from './assumptionsDataHelpers';
 
 /**
@@ -67,7 +67,10 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
       year: absoluteYear,
     };
 
-    // For each effect, calculate its marginal contribution
+    // For each effect, calculate its contribution using finite differences
+    // We'll calculate how many lives are saved in a small time window around t
+    const dt = timeLimit / numSamples; // Use the same dt as our sampling interval
+
     allEffects.forEach((effect) => {
       const startTime = effect.startTime;
       const windowLength = effect.windowLength;
@@ -77,48 +80,49 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
 
       // Check if effect is active at this time
       if (t >= startTime && t < startTime + windowLength) {
-        // Calculate cost per life WITH this effect
-        const effectsAtTime = allEffects.filter((e) => {
-          return t >= e.startTime && t < e.startTime + e.windowLength;
-        });
+        // Create versions of this effect clipped to [0, t] and [0, t+dt]
+        // to calculate cumulative lives saved up to each point
+        const effectAtT = {
+          ...effect,
+          windowLength: Math.min(windowLength, Math.max(0, t - startTime)),
+        };
 
-        // Calculate cost per life WITHOUT this effect
-        const effectsWithout = effectsAtTime.filter((e) => e.id !== effect.id);
+        const effectAtTplusDt = {
+          ...effect,
+          windowLength: Math.min(windowLength, Math.max(0, t + dt - startTime)),
+        };
 
-        // Calculate combined cost per life for both scenarios
-        let costWith = Infinity;
-        let costWithout = Infinity;
+        // Calculate lives saved with just this effect up to time t and t+dt
+        let livesAtT = 0;
+        let livesAtTplusDt = 0;
 
-        if (effectsAtTime.length > 0) {
+        if (effectAtT.windowLength > 0) {
           try {
-            costWith = calculateCombinedCostPerLife(effectsAtTime, globalParams, absoluteYear);
+            const costAtT = calculateCostPerLife([effectAtT], globalParams, donationYear);
+            if (costAtT !== Infinity && costAtT !== 0) {
+              livesAtT = 1 / costAtT; // Using amount = 1 for rate calculation
+            }
           } catch {
-            costWith = Infinity;
+            livesAtT = 0;
           }
         }
 
-        if (effectsWithout.length > 0) {
+        if (effectAtTplusDt.windowLength > 0) {
           try {
-            costWithout = calculateCombinedCostPerLife(effectsWithout, globalParams, absoluteYear);
+            const costAtTplusDt = calculateCostPerLife([effectAtTplusDt], globalParams, donationYear);
+            if (costAtTplusDt !== Infinity && costAtTplusDt !== 0) {
+              livesAtTplusDt = 1 / costAtTplusDt;
+            }
           } catch {
-            costWithout = Infinity;
+            livesAtTplusDt = 0;
           }
         }
 
-        // Calculate marginal contribution (lives saved with - lives saved without)
-        // For a fixed donation amount, lives saved = amount / cost
-        // So marginal contribution = amount * (1/costWith - 1/costWithout)
-        // We'll use amount = 1 for the rate calculation
-        let marginalRate = 0;
-        if (costWith !== Infinity && costWith !== 0) {
-          marginalRate = 1 / costWith;
-        }
-        if (costWithout !== Infinity && costWithout !== 0) {
-          marginalRate -= 1 / costWithout;
-        }
+        // The rate at time t is the difference divided by dt
+        const rate = (livesAtTplusDt - livesAtT) / dt;
 
         // Apply the category weight
-        point[effect.id] = marginalRate * effect.weight;
+        point[effect.id] = rate * effect.weight;
       }
     });
 

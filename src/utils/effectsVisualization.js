@@ -3,9 +3,7 @@
  * Uses sampling approach instead of complex decomposition
  */
 
-import { HISTORICAL_POPULATION_GROWTH_RATE } from './constants';
-import { getCurrentYear } from './donationDataHelpers';
-import { selectEffectsForYear } from './effectsCalculation';
+import { selectEffectsForYear, calculateCombinedCostPerLife } from './effectsCalculation';
 import { getCostPerLifeForRecipientFromCombined } from './assumptionsDataHelpers';
 
 /**
@@ -29,11 +27,7 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
 
   // Get global parameters
   const globalParams = combinedAssumptions.globalParameters;
-  const discountRate = globalParams.discountRate || 0;
   const timeLimit = globalParams.timeLimit || 100;
-  const populationGrowthRate = globalParams.populationGrowthRate || 0;
-  const populationLimit = globalParams.populationLimit || 1;
-  const currentYear = getCurrentYear();
 
   // Get recipient and effects
   const recipient = combinedAssumptions.getRecipientById(recipientId);
@@ -42,8 +36,8 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
   // Collect all effects from all categories
   const allEffects = [];
   Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
-    const categoryWeight = categoryData.fraction || 0;
-    // Only skip if fraction is explicitly set to 0, not if undefined/null
+    const categoryWeight = categoryData.fraction;
+    // Only skip if fraction is explicitly set to 0
     if (categoryData.fraction === 0) return;
 
     const category = combinedAssumptions.categories[categoryId];
@@ -53,6 +47,7 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
     effects.forEach((effect) => {
       allEffects.push({
         ...effect,
+        id: effect.effectId, // Map effectId to id for graph display
         weight: categoryWeight,
       });
     });
@@ -72,43 +67,58 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
       year: absoluteYear,
     };
 
-    // For each effect, calculate its contribution at this time
+    // For each effect, calculate its marginal contribution
     allEffects.forEach((effect) => {
-      const startTime = effect.startTime || 0;
-      const windowLength = effect.windowLength || 0;
+      const startTime = effect.startTime;
+      const windowLength = effect.windowLength;
 
       // Initialize this effect's contribution to 0
       point[effect.id] = 0;
 
       // Check if effect is active at this time
       if (t >= startTime && t < startTime + windowLength) {
-        const discountFactor = Math.pow(1 + discountRate, -t);
+        // Calculate cost per life WITH this effect
+        const effectsAtTime = allEffects.filter((e) => {
+          return t >= e.startTime && t < e.startTime + e.windowLength;
+        });
 
-        // Calculate population at this time
-        let populationFactor = 1;
-        if (effect.costPerMicroprobability !== undefined) {
-          // Population-based effect - apply growth
-          if (absoluteYear <= currentYear) {
-            // Historical period
-            const yearsAgo = currentYear - absoluteYear;
-            populationFactor = 1 / Math.pow(1 + HISTORICAL_POPULATION_GROWTH_RATE, yearsAgo);
-          } else {
-            // Future period
-            const yearsFuture = absoluteYear - currentYear;
-            populationFactor = Math.pow(1 + populationGrowthRate, yearsFuture);
+        // Calculate cost per life WITHOUT this effect
+        const effectsWithout = effectsAtTime.filter((e) => e.id !== effect.id);
 
-            // Apply population limit
-            const limitFactor = populationLimit;
-            if (limitFactor > 1) {
-              populationFactor = Math.min(populationFactor, limitFactor);
-            } else if (limitFactor < 1) {
-              populationFactor = Math.max(populationFactor, limitFactor);
-            }
+        // Calculate combined cost per life for both scenarios
+        let costWith = Infinity;
+        let costWithout = Infinity;
+
+        if (effectsAtTime.length > 0) {
+          try {
+            costWith = calculateCombinedCostPerLife(effectsAtTime, globalParams, absoluteYear);
+          } catch {
+            costWith = Infinity;
           }
         }
 
-        // Store this effect's weighted contribution
-        point[effect.id] = effect.weight * discountFactor * populationFactor;
+        if (effectsWithout.length > 0) {
+          try {
+            costWithout = calculateCombinedCostPerLife(effectsWithout, globalParams, absoluteYear);
+          } catch {
+            costWithout = Infinity;
+          }
+        }
+
+        // Calculate marginal contribution (lives saved with - lives saved without)
+        // For a fixed donation amount, lives saved = amount / cost
+        // So marginal contribution = amount * (1/costWith - 1/costWithout)
+        // We'll use amount = 1 for the rate calculation
+        let marginalRate = 0;
+        if (costWith !== Infinity && costWith !== 0) {
+          marginalRate = 1 / costWith;
+        }
+        if (costWithout !== Infinity && costWithout !== 0) {
+          marginalRate -= 1 / costWithout;
+        }
+
+        // Apply the category weight
+        point[effect.id] = marginalRate * effect.weight;
       }
     });
 

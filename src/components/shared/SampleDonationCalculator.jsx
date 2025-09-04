@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import YearSelector from './YearSelector';
+import LivesSavedGraph from '../charts/LivesSavedGraph';
 import { getCostPerLifeForRecipientFromCombined } from '../../utils/assumptionsDataHelpers';
-import { formatNumber, formatNumberWithCommas } from '../../utils/formatters';
+import { formatNumberWithCommas, formatCurrency, formatLives } from '../../utils/formatters';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
+import {
+  calculateLivesSavedSegments,
+  generateVisualizationPoints,
+  calculateIntegralBreakdown,
+} from '../../utils/effectsVisualization';
 
 const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
   const currentYear = getCurrentYear();
@@ -51,6 +57,29 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
     }
   };
 
+  // Calculate segments and visualization data
+  const { visualizationData, breakdown } = useMemo(() => {
+    const amount = parseFloat(donationAmount.replace(/,/g, ''));
+
+    if (!combinedAssumptions || !recipientId || isNaN(amount) || amount <= 0 || costPerLife === Infinity) {
+      return { visualizationData: [], breakdown: null };
+    }
+
+    // Calculate raw points using sampling approach
+    const rawPoints = calculateLivesSavedSegments(recipientId, amount, selectedYear, combinedAssumptions);
+
+    // Generate visualization points in the format expected by the graph
+    const vizData = generateVisualizationPoints(rawPoints);
+
+    // Calculate breakdown
+    const integralBreakdown = calculateIntegralBreakdown(vizData);
+
+    return {
+      visualizationData: vizData,
+      breakdown: integralBreakdown,
+    };
+  }, [donationAmount, selectedYear, costPerLife, recipientId, combinedAssumptions]);
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
@@ -81,21 +110,27 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
           <div className="text-sm text-gray-600">
             Cost per life in {selectedYear}:{' '}
             <span className="font-semibold text-gray-900">
-              {costPerLife === Infinity ? 'N/A' : `$${formatNumber(costPerLife)}`}
+              {costPerLife === Infinity ? 'N/A' : formatCurrency(costPerLife)}
             </span>
           </div>
 
           {donationAmount && livesSaved > 0 && (
             <div className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-              Lives saved:{' '}
-              <span className="font-semibold">
-                {livesSaved < 0 ? '-' : ''}
-                {formatNumber(Math.abs(livesSaved))}
-              </span>
+              Lives saved: <span className="font-semibold">{formatLives(livesSaved)}</span>
             </div>
           )}
         </div>
       </div>
+
+      {/* Graph - show whenever there's a valid donation amount */}
+      {donationAmount && livesSaved > 0 && visualizationData.length > 0 && (
+        <div className="mt-6">
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">Discounted Lives Saved Over Time</h3>
+            <LivesSavedGraph data={visualizationData} breakdown={breakdown} height={250} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

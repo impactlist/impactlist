@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { formatNumber, formatCurrency } from '../../utils/formatters';
+import { formatLives, formatCurrency } from '../../utils/formatters';
 import YearSelector from '../shared/YearSelector';
 
 /**
@@ -93,8 +93,7 @@ const CalculatorForm = ({
               </div>
               {amount && !isNaN(Number(amount)) && (
                 <div className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-                  Lives saved: {livesSaved < 0 ? '-' : ''}
-                  {formatNumber(Math.abs(livesSaved))}
+                  Lives saved: {formatLives(livesSaved)}
                 </div>
               )}
             </div>

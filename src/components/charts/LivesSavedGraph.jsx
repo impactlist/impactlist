@@ -56,7 +56,7 @@ const formatYAxisTick = (value) => {
 /**
  * Graph component showing lives saved over time
  */
-const LivesSavedGraph = ({ data, breakdown, height = 300 }) => {
+const LivesSavedGraph = ({ data, height = 300 }) => {
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
@@ -100,34 +100,6 @@ const LivesSavedGraph = ({ data, breakdown, height = 300 }) => {
   // Determine if we need logarithmic scale based on time span
   const maxYear = Math.max(...data.map((d) => d.year));
   const useLogScale = maxYear > 10000;
-
-  // Custom legend content
-  const renderLegend = () => {
-    const items = [
-      { key: 'historical', label: 'Historical', color: SEGMENT_COLORS.historical },
-      { key: 'future-growth', label: 'Future Growth', color: SEGMENT_COLORS['future-growth'] },
-      { key: 'population-limit', label: 'Population Limit', color: SEGMENT_COLORS['population-limit'] },
-      { key: 'qaly', label: 'Fixed Window', color: SEGMENT_COLORS.qaly },
-    ];
-
-    return (
-      <div className="flex justify-center gap-6 mt-2">
-        {items.map((item) => {
-          // Only show if segment has data
-          const hasData =
-            breakdown && breakdown[item.key.replace('-', '')] && breakdown[item.key.replace('-', '')].lives > 0;
-          if (!hasData && item.key !== 'historical') return null;
-
-          return (
-            <div key={item.key} className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: item.color }} />
-              <span className="text-xs text-gray-600">{item.label}</span>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
 
   return (
     <div className="w-full">
@@ -184,7 +156,6 @@ const LivesSavedGraph = ({ data, breakdown, height = 300 }) => {
           />
         </AreaChart>
       </ResponsiveContainer>
-      {renderLegend()}
     </div>
   );
 };
@@ -197,7 +168,6 @@ LivesSavedGraph.propTypes = {
       segment: PropTypes.string.isRequired,
     })
   ).isRequired,
-  breakdown: PropTypes.object,
   height: PropTypes.number,
 };
 

@@ -5,11 +5,7 @@ import LivesSavedGraph from '../charts/LivesSavedGraph';
 import { getCostPerLifeForRecipientFromCombined } from '../../utils/assumptionsDataHelpers';
 import { formatNumberWithCommas, formatCurrency, formatLives } from '../../utils/formatters';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
-import {
-  calculateLivesSavedSegments,
-  generateVisualizationPoints,
-  calculateIntegralBreakdown,
-} from '../../utils/effectsVisualization';
+import { calculateLivesSavedSegments, generateVisualizationPoints } from '../../utils/effectsVisualization';
 
 const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
   const currentYear = getCurrentYear();
@@ -58,11 +54,11 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
   };
 
   // Calculate segments and visualization data
-  const { visualizationData, breakdown } = useMemo(() => {
+  const visualizationData = useMemo(() => {
     const amount = parseFloat(donationAmount.replace(/,/g, ''));
 
     if (!combinedAssumptions || !recipientId || isNaN(amount) || amount <= 0 || costPerLife === Infinity) {
-      return { visualizationData: [], breakdown: null };
+      return [];
     }
 
     // Calculate raw points using sampling approach
@@ -71,13 +67,7 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
     // Generate visualization points in the format expected by the graph
     const vizData = generateVisualizationPoints(rawPoints);
 
-    // Calculate breakdown
-    const integralBreakdown = calculateIntegralBreakdown(vizData);
-
-    return {
-      visualizationData: vizData,
-      breakdown: integralBreakdown,
-    };
+    return vizData;
   }, [donationAmount, selectedYear, costPerLife, recipientId, combinedAssumptions]);
 
   return (
@@ -127,7 +117,7 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
         <div className="mt-6">
           <div className="border-t border-gray-200 pt-4">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Discounted Lives Saved Over Time</h3>
-            <LivesSavedGraph data={visualizationData} breakdown={breakdown} height={250} />
+            <LivesSavedGraph data={visualizationData} height={250} />
           </div>
         </div>
       )}

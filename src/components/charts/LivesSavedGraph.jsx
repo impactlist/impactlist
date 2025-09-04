@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatLargeNumber, formatCalendarYear } from '../../utils/effectsVisualization';
 
-// Color scheme for different segments
-const SEGMENT_COLORS = {
-  historical: '#6366f1', // Indigo (past)
-  'future-growth': '#10b981', // Emerald (growth)
-  'population-limit': '#f59e0b', // Amber (limit)
-  qaly: '#ec4899', // Pink (QALY-based effects)
-};
+// Color palette for effects
+const COLOR_PALETTE = [
+  '#6366f1', // Indigo
+  '#10b981', // Emerald
+  '#f59e0b', // Amber
+  '#ec4899', // Pink
+  '#ef4444', // Red
+  '#8b5cf6', // Violet
+  '#06b6d4', // Cyan
+  '#84cc16', // Lime
+  '#f97316', // Orange
+  '#a855f7', // Purple
+];
 
 /**
  * Custom tooltip to show detailed information
@@ -20,21 +26,23 @@ const CustomTooltip = ({ active, payload }) => {
   const data = payload[0].payload;
 
   // Calculate total lives per year for this point
-  const totalLivesPerYear =
-    (data.historical || 0) + (data['future-growth'] || 0) + (data['population-limit'] || 0) + (data.qaly || 0);
+  let totalLivesPerYear = 0;
+  const activeEffects = [];
 
-  // Determine which segment is active (has non-zero value)
-  let activeSegment = 'None';
-  if (data.qaly > 0) activeSegment = 'Fixed Window';
-  else if (data['population-limit'] > 0) activeSegment = 'Population Limit';
-  else if (data['future-growth'] > 0) activeSegment = 'Future Growth';
-  else if (data.historical > 0) activeSegment = 'Historical';
+  Object.keys(data).forEach((key) => {
+    if (key !== 'year' && data[key] !== 0) {
+      totalLivesPerYear += data[key];
+      activeEffects.push({ id: key, value: data[key] });
+    }
+  });
 
   return (
     <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
       <p className="text-sm font-semibold text-gray-700">Year {formatCalendarYear(data.year)}</p>
       <p className="text-sm text-gray-600">Lives/year: {formatLargeNumber(totalLivesPerYear, 3)}</p>
-      <p className="text-xs text-gray-500 mt-1">Segment: {activeSegment}</p>
+      {activeEffects.length > 0 && (
+        <div className="mt-1 text-xs text-gray-500">Active effects: {activeEffects.length}</div>
+      )}
     </div>
   );
 };
@@ -57,6 +65,22 @@ const formatYAxisTick = (value) => {
  * Graph component showing lives saved over time
  */
 const LivesSavedGraph = ({ data, height = 300 }) => {
+  // Extract effect IDs and assign colors
+  const effectInfo = useMemo(() => {
+    if (!data || data.length === 0) return { effectIds: [], colorMap: {} };
+
+    // Get all effect IDs from the first point (excluding 'year')
+    const effectIds = Object.keys(data[0]).filter((key) => key !== 'year');
+
+    // Assign colors to each effect
+    const colorMap = {};
+    effectIds.forEach((id, index) => {
+      colorMap[id] = COLOR_PALETTE[index % COLOR_PALETTE.length];
+    });
+
+    return { effectIds, colorMap };
+  }, [data]);
+
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
@@ -65,38 +89,6 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
     );
   }
 
-  // Transform data for stacked area chart
-  // The data already comes in the correct format from generateVisualizationPoints
-  const transformedData = [];
-
-  // Check if data is already in the correct format
-  if (data.length > 0 && 'historical' in data[0]) {
-    // Data is already in the correct format with segment values as properties
-    transformedData.push(...data);
-  } else {
-    // Legacy format with segment and value properties
-    const yearMap = new Map();
-    data.forEach((point) => {
-      const year = point.year;
-      if (!yearMap.has(year)) {
-        yearMap.set(year, {
-          year: year,
-          historical: 0,
-          'future-growth': 0,
-          'population-limit': 0,
-          qaly: 0,
-        });
-      }
-      const entry = yearMap.get(year);
-      if (point.segment && point.value !== undefined) {
-        entry[point.segment] = point.value;
-      }
-    });
-    yearMap.forEach((value) => transformedData.push(value));
-  }
-
-  transformedData.sort((a, b) => a.year - b.year);
-
   // Determine if we need logarithmic scale based on time span
   const maxYear = Math.max(...data.map((d) => d.year));
   const useLogScale = maxYear > 10000;
@@ -104,7 +96,7 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={height}>
-        <AreaChart data={transformedData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+        <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis
             dataKey="year"
@@ -117,43 +109,19 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
           <YAxis tickFormatter={formatYAxisTick} tick={{ fontSize: 11 }} stroke="#6b7280" width={60} />
           <Tooltip content={<CustomTooltip />} animationDuration={200} />
 
-          {/* Stack areas in order */}
-          <Area
-            type="monotone"
-            dataKey="historical"
-            stackId="1"
-            stroke={SEGMENT_COLORS.historical}
-            fill={SEGMENT_COLORS.historical}
-            fillOpacity={0.7}
-            strokeWidth={1.5}
-          />
-          <Area
-            type="monotone"
-            dataKey="future-growth"
-            stackId="1"
-            stroke={SEGMENT_COLORS['future-growth']}
-            fill={SEGMENT_COLORS['future-growth']}
-            fillOpacity={0.7}
-            strokeWidth={1.5}
-          />
-          <Area
-            type="monotone"
-            dataKey="population-limit"
-            stackId="1"
-            stroke={SEGMENT_COLORS['population-limit']}
-            fill={SEGMENT_COLORS['population-limit']}
-            fillOpacity={0.7}
-            strokeWidth={1.5}
-          />
-          <Area
-            type="monotone"
-            dataKey="qaly"
-            stackId="1"
-            stroke={SEGMENT_COLORS.qaly}
-            fill={SEGMENT_COLORS.qaly}
-            fillOpacity={0.7}
-            strokeWidth={1.5}
-          />
+          {/* Dynamically generate Area components for each effect */}
+          {effectInfo.effectIds.map((effectId) => (
+            <Area
+              key={effectId}
+              type="monotone"
+              dataKey={effectId}
+              stackId="1"
+              stroke={effectInfo.colorMap[effectId]}
+              fill={effectInfo.colorMap[effectId]}
+              fillOpacity={0.7}
+              strokeWidth={1.5}
+            />
+          ))}
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -164,8 +132,7 @@ LivesSavedGraph.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number.isRequired,
-      value: PropTypes.number.isRequired,
-      segment: PropTypes.string.isRequired,
+      // Dynamic properties for each effect ID
     })
   ).isRequired,
   height: PropTypes.number,

@@ -20,7 +20,7 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
   // Get the cost per life for this recipient
   const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, donationYear);
 
-  if (!costPerLife || costPerLife === Infinity || costPerLife <= 0) {
+  if (!costPerLife || costPerLife === Infinity || costPerLife === 0) {
     return [];
   }
 
@@ -67,12 +67,17 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
   for (let i = 0; i <= numSamples; i++) {
     const t = (i / numSamples) * timeLimit;
     const absoluteYear = donationYear + t;
-    let rateAtTime = 0;
+    const point = {
+      year: absoluteYear,
+    };
 
     // For each effect, calculate its contribution at this time
     allEffects.forEach((effect) => {
       const startTime = effect.startTime || 0;
       const windowLength = effect.windowLength || 0;
+
+      // Initialize this effect's contribution to 0
+      point[effect.id] = 0;
 
       // Check if effect is active at this time
       if (t >= startTime && t < startTime + windowLength) {
@@ -101,73 +106,47 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
           }
         }
 
-        // Add weighted contribution
-        rateAtTime += effect.weight * discountFactor * populationFactor;
+        // Store this effect's weighted contribution
+        point[effect.id] = effect.weight * discountFactor * populationFactor;
       }
     });
 
-    points.push({
-      year: absoluteYear,
-      value: rateAtTime,
-    });
+    points.push(point);
   }
 
   // Normalize the points so they integrate to totalLivesSaved
-  // Calculate the integral using trapezoidal rule
-  let integral = 0;
-  for (let i = 1; i < points.length; i++) {
-    const dt = timeLimit / numSamples;
-    integral += ((points[i - 1].value + points[i].value) * dt) / 2;
+  // First, calculate the integral for each effect using trapezoidal rule
+  const effectIntegrals = {};
+  let totalIntegral = 0;
+
+  // Get all effect IDs from the first point (all points have the same structure)
+  if (points.length > 0) {
+    const effectIds = Object.keys(points[0]).filter((key) => key !== 'year');
+
+    effectIds.forEach((effectId) => {
+      let effectIntegral = 0;
+      for (let i = 1; i < points.length; i++) {
+        const dt = timeLimit / numSamples;
+        effectIntegral += ((points[i - 1][effectId] + points[i][effectId]) * dt) / 2;
+      }
+      effectIntegrals[effectId] = effectIntegral;
+      totalIntegral += effectIntegral;
+    });
   }
 
   // Normalize if we have a non-zero integral
-  if (integral > 0) {
-    const normalizer = totalLivesSaved / integral;
-    points.forEach((p) => {
-      p.value *= normalizer;
+  if (totalIntegral !== 0) {
+    const normalizer = totalLivesSaved / totalIntegral;
+    points.forEach((point) => {
+      Object.keys(point).forEach((key) => {
+        if (key !== 'year') {
+          point[key] *= normalizer;
+        }
+      });
     });
   }
 
   return points;
-};
-
-/**
- * Generate visualization points for graphing
- * @param {Array} rawPoints - Raw calculation points
- * @returns {Array} Array of points for visualization
- */
-export const generateVisualizationPoints = (rawPoints) => {
-  if (!rawPoints || rawPoints.length === 0) return [];
-
-  // Determine the dominant effect type based on when most lives are saved
-  const currentYear = getCurrentYear();
-  let historicalSum = 0;
-  let futureSum = 0;
-
-  rawPoints.forEach((point) => {
-    if (point.year <= currentYear) {
-      historicalSum += point.value;
-    } else {
-      futureSum += point.value;
-    }
-  });
-
-  // Determine segment type
-  let segmentType = 'qaly'; // Default
-  if (historicalSum > futureSum * 0.1) {
-    segmentType = 'historical';
-  } else if (futureSum > historicalSum * 0.1) {
-    segmentType = 'future-growth';
-  }
-
-  // Convert to format expected by graph
-  return rawPoints.map((point) => ({
-    year: point.year,
-    historical: segmentType === 'historical' ? point.value : 0,
-    'future-growth': segmentType === 'future-growth' ? point.value : 0,
-    'population-limit': 0,
-    qaly: segmentType === 'qaly' ? point.value : 0,
-  }));
 };
 
 /**

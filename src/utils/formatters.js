@@ -317,6 +317,8 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     return '$0';
   } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
     return '∞';
+  } else if (amount === Infinity || amount === -Infinity) {
+    return '∞';
   }
 
   const isNegative = amount < 0;

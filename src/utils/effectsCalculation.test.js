@@ -1,5 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import { calculateCostPerLife, effectToCostPerLife, calculateCombinedCostPerLife } from './effectsCalculation';
+import {
+  calculateCostPerLife,
+  effectToCostPerLife,
+  calculateCombinedCostPerLife,
+  calculateCumulativeImpact,
+} from './effectsCalculation';
 
 // Mock getCurrentYear to have consistent test results
 vi.mock('./donationDataHelpers', async () => {
@@ -290,12 +295,12 @@ describe('effectsCalculation', () => {
         expect(withinCost).toBeLessThan(pastCost);
       });
 
-      it('should have same cost for different window lengths that both extend past time limit', () => {
+      it('should maintain intrinsic rates for different window lengths when truncated by time limit', () => {
         const params = { ...baseGlobalParams, discountRate: 0.03, timeLimit: 40 };
         const startTime = 30;
 
-        // Both effects start at year 30 and extend past the time limit of 40
-        // They should both be truncated to 10 years (40 - 30)
+        // Effects with different original window lengths should maintain their intrinsic yearly rates
+        // even when truncated by time limits
         const window20 = createQALYEffect(1000, startTime, 20); // extends to year 50
         const window30 = createQALYEffect(1000, startTime, 30); // extends to year 60
         const window50 = createQALYEffect(1000, startTime, 50); // extends to year 80
@@ -304,14 +309,122 @@ describe('effectsCalculation', () => {
         const cost30 = effectToCostPerLife(window30, params, 2024);
         const cost50 = effectToCostPerLife(window50, params, 2024);
 
-        // All should have the same cost since they're all truncated to 10 years
-        expect(cost20).toBeCloseTo(cost30, 10);
-        expect(cost30).toBeCloseTo(cost50, 10);
+        // Different window lengths should have different costs per life (different intrinsic rates)
+        // Longer window effects have HIGHER cost per life (same costPerQALY spread over more years)
+        // 20-year effect should be most cost-effective (lowest cost per life)
+        // 50-year effect should be least cost-effective (highest cost per life)
+        expect(cost20).toBeLessThan(cost30);
+        expect(cost30).toBeLessThan(cost50);
 
-        // Also test that they match a window that exactly fits the limit
+        // Verify that a 10-year effect (which exactly fits the limit) has the lowest cost per life
         const windowExact = createQALYEffect(1000, startTime, 10); // exactly to year 40
         const costExact = effectToCostPerLife(windowExact, params, 2024);
-        expect(cost20).toBeCloseTo(costExact, 10);
+        expect(costExact).toBeLessThan(cost20);
+      });
+
+      it('should preserve intrinsic yearly rate regardless of time limit truncation', () => {
+        const params = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 100 }; // Zero discount for simple math
+        const paramsLimited = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 15 }; // Truncated time limit
+
+        // 30-year effect starting at year 10
+        const effect = createQALYEffect(1000, 10, 30); // costPerQALY=1000, 30-year window
+
+        const costUnlimited = effectToCostPerLife(effect, params, 2024);
+        const costLimited = effectToCostPerLife(effect, paramsLimited, 2024);
+
+        // Both should have the same cost per life (same yearly rate)
+        // because the intrinsic design is preserved
+        expect(costLimited).toBeCloseTo(costUnlimited, 10);
+
+        // With zero discount, cost per life should equal costPerQALY * yearsPerLife
+        const expectedCostPerLife = 1000 * params.yearsPerLife;
+        expect(costUnlimited).toBeCloseTo(expectedCostPerLife, 10);
+        expect(costLimited).toBeCloseTo(expectedCostPerLife, 10);
+      });
+
+      it('should apply time limits correctly in cumulative impact calculations', () => {
+        const params = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 15 };
+
+        // 30-year effect starting at year 10, but truncated to 5 years by time limit
+        const effect = createQALYEffect(1000, 10, 30);
+
+        // Test cumulative impact at different time points
+        const cumulativeAtStart = calculateCumulativeImpact(effect, params, 2024, 10); // Just at start
+        const cumulativeAtMiddle = calculateCumulativeImpact(effect, params, 2024, 12.5); // Halfway through allowed period
+        const cumulativeAtEnd = calculateCumulativeImpact(effect, params, 2024, 15); // At time limit
+        const cumulativePastLimit = calculateCumulativeImpact(effect, params, 2024, 20); // Past time limit
+
+        // Should be zero at start
+        expect(cumulativeAtStart).toBe(0);
+
+        // Should be 50% at middle of allowed period (2.5 years out of 5 years allowed)
+        // Note: This is 2.5/5 = 0.5 ratio within the time-limited period
+        expect(cumulativeAtMiddle).toBeCloseTo(cumulativeAtEnd * 0.5, 8);
+
+        // Should be same at end and past limit (both get full allowed impact)
+        expect(cumulativePastLimit).toBeCloseTo(cumulativeAtEnd, 10);
+
+        // Cumulative at end should match what an unrestricted calculation would give at time 15
+        // (this accounts for proper discounting rather than assuming uniform distribution)
+        const paramsUnlimited = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 100 };
+        const expectedTruncatedCumulative = calculateCumulativeImpact(effect, paramsUnlimited, 2024, 15);
+        expect(cumulativeAtEnd).toBeCloseTo(expectedTruncatedCumulative, 8);
+      });
+
+      it('should handle discount math correctly with time limit truncation', () => {
+        const params = { ...baseGlobalParams, discountRate: 0.05, timeLimit: 15 };
+
+        // 20-year effect starting at year 5, truncated to 10 years (15-5) by time limit
+        const effect = createQALYEffect(1000, 5, 20);
+
+        const costPerLife = effectToCostPerLife(effect, params, 2024);
+
+        // Manually calculate what the cost per life should be:
+        // 1. Uses original 20-year window for intrinsic rate calculation
+        // 2. Discount factors should be calculated over original 20-year period
+        const discountToStart = Math.pow(1 + params.discountRate, -5);
+        const discountWindowSum = (1 - Math.pow(1 + params.discountRate, -20)) / Math.log(1 + params.discountRate);
+        const avgDiscountFactor = (discountToStart * discountWindowSum) / 20;
+
+        const expectedCostPerLife = (1000 * params.yearsPerLife) / avgDiscountFactor;
+
+        expect(costPerLife).toBeCloseTo(expectedCostPerLife, 8);
+
+        // Test that cumulative calculations respect the time limit in fraction calculation
+        const cumulativeAtLimit = calculateCumulativeImpact(effect, params, 2024, 15);
+        const totalLives = 1 / costPerLife;
+
+        // Fraction should be based on 10-year truncated window, not full 20-year window
+        const truncatedDiscountSum = (1 - Math.pow(1 + params.discountRate, -10)) / Math.log(1 + params.discountRate);
+        const expectedFraction = truncatedDiscountSum / discountWindowSum;
+        const expectedCumulative = totalLives * expectedFraction;
+
+        expect(cumulativeAtLimit).toBeCloseTo(expectedCumulative, 8);
+      });
+
+      it('should handle edge cases with time limits', () => {
+        // Test effect that starts exactly at time limit
+        const params1 = { ...baseGlobalParams, discountRate: 0.02, timeLimit: 10 };
+        const effectAtLimit = createQALYEffect(1000, 10, 20);
+        const costAtLimit = effectToCostPerLife(effectAtLimit, params1, 2024);
+        expect(costAtLimit).toBe(Infinity); // Should be invalid
+
+        // Test effect that starts after time limit
+        const effectPastLimit = createQALYEffect(1000, 15, 10);
+        const costPastLimit = effectToCostPerLife(effectPastLimit, params1, 2024);
+        expect(costPastLimit).toBe(Infinity); // Should be invalid
+
+        // Test effect that ends exactly at time limit
+        const params2 = { ...baseGlobalParams, discountRate: 0.02, timeLimit: 30 };
+        const effectExactEnd = createQALYEffect(1000, 10, 20); // ends at year 30
+        const costExactEnd = effectToCostPerLife(effectExactEnd, params2, 2024);
+        expect(Number.isFinite(costExactEnd)).toBe(true); // Should be valid
+        expect(costExactEnd).toBeGreaterThan(0);
+
+        // Cumulative impact should reach maximum exactly at time limit
+        const cumulativeAtLimit = calculateCumulativeImpact(effectExactEnd, params2, 2024, 30);
+        const cumulativePastLimit = calculateCumulativeImpact(effectExactEnd, params2, 2024, 35);
+        expect(cumulativePastLimit).toBeCloseTo(cumulativeAtLimit, 10);
       });
     });
 

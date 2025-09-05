@@ -137,13 +137,15 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParams');
 
   const startYear = effect.startTime;
-  const windowLength = Math.min(effect.windowLength, globalParams.timeLimit - startYear);
+  // Separate concepts: original window for intrinsic rate, actual window for constraints
+  const originalWindowLength = effect.windowLength;
+  const actualWindowLength = Math.min(effect.windowLength, globalParams.timeLimit - startYear);
 
-  if (!validateEffectWindow(startYear, windowLength, effect.windowLength, globalParams.timeLimit)) {
+  if (!validateEffectWindow(startYear, actualWindowLength, effect.windowLength, globalParams.timeLimit)) {
     return Infinity;
   }
 
-  // Calculate average discount factor for the effect window
+  // Calculate average discount factor based on original window to preserve intrinsic rate
   let averageDiscountFactor;
   const i = globalParams.discountRate;
 
@@ -151,10 +153,10 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
     // Instantaneous pulse effect
     averageDiscountFactor = calculateDiscountToTime(i, startYear);
   } else {
-    // Fixed window effect - use helper for discount factor
+    // Fixed window effect - use original window for intrinsic rate calculation
     const discountToWindowStart = calculateDiscountToTime(i, startYear);
-    const windowDiscountFactorSum = calculateDiscountWindowSum(i, windowLength);
-    averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / windowLength;
+    const windowDiscountFactorSum = calculateDiscountWindowSum(i, originalWindowLength);
+    averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / originalWindowLength;
   }
 
   const costPerLife = effect.costPerQALY * globalParams.yearsPerLife;
@@ -163,6 +165,7 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   // - A smaller discount factor means future QALYs are worth less
   // - So we need MORE money today to achieve the same impact
   // - Division by a number < 1 increases the cost appropriately
+  // Using original window preserves the effect's intrinsic yearly rate
   return costPerLife / averageDiscountFactor;
 };
 
@@ -531,23 +534,16 @@ export const calculateCumulativeImpact = (effect, globalParams, donationYear, up
   // Calculate the effective window length up to upToTime
   const effectiveWindow = Math.min(windowLength, upToTime - startTime);
 
+  // Apply time limit constraints to the effective window
+  const actualEffectiveWindow = Math.min(effectiveWindow, globalParams.timeLimit - startTime);
+
   // If no effective window, no impact
-  if (effectiveWindow <= 0) {
+  if (actualEffectiveWindow <= 0) {
     return 0;
   }
 
-  // If upToTime is beyond the effect window, return full impact
-  if (upToTime >= startTime + windowLength) {
-    try {
-      const costPerLife = effectToCostPerLife(effect, globalParams, donationYear);
-      if (costPerLife === Infinity || costPerLife === 0) {
-        return 0;
-      }
-      return 1 / costPerLife;
-    } catch {
-      return 0;
-    }
-  }
+  // For cumulative impact calculation, always use fractional approach based on original window
+  // This ensures consistent results regardless of time limit constraints
 
   // Handle QALY effects with mathematical fraction approach
   if (effect.costPerQALY !== undefined) {
@@ -561,8 +557,27 @@ export const calculateCumulativeImpact = (effect, globalParams, donationYear, up
 
       // Calculate fraction of impact realized by upToTime using proper discount math
       const discountRate = globalParams.discountRate;
-      const totalWindowDiscountSum = calculateDiscountWindowSum(discountRate, windowLength);
-      const partialWindowDiscountSum = calculateDiscountWindowSum(discountRate, effectiveWindow);
+
+      // For consistent cumulative impact calculation, always use the original window length
+      // for the denominator. This ensures that "cumulative impact by time X" gives the same
+      // result regardless of time limit settings.
+      const originalWindowLength = windowLength;
+
+      // The actual elapsed time is constrained by both upToTime and time limits
+      const actualElapsedTime = Math.min(
+        upToTime - startTime,
+        originalWindowLength,
+        globalParams.timeLimit - startTime
+      );
+
+      // If no time has elapsed or time limits prevent any impact, return 0
+      if (actualElapsedTime <= 0) {
+        return 0;
+      }
+
+      // Calculate discount sums using original window for denominator (mathematically correct)
+      const totalWindowDiscountSum = calculateDiscountWindowSum(discountRate, originalWindowLength);
+      const partialWindowDiscountSum = calculateDiscountWindowSum(discountRate, actualElapsedTime);
 
       const fractionRealized = partialWindowDiscountSum / totalWindowDiscountSum;
 
@@ -576,7 +591,7 @@ export const calculateCumulativeImpact = (effect, globalParams, donationYear, up
   // Population effects have genuinely complex time-varying behavior due to growth rates and limits
   const cumulativeEffect = {
     ...effect,
-    windowLength: effectiveWindow,
+    windowLength: actualEffectiveWindow,
   };
 
   try {

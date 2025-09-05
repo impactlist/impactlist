@@ -503,6 +503,60 @@ const applyEffectMultipliers = (baseEffect, multipliers, context) => {
 };
 
 /**
+ * Calculate cumulative impact of an effect up to a specific time point
+ * This preserves the original effect parameters while calculating how much
+ * cumulative impact has occurred by the given upToTime.
+ * @param {Object} effect - The effect object with original parameters
+ * @param {Object} globalParams - Global parameters object
+ * @param {number} donationYear - Year when the donation was made
+ * @param {number} upToTime - Time (years after donation) up to which to calculate impact
+ * @returns {number} Cumulative lives saved per dollar up to the given time
+ */
+export const calculateCumulativeImpact = (effect, globalParams, donationYear, upToTime) => {
+  assertExists(effect, 'effect');
+  assertExists(globalParams, 'globalParams');
+  if (typeof donationYear !== 'number' || !Number.isInteger(donationYear)) {
+    throw new Error('donationYear must be an integer');
+  }
+  assertNonNegativeNumber(upToTime, 'upToTime', 'in calculateCumulativeImpact');
+
+  const startTime = effect.startTime;
+  const windowLength = effect.windowLength;
+
+  // If upToTime is before the effect starts, no impact yet
+  if (upToTime <= startTime) {
+    return 0;
+  }
+
+  // Calculate the effective window length up to upToTime
+  const effectiveWindow = Math.min(windowLength, upToTime - startTime);
+
+  // If no effective window, no impact
+  if (effectiveWindow <= 0) {
+    return 0;
+  }
+
+  // Create a modified effect that represents the cumulative impact up to upToTime
+  // This preserves the original cost structure but limits the time window
+  const cumulativeEffect = {
+    ...effect,
+    windowLength: effectiveWindow,
+  };
+
+  // Calculate the cost per life for this cumulative effect
+  try {
+    const costPerLife = effectToCostPerLife(cumulativeEffect, globalParams, donationYear);
+    if (costPerLife === Infinity || costPerLife === 0) {
+      return 0;
+    }
+    // Return lives saved per dollar (reciprocal of cost per life)
+    return 1 / costPerLife;
+  } catch {
+    return 0;
+  }
+};
+
+/**
  * Apply recipient effect modifications to a base effect object
  * @param {Object} baseEffect - The base effect from category
  * @param {Object} recipientEffect - The recipient's effect modification (with overrides/multipliers)

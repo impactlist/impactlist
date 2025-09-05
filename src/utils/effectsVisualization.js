@@ -3,7 +3,7 @@
  * Uses sampling approach instead of complex decomposition
  */
 
-import { selectEffectsForYear, calculateCostPerLife } from './effectsCalculation';
+import { selectEffectsForYear, calculateCumulativeImpact } from './effectsCalculation';
 import { getCostPerLifeForRecipientFromCombined } from './assumptionsDataHelpers';
 
 /**
@@ -80,46 +80,13 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
 
       // Check if effect is active at this time
       if (t >= startTime && t < startTime + windowLength) {
-        // Create versions of this effect clipped to [0, t] and [0, t+dt]
-        // to calculate cumulative lives saved up to each point
-        const effectAtT = {
-          ...effect,
-          windowLength: Math.min(windowLength, Math.max(0, t - startTime)),
-        };
+        // Calculate cumulative impact up to time t and t+dt
+        // This preserves original effect parameters while calculating true cumulative impact
+        const cumulativeAtT = calculateCumulativeImpact(effect, globalParams, donationYear, t);
+        const cumulativeAtTplusDt = calculateCumulativeImpact(effect, globalParams, donationYear, t + dt);
 
-        const effectAtTplusDt = {
-          ...effect,
-          windowLength: Math.min(windowLength, Math.max(0, t + dt - startTime)),
-        };
-
-        // Calculate lives saved with just this effect up to time t and t+dt
-        let livesAtT = 0;
-        let livesAtTplusDt = 0;
-
-        if (effectAtT.windowLength > 0) {
-          try {
-            const costAtT = calculateCostPerLife([effectAtT], globalParams, donationYear);
-            if (costAtT !== Infinity && costAtT !== 0) {
-              livesAtT = 1 / costAtT; // Using amount = 1 for rate calculation
-            }
-          } catch {
-            livesAtT = 0;
-          }
-        }
-
-        if (effectAtTplusDt.windowLength > 0) {
-          try {
-            const costAtTplusDt = calculateCostPerLife([effectAtTplusDt], globalParams, donationYear);
-            if (costAtTplusDt !== Infinity && costAtTplusDt !== 0) {
-              livesAtTplusDt = 1 / costAtTplusDt;
-            }
-          } catch {
-            livesAtTplusDt = 0;
-          }
-        }
-
-        // The rate at time t is the difference divided by dt
-        const rate = (livesAtTplusDt - livesAtT) / dt;
+        // The rate at time t is the difference in cumulative impact divided by dt
+        const rate = (cumulativeAtTplusDt - cumulativeAtT) / dt;
 
         // Apply the category weight
         point[effect.id] = rate * effect.weight;

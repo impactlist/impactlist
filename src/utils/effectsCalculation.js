@@ -536,20 +536,54 @@ export const calculateCumulativeImpact = (effect, globalParams, donationYear, up
     return 0;
   }
 
-  // Create a modified effect that represents the cumulative impact up to upToTime
-  // This preserves the original cost structure but limits the time window
+  // If upToTime is beyond the effect window, return full impact
+  if (upToTime >= startTime + windowLength) {
+    try {
+      const costPerLife = effectToCostPerLife(effect, globalParams, donationYear);
+      if (costPerLife === Infinity || costPerLife === 0) {
+        return 0;
+      }
+      return 1 / costPerLife;
+    } catch {
+      return 0;
+    }
+  }
+
+  // Handle QALY effects with mathematical fraction approach
+  if (effect.costPerQALY !== undefined) {
+    try {
+      // Calculate total lives saved by the original full effect
+      const totalCostPerLife = effectToCostPerLife(effect, globalParams, donationYear);
+      if (totalCostPerLife === Infinity || totalCostPerLife === 0) {
+        return 0;
+      }
+      const totalLivesSaved = 1 / totalCostPerLife;
+
+      // Calculate fraction of impact realized by upToTime using proper discount math
+      const discountRate = globalParams.discountRate;
+      const totalWindowDiscountSum = calculateDiscountWindowSum(discountRate, windowLength);
+      const partialWindowDiscountSum = calculateDiscountWindowSum(discountRate, effectiveWindow);
+
+      const fractionRealized = partialWindowDiscountSum / totalWindowDiscountSum;
+
+      return totalLivesSaved * fractionRealized;
+    } catch {
+      return 0;
+    }
+  }
+
+  // Handle population effects with existing finite difference approach
+  // Population effects have genuinely complex time-varying behavior due to growth rates and limits
   const cumulativeEffect = {
     ...effect,
     windowLength: effectiveWindow,
   };
 
-  // Calculate the cost per life for this cumulative effect
   try {
     const costPerLife = effectToCostPerLife(cumulativeEffect, globalParams, donationYear);
     if (costPerLife === Infinity || costPerLife === 0) {
       return 0;
     }
-    // Return lives saved per dollar (reciprocal of cost per life)
     return 1 / costPerLife;
   } catch {
     return 0;

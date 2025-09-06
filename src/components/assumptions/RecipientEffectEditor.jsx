@@ -305,8 +305,9 @@ const RecipientEffectEditor = ({
           description={
             <div>
               <p>
-                Set at most one value (override or multiplier) for each parameter. These are the underlying parameters
-                that are used to compute the cost per life.
+                Set at most one value (override or multiplier) for each parameter. An override replaces the default
+                value for the category, while a multiplier multiplies the default category value. These are the
+                underlying parameters that are used to compute the cost per life.
               </p>
               {tempEditToEffects.length > 1 && hasTimeIntervals && (
                 <div className="flex items-center gap-2 mt-2">

@@ -145,7 +145,7 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
     return Infinity;
   }
 
-  // Calculate average discount factor based on original window to preserve intrinsic rate
+  // Calculate average discount factor based on actual constrained window
   let averageDiscountFactor;
   const i = globalParams.discountRate;
 
@@ -153,20 +153,25 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
     // Instantaneous pulse effect
     averageDiscountFactor = calculateDiscountToTime(i, startYear);
   } else {
-    // Fixed window effect - use original window for intrinsic rate calculation
+    // Fixed window effect - use actual constrained window length
     const discountToWindowStart = calculateDiscountToTime(i, startYear);
-    const windowDiscountFactorSum = calculateDiscountWindowSum(i, originalWindowLength);
-    averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / originalWindowLength;
+    const windowDiscountFactorSum = calculateDiscountWindowSum(i, actualWindowLength);
+    averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / actualWindowLength;
   }
 
   const costPerLife = effect.costPerQALY * globalParams.yearsPerLife;
 
-  // We divide by the average discount factor because:
-  // - A smaller discount factor means future QALYs are worth less
-  // - So we need MORE money today to achieve the same impact
-  // - Division by a number < 1 increases the cost appropriately
-  // Using original window preserves the effect's intrinsic yearly rate
-  return costPerLife / averageDiscountFactor;
+  // Handle pulse effects (windowLength = 0) - no truncation adjustment needed
+  if (effect.windowLength === 0) {
+    return costPerLife / averageDiscountFactor;
+  }
+
+  // For windowed effects: account for truncation by adjusting for rate differences
+  // Effects with longer original windows have lower rates, so truncation affects them differently
+  const qalysDeliveredFraction = actualWindowLength / originalWindowLength;
+  const truncationAdjustedCost = costPerLife / qalysDeliveredFraction;
+
+  return truncationAdjustedCost / averageDiscountFactor;
 };
 
 /**
@@ -503,106 +508,6 @@ const applyEffectMultipliers = (baseEffect, multipliers, context) => {
   });
 
   return modifiedEffect;
-};
-
-/**
- * Calculate cumulative impact of an effect up to a specific time point
- * This preserves the original effect parameters while calculating how much
- * cumulative impact has occurred by the given upToTime.
- * @param {Object} effect - The effect object with original parameters
- * @param {Object} globalParams - Global parameters object
- * @param {number} donationYear - Year when the donation was made
- * @param {number} upToTime - Time (years after donation) up to which to calculate impact
- * @returns {number} Cumulative lives saved per dollar up to the given time
- */
-export const calculateCumulativeImpact = (effect, globalParams, donationYear, upToTime) => {
-  assertExists(effect, 'effect');
-  assertExists(globalParams, 'globalParams');
-  if (typeof donationYear !== 'number' || !Number.isInteger(donationYear)) {
-    throw new Error('donationYear must be an integer');
-  }
-  assertNonNegativeNumber(upToTime, 'upToTime', 'in calculateCumulativeImpact');
-
-  const startTime = effect.startTime;
-  const windowLength = effect.windowLength;
-
-  // If upToTime is before the effect starts, no impact yet
-  if (upToTime <= startTime) {
-    return 0;
-  }
-
-  // Calculate the effective window length up to upToTime
-  const effectiveWindow = Math.min(windowLength, upToTime - startTime);
-
-  // Apply time limit constraints to the effective window
-  const actualEffectiveWindow = Math.min(effectiveWindow, globalParams.timeLimit - startTime);
-
-  // If no effective window, no impact
-  if (actualEffectiveWindow <= 0) {
-    return 0;
-  }
-
-  // For cumulative impact calculation, always use fractional approach based on original window
-  // This ensures consistent results regardless of time limit constraints
-
-  // Handle QALY effects with mathematical fraction approach
-  if (effect.costPerQALY !== undefined) {
-    try {
-      // Calculate total lives saved by the original full effect
-      const totalCostPerLife = effectToCostPerLife(effect, globalParams, donationYear);
-      if (totalCostPerLife === Infinity || totalCostPerLife === 0) {
-        return 0;
-      }
-      const totalLivesSaved = 1 / totalCostPerLife;
-
-      // Calculate fraction of impact realized by upToTime using proper discount math
-      const discountRate = globalParams.discountRate;
-
-      // For consistent cumulative impact calculation, always use the original window length
-      // for the denominator. This ensures that "cumulative impact by time X" gives the same
-      // result regardless of time limit settings.
-      const originalWindowLength = windowLength;
-
-      // The actual elapsed time is constrained by both upToTime and time limits
-      const actualElapsedTime = Math.min(
-        upToTime - startTime,
-        originalWindowLength,
-        globalParams.timeLimit - startTime
-      );
-
-      // If no time has elapsed or time limits prevent any impact, return 0
-      if (actualElapsedTime <= 0) {
-        return 0;
-      }
-
-      // Calculate discount sums using original window for denominator (mathematically correct)
-      const totalWindowDiscountSum = calculateDiscountWindowSum(discountRate, originalWindowLength);
-      const partialWindowDiscountSum = calculateDiscountWindowSum(discountRate, actualElapsedTime);
-
-      const fractionRealized = partialWindowDiscountSum / totalWindowDiscountSum;
-
-      return totalLivesSaved * fractionRealized;
-    } catch {
-      return 0;
-    }
-  }
-
-  // Handle population effects with existing finite difference approach
-  // Population effects have genuinely complex time-varying behavior due to growth rates and limits
-  const cumulativeEffect = {
-    ...effect,
-    windowLength: actualEffectiveWindow,
-  };
-
-  try {
-    const costPerLife = effectToCostPerLife(cumulativeEffect, globalParams, donationYear);
-    if (costPerLife === Infinity || costPerLife === 0) {
-      return 0;
-    }
-    return 1 / costPerLife;
-  } catch {
-    return 0;
-  }
 };
 
 /**

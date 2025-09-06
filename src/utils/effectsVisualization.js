@@ -3,7 +3,7 @@
  * Uses sampling approach instead of complex decomposition
  */
 
-import { selectEffectsForYear, calculateCumulativeImpact } from './effectsCalculation';
+import { selectEffectsForYear, effectToCostPerLife } from './effectsCalculation';
 import { getCostPerLifeForRecipientFromCombined } from './assumptionsDataHelpers';
 
 /**
@@ -28,6 +28,11 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
   // Get global parameters
   const globalParams = combinedAssumptions.globalParameters;
   const timeLimit = globalParams.timeLimit || 100;
+
+  // Handle edge case: if time limit is 0 or negative, no effects can occur
+  if (timeLimit <= 0) {
+    return [{ year: donationYear }]; // Single point with no effects
+  }
 
   // Get recipient and effects
   const recipient = combinedAssumptions.getRecipientById(recipientId);
@@ -80,10 +85,23 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
 
       // Check if effect is active at this time
       if (t >= startTime && t < startTime + windowLength) {
-        // Calculate cumulative impact up to time t and t+dt
-        // This preserves original effect parameters while calculating true cumulative impact
-        const cumulativeAtT = calculateCumulativeImpact(effect, globalParams, donationYear, t);
-        const cumulativeAtTplusDt = calculateCumulativeImpact(effect, globalParams, donationYear, t + dt);
+        // Calculate cumulative impact using effectToCostPerLife with different time limits
+        // This unified approach works for all effect types
+        let cumulativeAtT, cumulativeAtTplusDt;
+
+        if (t <= 0) {
+          // At t=0, no cumulative impact has occurred yet
+          cumulativeAtT = 0;
+        } else {
+          const paramsAtT = { ...globalParams, timeLimit: t };
+          const costPerLifeAtT = effectToCostPerLife(effect, paramsAtT, donationYear);
+          cumulativeAtT = costPerLifeAtT === Infinity || costPerLifeAtT === 0 ? 0 : 1 / costPerLifeAtT;
+        }
+
+        const paramsAtTplusDt = { ...globalParams, timeLimit: t + dt };
+        const costPerLifeAtTplusDt = effectToCostPerLife(effect, paramsAtTplusDt, donationYear);
+        cumulativeAtTplusDt =
+          costPerLifeAtTplusDt === Infinity || costPerLifeAtTplusDt === 0 ? 0 : 1 / costPerLifeAtTplusDt;
 
         // The rate at time t is the difference in cumulative impact divided by dt
         const rate = (cumulativeAtTplusDt - cumulativeAtT) / dt;

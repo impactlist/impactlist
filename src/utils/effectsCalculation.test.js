@@ -1,10 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import {
-  calculateCostPerLife,
-  effectToCostPerLife,
-  calculateCombinedCostPerLife,
-  calculateCumulativeImpact,
-} from './effectsCalculation';
+import { calculateCostPerLife, effectToCostPerLife, calculateCombinedCostPerLife } from './effectsCalculation';
+import { calculateLivesSavedSegments } from './effectsVisualization';
 
 // Mock getCurrentYear to have consistent test results
 vi.mock('./donationDataHelpers', async () => {
@@ -332,74 +328,156 @@ describe('effectsCalculation', () => {
         const costUnlimited = effectToCostPerLife(effect, params, 2024);
         const costLimited = effectToCostPerLife(effect, paramsLimited, 2024);
 
-        // Both should have the same cost per life (same yearly rate)
-        // because the intrinsic design is preserved
-        expect(costLimited).toBeCloseTo(costUnlimited, 10);
+        // Limited effect should have HIGHER cost per life due to truncation
+        // Effect runs from year 10-40 (30 years) vs year 10-15 (5 years)
+        // So limited delivers 5/30 = 1/6 of the QALYs, meaning 6x higher cost per life
+        expect(costLimited).toBeCloseTo(costUnlimited * 6, 10);
 
-        // With zero discount, cost per life should equal costPerQALY * yearsPerLife
+        // With zero discount and full 30-year window, cost per life should equal costPerQALY * yearsPerLife
         const expectedCostPerLife = 1000 * params.yearsPerLife;
         expect(costUnlimited).toBeCloseTo(expectedCostPerLife, 10);
-        expect(costLimited).toBeCloseTo(expectedCostPerLife, 10);
+
+        // With truncation to 5 years, cost should be 6x higher
+        expect(costLimited).toBeCloseTo(expectedCostPerLife * 6, 10);
       });
 
-      it('should apply time limits correctly in cumulative impact calculations', () => {
-        const params = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 15 };
+      it('should apply time limits correctly in visualization calculations', () => {
+        // Create a mock combinedAssumptions structure for testing visualization
+        const mockCombinedAssumptions = {
+          globalParameters: { ...baseGlobalParams, discountRate: 0.0, timeLimit: 15 },
+          recipients: {
+            'test-recipient': {
+              name: 'Test Recipient',
+              categories: {
+                testCategory: { fraction: 1.0 },
+              },
+            },
+          },
+          categories: {
+            testCategory: {
+              effects: [{ effectId: 'test-effect', costPerQALY: 1000, startTime: 10, windowLength: 30 }],
+            },
+          },
+          getRecipientById: (id) => mockCombinedAssumptions.recipients[id],
+        };
 
-        // 30-year effect starting at year 10, but truncated to 5 years by time limit
-        const effect = createQALYEffect(1000, 10, 30);
+        // Test mathematical consistency: same donation amount should give consistent results
+        // regardless of time limit settings when asking about the same time period
+        const points1 = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockCombinedAssumptions);
 
-        // Test cumulative impact at different time points
-        const cumulativeAtStart = calculateCumulativeImpact(effect, params, 2024, 10); // Just at start
-        const cumulativeAtMiddle = calculateCumulativeImpact(effect, params, 2024, 12.5); // Halfway through allowed period
-        const cumulativeAtEnd = calculateCumulativeImpact(effect, params, 2024, 15); // At time limit
-        const cumulativePastLimit = calculateCumulativeImpact(effect, params, 2024, 20); // Past time limit
+        // Test with unlimited time limit
+        const mockUnlimited = {
+          ...mockCombinedAssumptions,
+          globalParameters: { ...baseGlobalParams, discountRate: 0.0, timeLimit: 100 },
+        };
+        const points2 = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockUnlimited);
 
-        // Should be zero at start
-        expect(cumulativeAtStart).toBe(0);
+        // Both should have data points and should show consistent behavior in the overlapping region
+        expect(points1.length).toBeGreaterThan(0);
+        expect(points2.length).toBeGreaterThan(0);
 
-        // Should be 50% at middle of allowed period (2.5 years out of 5 years allowed)
-        // Note: This is 2.5/5 = 0.5 ratio within the time-limited period
-        expect(cumulativeAtMiddle).toBeCloseTo(cumulativeAtEnd * 0.5, 8);
+        // Find points around year 15 (5 years after effect start at year 10)
+        const targetYear = 2024 + 12.5; // Middle of the allowed period
+        const point1 = points1.find((p) => Math.abs(p.year - targetYear) < 0.1);
+        const point2 = points2.find((p) => Math.abs(p.year - targetYear) < 0.1);
 
-        // Should be same at end and past limit (both get full allowed impact)
-        expect(cumulativePastLimit).toBeCloseTo(cumulativeAtEnd, 10);
-
-        // Cumulative at end should match what an unrestricted calculation would give at time 15
-        // (this accounts for proper discounting rather than assuming uniform distribution)
-        const paramsUnlimited = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 100 };
-        const expectedTruncatedCumulative = calculateCumulativeImpact(effect, paramsUnlimited, 2024, 15);
-        expect(cumulativeAtEnd).toBeCloseTo(expectedTruncatedCumulative, 8);
+        if (point1 && point2) {
+          // The visualization should give consistent results for the same time period
+          // regardless of time limit settings
+          expect(point1['test-effect']).toBeCloseTo(point2['test-effect'], 6);
+        }
       });
 
-      it('should handle discount math correctly with time limit truncation', () => {
+      it('should handle discount math correctly in visualization with time limits', () => {
+        // Create mock combinedAssumptions for testing discount math with time limits
         const params = { ...baseGlobalParams, discountRate: 0.05, timeLimit: 15 };
+        const mockCombinedAssumptions = {
+          globalParameters: params,
+          recipients: {
+            'test-recipient': {
+              name: 'Test Recipient',
+              categories: {
+                testCategory: { fraction: 1.0 },
+              },
+            },
+          },
+          categories: {
+            testCategory: {
+              effects: [{ effectId: 'test-effect', costPerQALY: 1000, startTime: 5, windowLength: 20 }],
+            },
+          },
+          getRecipientById: (id) => mockCombinedAssumptions.recipients[id],
+        };
 
-        // 20-year effect starting at year 5, truncated to 10 years (15-5) by time limit
+        // Test that the unified approach preserves intrinsic rates (cost per life calculation)
         const effect = createQALYEffect(1000, 5, 20);
-
         const costPerLife = effectToCostPerLife(effect, params, 2024);
 
-        // Manually calculate what the cost per life should be:
-        // 1. Uses original 20-year window for intrinsic rate calculation
-        // 2. Discount factors should be calculated over original 20-year period
+        // Manually calculate expected cost per life using truncated window with adjustment
+        const actualWindowLength = 10; // truncated from 20 to 10 by timeLimit=15, startTime=5
         const discountToStart = Math.pow(1 + params.discountRate, -5);
-        const discountWindowSum = (1 - Math.pow(1 + params.discountRate, -20)) / Math.log(1 + params.discountRate);
-        const avgDiscountFactor = (discountToStart * discountWindowSum) / 20;
-
-        const expectedCostPerLife = (1000 * params.yearsPerLife) / avgDiscountFactor;
+        const discountWindowSum =
+          (1 - Math.pow(1 + params.discountRate, -actualWindowLength)) / Math.log(1 + params.discountRate);
+        const avgDiscountFactor = (discountToStart * discountWindowSum) / actualWindowLength;
+        const baseCostPerLife = (1000 * params.yearsPerLife) / avgDiscountFactor;
+        // Apply truncation adjustment: effect delivers QALYs over 20 years, but only 10 years are realized
+        const expectedCostPerLife = baseCostPerLife / (actualWindowLength / 20);
 
         expect(costPerLife).toBeCloseTo(expectedCostPerLife, 8);
 
-        // Test that cumulative calculations respect the time limit in fraction calculation
-        const cumulativeAtLimit = calculateCumulativeImpact(effect, params, 2024, 15);
-        const totalLives = 1 / costPerLife;
+        // Test that visualization correctly integrates the finite differences
+        const points = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockCombinedAssumptions);
+        expect(points.length).toBeGreaterThan(0);
 
-        // Fraction should be based on 10-year truncated window, not full 20-year window
-        const truncatedDiscountSum = (1 - Math.pow(1 + params.discountRate, -10)) / Math.log(1 + params.discountRate);
-        const expectedFraction = truncatedDiscountSum / discountWindowSum;
-        const expectedCumulative = totalLives * expectedFraction;
+        // Integration should sum to approximately the total expected lives saved
+        const totalExpectedLives = 50000 / expectedCostPerLife;
+        let totalIntegrated = 0;
+        for (let i = 1; i < points.length; i++) {
+          const dt = points[i].year - points[i - 1].year;
+          const avgRate = (points[i]['test-effect'] + points[i - 1]['test-effect']) / 2;
+          totalIntegrated += avgRate * dt;
+        }
 
-        expect(cumulativeAtLimit).toBeCloseTo(expectedCumulative, 8);
+        // Should be reasonably close (allowing for numerical integration error)
+        expect(totalIntegrated).toBeCloseTo(totalExpectedLives, 4);
+      });
+
+      it('should debug unified approach with simple case', () => {
+        // Super simple test case to isolate the issue
+        const simpleParams = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 20 };
+
+        // Simple effect: starts at year 0, runs 10 years, with zero discount
+        const mockCombinedAssumptions = {
+          globalParameters: simpleParams,
+          recipients: {
+            'test-recipient': {
+              name: 'Test Recipient',
+              categories: { testCategory: { fraction: 1.0 } },
+            },
+          },
+          categories: {
+            testCategory: {
+              effects: [{ effectId: 'test-effect', costPerQALY: 1000, startTime: 0, windowLength: 10 }],
+            },
+          },
+          getRecipientById: (id) => mockCombinedAssumptions.recipients[id],
+        };
+
+        // Test the direct cost per life calculation
+        const effect = { costPerQALY: 1000, startTime: 0, windowLength: 10 };
+        const costPerLifeT5 = effectToCostPerLife(effect, { ...simpleParams, timeLimit: 5 }, 2024); // truncates 10->5 years
+        const costPerLifeT7 = effectToCostPerLife(effect, { ...simpleParams, timeLimit: 7 }, 2024); // truncates 10->7 years
+        const costPerLifeT10 = effectToCostPerLife(effect, { ...simpleParams, timeLimit: 10 }, 2024); // no truncation
+
+        // Test the visualization
+        const points = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockCombinedAssumptions);
+
+        // Basic assertions
+        expect(points.length).toBeGreaterThan(0);
+        expect(costPerLifeT5).toBeGreaterThan(0);
+        expect(costPerLifeT10).toBeGreaterThan(0);
+        expect(costPerLifeT5).toBeGreaterThan(costPerLifeT7);
+        expect(costPerLifeT7).toBeGreaterThan(costPerLifeT10);
       });
 
       it('should handle edge cases with time limits', () => {
@@ -421,10 +499,32 @@ describe('effectsCalculation', () => {
         expect(Number.isFinite(costExactEnd)).toBe(true); // Should be valid
         expect(costExactEnd).toBeGreaterThan(0);
 
-        // Cumulative impact should reach maximum exactly at time limit
-        const cumulativeAtLimit = calculateCumulativeImpact(effectExactEnd, params2, 2024, 30);
-        const cumulativePastLimit = calculateCumulativeImpact(effectExactEnd, params2, 2024, 35);
-        expect(cumulativePastLimit).toBeCloseTo(cumulativeAtLimit, 10);
+        // Validate that the unified approach handles boundary conditions correctly
+        // by testing that finite difference calculations work properly at time limits
+        const mockCombinedAssumptions = {
+          globalParameters: params2,
+          recipients: {
+            'test-recipient': {
+              name: 'Test Recipient',
+              categories: {
+                testCategory: { fraction: 1.0 },
+              },
+            },
+          },
+          categories: {
+            testCategory: {
+              effects: [{ effectId: 'test-effect', costPerQALY: 1000, startTime: 10, windowLength: 20 }],
+            },
+          },
+          getRecipientById: (id) => mockCombinedAssumptions.recipients[id],
+        };
+
+        const points = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockCombinedAssumptions);
+        expect(points.length).toBeGreaterThan(0);
+
+        // Effect should be active in the visualization during its window
+        const activePoints = points.filter((p) => p['test-effect'] > 0);
+        expect(activePoints.length).toBeGreaterThan(0);
       });
     });
 

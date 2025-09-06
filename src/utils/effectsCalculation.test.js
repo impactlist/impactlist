@@ -384,7 +384,7 @@ describe('effectsCalculation', () => {
         if (point1 && point2) {
           // The visualization should give consistent results for the same time period
           // regardless of time limit settings
-          expect(point1['test-effect']).toBeCloseTo(point2['test-effect'], 6);
+          expect(point1['testCategory-test-effect']).toBeCloseTo(point2['testCategory-test-effect'], 6);
         }
       });
 
@@ -434,7 +434,7 @@ describe('effectsCalculation', () => {
         let totalIntegrated = 0;
         for (let i = 1; i < points.length; i++) {
           const dt = points[i].year - points[i - 1].year;
-          const avgRate = (points[i]['test-effect'] + points[i - 1]['test-effect']) / 2;
+          const avgRate = (points[i]['testCategory-test-effect'] + points[i - 1]['testCategory-test-effect']) / 2;
           totalIntegrated += avgRate * dt;
         }
 
@@ -523,7 +523,7 @@ describe('effectsCalculation', () => {
         expect(points.length).toBeGreaterThan(0);
 
         // Effect should be active in the visualization during its window
-        const activePoints = points.filter((p) => p['test-effect'] > 0);
+        const activePoints = points.filter((p) => p['testCategory-test-effect'] > 0);
         expect(activePoints.length).toBeGreaterThan(0);
       });
     });

@@ -52,7 +52,7 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
     effects.forEach((effect) => {
       allEffects.push({
         ...effect,
-        id: effect.effectId, // Map effectId to id for graph display
+        id: `${categoryId}-${effect.effectId}`, // Use category-effect combination for unique graph display ID
         weight: categoryWeight,
       });
     });

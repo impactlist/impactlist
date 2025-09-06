@@ -70,7 +70,7 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
-        <span className="text-gray-700 font-medium">Sample donation for year</span>
+        <h2 className="text-xl font-semibold text-slate-800">Sample donation for year</h2>
         <YearSelector value={selectedYear} onChange={setSelectedYear} label="" className="" />
       </div>
 

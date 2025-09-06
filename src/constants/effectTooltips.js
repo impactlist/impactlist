@@ -6,7 +6,8 @@
 export const EFFECT_TOOLTIPS = {
   // QALY/Standard effects
   qaly: {
-    costPerQALY: 'Cost to produce or save one quality-adjusted life year.',
+    costPerQALY:
+      'Cost to produce or save one quality-adjusted life year. The benefits are spread evenly over the window length.',
     startTime: 'Number of years after the intervention starts that the effect of that intervention starts.',
     windowLength:
       'Duration of the effect of the intervention. The window length can be superseded by a shorter global time limit parameter.',

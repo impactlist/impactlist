@@ -313,6 +313,14 @@ export const validateRecipientEffectField = (fieldName, value, type, effectType)
     if (numValue === 0) {
       return 'Multiplier cannot be zero';
     }
+
+    // Additional validation for fields that must remain positive after multiplication
+    if (
+      (fieldName === 'windowLength' || fieldName === 'startTime' || fieldName === 'populationFractionAffected') &&
+      numValue < 0
+    ) {
+      return `Multiplier for ${fieldName} cannot be negative`;
+    }
   }
 
   // For overrides, use the same validation as regular effect fields

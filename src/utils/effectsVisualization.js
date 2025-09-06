@@ -260,3 +260,78 @@ export const formatCalendarYear = (year) => {
     return year.toExponential(1);
   }
 };
+
+/**
+ * Generate evenly spaced tick marks for X-axis based on time range
+ * @param {number} minYear - Minimum year in the data
+ * @param {number} maxYear - Maximum year in the data
+ * @returns {number[]} Array of tick positions
+ */
+export const generateEvenlySpacedTicks = (minYear, maxYear) => {
+  const range = maxYear - minYear;
+
+  // For very small ranges, let Recharts handle automatic ticks
+  if (range < 100) {
+    return undefined; // Use automatic ticks
+  }
+
+  // Calculate optimal number of ticks based on range size
+  let targetTickCount;
+  if (range < 1000) {
+    targetTickCount = 8;
+  } else if (range < 10000) {
+    targetTickCount = 10;
+  } else {
+    targetTickCount = 8; // For very large ranges, use fewer ticks for clarity
+  }
+
+  // Calculate step size and round to nice numbers
+  const rawStep = range / (targetTickCount - 1);
+  const step = roundToNiceNumber(rawStep);
+
+  // Generate ticks starting from a nice number at or after minYear
+  const ticks = [];
+  const startTick = Math.ceil(minYear / step) * step;
+
+  // Always include the first year
+  ticks.push(minYear);
+
+  // Add evenly spaced ticks
+  for (let tick = startTick; tick < maxYear; tick += step) {
+    if (tick > minYear && Math.abs(tick - minYear) > step * 0.1) {
+      // Avoid too-close ticks
+      ticks.push(tick);
+    }
+  }
+
+  // Always include the last year if it's not too close to the previous tick
+  if (maxYear - ticks[ticks.length - 1] > step * 0.1) {
+    ticks.push(maxYear);
+  }
+
+  return ticks;
+};
+
+/**
+ * Round a number to a "nice" value for tick marks (1, 2, 5, 10, 20, 50, 100, etc.)
+ * @param {number} value - Raw value to round
+ * @returns {number} Nice rounded value
+ */
+const roundToNiceNumber = (value) => {
+  const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
+  const normalized = value / magnitude;
+
+  // Round normalized value to nice numbers: 1, 2, 5, 10
+  let niceNormalized;
+  if (normalized <= 1) {
+    niceNormalized = 1;
+  } else if (normalized <= 2) {
+    niceNormalized = 2;
+  } else if (normalized <= 5) {
+    niceNormalized = 5;
+  } else {
+    niceNormalized = 10;
+  }
+
+  return niceNormalized * magnitude;
+};

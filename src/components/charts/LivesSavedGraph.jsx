@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { formatLargeNumber, formatCalendarYear } from '../../utils/effectsVisualization';
+import { formatLargeNumber, formatCalendarYear, generateEvenlySpacedTicks } from '../../utils/effectsVisualization';
 
 // Color palette for effects
 const COLOR_PALETTE = [
@@ -65,9 +65,11 @@ const formatYAxisTick = (value) => {
  * Graph component showing lives saved over time
  */
 const LivesSavedGraph = ({ data, height = 300 }) => {
-  // Extract effect IDs and assign colors
-  const effectInfo = useMemo(() => {
-    if (!data || data.length === 0) return { effectIds: [], colorMap: {} };
+  // Extract effect IDs, assign colors, and calculate tick positions
+  const { effectInfo, customTicks } = useMemo(() => {
+    if (!data || data.length === 0) {
+      return { effectInfo: { effectIds: [], colorMap: {} }, customTicks: undefined };
+    }
 
     // Get all effect IDs from the first point (excluding 'year')
     const effectIds = Object.keys(data[0]).filter((key) => key !== 'year');
@@ -78,7 +80,15 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
       colorMap[id] = COLOR_PALETTE[index % COLOR_PALETTE.length];
     });
 
-    return { effectIds, colorMap };
+    // Calculate custom tick positions for X-axis
+    const minYear = Math.min(...data.map((d) => d.year));
+    const maxYear = Math.max(...data.map((d) => d.year));
+    const ticks = generateEvenlySpacedTicks(minYear, maxYear);
+
+    return {
+      effectInfo: { effectIds, colorMap },
+      customTicks: ticks,
+    };
   }, [data]);
 
   if (!data || data.length === 0) {
@@ -89,10 +99,6 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
     );
   }
 
-  // Determine if we need logarithmic scale based on time span
-  const maxYear = Math.max(...data.map((d) => d.year));
-  const useLogScale = maxYear > 10000;
-
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={height}>
@@ -100,8 +106,9 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis
             dataKey="year"
-            scale={useLogScale ? 'log' : 'linear'}
-            domain={useLogScale ? ['dataMin', 'dataMax'] : undefined}
+            scale="linear"
+            domain={['dataMin', 'dataMax']}
+            ticks={customTicks}
             tickFormatter={formatXAxisTick}
             tick={{ fontSize: 11 }}
             stroke="#6b7280"

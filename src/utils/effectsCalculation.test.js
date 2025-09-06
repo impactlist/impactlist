@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { calculateCostPerLife, effectToCostPerLife, calculateCombinedCostPerLife } from './effectsCalculation';
-import { calculateLivesSavedSegments } from './effectsVisualization';
+import { calculateLivesSavedSegments, generateEvenlySpacedTicks } from './effectsVisualization';
 
 // Mock getCurrentYear to have consistent test results
 vi.mock('./donationDataHelpers', async () => {
@@ -1237,6 +1237,67 @@ describe('effectsCalculation', () => {
       const expectedLives = donationAmount / expectedCostPerLife;
 
       expect(totalIntegrated).toBeCloseTo(expectedLives, 1);
+    });
+  });
+
+  describe('X-Axis Tick Generation', () => {
+    it('should return undefined for small ranges to use automatic ticks', () => {
+      const ticks = generateEvenlySpacedTicks(2020, 2050); // 30 year range
+      expect(ticks).toBeUndefined();
+    });
+
+    it('should generate evenly spaced ticks for medium ranges', () => {
+      const ticks = generateEvenlySpacedTicks(2020, 2520); // 500 year range
+      expect(ticks).toBeDefined();
+      expect(ticks.length).toBeGreaterThan(5);
+      expect(ticks.length).toBeLessThan(12);
+      expect(ticks[0]).toBe(2020); // First tick should be start year
+      expect(ticks[ticks.length - 1]).toBe(2520); // Last tick should be end year
+    });
+
+    it('should generate evenly spaced ticks for large ranges (1 million years)', () => {
+      const minYear = 2025;
+      const maxYear = 1000000 + 2025; // 1,002,025
+      const ticks = generateEvenlySpacedTicks(minYear, maxYear);
+
+      expect(ticks).toBeDefined();
+      expect(ticks.length).toBeGreaterThan(5);
+      expect(ticks.length).toBeLessThan(12);
+      expect(ticks[0]).toBe(minYear);
+
+      // Check that ticks are reasonably spaced
+      if (ticks.length >= 2) {
+        const spacings = [];
+        for (let i = 1; i < ticks.length; i++) {
+          spacings.push(ticks[i] - ticks[i - 1]);
+        }
+
+        // Check that all spacings are positive (increasing)
+        spacings.forEach((spacing) => {
+          expect(spacing).toBeGreaterThan(0);
+        });
+
+        // Check that spacings are relatively consistent (within factor of 2)
+        const minSpacing = Math.min(...spacings);
+        const maxSpacing = Math.max(...spacings);
+        expect(maxSpacing / minSpacing).toBeLessThan(2.5); // Allow some variation for nice numbers
+      }
+    });
+
+    it('should generate nice round numbers for tick positions', () => {
+      const ticks = generateEvenlySpacedTicks(0, 100000); // 100k range
+
+      // Most ticks should be round numbers (multiples of 1000, 5000, 10000, etc.)
+      const roundTicks = ticks.filter((tick) => {
+        // Check if tick is a "nice" number (multiple of powers of 10, 2, or 5)
+        const log10 = Math.log10(Math.abs(tick) || 1);
+        const magnitude = Math.pow(10, Math.floor(log10));
+        const normalized = tick / magnitude;
+        return [0, 1, 2, 5, 10, 20, 50, 100].includes(Math.round(normalized));
+      });
+
+      // Most ticks should be nice numbers (allow some flexibility)
+      expect(roundTicks.length).toBeGreaterThanOrEqual(Math.floor(ticks.length * 0.6));
     });
   });
 });

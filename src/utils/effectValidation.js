@@ -71,8 +71,8 @@ export const validateEffectField = (fieldName, value, effectType) => {
     if (isPartialInput(cleanValue)) {
       return 'Window length is required';
     }
-    if (isNaN(numValue) || numValue < 0) {
-      return 'Window length must be non-negative';
+    if (isNaN(numValue) || numValue <= 0) {
+      return 'Window length must be positive';
     }
   }
 

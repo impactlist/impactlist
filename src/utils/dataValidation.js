@@ -123,7 +123,7 @@ export const validateCategoryEffect = (effect, categoryId, index) => {
   // Required fields
   assertExists(effect.effectId, 'effectId', context);
   assertNumber(effect.startTime, 'startTime', context);
-  assertNonNegativeNumber(effect.windowLength, 'windowLength', context);
+  assertPositiveNumber(effect.windowLength, 'windowLength', context);
 
   // Must have either costPerQALY or costPerMicroprobability
   const hasCostPerQALY = effect.costPerQALY !== undefined;

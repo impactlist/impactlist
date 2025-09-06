@@ -83,13 +83,13 @@ describe('effectsCalculation', () => {
       expect(result).toBeLessThan(Infinity);
     });
 
-    it('should handle effects with zero window length (pulse)', () => {
+    it('should handle effects with very short window length', () => {
       const effects = [
         {
           type: 'qaly',
           costPerQALY: 1000,
           startTime: 0,
-          windowLength: 0, // Pulse effect
+          windowLength: 1, // Very short effect
         },
       ];
       const result = calculateCostPerLife(effects, baseGlobalParams, 2020);
@@ -254,29 +254,29 @@ describe('effectsCalculation', () => {
     describe('Time Window Effects (QALY)', () => {
       it('should have same cost regardless of window length when discount = 0', () => {
         const params = { ...baseGlobalParams, discountRate: 0 };
-        const pulseEffect = createQALYEffect(1000, 10, 0);
+        const veryShortWindow = createQALYEffect(1000, 10, 1);
         const shortWindow = createQALYEffect(1000, 10, 5);
         const longWindow = createQALYEffect(1000, 10, 30);
 
-        const pulseCost = effectToCostPerLife(pulseEffect, params, 2024);
+        const veryShortCost = effectToCostPerLife(veryShortWindow, params, 2024);
         const shortCost = effectToCostPerLife(shortWindow, params, 2024);
         const longCost = effectToCostPerLife(longWindow, params, 2024);
 
-        expect(pulseCost).toBeCloseTo(shortCost, 10);
+        expect(veryShortCost).toBeCloseTo(shortCost, 10);
         expect(shortCost).toBeCloseTo(longCost, 10);
       });
 
       it('should have higher cost with longer window when discount > 0', () => {
         const params = { ...baseGlobalParams, discountRate: 0.03 };
-        const pulseEffect = createQALYEffect(1000, 0, 0);
+        const veryShortWindow = createQALYEffect(1000, 0, 1);
         const shortWindow = createQALYEffect(1000, 0, 5);
         const longWindow = createQALYEffect(1000, 0, 20);
 
-        const pulseCost = effectToCostPerLife(pulseEffect, params, 2024);
+        const veryShortCost = effectToCostPerLife(veryShortWindow, params, 2024);
         const shortCost = effectToCostPerLife(shortWindow, params, 2024);
         const longCost = effectToCostPerLife(longWindow, params, 2024);
 
-        expect(pulseCost).toBeLessThan(shortCost);
+        expect(veryShortCost).toBeLessThan(shortCost);
         expect(shortCost).toBeLessThan(longCost);
       });
 
@@ -745,16 +745,16 @@ describe('effectsCalculation', () => {
 
       it('should have averageDiscountFactor = 1 when discountRate = 0', () => {
         const params = { ...baseGlobalParams, discountRate: 0 };
-        const pulse = createQALYEffect(1000, 10, 0);
+        const shortWindow = createQALYEffect(1000, 10, 1);
         const window = createQALYEffect(1000, 10, 20);
 
         // Since averageDiscountFactor = 1, cost = costPerQALY * yearsPerLife
         const expectedCost = 1000 * 50;
 
-        const pulseCost = effectToCostPerLife(pulse, params, 2024);
+        const shortCost = effectToCostPerLife(shortWindow, params, 2024);
         const windowCost = effectToCostPerLife(window, params, 2024);
 
-        expect(pulseCost).toBeCloseTo(expectedCost, 10);
+        expect(shortCost).toBeCloseTo(expectedCost, 10);
         expect(windowCost).toBeCloseTo(expectedCost, 10);
       });
     });
@@ -920,16 +920,16 @@ describe('effectsCalculation', () => {
       expect(diff2).toBeLessThan(0.1); // Less than 10% change
     });
 
-    it('should handle instantaneous pulse effects in the past correctly', () => {
-      const effect = createPopEffect(100, 0.1, 1, 10, 0); // Pulse at year 10
+    it('should handle very short effects in the past correctly', () => {
+      const effect = createPopEffect(100, 0.1, 1, 10, 1); // Very short effect at year 10
       const params = baseGlobalParams;
 
-      // Donation from 2000: pulse at 2010 (in the past)
-      const pastPulse = effectToCostPerLife(effect, params, 2000);
+      // Donation from 2000: effect at 2010 (in the past)
+      const pastEffect = effectToCostPerLife(effect, params, 2000);
 
       // Should calculate population at 2010 using historical growth
-      expect(pastPulse).toBeGreaterThan(0);
-      expect(pastPulse).toBeLessThan(Infinity);
+      expect(pastEffect).toBeGreaterThan(0);
+      expect(pastEffect).toBeLessThan(Infinity);
     });
 
     it('should properly apply population limits only to future periods', () => {
@@ -953,16 +953,15 @@ describe('effectsCalculation', () => {
 
     it('should handle boundary year consistently', () => {
       // Test that effects at exactly the current year are handled correctly
-      const pulseEffect = createPopEffect(100, 0.1, 1, 0, 0); // Pulse at donation year
-      const windowEffect = createPopEffect(100, 0.1, 1, 0, 1); // 1-year window starting at donation
+      const shortEffect = createPopEffect(100, 0.1, 1, 0, 1); // 1-year effect at donation year
+      const windowEffect = createPopEffect(100, 0.1, 1, 0, 2); // 2-year window starting at donation
 
       // Both at current year (2024)
-      const pulseCost = effectToCostPerLife(pulseEffect, baseGlobalParams, 2024);
+      const shortCost = effectToCostPerLife(shortEffect, baseGlobalParams, 2024);
       const windowCost = effectToCostPerLife(windowEffect, baseGlobalParams, 2024);
 
-      // Both should give similar results (pulse is instantaneous, window is 1 year)
-      // They won't be exactly equal due to discounting over the window
-      expect(pulseCost).toBeGreaterThan(0);
+      // Both should give reasonable results
+      expect(shortCost).toBeGreaterThan(0);
       expect(windowCost).toBeGreaterThan(0);
 
       // Test continuity: donations at different years should be continuous

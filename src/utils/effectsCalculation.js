@@ -128,7 +128,7 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   assertExists(effect, 'effect');
   assertNonZeroNumber(effect.costPerQALY, 'costPerQALY', 'in QALY effect');
   assertNonNegativeNumber(effect.startTime, 'startTime', 'in QALY effect');
-  assertNonNegativeNumber(effect.windowLength, 'windowLength', 'in QALY effect');
+  assertPositiveNumber(effect.windowLength, 'windowLength', 'in QALY effect');
 
   // Get global parameters
   assertExists(globalParams, 'globalParams');
@@ -187,7 +187,7 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
   assertPositiveNumber(effect.populationFractionAffected, 'populationFractionAffected', 'in population effect');
   assertNonZeroNumber(effect.qalyImprovementPerYear, 'qalyImprovementPerYear', 'in population effect');
   assertNonNegativeNumber(effect.startTime, 'startTime', 'in population effect');
-  assertNonNegativeNumber(effect.windowLength, 'windowLength', 'in population effect');
+  assertPositiveNumber(effect.windowLength, 'windowLength', 'in population effect');
 
   // Get global parameters
   assertExists(globalParams, 'globalParams');
@@ -463,7 +463,7 @@ export const calculateCostPerLife = (effects, globalParams, donationYear) => {
   // Calculate individual cost per life for each effect
   const effectCosts = applicableEffects.map((effect) => {
     assertExists(effect.startTime, 'startTime', `in effect ${effect.effectId}`);
-    assertNonNegativeNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
+    assertPositiveNumber(effect.windowLength, 'windowLength', `in effect ${effect.effectId}`);
 
     // Get the already-discounted cost per life from the effect
     return effectToCostPerLife(effect, globalParams, donationYear);

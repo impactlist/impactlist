@@ -124,13 +124,13 @@ describe('Donation Flow Integration', () => {
       expect(costPerLife).toBeLessThan(Infinity);
     });
 
-    it('should handle edge case: immediate pulse effect', () => {
+    it('should handle edge case: very short effect', () => {
       const effects = [
         {
           type: 'qaly',
           costPerQALY: 100,
           startTime: 0,
-          windowLength: 0, // Immediate pulse
+          windowLength: 1, // Very short effect
         },
       ];
 

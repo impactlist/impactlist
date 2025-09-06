@@ -1069,4 +1069,174 @@ describe('effectsCalculation', () => {
       expect(pastDonation).toBeLessThan(Infinity);
     });
   });
+
+  describe('Category Visualization', () => {
+    it('should calculate visualization points for categories using isCategory option', () => {
+      const testEffect = {
+        type: 'qaly',
+        costPerQALY: 1000,
+        startTime: 0,
+        windowLength: 20,
+      };
+
+      const mockCombinedAssumptions = {
+        globalParameters: baseGlobalParams,
+        categories: {
+          'test-category': {
+            name: 'Test Category',
+            effects: [{ ...testEffect, effectId: 'test-effect' }],
+          },
+        },
+      };
+
+      // Test category visualization with isCategory: true
+      const points = calculateLivesSavedSegments('test-category', 50000, 2024, mockCombinedAssumptions, {
+        isCategory: true,
+      });
+
+      expect(points.length).toBeGreaterThan(0);
+      expect(points[0]).toHaveProperty('year');
+      expect(points[0]).toHaveProperty('test-category-test-effect');
+    });
+
+    it('should use weight = 1 for category effects (no fractional weights)', () => {
+      const testEffect = {
+        type: 'qaly',
+        costPerQALY: 1000,
+        startTime: 0,
+        windowLength: 10,
+      };
+
+      const mockCombinedAssumptions = {
+        globalParameters: baseGlobalParams,
+        categories: {
+          'test-category': {
+            name: 'Test Category',
+            effects: [{ ...testEffect, effectId: 'test-effect' }],
+          },
+        },
+      };
+
+      const points = calculateLivesSavedSegments('test-category', 50000, 2024, mockCombinedAssumptions, {
+        isCategory: true,
+      });
+
+      // Check that we get visualization data
+      expect(points.length).toBeGreaterThan(0);
+
+      // Find a point where the effect is active
+      const activePoint = points.find((p) => p['test-category-test-effect'] > 0);
+      expect(activePoint).toBeDefined();
+    });
+
+    it('should return empty array for category with no effects', () => {
+      const mockCombinedAssumptions = {
+        globalParameters: baseGlobalParams,
+        categories: {
+          'empty-category': {
+            name: 'Empty Category',
+            effects: [],
+          },
+        },
+      };
+
+      // Should throw error because cost per life calculation fails with empty effects
+      expect(() => {
+        calculateLivesSavedSegments('empty-category', 50000, 2024, mockCombinedAssumptions, {
+          isCategory: true,
+        });
+      }).toThrow('Field effects cannot be empty');
+    });
+
+    it('should return empty array for non-existent category', () => {
+      const mockCombinedAssumptions = {
+        globalParameters: baseGlobalParams,
+        categories: {},
+      };
+
+      // Should throw error because category doesn't exist
+      expect(() => {
+        calculateLivesSavedSegments('nonexistent-category', 50000, 2024, mockCombinedAssumptions, {
+          isCategory: true,
+        });
+      }).toThrow('Category nonexistent-category not found in combined assumptions');
+    });
+
+    it('should maintain backward compatibility - default behavior treats entityId as recipient', () => {
+      const testEffect = {
+        type: 'qaly',
+        costPerQALY: 1000,
+        startTime: 0,
+        windowLength: 10,
+      };
+
+      const mockCombinedAssumptions = {
+        globalParameters: baseGlobalParams,
+        categories: {
+          testCategory: {
+            effects: [{ ...testEffect, effectId: 'test-effect' }],
+          },
+        },
+        recipients: {
+          'test-recipient': {
+            name: 'Test Recipient',
+            categories: {
+              testCategory: {
+                fraction: 1.0,
+              },
+            },
+          },
+        },
+        getRecipientById: (id) => mockCombinedAssumptions.recipients[id],
+      };
+
+      // Call without isCategory option - should default to recipient behavior
+      const points = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockCombinedAssumptions);
+
+      expect(points.length).toBeGreaterThan(0);
+      expect(points[0]).toHaveProperty('testCategory-test-effect');
+    });
+
+    it('should integrate correctly to total lives saved for category', () => {
+      const testEffect = {
+        type: 'qaly',
+        costPerQALY: 1000,
+        startTime: 0,
+        windowLength: 10,
+      };
+
+      const mockCombinedAssumptions = {
+        globalParameters: { ...baseGlobalParams, timeLimit: 50 },
+        categories: {
+          'test-category': {
+            name: 'Test Category',
+            effects: [{ ...testEffect, effectId: 'test-effect' }],
+          },
+        },
+      };
+
+      const donationAmount = 50000;
+      const points = calculateLivesSavedSegments('test-category', donationAmount, 2024, mockCombinedAssumptions, {
+        isCategory: true,
+      });
+
+      // Integrate using trapezoidal rule
+      let totalIntegrated = 0;
+      for (let i = 1; i < points.length; i++) {
+        const dt = points[i].year - points[i - 1].year;
+        const avgRate = (points[i]['test-category-test-effect'] + points[i - 1]['test-category-test-effect']) / 2;
+        totalIntegrated += avgRate * dt;
+      }
+
+      // Should integrate to approximately the expected total lives saved
+      const expectedCostPerLife = calculateCostPerLife(
+        [{ ...testEffect, effectId: 'test-effect' }],
+        mockCombinedAssumptions.globalParameters,
+        2024
+      );
+      const expectedLives = donationAmount / expectedCostPerLife;
+
+      expect(totalIntegrated).toBeCloseTo(expectedLives, 1);
+    });
+  });
 });

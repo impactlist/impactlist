@@ -364,10 +364,10 @@ export const effectToCostPerLife = (effect, globalParams, donationYear) => {
     throw new Error('donationYear must be an integer for effectToCostPerLife');
   }
 
-  // Validate that donation isn't in the future
+  // Handle future donation years by using current year instead
   const currentYear = getCurrentYear();
   if (donationYear > currentYear) {
-    throw new Error(`Donation year ${donationYear} cannot be in the future (current year is ${currentYear})`);
+    donationYear = currentYear;
   }
 
   if (effect.costPerQALY !== undefined) {

@@ -1026,21 +1026,20 @@ describe('effectsCalculation', () => {
       expect(costWithLimit).toBeGreaterThan(costNoLimit);
     });
 
-    it('should reject future donations', () => {
+    it('should handle future donations by using current year', () => {
       const effect = createPopEffect(100, 0.1, 1, 5, 10); // Effect at years 5-15
       const params = { ...baseGlobalParams };
 
       // Test with a future donation (year 2030)
       const futureDonation = 2030;
-
-      // Should throw an error for future donations
-      expect(() => effectToCostPerLife(effect, params, futureDonation)).toThrow(
-        'Donation year 2030 cannot be in the future'
-      );
-
-      // Present donation should work fine
       const presentDonation = 2024;
+
+      // Should not throw an error for future donations, instead use current year
+      const futureCost = effectToCostPerLife(effect, params, futureDonation);
       const presentCost = effectToCostPerLife(effect, params, presentDonation);
+
+      // Both should return the same result since future year defaults to current year
+      expect(futureCost).toBe(presentCost);
       expect(presentCost).toBeGreaterThan(0);
     });
 

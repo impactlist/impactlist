@@ -2,29 +2,35 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import YearSelector from './YearSelector';
 import LivesSavedGraph from '../charts/LivesSavedGraph';
-import { getCostPerLifeForRecipientFromCombined } from '../../utils/assumptionsDataHelpers';
+import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { formatNumberWithCommas, formatCurrency, formatLives } from '../../utils/formatters';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { calculateLivesSavedSegments } from '../../utils/effectsVisualization';
 
-const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
+const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions }) => {
   const currentYear = getCurrentYear();
   const [donationAmount, setDonationAmount] = useState('');
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [costPerLife, setCostPerLife] = useState(0);
   const [livesSaved, setLivesSaved] = useState(0);
 
+  // Determine if we're working with a category or recipient
+  const isCategory = !!categoryId;
+  const entityId = categoryId || recipientId;
+
   // Calculate cost per life whenever year changes
   useEffect(() => {
-    if (!combinedAssumptions || !recipientId) return;
+    if (!combinedAssumptions || !entityId) return;
 
     try {
-      const cost = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, selectedYear);
+      const cost = isCategory
+        ? getCostPerLifeFromCombined(combinedAssumptions, entityId, selectedYear)
+        : getCostPerLifeForRecipientFromCombined(combinedAssumptions, entityId, selectedYear);
       setCostPerLife(cost);
     } catch {
       setCostPerLife(Infinity);
     }
-  }, [combinedAssumptions, recipientId, selectedYear]);
+  }, [combinedAssumptions, entityId, selectedYear, isCategory]);
 
   // Calculate lives saved whenever amount or cost per life changes
   useEffect(() => {
@@ -57,15 +63,15 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
   const visualizationData = useMemo(() => {
     const amount = parseFloat(donationAmount.replace(/,/g, ''));
 
-    if (!combinedAssumptions || !recipientId || isNaN(amount) || amount <= 0 || costPerLife === Infinity) {
+    if (!combinedAssumptions || !entityId || isNaN(amount) || amount <= 0 || costPerLife === Infinity) {
       return [];
     }
 
     // Calculate points using sampling approach - now returns points with effect breakdowns
-    const points = calculateLivesSavedSegments(recipientId, amount, selectedYear, combinedAssumptions);
+    const points = calculateLivesSavedSegments(entityId, amount, selectedYear, combinedAssumptions, { isCategory });
 
     return points;
-  }, [donationAmount, selectedYear, costPerLife, recipientId, combinedAssumptions]);
+  }, [donationAmount, selectedYear, costPerLife, entityId, combinedAssumptions, isCategory]);
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
@@ -126,7 +132,8 @@ const SampleDonationCalculator = ({ recipientId, combinedAssumptions }) => {
 };
 
 SampleDonationCalculator.propTypes = {
-  recipientId: PropTypes.string.isRequired,
+  recipientId: PropTypes.string,
+  categoryId: PropTypes.string,
   combinedAssumptions: PropTypes.object.isRequired,
 };
 

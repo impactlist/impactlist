@@ -7,6 +7,7 @@ import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import EntityStatistics from '../components/entity/EntityStatistics';
+import SampleDonationCalculator from '../components/shared/SampleDonationCalculator';
 import { donations } from '../data/generatedData';
 import MarkdownContent from '../components/shared/MarkdownContent';
 
@@ -104,6 +105,9 @@ const CategoryDetail = () => {
           customValuesIndicator={<CustomValuesIndicator />}
           onAdjustAssumptions={openModal}
         />
+
+        {/* Sample donation calculator */}
+        <SampleDonationCalculator categoryId={categoryId} combinedAssumptions={combinedAssumptions} />
 
         {/* Category markdown content */}
         <MarkdownContent content={categoryInfo.content} className="mt-8 mb-8" />

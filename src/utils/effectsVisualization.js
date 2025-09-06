@@ -4,19 +4,31 @@
  */
 
 import { selectEffectsForYear, effectToCostPerLife } from './effectsCalculation';
-import { getCostPerLifeForRecipientFromCombined } from './assumptionsDataHelpers';
+import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } from './assumptionsDataHelpers';
 
 /**
  * Calculate visualization points by sampling the rate at different times
- * @param {string} recipientId - Recipient ID
+ * @param {string} entityId - Recipient ID or Category ID
  * @param {number} donationAmount - Amount donated
  * @param {number} donationYear - Year of donation
  * @param {Object} combinedAssumptions - Combined assumptions with all data
+ * @param {Object} options - Options object
+ * @param {boolean} options.isCategory - Whether entityId is a category (default: false, treats as recipient)
  * @returns {Array} Array of points for visualization
  */
-export const calculateLivesSavedSegments = (recipientId, donationAmount, donationYear, combinedAssumptions) => {
-  // Get the cost per life for this recipient
-  const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, donationYear);
+export const calculateLivesSavedSegments = (
+  entityId,
+  donationAmount,
+  donationYear,
+  combinedAssumptions,
+  options = {}
+) => {
+  const { isCategory = false } = options;
+
+  // Get the cost per life for this entity
+  const costPerLife = isCategory
+    ? getCostPerLifeFromCombined(combinedAssumptions, entityId, donationYear)
+    : getCostPerLifeForRecipientFromCombined(combinedAssumptions, entityId, donationYear);
 
   if (!costPerLife || costPerLife === Infinity || costPerLife === 0) {
     return [];
@@ -34,29 +46,45 @@ export const calculateLivesSavedSegments = (recipientId, donationAmount, donatio
     return [{ year: donationYear }]; // Single point with no effects
   }
 
-  // Get recipient and effects
-  const recipient = combinedAssumptions.getRecipientById(recipientId);
-  if (!recipient) return [];
-
-  // Collect all effects from all categories
+  // Collect all effects - different logic for recipients vs categories
   const allEffects = [];
-  Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
-    const categoryWeight = categoryData.fraction;
-    // Only skip if fraction is explicitly set to 0
-    if (categoryData.fraction === 0) return;
 
-    const category = combinedAssumptions.categories[categoryId];
-    if (!category || !category.effects) return;
+  if (isCategory) {
+    // Category case: get effects directly from the single category
+    const category = combinedAssumptions.categories[entityId];
+    if (!category || !category.effects) return [];
 
     const effects = selectEffectsForYear(category.effects, donationYear);
     effects.forEach((effect) => {
       allEffects.push({
         ...effect,
-        id: `${categoryId}-${effect.effectId}`, // Use category-effect combination for unique graph display ID
-        weight: categoryWeight,
+        id: `${entityId}-${effect.effectId}`, // Use category-effect combination for unique graph display ID
+        weight: 1, // Categories don't have fractional weights
       });
     });
-  });
+  } else {
+    // Recipient case: collect effects from all categories (existing logic)
+    const recipient = combinedAssumptions.getRecipientById(entityId);
+    if (!recipient) return [];
+
+    Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
+      const categoryWeight = categoryData.fraction;
+      // Only skip if fraction is explicitly set to 0
+      if (categoryData.fraction === 0) return;
+
+      const category = combinedAssumptions.categories[categoryId];
+      if (!category || !category.effects) return;
+
+      const effects = selectEffectsForYear(category.effects, donationYear);
+      effects.forEach((effect) => {
+        allEffects.push({
+          ...effect,
+          id: `${categoryId}-${effect.effectId}`, // Use category-effect combination for unique graph display ID
+          weight: categoryWeight,
+        });
+      });
+    });
+  }
 
   if (allEffects.length === 0) return [];
 

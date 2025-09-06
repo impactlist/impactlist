@@ -368,6 +368,9 @@ const RecipientDetail = () => {
           currentYear={getCurrentYear()}
         />
 
+        {/* Sample donation calculator */}
+        <SampleDonationCalculator recipientId={recipientId} combinedAssumptions={combinedAssumptions} />
+
         {/* Focus Areas chart with toggle */}
         {recipientInfo.categoryBreakdown.length > 1 && (
           <EntityChartSection
@@ -390,9 +393,6 @@ const RecipientDetail = () => {
 
         {/* Recipient markdown content */}
         <MarkdownContent content={recipientContent} className="mt-8 mb-8" />
-
-        {/* Sample donation calculator */}
-        <SampleDonationCalculator recipientId={recipientId} combinedAssumptions={combinedAssumptions} />
 
         {/* Donations list */}
         <EntityDonationTable

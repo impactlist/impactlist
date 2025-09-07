@@ -76,7 +76,7 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
         <YearSelector value={selectedYear} onChange={setSelectedYear} label="" className="" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
         <div>
           <NumericInput
             id="sample-donation-amount"

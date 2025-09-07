@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import YearSelector from './YearSelector';
+import NumericInput from './NumericInput';
 import LivesSavedGraph from '../charts/LivesSavedGraph';
 import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
-import { formatNumberWithCommas, formatCurrency, formatLives } from '../../utils/formatters';
+import { formatCurrency, formatLives } from '../../utils/formatters';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { calculateLivesSavedSegments } from '../../utils/effectsVisualization';
 
@@ -13,6 +14,17 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [costPerLife, setCostPerLife] = useState(0);
   const [livesSaved, setLivesSaved] = useState(0);
+
+  // Helper to get numeric value from NumericInput's output
+  // NumericInput returns either a number or string (for partial inputs like "-" or ".")
+  const getNumericValue = (value) => {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') {
+      const parsed = parseFloat(value.replace(/,/g, ''));
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  };
 
   // Determine if we're working with a category or recipient
   const isCategory = !!categoryId;
@@ -34,36 +46,20 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
 
   // Calculate lives saved whenever amount or cost per life changes
   useEffect(() => {
-    const amount = parseFloat(donationAmount.replace(/,/g, ''));
+    const amount = getNumericValue(donationAmount);
 
-    if (!isNaN(amount) && amount > 0 && costPerLife !== 0 && costPerLife !== Infinity) {
+    if (amount > 0 && costPerLife !== 0 && costPerLife !== Infinity) {
       setLivesSaved(amount / costPerLife);
     } else {
       setLivesSaved(0);
     }
   }, [donationAmount, costPerLife]);
 
-  const handleAmountChange = (e) => {
-    const value = e.target.value;
-    // Allow only numbers and commas
-    if (value === '' || /^[\d,]*\.?\d*$/.test(value)) {
-      setDonationAmount(value);
-    }
-  };
-
-  const handleAmountBlur = () => {
-    // Format with commas on blur
-    const amount = parseFloat(donationAmount.replace(/,/g, ''));
-    if (!isNaN(amount) && amount > 0) {
-      setDonationAmount(formatNumberWithCommas(amount.toString()));
-    }
-  };
-
   // Calculate segments and visualization data
   const visualizationData = useMemo(() => {
-    const amount = parseFloat(donationAmount.replace(/,/g, ''));
+    const amount = getNumericValue(donationAmount);
 
-    if (!combinedAssumptions || !entityId || isNaN(amount) || amount <= 0 || costPerLife === Infinity) {
+    if (!combinedAssumptions || !entityId || amount <= 0 || costPerLife === Infinity) {
       return [];
     }
 
@@ -82,21 +78,15 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="sample-donation-amount" className="block text-sm font-medium text-gray-700 mb-2">
-            Donation Amount
-          </label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-            <input
-              type="text"
-              id="sample-donation-amount"
-              value={donationAmount}
-              onChange={handleAmountChange}
-              onBlur={handleAmountBlur}
-              placeholder="Enter amount"
-              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
+          <NumericInput
+            id="sample-donation-amount"
+            value={donationAmount}
+            onChange={setDonationAmount}
+            placeholder="Enter amount"
+            label="Donation Amount"
+            prefix="$"
+            className=""
+          />
         </div>
 
         <div className="flex flex-col justify-center space-y-2 mt-6">

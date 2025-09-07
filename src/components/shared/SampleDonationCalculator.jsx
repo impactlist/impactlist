@@ -89,22 +89,24 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
           />
         </div>
 
-        <div className="flex flex-col justify-center space-y-2 mt-6">
-          <div className="text-sm text-gray-600">
-            Cost per life in {selectedYear}:{' '}
-            <span className="font-semibold text-gray-900">
-              {costPerLife === Infinity ? 'N/A' : formatCurrency(costPerLife)}
-            </span>
-          </div>
-
-          {donationAmount && livesSaved !== 0 && (
+        <div className="flex items-center">
+          <div className="space-y-1 mt-3">
             <div className="text-sm text-gray-600">
-              Lives saved:{' '}
-              <span className={`font-semibold ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
-                {formatLives(livesSaved)}
+              Cost per life in {selectedYear}:{' '}
+              <span className="font-semibold text-gray-900">
+                {costPerLife === Infinity ? 'N/A' : formatCurrency(costPerLife)}
               </span>
             </div>
-          )}
+
+            {donationAmount && livesSaved !== 0 && (
+              <div className="text-sm text-gray-600">
+                Lives saved:{' '}
+                <span className={`font-semibold ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                  {formatLives(livesSaved)}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -10,7 +10,7 @@ import { calculateLivesSavedSegments } from '../../utils/effectsVisualization';
 
 const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions }) => {
   const currentYear = getCurrentYear();
-  const [donationAmount, setDonationAmount] = useState('');
+  const [donationAmount, setDonationAmount] = useState('1,000,000');
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [costPerLife, setCostPerLife] = useState(0);
   const [livesSaved, setLivesSaved] = useState(0);

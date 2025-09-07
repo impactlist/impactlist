@@ -96,7 +96,7 @@ const calculateYearToPopulationLimit = (currentPop, limitPop, growthRate) => {
 
   // Check if already at limit
   if (currentPop === limitPop) {
-    return 0; // Already at limit
+    return Infinity; // Already at limit, so we never "hit" it for calculation purposes
   }
 
   // Assert growth rate is valid

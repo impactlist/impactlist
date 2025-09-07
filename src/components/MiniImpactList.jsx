@@ -102,7 +102,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm">
-      <div className="text-sm text-slate-500 mb-3">Your potential rank on Impact List</div>
+      <div className="text-sm font-bold text-slate-800 mb-3">Your potential rank on Impact List</div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-slate-200">
           <thead>

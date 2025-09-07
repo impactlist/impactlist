@@ -14,6 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Don't try to test things unless I specifically ask you to. Although you can run existing tests and 'npm run lint'
 
 ## Code Style Guidelines
+
 - Naming: Use camelCase for variables/functions, PascalCase for classes
 - Error handling: Never fail silently when something unexpected happens. We always want to fail hard and loudly to not let subtle bugs persist.
 - Comments: Document complex logic and public interfaces

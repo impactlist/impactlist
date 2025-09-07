@@ -96,7 +96,7 @@ const calculateYearToPopulationLimit = (currentPop, limitPop, growthRate) => {
 
   // Check if already at limit
   if (currentPop === limitPop) {
-    return Infinity; // Already at limit, so we never "hit" it for calculation purposes
+    return 0; // Already at limit
   }
 
   // Assert growth rate is valid
@@ -316,26 +316,31 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
         }
       }
 
-      // Check if we'll hit population limit during future portion
-      const yearToHitLimit = calculateYearToPopulationLimit(populationAtFutureStart, populationLimitNumerical, g);
+      // First, check if the population starts in a "capped" or "floored" state.
+      const startsAboveCeiling =
+        g > 0 && globalParams.populationLimit > 1 && populationAtFutureStart >= populationLimitNumerical;
+      const startsBelowFloor =
+        g < 0 && globalParams.populationLimit < 1 && populationAtFutureStart <= populationLimitNumerical;
 
-      if (yearToHitLimit >= 0 && yearToHitLimit < futureDuration) {
-        // Split future portion at population limit
-        totalQALYs += calculateWindowQALYs(futureStart, yearToHitLimit, g, populationAtFutureStart);
-
-        // After hitting limit, population is constant
-        const remainingDuration = futureDuration - yearToHitLimit;
-        const limitStartTime = futureStart + yearToHitLimit;
-        const discountFactor = calculateDiscountWindowSum(r, remainingDuration);
-        totalQALYs +=
-          populationLimitNumerical *
-          fraction *
-          qalyPerYear *
-          calculateDiscountToTime(r, limitStartTime) *
-          discountFactor;
+      if (startsAboveCeiling || startsBelowFloor) {
+        // If starting at/past the limit, the entire future duration has a constant population at the limit.
+        totalQALYs += calculateWindowQALYs(futureStart, futureDuration, 0, populationLimitNumerical);
       } else {
-        // No population limit hit during future portion
-        totalQALYs += calculateWindowQALYs(futureStart, futureDuration, g, populationAtFutureStart);
+        // Otherwise, the population is starting "unconstrained".
+        // Check if it will hit the limit during the effect window.
+        const yearToHitLimit = calculateYearToPopulationLimit(populationAtFutureStart, populationLimitNumerical, g);
+
+        if (yearToHitLimit >= 0 && yearToHitLimit < futureDuration) {
+          // It hits the limit. Split the calculation into a growing/shrinking part and a constant part.
+          totalQALYs += calculateWindowQALYs(futureStart, yearToHitLimit, g, populationAtFutureStart);
+
+          const remainingDuration = futureDuration - yearToHitLimit;
+          const limitStartTime = futureStart + yearToHitLimit;
+          totalQALYs += calculateWindowQALYs(limitStartTime, remainingDuration, 0, populationLimitNumerical);
+        } else {
+          // It never hits the limit within the window. Calculate with normal growth/shrinkage.
+          totalQALYs += calculateWindowQALYs(futureStart, futureDuration, g, populationAtFutureStart);
+        }
       }
     }
   }

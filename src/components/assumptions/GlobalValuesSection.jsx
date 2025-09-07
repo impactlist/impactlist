@@ -2,7 +2,8 @@ import React from 'react';
 import Tooltip from '../shared/Tooltip';
 import SectionCard from '../shared/SectionCard';
 import CustomValueIndicator from '../shared/CustomValueIndicator';
-import { formatWithCursorHandling, formatNumberWithCommas } from '../../utils/formatters';
+import NumericInput from '../shared/NumericInput';
+import { formatNumberWithCommas } from '../../utils/formatters';
 
 const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
   // Format display value based on parameter type
@@ -74,6 +75,9 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {parameters.map((param) => {
+        // For NumericInput, we need to pass the correct value based on format
+        // For percentages: use formatted (already in percentage form, e.g., "2" for 2%)
+        // For numbers: use formatted (with commas)
         const value = formValues[param.id]?.formatted || '';
         const hasError = errors[param.id];
         const defaultValue = defaultGlobalParameters[param.id];
@@ -112,42 +116,32 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                 />
               )}
             </div>
-            <input
-              type="text"
-              id={param.id}
-              name={param.id}
-              value={param.readonly ? formatDisplayValue(defaultValue, param.format) : value}
-              onChange={(e) => {
-                if (param.readonly) return;
-                // Get the current input element and cursor position
-                const inputElement = e.target;
-                const newValue = e.target.value;
-                const currentPosition = e.target.selectionStart;
-
-                // Format with commas while preserving cursor position
-                const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
-
-                // Pass the formatted value to parent
-                onChange(param.id, result.value);
-              }}
-              readOnly={param.readonly}
-              disabled={param.readonly}
-              placeholder={formatDisplayValue(defaultValue, param.format)}
-              className={`
-                w-full px-2 py-1 text-sm border rounded focus:ring-1 focus:outline-none
-                ${
-                  param.readonly
-                    ? 'bg-gray-100 border-gray-200 text-gray-600 cursor-not-allowed'
-                    : hasError
-                      ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                }
-              `}
-            />
-            {hasError && (
-              <p className="mt-1 text-sm text-red-600" role="alert">
-                {errors[param.id]}
-              </p>
+            {param.readonly ? (
+              <input
+                type="text"
+                id={param.id}
+                name={param.id}
+                value={formatDisplayValue(defaultValue, param.format)}
+                readOnly={true}
+                disabled={true}
+                className="w-full px-2 py-1 text-sm border rounded focus:ring-1 focus:outline-none bg-gray-100 border-gray-200 text-gray-600 cursor-not-allowed"
+              />
+            ) : (
+              <NumericInput
+                id={param.id}
+                value={value}
+                onChange={(newValue) => {
+                  // NumericInput returns a number or string
+                  // For percentages, newValue is already in percentage form (e.g., 2 for 2%)
+                  // For numbers, it's the actual value
+                  const formatted =
+                    typeof newValue === 'number' ? formatNumberWithCommas(newValue.toString()) : newValue;
+                  onChange(param.id, formatted);
+                }}
+                placeholder={formatDisplayValue(defaultValue, param.format)}
+                error={hasError ? errors[param.id] : undefined}
+                isCustom={isCustom}
+              />
             )}
             {isCustom && !hasError && (
               <p className="text-xs text-gray-500 mt-0.5">Default: {formatDisplayValue(defaultValue, param.format)}</p>

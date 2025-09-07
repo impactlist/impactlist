@@ -219,7 +219,10 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
   const yearsFromDonationToNow = currentYear - donationYear;
 
   // Use discrete annual rates for growth and discounting
-  const g = globalParams.populationGrowthRate;
+  let g = globalParams.populationGrowthRate;
+  if (globalParams.populationLimit === 1) {
+    g = 0;
+  }
   const historicalG = HISTORICAL_POPULATION_GROWTH_RATE;
   const r = globalParams.discountRate;
   const P0 = globalParams.currentPopulation;

@@ -24,9 +24,27 @@ const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`w-full ${sizeClasses[size]} border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pr-10`}
+        className={`w-full ${sizeClasses[size]} border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${value ? 'pr-16' : 'pr-10'}`}
       />
-      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+      <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange('')}
+            className="p-1 hover:bg-gray-100 rounded-full mr-1"
+            aria-label="Clear search"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`${iconSizeClasses[size]} text-gray-400 hover:text-gray-600`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className={`${iconSizeClasses[size]} text-gray-400`}

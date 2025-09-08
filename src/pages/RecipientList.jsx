@@ -18,9 +18,11 @@ import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
+import SearchInput from '../components/shared/SearchInput';
 
 const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { combinedAssumptions, openModal } = useAssumptions();
 
   useEffect(() => {
@@ -94,6 +96,11 @@ const RecipientList = () => {
     // Let SortableTable handle the sorting with the special logic
     setRecipientStats(recipientStats);
   }, [combinedAssumptions]);
+
+  // Filter recipients based on search term
+  const filteredRecipients = searchTerm
+    ? recipientStats.filter((recipient) => recipient.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    : recipientStats;
 
   // Recipient table columns configuration
   const recipientColumns = [
@@ -186,8 +193,11 @@ const RecipientList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="flex justify-end items-center mb-4">
-            <div className="flex items-center space-x-3">
+          <div className="flex justify-between items-center mb-4">
+            <div className="w-full max-w-md">
+              <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
+            </div>
+            <div className="flex items-center space-x-3 ml-4">
               <CustomValuesIndicator />
               <AdjustAssumptionsButton onClick={openModal} />
             </div>
@@ -196,7 +206,7 @@ const RecipientList = () => {
             <div className="overflow-x-auto">
               <SortableTable
                 columns={recipientColumns}
-                data={recipientStats}
+                data={filteredRecipients}
                 defaultSortColumn="costPerLife"
                 defaultSortDirection="asc"
                 tiebreakColumn="totalLivesSaved"

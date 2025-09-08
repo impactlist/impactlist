@@ -39,7 +39,7 @@ export const calculateLivesSavedSegments = (
 
   // Get global parameters
   const globalParams = combinedAssumptions.globalParameters;
-  const timeLimit = globalParams.timeLimit || 100;
+  const timeLimit = globalParams.timeLimit;
 
   // Handle edge case: if time limit is 0 or negative, no effects can occur
   if (timeLimit <= 0) {
@@ -88,37 +88,88 @@ export const calculateLivesSavedSegments = (
 
   if (allEffects.length === 0) return [];
 
-  // Sample points across the time range
-  const numSamples = 100;
-  const points = [];
+  // --- New "Critical Point Sampling" logic ---
 
-  // Calculate the rate at each sample point
-  for (let i = 0; i <= numSamples; i++) {
-    const t = (i / numSamples) * timeLimit;
+  // 1. Generate a set of critical time points for sharp, accurate graphs
+  const timePoints = new Set();
+  timePoints.add(0);
+  timePoints.add(timeLimit);
+  const EPSILON = 1; // Use a 1-year delta to create sharp-but-not-vertical edges, avoiding tooltip issues with rounding.
+
+  const SAMPLES_PER_EFFECT = 30; // Number of intermediate samples within an effect's window
+
+  allEffects.forEach((effect) => {
+    const { startTime, windowLength } = effect;
+
+    // --- Add points to create sharp edges for effect start and end ---
+    // Point just before the effect starts (to anchor the line at zero)
+    if (startTime > EPSILON) {
+      timePoints.add(startTime - EPSILON);
+    }
+    timePoints.add(startTime); // Point at the exact start
+
+    // Point just before the effect ends (to show the value before dropping to zero)
+    if (windowLength > EPSILON) {
+      timePoints.add(startTime + windowLength - EPSILON);
+    }
+    timePoints.add(startTime + windowLength); // Point at the exact end (where value becomes zero)
+    // --- End sharp edges ---
+
+    // Add intermediate sample points for curve resolution, respecting the global timeLimit.
+    const effectiveEndTime = Math.min(startTime + windowLength, timeLimit);
+    const effectiveWindow = effectiveEndTime - startTime;
+
+    if (effectiveWindow > 1) {
+      // Only add for windows larger than a year to avoid clutter
+      for (let i = 1; i < SAMPLES_PER_EFFECT; i++) {
+        const intermediatePoint = startTime + (i / SAMPLES_PER_EFFECT) * effectiveWindow;
+        timePoints.add(intermediatePoint);
+      }
+    }
+  });
+
+  // 2. Consolidate and sort the time points
+  const sortedTimePoints = Array.from(timePoints)
+    .filter((t) => t <= timeLimit) // Ensure no points extend beyond the global time limit
+    .sort((a, b) => a - b);
+
+  // 3. Calculate the rate at each critical point
+  const points = [];
+  for (let i = 0; i < sortedTimePoints.length; i++) {
+    const t = sortedTimePoints[i];
     const absoluteYear = donationYear + t;
     const point = {
       year: absoluteYear,
     };
 
-    // For each effect, calculate its contribution using finite differences
-    // We'll calculate how many lives are saved in a small time window around t
-    const dt = timeLimit / numSamples; // Use the same dt as our sampling interval
+    // The interval (dt) is the time between this point and the next
+    // For the last point, we can use the difference to the previous point
+    const dt = i < sortedTimePoints.length - 1 ? sortedTimePoints[i + 1] - t : t - sortedTimePoints[i - 1];
+
+    if (dt <= 0) {
+      // Avoid division by zero and redundant calculations if points are too close
+      // We can just copy the values from the previous point if dt is 0
+      if (i > 0) {
+        const prevPoint = points[points.length - 1];
+        // Create a new object to avoid mutation issues
+        const newPoint = { ...prevPoint, year: absoluteYear };
+        points.push(newPoint);
+      }
+      continue;
+    }
 
     allEffects.forEach((effect) => {
-      const startTime = effect.startTime;
-      const windowLength = effect.windowLength;
+      const { startTime, windowLength } = effect;
 
       // Initialize this effect's contribution to 0
       point[effect.id] = 0;
 
-      // Check if effect is active at this time
+      // Check if effect is active at this time. Note: includes start, excludes end.
       if (t >= startTime && t < startTime + windowLength) {
         // Calculate cumulative impact using effectToCostPerLife with different time limits
-        // This unified approach works for all effect types
         let cumulativeAtT, cumulativeAtTplusDt;
 
         if (t <= 0) {
-          // At t=0, no cumulative impact has occurred yet
           cumulativeAtT = 0;
         } else {
           const paramsAtT = { ...globalParams, timeLimit: t };
@@ -151,11 +202,17 @@ export const calculateLivesSavedSegments = (
   if (points.length > 0) {
     const effectIds = Object.keys(points[0]).filter((key) => key !== 'year');
 
+    // Integrate the area under the curve for each effect using the trapezoidal rule.
     effectIds.forEach((effectId) => {
       let effectIntegral = 0;
       for (let i = 1; i < points.length; i++) {
-        const dt = timeLimit / numSamples;
-        effectIntegral += ((points[i - 1][effectId] + points[i][effectId]) * dt) / 2;
+        // dt is now variable, based on the time difference between points
+        const dt = points[i].year - points[i - 1].year;
+        if (dt > 0) {
+          const p0 = points[i - 1][effectId] || 0;
+          const p1 = points[i][effectId] || 0;
+          effectIntegral += ((p0 + p1) * dt) / 2;
+        }
       }
       effectIntegrals[effectId] = effectIntegral;
       totalIntegral += effectIntegral;

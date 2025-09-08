@@ -65,33 +65,76 @@ const formatYAxisTick = (value) => {
  * Graph component showing lives saved over time
  */
 const LivesSavedGraph = ({ data, height = 300 }) => {
-  // Extract effect IDs, assign colors, and calculate tick positions
-  const { effectInfo, customTicks } = useMemo(() => {
+  // Process data for graphing: filter to relevant time range, get effects, and calculate ticks
+  const { effectInfo, customTicks, filteredData } = useMemo(() => {
     if (!data || data.length === 0) {
-      return { effectInfo: { effectIds: [], colorMap: {} }, customTicks: undefined };
+      return { effectInfo: { effectIds: [], colorMap: {} }, customTicks: undefined, filteredData: [] };
     }
 
-    // Get all effect IDs from the first point (excluding 'year')
     const effectIds = Object.keys(data[0]).filter((key) => key !== 'year');
 
-    // Assign colors to each effect
     const colorMap = {};
     effectIds.forEach((id, index) => {
       colorMap[id] = COLOR_PALETTE[index % COLOR_PALETTE.length];
     });
 
-    // Calculate custom tick positions for X-axis
-    const minYear = Math.min(...data.map((d) => d.year));
-    const maxYear = Math.max(...data.map((d) => d.year));
-    const ticks = generateEvenlySpacedTicks(minYear, maxYear);
+    const minYear = data[0].year;
+    const maxYear = data[data.length - 1].year;
+
+    // Find the index of the last point with a non-zero value
+    let lastNonZeroIndex = -1;
+    for (let i = data.length - 1; i >= 0; i--) {
+      const point = data[i];
+      const hasNonZeroValue = effectIds.some((id) => (point[id] || 0) > 1e-9);
+      if (hasNonZeroValue) {
+        lastNonZeroIndex = i;
+        break;
+      }
+    }
+
+    let newMaxYear;
+    if (lastNonZeroIndex === -1) {
+      // All points are zero, just show a small initial range
+      newMaxYear = minYear + 1;
+    } else if (lastNonZeroIndex === data.length - 1) {
+      // The very last point has a non-zero value, so the effect runs indefinitely.
+      // The graph should extend to the end of the data (timeLimit).
+      newMaxYear = maxYear;
+    } else {
+      // The effect ends. Show the drop to zero and add a buffer.
+      const lastNonZeroYear = data[lastNonZeroIndex].year;
+      const firstZeroYear = data[lastNonZeroIndex + 1].year;
+
+      const buffer = Math.max((firstZeroYear - lastNonZeroYear) * 0.5, 1);
+      newMaxYear = Math.min(maxYear, firstZeroYear + buffer);
+    }
+
+    // Filter data to the new, smaller domain
+    let filteredData = data.filter((point) => point.year <= newMaxYear);
+
+    // Ensure the line extends to the edge of the graph
+    if (filteredData.length > 0) {
+      const lastFilteredPoint = filteredData[filteredData.length - 1];
+      if (lastFilteredPoint.year < newMaxYear) {
+        // Create a new point at the edge with the same (zero) values as the last point.
+        const edgePoint = { ...lastFilteredPoint, year: newMaxYear };
+        filteredData.push(edgePoint);
+      }
+    }
+
+    const displayMinYear = filteredData.length > 0 ? filteredData[0].year : minYear;
+    const displayMaxYear = filteredData.length > 0 ? filteredData[filteredData.length - 1].year : newMaxYear;
+
+    const ticks = generateEvenlySpacedTicks(displayMinYear, displayMaxYear);
 
     return {
       effectInfo: { effectIds, colorMap },
       customTicks: ticks,
+      filteredData,
     };
   }, [data]);
 
-  if (!data || data.length === 0) {
+  if (!filteredData || filteredData.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
         <p className="text-gray-500">No data to display</p>
@@ -102,10 +145,11 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={height}>
-        <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+        <AreaChart data={filteredData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis
             dataKey="year"
+            type="number"
             scale="linear"
             domain={['dataMin', 'dataMax']}
             ticks={customTicks}

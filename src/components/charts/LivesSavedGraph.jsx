@@ -59,7 +59,11 @@ const formatXAxisTick = (value) => {
  * Custom Y-axis tick formatter
  */
 const formatYAxisTick = (value) => {
-  return formatLargeNumber(value, 1);
+  // For small numbers (absolute value < 10), use 2 decimal places
+  // For larger numbers, use 1 decimal place
+  const absValue = Math.abs(value);
+  const precision = absValue < 10 ? 2 : 1;
+  return formatLargeNumber(value, precision);
 };
 
 /**

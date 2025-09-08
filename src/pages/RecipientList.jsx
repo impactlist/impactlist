@@ -193,11 +193,11 @@ const RecipientList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="flex justify-between items-center mb-4">
-            <div className="w-full max-w-md">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+            <div className="w-full sm:max-w-md">
               <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
             </div>
-            <div className="flex items-center space-x-3 ml-4">
+            <div className="flex items-center space-x-3 self-end sm:self-auto">
               <CustomValuesIndicator />
               <AdjustAssumptionsButton onClick={openModal} />
             </div>

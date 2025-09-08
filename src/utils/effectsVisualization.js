@@ -93,26 +93,30 @@ export const calculateLivesSavedSegments = (
   // 1. Generate a set of critical time points for sharp, accurate graphs
   const timePoints = new Set();
   timePoints.add(0);
-  timePoints.add(timeLimit);
+  timePoints.add(Math.round(timeLimit));
   const EPSILON = 1; // Use a 1-year delta to create sharp-but-not-vertical edges, avoiding tooltip issues with rounding.
 
-  const SAMPLES_PER_EFFECT = 30; // Number of intermediate samples within an effect's window
+  const SAMPLES_PER_EFFECT = 100; // Number of intermediate samples within an effect's window
 
   allEffects.forEach((effect) => {
     const { startTime, windowLength } = effect;
 
     // --- Add points to create sharp edges for effect start and end ---
+    // Round all time points to nearest integer
+    const roundedStart = Math.round(startTime);
+    const roundedEnd = Math.round(startTime + windowLength);
+
     // Point just before the effect starts (to anchor the line at zero)
-    if (startTime > EPSILON) {
-      timePoints.add(startTime - EPSILON);
+    if (roundedStart > EPSILON) {
+      timePoints.add(roundedStart - EPSILON);
     }
-    timePoints.add(startTime); // Point at the exact start
+    timePoints.add(roundedStart); // Point at the exact start
 
     // Point just before the effect ends (to show the value before dropping to zero)
-    if (windowLength > EPSILON) {
-      timePoints.add(startTime + windowLength - EPSILON);
+    if (roundedEnd - roundedStart > EPSILON) {
+      timePoints.add(roundedEnd - EPSILON);
     }
-    timePoints.add(startTime + windowLength); // Point at the exact end (where value becomes zero)
+    timePoints.add(roundedEnd); // Point at the exact end (where value becomes zero)
     // --- End sharp edges ---
 
     // Add intermediate sample points for curve resolution, respecting the global timeLimit.
@@ -123,12 +127,13 @@ export const calculateLivesSavedSegments = (
       // Only add for windows larger than a year to avoid clutter
       for (let i = 1; i < SAMPLES_PER_EFFECT; i++) {
         const intermediatePoint = startTime + (i / SAMPLES_PER_EFFECT) * effectiveWindow;
-        timePoints.add(intermediatePoint);
+        // Round intermediate points to integers as well
+        timePoints.add(Math.round(intermediatePoint));
       }
     }
   });
 
-  // 2. Consolidate and sort the time points
+  // 2. Consolidate and sort the time points - all will be integers now
   const sortedTimePoints = Array.from(timePoints)
     .filter((t) => t <= timeLimit) // Ensure no points extend beyond the global time limit
     .sort((a, b) => a - b);

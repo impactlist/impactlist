@@ -102,7 +102,14 @@ const RecipientValuesSection = ({
 
               return (
                 <div key={recipient.name} className="border border-gray-400 rounded-md p-3 inline-block bg-white">
-                  <h3 className="font-medium text-gray-800 mb-2">{recipient.name}</h3>
+                  <h3 className="font-medium mb-2">
+                    <Link
+                      to={`/recipient/${encodeURIComponent(recipientId)}`}
+                      className="text-indigo-600 hover:text-indigo-800"
+                    >
+                      {recipient.name}
+                    </Link>
+                  </h3>
                   <div className="space-y-1">
                     {recipientCategories.map(([categoryId]) => {
                       const category = defaultAssumptions?.categories?.[categoryId];

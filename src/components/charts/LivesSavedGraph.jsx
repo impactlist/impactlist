@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatLargeNumber, formatCalendarYear, generateEvenlySpacedTicks } from '../../utils/effectsVisualization';
+import { formatLives } from '../../utils/formatters';
 
 // Color palette for effects
 const COLOR_PALETTE = [
@@ -39,7 +40,7 @@ const CustomTooltip = ({ active, payload }) => {
   return (
     <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
       <p className="text-sm font-semibold text-gray-700">Year {formatCalendarYear(data.year)}</p>
-      <p className="text-sm text-gray-600">Lives/year: {formatLargeNumber(totalLivesPerYear, 3)}</p>
+      <p className="text-sm text-gray-600">Lives/year: {formatLives(totalLivesPerYear)}</p>
       {activeEffects.length > 0 && (
         <div className="mt-1 text-xs text-gray-500">Active effects: {activeEffects.length}</div>
       )}

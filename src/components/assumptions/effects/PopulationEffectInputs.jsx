@@ -7,7 +7,15 @@ import { getEffectTooltip } from '../../../constants/effectTooltips';
 /**
  * Input fields for population-based effects
  */
-const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange, globalParameters }) => {
+const PopulationEffectInputs = ({
+  effect,
+  effectIndex,
+  defaultEffect,
+  errors,
+  onChange,
+  globalParameters,
+  isDisabled,
+}) => {
   const handleChange = (fieldName) => (value) => {
     onChange(effectIndex, fieldName, value);
   };
@@ -28,6 +36,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
           onChange={handleChange('costPerMicroprobability')}
           error={getError('costPerMicroprobability')}
           prefix="$"
+          disabled={isDisabled}
         />
 
         <FormField
@@ -38,6 +47,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
           defaultValue={defaultEffect?.populationFractionAffected}
           onChange={handleChange('populationFractionAffected')}
           error={getError('populationFractionAffected')}
+          disabled={isDisabled}
         />
       </div>
 
@@ -50,6 +60,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
           defaultValue={defaultEffect?.qalyImprovementPerYear}
           onChange={handleChange('qalyImprovementPerYear')}
           error={getError('qalyImprovementPerYear')}
+          disabled={isDisabled}
         />
 
         <FormField
@@ -60,6 +71,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
           defaultValue={defaultEffect?.startTime}
           onChange={handleChange('startTime')}
           error={getError('startTime')}
+          disabled={isDisabled}
         />
 
         <div className="flex flex-col">
@@ -71,6 +83,7 @@ const PopulationEffectInputs = ({ effect, effectIndex, defaultEffect, errors, on
             defaultValue={defaultEffect?.windowLength}
             onChange={handleChange('windowLength')}
             error={getError('windowLength')}
+            disabled={isDisabled}
           />
           <TimeLimitMessage
             startTime={effect.startTime}
@@ -102,6 +115,7 @@ PopulationEffectInputs.propTypes = {
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   globalParameters: PropTypes.object,
+  isDisabled: PropTypes.bool,
 };
 
 export default PopulationEffectInputs;

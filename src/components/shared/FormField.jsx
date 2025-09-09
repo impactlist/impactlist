@@ -18,6 +18,7 @@ const FormField = ({
   placeholder,
   prefix,
   format = 'number', // 'number', 'percentage'
+  disabled = false,
 }) => {
   // Determine if this is a custom value (different from default, including empty)
   const isCustom = value !== undefined && value !== null && value !== defaultValue;
@@ -80,7 +81,13 @@ const FormField = ({
   return (
     <div
       className={`py-2 px-3 rounded border ${
-        hasError ? 'border-red-300 bg-red-50' : isCustom ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'
+        disabled
+          ? 'border-gray-200 bg-gray-50 opacity-75'
+          : hasError
+            ? 'border-red-300 bg-red-50'
+            : isCustom
+              ? 'border-indigo-300 bg-indigo-50'
+              : 'border-gray-200'
       }`}
     >
       {/* Label and Reset button */}
@@ -100,7 +107,7 @@ const FormField = ({
             </Tooltip>
           )}
         </label>
-        {isCustom && (
+        {isCustom && !disabled && (
           <button
             type="button"
             className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
@@ -127,13 +134,16 @@ const FormField = ({
           value={displayValue}
           onChange={handleChange}
           placeholder={placeholderValue}
+          disabled={disabled}
           className={`
             w-full py-1 text-sm border rounded focus:ring-1 focus:outline-none
             ${prefix ? 'pl-6 pr-2' : 'px-2'}
             ${
-              hasError
-                ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+              disabled
+                ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
+                : hasError
+                  ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
+                  : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
             }
           `}
         />
@@ -168,6 +178,7 @@ FormField.propTypes = {
   placeholder: PropTypes.string,
   prefix: PropTypes.string,
   format: PropTypes.oneOf(['number', 'percentage']),
+  disabled: PropTypes.bool,
 };
 
 export default FormField;

@@ -7,7 +7,7 @@ import { getEffectTooltip } from '../../../constants/effectTooltips';
 /**
  * Input fields for QALY-based effects
  */
-const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange, globalParameters }) => {
+const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange, globalParameters, isDisabled }) => {
   const handleChange = (fieldName) => (value) => {
     onChange(effectIndex, fieldName, value);
   };
@@ -27,6 +27,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
         onChange={handleChange('costPerQALY')}
         error={getError('costPerQALY')}
         prefix="$"
+        disabled={isDisabled}
       />
 
       <FormField
@@ -37,6 +38,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
         defaultValue={defaultEffect?.startTime}
         onChange={handleChange('startTime')}
         error={getError('startTime')}
+        disabled={isDisabled}
       />
 
       <div className="flex flex-col">
@@ -48,6 +50,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
           defaultValue={defaultEffect?.windowLength}
           onChange={handleChange('windowLength')}
           error={getError('windowLength')}
+          disabled={isDisabled}
         />
         <TimeLimitMessage
           startTime={effect.startTime}
@@ -74,6 +77,7 @@ QalyEffectInputs.propTypes = {
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   globalParameters: PropTypes.object,
+  isDisabled: PropTypes.bool,
 };
 
 export default QalyEffectInputs;

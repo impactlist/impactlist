@@ -5,6 +5,7 @@ import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffect
 import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
+import DisableToggleButton from '../shared/DisableToggleButton';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
 import { calculateEffectCostPerLife } from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
@@ -66,6 +67,7 @@ const RecipientEffectEditor = ({
         // Only use user values if they exist, otherwise empty (defaults show as placeholders)
         overrides: userEffect?.overrides || {},
         multipliers: userEffect?.multipliers || {},
+        disabled: userEffect?.disabled || false,
         // Keep base values for reference during editing
         _baseEffect: effect,
         _defaultRecipientEffect: defaultRecipientEffect,
@@ -82,6 +84,18 @@ const RecipientEffectEditor = ({
       setErrors(validation.errors);
     }
   }, [tempEditToEffects]);
+
+  // Toggle disabled state for a recipient effect
+  const toggleEffectDisabled = (effectIndex) => {
+    setTempEditToEffects((prev) => {
+      const newEffects = [...prev];
+      newEffects[effectIndex] = {
+        ...newEffects[effectIndex],
+        disabled: !newEffects[effectIndex].disabled,
+      };
+      return newEffects;
+    });
+  };
 
   // Update a specific field of an effect
   const updateEffectField = (effectIndex, fieldName, type, value) => {
@@ -150,6 +164,11 @@ const RecipientEffectEditor = ({
     return tempEditToEffects.map((effect) => {
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
+
+      // Check if effect is disabled at either category or recipient level
+      if (baseEffect.disabled || effect.disabled) {
+        return Infinity;
+      }
 
       // Merge with default recipient effect for any empty fields
       const effectToApply = {
@@ -252,6 +271,7 @@ const RecipientEffectEditor = ({
           effectId: effect.effectId,
           overrides: {},
           multipliers: {},
+          disabled: effect.disabled || false,
         };
 
         // Process overrides - convert strings to numbers
@@ -286,8 +306,12 @@ const RecipientEffectEditor = ({
           });
         }
 
-        // Only include effect if it has overrides or multipliers
-        if (Object.keys(cleanEffect.overrides).length > 0 || Object.keys(cleanEffect.multipliers).length > 0) {
+        // Only include effect if it has overrides, multipliers, or is disabled
+        if (
+          Object.keys(cleanEffect.overrides).length > 0 ||
+          Object.keys(cleanEffect.multipliers).length > 0 ||
+          cleanEffect.disabled
+        ) {
           return cleanEffect;
         }
         return null;
@@ -358,12 +382,23 @@ const RecipientEffectEditor = ({
                 (e) => e.effectId === effect.effectId
               );
 
+              const isDisabledByCategory = baseEffect?.disabled || false;
+              const isDisabledByRecipient = effect.disabled || false;
+              const isFullyDisabled = isDisabledByCategory || isDisabledByRecipient;
+
               return (
-                <div key={effect.effectId} className="border border-gray-400 rounded-lg p-3">
+                <div
+                  key={effect.effectId}
+                  className={`border border-gray-400 rounded-lg p-3 transition-all duration-200`}
+                >
                   <div className="flex justify-between items-start mb-2">
-                    <div>
+                    <div style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
                       <h3 className="text-lg font-medium text-gray-800">
                         Effect {index + 1}: {effect.effectId}
+                        {isDisabledByCategory && <span className="ml-2 text-gray-500">(Disabled in category)</span>}
+                        {isDisabledByRecipient && !isDisabledByCategory && (
+                          <span className="ml-2 text-gray-500">(Disabled for recipient)</span>
+                        )}
                       </h3>
                       {baseEffect?.validTimeInterval && (
                         <p className="text-xs text-gray-500 mt-1">
@@ -378,10 +413,29 @@ const RecipientEffectEditor = ({
                         </p>
                       )}
                     </div>
-                    <EffectCostDisplay cost={costPerLife} baseCost={baseCost} showInfinity={true} className="text-sm" />
+                    <div className="flex items-center gap-2">
+                      <div style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                        <EffectCostDisplay
+                          cost={costPerLife}
+                          baseCost={baseCost}
+                          showInfinity={true}
+                          className="text-sm"
+                        />
+                      </div>
+                      {!isDisabledByCategory && (
+                        <DisableToggleButton
+                          isDisabled={isDisabledByRecipient}
+                          onToggle={() => toggleEffectDisabled(index)}
+                          className={isDisabledByRecipient ? 'enable-button' : ''}
+                          style={{ pointerEvents: 'auto' }}
+                        />
+                      )}
+                    </div>
                   </div>
 
-                  <div>
+                  <div
+                    style={isFullyDisabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                  >
                     {effectType === 'qaly' ? (
                       <RecipientQalyEffectInputs
                         effectIndex={index}
@@ -393,6 +447,7 @@ const RecipientEffectEditor = ({
                         multipliers={effect.multipliers}
                         onChange={updateEffectField}
                         globalParameters={globalParameters}
+                        isDisabled={isFullyDisabled}
                       />
                     ) : effectType === 'population' ? (
                       <RecipientPopulationEffectInputs
@@ -405,6 +460,7 @@ const RecipientEffectEditor = ({
                         multipliers={effect.multipliers}
                         onChange={updateEffectField}
                         globalParameters={globalParameters}
+                        isDisabled={isFullyDisabled}
                       />
                     ) : (
                       <div className="text-sm text-red-600">Unknown effect type</div>

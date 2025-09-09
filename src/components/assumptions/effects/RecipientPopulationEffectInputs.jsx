@@ -19,6 +19,7 @@ const RecipientPopulationEffectInputs = ({
   multipliers,
   onChange,
   globalParameters,
+  isDisabled,
 }) => {
   // Helper to handle the mutual exclusivity of override/multiplier
   const handleOverrideChange = (fieldName, value) => {
@@ -147,12 +148,15 @@ const RecipientPopulationEffectInputs = ({
                     handleOverrideChange(field.name, result.value);
                   }}
                   placeholder={overridePlaceholder !== null ? formatNumberWithCommas(overridePlaceholder) : 'None'}
+                  disabled={isDisabled}
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
-                    overrideError
-                      ? 'border-red-300 focus:ring-red-500'
-                      : overrideValue && overrideValue !== ''
-                        ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
-                        : 'border-gray-300 focus:ring-indigo-500'
+                    isDisabled
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
+                      : overrideError
+                        ? 'border-red-300 focus:ring-red-500'
+                        : overrideValue && overrideValue !== ''
+                          ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
+                          : 'border-gray-300 focus:ring-indigo-500'
                   }`}
                 />
                 {overrideError && <p className="mt-1 text-xs text-red-600">{overrideError}</p>}
@@ -195,12 +199,15 @@ const RecipientPopulationEffectInputs = ({
                     handleMultiplierChange(field.name, result.value);
                   }}
                   placeholder={multiplierPlaceholder !== null ? formatNumberWithCommas(multiplierPlaceholder) : 'None'}
+                  disabled={isDisabled}
                   className={`w-full px-3 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 ${
-                    multiplierError
-                      ? 'border-red-300 focus:ring-red-500'
-                      : multiplierValue && multiplierValue !== ''
-                        ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
-                        : 'border-gray-300 focus:ring-indigo-500'
+                    isDisabled
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
+                      : multiplierError
+                        ? 'border-red-300 focus:ring-red-500'
+                        : multiplierValue && multiplierValue !== ''
+                          ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
+                          : 'border-gray-300 focus:ring-indigo-500'
                   }`}
                 />
                 {multiplierError && <p className="mt-1 text-xs text-red-600">{multiplierError}</p>}

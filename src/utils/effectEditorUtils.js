@@ -68,6 +68,11 @@ export const calculateEffectCostPerLife = (effect, globalParameters, previewYear
     throw new Error('previewYear must be an integer for calculateEffectCostPerLife');
   }
 
+  // Check if effect is disabled
+  if (effect.disabled) {
+    return Infinity;
+  }
+
   try {
     const cleanedEffect = cleanEffectForCalculation(effect);
 

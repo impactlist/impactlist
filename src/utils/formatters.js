@@ -95,12 +95,12 @@ export const formatNumber = (num) => {
     // Trillions - use configured significant figures
     const value = absNum / TRILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `${valueStr}T`;
+    formattedValue = `${valueStr} T`;
   } else if (absNum >= BILLION) {
     // Billions - use configured significant figures
     const value = absNum / BILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `${valueStr}B`;
+    formattedValue = `${valueStr} B`;
   } else if (absNum >= HUNDRED) {
     // For regular numbers, use standard comma formatting
     formattedValue = Math.round(absNum).toLocaleString('en-US');
@@ -370,17 +370,17 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     // Trillions - use configured significant figures
     const value = absAmount / TRILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `$${valueStr}T`;
+    formattedValue = `$${valueStr} T`;
   } else if (absAmount >= BILLION) {
     // Billions - use configured significant figures
     const value = absAmount / BILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `$${valueStr}B`;
+    formattedValue = `$${valueStr} B`;
   } else if (absAmount >= MILLION) {
     // Millions - use configured significant figures
     const value = absAmount / MILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `$${valueStr}M`;
+    formattedValue = `$${valueStr} M`;
   } else if (absAmount >= THOUSAND) {
     // For values ≥ 1,000, show with commas but without 'K' abbreviation
     formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;

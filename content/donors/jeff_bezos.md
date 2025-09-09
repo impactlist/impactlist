@@ -1,5 +1,5 @@
 ---
 id: 'jeff-bezos'
 name: 'Jeff Bezos'
-netWorth: 191_000_000_000
+netWorth: 247_000_000_000
 ---

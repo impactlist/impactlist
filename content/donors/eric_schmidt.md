@@ -1,5 +1,5 @@
 ---
 id: 'eric-schmidt'
 name: 'Eric Schmidt'
-netWorth: 22_400_000_000
+netWorth: 28_600_000_000
 ---

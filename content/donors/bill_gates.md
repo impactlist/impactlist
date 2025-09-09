@@ -1,7 +1,7 @@
 ---
 id: 'bill-gates'
 name: 'Bill Gates'
-netWorth: 108_000_000_000
+netWorth: 106_300_000_000
 #totalDonated: 39_500_000_000
 ---
 

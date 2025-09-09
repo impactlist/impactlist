@@ -85,6 +85,11 @@ const mergeRecipientEffectWithUser = (defaultEffect, userEffect) => {
     });
   }
 
+  // Copy the disabled field if present
+  if (userEffect.disabled !== undefined) {
+    merged.disabled = userEffect.disabled;
+  }
+
   return merged;
 };
 

@@ -273,6 +273,8 @@ const AssumptionsEditor = () => {
             effectData[fieldName] = parseFloat(value);
           } else if (typeof value === 'number') {
             effectData[fieldName] = value;
+          } else if (typeof value === 'boolean') {
+            effectData[fieldName] = value;
           }
         }
       });
@@ -301,10 +303,15 @@ const AssumptionsEditor = () => {
 
     // Then save the new effects
     updatedEffects.forEach((effect) => {
-      updateRecipientEffect(recipient.name, categoryId, effect.effectId, {
+      const effectData = {
         overrides: effect.overrides || {},
         multipliers: effect.multipliers || {},
-      });
+      };
+      // Include disabled state if present
+      if (effect.disabled !== undefined) {
+        effectData.disabled = effect.disabled;
+      }
+      updateRecipientEffect(recipient.name, categoryId, effect.effectId, effectData);
     });
 
     // Close the editor

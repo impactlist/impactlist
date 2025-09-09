@@ -181,36 +181,45 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                     effect.disabled ? 'effect-disabled' : ''
                   }`}
                 >
-                  <div className="mb-2 flex justify-between items-start">
-                    <div style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
-                      <h4 className="text-sm font-medium text-gray-900">
-                        Effect {index + 1}: {effect.effectId}
-                        {effect.disabled && <span className="ml-2 text-gray-500">(Disabled)</span>}
-                      </h4>
-                      {effect.validTimeInterval && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          Active:{' '}
-                          {effect.validTimeInterval[0] === null
-                            ? `Until ${effect.validTimeInterval[1]}`
-                            : `${effect.validTimeInterval[0]} - ${effect.validTimeInterval[1] || 'present'}`}
-                          {(previewYear < effect.validTimeInterval[0] ||
-                            (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
-                            <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
-                          )}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
-                        <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm" />
+                  <div className="mb-2">
+                    <div className="flex flex-wrap justify-between items-start gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4
+                          className="text-sm font-medium text-gray-900 whitespace-nowrap"
+                          style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                        >
+                          Effect {index + 1}: {effect.effectId}
+                        </h4>
+                        <DisableToggleButton
+                          isDisabled={effect.disabled || false}
+                          onToggle={() => toggleEffectDisabled(index)}
+                          className={effect.disabled ? 'enable-button' : ''}
+                          style={{ pointerEvents: 'auto' }}
+                        />
                       </div>
-                      <DisableToggleButton
-                        isDisabled={effect.disabled || false}
-                        onToggle={() => toggleEffectDisabled(index)}
-                        className={effect.disabled ? 'enable-button' : ''}
-                        style={{ pointerEvents: 'auto' }}
-                      />
+                      <div style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                        <EffectCostDisplay
+                          cost={costPerLife}
+                          showInfinity={true}
+                          className="text-sm whitespace-nowrap"
+                        />
+                      </div>
                     </div>
+                    {effect.validTimeInterval && (
+                      <p
+                        className="text-xs text-gray-500 mt-1"
+                        style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                      >
+                        Active:{' '}
+                        {effect.validTimeInterval[0] === null
+                          ? `Until ${effect.validTimeInterval[1]}`
+                          : `${effect.validTimeInterval[0]} - ${effect.validTimeInterval[1] || 'present'}`}
+                        {(previewYear < effect.validTimeInterval[0] ||
+                          (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
+                          <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
+                        )}
+                      </p>
+                    )}
                   </div>
 
                   <div

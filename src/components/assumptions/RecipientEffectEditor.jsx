@@ -391,46 +391,53 @@ const RecipientEffectEditor = ({
                   key={effect.effectId}
                   className={`border border-gray-400 rounded-lg p-3 transition-all duration-200`}
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <div style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
-                      <h3 className="text-lg font-medium text-gray-800">
-                        Effect {index + 1}: {effect.effectId}
-                        {isDisabledByCategory && <span className="ml-2 text-gray-500">(Disabled in category)</span>}
-                        {isDisabledByRecipient && !isDisabledByCategory && (
-                          <span className="ml-2 text-gray-500">(Disabled for recipient)</span>
+                  <div className="mb-2">
+                    <div className="flex flex-wrap justify-between items-start gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3
+                          className="text-lg font-medium text-gray-800 whitespace-nowrap"
+                          style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                        >
+                          Effect {index + 1}: {effect.effectId}
+                        </h3>
+                        {!isDisabledByCategory && (
+                          <DisableToggleButton
+                            isDisabled={isDisabledByRecipient}
+                            onToggle={() => toggleEffectDisabled(index)}
+                            className={isDisabledByRecipient ? 'enable-button' : ''}
+                            style={{ pointerEvents: 'auto' }}
+                          />
                         )}
-                      </h3>
-                      {baseEffect?.validTimeInterval && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          Active:{' '}
-                          {baseEffect.validTimeInterval[0] === null
-                            ? `Until ${baseEffect.validTimeInterval[1]}`
-                            : `${baseEffect.validTimeInterval[0]} - ${baseEffect.validTimeInterval[1] || 'present'}`}
-                          {(previewYear < baseEffect.validTimeInterval[0] ||
-                            (baseEffect.validTimeInterval[1] && previewYear > baseEffect.validTimeInterval[1])) && (
-                            <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
-                          )}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
+                        {isDisabledByCategory && (
+                          <span className="text-xs text-gray-500" style={{ filter: 'grayscale(100%)', opacity: 0.6 }}>
+                            (Disabled in category)
+                          </span>
+                        )}
+                      </div>
                       <div style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
                         <EffectCostDisplay
                           cost={costPerLife}
                           baseCost={baseCost}
                           showInfinity={true}
-                          className="text-sm"
+                          className="text-sm whitespace-nowrap"
                         />
                       </div>
-                      {!isDisabledByCategory && (
-                        <DisableToggleButton
-                          isDisabled={isDisabledByRecipient}
-                          onToggle={() => toggleEffectDisabled(index)}
-                          className={isDisabledByRecipient ? 'enable-button' : ''}
-                          style={{ pointerEvents: 'auto' }}
-                        />
-                      )}
                     </div>
+                    {baseEffect?.validTimeInterval && (
+                      <p
+                        className="text-xs text-gray-500 mt-1"
+                        style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                      >
+                        Active:{' '}
+                        {baseEffect.validTimeInterval[0] === null
+                          ? `Until ${baseEffect.validTimeInterval[1]}`
+                          : `${baseEffect.validTimeInterval[0]} - ${baseEffect.validTimeInterval[1] || 'present'}`}
+                        {(previewYear < baseEffect.validTimeInterval[0] ||
+                          (baseEffect.validTimeInterval[1] && previewYear > baseEffect.validTimeInterval[1])) && (
+                          <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
+                        )}
+                      </p>
+                    )}
                   </div>
 
                   <div

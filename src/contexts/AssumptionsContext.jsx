@@ -193,6 +193,32 @@ export const AssumptionsProvider = ({ children }) => {
         });
       }
 
+      // Process disabled field
+      if (effectData.disabled !== undefined) {
+        // Need to ensure structure exists since there might be no overrides/multipliers
+        if (!newData) newData = {};
+        if (!newData.recipients) newData.recipients = {};
+        if (!newData.recipients[recipientId]) newData.recipients[recipientId] = { categories: {} };
+        if (!newData.recipients[recipientId].categories) newData.recipients[recipientId].categories = {};
+        if (!newData.recipients[recipientId].categories[categoryId]) {
+          newData.recipients[recipientId].categories[categoryId] = { effects: [] };
+        }
+        if (!newData.recipients[recipientId].categories[categoryId].effects) {
+          newData.recipients[recipientId].categories[categoryId].effects = [];
+        }
+
+        // Find or create the effect
+        let effect = newData.recipients[recipientId].categories[categoryId].effects.find(
+          (e) => e.effectId === effectId
+        );
+        if (!effect) {
+          effect = { effectId };
+          newData.recipients[recipientId].categories[categoryId].effects.push(effect);
+        }
+
+        effect.disabled = effectData.disabled;
+      }
+
       return newData;
     });
   };

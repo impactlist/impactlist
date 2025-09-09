@@ -372,6 +372,11 @@ export const effectToCostPerLife = (effect, globalParams, donationYear) => {
     throw new Error('donationYear must be an integer for effectToCostPerLife');
   }
 
+  // Check if effect is disabled
+  if (effect.disabled) {
+    return Infinity;
+  }
+
   // Handle future donation years by using current year instead
   const currentYear = getCurrentYear();
   if (donationYear > currentYear) {
@@ -548,6 +553,11 @@ export const applyRecipientEffectToBase = (baseEffect, recipientEffect, context)
   // Apply multipliers
   if (recipientEffect.multipliers) {
     result = applyEffectMultipliers(result, recipientEffect.multipliers, context);
+  }
+
+  // Apply disabled state
+  if (recipientEffect.disabled !== undefined) {
+    result.disabled = recipientEffect.disabled;
   }
 
   return result;

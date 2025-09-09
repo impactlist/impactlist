@@ -60,7 +60,10 @@ const RecipientValuesSection = ({
     // Apply recipient effects to base category effects
     const modifiedEffects = category.effects.map((baseEffect) => {
       const recipientEffect = effectsToApply.find((e) => e.effectId === baseEffect.effectId);
-      if (recipientEffect && (recipientEffect.overrides || recipientEffect.multipliers)) {
+      if (
+        recipientEffect &&
+        (recipientEffect.overrides || recipientEffect.multipliers || recipientEffect.disabled !== undefined)
+      ) {
         return applyRecipientEffectToBase(baseEffect, recipientEffect, `recipient ${recipient.name}`);
       }
       return baseEffect;

@@ -12,6 +12,9 @@ import {
   FRACTION_LIFE_THRESHOLD,
 } from './constants';
 
+// Number of significant figures to display for large numbers with suffixes (B, T, M)
+const LARGE_NUMBER_SIG_FIGS = 3;
+
 /**
  * Add one digit after the decimal if the number is < 100 and is a non-integer, otherwise round to integer.
  * @param {number} num - A non-negative number to format
@@ -30,6 +33,54 @@ export const formatNumberWithNoMoreThanOneDecimal = (num) => {
 };
 
 /**
+ * Format a number to a specified number of significant figures
+ * @param {number} num - The number to format
+ * @param {number} sigFigs - Number of significant figures
+ * @returns {string} - Formatted number string
+ */
+export const formatWithSignificantFigures = (num, sigFigs) => {
+  if (num === 0) return '0';
+
+  // For numbers >= 1000, add commas but maintain precision
+  if (num >= 1000) {
+    // Just format with standard precision and add commas
+    const rounded = parseFloat(num.toPrecision(sigFigs));
+    return rounded.toLocaleString('en-US', {
+      minimumSignificantDigits: sigFigs,
+      maximumSignificantDigits: sigFigs,
+    });
+  }
+
+  // For numbers >= 100, show as integer if that gives us enough sig figs
+  if (num >= 100) {
+    const integerDigits = Math.floor(Math.log10(num)) + 1;
+    if (integerDigits >= sigFigs) {
+      // We have enough integer digits
+      const factor = Math.pow(10, integerDigits - sigFigs);
+      return (Math.round(num / factor) * factor).toString();
+    }
+    // Need decimal places
+    const decimals = sigFigs - integerDigits;
+    return num.toFixed(decimals);
+  }
+
+  // For numbers 10-99, calculate needed decimal places
+  if (num >= 10) {
+    const decimals = Math.max(0, sigFigs - 2);
+    return num.toFixed(decimals);
+  }
+
+  // For numbers 1-9, calculate needed decimal places
+  if (num >= 1) {
+    const decimals = Math.max(0, sigFigs - 1);
+    return num.toFixed(decimals);
+  }
+
+  // For numbers < 1, use toPrecision
+  return num.toPrecision(sigFigs);
+};
+
+/**
  * Format numbers with commas and suffixes for large values
  * @param {number} num - The number to format
  * @returns {string} - Formatted number with commas and optional suffixes
@@ -41,24 +92,14 @@ export const formatNumber = (num) => {
 
   // Handle extremely large numbers with B/T suffixes
   if (absNum >= TRILLION) {
-    // Trillions - use 2 significant digits
+    // Trillions - use configured significant figures
     const value = absNum / TRILLION;
-    // Format integer or decimal value.
-    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
-    // Add commas for large prefix values (e.g., 1,234.5T)
-    if (value >= THOUSAND) {
-      valueStr = Number(valueStr).toLocaleString('en-US');
-    }
+    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = `${valueStr}T`;
   } else if (absNum >= BILLION) {
-    // Billions - use 2 significant digits
+    // Billions - use configured significant figures
     const value = absNum / BILLION;
-    // Format integer or decimal value
-    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
-    // Add commas for large prefix values (e.g., 1,234.5B)
-    if (value >= THOUSAND) {
-      valueStr = Number(valueStr).toLocaleString('en-US');
-    }
+    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = `${valueStr}B`;
   } else if (absNum >= HUNDRED) {
     // For regular numbers, use standard comma formatting
@@ -326,34 +367,19 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
 
   let formattedValue;
   if (absAmount >= TRILLION) {
-    // Trillions
+    // Trillions - use configured significant figures
     const value = absAmount / TRILLION;
-    // Format integer or decimal value
-    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
-    // Add commas for large prefix values (e.g., $1,234.5T)
-    if (value >= 1000) {
-      valueStr = Number(valueStr).toLocaleString('en-US');
-    }
+    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = `$${valueStr}T`;
   } else if (absAmount >= BILLION) {
-    // Billions
+    // Billions - use configured significant figures
     const value = absAmount / BILLION;
-    // Format integer or decimal value
-    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
-    // Add commas for large prefix values (e.g., $1,234.5B)
-    if (value >= 1000) {
-      valueStr = Number(valueStr).toLocaleString('en-US');
-    }
+    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = `$${valueStr}B`;
   } else if (absAmount >= MILLION) {
-    // Millions
+    // Millions - use configured significant figures
     const value = absAmount / MILLION;
-    // Format integer or decimal value
-    let valueStr = formatNumberWithNoMoreThanOneDecimal(value);
-    // Add commas for large prefix values (e.g., $1,234.5M)
-    if (value >= 1000) {
-      valueStr = Number(valueStr).toLocaleString('en-US');
-    }
+    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = `$${valueStr}M`;
   } else if (absAmount >= THOUSAND) {
     // For values ≥ 1,000, show with commas but without 'K' abbreviation

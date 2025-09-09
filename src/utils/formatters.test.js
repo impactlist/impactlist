@@ -41,21 +41,21 @@ describe('formatNumber', () => {
   });
 
   it('should format billions with B suffix', () => {
-    expect(formatNumber(1000000000)).toBe('1B');
-    expect(formatNumber(1500000000)).toBe('1.5B');
+    expect(formatNumber(1000000000)).toBe('1.00B');
+    expect(formatNumber(1500000000)).toBe('1.50B');
     expect(formatNumber(12345000000)).toBe('12.3B');
   });
 
   it('should format trillions with T suffix', () => {
-    expect(formatNumber(1000000000000)).toBe('1T');
-    expect(formatNumber(1500000000000)).toBe('1.5T');
+    expect(formatNumber(1000000000000)).toBe('1.00T');
+    expect(formatNumber(1500000000000)).toBe('1.50T');
     expect(formatNumber(12345000000000)).toBe('12.3T');
   });
 
   it('should handle negative numbers', () => {
     expect(formatNumber(-1000)).toBe('-1,000');
-    expect(formatNumber(-1000000000)).toBe('-1B');
-    expect(formatNumber(-1000000000000)).toBe('-1T');
+    expect(formatNumber(-1000000000)).toBe('-1.00B');
+    expect(formatNumber(-1000000000000)).toBe('-1.00T');
   });
 
   it('should handle very small numbers', () => {
@@ -205,25 +205,25 @@ describe('formatCurrency', () => {
   });
 
   it('should format millions with M suffix', () => {
-    expect(formatCurrency(1000000)).toBe('$1M');
-    expect(formatCurrency(1500000)).toBe('$1.5M');
+    expect(formatCurrency(1000000)).toBe('$1.00M');
+    expect(formatCurrency(1500000)).toBe('$1.50M');
     expect(formatCurrency(999000000)).toBe('$999M');
   });
 
   it('should format billions with B suffix', () => {
-    expect(formatCurrency(1000000000)).toBe('$1B');
-    expect(formatCurrency(1500000000)).toBe('$1.5B');
+    expect(formatCurrency(1000000000)).toBe('$1.00B');
+    expect(formatCurrency(1500000000)).toBe('$1.50B');
   });
 
   it('should format trillions with T suffix', () => {
-    expect(formatCurrency(1000000000000)).toBe('$1T');
-    expect(formatCurrency(1500000000000)).toBe('$1.5T');
+    expect(formatCurrency(1000000000000)).toBe('$1.00T');
+    expect(formatCurrency(1500000000000)).toBe('$1.50T');
   });
 
   it('should handle negative amounts', () => {
     expect(formatCurrency(-1000)).toBe('-$1,000');
-    expect(formatCurrency(-1000000)).toBe('-$1M');
-    expect(formatCurrency(-1000000000)).toBe('-$1B');
+    expect(formatCurrency(-1000000)).toBe('-$1.00M');
+    expect(formatCurrency(-1000000000)).toBe('-$1.00B');
   });
 
   it('should use scientific notation for extremely small amounts', () => {

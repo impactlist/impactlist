@@ -193,8 +193,8 @@ describe('Donation Flow Integration', () => {
       expect(formatted[0]).toBe('$100');
       expect(formatted[1]).toBe('$1,000');
       expect(formatted[2]).toBe('$10,000');
-      expect(formatted[3]).toBe('$1M');
-      expect(formatted[4]).toBe('$1B');
+      expect(formatted[3]).toBe('$1.00M');
+      expect(formatted[4]).toBe('$1.00B');
     });
 
     it('should format lives saved consistently', () => {

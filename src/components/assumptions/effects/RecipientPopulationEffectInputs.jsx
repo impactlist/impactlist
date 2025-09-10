@@ -199,8 +199,8 @@ const RecipientPopulationEffectInputs = ({
           <div key={field.name} className="space-y-2">
             {/* All on one line: label, tooltip, segmented control, and input */}
             <div className="flex flex-wrap items-center gap-2">
-              {/* Field label with tooltip */}
-              <div className="flex items-center gap-2 min-w-fit">
+              {/* Field label with tooltip - stays on first line */}
+              <div className="flex items-center gap-2 shrink-0">
                 <label className="text-sm font-medium text-gray-900">{field.label}</label>
                 {field.tooltip && (
                   <div className="group relative inline-block">
@@ -212,8 +212,8 @@ const RecipientPopulationEffectInputs = ({
                 )}
               </div>
 
-              {/* Segmented control and input */}
-              <div className="flex items-center gap-2 flex-1">
+              {/* Segmented control and input - wraps together first, then input wraps separately */}
+              <div className="flex flex-wrap items-center gap-2 min-w-0">
                 <SegmentedControl
                   options={segmentOptions}
                   value={mode}

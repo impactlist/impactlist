@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
 import TimeLimitMessage from '../../shared/TimeLimitMessage';
@@ -26,9 +26,6 @@ const BaseRecipientEffectInputs = ({
   globalParameters,
   isDisabled,
 }) => {
-  // Track which mode is selected for each field
-  const [fieldModes, setFieldModes] = useState({});
-
   // Extract field names for initialization - memoized to prevent recreating on every render
   const fieldNames = React.useMemo(
     () => fields.map((field) => (typeof field === 'string' ? field : field.name)),
@@ -36,7 +33,7 @@ const BaseRecipientEffectInputs = ({
   );
 
   // Initialize field modes based on existing data
-  useEffect(() => {
+  const [fieldModes, setFieldModes] = useState(() => {
     const modes = {};
 
     fieldNames.forEach((fieldName) => {
@@ -49,8 +46,8 @@ const BaseRecipientEffectInputs = ({
       }
     });
 
-    setFieldModes(modes);
-  }, [overrides, multipliers, fieldNames]);
+    return modes;
+  });
 
   // Handle mode change for a field
   const handleModeChange = (fieldName, newMode) => {

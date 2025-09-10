@@ -111,17 +111,6 @@ const RecipientQalyEffectInputs = ({
 
     if (mode === 'default' && overridePlaceholder !== null) {
       return `Currently: ${formatNumberWithCommas(overridePlaceholder)}`;
-    } else if (mode === 'override') {
-      const currentValue = getCurrentInputValue(fieldName);
-      if (currentValue && currentValue !== '') {
-        const numValue = parseFloat(currentValue.toString().replace(/,/g, ''));
-        if (!isNaN(numValue) && overridePlaceholder !== null) {
-          const defaultValue = parseFloat(overridePlaceholder);
-          if (numValue !== defaultValue) {
-            return `Default: ${formatNumberWithCommas(overridePlaceholder)}`;
-          }
-        }
-      }
     } else if (mode === 'multiplier') {
       const currentValue = getCurrentInputValue(fieldName);
       if (currentValue && currentValue !== '' && overridePlaceholder !== null) {

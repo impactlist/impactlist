@@ -56,11 +56,9 @@ const BaseRecipientEffectInputs = ({
       [fieldName]: newMode,
     }));
 
-    // Clear both values when switching to default
-    if (newMode === 'default') {
-      onChange(effectIndex, fieldName, 'override', '');
-      onChange(effectIndex, fieldName, 'multiplier', '');
-    }
+    // Don't clear values when switching to default - just change the mode
+    // This preserves the values so they can be restored when switching back
+    // The parent component should handle clearing values when actually saving in default mode
   };
 
   // Handle value change based on current mode
@@ -80,10 +78,12 @@ const BaseRecipientEffectInputs = ({
   // Get the current value for the input based on mode
   const getCurrentInputValue = (fieldName) => {
     const mode = fieldModes[fieldName];
-    if (mode === 'override' && overrides && overrides[fieldName] !== undefined) {
-      return overrides[fieldName];
-    } else if (mode === 'multiplier' && multipliers && multipliers[fieldName] !== undefined) {
-      return multipliers[fieldName];
+    if (mode === 'override') {
+      // Show the override value if it exists, even if empty string
+      return overrides?.[fieldName] ?? '';
+    } else if (mode === 'multiplier') {
+      // Show the multiplier value if it exists, even if empty string
+      return multipliers?.[fieldName] ?? '';
     }
     return '';
   };

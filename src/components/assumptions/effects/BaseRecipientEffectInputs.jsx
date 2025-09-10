@@ -191,7 +191,7 @@ const BaseRecipientEffectInputs = ({
               </div>
 
               {/* Segmented control and input - wraps together first, then input wraps separately */}
-              <div className="flex flex-wrap items-center gap-2 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 min-w-0 [&:not(:first-child)]:ml-2">
                 <SegmentedControl
                   options={segmentOptions}
                   value={mode}

@@ -29,8 +29,11 @@ const BaseRecipientEffectInputs = ({
   // Track which mode is selected for each field
   const [fieldModes, setFieldModes] = useState({});
 
-  // Extract field names for initialization
-  const fieldNames = fields.map((field) => (typeof field === 'string' ? field : field.name));
+  // Extract field names for initialization - memoized to prevent recreating on every render
+  const fieldNames = React.useMemo(
+    () => fields.map((field) => (typeof field === 'string' ? field : field.name)),
+    [fields]
+  );
 
   // Initialize field modes based on existing data
   useEffect(() => {

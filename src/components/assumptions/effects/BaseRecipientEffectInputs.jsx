@@ -243,16 +243,18 @@ const BaseRecipientEffectInputs = ({
             {/* Error message and helper text on separate lines */}
             {error && <p className="text-xs text-red-600 ml-2">{error}</p>}
             {mode !== 'default' && helperText && <p className="text-xs text-gray-500 ml-2">{helperText}</p>}
+
+            {/* Show time limit message only for windowLength field */}
+            {fieldName === 'windowLength' && (
+              <TimeLimitMessage
+                startTime={effectiveStartTime}
+                windowLength={effectiveWindowLength}
+                timeLimit={globalParameters?.timeLimit}
+              />
+            )}
           </div>
         );
       })}
-
-      {/* Time limit message */}
-      <TimeLimitMessage
-        startTime={effectiveStartTime}
-        windowLength={effectiveWindowLength}
-        timeLimit={globalParameters?.timeLimit}
-      />
     </div>
   );
 };

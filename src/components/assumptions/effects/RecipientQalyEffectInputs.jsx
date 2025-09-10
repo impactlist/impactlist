@@ -176,23 +176,24 @@ const RecipientQalyEffectInputs = ({
         const placeholder = getPlaceholder(field.name);
 
         return (
-          <div key={field.name}>
-            {/* Field label with tooltip */}
-            <div className="flex items-center gap-2 mb-2">
-              <label className="text-sm font-medium text-gray-900">{field.label}</label>
-              {field.tooltip && (
-                <div className="group relative inline-block">
-                  <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
-                  <div className="invisible group-hover:visible absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
-                    {field.tooltip}
+          <div key={field.name} className="space-y-2">
+            {/* All on one line: label, tooltip, segmented control, and input */}
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Field label with tooltip */}
+              <div className="flex items-center gap-2 min-w-fit">
+                <label className="text-sm font-medium text-gray-900">{field.label}</label>
+                {field.tooltip && (
+                  <div className="group relative inline-block">
+                    <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                    <div className="invisible group-hover:visible absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
+                      {field.tooltip}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Segmented control and input */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
+              {/* Segmented control and input */}
+              <div className="flex items-center gap-2 flex-1">
                 <SegmentedControl
                   options={segmentOptions}
                   value={mode}
@@ -225,7 +226,7 @@ const RecipientQalyEffectInputs = ({
                   }}
                   placeholder={placeholder}
                   disabled={isDisabled || mode === 'default'}
-                  className={`flex-1 max-w-[150px] px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${
+                  className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${
                     isDisabled || mode === 'default'
                       ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
                       : error
@@ -236,13 +237,11 @@ const RecipientQalyEffectInputs = ({
                   }`}
                 />
               </div>
-
-              {/* Error message */}
-              {error && <p className="text-xs text-red-600 ml-2">{error}</p>}
-
-              {/* Helper text - only show for override/multiplier modes when there's a meaningful difference */}
-              {mode !== 'default' && helperText && <p className="text-xs text-gray-500 ml-2">{helperText}</p>}
             </div>
+
+            {/* Error message and helper text on separate lines */}
+            {error && <p className="text-xs text-red-600 ml-2">{error}</p>}
+            {mode !== 'default' && helperText && <p className="text-xs text-gray-500 ml-2">{helperText}</p>}
           </div>
         );
       })}

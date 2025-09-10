@@ -141,21 +141,29 @@ const BaseRecipientEffectInputs = ({
   ];
 
   // Get effective values for time limit message
-  const effectiveStartTime =
-    (fieldModes['startTime'] === 'override' && overrides?.startTime) ||
-    getOverridePlaceholderValue('startTime', {
+  const getEffectiveValue = (fieldName) => {
+    const mode = fieldModes[fieldName];
+    const defaultValue = getOverridePlaceholderValue(fieldName, {
       defaultCategoryEffect,
       userCategoryEffect,
       defaultRecipientEffect,
     });
 
-  const effectiveWindowLength =
-    (fieldModes['windowLength'] === 'override' && overrides?.windowLength) ||
-    getOverridePlaceholderValue('windowLength', {
-      defaultCategoryEffect,
-      userCategoryEffect,
-      defaultRecipientEffect,
-    });
+    if (mode === 'override' && overrides?.[fieldName]) {
+      const value = parseFloat(overrides[fieldName].toString().replace(/,/g, ''));
+      return !isNaN(value) ? value : defaultValue;
+    } else if (mode === 'multiplier' && multipliers?.[fieldName]) {
+      const multiplier = parseFloat(multipliers[fieldName].toString().replace(/,/g, ''));
+      if (!isNaN(multiplier) && defaultValue !== null) {
+        return parseFloat(defaultValue) * multiplier;
+      }
+    }
+
+    return defaultValue;
+  };
+
+  const effectiveStartTime = getEffectiveValue('startTime');
+  const effectiveWindowLength = getEffectiveValue('windowLength');
 
   return (
     <div className="space-y-4">

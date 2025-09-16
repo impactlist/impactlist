@@ -47,7 +47,7 @@ const BaseRecipientEffectInputs = ({
       } else if (multipliers && hasValue(multipliers[fieldName])) {
         modes[fieldName] = 'multiplier';
       } else {
-        modes[fieldName] = 'default';
+        modes[fieldName] = 'override'; // Default to override mode
       }
     });
 
@@ -70,7 +70,7 @@ const BaseRecipientEffectInputs = ({
         } else if (multipliers && hasValue(multipliers[fieldName])) {
           modes[fieldName] = 'multiplier';
         } else {
-          modes[fieldName] = 'default';
+          modes[fieldName] = 'override'; // Default to override mode
         }
       });
 
@@ -81,29 +81,17 @@ const BaseRecipientEffectInputs = ({
 
   // Handle mode change for a field
   const handleModeChange = (fieldName, newMode) => {
-    const prevMode = fieldModes[fieldName];
-
     setFieldModes((prev) => ({
       ...prev,
       [fieldName]: newMode,
     }));
 
-    // Only clear the "other" value type to prevent conflicts
-    // Don't clear when switching TO default (preserves values for switching back)
-    // But do clear when switching FROM default to a specific mode
+    // Clear the "other" value type to prevent conflicts
     if (newMode === 'override') {
       // Always clear multiplier when switching to override
       onChange(effectIndex, fieldName, 'multiplier', '');
     } else if (newMode === 'multiplier') {
       // Always clear override when switching to multiplier
-      onChange(effectIndex, fieldName, 'override', '');
-    } else if (newMode === 'default' && prevMode === 'override') {
-      // When switching from override to default, keep the override value
-      // but clear multiplier just in case
-      onChange(effectIndex, fieldName, 'multiplier', '');
-    } else if (newMode === 'default' && prevMode === 'multiplier') {
-      // When switching from multiplier to default, keep the multiplier value
-      // but clear override just in case
       onChange(effectIndex, fieldName, 'override', '');
     }
   };
@@ -125,33 +113,30 @@ const BaseRecipientEffectInputs = ({
   // Get the current value for the input based on mode
   const getCurrentInputValue = (fieldName) => {
     const mode = fieldModes[fieldName];
-    if (mode === 'override') {
-      // Show the override value if it exists, even if empty string
-      return overrides?.[fieldName] ?? '';
-    } else if (mode === 'multiplier') {
+    if (mode === 'multiplier') {
       // Show the multiplier value if it exists, even if empty string
       return multipliers?.[fieldName] ?? '';
     }
-    return '';
+    // Default to override mode behavior
+    return overrides?.[fieldName] ?? '';
   };
 
   // Get the appropriate placeholder based on mode
   const getPlaceholder = (fieldName) => {
     const mode = fieldModes[fieldName];
-    if (mode === 'override') {
-      const overridePlaceholder = getOverridePlaceholderValue(fieldName, {
-        defaultCategoryEffect,
-        userCategoryEffect,
-        defaultRecipientEffect,
-      });
-      return overridePlaceholder !== null ? formatNumberWithCommas(overridePlaceholder) : 'Enter value';
-    } else if (mode === 'multiplier') {
+    if (mode === 'multiplier') {
       const multiplierPlaceholder = getMultiplierPlaceholderValue(fieldName, {
         defaultRecipientEffect,
       });
       return multiplierPlaceholder !== null ? formatNumberWithCommas(multiplierPlaceholder) : '1';
     }
-    return '';
+    // Default to override mode behavior
+    const overridePlaceholder = getOverridePlaceholderValue(fieldName, {
+      defaultCategoryEffect,
+      userCategoryEffect,
+      defaultRecipientEffect,
+    });
+    return overridePlaceholder !== null ? formatNumberWithCommas(overridePlaceholder) : 'Enter value';
   };
 
   // Get helper text showing current value
@@ -163,9 +148,7 @@ const BaseRecipientEffectInputs = ({
       defaultRecipientEffect,
     });
 
-    if (mode === 'default' && overridePlaceholder !== null) {
-      return `Currently: ${formatNumberWithCommas(overridePlaceholder)}`;
-    } else if (mode === 'multiplier') {
+    if (mode === 'multiplier') {
       const currentValue = getCurrentInputValue(fieldName);
       if (currentValue && currentValue !== '' && overridePlaceholder !== null) {
         const multiplier = parseFloat(currentValue.toString().replace(/,/g, ''));
@@ -179,7 +162,6 @@ const BaseRecipientEffectInputs = ({
   };
 
   const segmentOptions = [
-    { value: 'default', label: 'Default' },
     { value: 'override', label: 'Set value' },
     { value: 'multiplier', label: 'Multiply' },
   ];
@@ -220,7 +202,7 @@ const BaseRecipientEffectInputs = ({
             ? getEffectTooltip(effectType, fieldName)
             : field.tooltip || getEffectTooltip(effectType, fieldName);
 
-        const mode = fieldModes[fieldName] || 'default';
+        const mode = fieldModes[fieldName] || 'override';
         const currentValue = getCurrentInputValue(fieldName);
         const overrideError = errors[`${effectIndex}-${fieldName}-override`];
         const multiplierError = errors[`${effectIndex}-${fieldName}-multiplier`];
@@ -257,43 +239,19 @@ const BaseRecipientEffectInputs = ({
                 {/* Single context-aware input - always visible */}
                 <input
                   type="text"
-                  value={
-                    mode === 'default'
-                      ? formatNumberWithCommas(
-                          getOverridePlaceholderValue(fieldName, {
-                            defaultCategoryEffect,
-                            userCategoryEffect,
-                            defaultRecipientEffect,
-                          }) || ''
-                        )
-                      : formatNumberWithCommas(currentValue)
-                  }
+                  value={formatNumberWithCommas(currentValue)}
                   onChange={(e) => {
-                    if (mode !== 'default') {
-                      const inputElement = e.target;
-                      const newValue = e.target.value;
-                      const currentPosition = e.target.selectionStart;
-                      const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
-                      handleValueChange(fieldName, result.value);
-                    }
+                    const inputElement = e.target;
+                    const newValue = e.target.value;
+                    const currentPosition = e.target.selectionStart;
+                    const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
+                    handleValueChange(fieldName, result.value);
                   }}
                   placeholder={placeholder}
-                  disabled={isDisabled || mode === 'default'}
+                  disabled={isDisabled}
                   className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
                     if (isDisabled) {
                       return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
-                    }
-
-                    if (mode === 'default') {
-                      // Check if choosing "default" is actually overriding a recipient-specific default
-                      const hasRecipientDefault =
-                        hasValue(defaultRecipientEffect?.overrides?.[fieldName]) ||
-                        hasValue(defaultRecipientEffect?.multipliers?.[fieldName]);
-
-                      // If recipient has a default, choosing "default" mode is a customization
-                      return hasRecipientDefault
-                        ? 'bg-indigo-50 text-gray-500 cursor-not-allowed border-indigo-300'
-                        : 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
                     }
 
                     if (error) {
@@ -332,7 +290,7 @@ const BaseRecipientEffectInputs = ({
 
             {/* Error message and helper text on separate lines */}
             {error && <p className="text-xs text-red-600 ml-2">{error}</p>}
-            {mode !== 'default' && helperText && <p className="text-xs text-gray-500 ml-2">{helperText}</p>}
+            {helperText && <p className="text-xs text-gray-500 ml-2">{helperText}</p>}
 
             {/* Show time limit message only for windowLength field */}
             {fieldName === 'windowLength' && (

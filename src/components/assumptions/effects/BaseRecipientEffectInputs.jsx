@@ -81,14 +81,31 @@ const BaseRecipientEffectInputs = ({
 
   // Handle mode change for a field
   const handleModeChange = (fieldName, newMode) => {
+    const prevMode = fieldModes[fieldName];
+
     setFieldModes((prev) => ({
       ...prev,
       [fieldName]: newMode,
     }));
 
-    // Don't clear values when switching to default - just change the mode
-    // This preserves the values so they can be restored when switching back
-    // The parent component should handle clearing values when actually saving in default mode
+    // Only clear the "other" value type to prevent conflicts
+    // Don't clear when switching TO default (preserves values for switching back)
+    // But do clear when switching FROM default to a specific mode
+    if (newMode === 'override') {
+      // Always clear multiplier when switching to override
+      onChange(effectIndex, fieldName, 'multiplier', '');
+    } else if (newMode === 'multiplier') {
+      // Always clear override when switching to multiplier
+      onChange(effectIndex, fieldName, 'override', '');
+    } else if (newMode === 'default' && prevMode === 'override') {
+      // When switching from override to default, keep the override value
+      // but clear multiplier just in case
+      onChange(effectIndex, fieldName, 'multiplier', '');
+    } else if (newMode === 'default' && prevMode === 'multiplier') {
+      // When switching from multiplier to default, keep the multiplier value
+      // but clear override just in case
+      onChange(effectIndex, fieldName, 'override', '');
+    }
   };
 
   // Handle value change based on current mode
@@ -263,16 +280,29 @@ const BaseRecipientEffectInputs = ({
                   placeholder={placeholder}
                   disabled={isDisabled || mode === 'default'}
                   className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
-                    if (isDisabled || mode === 'default') {
+                    if (isDisabled) {
                       return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
                     }
+
+                    if (mode === 'default') {
+                      // Check if choosing "default" is actually overriding a recipient-specific default
+                      const hasRecipientDefault =
+                        hasValue(defaultRecipientEffect?.overrides?.[fieldName]) ||
+                        hasValue(defaultRecipientEffect?.multipliers?.[fieldName]);
+
+                      // If recipient has a default, choosing "default" mode is a customization
+                      return hasRecipientDefault
+                        ? 'bg-indigo-50 text-gray-500 cursor-not-allowed border-indigo-300'
+                        : 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
+                    }
+
                     if (error) {
                       return 'border-red-300 focus:ring-red-500';
                     }
 
                     // Check if this is a custom value (different from default)
                     let isCustomValue = false;
-                    if (currentValue !== '' && currentValue !== undefined && currentValue !== null) {
+                    if (hasValue(currentValue)) {
                       // Get the default value for comparison
                       const defaultValue =
                         mode === 'override'
@@ -282,7 +312,7 @@ const BaseRecipientEffectInputs = ({
                             : null;
 
                       // Compare current with default (handle string/number conversion)
-                      if (defaultValue !== undefined && defaultValue !== null && defaultValue !== '') {
+                      if (hasValue(defaultValue)) {
                         const currentNum = parseFloat(currentValue.toString().replace(/,/g, ''));
                         const defaultNum = parseFloat(defaultValue.toString().replace(/,/g, ''));
                         isCustomValue = !isNaN(currentNum) && !isNaN(defaultNum) && currentNum !== defaultNum;

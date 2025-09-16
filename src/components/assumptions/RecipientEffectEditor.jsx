@@ -62,11 +62,25 @@ const RecipientEffectEditor = ({
       const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
       const userEffect = userRecipientEffects?.find((e) => e.effectId === effect.effectId);
 
+      // Use user values if they exist, otherwise fall back to defaults
+      // But don't merge them - if user has ANY overrides/multipliers, use only those
+      let effectOverrides, effectMultipliers;
+
+      if (userEffect && (userEffect.overrides || userEffect.multipliers)) {
+        // User has customizations, use only user values
+        effectOverrides = userEffect.overrides || {};
+        effectMultipliers = userEffect.multipliers || {};
+      } else {
+        // No user customizations, use defaults
+        effectOverrides = defaultRecipientEffect?.overrides || {};
+        effectMultipliers = defaultRecipientEffect?.multipliers || {};
+      }
+
       return {
         effectId: effect.effectId,
-        // Use user values if they exist, otherwise use default recipient values
-        overrides: userEffect?.overrides || defaultRecipientEffect?.overrides || {},
-        multipliers: userEffect?.multipliers || defaultRecipientEffect?.multipliers || {},
+        // Use either user or default values, but not mixed
+        overrides: effectOverrides,
+        multipliers: effectMultipliers,
         disabled: userEffect?.disabled || defaultRecipientEffect?.disabled || false,
         // Keep base values for reference during editing
         _baseEffect: effect,

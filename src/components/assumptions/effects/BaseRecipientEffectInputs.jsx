@@ -262,15 +262,40 @@ const BaseRecipientEffectInputs = ({
                   }}
                   placeholder={placeholder}
                   disabled={isDisabled || mode === 'default'}
-                  className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${
-                    isDisabled || mode === 'default'
-                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
-                      : error
-                        ? 'border-red-300 focus:ring-red-500'
-                        : currentValue && currentValue !== ''
-                          ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
-                          : 'border-gray-300 focus:ring-indigo-500'
-                  }`}
+                  className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
+                    if (isDisabled || mode === 'default') {
+                      return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
+                    }
+                    if (error) {
+                      return 'border-red-300 focus:ring-red-500';
+                    }
+
+                    // Check if this is a custom value (different from default)
+                    let isCustomValue = false;
+                    if (currentValue !== '' && currentValue !== undefined && currentValue !== null) {
+                      // Get the default value for comparison
+                      const defaultValue =
+                        mode === 'override'
+                          ? defaultRecipientEffect?.overrides?.[fieldName]
+                          : mode === 'multiplier'
+                            ? defaultRecipientEffect?.multipliers?.[fieldName]
+                            : null;
+
+                      // Compare current with default (handle string/number conversion)
+                      if (defaultValue !== undefined && defaultValue !== null && defaultValue !== '') {
+                        const currentNum = parseFloat(currentValue.toString().replace(/,/g, ''));
+                        const defaultNum = parseFloat(defaultValue.toString().replace(/,/g, ''));
+                        isCustomValue = !isNaN(currentNum) && !isNaN(defaultNum) && currentNum !== defaultNum;
+                      } else {
+                        // No default means any value is custom
+                        isCustomValue = true;
+                      }
+                    }
+
+                    return isCustomValue
+                      ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
+                      : 'border-gray-300 focus:ring-indigo-500';
+                  })()}`}
                 />
               </div>
             </div>

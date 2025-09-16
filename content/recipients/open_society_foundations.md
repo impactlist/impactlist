@@ -7,9 +7,9 @@ categories:
   - id: global-development
     fraction: 0.15
   - id: human-rights
-    fraction: 0.25
-  - id: social-justice
     fraction: 0.20
+  - id: social-justice
+    fraction: 0.25
   - id: institutions
     fraction: 0.1
   - id: political

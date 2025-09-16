@@ -64,10 +64,10 @@ const RecipientEffectEditor = ({
 
       return {
         effectId: effect.effectId,
-        // Only use user values if they exist, otherwise empty (defaults show as placeholders)
-        overrides: userEffect?.overrides || {},
-        multipliers: userEffect?.multipliers || {},
-        disabled: userEffect?.disabled || false,
+        // Use user values if they exist, otherwise use default recipient values
+        overrides: userEffect?.overrides || defaultRecipientEffect?.overrides || {},
+        multipliers: userEffect?.multipliers || defaultRecipientEffect?.multipliers || {},
+        disabled: userEffect?.disabled || defaultRecipientEffect?.disabled || false,
         // Keep base values for reference during editing
         _baseEffect: effect,
         _defaultRecipientEffect: defaultRecipientEffect,

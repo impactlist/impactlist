@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
 import TimeLimitMessage from '../../shared/TimeLimitMessage';
@@ -32,14 +32,19 @@ const BaseRecipientEffectInputs = ({
     [fields]
   );
 
+  // Helper to check if a value is non-empty (handles both strings and numbers)
+  const hasValue = (value) => {
+    return value !== undefined && value !== null && value !== '';
+  };
+
   // Initialize field modes based on existing data
   const [fieldModes, setFieldModes] = useState(() => {
     const modes = {};
 
     fieldNames.forEach((fieldName) => {
-      if (overrides && overrides[fieldName] !== undefined && overrides[fieldName] !== '') {
+      if (overrides && hasValue(overrides[fieldName])) {
         modes[fieldName] = 'override';
-      } else if (multipliers && multipliers[fieldName] !== undefined && multipliers[fieldName] !== '') {
+      } else if (multipliers && hasValue(multipliers[fieldName])) {
         modes[fieldName] = 'multiplier';
       } else {
         modes[fieldName] = 'default';
@@ -48,6 +53,31 @@ const BaseRecipientEffectInputs = ({
 
     return modes;
   });
+
+  // Track if initial setup is done
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Set correct modes once when props are first available
+  useEffect(() => {
+    // Only run once when we first get real data
+    if (!isInitialized && (overrides !== undefined || multipliers !== undefined)) {
+      const modes = {};
+
+      fieldNames.forEach((fieldName) => {
+        // Check for values properly handling both strings and numbers
+        if (overrides && hasValue(overrides[fieldName])) {
+          modes[fieldName] = 'override';
+        } else if (multipliers && hasValue(multipliers[fieldName])) {
+          modes[fieldName] = 'multiplier';
+        } else {
+          modes[fieldName] = 'default';
+        }
+      });
+
+      setFieldModes(modes);
+      setIsInitialized(true);
+    }
+  }, [overrides, multipliers, fieldNames, isInitialized]);
 
   // Handle mode change for a field
   const handleModeChange = (fieldName, newMode) => {

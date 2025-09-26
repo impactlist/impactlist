@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils/formatters';
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
 import TimeLimitMessage from '../../shared/TimeLimitMessage';
 import SegmentedControl from '../../shared/SegmentedControl';
-import { getEffectTooltip } from '../../../constants/effectTooltips';
 
 /**
  * Base component for editing effect overrides/multipliers for recipients
  * Uses segmented control with a single context-aware input
  *
  * @param {Array} fields - Array of field definitions with name, label, and tooltip info
- * @param {string} effectType - Type of effect ('qaly' or 'population') for tooltip lookup
  */
 const BaseRecipientEffectInputs = ({
   fields,
-  effectType,
   effectIndex,
   defaultCategoryEffect,
   userCategoryEffect,
@@ -23,6 +20,8 @@ const BaseRecipientEffectInputs = ({
   overrides,
   multipliers,
   onChange,
+  onModeChange,
+  fieldModes: parentFieldModes,
   globalParameters,
   isDisabled,
 }) => {
@@ -37,10 +36,11 @@ const BaseRecipientEffectInputs = ({
     return value !== undefined && value !== null && value !== '';
   };
 
-  // Initialize field modes based on existing data
-  const [fieldModes, setFieldModes] = useState(() => {
-    const modes = {};
+  // Use parent field modes or initialize local fallback if not provided
+  const [localFieldModes, setLocalFieldModes] = useState(() => {
+    if (parentFieldModes) return {}; // Don't need local state if parent manages it
 
+    const modes = {};
     fieldNames.forEach((fieldName) => {
       if (overrides && hasValue(overrides[fieldName])) {
         modes[fieldName] = 'override';
@@ -50,69 +50,58 @@ const BaseRecipientEffectInputs = ({
         modes[fieldName] = 'override'; // Default to override mode
       }
     });
-
     return modes;
   });
 
-  // Track if initial setup is done
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  // Set correct modes once when props are first available
-  useEffect(() => {
-    // Only run once when we first get real data
-    if (!isInitialized && (overrides !== undefined || multipliers !== undefined)) {
-      const modes = {};
-
-      fieldNames.forEach((fieldName) => {
-        // Check for values properly handling both strings and numbers
-        if (overrides && hasValue(overrides[fieldName])) {
-          modes[fieldName] = 'override';
-        } else if (multipliers && hasValue(multipliers[fieldName])) {
-          modes[fieldName] = 'multiplier';
-        } else {
-          modes[fieldName] = 'override'; // Default to override mode
-        }
-      });
-
-      setFieldModes(modes);
-      setIsInitialized(true);
-    }
-  }, [overrides, multipliers, fieldNames, isInitialized]);
+  // Use parent field modes if available, otherwise use local state
+  const fieldModes = parentFieldModes || localFieldModes;
 
   // Handle mode change for a field
   const handleModeChange = (fieldName, newMode) => {
-    setFieldModes((prev) => ({
-      ...prev,
-      [fieldName]: newMode,
-    }));
+    if (onModeChange) {
+      // Parent is managing field modes
+      onModeChange(effectIndex, fieldName, newMode);
+    } else {
+      // Local management fallback
+      setLocalFieldModes((prev) => ({
+        ...prev,
+        [fieldName]: newMode,
+      }));
 
-    // Clear the "other" value type to prevent conflicts
-    if (newMode === 'override') {
-      // Always clear multiplier when switching to override
-      onChange(effectIndex, fieldName, 'multiplier', '');
-    } else if (newMode === 'multiplier') {
-      // Always clear override when switching to multiplier
-      onChange(effectIndex, fieldName, 'override', '');
+      // Clear the "other" value type to prevent conflicts
+      if (newMode === 'override') {
+        // Always clear multiplier when switching to override
+        onChange(effectIndex, fieldName, 'multiplier', '');
+      } else if (newMode === 'multiplier') {
+        // Always clear override when switching to multiplier
+        onChange(effectIndex, fieldName, 'override', '');
+      }
     }
   };
 
   // Handle value change based on current mode
   const handleValueChange = (fieldName, value) => {
-    const mode = fieldModes[fieldName];
+    const modeKey = parentFieldModes ? `${effectIndex}-${fieldName}` : fieldName;
+    const mode = parentFieldModes ? fieldModes[modeKey] : fieldModes[fieldName];
     if (mode === 'override') {
       onChange(effectIndex, fieldName, 'override', value);
-      // Clear multiplier when setting override
-      onChange(effectIndex, fieldName, 'multiplier', '');
+      // Only clear multiplier locally if parent isn't managing modes
+      if (!onModeChange) {
+        onChange(effectIndex, fieldName, 'multiplier', '');
+      }
     } else if (mode === 'multiplier') {
       onChange(effectIndex, fieldName, 'multiplier', value);
-      // Clear override when setting multiplier
-      onChange(effectIndex, fieldName, 'override', '');
+      // Only clear override locally if parent isn't managing modes
+      if (!onModeChange) {
+        onChange(effectIndex, fieldName, 'override', '');
+      }
     }
   };
 
   // Get the current value for the input based on mode
   const getCurrentInputValue = (fieldName) => {
-    const mode = fieldModes[fieldName];
+    const modeKey = parentFieldModes ? `${effectIndex}-${fieldName}` : fieldName;
+    const mode = parentFieldModes ? fieldModes[modeKey] : fieldModes[fieldName];
     if (mode === 'multiplier') {
       // Show the multiplier value if it exists, even if empty string
       return multipliers?.[fieldName] ?? '';
@@ -123,7 +112,8 @@ const BaseRecipientEffectInputs = ({
 
   // Get the appropriate placeholder based on mode
   const getPlaceholder = (fieldName) => {
-    const mode = fieldModes[fieldName];
+    const modeKey = parentFieldModes ? `${effectIndex}-${fieldName}` : fieldName;
+    const mode = parentFieldModes ? fieldModes[modeKey] : fieldModes[fieldName];
     if (mode === 'multiplier') {
       const multiplierPlaceholder = getMultiplierPlaceholderValue(fieldName, {
         defaultRecipientEffect,
@@ -141,7 +131,8 @@ const BaseRecipientEffectInputs = ({
 
   // Get helper text showing current value
   const getHelperText = (fieldName) => {
-    const mode = fieldModes[fieldName];
+    const modeKey = parentFieldModes ? `${effectIndex}-${fieldName}` : fieldName;
+    const mode = parentFieldModes ? fieldModes[modeKey] : fieldModes[fieldName];
     const overridePlaceholder = getOverridePlaceholderValue(fieldName, {
       defaultCategoryEffect,
       userCategoryEffect,
@@ -168,7 +159,8 @@ const BaseRecipientEffectInputs = ({
 
   // Get effective values for time limit message
   const getEffectiveValue = (fieldName) => {
-    const mode = fieldModes[fieldName];
+    const modeKey = parentFieldModes ? `${effectIndex}-${fieldName}` : fieldName;
+    const mode = parentFieldModes ? fieldModes[modeKey] : fieldModes[fieldName];
     const defaultValue = getOverridePlaceholderValue(fieldName, {
       defaultCategoryEffect,
       userCategoryEffect,
@@ -194,15 +186,13 @@ const BaseRecipientEffectInputs = ({
   return (
     <div className="space-y-4">
       {fields.map((field) => {
-        // Support both string fields and object fields
+        // Support both string fields and object fields (for backward compatibility)
         const fieldName = typeof field === 'string' ? field : field.name;
         const fieldLabel = typeof field === 'string' ? fieldName : field.label;
-        const fieldTooltip =
-          typeof field === 'string'
-            ? getEffectTooltip(effectType, fieldName)
-            : field.tooltip || getEffectTooltip(effectType, fieldName);
+        const fieldTooltip = typeof field === 'string' ? '' : field.tooltip || '';
 
-        const mode = fieldModes[fieldName] || 'override';
+        const modeKey = parentFieldModes ? `${effectIndex}-${fieldName}` : fieldName;
+        const mode = (parentFieldModes ? fieldModes[modeKey] : fieldModes[fieldName]) || 'override';
         const currentValue = getCurrentInputValue(fieldName);
         const overrideError = errors[`${effectIndex}-${fieldName}-override`];
         const multiplierError = errors[`${effectIndex}-${fieldName}-multiplier`];

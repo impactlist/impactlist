@@ -15,6 +15,7 @@ import {
   validateRecipientEffects,
   cleanAndParseValue,
 } from '../../utils/effectValidation';
+import { getEffectFieldNames } from '../../constants/effectFieldDefinitions';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import YearSelector from '../shared/YearSelector';
@@ -34,6 +35,7 @@ const RecipientEffectEditor = ({
   const [tempEditToEffects, setTempEditToEffects] = useState([]);
   const [errors, setErrors] = useState({});
   const [previewYear, setPreviewYear] = useState(getCurrentYear());
+  const [fieldModes, setFieldModes] = useState({});
   const { defaultAssumptions, userAssumptions } = useAssumptions();
 
   // Get default effects for this recipient category
@@ -62,33 +64,82 @@ const RecipientEffectEditor = ({
       const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
       const userEffect = userRecipientEffects?.find((e) => e.effectId === effect.effectId);
 
-      // Use user values if they exist, otherwise fall back to defaults
-      // But don't merge them - if user has ANY overrides/multipliers, use only those
-      let effectOverrides, effectMultipliers;
+      // Merge user values with default recipient values
+      // Default recipient values should appear as actual editable values
+      let effectOverrides = {};
+      let effectMultipliers = {};
 
-      if (userEffect && (userEffect.overrides || userEffect.multipliers)) {
-        // User has customizations, use only user values
-        effectOverrides = userEffect.overrides || {};
-        effectMultipliers = userEffect.multipliers || {};
-      } else {
-        // No user customizations, use defaults
-        effectOverrides = defaultRecipientEffect?.overrides || {};
-        effectMultipliers = defaultRecipientEffect?.multipliers || {};
+      // Start with default recipient values as the base
+      if (defaultRecipientEffect?.overrides) {
+        effectOverrides = { ...defaultRecipientEffect.overrides };
+      }
+      if (defaultRecipientEffect?.multipliers) {
+        effectMultipliers = { ...defaultRecipientEffect.multipliers };
+      }
+
+      // Merge user values on top (field by field, not wholesale replacement)
+      if (userEffect) {
+        if (userEffect.overrides) {
+          // Merge user overrides with default overrides
+          Object.keys(userEffect.overrides).forEach((field) => {
+            // User override takes precedence
+            effectOverrides[field] = userEffect.overrides[field];
+            // Clear any multiplier for this field
+            delete effectMultipliers[field];
+          });
+        }
+        if (userEffect.multipliers) {
+          // Merge user multipliers with default multipliers
+          Object.keys(userEffect.multipliers).forEach((field) => {
+            // User multiplier takes precedence
+            effectMultipliers[field] = userEffect.multipliers[field];
+            // Clear any override for this field
+            delete effectOverrides[field];
+          });
+        }
       }
 
       return {
         effectId: effect.effectId,
-        // Use either user or default values, but not mixed
         overrides: effectOverrides,
         multipliers: effectMultipliers,
         disabled: userEffect?.disabled || defaultRecipientEffect?.disabled || false,
         // Keep base values for reference during editing
         _baseEffect: effect,
         _defaultRecipientEffect: defaultRecipientEffect,
+        _userEffect: userEffect,
       };
     });
 
     setTempEditToEffects(initialEffects);
+
+    // Initialize field modes based on the initial effects
+    const modes = {};
+    initialEffects.forEach((effect, effectIndex) => {
+      const fieldNames = getEffectFieldNames(effect._baseEffect);
+      fieldNames.forEach((fieldName) => {
+        const modeKey = `${effectIndex}-${fieldName}`;
+        // Check if there's an override or multiplier to determine initial mode
+        if (
+          effect.overrides &&
+          effect.overrides[fieldName] !== undefined &&
+          effect.overrides[fieldName] !== null &&
+          effect.overrides[fieldName] !== ''
+        ) {
+          modes[modeKey] = 'override';
+        } else if (
+          effect.multipliers &&
+          effect.multipliers[fieldName] !== undefined &&
+          effect.multipliers[fieldName] !== null &&
+          effect.multipliers[fieldName] !== ''
+        ) {
+          modes[modeKey] = 'multiplier';
+        } else {
+          modes[modeKey] = 'override'; // Default to override mode
+        }
+      });
+    });
+    setFieldModes(modes);
   }, [recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects, userAssumptions]);
 
   // Validate all effects on mount and when effects change
@@ -109,6 +160,24 @@ const RecipientEffectEditor = ({
       };
       return newEffects;
     });
+  };
+
+  // Handle mode change for a field
+  const handleModeChange = (effectIndex, fieldName, newMode) => {
+    const modeKey = `${effectIndex}-${fieldName}`;
+    setFieldModes((prev) => ({
+      ...prev,
+      [modeKey]: newMode,
+    }));
+
+    // Clear the "other" value type to prevent conflicts
+    if (newMode === 'override') {
+      // Clear multiplier when switching to override
+      updateEffectField(effectIndex, fieldName, 'multiplier', '');
+    } else if (newMode === 'multiplier') {
+      // Clear override when switching to multiplier
+      updateEffectField(effectIndex, fieldName, 'override', '');
+    }
   };
 
   // Update a specific field of an effect
@@ -280,7 +349,7 @@ const RecipientEffectEditor = ({
 
     // Clean up effects for saving
     const effectsToSave = tempEditToEffects
-      .map((effect) => {
+      .map((effect, effectIndex) => {
         const cleanEffect = {
           effectId: effect.effectId,
           overrides: {},
@@ -288,9 +357,30 @@ const RecipientEffectEditor = ({
           disabled: effect.disabled || false,
         };
 
-        // Process overrides - convert strings to numbers
-        if (effect.overrides) {
-          Object.entries(effect.overrides).forEach(([fieldName, value]) => {
+        // Get field names for this effect
+        const fieldNames = getEffectFieldNames(effect._baseEffect);
+
+        // Check if there were any default recipient values or user values
+        const defaultRecipientEffect = effect._defaultRecipientEffect;
+        const userEffect = effect._userEffect;
+
+        // Track if we need to save this effect (even with empty values) to clear defaults
+        let needsClearing = false;
+
+        // Process each field based on its selected mode
+        fieldNames.forEach((fieldName) => {
+          const modeKey = `${effectIndex}-${fieldName}`;
+          const selectedMode = fieldModes[modeKey] || 'override';
+
+          // Check if there was any default or user value that might need clearing
+          const hadDefaultOverride = defaultRecipientEffect?.overrides?.[fieldName];
+          const hadDefaultMultiplier = defaultRecipientEffect?.multipliers?.[fieldName];
+          const hadUserOverride = userEffect?.overrides?.[fieldName];
+          const hadUserMultiplier = userEffect?.multipliers?.[fieldName];
+
+          if (selectedMode === 'override') {
+            // Save override value if it exists and mode is 'override'
+            const value = effect.overrides?.[fieldName];
             if (value !== null && value !== undefined && value !== '') {
               const { numValue } = cleanAndParseValue(value);
               if (!isNaN(numValue)) {
@@ -300,13 +390,16 @@ const RecipientEffectEditor = ({
                   `Failed to convert override ${fieldName} to number in effect ${effect.effectId}. Value: "${value}"`
                 );
               }
+            } else {
+              // Empty override - check if we're clearing any existing value
+              if (hadDefaultOverride || hadUserOverride || hadDefaultMultiplier || hadUserMultiplier) {
+                // User has cleared a field that had a value - need to save this clearing
+                needsClearing = true;
+              }
             }
-          });
-        }
-
-        // Process multipliers - convert strings to numbers
-        if (effect.multipliers) {
-          Object.entries(effect.multipliers).forEach(([fieldName, value]) => {
+          } else if (selectedMode === 'multiplier') {
+            // Save multiplier value if it exists and mode is 'multiplier'
+            const value = effect.multipliers?.[fieldName];
             if (value !== null && value !== undefined && value !== '') {
               const { numValue } = cleanAndParseValue(value);
               if (!isNaN(numValue)) {
@@ -316,15 +409,22 @@ const RecipientEffectEditor = ({
                   `Failed to convert multiplier ${fieldName} to number in effect ${effect.effectId}. Value: "${value}"`
                 );
               }
+            } else {
+              // Empty multiplier - check if we're clearing any existing value
+              if (hadDefaultMultiplier || hadUserMultiplier || hadDefaultOverride || hadUserOverride) {
+                // User has cleared a field that had a value - need to save this clearing
+                needsClearing = true;
+              }
             }
-          });
-        }
+          }
+        });
 
-        // Only include effect if it has overrides, multipliers, or is disabled
+        // Include effect if it has values, is disabled, or needs clearing
         if (
           Object.keys(cleanEffect.overrides).length > 0 ||
           Object.keys(cleanEffect.multipliers).length > 0 ||
-          cleanEffect.disabled
+          cleanEffect.disabled ||
+          needsClearing
         ) {
           return cleanEffect;
         }
@@ -467,6 +567,8 @@ const RecipientEffectEditor = ({
                         overrides={effect.overrides}
                         multipliers={effect.multipliers}
                         onChange={updateEffectField}
+                        onModeChange={handleModeChange}
+                        fieldModes={fieldModes}
                         globalParameters={globalParameters}
                         isDisabled={isFullyDisabled}
                       />
@@ -480,6 +582,8 @@ const RecipientEffectEditor = ({
                         overrides={effect.overrides}
                         multipliers={effect.multipliers}
                         onChange={updateEffectField}
+                        onModeChange={handleModeChange}
+                        fieldModes={fieldModes}
                         globalParameters={globalParameters}
                         isDisabled={isFullyDisabled}
                       />

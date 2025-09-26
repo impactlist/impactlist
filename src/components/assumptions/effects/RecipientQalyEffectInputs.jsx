@@ -1,19 +1,13 @@
 import React from 'react';
 import BaseRecipientEffectInputs from './BaseRecipientEffectInputs';
-import { getEffectTooltip } from '../../../constants/effectTooltips';
+import { QALY_EFFECT_FIELDS } from '../../../constants/effectFieldDefinitions';
 
 /**
  * Component for editing QALY effect overrides/multipliers for recipients
  * Wrapper around BaseRecipientEffectInputs with QALY-specific fields
  */
 const RecipientQalyEffectInputs = (props) => {
-  const fields = [
-    { name: 'costPerQALY', label: 'Cost per life-year', tooltip: getEffectTooltip('qaly', 'costPerQALY') },
-    { name: 'startTime', label: 'Start Time (years)', tooltip: getEffectTooltip('qaly', 'startTime') },
-    { name: 'windowLength', label: 'Window Length (years)', tooltip: getEffectTooltip('qaly', 'windowLength') },
-  ];
-
-  return <BaseRecipientEffectInputs {...props} fields={fields} effectType="qaly" />;
+  return <BaseRecipientEffectInputs {...props} fields={QALY_EFFECT_FIELDS} />;
 };
 
 export default RecipientQalyEffectInputs;

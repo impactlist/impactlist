@@ -9,12 +9,7 @@ import DisableToggleButton from '../shared/DisableToggleButton';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
 import { calculateEffectCostPerLife } from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
-import {
-  getEffectType,
-  validateRecipientEffectField,
-  validateRecipientEffects,
-  cleanAndParseValue,
-} from '../../utils/effectValidation';
+import { getEffectType, validateRecipientEffectField, cleanAndParseValue } from '../../utils/effectValidation';
 import { getEffectFieldNames } from '../../constants/effectFieldDefinitions';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
@@ -142,14 +137,6 @@ const RecipientEffectEditor = ({
     setFieldModes(modes);
   }, [recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects, userAssumptions]);
 
-  // Validate all effects on mount and when effects change
-  useEffect(() => {
-    if (tempEditToEffects.length > 0) {
-      const validation = validateRecipientEffects(tempEditToEffects);
-      setErrors(validation.errors);
-    }
-  }, [tempEditToEffects]);
-
   // Toggle disabled state for a recipient effect
   const toggleEffectDisabled = (effectIndex) => {
     setTempEditToEffects((prev) => {
@@ -169,15 +156,6 @@ const RecipientEffectEditor = ({
       ...prev,
       [modeKey]: newMode,
     }));
-
-    // Clear the "other" value type to prevent conflicts
-    if (newMode === 'override') {
-      // Clear multiplier when switching to override
-      updateEffectField(effectIndex, fieldName, 'multiplier', '');
-    } else if (newMode === 'multiplier') {
-      // Clear override when switching to multiplier
-      updateEffectField(effectIndex, fieldName, 'override', '');
-    }
   };
 
   // Update a specific field of an effect
@@ -192,18 +170,8 @@ const RecipientEffectEditor = ({
 
       if (type === 'override') {
         effect.overrides = { ...effect.overrides, [fieldName]: value };
-        // Clear multiplier when setting override
-        if (value !== '' && value !== null && value !== undefined) {
-          effect.multipliers = { ...effect.multipliers };
-          delete effect.multipliers[fieldName];
-        }
       } else if (type === 'multiplier') {
         effect.multipliers = { ...effect.multipliers, [fieldName]: value };
-        // Clear override when setting multiplier
-        if (value !== '' && value !== null && value !== undefined) {
-          effect.overrides = { ...effect.overrides };
-          delete effect.overrides[fieldName];
-        }
       }
 
       // Clean up empty values
@@ -253,58 +221,48 @@ const RecipientEffectEditor = ({
         return Infinity;
       }
 
-      // Merge with default recipient effect for any empty fields
+      // Build a clean effect to apply based on selected modes
       const effectToApply = {
         effectId: effect.effectId,
         overrides: {},
         multipliers: {},
       };
 
-      // Build a set of fields that have user overrides
-      const userOverrideFields = new Set();
-      if (effect.overrides) {
-        Object.entries(effect.overrides).forEach(([field, value]) => {
+      const fieldNames = getEffectFieldNames(baseEffect);
+      fieldNames.forEach((fieldName) => {
+        const modeKey = `${tempEditToEffects.indexOf(effect)}-${fieldName}`;
+        const selectedMode = fieldModes[modeKey] || 'override';
+
+        if (selectedMode === 'override') {
+          const value = effect.overrides?.[fieldName];
           if (value !== '' && value !== null && value !== undefined) {
-            effectToApply.overrides[field] = value;
-            userOverrideFields.add(field);
+            effectToApply.overrides[fieldName] = value;
+          } else {
+            // If override is empty, check for a default recipient value
+            const defaultValue = effect._defaultRecipientEffect?.overrides?.[fieldName];
+            if (defaultValue !== '' && defaultValue !== null && defaultValue !== undefined) {
+              effectToApply.overrides[fieldName] = defaultValue;
+            }
           }
-        });
-      }
-
-      // Build a set of fields that have user multipliers
-      const userMultiplierFields = new Set();
-      if (effect.multipliers) {
-        Object.entries(effect.multipliers).forEach(([field, value]) => {
+        } else if (selectedMode === 'multiplier') {
+          const value = effect.multipliers?.[fieldName];
           if (value !== '' && value !== null && value !== undefined) {
-            effectToApply.multipliers[field] = value;
-            userMultiplierFields.add(field);
+            effectToApply.multipliers[fieldName] = value;
+          } else {
+            // If multiplier is empty, check for a default recipient value
+            const defaultValue = effect._defaultRecipientEffect?.multipliers?.[fieldName];
+            if (defaultValue !== '' && defaultValue !== null && defaultValue !== undefined) {
+              effectToApply.multipliers[fieldName] = defaultValue;
+            }
           }
-        });
-      }
-
-      // Add default overrides for fields that don't have user values
-      if (effect._defaultRecipientEffect?.overrides) {
-        Object.entries(effect._defaultRecipientEffect.overrides).forEach(([field, value]) => {
-          if (!userOverrideFields.has(field) && !userMultiplierFields.has(field)) {
-            effectToApply.overrides[field] = value;
-          }
-        });
-      }
-
-      // Add default multipliers for fields that don't have user values
-      if (effect._defaultRecipientEffect?.multipliers) {
-        Object.entries(effect._defaultRecipientEffect.multipliers).forEach(([field, value]) => {
-          if (!userOverrideFields.has(field) && !userMultiplierFields.has(field)) {
-            effectToApply.multipliers[field] = value;
-          }
-        });
-      }
+        }
+      });
 
       // Create modified effect with overrides/multipliers applied
       const modifiedEffect = applyRecipientEffectToBase(baseEffect, effectToApply, `effect ${effect.effectId}`);
       return calculateEffectCostPerLife(modifiedEffect, globalParameters, yearForCalculation);
     });
-  }, [tempEditToEffects, globalParameters, previewYear]);
+  }, [tempEditToEffects, globalParameters, previewYear, fieldModes]);
 
   // Calculate base cost per life for each effect (without recipient-specific overrides)
   const baseEffectCostPerLife = useMemo(() => {

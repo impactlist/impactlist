@@ -212,7 +212,7 @@ const RecipientEffectEditor = ({
     // Use current year if previewYear is empty or invalid
     const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
 
-    return tempEditToEffects.map((effect) => {
+    return tempEditToEffects.map((effect, effectIndex) => {
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
 
@@ -230,7 +230,7 @@ const RecipientEffectEditor = ({
 
       const fieldNames = getEffectFieldNames(baseEffect);
       fieldNames.forEach((fieldName) => {
-        const modeKey = `${tempEditToEffects.indexOf(effect)}-${fieldName}`;
+        const modeKey = `${effectIndex}-${fieldName}`;
         const selectedMode = fieldModes[modeKey] || 'override';
 
         if (selectedMode === 'override') {

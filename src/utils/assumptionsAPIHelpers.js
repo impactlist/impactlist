@@ -29,37 +29,10 @@ export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categ
 
   const effect = newData.categories[categoryId].effects[effectIndex];
 
-  // Check if the value matches the default field value
-  const defaultFieldValue = defaultEffect[fieldName];
+  // Always store the value to respect user's explicit input
+  effect[fieldName] = value;
 
-  if (defaultFieldValue !== undefined && value === defaultFieldValue) {
-    // Value matches default - remove the custom value entirely
-    // Check if this field exists in the user effect
-    if (effect[fieldName] !== undefined) {
-      delete effect[fieldName];
-    }
-
-    // Clean up empty effect if needed (only keep effectId and actual field values)
-    const hasCustomFields = Object.keys(effect).some((key) => key !== 'effectId');
-    if (!hasCustomFields) {
-      newData.categories[categoryId].effects.splice(effectIndex, 1);
-    }
-
-    // Clean up empty structures
-    if (newData.categories[categoryId].effects.length === 0) {
-      delete newData.categories[categoryId];
-      if (Object.keys(newData.categories).length === 0) {
-        delete newData.categories;
-      }
-    }
-
-    return Object.keys(newData).length > 0 ? newData : null;
-  } else {
-    // Value differs from default - store directly as field value
-    effect[fieldName] = value;
-
-    return newData;
-  }
+  return newData;
 };
 
 /**
@@ -96,22 +69,16 @@ export const setCategoryEffect = (userAssumptions, defaultAssumptions, categoryI
     }
   });
 
-  // Add only fields that differ from defaults
+  // Add all provided fields, regardless of default values
   let hasCustomFields = false;
   Object.keys(effectData).forEach((fieldName) => {
     if (fieldName !== 'effectId' && effectData[fieldName] !== undefined) {
-      const defaultValue = defaultEffect[fieldName];
-      const newValue = effectData[fieldName];
-
-      // Only store if different from default
-      if (newValue !== defaultValue) {
-        userEffect[fieldName] = newValue;
-        hasCustomFields = true;
-      }
+      userEffect[fieldName] = effectData[fieldName];
+      hasCustomFields = true;
     }
   });
 
-  // Clean up if no custom fields
+  // Clean up if no custom fields were provided
   if (!hasCustomFields) {
     newData.categories[categoryId].effects.splice(effectIndex, 1);
     if (newData.categories[categoryId].effects.length === 0) {
@@ -193,50 +160,19 @@ export const setRecipientFieldOverride = (
 
   const effect = effects[effectIndex];
 
-  // Check if the value matches the default override
-  const defaultOverrideValue = defaultEffect.overrides?.[fieldName];
+  // Always set the override to respect user's explicit input
+  if (!effect.overrides) effect.overrides = {};
+  effect.overrides[fieldName] = value;
 
-  if (defaultOverrideValue !== undefined && value === defaultOverrideValue) {
-    // Value matches default - remove the override entirely
-    if (effect.overrides && effect.overrides[fieldName] !== undefined) {
-      delete effect.overrides[fieldName];
-      if (Object.keys(effect.overrides).length === 0) {
-        delete effect.overrides;
-      }
+  // Remove any multiplier for the same field
+  if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
+    delete effect.multipliers[fieldName];
+    if (Object.keys(effect.multipliers).length === 0) {
+      delete effect.multipliers;
     }
-
-    // Clean up empty effect if needed
-    if (!effect.overrides && !effect.multipliers) {
-      effects.splice(effectIndex, 1);
-    }
-
-    // Clean up empty structures
-    if (effects.length === 0) {
-      delete newData.recipients[recipientId].categories[categoryId];
-      if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
-        delete newData.recipients[recipientId];
-        if (Object.keys(newData.recipients).length === 0) {
-          delete newData.recipients;
-        }
-      }
-    }
-
-    return Object.keys(newData).length > 0 ? newData : null;
-  } else {
-    // Value differs from default - set the override
-    if (!effect.overrides) effect.overrides = {};
-    effect.overrides[fieldName] = value;
-
-    // Remove any multiplier for the same field
-    if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
-      delete effect.multipliers[fieldName];
-      if (Object.keys(effect.multipliers).length === 0) {
-        delete effect.multipliers;
-      }
-    }
-
-    return newData;
   }
+
+  return newData;
 };
 
 /**
@@ -287,50 +223,19 @@ export const setRecipientFieldMultiplier = (
 
   const effect = effects[effectIndex];
 
-  // Check if the multiplier matches the default multiplier
-  const defaultMultiplierValue = defaultEffect.multipliers?.[fieldName];
+  // Always set the multiplier to respect user's explicit input
+  if (!effect.multipliers) effect.multipliers = {};
+  effect.multipliers[fieldName] = multiplier;
 
-  if (defaultMultiplierValue !== undefined && multiplier === defaultMultiplierValue) {
-    // Value matches default - remove the multiplier entirely
-    if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
-      delete effect.multipliers[fieldName];
-      if (Object.keys(effect.multipliers).length === 0) {
-        delete effect.multipliers;
-      }
+  // Remove any override for the same field
+  if (effect.overrides && effect.overrides[fieldName] !== undefined) {
+    delete effect.overrides[fieldName];
+    if (Object.keys(effect.overrides).length === 0) {
+      delete effect.overrides;
     }
-
-    // Clean up empty effect if needed
-    if (!effect.overrides && !effect.multipliers) {
-      effects.splice(effectIndex, 1);
-    }
-
-    // Clean up empty structures
-    if (effects.length === 0) {
-      delete newData.recipients[recipientId].categories[categoryId];
-      if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
-        delete newData.recipients[recipientId];
-        if (Object.keys(newData.recipients).length === 0) {
-          delete newData.recipients;
-        }
-      }
-    }
-
-    return Object.keys(newData).length > 0 ? newData : null;
-  } else {
-    // Value differs from default - set the multiplier
-    if (!effect.multipliers) effect.multipliers = {};
-    effect.multipliers[fieldName] = multiplier;
-
-    // Remove any override for the same field
-    if (effect.overrides && effect.overrides[fieldName] !== undefined) {
-      delete effect.overrides[fieldName];
-      if (Object.keys(effect.overrides).length === 0) {
-        delete effect.overrides;
-      }
-    }
-
-    return newData;
   }
+
+  return newData;
 };
 
 /**

@@ -168,7 +168,6 @@ const AssumptionsEditor = () => {
     // Update global parameter values using context methods
     Object.entries(globalForm.formValues).forEach(([paramKey, valueObj]) => {
       const rawValue = valueObj.raw;
-      const defaultValue = defaultAssumptions.globalParameters[paramKey];
 
       if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
         // Empty value - clear any custom override
@@ -176,13 +175,8 @@ const AssumptionsEditor = () => {
       } else {
         const { numValue } = cleanAndParseValue(rawValue);
         if (!isNaN(numValue)) {
-          // Only set if different from default
-          if (numValue !== defaultValue) {
-            updateGlobalParameter(paramKey, numValue);
-          } else {
-            // Value equals default - clear any custom override
-            updateGlobalParameter(paramKey, '');
-          }
+          // Always set the value if it's a number, to ensure user intent is captured
+          updateGlobalParameter(paramKey, numValue);
         }
       }
     });

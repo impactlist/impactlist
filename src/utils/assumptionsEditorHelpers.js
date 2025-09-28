@@ -203,3 +203,70 @@ export const getMergedRecipient = (defaultAssumptions, userAssumptions, recipien
     categories: mergedCategories,
   };
 };
+
+/**
+ * Check if a recipient's user-defined effects are meaningfully different from its defaults.
+ * @param {Array|undefined} userEffects - The user's effect overrides for a recipient category.
+ * @param {Array|undefined} defaultEffects - The default effects for a recipient category.
+ * @returns {boolean} True if there is a meaningful difference.
+ */
+export const recipientHasMeaningfulCustomValues = (userEffects, defaultEffects) => {
+  // Normalize to empty arrays if undefined/null
+  userEffects = userEffects || [];
+  defaultEffects = defaultEffects || [];
+
+  // If user has no effects but default has effects, no custom values
+  if (userEffects.length === 0 && defaultEffects.length > 0) {
+    return false;
+  }
+
+  // If user has effects but default doesn't, check if they're meaningful
+  if (userEffects.length > 0 && defaultEffects.length === 0) {
+    return userEffects.some((e) => e.disabled || e.multipliers || e.overrides);
+  }
+
+  // If the number of effect overrides is different (and both non-empty), check for meaningful content
+  if (userEffects.length !== defaultEffects.length) {
+    // Check if userEffects has meaningful content
+    return userEffects.some((e) => e.disabled || e.multipliers || e.overrides);
+  }
+
+  // If lengths are the same (and > 0), we need to compare the content.
+  if (userEffects.length === 0) {
+    return false; // No custom values
+  }
+
+  // Create maps for easy lookup
+  const userEffectMap = new Map(userEffects.map((e) => [e.effectId, e]));
+  const defaultEffectMap = new Map(defaultEffects.map((e) => [e.effectId, e]));
+
+  for (const [effectId, userEffect] of userEffectMap.entries()) {
+    const defaultEffect = defaultEffectMap.get(effectId);
+
+    // If a user effect doesn't have a corresponding default, that's a difference.
+    if (!defaultEffect) {
+      return true;
+    }
+
+    // Compare disabled status (treat undefined as false)
+    if ((userEffect.disabled || false) !== (defaultEffect.disabled || false)) {
+      return true;
+    }
+
+    // Compare multipliers and overrides using JSON.stringify for a deep-enough comparison.
+    // This is simpler and safer than a manual deep compare, and key order should be consistent.
+    const userMultipliers = JSON.stringify(userEffect.multipliers || {});
+    const defaultMultipliers = JSON.stringify(defaultEffect.multipliers || {});
+    if (userMultipliers !== defaultMultipliers) {
+      return true;
+    }
+
+    const userOverrides = JSON.stringify(userEffect.overrides || {});
+    const defaultOverrides = JSON.stringify(defaultEffect.overrides || {});
+    if (userOverrides !== defaultOverrides) {
+      return true;
+    }
+  }
+
+  return false;
+};

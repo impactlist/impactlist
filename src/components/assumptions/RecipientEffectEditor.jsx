@@ -299,6 +299,41 @@ const RecipientEffectEditor = ({
     return Object.keys(errors).length > 0;
   }, [errors]);
 
+  // Helper function to check if two values are meaningfully different
+  const isDifferentFromDefault = (currentValue, defaultValue) => {
+    // Both empty/null/undefined - no difference
+    if (
+      (currentValue === null || currentValue === undefined || currentValue === '') &&
+      (defaultValue === null || defaultValue === undefined || defaultValue === '')
+    ) {
+      return false;
+    }
+
+    // One empty, one not - there's a difference
+    if (
+      currentValue === null ||
+      currentValue === undefined ||
+      currentValue === '' ||
+      defaultValue === null ||
+      defaultValue === undefined ||
+      defaultValue === ''
+    ) {
+      return true;
+    }
+
+    // Parse numeric values and compare with tolerance for floating point
+    const current = parseFloat(currentValue);
+    const defaultNum = parseFloat(defaultValue);
+
+    if (isNaN(current) || isNaN(defaultNum)) {
+      // If either can't be parsed as number, do string comparison
+      return currentValue !== defaultValue;
+    }
+
+    // Use small tolerance for floating-point comparison
+    return Math.abs(current - defaultNum) >= 0.0001;
+  };
+
   // Handle save
   const handleSave = () => {
     if (hasErrors) {
@@ -318,9 +353,13 @@ const RecipientEffectEditor = ({
         // Get field names for this effect
         const fieldNames = getEffectFieldNames(effect._baseEffect);
 
-        // Check if there were any default recipient values or user values
+        // Check if there were any default recipient values
         const defaultRecipientEffect = effect._defaultRecipientEffect;
-        const userEffect = effect._userEffect;
+
+        // Check if disabled state differs from default
+        const defaultDisabled = defaultRecipientEffect?.disabled || false;
+        const currentDisabled = effect.disabled || false;
+        const disabledDiffersFromDefault = currentDisabled !== defaultDisabled;
 
         // Track if we need to save this effect (even with empty values) to clear defaults
         let needsClearing = false;
@@ -330,60 +369,57 @@ const RecipientEffectEditor = ({
           const modeKey = `${effectIndex}-${fieldName}`;
           const selectedMode = fieldModes[modeKey] || 'override';
 
-          // Check if there was any default or user value that might need clearing
-          const hadDefaultOverride = defaultRecipientEffect?.overrides?.[fieldName];
-          const hadDefaultMultiplier = defaultRecipientEffect?.multipliers?.[fieldName];
-          const hadUserOverride = userEffect?.overrides?.[fieldName];
-          const hadUserMultiplier = userEffect?.multipliers?.[fieldName];
+          // Get the current value based on selected mode
+          const currentValue =
+            selectedMode === 'override' ? effect.overrides?.[fieldName] : effect.multipliers?.[fieldName];
 
-          if (selectedMode === 'override') {
-            // Save override value if it exists and mode is 'override'
-            const value = effect.overrides?.[fieldName];
-            if (value !== null && value !== undefined && value !== '') {
-              const { numValue } = cleanAndParseValue(value);
+          // Get the default value for comparison
+          const defaultValue =
+            selectedMode === 'override'
+              ? defaultRecipientEffect?.overrides?.[fieldName]
+              : defaultRecipientEffect?.multipliers?.[fieldName];
+
+          // Check if current value differs from default
+          if (isDifferentFromDefault(currentValue, defaultValue)) {
+            // Value is different from default, save it
+            if (currentValue !== null && currentValue !== undefined && currentValue !== '') {
+              const { numValue } = cleanAndParseValue(currentValue);
               if (!isNaN(numValue)) {
-                cleanEffect.overrides[fieldName] = numValue;
+                if (selectedMode === 'override') {
+                  cleanEffect.overrides[fieldName] = numValue;
+                } else {
+                  cleanEffect.multipliers[fieldName] = numValue;
+                }
               } else {
                 throw new Error(
-                  `Failed to convert override ${fieldName} to number in effect ${effect.effectId}. Value: "${value}"`
+                  `Failed to convert ${selectedMode} ${fieldName} to number in effect ${effect.effectId}. Value: "${currentValue}"`
                 );
               }
             } else {
-              // Empty override - check if we're clearing any existing value
-              if (hadDefaultOverride || hadUserOverride || hadDefaultMultiplier || hadUserMultiplier) {
-                // User has cleared a field that had a value - need to save this clearing
+              // User explicitly cleared a field that had a default value
+              // We need to save this as an explicit clearing
+              if (defaultValue !== null && defaultValue !== undefined && defaultValue !== '') {
+                // Mark that we need to save this effect to record the clearing
                 needsClearing = true;
-              }
-            }
-          } else if (selectedMode === 'multiplier') {
-            // Save multiplier value if it exists and mode is 'multiplier'
-            const value = effect.multipliers?.[fieldName];
-            if (value !== null && value !== undefined && value !== '') {
-              const { numValue } = cleanAndParseValue(value);
-              if (!isNaN(numValue)) {
-                cleanEffect.multipliers[fieldName] = numValue;
-              } else {
-                throw new Error(
-                  `Failed to convert multiplier ${fieldName} to number in effect ${effect.effectId}. Value: "${value}"`
-                );
-              }
-            } else {
-              // Empty multiplier - check if we're clearing any existing value
-              if (hadDefaultMultiplier || hadUserMultiplier || hadDefaultOverride || hadUserOverride) {
-                // User has cleared a field that had a value - need to save this clearing
-                needsClearing = true;
+                // Don't store null - the absence of the field indicates it should not use the default
+                // The needsClearing flag ensures we still save the effect to record the user's intent
               }
             }
           }
+          // If value matches default, don't save it (no action needed)
         });
 
-        // Include effect if it has values, is disabled, or needs clearing
+        // Include effect if it has values different from defaults, disabled state differs, or needs clearing
         if (
           Object.keys(cleanEffect.overrides).length > 0 ||
           Object.keys(cleanEffect.multipliers).length > 0 ||
-          cleanEffect.disabled ||
+          disabledDiffersFromDefault ||
           needsClearing
         ) {
+          // Only include disabled flag if it differs from default
+          if (!disabledDiffersFromDefault) {
+            delete cleanEffect.disabled;
+          }
           return cleanEffect;
         }
         return null;

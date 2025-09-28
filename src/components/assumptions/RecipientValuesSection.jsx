@@ -6,7 +6,7 @@ import CurrencyInput from '../shared/CurrencyInput';
 import { formatCurrency } from '../../utils/formatters';
 import { getRecipientId, getCurrentYear } from '../../utils/donationDataHelpers';
 import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
-import { mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
+import { mergeGlobalParameters, recipientHasMeaningfulCustomValues } from '../../utils/assumptionsEditorHelpers';
 
 /**
  * Component for displaying recipient-specific cost per life values.
@@ -133,9 +133,16 @@ const RecipientValuesSection = ({
                         ? getRecipientCostPerLife(recipientId, recipient, categoryId)
                         : null;
 
-                      // Check if recipient has user custom values
-                      const hasUserCustomValues =
-                        userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects?.length > 0;
+                      // Check if recipient has user custom values that differ from the recipient's defaults
+                      const userRecipientEffects =
+                        userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+                      const defaultRecipientEffects =
+                        defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+
+                      const hasUserCustomValues = recipientHasMeaningfulCustomValues(
+                        userRecipientEffects,
+                        defaultRecipientEffects
+                      );
 
                       // Show category cost in parentheses if recipient cost differs
                       // Compare formatted values to determine if they're visually different

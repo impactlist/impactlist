@@ -103,30 +103,30 @@ const CategoryValuesSection = ({
                   }}
                 />
               </div>
-              <div className="relative">
-                <CurrencyInput
-                  id={`category-${key}`}
-                  value={formattedCurrent} // Use calculated value directly (no form state needed for read-only)
-                  onChange={(value) => onChange(key, value)}
-                  error={hasError}
-                  className="w-full pr-10"
-                  validateOnBlur={true} // Only validate on blur, not while typing
-                  placeholder={formattedDefault} // Use formatted default as placeholder
-                  disabled={true} // Make read-only
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!onEditCategory) {
-                      throw new Error('onEditCategory prop is required when editing categories');
-                    }
-                    onEditCategory(key);
-                  }}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                >
-                  Edit
-                </button>
-              </div>
+              <CurrencyInput
+                id={`category-${key}`}
+                value={formattedCurrent} // Use calculated value directly (no form state needed for read-only)
+                onChange={(value) => onChange(key, value)}
+                error={hasError}
+                className="w-full"
+                validateOnBlur={true} // Only validate on blur, not while typing
+                placeholder={formattedDefault} // Use formatted default as placeholder
+                disabled={true} // Make read-only
+                rightElement={
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!onEditCategory) {
+                        throw new Error('onEditCategory prop is required when editing categories');
+                      }
+                      onEditCategory(key);
+                    }}
+                    className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                  >
+                    Edit
+                  </button>
+                }
+              />
               {isCustom && !hasError && (
                 <div className="text-xs text-gray-500 mt-0.5">Default: ${formattedDefault}</div>
               )}

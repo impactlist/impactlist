@@ -17,6 +17,7 @@ const CurrencyInput = ({
   disabled = false,
   validateOnBlur = false, // If true, only validates when input loses focus
   isCustom = false, // If true, highlights field to show custom value
+  rightElement = null, // Optional element to render on the right side inside the input
 }) => {
   const [localValue, setLocalValue] = useState('');
   const [cursorPosition, setCursorPosition] = useState(null);
@@ -121,7 +122,7 @@ const CurrencyInput = ({
           disabled={disabled}
           aria-invalid={!!error}
           aria-errormessage={error ? `${id}-error` : undefined}
-          className={`w-full pl-5 py-1 text-sm border rounded focus:ring-1 focus:outline-none ${
+          className={`w-full pl-5 ${rightElement ? 'pr-10' : 'pr-2'} py-1 text-sm border rounded focus:ring-1 focus:outline-none ${
             error
               ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
               : isCustom
@@ -129,6 +130,7 @@ const CurrencyInput = ({
                 : 'border-slate-300 focus:ring-indigo-500 focus:border-indigo-500'
           } ${disabled && !isCustom ? 'bg-gray-100 text-gray-500' : disabled ? 'text-gray-600' : ''}`}
         />
+        {rightElement && <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">{rightElement}</div>}
       </div>
       {error && (
         <p id={`${id}-error`} className="mt-1 text-xs text-red-600">
@@ -150,6 +152,7 @@ CurrencyInput.propTypes = {
   disabled: PropTypes.bool,
   validateOnBlur: PropTypes.bool,
   isCustom: PropTypes.bool,
+  rightElement: PropTypes.node,
 };
 
 export default React.memo(CurrencyInput);

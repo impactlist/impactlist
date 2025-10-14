@@ -163,7 +163,7 @@ const RecipientValuesSection = ({
                           </Link>
 
                           {/* Cost per life input with Edit button */}
-                          <div className="flex-1 max-w-xs">
+                          <div className="flex-1 max-w-[200px]">
                             <CurrencyInput
                               id={`recipient-${recipientId}-${categoryId}`}
                               value={formattedRecipientCost}

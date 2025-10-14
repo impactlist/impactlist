@@ -142,3 +142,42 @@ export const formatCostForDisplay = (cost, showInfinity = true) => {
   }
   return new Intl.NumberFormat('en-US').format(Math.round(cost));
 };
+
+/**
+ * Sorts effects by active date (latest to earliest), with standard effects before population effects
+ * for effects that end in the same year.
+ *
+ * @param {Array} effects - Array of effect objects
+ * @returns {Array} - Sorted array (new array, doesn't mutate original)
+ */
+export const sortEffectsByActiveDate = (effects) => {
+  return [...effects].sort((a, b) => {
+    // Get validTimeInterval from effect or its _baseEffect (for recipient effects)
+    const aInterval = a.validTimeInterval || a._baseEffect?.validTimeInterval;
+    const bInterval = b.validTimeInterval || b._baseEffect?.validTimeInterval;
+
+    // Get end years (null means currently active)
+    const aEnd = aInterval?.[1] ?? null;
+    const bEnd = bInterval?.[1] ?? null;
+
+    // Currently active (null end) comes first
+    if (aEnd === null && bEnd !== null) return -1;
+    if (aEnd !== null && bEnd === null) return 1;
+
+    // Both have end dates - sort by descending year (later years first)
+    if (aEnd !== null && bEnd !== null && aEnd !== bEnd) {
+      return bEnd - aEnd;
+    }
+
+    // Same end date (or both null/currently active) - secondary sort by effect type
+    // Standard (qaly) effects before population effects
+    const aType = getEffectType(a._baseEffect || a);
+    const bType = getEffectType(b._baseEffect || b);
+
+    if (aType === 'qaly' && bType === 'population') return -1;
+    if (aType === 'population' && bType === 'qaly') return 1;
+
+    // Same type and same end date, maintain original order
+    return 0;
+  });
+};

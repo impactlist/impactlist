@@ -7,7 +7,7 @@ import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import DisableToggleButton from '../shared/DisableToggleButton';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
-import { calculateEffectCostPerLife } from '../../utils/effectEditorUtils';
+import { calculateEffectCostPerLife, sortEffectsByActiveDate } from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
 import { getEffectType, validateRecipientEffectField, cleanAndParseValue } from '../../utils/effectValidation';
 import { getEffectFieldNames } from '../../constants/effectFieldDefinitions';
@@ -106,11 +106,14 @@ const RecipientEffectEditor = ({
       };
     });
 
-    setTempEditToEffects(initialEffects);
+    // Sort effects by active date (latest to earliest)
+    const sortedEffects = sortEffectsByActiveDate(initialEffects);
 
-    // Initialize field modes based on the initial effects
+    setTempEditToEffects(sortedEffects);
+
+    // Initialize field modes based on the sorted effects
     const modes = {};
-    initialEffects.forEach((effect, effectIndex) => {
+    sortedEffects.forEach((effect, effectIndex) => {
       const fieldNames = getEffectFieldNames(effect._baseEffect);
       fieldNames.forEach((fieldName) => {
         const modeKey = `${effectIndex}-${fieldName}`;

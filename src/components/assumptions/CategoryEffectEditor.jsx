@@ -6,7 +6,11 @@ import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import DisableToggleButton from '../shared/DisableToggleButton';
-import { calculateEffectCostPerLife, cleanEffectsForSave } from '../../utils/effectEditorUtils';
+import {
+  calculateEffectCostPerLife,
+  cleanEffectsForSave,
+  sortEffectsByActiveDate,
+} from '../../utils/effectEditorUtils';
 import { calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
 import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
@@ -41,8 +45,11 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       // Use the existing mergeEffects function to properly merge user and default effects
       const mergedEffects = mergeEffects(category.effects, userEffects);
 
-      // Set the merged effects (already deep cloned by mergeEffects)
-      setTempEditToEffects(mergedEffects);
+      // Sort effects by active date (latest to earliest)
+      const sortedEffects = sortEffectsByActiveDate(mergedEffects);
+
+      // Set the sorted effects (already deep cloned by mergeEffects)
+      setTempEditToEffects(sortedEffects);
     }
   }, [category, categoryId, userAssumptions]);
 

@@ -184,7 +184,7 @@ const BaseRecipientEffectInputs = ({
   const effectiveWindowLength = getEffectiveValue('windowLength');
 
   return (
-    <div className="space-y-4">
+    <div className="grid items-start gap-x-2 gap-y-4" style={{ gridTemplateColumns: 'max-content max-content 160px' }}>
       {fields.map((field) => {
         // Support both string fields and object fields (for backward compatibility)
         const fieldName = typeof field === 'string' ? field : field.name;
@@ -201,96 +201,91 @@ const BaseRecipientEffectInputs = ({
         const placeholder = getPlaceholder(fieldName);
 
         return (
-          <div key={fieldName} className="space-y-2">
-            {/* All on one line: label, tooltip, segmented control, and input */}
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Field label with tooltip - stays on first line */}
-              <div className="flex items-center gap-2 shrink-0">
-                <label className="text-sm font-medium text-gray-900">{fieldLabel}</label>
-                {fieldTooltip && (
-                  <div className="group relative inline-block">
-                    <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
-                    <div className="invisible group-hover:visible absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
-                      {fieldTooltip}
-                    </div>
+          <React.Fragment key={fieldName}>
+            {/* Field label with tooltip */}
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-gray-900 whitespace-nowrap">{fieldLabel}</label>
+              {fieldTooltip && (
+                <div className="group relative inline-block">
+                  <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
+                  <div className="invisible group-hover:visible absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
+                    {fieldTooltip}
                   </div>
-                )}
-              </div>
-
-              {/* Segmented control and input - wraps together first, then input wraps separately */}
-              <div className="flex flex-wrap items-center gap-2 min-w-0 [&:not(:first-child)]:ml-2">
-                <SegmentedControl
-                  options={segmentOptions}
-                  value={mode}
-                  onChange={(newMode) => handleModeChange(fieldName, newMode)}
-                  disabled={isDisabled}
-                />
-
-                {/* Single context-aware input - always visible */}
-                <input
-                  type="text"
-                  value={formatNumberWithCommas(currentValue)}
-                  onChange={(e) => {
-                    const inputElement = e.target;
-                    const newValue = e.target.value;
-                    const currentPosition = e.target.selectionStart;
-                    const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
-                    handleValueChange(fieldName, result.value);
-                  }}
-                  placeholder={placeholder}
-                  disabled={isDisabled}
-                  className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
-                    if (isDisabled) {
-                      return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
-                    }
-
-                    if (error) {
-                      return 'border-red-300 focus:ring-red-500';
-                    }
-
-                    // Check if this is a custom value (different from default)
-                    let isCustomValue = false;
-                    if (hasValue(currentValue)) {
-                      // Get the default value for comparison
-                      const defaultValue =
-                        mode === 'override'
-                          ? defaultRecipientEffect?.overrides?.[fieldName]
-                          : mode === 'multiplier'
-                            ? defaultRecipientEffect?.multipliers?.[fieldName]
-                            : null;
-
-                      // Compare current with default (handle string/number conversion)
-                      if (hasValue(defaultValue)) {
-                        const currentNum = parseFloat(currentValue.toString().replace(/,/g, ''));
-                        const defaultNum = parseFloat(defaultValue.toString().replace(/,/g, ''));
-                        isCustomValue = !isNaN(currentNum) && !isNaN(defaultNum) && currentNum !== defaultNum;
-                      } else {
-                        // No default means any value is custom
-                        isCustomValue = true;
-                      }
-                    }
-
-                    return isCustomValue
-                      ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
-                      : 'border-gray-300 focus:ring-indigo-500';
-                  })()}`}
-                />
-              </div>
+                </div>
+              )}
             </div>
 
-            {/* Error message and helper text on separate lines */}
-            {error && <p className="text-xs text-red-600 ml-2">{error}</p>}
-            {helperText && <p className="text-xs text-gray-500 ml-2">{helperText}</p>}
+            {/* Segmented control */}
+            <SegmentedControl
+              options={segmentOptions}
+              value={mode}
+              onChange={(newMode) => handleModeChange(fieldName, newMode)}
+              disabled={isDisabled}
+            />
 
-            {/* Show time limit message only for windowLength field */}
-            {fieldName === 'windowLength' && (
-              <TimeLimitMessage
-                startTime={effectiveStartTime}
-                windowLength={effectiveWindowLength}
-                timeLimit={globalParameters?.timeLimit}
+            {/* Single context-aware input with error/helper text below */}
+            <div className="space-y-1">
+              <input
+                type="text"
+                value={formatNumberWithCommas(currentValue)}
+                onChange={(e) => {
+                  const inputElement = e.target;
+                  const newValue = e.target.value;
+                  const currentPosition = e.target.selectionStart;
+                  const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
+                  handleValueChange(fieldName, result.value);
+                }}
+                placeholder={placeholder}
+                disabled={isDisabled}
+                className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
+                  if (isDisabled) {
+                    return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
+                  }
+
+                  if (error) {
+                    return 'border-red-300 focus:ring-red-500';
+                  }
+
+                  // Check if this is a custom value (different from default)
+                  let isCustomValue = false;
+                  if (hasValue(currentValue)) {
+                    // Get the default value for comparison
+                    const defaultValue =
+                      mode === 'override'
+                        ? defaultRecipientEffect?.overrides?.[fieldName]
+                        : mode === 'multiplier'
+                          ? defaultRecipientEffect?.multipliers?.[fieldName]
+                          : null;
+
+                    // Compare current with default (handle string/number conversion)
+                    if (hasValue(defaultValue)) {
+                      const currentNum = parseFloat(currentValue.toString().replace(/,/g, ''));
+                      const defaultNum = parseFloat(defaultValue.toString().replace(/,/g, ''));
+                      isCustomValue = !isNaN(currentNum) && !isNaN(defaultNum) && currentNum !== defaultNum;
+                    } else {
+                      // No default means any value is custom
+                      isCustomValue = true;
+                    }
+                  }
+
+                  return isCustomValue
+                    ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
+                    : 'border-gray-300 focus:ring-indigo-500';
+                })()}`}
               />
-            )}
-          </div>
+              {/* Error message and helper text */}
+              {error && <p className="text-xs text-red-600">{error}</p>}
+              {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
+              {/* Show time limit message only for windowLength field */}
+              {fieldName === 'windowLength' && (
+                <TimeLimitMessage
+                  startTime={effectiveStartTime}
+                  windowLength={effectiveWindowLength}
+                  timeLimit={globalParameters?.timeLimit}
+                />
+              )}
+            </div>
+          </React.Fragment>
         );
       })}
     </div>

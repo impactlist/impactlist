@@ -19,6 +19,7 @@ import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
 import SearchInput from '../components/shared/SearchInput';
+import Tooltip from '../components/shared/Tooltip';
 
 const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);
@@ -120,7 +121,11 @@ const RecipientList = () => {
     },
     {
       key: 'totalLivesSaved',
-      label: 'Lives Saved',
+      label: (
+        <Tooltip content="Lives saved is calculated by dividing each donation amount (after applying any credit adjustments) by the recipient's cost per life, then summing across all donations to the recipient.">
+          <span className="border-b border-dotted border-slate-400 cursor-help">Lives Saved</span>
+        </Tooltip>
+      ),
       render: (recipient) => (
         <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-red-700' : 'text-slate-900'}`}>
           {formatNumber(Math.round(recipient.totalLivesSaved))}

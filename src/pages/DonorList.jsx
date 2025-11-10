@@ -98,6 +98,15 @@ const DonorList = () => {
     {
       key: 'totalLivesSaved',
       label: 'Lives Saved',
+      tooltip: (
+        <div>
+          We calculate the expected lives saved for each donation, based on cost effective estimates for every charity.
+          We then sum these values across all the donations a person has made to get their total expected lives saved.{' '}
+          <Link to="/faq" className="text-blue-400 hover:text-blue-300 underline">
+            Learn more in our FAQ
+          </Link>
+        </div>
+      ),
       render: (donor) => (
         <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
           {formatNumber(Math.round(donor.totalLivesSaved))}

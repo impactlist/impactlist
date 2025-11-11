@@ -102,9 +102,16 @@ const FAQ = () => {
                 </p>
                 <br />
                 <p className="text-gray-600">
-                  For instance, if a charity cures someone's blindness or educates a child, we need to estimate some
-                  amount of QALYs that this is equivalent to. This inherently involves approximations and uncertainty,
-                  but we think it's better than not trying to compare them at all.
+                  For instance, if a charity cures someone's blindness we would need to estimate how much better their
+                  life is per year now that they can see, as a fraction of a life year. We might estimate that a year of
+                  not being able to see is 15% less good than a year of being able to see. So curing someone's blindness
+                  for a year is equivalent to 0.15 QALYs. We would then multiply this by the amount of years we expect
+                  them to be able to see for. If we expect them to be able to see for 10 years, then we would estimate
+                  that curing their blindness is equivalent to 1.5 QALYs.
+                  <br />
+                  <br />
+                  This process inherently involves approximations and a lot of uncertainty, but we think it's better
+                  than not trying to compare different charitable causes at all.
                 </p>
               </div>
 

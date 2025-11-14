@@ -14,8 +14,8 @@ _The following analysis was done on November 12th 2025. It was written by GPT 5 
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
 
-**Point estimate:** **$12,000 per QALY**  
-**Range (plausible):** **$2,000–$60,000 per QALY**
+**Point estimate:** **\$12,000 per QALY**  
+**Range (plausible):** **\$2,000–\$60,000 per QALY**
 
 ## Details
 

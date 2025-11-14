@@ -14,8 +14,8 @@ _The following analysis was done on November 12th 2025. It was written by GPT 5 
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
 
-**Point estimate:** **$12,000 per QALY**  
-**Range (plausible):** **$3,000–$30,000 per QALY**
+**Point estimate:** **\$12,000 per QALY**  
+**Range (plausible):** **\$3,000–\$30,000 per QALY**
 
 ## Details
 
@@ -35,7 +35,7 @@ Sources: [WHO scoping review (Fancourt & Finn, 2019)](https://www.ncch.org.uk/up
   Sources: [Doncaster evaluation](https://cpe.org.uk/wp-content/uploads/2017/02/Evaluation-of-Doncaster-Social-Prescribing-Service-December-2016.pdf), [summary of economic evidence](https://socialprescribingacademy.org.uk/media/carfrp2e/evidence-review-economic-impact.pdf).
 
 **Quick calculation from Anchor A (illustrative):**  
-If a program like the singing RCT yields **0.015 QALYs in 6 months**, then a **full year of comparable engagement** plausibly yields **≈0.03 QALYs/person-year**. If all-in philanthropic cost is **$250 per participant-year** (group sessions, venue, coordination), **cost per QALY ≈ $250 / 0.03 ≈ $8,300**.
+If a program like the singing RCT yields **0.015 QALYs in 6 months**, then a **full year of comparable engagement** plausibly yields **≈0.03 QALYs/person-year**. If all-in philanthropic cost is **\$250 per participant-year** (group sessions, venue, coordination), **cost per QALY ≈ \$250 / 0.03 ≈ \$8,300**.
 
 **Anchor B — Wellbeing (WELLBY) → QALY conversion for “above-normal” life quality**
 
@@ -49,11 +49,11 @@ Sources: Longitudinal/fixed-effects evidence of positive LS changes with arts en
 
 - LS effect: **+0.2** for **0.5 years** ⇒ **0.1 WELLBY**/person.
 - Convert to QALY: **0.1 WELLBY ÷ 7 ≈ 0.014 QALYs**.
-- If philanthropic cost is **$250 per participant-year**, then **cost per QALY ≈ $250 / 0.014 ≈ $17,900**.
+- If philanthropic cost is **\$250 per participant-year**, then **cost per QALY ≈ \$250 / 0.014 ≈ \$17,900**.
 
 ### Bringing the anchors together
 
-Taking Anchor A (health-QALY based) **≈ $8k/QALY** and Anchor B (wellbeing→QALY) **≈ $18k/QALY**, and allowing for program heterogeneity (social prescribing spanning **~£2k–£20k per QALY**), we place a **central estimate at $12,000 per QALY** with a **range of $3,000–$30,000**. This range reflects:
+Taking Anchor A (health-QALY based) **≈ \$8k/QALY** and Anchor B (wellbeing→QALY) **≈ \$18k/QALY**, and allowing for program heterogeneity (social prescribing spanning **~£2k–£20k per QALY**), we place a **central estimate at \$12,000 per QALY** with a **range of \$3,000–\$30,000**. This range reflects:
 
 - Variation in **per-participant costs** (group size, venues, facilitator pay, overheads). See cost tables in the RCT (e.g., facilitator/venue costs) for ballpark group economics.  
   Source: [Coulton et al., 2015, Table 3](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/516558F0DDD7D4DD0197FDDEAD30ED85/S0007125000239159a.pdf/).

@@ -14,8 +14,8 @@ _The following analysis was done on November 13th 2025. It was written by GPT 5 
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
 
-**Point estimate:** **$160,000 per QALY**  
-**Range (plausible):** **$50,000–$700,000 per QALY**
+**Point estimate:** **\$160,000 per QALY**  
+**Range (plausible):** **\$50,000–\$700,000 per QALY**
 
 ## Details
 
@@ -36,16 +36,16 @@ This category covers philanthropic work that is politically contentious in the U
 
 ### A transparent back-of-the-envelope calculation (BOTEC)
 
-We model a representative $1,000,000 grant to a well-run portfolio (illustrative mix):  
+We model a representative \$1,000,000 grant to a well-run portfolio (illustrative mix):  
 **40%** inclusive-policy advocacy, **40%** accountability/safety reform, **20%** bias-mitigation programs.
 
-1. **Inclusive-policy advocacy (40% = $400k).**
+1. **Inclusive-policy advocacy (40% = \$400k).**
 
    - **Assumption A1 (reach & success):** 15% chance of one policy win affecting **50,000** people; **1%** experience a meaningful improvement in day-to-day well-being.
    - **Assumption A2 (QALY/person):** average **0.02 QALY/year** for **2 years** among those directly benefiting (small but real increases in safety, belonging, reduced stigma—consistent with effects seen around inclusive policy changes).
    - **Expected QALYs:** 50,000 × 1% × 0.02 × 2 × 15% = **3.0 QALYs**.
 
-2. **Accountability/safety reform (40% = $400k).**
+2. **Accountability/safety reform (40% = \$400k).**
 
    - **Assumption B1 (effect size):** practice changes that, in expectation, avert **10 non-fatal injury/trauma incidents** and reduce excessive-force complaints.
    - **Assumption B2 (QALY/incident):** **0.15 QALY** per averted serious incident (medical + psychological sequelae over following years; conservative relative to injury utility decrements).
@@ -53,7 +53,7 @@ We model a representative $1,000,000 grant to a well-run portfolio (illustrative
    - **Spillovers:** small deterioration in trust among some stakeholders (**–0.2 QALY** equivalent across the affected group in aggregate).
    - **Net QALYs:** **1.3 QALYs**.
 
-3. **Bias-mitigation programs (20% = $200k).**
+3. **Bias-mitigation programs (20% = \$200k).**
    - Meta-analytic evidence suggests limited durable behavior change; we assume **very small benefits**, largely from climate improvements among participants.
    - **Assumption C1:** net **0.3 QALY** across the treated population, after accounting for possible resentment/backlash.
 
@@ -62,18 +62,18 @@ We model a representative $1,000,000 grant to a well-run portfolio (illustrative
 **Risk adjustment for downstream harms.**  
 To reflect contested findings around crime, backlash, or displacement of harm, we apply a **–25% portfolio penalty** to the subtotal.
 
-- **Adjusted total:** 4.6 × (1 – 0.25) = **3.45 QALYs** per **$1,000,000** → **$290,000 per QALY**.
+- **Adjusted total:** 4.6 × (1 – 0.25) = **3.45 QALYs** per **\$1,000,000** → **\$290,000 per QALY**.
 
 **Conservative learning-by-doing effect.**  
 Well-run advocacy portfolios often improve targeting over time (dropping failed tactics, scaling what works). We therefore credit an additional **+80%** of one year’s impact spread over the next four years (small compounding from organizational learning and follow-on wins): **+1.6 QALYs**.
 
-- **Final expected QALYs:** **~5.1 QALYs** per **$1,000,000** → **~$196,000 per QALY**.
+- **Final expected QALYs:** **~5.1 QALYs** per **\$1,000,000** → **~\$196,000 per QALY**.
 
 **Reconciling to the headline estimate.**  
-The BOTEC above deliberately leans conservative on inclusive-policy reach and on per-incident QALY gains from safety reforms, and it embeds an explicit penalty for negative spillovers. Balancing this with evidence that some policy changes can produce small but broad mental-health gains (large denominators with tiny individual effects) yields our headline **$160,000 per QALY**, with a **plausible range of $50,000–$700,000** reflecting:
+The BOTEC above deliberately leans conservative on inclusive-policy reach and on per-incident QALY gains from safety reforms, and it embeds an explicit penalty for negative spillovers. Balancing this with evidence that some policy changes can produce small but broad mental-health gains (large denominators with tiny individual effects) yields our headline **\$160,000 per QALY**, with a **plausible range of \$50,000–\$700,000** reflecting:
 
-- Optimistic cases (successful state-level rights protections with durable uptake and minimal backlash) that could plausibly reach **$50k–$100k/QALY**.
-- Pessimistic cases (net harms from poorly targeted reforms, backlash, or crime spillovers) that could push costs **above $500k/QALY**.
+- Optimistic cases (successful state-level rights protections with durable uptake and minimal backlash) that could plausibly reach **\$50k–\$100k/QALY**.
+- Pessimistic cases (net harms from poorly targeted reforms, backlash, or crime spillovers) that could push costs **above \$500k/QALY**.
 
 ### Notes on negative externalities
 
@@ -85,7 +85,7 @@ The BOTEC above deliberately leans conservative on inclusive-policy reach and on
 
 ## Bottom line
 
-Donations to well-run, politically contentious “social justice” organizations in wealthy countries plausibly generate **meaningful but uncertain** improvements in well-being and safety. After explicitly discounting for risks of downstream harm and backlash, we estimate an expected cost-effectiveness of **~$160,000 per QALY** (plausible **$50,000–$700,000**), with impact typically beginning **~1–2 years** after funding and benefits persisting **~5 years** on average.
+Donations to well-run, politically contentious “social justice” organizations in wealthy countries plausibly generate **meaningful but uncertain** improvements in well-being and safety. After explicitly discounting for risks of downstream harm and backlash, we estimate an expected cost-effectiveness of **~\$160,000 per QALY** (plausible **\$50,000–\$700,000**), with impact typically beginning **~1–2 years** after funding and benefits persisting **~5 years** on average.
 
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 

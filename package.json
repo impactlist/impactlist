@@ -28,11 +28,14 @@
   "description": "",
   "dependencies": {
     "framer-motion": "^12.7.4",
+    "katex": "^0.16.25",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.5.0",
-    "recharts": "^2.15.2"
+    "recharts": "^2.15.2",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

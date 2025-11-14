@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-# Social Justice — Estimated Cost per QALY
-
 _The following analysis was done on November 13th 2025. It was written by GPT 5 Thinking and edited by Impact List staff for brevity._
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
@@ -88,6 +86,8 @@ The BOTEC above deliberately leans conservative on inclusive-policy reach and on
 ## Bottom line
 
 Donations to well-run, politically contentious “social justice” organizations in wealthy countries plausibly generate **meaningful but uncertain** improvements in well-being and safety. After explicitly discounting for risks of downstream harm and backlash, we estimate an expected cost-effectiveness of **~$160,000 per QALY** (plausible **$50,000–$700,000**), with impact typically beginning **~1–2 years** after funding and benefits persisting **~5 years** on average.
+
+_Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
 

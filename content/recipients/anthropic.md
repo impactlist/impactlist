@@ -5,7 +5,7 @@ categories:
   - id: ai-capabilities
     fraction: 1
     effects:
-      - effectId: population-late
+      - effectId: population-doom
         multipliers:
           costPerMicroprobability: 4
 ---

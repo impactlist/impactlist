@@ -2,24 +2,10 @@
 id: ai-risk
 name: 'AI Existential Risk'
 effects:
-  - effectId: population-early
-    startTime: 50
+  - effectId: population
+    startTime: 15
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 800_000
-    populationFractionAffected: 1.0
-    qalyImprovementPerYear: 1.0
-    validTimeInterval: [null, 2012]
-  - effectId: population-medium
-    startTime: 30
-    windowLength: 1_000_000_000_000
-    costPerMicroprobability: 400_000
-    populationFractionAffected: 1.0
-    qalyImprovementPerYear: 1.0
-    validTimeInterval: [2013, 2021]
-  - effectId: population-late
-    startTime: 10
-    windowLength: 1_000_000_000_000
-    costPerMicroprobability: 200_000
+    costPerMicroprobability: 2_000_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: 1.0
     validTimeInterval: [2022, null]
@@ -153,7 +139,7 @@ We approximate this using global averages and simple assumptions.
 
 #### Step 1: Remaining life expectancy
 
-Global life expectancy at birth has risen to around **73 years** in recent years.[^owid-life] Many people alive at mid-century will already be adults, but people in richer countries will live longer than those in poorer countries. A simple stylised assumption is that for the “average person” alive at the time of an AI catastrophe:
+Global life expectancy at birth has risen to around **73 years** in recent years, according to [Our World in Data – Life Expectancy](https://ourworldindata.org/life-expectancy). Many people alive at mid-century will already be adults, but people in richer countries will live longer than those in poorer countries. A simple stylised assumption is that for the “average person” alive at the time of an AI catastrophe:
 
 - **Expected remaining lifespan:** about **40 years**.
 
@@ -199,7 +185,7 @@ So each affected person gains roughly $q_{\text{imp}} \times D \approx 36$ QALYs
 
 #### Step 4: Total QALYs lost in the doom event
 
-The UN’s 2024 revision of the World Population Prospects projects that the global population will peak at just under **10.3 billion** people in the 2080s.[^un-pop] For simplicity, we round this to 10 billion.
+The UN’s 2024 revision of the World Population Prospects projects that the global population will peak at just under **10.3 billion** people in the 2080s; see the [World Population Prospects 2024 summary](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf) and [Our World in Data’s overview of the 2024 revision](https://ourworldindata.org/un-population-2024-revision). For simplicity, we round this to 10 billion.
 
 Assuming a world population of $N_{\text{world}} = 10^{10}$ (10 billion) at the time of catastrophe, and everyone dying:
 
@@ -266,20 +252,18 @@ First we estimate **how much the world has already spent specifically on reducin
 
 A 2023–2025 overview on the Effective Altruism Forum, [“An Overview of the AI Safety Funding Situation”](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), aggregates funding from major AI safety donors:
 
-- **Open Philanthropy** has spent roughly \$300–\$350 million on AI safety grants up to 2023, according to that analysis. The same post notes that this is about 12% of Open Phil’s total grantmaking.[^ea-funding]
-- A 2024 profile in _TIME_ on Open Philanthropy president Cari Tuna reports that, of the **\$3 billion** Open Philanthropy has donated, “roughly **\$400 million has been to AI**,” making it one of the largest philanthropic funders of AI safety.[^time-tuna]
-- **Survival and Flourishing Fund (SFF)** has donated about **\$53 million** to AI safety projects since 2019.[^ea-funding]
-- The **FTX Future Fund** contributed an estimated **\$32 million** to AI safety projects between February and August 2022 before shutting down.[^ea-funding]
-- The **Long-Term Future Fund (LTFF)** has spent about **\$10 million** on AI safety over its lifetime.[^ea-funding]
-- The same EA Forum post also estimates that AI safety teams inside for-profit labs (OpenAI, Anthropic, DeepMind, Conjecture) represent roughly **\$32 million per year** in safety-focused costs, when you account for salaries and overhead.[^ea-funding] Over several years this easily reaches into the hundreds of millions.
-- Government programs like the UK’s **Foundation Model Taskforce** and other public AI safety initiatives add further tens or hundreds of millions to the total.[^ea-funding]
+- **Open Philanthropy** has spent roughly \$300–\$350 million on AI safety grants up to 2023, according to that analysis, representing about 12% of its total grantmaking.
+- A 2024 profile in _TIME_ on Open Philanthropy president Cari Tuna reports that, of the **\$3 billion** Open Philanthropy has donated, “roughly **\$400 million has been to AI**,” making it one of the largest philanthropic funders of AI safety. See [“Cari Tuna: The 100 Most Influential People in AI 2024”](https://time.com/7012763/cari-tuna/).
+- **Survival and Flourishing Fund (SFF)** has donated about **\$53 million** to AI safety projects since 2019, according to the same EA Forum overview.
+- The **FTX Future Fund** contributed an estimated **\$32 million** to AI safety projects between February and August 2022 before shutting down, again based on that overview.
+- The **Long-Term Future Fund (LTFF)** has spent about **\$10 million** on AI safety over its lifetime.
+- The EA Forum post also estimates that AI safety teams inside for-profit labs (OpenAI, Anthropic, DeepMind, Conjecture) represent roughly **\$32 million per year** in safety-focused costs, when you account for salaries and overhead. Over several years this easily reaches into the hundreds of millions.
+- Government programs like the UK’s **Foundation Model Taskforce** and other public AI safety initiatives add further tens or hundreds of millions to the total.
 
 Putting this together, a **cautious, round-number estimate** for _cumulative spending through around 2025_ specifically aimed at reducing existential or catastrophic risk from AI (including philanthropic grants, targeted corporate safety teams, and high-level government programmes) is on the order of:
 
 - **Central estimate:** \$1 billion
 - **Plausible range:** \$0.5–\$2 billion
-
-This is consistent with the EA Forum analysis and external reporting on Open Philanthropy’s contributions.
 
 ##### 1.2 How much risk reduction might that have achieved?
 
@@ -327,7 +311,7 @@ If cumulative spending is $C$ and the absolute risk reduction is $\Delta P$, the
 
 Using our central numbers:
 
-- $C \approx \$1 \text{ billion} = 10^{9}$
+- $$C \approx \$1 \text{ billion} = 10^{9}$$
 - $\Delta P \approx 3 \times 10^{-4}$
 
 Then:
@@ -361,9 +345,9 @@ Within the effective altruism community, a convenient unit is a **“microdoom�
 
 Among the models discussed:
 
-- A **linear-growth model** assumes that increasing the AI safety workforce from about 350 people to 10,000 people would reduce AI existential risk by **10 percentage points**, with the effect linear in the number of people. Under that model, one additional AI safety career averts about **10 microdooms**.[^jurkovic]
-- A **diminishing returns model** with a larger ideal workforce and a 20% absolute risk reduction gives **~49 microdooms** per additional career at the current margin.[^jurkovic]
-- A **Pareto model**—where 10% of people account for 90% of the impact—suggests that a typical (10th–90th percentile) AI safety professional might avert **10–270 microdooms**, with a higher mean but very skewed distribution.[^jurkovic]
+- A **linear-growth model** assumes that increasing the AI safety workforce from about 350 people to 10,000 people would reduce AI existential risk by **10 percentage points**, with the effect linear in the number of people. Under that model, one additional AI safety career averts about **10 microdooms**.
+- A **diminishing returns model** with a larger ideal workforce and a 20% absolute risk reduction gives **~49 microdooms** per additional career at the current margin.
+- A **Pareto model**—where 10% of people account for 90% of the impact—suggests that a typical (10th–90th percentile) AI safety professional might avert **10–270 microdooms**, with a higher mean but very skewed distribution.
 
 Jurkovic’s own conclusion is that **one additional AI safety professional plausibly reduces AI existential risk by at least one microdoom**, and more likely by tens of microdooms, under these stylised assumptions.
 
@@ -378,13 +362,13 @@ Now we convert this into a **cost per microdoom** by estimating the financial co
 
 AI alignment and governance researchers tend to have skills comparable to senior machine learning scientists or research engineers. Public salary data suggests (in 2024–2025):
 
-- Median salaries for AI research scientists in the US around **\$180,000–\$220,000** per year, with higher figures at top labs.[^glassdoor-salary][^ephy-salary]
-- The EA Forum funding overview notes that at non-profits like MIRI and Redwood Research, the **total cost per employee is around twice their gross salary**, once you include payroll taxes, health insurance, office space, compute, and other overheads.[^ea-funding]
+- Median salaries for AI research scientists in the US around **\$180,000–\$220,000** per year, with higher figures at top labs; see, for example, [Glassdoor’s AI Research Scientist salary data for the US](https://www.glassdoor.com/Salaries/ai-research-scientist-salary-SRCH_KO0%2C21.htm) and the 2024 Ephy analysis [“Who pays more? Microsoft vs Meta for AI Research Scientists”](https://www.ephy.io/post/who-pays-more-microsoft-vs-meta-for-ai-research-scientists).
+- The EA Forum funding overview mentioned above notes that at non-profits like MIRI and Redwood Research, the **total cost per employee is around twice their gross salary**, once you include payroll taxes, health insurance, office space, compute, and other overheads.
 
 If we assume:
 
 - Gross salary for a strong AI safety researcher at a non-profit or lab: about **\$200,000–\$250,000 per year**.
-- Total cost to the organisation (salary plus benefits, compute, overhead): about **2× salary**, i.e. **\$400,000–\$500,000 per year**.[^ea-funding]
+- Total cost to the organisation (salary plus benefits, compute, overhead): about **2× salary**, i.e. **\$400,000–\$500,000 per year**.
 - An effective AI safety career in the field lasts **20–30 years** (some may move in and out, or retire early, but others will stay for decades).
 
 Then the **total cost per career** is roughly:
@@ -535,22 +519,6 @@ Given all of these uncertainties, we view the estimates on this page as **rough 
 For donors who are comfortable with large uncertainties but concerned about the possibility that AI could literally end the story of humanity, **AI existential risk charities appear to be one of the most promising places to give**.
 
 _Our current cost per life estimates are very approximate and we are looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
-
----
-
-[^owid-life]: See [Our World in Data – Life Expectancy](https://ourworldindata.org/life-expectancy), which reports a global average life expectancy of about 73 years in 2023 and documents the long-run rise in longevity.
-
-[^un-pop]: See the UN’s [World Population Prospects 2024 summary](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf) and [Our World in Data’s overview of the 2024 revision](https://ourworldindata.org/un-population-2024-revision), which project a peak global population of just over 10 billion in the late 21st century.
-
-[^ea-funding]: Stephen McAleese, [“An Overview of the AI Safety Funding Situation”](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation) (EA Forum, updated January 2025), which estimates Open Philanthropy’s AI safety grants at \$336 million up to 2023, SFF at \$53 million, LTFF at \$10 million, FTX Future Fund at \$32 million, and corporate AI safety teams at roughly \$32 million per year.
-
-[^time-tuna]: TIME Magazine profile, [“Cari Tuna: The 100 Most Influential People in AI 2024”](https://time.com/7012763/cari-tuna/), which states that of the \$3 billion Open Philanthropy has donated, roughly \$400 million has been to AI.
-
-[^jurkovic]: Nikola Jurkovic, [“Microdooms averted by working on AI Safety”](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety), which defines microdooms, presents several models of how many microdooms an AI safety professional might avert, and explicitly calculates 10 microdooms per career under a linear growth model.
-
-[^glassdoor-salary]: See, for example, Glassdoor’s [AI Research Scientist salary data for the US](https://www.glassdoor.com/Salaries/ai-research-scientist-salary-SRCH_KO0%2C21.htm), which reports an average salary around \$190,000 with typical ranges between about \$155,000 and \$240,000.
-
-[^ephy-salary]: See also the 2024 analysis “Who pays more? Microsoft vs Meta for AI Research Scientists” on [Ephy](https://www.ephy.io/post/who-pays-more-microsoft-vs-meta-for-ai-research-scientists), which reports a median annual salary for AI research scientists around \$220,000 in the US.
 
 # Internal Notes
 

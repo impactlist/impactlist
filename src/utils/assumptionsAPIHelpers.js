@@ -39,6 +39,36 @@ export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categ
  * Set all custom values for a category effect at once (batch update)
  * Only stores fields that differ from defaults
  */
+const normalizeFieldValue = (fieldName, value) => {
+  if (fieldName === 'disabled') {
+    return value === undefined ? false : Boolean(value);
+  }
+  return value;
+};
+
+const areValuesEqual = (valueA, valueB) => {
+  if (Array.isArray(valueA) && Array.isArray(valueB)) {
+    if (valueA.length !== valueB.length) {
+      return false;
+    }
+    return valueA.every((item, idx) => areValuesEqual(item, valueB[idx]));
+  }
+
+  if (Array.isArray(valueA) || Array.isArray(valueB)) {
+    return false;
+  }
+
+  if (valueA === valueB) {
+    return true;
+  }
+
+  return typeof valueA === 'number' && typeof valueB === 'number' && Number.isNaN(valueA) && Number.isNaN(valueB);
+};
+
+const shouldSkipField = (fieldName) => {
+  return fieldName === 'effectId' || fieldName.startsWith('_');
+};
+
 export const setCategoryEffect = (userAssumptions, defaultAssumptions, categoryId, effectId, effectData) => {
   // Validate that the effect exists in defaults
   const defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
@@ -69,11 +99,23 @@ export const setCategoryEffect = (userAssumptions, defaultAssumptions, categoryI
     }
   });
 
-  // Add all provided fields, regardless of default values
+  // Add only provided fields that differ from defaults
   let hasCustomFields = false;
   Object.keys(effectData).forEach((fieldName) => {
-    if (fieldName !== 'effectId' && effectData[fieldName] !== undefined) {
-      userEffect[fieldName] = effectData[fieldName];
+    if (shouldSkipField(fieldName)) {
+      return;
+    }
+
+    const value = effectData[fieldName];
+    if (value === undefined) {
+      return;
+    }
+
+    const normalizedValue = normalizeFieldValue(fieldName, value);
+    const defaultValue = normalizeFieldValue(fieldName, defaultEffect[fieldName]);
+
+    if (!areValuesEqual(normalizedValue, defaultValue)) {
+      userEffect[fieldName] = normalizedValue;
       hasCustomFields = true;
     }
   });

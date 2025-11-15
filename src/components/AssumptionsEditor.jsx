@@ -43,6 +43,8 @@ const AssumptionsEditor = () => {
     getGlobalParameter,
     isModalOpen,
     closeModal,
+    modalConfig,
+    setModalConfig,
     activeTab,
     setActiveTab,
     recipientSearchTerm,
@@ -61,6 +63,26 @@ const AssumptionsEditor = () => {
       setEditingRecipient(null);
     }
   }, [isModalOpen]);
+
+  // Handle deep-linking requests when the modal is opened from elsewhere
+  useEffect(() => {
+    if (!modalConfig) {
+      return;
+    }
+
+    if (modalConfig.tab) {
+      setActiveTab(modalConfig.tab);
+    } else if (modalConfig.categoryId) {
+      setActiveTab('categories');
+    }
+
+    if (modalConfig.categoryId) {
+      setEditingRecipient(null);
+      setEditingCategoryId(modalConfig.categoryId);
+    }
+
+    setModalConfig(null);
+  }, [modalConfig, setActiveTab, setModalConfig]);
 
   const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
 

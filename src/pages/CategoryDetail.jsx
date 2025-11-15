@@ -15,6 +15,9 @@ const CategoryDetail = () => {
   const { categoryId } = useParams();
   const [categoryInfo, setCategoryInfo] = useState(null);
   const { combinedAssumptions, openModal } = useAssumptions();
+  const handleEditCategoryAssumptions = () => {
+    openModal({ tab: 'categories', categoryId });
+  };
 
   useEffect(() => {
     // Get category info
@@ -104,6 +107,15 @@ const CategoryDetail = () => {
           entityType="recipient" // Reuse recipient styling
           customValuesIndicator={<CustomValuesIndicator />}
           onAdjustAssumptions={openModal}
+          costPerLifeAction={
+            <button
+              type="button"
+              onClick={handleEditCategoryAssumptions}
+              className="inline-flex items-center px-2 py-0.5 border border-indigo-200 text-xs font-semibold text-indigo-600 rounded hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500"
+            >
+              Edit
+            </button>
+          }
         />
 
         {/* Sample donation calculator */}

@@ -8,7 +8,6 @@ effects:
     costPerMicroprobability: 2_000_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: 1.0
-    validTimeInterval: [2022, null]
 ---
 
 # Justification of cost per life

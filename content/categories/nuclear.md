@@ -3,14 +3,18 @@ id: nuclear
 name: 'Nuclear'
 effects:
   - effectId: population
-    startTime: 15
-    windowLength: 100
-    costPerMicroprobability: 500_000
-    populationFractionAffected: 0.1
-    qalyImprovementPerYear: 1.0
+    startTime: 25
+    windowLength: 30
+    costPerMicroprobability: 2_500_000
+    populationFractionAffected: 0.9
+    qalyImprovementPerYear: 0.75
 ---
 
 # Justification of cost per life
+
+_The following analysis was done on November 13th 2025. It was written by GPT 5 Thinking and edited by Impact List staff for brevity._
+
+Unlike a 'normal' cause category where we compute the cost per life by first estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), donations to this category aim to avert a low probability but catastrophic event. We therefore will define an event, determine what fraction of the global population this event would likely affect, determine how much this event would harm each person affected, and estimate the cost of reducing the likelihood of this event by one in a million.
 
 ### Headline estimates
 
@@ -24,7 +28,6 @@ effects:
 - **Average QALY improvement per affected person per year if the war is averted:**
   - Point estimate: 0.75
   - 80% range: 0.5–1.0
-- **Expected “start time” of the averted event:** about 50 years from now (around 2075).
 - **Duration of the effect (how long individuals would otherwise be affected):**
   - Point estimate: 30 years
   - 80% range: 20–50 years
@@ -143,26 +146,7 @@ Even at the low end, the QALY loss per affected person is large compared to typi
 
 ---
 
-### Start time and duration of the averted event
-
-For this cause area we must also pick a **start time** for the averted event and a **duration** for its effects.
-
-#### Start time
-
-Analyses by 80,000 Hours and others suggest that the chance of some nuclear war over the next 100 years might be in the 20–50% range, with the chance of all-out US–Russia war being smaller but still non-negligible over that time horizon. Forecasting tournaments and expert elicitation generally treat nuclear war as a **persistent risk** that may be higher in some decades and lower in others, but not concentrated in any single year.
-
-For modeling simplicity, we assume:
-
-- The risk is spread over roughly the next century.
-- There is no dominant “peak year” that strongly outweighs the rest.
-
-Conditional on a war happening at some point in the next 100 years, a natural simplification is to treat the **expected time of occurrence** as roughly halfway through that period. Since our base year is around 2025, this gives:
-
-- **Expected start time:** about 50 years from now, or around the year 2075.
-
-This is not a prediction that “2075 is special”; it is a modeling convenience that places nuclear risk broadly in the same long-term timeframe as other global-catastrophic risks.
-
-#### Duration
+### Duration of the averted event
 
 As discussed above, we use **30 years** as the central duration over which affected individuals’ QALYs are significantly reduced. Intuitively, this is a rough compromise between:
 
@@ -195,7 +179,12 @@ Then:
 
 - The expected number of deaths averted is  
   $5\ \text{billion} \times 0.01 \times 0.40 = 20\ \text{million}$.
-- The cost per death averted is \$25 billion / 20 million $\approx$ \$1,250 per life.
+- The cost per death averted is
+
+  $$
+  \frac{\$25\ \text{billion}}{20\ \text{million}} \approx \$1{,}250\ \text{per life}.
+  $$
+
 - If each life averted corresponds to roughly 30–40 QALYs, this implies **\$30–\$40 per QALY**.
 
 This is already highly competitive with many health and poverty interventions, even before accounting for the value of preserving civilization’s long-term potential. Importantly for our microprobability parameter:
@@ -217,7 +206,13 @@ Longtermist funders such as Open Philanthropy have published internal benchmarks
 
 This corresponds to:
 
-- \$1 billion / (0.0005 / 10^{-6}) = \$1 billion / 500 microprobabilities = **\$2 million per microprobability** of existential catastrophe.
+- This corresponds to:
+
+  $$
+  \frac{\$1\ \text{billion}}{0.0005 / 10^{-6}} = \frac{\$1\ \text{billion}}{500\ \text{microprobabilities}} \approx \$2\ \text{million per microprobability}.
+  $$
+
+  So roughly **\$2 million per microprobability** of existential catastrophe.
 
 Nuclear war is _less likely_ than AI-related existential risk to literally wipe out humanity, but it is **much better understood technically** and arguably **more tractable in the near term**, because it involves familiar state actors and institutions such as arms-control treaties, launch-on-warning protocols, and command-and-control systems. It does not seem unreasonable to believe that:
 
@@ -294,5 +289,7 @@ Despite these uncertainties, the combination of:
 - Plausible pathways for philanthropy to influence nuclear policy,
 
 makes nuclear-risk reduction a serious contender as a highly cost-effective cause area, even when evaluated solely in terms of QALYs for currently existing and near-future people.
+
+_Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes

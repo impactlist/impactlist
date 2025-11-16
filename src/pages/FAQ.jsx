@@ -60,28 +60,62 @@ const FAQ = () => {
 
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  The donation effectiveness estimates seem arbitrary. Why should I trust them?
+                  How do you calculate the effectiveness of different charities?
                 </h3>
                 <p className="text-gray-600">
-                  This project is in its extreme early stages, and is essentially a proof of concept. Almost all of the
-                  work has gone into building the site itself, and so far almost no work has gone into the effectiveness
-                  estimates. If you disagree with any assumptions you can use the 'Adjust Assumptions' button to use
-                  your own effectiveness estimates.
+                  Initially we've mostly focused on calculating the effectiveness of different{' '}
+                  <strong>categories</strong> of donations, such as global health, poverty, animal welfare, etc. We
+                  currently have 27 categories. You can see the effectiveness estimates for each category by going{' '}
+                  <a href="/categories" className="text-blue-600 hover:text-blue-800 underline">
+                    here
+                  </a>{' '}
+                  and then clicking on the category you're interested in. The site also supports specifying the
+                  effectiveness of specific charities. We've only done that for a handful so far, but plan to add more
+                  in the future.
                 </p>
                 <br />
                 <p className="text-gray-600">
-                  We'd love to get some volunteers to help with effectiveness estimates. If you'd like to help, see{' '}
-                  <a
-                    href="https://github.com/impactlist/impactlist/blob/main/CONTRIBUTING.md"
-                    className="text-blue-600 hover:text-blue-800 underline"
-                  >
-                    here
+                  Because we have very few staff, we've initially made heavy use of large language models (mostly
+                  ChatGPT 5.1 Thinking) to help us with the estimation process. We encourage the LLMs to make use of
+                  existing work by organizations such as{' '}
+                  <a href="https://www.givewell.org/" className="text-blue-600 hover:text-blue-800 underline">
+                    GiveWell
                   </a>{' '}
-                  for how to get started, and join our{' '}
+                  and{' '}
+                  <a href="https://www.openphilanthropy.org/" className="text-blue-600 hover:text-blue-800 underline">
+                    Open Philanthropy
+                  </a>
+                  , who have already done a lot of the hard work of estimating charity effectiveness. We plan to refine
+                  our estimates over time with human experts.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  The charity effectiveness estimates seem arbitrary. Why should I trust them?
+                </h3>
+                <p className="text-gray-600">
+                  Our goal is to make the assumptions and the details of the calculations as transparent as possible. We
+                  encourage you to read the justifications for the effectiveness estimates for each category, and see if
+                  they seem reasonable to you. If not, you have a few options:
+                  <br />
+                  <br />
+                  (1) Use the 'Adjust Assumptions' button on the top right of most pages on this site. This gives you
+                  full control over the assumptions to see how your preferred values would affect the rankings.
+                  <br />
+                  (2) Help us improve the estimates. Email us (see below) or join our{' '}
                   <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">
                     Discord
                   </a>{' '}
-                  .
+                  and let us know why you disagree and we may incorporate your feedback into the estimates. You can also
+                  help us improve the estimates more directly by making a{' '}
+                  <a
+                    href="https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                  >
+                    github pull request
+                  </a>
+                  {'.'}
                 </p>
               </div>
 

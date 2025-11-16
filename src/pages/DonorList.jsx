@@ -100,8 +100,9 @@ const DonorList = () => {
       label: 'Lives Saved',
       tooltip: (
         <div>
-          We calculate the expected lives saved for each donation, based on cost effective estimates for every charity.
-          We then sum these values across all the donations a person has made to get their total expected lives saved.
+          We first calculate the expected lives saved for each donation a person has made, based on our cost
+          effectiveness estimates for every charity. We then sum these values across all the donations a person has made
+          to get their total expected lives saved.
           <br />
           <br />
           See the FAQ for more details.

@@ -44,7 +44,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
       <div className="flex flex-col">
         <FormField
           id={`effect-${effectIndex}-windowLength`}
-          label="Window Length (years)"
+          label="Duration (years)"
           description={getEffectTooltip('qaly', 'windowLength')}
           value={effect.windowLength}
           defaultValue={defaultEffect?.windowLength}

@@ -77,7 +77,7 @@ const PopulationEffectInputs = ({
         <div className="flex flex-col">
           <FormField
             id={`effect-${effectIndex}-windowLength`}
-            label="Window length (years)"
+            label="Duration (years)"
             description={getEffectTooltip('population', 'windowLength')}
             value={effect.windowLength}
             defaultValue={defaultEffect?.windowLength}

@@ -7,10 +7,10 @@ export const EFFECT_TOOLTIPS = {
   // QALY/Standard effects
   qaly: {
     costPerQALY:
-      'Cost to produce or save one quality-adjusted life year. The benefits are spread evenly over the window length.',
+      'Cost to produce or save one quality-adjusted life year. The benefits are spread evenly over the duration.',
     startTime: 'Number of years after the intervention starts that the effect of that intervention starts.',
     windowLength:
-      'Duration of the effect of the intervention. The window length can be superseded by a shorter global time limit parameter.',
+      'Duration of the effect of the intervention. The duration can be superseded by a shorter global time limit parameter.',
   },
 
   // Population-level effects
@@ -22,7 +22,7 @@ export const EFFECT_TOOLTIPS = {
       'Quality-adjusted life years gained or lost per person per year if the event happens. For instance if the event kills everyone it affects, the life-year improvement per year is -1 (each person loses one life-year per year after they die).',
     startTime: 'Number of years after the intervention starts until the event is expected to happen, if it happens.',
     windowLength:
-      'Duration of the effect of the event, if it happens. The window length can be superseded by a shorter global time limit parameter.',
+      'Duration of the effect of the event, if it happens. The duration can be superseded by a shorter global time limit parameter.',
   },
 };
 

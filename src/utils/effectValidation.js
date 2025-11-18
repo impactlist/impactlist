@@ -69,10 +69,10 @@ export const validateEffectField = (fieldName, value, effectType) => {
   if (fieldName === 'windowLength') {
     const { cleanValue, numValue } = cleanAndParseValue(value);
     if (isPartialInput(cleanValue)) {
-      return 'Window length is required';
+      return 'Duration is required';
     }
     if (isNaN(numValue) || numValue <= 0) {
-      return 'Window length must be positive';
+      return 'Duration must be positive';
     }
   }
 

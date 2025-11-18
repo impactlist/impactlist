@@ -13,7 +13,7 @@ export const QALY_EFFECT_FIELDS = [
   },
   {
     name: 'windowLength',
-    label: 'Window Length (years)',
+    label: 'Duration (years)',
     tooltip: EFFECT_TOOLTIPS.qaly.windowLength,
   },
 ];
@@ -41,7 +41,7 @@ export const POPULATION_EFFECT_FIELDS = [
   },
   {
     name: 'windowLength',
-    label: 'Window length (years)',
+    label: 'Duration (years)',
     tooltip: EFFECT_TOOLTIPS.population.windowLength,
   },
 ];

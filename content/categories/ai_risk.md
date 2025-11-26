@@ -26,7 +26,7 @@ This effect captures welfare gains from reducing the probability of human extinc
 - **Population fraction affected:** 1.0 (by definition, everyone dies)
 - **QALY improvement per affected person per year:** 0.9 (0.7–1.0)
 - **Start time:** 15 years
-- **Duration:** 40 years (for people alive at time of catastrophe)
+- **Duration:** Defined by global time limit parameter (default is 100 years)
 
 ## Assumptions
 
@@ -37,7 +37,7 @@ This effect captures welfare gains from reducing the probability of human extinc
 5. Dario Amodei estimates ~25% chance of extremely bad AI outcomes including extinction. ([Axios](https://www.axios.com/2025/09/17/anthropic-dario-amodei-p-doom-25-percent))
 6. Global life expectancy is ~73 years; healthy life expectancy (HALE) is ~63–64 years, implying average quality weight ~0.85–0.9. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 7. World population projected to peak at ~10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf))
-8. Each death corresponds to ~36 QALYs lost (40 years remaining × 0.9 quality).
+8. For currently alive people, average remaining life expectancy is ~40 years with ~0.9 quality weight, yielding ~36 QALYs per person.
 9. Cumulative AI safety spending through 2025 is ~\$1 billion (Open Philanthropy ~\$400M, SFF ~\$53M, FTX Future Fund ~\$32M, LTFF ~\$10M, plus lab safety teams ~\$32M/year and government programs). ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [TIME](https://time.com/7012763/cari-tuna/))
 10. Total cost per AI safety employee is ~2× salary (~\$400–500k/year) including benefits, compute, and overhead. ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation))
 11. AI research scientist salaries in the US are ~\$180–220k/year. ([Glassdoor](https://www.glassdoor.com/Salaries/ai-research-scientist-salary-SRCH_KO0%2C21.htm))
@@ -98,33 +98,33 @@ Note: This modeling only counts QALYs for humans, not for non-human animals or o
 
 ### QALY Improvement per Affected Person per Year
 
-The point estimate (0.9) and range (0.7–1.0) are derived by estimating how many high-quality life-years each person loses.
+The point estimate (0.9) and range (0.7–1.0) represent the average quality-of-life weight for human existence.
 
-**Step 1 — Remaining life expectancy:**
+WHO estimates healthy life expectancy (HALE) at ~63–64 years vs. ~73 years total life expectancy (Assumption 6), implying people spend most of their lives in reasonably good health. This suggests an average quality-of-life weight of ~0.85–0.9. We use 0.9 QALYs per year, treating this as all-things-considered quality including work, relationships, culture, and periods of hardship.
 
-Global life expectancy at birth is ~73 years (Assumption 6). For the "average person" alive at the time of an AI catastrophe, accounting for mixed ages and countries, we assume ~40 years remaining.
+**How total QALYs scale with time limit:**
 
-**Step 2 — Quality of life:**
+The cost per QALY depends on the duration (time limit) the user chooses. With world population of ~10 billion (Assumption 7) and 0.9 QALYs per person per year:
 
-WHO estimates healthy life expectancy (HALE) at ~63–64 years vs. ~73 years total, implying people spend most of their lives in reasonably good health. This suggests an average quality-of-life weight of ~0.85–0.9. We use 0.9 QALYs per year, treating this as all-things-considered quality including work, relationships, culture, and periods of hardship.
+**Example 1 — Time limit = 40 years (currently alive people only):**
 
-**Step 3 — QALYs lost per person:**
+- Total QALYs lost: 10B × 0.9 × 40 = **360 billion QALYs**
+- QALYs saved per microprobability: 360B × 10⁻⁶ = 360,000
+- Cost per QALY: \$2M / 360,000 ≈ **\$6/QALY**
 
-If someone dies instantly in an AI catastrophe instead of living out their remaining life:
+**Example 2 — Time limit = 100 years (default, ~2–3 generations):**
 
-- QALYs lost per person ≈ 40 × 0.9 = **36 QALYs** (Assumption 8)
+- Total QALYs lost: 10B × 0.9 × 100 = **900 billion QALYs**
+- QALYs saved per microprobability: 900B × 10⁻⁶ = 900,000
+- Cost per QALY: \$2M / 900,000 ≈ **\$2.20/QALY**
 
-**Step 4 — Total QALYs lost:**
+**Example 3 — Time limit = 1,000 years (~25 generations):**
 
-With world population of ~10 billion (Assumption 7):
+- Total QALYs lost: 10B × 0.9 × 1,000 = **9 trillion QALYs**
+- QALYs saved per microprobability: 9T × 10⁻⁶ = 9 billion
+- Cost per QALY: \$2M / 9B ≈ **\$0.0002/QALY**
 
-- 10 billion die × 36 QALYs each = **360 billion QALYs**
-
-For 10 billion affected over 40 years: 360B / (10B × 40) = **0.9 QALYs/person/year**
-
-A 1-in-1,000,000 risk reduction therefore saves ~360,000 expected QALYs, implying ~\$6/QALY (range \$0.6–\$60/QALY).
-
-This is larger than our nuclear-war estimate (~200 billion QALYs) because everyone dies and we treat all deaths as premature by several decades. Crucially, this **still ignores the vast number of future generations that would never exist if humanity goes extinct**.
+These examples assume constant population for simplicity. The actual calculation uses global parameters that define the future population curve, so scaling may not be exactly linear. The default time limit is 100 years; users can adjust this to match their values.
 
 ### Start Time
 
@@ -132,7 +132,16 @@ The 15-year start time reflects uncertainty about when transformative AI might a
 
 ### Duration
 
-The 40-year duration represents the average remaining lifespan of people alive at the time of catastrophe. For AI doom there are no survivors, so we are simply averaging over the remaining lifetime people would have had if not killed. This captures uncertainty about age distribution, future life expectancy improvements, and regional differences.
+The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Unlike other catastrophic risks where some people survive and recover, AI-caused extinction means no future generations ever exist—so the choice of time horizon significantly affects the estimated impact.
+
+Example time limits:
+
+- **40 years** counts only currently alive people's remaining lifespans
+- **100 years** (default) includes roughly 2–3 generations
+- **1,000 years** includes roughly 25 generations of descendants
+- **Up to 1 trillion years** for longtermists who want to see the full potential loss of humanity's future
+
+The cost per QALY depends on the chosen time limit and other global parameters that define the future population curve. This allows users to see impact estimates that match their own values about how much weight to give future generations.
 
 ## What Kinds of Charities Are We Modeling?
 
@@ -171,11 +180,11 @@ These numbers are order-of-magnitude guesses, not precise forecasts. Major uncer
 
 4. **Interaction with other risks and benefits.** AI safety work might also reduce other catastrophic risks (AI-enabled bioterrorism, cyberwarfare) or speed up beneficial applications. These co-benefits are not included above.
 
-5. **The long-run future.** Our QALY calculations only include people alive at the time of catastrophe. They do not count the potentially vast number of future people who would never exist if humanity goes extinct. Longtermist analyses argue that preserving humanity's long-run potential—centuries of civilization, possible space settlement, trillions of future lives—dominates the calculus.
+5. **Valuing future generations.** The default time limit (100 years) includes 2–3 generations beyond those currently alive. Users can adjust this: shorter (~40 years) for only currently alive people, or much longer (up to 1 trillion years) for full longtermist weight. This choice dramatically affects the implied cost per QALY.
 
 6. **Non-human welfare.** If misaligned AI destroys most animal life, welfare losses for non-human animals could be enormous. On the flip side, aligned AI might vastly reduce wild-animal suffering or improve farmed animal lives. Our framework here is human-centric.
 
-Given these uncertainties, these estimates are rough tools for comparison. They suggest that even under conservative, near-term, human-only assumptions, **top AI existential risk charities plausibly achieve ~\$1–\$60 per QALY**, with a central estimate around **\$6 per QALY**.
+Given these uncertainties, these estimates are rough tools for comparison. With the default 100-year time limit, top AI existential risk charities achieve roughly **\$2/QALY**. With shorter horizons (40 years, currently alive only) the cost rises to ~\$6/QALY; with longer horizons it drops further.
 
 _These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 

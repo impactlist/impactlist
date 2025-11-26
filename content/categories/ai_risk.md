@@ -186,6 +186,8 @@ These numbers are order-of-magnitude guesses, not precise forecasts. Major uncer
 
 Given these uncertainties, these estimates are rough tools for comparison. With the default 100-year time limit, top AI existential risk charities achieve roughly **\$2/QALY**. With shorter horizons (40 years, currently alive only) the cost rises to ~\$6/QALY; with longer horizons it drops further.
 
+---
+
 _These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes

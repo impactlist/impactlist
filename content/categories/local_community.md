@@ -10,42 +10,54 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on November 12th 2025. It was written by GPT 5 Thinking and edited by Impact List staff for brevity._
+_The following analysis was done on November 12th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing, but check the global assumptions for this value and other relevant parameters, such as the discount factor).
 
-**Point estimate:** **\$12,000 per QALY**  
-**Range (plausible):** **\$2,000–\$60,000 per QALY**
+## Description of effect
+
+This effect captures health gains from community-level charities in rich countries that deliver direct, evidence-backed services: harm-reduction and overdose prevention, smoking-cessation outreach, primary-care-linked domestic-violence identification/referral, and fall-prevention for older adults. These are often run by local nonprofits in partnership with health and social-care providers.
+
+## Point Estimates
+
+- **Cost per QALY:** \$12,000 (\$2,000–\$60,000)
+- **Start time:** 1 year
+- **Duration:** 15 years
+
+## Assumptions
+
+1. Community naloxone distribution achieves \$111–\$58,738/QALY depending on context; all studies conclude it is cost-effective, with better results in higher-risk populations. ([Cherrier et al. 2021](https://doi.org/10.1007/s41669-021-00309-z))
+2. Smoking-cessation outreach with medication and counseling achieves approximately \$905/QALY (95% CI \$822–\$1,001) in real-world implementation. ([Mundt et al. 2024](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10922402/))
+3. Domestic-violence identification and referral (IRIS model) produces QALY gains with net cost savings from a societal perspective over 10-year horizons. ([Devine et al. 2012](https://bmjopen.bmj.com/content/bmjopen/2/3/e001008.full.pdf), [Barbosa et al. 2018](https://bmjopen.bmj.com/content/bmjopen/8/8/e021256.full.pdf))
+4. Home-safety assessment programs for falls prevention are the most cost-effective approach for community-dwelling older adults, commonly <\$40,000/QALY; medication-adjustment in care facilities achieves <\$13,000/QALY. ([Olij et al. 2018](https://shantysterke.nl/wp-content/uploads/2018/12/J-Am-Geriatr-Soc.pdf))
 
 ## Details
 
-**What we include as “Local Community.”**  
-This category covers community-level charities in rich countries that deliver direct, evidence-backed services to local residents—e.g., harm-reduction and overdose prevention, smoking-cessation outreach, primary-care-linked domestic-violence identification/referral, and fall-prevention for older adults. These are often run by local nonprofits in partnership with health and social-care providers.
+### Cost per QALY
 
-**Representative top-tier interventions and their cost-per-QALY evidence**
+The point estimate (\$12,000/QALY) and range (\$2,000–\$60,000/QALY) represent an average across well-evidenced community health programs.
 
-- **Community naloxone distribution (harm reduction).**  
-  A systematic review of economic evaluations found **all studies** concluded community naloxone distribution is cost-effective, with **ICURs ranging from \$111–\$58,738 per QALY** (2020 USD). Cost-effectiveness improves with higher overdose risk and bystander willingness to intervene.  
-  Source: [Cherrier et al., 2021, _PharmacoEconomics – Open_](https://doi.org/10.1007/s41669-021-00309-z). See also policy-relevant modeling and reviews on overdose-prevention centers and statewide distribution efforts: [Behrends et al., 2024](https://pmc.ncbi.nlm.nih.gov/articles/PMC11069439/); [Zang et al., 2024](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2819204).
+**Intervention-specific estimates:**
 
-- **Smoking-cessation outreach and treatment (community/primary-care linked).**  
-  A recent US implementation study reported **\$905 per QALY** (95% CI \$822–\$1,001) for a comprehensive outreach + medication + counseling program in real-world clinics; other proactive quitline/outreach models typically report **low-thousands \$ per QALY**.  
-  Sources: [Mundt et al., 2023/2024](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10922402/); [Thao et al., 2019](https://onlinelibrary.wiley.com/doi/10.1111/add.14752); summary slide deck with the same ICER: [Mundt 2024](https://ctri.wisc.edu/wp-content/uploads/sites/240/2024/08/Mundt_CostEffectiveness_2024_Slides.pdf). Background on long-run health gains from quitting: [US Surgeon General, 2020](https://www.hhs.gov/sites/default/files/2020-cessation-sgr-full-report.pdf).
+- **Naloxone distribution:** ~\$5k–\$15k/QALY typical, with wide range by overdose prevalence (Assumption 1)
+- **Smoking cessation outreach:** ~\$1k–\$5k/QALY (Assumption 2)
+- **Domestic violence (IRIS):** Often cost-saving (Assumption 3)
+- **Falls prevention:** ~\$20k–\$40k/QALY for home assessments (Assumption 4)
 
-- **Domestic-violence identification and referral (IRIS model).**  
-  UK evaluations of the IRIS program find **QALY gains with net cost savings** (dominant vs. usual care) from a societal perspective; the updated IRIS+ model remained cost-effective and often cost-saving over a 10-year horizon.  
-  Sources: [Devine et al., 2012, _BMJ Open_](https://bmjopen.bmj.com/content/bmjopen/2/3/e001008.full.pdf); [Barbosa et al., 2018, _BMJ Open_](https://bmjopen.bmj.com/content/bmjopen/8/8/e021256.full.pdf); [Cochrane et al., 2024, _BMJ Open_](https://openaccess.city.ac.uk/id/eprint/33017/1/e071300.full.pdf).
+**Combined estimate:**
 
-- **Home-safety assessment & modifications (falls prevention).**  
-  A systematic review of economic evaluations concluded that **home assessment programs** were the **most cost-effective** approach for community-dwelling older adults, commonly **< \$40,000 per QALY**; medication-adjustment programs in care facilities were often **< \$13,000 per QALY**.  
-  Sources: [Olij et al., 2018, _J Am Geriatrics Soc_](https://shantysterke.nl/wp-content/uploads/2018/12/J-Am-Geriatr-Soc.pdf); supporting observational and claims-based evidence: [Niedermann et al., 2024](https://bmcgeriatr.biomedcentral.com/articles/10.1186/s12877-024-05586-x).
+Averaging across these interventions for a representative "top charity" portfolio yields approximately \$12,000/QALY. The range (\$2k–\$60k) reflects variation in local epidemiology (overdose prevalence, smoking rates, age distribution), program design and intensity, and currency/year assumptions in source studies.
 
-**How we arrive at the estimate.**  
-Taking the **central** cost-per-QALY figures from these well-evidenced community programs—naloxone distribution (~\$5k–\$15k typical; wide range by context), smoking-cessation outreach (~\$1k–\$5k), home-safety/falls prevention (~\$20k–\$40k for community dwellers), and IRIS (often cost-saving)—and **averaging across them for a representative “top charity” portfolio** yields an order-of-magnitude estimate near **\$12,000 per QALY**. The **range (\$2k–\$60k)** reflects: (i) variation across local epidemiology and implementation (e.g., overdose prevalence, age in fall-prevention, population risk), (ii) program design (intensity, staffing, uptake), and (iii) currency/year assumptions in the source studies.
+### Start Time
 
-**Bottom line.**  
-In wealthy countries, high-performing **local community charities** that target pressing problems (overdose, smoking, domestic violence, injurious falls) can routinely achieve **low- to mid-five-figure dollar costs per QALY**, with some models **cost-saving**. A prudent point estimate for donations aimed at the best-evidenced opportunities in this space is **about \$12,000 per QALY**.
+The 1-year start time reflects that community health programs typically deliver benefits within months of implementation as individuals receive services.
 
-_Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
+### Duration
+
+The 15-year duration reflects that health gains from smoking cessation, overdose prevention, violence intervention, and fall prevention persist over participants' remaining lifespans, with some interventions producing benefits for decades.
+
+---
+
+_These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes

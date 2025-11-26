@@ -12,7 +12,7 @@ effects:
 
 _The following analysis was done on November 13th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing, but check the global assumptions for this value and other relevant parameters, such as the discount factor).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
 ## Description of effect
 
@@ -44,20 +44,24 @@ The point estimate (\$160,000/QALY) and range (\$50,000–\$700,000/QALY) are de
 **Model: \$1M portfolio (40% inclusive-policy advocacy, 40% accountability reform, 20% bias-mitigation):**
 
 **Inclusive-policy advocacy (\$400k):**
+
 - 15% chance of policy win affecting 50,000 people; 1% experience meaningful improvement
 - 0.02 QALY/year for 2 years among beneficiaries (Assumption 5)
 - Expected QALYs: 50,000 × 1% × 0.02 × 2 × 15% = **3.0 QALYs**
 
 **Accountability/safety reform (\$400k):**
+
 - Averts ~10 non-fatal injury/trauma incidents at 0.15 QALY each = 1.5 QALYs
 - Minus 0.2 QALY for trust spillovers = **1.3 QALYs**
 
 **Bias-mitigation programs (\$200k):**
+
 - Limited durable effect; net **0.3 QALYs** after backlash adjustment
 
 **Subtotal:** 3.0 + 1.3 + 0.3 = 4.6 QALYs
 
 **Risk adjustment:** Apply –25% penalty for downstream harms (Assumption 6):
+
 - Adjusted: 4.6 × 0.75 = **3.45 QALYs**
 
 **Learning effect:** +80% of one year's impact over next four years = +1.6 QALYs

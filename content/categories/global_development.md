@@ -10,6 +10,10 @@ effects:
 
 # Justification of cost per life
 
+_The following analysis was done on November 12th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
+
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
+
 ## Description of effect
 
 This effect captures improvements in quality of life from economic interventions targeting people in extreme poverty. Unlike Global Health interventions that primarily avert deaths, these programs increase consumption, assets, income, and psychological wellbeing through cash transfers, livelihood programs, and developmental interventions. Benefits persist for years and can help households escape poverty traps.

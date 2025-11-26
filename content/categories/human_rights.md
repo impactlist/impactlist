@@ -12,7 +12,7 @@ effects:
 
 _The following analysis was done on November 12th 2025, written by GPT 5 Pro and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing, but check the global assumptions for this value and other relevant parameters, such as the discount factor).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
 ## Description of effect
 
@@ -45,6 +45,7 @@ The point estimate (\$600/QALY) and range (\$200–\$2,000/QALY) represent a ble
 **Violence against women and girls (VAWG):**
 
 Using DALY-based estimates (Assumption 1) and converting to QALYs (Assumption 2):
+
 - Community activist programs: \$180/DALY → ~\$120/QALY
 - Self-defence programs: \$260/DALY → ~\$170/QALY
 

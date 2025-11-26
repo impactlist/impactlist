@@ -12,7 +12,7 @@ effects:
 
 _The following analysis was done on November 12th 2025, written by GPT 5 Thinking, cross-checked by Claude Sonnet 4.5 and Gemini Pro 2.5, and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing, but check the global assumptions for this value and other relevant parameters, such as the discount factor).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
 ## Description of effect
 
@@ -45,6 +45,7 @@ The point estimate (\$25,000/QALY) and range (\$5,000–\$100,000/QALY) represen
 **Direct treatment programs (best-in-class):**
 
 The strongest direct interventions cluster from low-thousands to low-tens-of-thousands per QALY:
+
 - Hypertension control: ~\$16,000/QALY (Assumption 1)
 - Smoking cessation: ~\$3,000–\$7,500/QALY (Assumption 2)
 - Patient navigation: ~\$19,000/QALY (Assumption 3)

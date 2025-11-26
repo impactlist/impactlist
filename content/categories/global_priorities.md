@@ -12,7 +12,7 @@ effects:
 
 _The following analysis was done on November 16th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing, but check the global assumptions for this value and other relevant parameters, such as the discount factor).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
 ## Description of effect
 
@@ -47,9 +47,10 @@ The point estimate (\$10/QALY) and range (\$1–\$500/QALY) reflect GPR's role a
 Consider \$20 million in GPR that modestly improves decisions across a \$10 billion philanthropic portfolio (Assumption 4):
 
 - If GPR improves average cost-effectiveness by 2%:
+
   - Extra "effective money": \$10B × 2% = \$200 million
   - At baseline \$200/QALY:
-  $$Q_{\text{extra}} = \dfrac{\$200{,}000{,}000}{\$200} = 1{,}000{,}000 \text{ QALYs}$$
+    $$Q_{\text{extra}} = \dfrac{\$200{,}000{,}000}{\$200} = 1{,}000{,}000 \text{ QALYs}$$
   - Cost per QALY: \$20M / 1M = **\$20/QALY**
 
 - If the same GPR influences \$20 billion by 2%, cost per QALY falls to **\$10**.

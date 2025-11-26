@@ -28,6 +28,8 @@ This effect captures welfare gains from reducing the probability of human extinc
 - **Start time:** 15 years
 - **Duration:** Defined by global time limit parameter (default is 100 years)
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Toby Ord estimates 10% probability of existential catastrophe from unaligned AI this century, higher than all other anthropogenic existential risks combined. ([The Precipice Revisited](https://www.tobyord.com/writing/the-precipice-revisited))

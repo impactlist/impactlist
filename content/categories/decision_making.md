@@ -24,6 +24,8 @@ This effect captures welfare gains from charities that improve how high-stakes i
 - **Start time:** 3 years
 - **Duration:** 20 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Forecasting tournaments produce substantially higher accuracy than status-quo methods; trained teams achieved 30–60% lower Brier scores than controls in the IARPA program. ([Mellers et al. 2015](https://www.pnas.org/doi/10.1073/pnas.1502419112), [Good Judgment](https://goodjudgment.com/research/))

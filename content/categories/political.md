@@ -24,6 +24,8 @@ This effect captures the expected QALY impact of partisan donations to candidate
 - **Start time:** 1 year
 - **Duration:** 4 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Campaign contact and advertising have small average persuasive effects in high-salience races; TV ad effects are often short-lived. ([Kalla & Broockman 2018](https://www.cambridge.org/core/journals/american-political-science-review/article/minimal-persuasive-effects-of-campaign-contact-in-general-elections-evidence-from-49-field-experiments/753665A313C4AB433DBF7110299B7433), [Gerber et al. 2011](https://www.cambridge.org/core/journals/american-political-science-review/article/how-large-and-longlasting-are-the-persuasive-effects-of-televised-campaign-ads-results-from-a-randomized-field-experiment/DA29FE8A5581C772006A1DEBB21CFC4C))

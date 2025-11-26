@@ -22,6 +22,8 @@ This effect captures quality-adjusted life-years gained through donations to top
 - **Start time:** 1 year
 - **Duration:** 60 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Remaining life expectancy for children under 5 in sub-Saharan Africa is approximately 60 years. ([World Bank](https://data.worldbank.org/indicator/SP.DYN.LE00.IN?locations=ZG))

@@ -24,6 +24,8 @@ This effect captures welfare gains from ambitious institutional reforms in rich 
 - **Start time:** 5 years
 - **Duration:** 40 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Relaxing land-use constraints in top-productivity metros could raise U.S. GDP by several percent; debate exists on exact magnitudes but sign and scale are substantial. ([Hsieh & Moretti 2019](https://www.aeaweb.org/articles?id=10.1257%2Fmac.20170388), [Greaney 2023](https://www.aeaweb.org/articles?from=f&id=10.1257%2Fmac.20230141))

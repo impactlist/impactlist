@@ -24,6 +24,8 @@ This effect captures welfare improvements for farmed animals through corporate c
 - **Start time:** 1 year
 - **Duration:** 15 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Top animal-welfare charities (The Humane League, Mercy for Animals, Compassion in World Farming) achieve approximately 11 hens helped per dollar through cage-free accountability programs. ([ACE 2025](https://animalcharityevaluators.org/charity-review/the-humane-league/))

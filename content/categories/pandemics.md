@@ -28,6 +28,8 @@ This effect captures welfare gains from reducing the probability of a global cat
 - **Start time:** 20 years
 - **Duration:** 10 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. The 1918 influenza killed ~50 million people (possibly 100 million) when global population was 1.8 billion. ([CDC](https://archive.cdc.gov/www_cdc_gov/flu/pandemic-resources/1918-commemoration/1918-pandemic-history.htm))

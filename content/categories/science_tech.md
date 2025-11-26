@@ -24,6 +24,8 @@ This effect captures quality-of-life improvements from philanthropic funding of 
 - **Start time:** 5 years
 - **Duration:** 25 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Each \$1 of R&D yields roughly \$5–\$13 in present-value economy-wide benefits after accounting for diffusion lags. ([Jones & Summers 2020](https://www.nber.org/system/files/working_papers/w27863/w27863.pdf))

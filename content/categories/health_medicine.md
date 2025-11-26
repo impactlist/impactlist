@@ -24,6 +24,8 @@ This effect captures health gains from high-income-country opportunities in two 
 - **Start time:** 5 years
 - **Duration:** 40 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Team-based hypertension control achieves median \$16,309 per QALY in U.S. studies. ([CDC](https://www.cdc.gov/nccdphp/priorities/high-blood-pressure.html))

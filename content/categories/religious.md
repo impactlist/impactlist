@@ -24,6 +24,8 @@ This effect captures health and wellbeing gains from charities that support reli
 - **Start time:** 1 year
 - **Duration:** 10 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Regular religious service attendance (weekly or more) is associated with 20–33% lower all-cause mortality compared to non-attendance, translating to approximately 7 additional years of life expectancy at age 20. ([Hummer et al. 1999](https://pubmed.ncbi.nlm.nih.gov/10332617/), [Li et al. 2016](https://pmc.ncbi.nlm.nih.gov/articles/PMC7825951/))

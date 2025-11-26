@@ -24,6 +24,8 @@ This effect captures health benefits from donations to top policy-focused climat
 - **Start time:** 7 years
 - **Duration:** 80 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Top climate nonprofits can avert approximately 1 tCO₂e per \$1 through policy advocacy and systems change. ([Giving Green 2025](https://www.givinggreen.earth/post/eager-to-measure-the-impact-of-your-climate-donation-forget-offset-math-focus-on-systems-change), [Founders Pledge](https://www.founderspledge.com/research/climate-change-executive-summary))

@@ -28,6 +28,8 @@ This effect captures welfare gains from reducing the probability of an all-out n
 - **Start time:** 25 years
 - **Duration:** 30 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. A US–Russia nuclear exchange could inject enough soot to cut global calorie production by ~90%, killing >5 billion people from famine. ([Xia et al. 2022](https://www.nature.com/articles/s43016-022-00573-0))

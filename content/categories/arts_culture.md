@@ -22,6 +22,8 @@ This effect captures quality-of-life improvements from arts, culture, and herita
 - **Start time:** 1 year
 - **Duration:** 2 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Arts, culture, and heritage programs that increase direct participation produce observable gains in life satisfaction and mental health. ([WHO scoping review](https://www.ncch.org.uk/uploads/WHO-Scoping-Review-Arts-and-Health.pdf), [DCMS/Frontier 2024](https://www.frontier-economics.com/media/2lbntjpz/monetising-the-impact-of-culture-and-heritage-on-health-and-wellbeing.pdf))

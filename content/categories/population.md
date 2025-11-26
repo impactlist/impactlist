@@ -24,6 +24,8 @@ This effect captures welfare gains from charities that raise births in high-inco
 - **Start time:** 2 years
 - **Duration:** 80 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Cost per additional birth ranges from \$15,000 (Québec-style allowances) to \$86,000 (high-end Australian estimates); central estimate \$40,000. ([Milligan](https://childcarecanada.org/documents/research-policy-practice/02/03/qu%C3%A9becs-baby-bonus-can-public-policy-raise-fertility), [e61 Institute](https://e61.in/how-financial-incentives-shape-fertility-in-australia/), [Peipert 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9351254/))

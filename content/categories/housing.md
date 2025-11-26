@@ -24,6 +24,8 @@ This effect captures health gains from homelessness and housing programs in weal
 - **Start time:** 1 year
 - **Duration:** 3 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. VA Supportive Services for Veteran Families achieves \$22,676/QALY overall, \$19,114/QALY for rapid rehousing, and \$29,751/QALY for homelessness prevention over a 2-year horizon. ([JAMA Network Open 2024](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2825636))

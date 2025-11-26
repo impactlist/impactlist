@@ -24,6 +24,8 @@ This effect captures welfare gains from Global Priorities Research (GPR): system
 - **Start time:** 5 years
 - **Duration:** 25 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Governments and philanthropists spend tens of trillions of dollars annually on efforts aimed at the common good; even redirecting a tiny fraction to more effective causes could provide huge gains. ([80,000 Hours](https://80000hours.org/problem-profiles/global-priorities-research/))

@@ -24,6 +24,8 @@ This effect captures quality-of-life improvements from education charities in we
 - **Start time:** 3 years
 - **Duration:** 40 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. KiVa anti-bullying program costs approximately €13,823 per QALY (≈\$15,000/QALY). ([Persson et al. 2018](https://pubmed.ncbi.nlm.nih.gov/29728796/))

@@ -24,6 +24,8 @@ This effect captures welfare gains from organizations that multiply the impact o
 - **Start time:** 5 years
 - **Duration:** 25 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. 80,000 Hours achieves at least a 15× donation multiplier from career changes alone, with marginal cost per impact-adjusted plan change under £250–500. ([EA Forum 2016](https://forum.effectivealtruism.org/posts/WKkF36bJsH8FmYZkw/why-donate-to-80-000-hours))

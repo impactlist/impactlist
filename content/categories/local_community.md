@@ -24,6 +24,8 @@ This effect captures health gains from community-level charities in rich countri
 - **Start time:** 1 year
 - **Duration:** 15 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Community naloxone distribution achieves \$111–\$58,738/QALY depending on context; all studies conclude it is cost-effective, with better results in higher-risk populations. ([Cherrier et al. 2021](https://doi.org/10.1007/s41669-021-00309-z))

@@ -20,6 +20,8 @@ This effect captures improvements in quality of life from economic interventions
 - **Start time:** 1 year
 - **Duration:** 15 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. The leading evidence-backed poverty interventions are unconditional cash transfers (GiveDirectly), graduation/livelihood programs (BRAC model), and deworming programs with long-term income effects. ([GiveWell](https://www.givewell.org/charities/top-charities), [J-PAL](https://www.povertyactionlab.org/evidence-effect/graduation-approach))
@@ -39,7 +41,7 @@ The point estimate (\$250/QALY) and range (\$100–\$600/QALY) represent a portf
 
 **Cash transfers (GiveDirectly):** GiveWell's November 2024 re-evaluation found GiveDirectly's program produces approximately 3–4 units of value per \$1,200 transfer when including direct consumption gains, spillover effects to non-recipients, and asset accumulation (Assumption 2). Using our conversion factor (Assumption 8):
 
-$$\dfrac{\$1,200}{3.5 \text{ units} \times 0.45 \text{ QALYs/unit}} \approx \$760/\text{QALY (single year)}$$
+$$\frac{\$1,200}{3.5 \text{ units} \times 0.45 \text{ QALYs/unit}} \approx \$760/\text{QALY (single year)}$$
 
 However, research shows consumption and asset gains persist 10–15 years with gradual decay (Assumption 7). Three-year follow-ups in Kenya found recipients maintained 40–60% of asset gains, and long-term studies in Uganda found income effects persisting 12+ years. Accounting for sustained but decaying benefits over 15 years yields approximately \$200–\$400/QALY.
 

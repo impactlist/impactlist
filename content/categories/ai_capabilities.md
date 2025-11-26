@@ -44,6 +44,8 @@ This effect captures welfare gains from AI as a general-purpose technology: high
 - **Start time:** 3 years
 - **Duration:** 20 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ### Assumptions
 
 1. Generative AI alone could add \$2.6–4.4 trillion per year across use cases. ([McKinsey 2023](https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier))
@@ -100,6 +102,8 @@ This effect captures gains from bringing forward a beneficial AGI world—where 
 - **Cost per QALY:** \$40,000 (\$10,000–\$150,000)
 - **Start time:** 15 years
 - **Duration:** 5 years
+
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
 
 ### Assumptions
 
@@ -162,6 +166,8 @@ Note: The QALY improvement per year is **-1.0** (negative), indicating this is a
 - **QALY improvement per affected person per year:** -1.0 (harm, not benefit)
 - **Start time:** 15 years
 - **Duration:** Defined by global time limit parameter (default is 100 years)
+
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
 
 ### Assumptions
 

@@ -24,6 +24,8 @@ This effect captures welfare gains from philanthropic work that is politically c
 - **Start time:** 1 year
 - **Duration:** 10 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Inclusive policy changes can improve mental health—e.g., same-sex marriage legalization was followed by a 7% reduction in adolescent suicide attempts. ([Raifman et al. 2017](https://jamanetwork.com/journals/jamapediatrics/fullarticle/2604258))

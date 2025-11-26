@@ -24,6 +24,8 @@ This effect captures health benefits from high-visibility rapid disaster respons
 - **Start time:** 0 years
 - **Duration:** 20 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. International search-and-rescue costs approximately \$1 million per life saved on average; Haiti (2010) U.S. teams made 47 live rescues at \$51 million (~\$1.1M per life). ([BMJ Global Health](https://pmc.ncbi.nlm.nih.gov/articles/PMC7745699/), [Disaster Medicine](https://www.cambridge.org/core/journals/disaster-medicine-and-public-health-preparedness/article/analysis-of-the-international-and-us-response-to-the-haiti-earthquake-recommendations-for-change/A771EF45577DBD4D2D3B73228B8C6E67))

@@ -24,6 +24,8 @@ This effect captures health gains from translational geroscience that aims to sl
 - **Start time:** 8 years
 - **Duration:** 40 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. "Delayed aging" modeling suggests ~2.2 extra healthy years for average Americans if aging is slowed, indicating the scale of potential impact. ([Goldman et al. 2013](https://pubmed.ncbi.nlm.nih.gov/24101058/))

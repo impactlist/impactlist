@@ -24,6 +24,8 @@ This effect captures welfare gains from charities that protect people from sever
 - **Start time:** 2 years
 - **Duration:** 25 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Community activist programs (e.g., SASA!) achieve approximately \$180/DALY for VAWG prevention; self-defence programs achieve ~\$260/DALY; radio campaigns may achieve ~\$13/DALY with weaker evidence. ([EA Forum 2023](https://forum.effectivealtruism.org/posts/uH9akQzJkzpBD5Duw/what-you-can-do-to-help-stop-violence-against-women-and))

@@ -24,6 +24,8 @@ This effect captures welfare gains from philanthropy that reduces the likelihood
 - **Start time:** 0 years
 - **Duration:** 10 years
 
+If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+
 ## Assumptions
 
 1. Conflict causes approximately 10 million DALYs/year directly, with indirect harms (healthcare disruption, displacement, famine) multiplying this by approximately 4×. ([Open Philanthropy](https://www.openphilanthropy.org/research/civil-conflict-reduction/))

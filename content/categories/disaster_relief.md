@@ -10,44 +10,63 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on November 12th 2025. It was written by GPT 5 Thinking, and edited by Impact List staff for brevity._
+_The following analysis was done on November 12th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing, but check the global assumptions for this value and other relevant parameters, such as the discount factor).
 
-**Point estimate:** **\$6,000 per QALY**  
-**Range (plausible):** **\$1,500–\$30,000 per QALY**
+## Description of effect
+
+This effect captures health benefits from high-visibility rapid disaster response: international search-and-rescue (USAR), emergency medical teams, emergency water/sanitation/hygiene (WASH), and reactive outbreak control (especially cholera vaccination) following floods, fires, and earthquakes. This does not include long-term disaster risk reduction or anticipatory action.
+
+## Point Estimates
+
+- **Cost per QALY:** \$6,000 (\$1,500–\$30,000)
+- **Start time:** 0 years
+- **Duration:** 20 years
+
+## Assumptions
+
+1. International search-and-rescue costs approximately \$1 million per life saved on average; Haiti (2010) U.S. teams made 47 live rescues at \$51 million (~\$1.1M per life). ([BMJ Global Health](https://pmc.ncbi.nlm.nih.gov/articles/PMC7745699/), [Disaster Medicine](https://www.cambridge.org/core/journals/disaster-medicine-and-public-health-preparedness/article/analysis-of-the-international-and-us-response-to-the-haiti-earthquake-recommendations-for-change/A771EF45577DBD4D2D3B73228B8C6E67))
+2. Typical adult disaster survivors have 20–40 remaining healthy life-years.
+3. Reactive cholera vaccination (OCV) in high-incidence post-disaster settings costs \$370–\$2,770 per DALY depending on vaccine price and herd effects. ([S. Afr. Med. J.](https://www.scielo.org.za/scielo.php?pid=S0256-95742011000900024&script=sci_arttext))
+4. Hotspot-targeted OCV can achieve approximately \$592 per DALY in high-incidence areas. ([Am. J. Trop. Med. Hyg.](https://www.ajtmh.org/view/journals/tpmd/91/6/article-p1181.xml))
+5. Low-incidence OCV campaigns can be much less cost-effective (~\$15,700–\$69,900 per DALY). ([Vaccines](https://pmc.ncbi.nlm.nih.gov/articles/PMC11598253/))
+6. Emergency WASH reduces diarrheal disease risk, but economic evaluations in humanitarian settings are sparse; emergency logistics likely raise costs above stable-program benchmarks. ([PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0124688), [WHO](https://wkc.who.int/docs/librariesprovider24/hedrm-documents/research-methods/who-guidance-research-methods-health-edrm-2021-chapter-4-7.pdf?sfvrsn=800eab90_2))
+7. Disaster relief is rarely neglected and is logistically constrained; many donations arrive after the short window where they could most affect mortality. ([GiveWell](https://blog.givewell.org/2008/08/29/the-case-against-disaster-relief/))
 
 ## Details
 
-**Scope.** This estimate covers **high-visibility rapid response**: international search-and-rescue (USAR), emergency medical teams and trauma care, emergency water/sanitation/hygiene (WASH), and reactive outbreak control (esp. cholera vaccination) following **floods, fires, earthquakes**. It does **not** include long-term disaster risk reduction (DRR) or anticipatory action.
+### Cost per QALY
 
-**Anchor 1: International search-and-rescue is very costly per life saved.**  
-A comprehensive review of USAR deployments finds **~US\$1 million per life saved** on average across recent earthquakes. In Haiti (2010), U.S. teams made **47 live rescues at a cost of \$51 million**, ≈**\$1.1 million per life**. Even where some teams arrived within 12 hours, most rescues were already performed locally. Mapping **\$1M per death averted** to QALYs (20–40 healthy life-years for typical adult survivors) implies **~\$25,000–\$50,000 per QALY** for USAR components.  
-Sources: BMJ Global Health review of ISAR deployments (costs, timing, limited rescues) [BMJ GH / NIH PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC7745699/); U.S. Haiti figure (47 rescues; \$51m) [Disaster Medicine & Public Health Preparedness](https://www.cambridge.org/core/journals/disaster-medicine-and-public-health-preparedness/article/analysis-of-the-international-and-us-response-to-the-haiti-earthquake-recommendations-for-change/A771EF45577DBD4D2D3B73228B8C6E67).
+The point estimate (\$6,000/QALY) and range (\$1,500–\$30,000/QALY) represent a blended average across disaster response interventions with widely varying cost-effectiveness.
 
-**Anchor 2: Reactive cholera vaccination (OCV) in post-disaster settings can be much more cost-effective.**  
-When floods and infrastructure failures raise waterborne-disease risk, **reactive OCV** can deliver **hundreds to low thousands of dollars per DALY averted**, depending heavily on incidence and vaccine price. Examples:
+**USAR/Emergency Medical Teams:**
 
-- **Zimbabwe (reactive OCV):** **\$370–\$2,770 per DALY** depending on vaccine price and herd effects. [S. Afr. Med. J.](https://www.scielo.org.za/scielo.php?pid=S0256-95742011000900024&script=sci_arttext).
-- **"Hotspot" targeting:** **~\$592 per DALY** modeled for high-incidence areas. [Am. J. Trop. Med. Hyg.](https://www.ajtmh.org/view/journals/tpmd/91/6/article-p1181.xml).
-- **Low-incidence contexts can be unfavorable:** A Thailand refugee-camp OCV campaign estimated **~\$69,900 per DALY** base-case (dropping to **~\$15,700** under higher incidence). [Vaccines (open-access)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11598253/).
-  Program cost inputs from Haiti show **~\$2.90 per dose delivered** (2013), illustrating logistical costs. [CDC/Am. J. Trop. Med. Hyg.](https://pmc.ncbi.nlm.nih.gov/articles/PMC5676633/).
+At approximately \$1 million per life saved (Assumption 1) and 20–40 remaining life-years for adult survivors (Assumption 2):
+$$\text{Cost per QALY} \approx \dfrac{\$1{,}000{,}000}{20\text{–}40} \approx \$25{,}000\text{–}\$50{,}000$$
 
-**Anchor 3: Emergency WASH and basic relief likely sit between these extremes but evidence is thin.**  
-Systematic reviews in humanitarian settings show WASH reduces diarrheal disease risk, yet **economic evaluations ($/QALY or $/DALY)** are sparse and heterogeneous; WHO’s guidance flags this as a key evidence gap. Benchmarking from related (non-emergency) water treatment suggests very low $/DALY in stable programs, but emergency logistics likely raise costs materially.  
-Sources: WASH effectiveness in crises (systematic review) [PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0124688); WHO Health EDRM methods chapter on **economic evaluation gaps** [WHO Guidance PDF](https://wkc.who.int/docs/librariesprovider24/hedrm-documents/research-methods/who-guidance-research-methods-health-edrm-2021-chapter-4-7.pdf?sfvrsn=800eab90_2).
+**Reactive OCV/WASH in high-incidence settings:**
 
-**What we’re averaging over.**  
-High-visibility disaster donations typically support a **mix** of costly life-saving deployments (USAR/EMTs) and more cost-effective public-health work (OCV/WASH), with some share to cash/shelter that improves short-run health and mental health but is rarely expressed in $/QALY terms. Using the anchors above:
+Well-targeted cholera vaccination achieves approximately \$400–\$3,000 per QALY (Assumptions 3–4), though poorly targeted campaigns in low-incidence contexts can exceed \$15,000/QALY (Assumption 5).
 
-- **USAR/EMTs:** **\$25k–\$50k per QALY** (derived from ~\$1m per life saved and adult remaining life-years).
-- **Reactive OCV/WASH in high-incidence settings:** **~\$400–\$3,000 per QALY** (can be much higher if incidence is low or campaigns are poorly targeted).
-  A reasonable blended expectation for large "disaster response funds" (with a minority to USAR/EMTs and a majority to WASH/OCV/basic relief) yields an overall **point estimate near \$6,000 per QALY**, with a wide **plausible range (\$1,500–\$30,000)** reflecting large variation in outbreak intensity, targeting, and the fraction of spending that goes to high-cost USAR/EMT deployments.
+**Blended estimate:**
 
-**Why not lower (like top global health)?**  
-Disaster relief is **rarely neglected** and is **logistically constrained**; many donations arrive after the short window where they could most affect mortality. Classic analyses caution that headline-driven emergency relief is often **less cost-effective** than routine health programs or preparedness.  
-Source: GiveWell summary of the Disease Control Priorities (2nd ed.) chapter critiquing emergency relief’s cost-effectiveness and timing [GiveWell blog](https://blog.givewell.org/2008/08/29/the-case-against-disaster-relief/).
+Large disaster response funds typically allocate a minority to costly USAR/EMT deployments and a majority to WASH/OCV/basic relief. This mix yields a point estimate near \$6,000/QALY. The wide range reflects variation in outbreak intensity, targeting quality, and the fraction spent on high-cost rescue operations.
 
-_Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
+**Why not lower?**
+
+Disaster relief is rarely neglected, is logistically constrained, and often receives donations after the critical window for mortality impact (Assumption 7).
+
+### Start Time
+
+The 0-year start time reflects that disaster response delivers immediate benefits during and shortly after acute emergencies.
+
+### Duration
+
+The 20-year duration reflects the remaining healthy life-years for survivors whose deaths are averted, primarily working-age adults.
+
+---
+
+_These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes

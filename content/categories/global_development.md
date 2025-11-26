@@ -4,50 +4,61 @@ name: 'Global Development / Poverty'
 effects:
   - effectId: standard
     startTime: 1
-    windowLength: 50
-    costPerQALY: 90
+    windowLength: 15
+    costPerQALY: 250
 ---
 
 # Justification of cost per life
 
-_The following analysis was done on November 12th 2025, written by GPT 5 Thinking, cross-checked by Claude Sonnet 4.5 and Gemini Pro 2.5, and edited by Impact List staff for brevity._
+## Description of effect
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
+This effect captures improvements in quality of life from economic interventions targeting people in extreme poverty. Unlike Global Health interventions that primarily avert deaths, these programs increase consumption, assets, income, and psychological wellbeing through cash transfers, livelihood programs, and developmental interventions. Benefits persist for years and can help households escape poverty traps.
 
-**Point estimate:** **\$87 per QALY**  
-**Range (plausible):** **\$60–\$150 per QALY**
+## Point Estimates
+
+- **Cost per QALY:** \$250 (\$100–\$600)
+- **Start time:** 1 year
+- **Duration:** 15 years
+
+## Assumptions
+
+1. The leading evidence-backed poverty interventions are unconditional cash transfers (GiveDirectly), graduation/livelihood programs (BRAC model), and deworming programs with long-term income effects. ([GiveWell](https://www.givewell.org/charities/top-charities), [J-PAL](https://www.povertyactionlab.org/evidence-effect/graduation-approach))
+2. GiveDirectly's cash transfer program is approximately 30–40% as cost-effective as GiveWell's top health charities. ([GiveWell](https://blog.givewell.org/2024/11/12/re-evaluating-the-impact-of-unconditional-cash-transfers/))
+3. GiveWell's moral weights assign 1 unit of value to doubling consumption for one person for one year, and 134 units to averting the death of a 5-year-old child (approximately 60 remaining life-years). ([GiveWell Moral Weights](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights))
+4. Cash transfers of approximately \$1,000 cost donors approximately \$1,200 per household after overhead, with 85–90% of donations reaching recipients. ([GiveDirectly](https://www.givedirectly.org/financials/))
+5. Graduation programs cost \$300–\$2,000 per household and produce benefit-cost ratios of approximately 1.2 in rigorous evaluations. ([Banerjee et al. 2015](https://www.science.org/doi/10.1126/science.1260799), [BRAC UPGI](https://bracultrapoorgraduation.medium.com/understanding-the-costs-of-graduation-investing-in-long-term-gains-b5f3b9ad1dfd))
+6. Deworming costs \$0.30–\$1.00 per child treated and may produce long-term income gains of approximately 10–15%, though evidence is based primarily on one study. ([GiveWell Deworming](https://www.givewell.org/international/technical/programs/deworming))
+7. Consumption and asset gains from these interventions persist for 10–15 years, with effects diminishing over time. ([Haushofer & Shapiro 2018](https://www.povertyactionlab.org/sites/default/files/research-paper/The-long-term-impact-of-conditional-cash-tranfer_Kenya_Haushofer_Shapiro_January2018.pdf), [Bandiera et al. 2017](https://bracinternational.org/ultra-poor-graduation/))
+8. The conversion from consumption-doubling units to QALY-equivalents is approximately 0.45 QALYs per unit, derived from GiveWell's moral weights (60 life-years / 134 units).
 
 ## Details
 
-**What we model as “Global Development / Poverty.”**  
-This category is anchored to the best-evidenced, large-scale opportunities typically funded by GiveWell’s Top Charities Fund: (1) seasonal malaria chemoprevention (Malaria Consortium), (2) insecticide-treated bednets (AMF), (3) vitamin A supplementation (Helen Keller Intl), and (4) cash incentives for routine childhood vaccination (New Incentives). GiveWell’s latest technical pages summarize **cost per death averted** as follows (location-dependent):
+### Cost per QALY
 
-- **SMC:** **\$2,000–\$7,000** per death averted.
-  Source: [GiveWell SMC page](https://www.givewell.org/international/technical/programs/seasonal-malaria-chemoprevention).
+The point estimate (\$250/QALY) and range (\$100–\$600/QALY) represent a portfolio of the most effective economic interventions for poverty reduction. This estimate is derived by combining cost-effectiveness data from multiple intervention types and converting consumption/income gains to QALY-equivalents using GiveWell's moral weights framework (Assumptions 3 and 8).
 
-- **ITNs:** **\$3,000–\$8,000** per death averted.
-  Source: [GiveWell ITN page](https://www.ggivewell.org/international/technical/programs/insecticide-treated-nets).
+**Cash transfers (GiveDirectly):** GiveWell's November 2024 re-evaluation found GiveDirectly's program produces approximately 3–4 units of value per \$1,200 transfer when including direct consumption gains, spillover effects to non-recipients, and asset accumulation (Assumption 2). Using our conversion factor (Assumption 8):
 
-- **Vitamin A supplementation (VAS):** **\$1,000–\$8,500** per death averted.
-  Source: [GiveWell VAS page](https://www.givewell.org/international/technical/programs/vitamin-A).
+$$\dfrac{\$1,200}{3.5 \text{ units} \times 0.45 \text{ QALYs/unit}} \approx \$760/\text{QALY (single year)}$$
 
-- **New Incentives (vaccination incentives):** **\$1,000–\$5,000** per death averted.
-  Source: [GiveWell New Incentives (Apr 2024)](https://www.givewell.org/international/technical/programs/new-incentives/april-2024-version).
+However, research shows consumption and asset gains persist 10–15 years with gradual decay (Assumption 7). Three-year follow-ups in Kenya found recipients maintained 40–60% of asset gains, and long-term studies in Uganda found income effects persisting 12+ years. Accounting for sustained but decaying benefits over 15 years yields approximately \$200–\$400/QALY.
 
-Taking the midpoint of each range and averaging across these four representative programs yields an unweighted portfolio average of **~\$4,438 per under-5 death averted**.
+**Graduation programs:** The BRAC model and similar programs cost \$300–\$2,000 per household (Assumption 5) and have been shown effective across six countries in rigorous RCTs. [Banerjee et al. (2015)](https://www.science.org/doi/10.1126/science.1260799) found benefit-cost ratios exceeding 1.0 in five of six sites, with benefits persisting 7–10 years after program completion. These programs produce sustained increases in consumption (9%), earnings (37%), savings (9x), and assets (2x). The higher upfront cost is offset by larger and more durable effects, yielding estimated cost-effectiveness of \$150–\$400/QALY.
 
-**From lives saved to QALYs.**
-Open Philanthropy's reading of GiveWell's moral-weight framework implies **~51 DALYs (≈QALYs) per under-5 death averted**. Dividing the portfolio average **\$4,438** by **51** gives **~\$87 per QALY**.
-Source: [Open Philanthropy technical notes](https://www.openphilanthropy.org/research/technical-updates-to-our-global-health-and-wellbeing-cause-prioritization-framework/).
+**Deworming:** Mass drug administration costs \$0.30–\$1.00 per child (Assumption 6), making it extremely cheap per person reached. GiveWell's recommendation is based primarily on one long-term study finding 10–15% income gains persisting into adulthood. However, GiveWell applies substantial discounts (~87%) for replicability uncertainty, as the evidence base is thin. When accounting for these discounts, deworming may be comparable in cost-effectiveness to cash transfers, though with higher variance.
 
-**Cross-checks outside the GiveWell models.**
-Independent economic evaluations of closely related child-survival programs land in the same ballpark on a DALY basis. For example, a 2025 Mozambique study of **SMC** estimated **\$130 per DALY averted** (and **~\$3,287 per death averted**), broadly consistent with the above conversion. Similar analyses from the Sahel report DALY costs in the low hundreds.
-Sources: [Malaria Journal 2025 (Mozambique SMC)](https://malariajournal.biomedcentral.com/articles/10.1186/s12936-025-05401-x); [Diawara 2021, Mali (SMC) via PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC7934250/).
+The wide range (\$100–\$600/QALY) reflects: uncertainty in converting consumption gains to QALYs, variation across programs and contexts, differing philosophical views on valuing consumption versus health gains, and substantial uncertainty in long-term effect persistence.
 
-**Why the range.**
-Costs per death averted vary materially by country, year, and program (e.g., **\$1,000–\$8,500** across the four interventions above). The healthy-life-years mapping per under-5 death averted is also uncertain; a reasonable corridor is **~45–60** QALYs. Combining these uncertainties yields a plausible overall corridor of **\$60–\$150 per QALY**. As an additional sense-check, GiveWell's public example for AMF nets (Guinea) historically implied about **\$4,500 per life saved**, which, using ~51 QALYs per death, maps to **~\$90 per QALY**—right in the middle of our estimate.
-Sources: ranges above; [GiveWell "How much does it cost to save a life?" example](https://www.givewell.org/how-much-does-it-cost-to-save-a-life/february-2024-version).
+### Start Time
 
-_Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
+The one-year start time reflects the typical delay between donation and program implementation. Cash transfers via mobile money platforms can be delivered within months, while graduation programs require 18–24 months of active intervention before benefits fully materialize.
+
+### Duration
+
+The 15-year duration represents the estimated period over which economic benefits persist (Assumption 7). Long-term follow-ups of both cash transfers and graduation programs show sustained effects on assets, consumption, and income for at least 7–12 years, with some studies finding effects persisting even longer. We use 15 years as a reasonable upper bound while acknowledging that effects gradually decay over time.
+
+---
+
+_These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes

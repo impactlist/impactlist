@@ -10,54 +10,72 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on November 12th 2025. It was written by GPT 5 Thinking and edited by Impact List staff for brevity._
+_The following analysis was done on November 12th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year), and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing, but check the global assumptions for this value and other relevant parameters, such as the discount factor).
 
-**Point estimate:** **\$900 per QALY**  
-**Range (plausible):** **\$150–\$20,000 per QALY**
+## Description of effect
+
+This effect captures health benefits from donations to top policy-focused climate charities that reduce CO₂ emissions through systems change—shaping standards, incentives, and technology roadmaps. Benefits are primarily from reduced temperature-related mortality, though many mitigation actions also cut air pollution for additional near-term health gains not fully captured here.
+
+## Point Estimates
+
+- **Cost per QALY:** \$900 (\$150–\$20,000)
+- **Start time:** 7 years
+- **Duration:** 80 years
+
+## Assumptions
+
+1. Top climate nonprofits can avert approximately 1 tCO₂e per \$1 through policy advocacy and systems change. ([Giving Green 2025](https://www.givinggreen.earth/post/eager-to-measure-the-impact-of-your-climate-donation-forget-offset-math-focus-on-systems-change), [Founders Pledge](https://www.founderspledge.com/research/climate-change-executive-summary))
+2. Founders Pledge 2023 grants could avert ~47.9 MtCO₂e on \$6.9M—approximately \$0.14 per ton in expectation (highly uncertain). ([Founders Pledge 2023](https://impact.founderspledge.com/2023/climate-change))
+3. Each ton of CO₂ causes approximately 2.26 × 10⁻⁴ expected deaths over 2020–2100 (i.e., ~4,434 tCO₂ per life saved). ([Bressler 2021](https://www.nature.com/articles/s41467-021-24487-w))
+4. Mortality damages from CO₂ are valued at approximately \$36.6 per ton in high-emissions scenarios. ([Carleton et al. 2022](https://academic.oup.com/qje/article/137/4/2037/6571943))
+5. Climate-attributable deaths (primarily heat-related among older adults) represent approximately 5 QALYs lost per death (range 2–10), based on years of life lost data. ([Baccini et al. 2013](https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0069638), [Nature Medicine 2023](https://www.nature.com/articles/s41591-023-02419-z))
+6. Ultra-cheap carbon offsets often lack additionality; systems-change advocacy is more reliable. ([Founders Pledge](https://www.founderspledge.com/research/climate-and-lifestyle-donations-and-offsetting))
+7. Avoided CO₂ today reduces temperature-related health harms across the remainder of the century (2020–2100).
 
 ## Details
 
-**How donations reduce emissions.**  
-Independent evaluators argue that a handful of policy-focused charities can avert large amounts of CO₂e per dollar by shaping standards, incentives, and technology roadmaps. Founders Pledge reports that grants to its high-impact recommendations in 2023 **could avert ~47.9 MtCO₂e** on **\$6.9M** in grants—about **\$0.14 per ton** in expectation (highly uncertain) ([Founders Pledge impact 2023](https://impact.founderspledge.com/2023/climate-change)). Giving Green's 2025 overview suggests a practical benchmark of **~1 tCO₂e per \$1** for top nonprofits ([Giving Green](https://www.givinggreen.earth/post/eager-to-measure-the-impact-of-your-climate-donation-forget-offset-math-focus-on-systems-change)). Earlier Founders Pledge analyses of **Clean Air Task Force** and peers indicate **\$0.10–\$1 per tCO₂e** is plausible for advocacy wins, with large error bars ([CATF summary of FP estimate](https://www.catf.us/timeline/rated-top-climate-charity/); FP research hub [overview](https://www.founderspledge.com/research/climate-change-executive-summary)). These figures concern **systems change** rather than retail offsets; FP cautions that ultra-cheap offsets often lack additionality ([FP: climate & offsetting](https://www.founderspledge.com/research/climate-and-lifestyle-donations-and-offsetting)).
+### Cost per QALY
 
-**From tons to health: the mortality link.**  
-Two influential, empirically grounded papers translate **one ton of CO₂** into expected mortality:
+The point estimate (\$900/QALY) and range (\$150–\$20,000/QALY) are derived from combining emissions-reduction costs with mortality-to-QALY conversions.
 
-- **Carleton et al. (QJE 2022)**: monetize mortality damages at **~\$36.6 per ton** (high-emissions case) and project large end-century mortality burdens without mitigation ([QJE paper](https://academic.oup.com/qje/article/137/4/2037/6571943); [EPIC summary](https://epic.uchicago.edu/research/valuing-the-global-mortality-consequences-of-climate-change-accounting-for-adaptation-costs-and-benefits/)).
-- **Bressler (Nature Communications 2021)**: "mortality cost of carbon" (MCC) of **2.26 × 10⁻⁴ deaths per tCO₂** in 2020 (i.e., **~4,434 tCO₂ per expected life saved** over 2020–2100) ([Nature Communications](https://www.nature.com/articles/s41467-021-24487-w)).
+**Step 1 — Emissions reduction per dollar:**
 
-To map deaths to **QALYs**, we draw on studies of **years of life lost (YLL)** in heat-related mortality—most climate-attributable deaths are among older adults, with nontrivial YLL but less than in child mortality. A multicity European study estimated **~23,750 YLL for ~2,200 heat deaths** before accounting for short-term “harvesting” (≈10.8 YLL/death) and **~5,907 YLL** after accounting for harvesting (≈**2.7 YLL/death**) ([Baccini et al., PLOS One 2013](https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0069638)). Age-profiled analyses of recent European heat seasons confirm the **80+ group carries most heat-mortality**, consistent with fewer YLL per death than in under-5 mortality ([Nature Medicine 2023](https://www.nature.com/articles/s41591-023-02419-z)). For a simple, transparent conversion we therefore model **~5 QALYs lost per climate-attributable death** (range **2–10**), acknowledging that some climate pathways (e.g., food insecurity, vector-borne disease) can involve younger ages and higher YLL.
+Top climate nonprofits achieve approximately \$0.30–\$1.50 per tCO₂e averted through policy advocacy (Assumptions 1–2), with some analyses suggesting even lower costs for high-leverage grants.
 
-**Putting it together (back-of-the-envelope).**
+**Step 2 — Mortality per ton:**
 
-- Mortality per ton: **2.26 × 10⁻⁴ deaths/tCO₂** (Bressler).
-- QALYs per death (assumed): **5** (range **2–10**).
-- So **QALYs per ton ≈ 2.26 × 10⁻⁴ × 5 = 0.00113**.
-- A charity that averts **~1 tCO₂ per \$1** then yields **\$1 / 0.00113 ≈ \$885 per QALY**.
-- Using a conservative advocacy cost of **\$1.5/tCO₂** gives **~\$1,300 per QALY** (our point estimate).
-- Bounding the inputs—**\$0.3–\$10/tCO₂** and **2–10 QALYs/death**—spans **~\$150–\$20,000 per QALY**.
+Using Bressler's mortality cost of carbon (Assumption 3):
 
-**Context and caveats.**
+- Deaths per ton: 2.26 × 10⁻⁴
+- QALYs per death: 5 (Assumption 5)
+- QALYs per ton: 2.26 × 10⁻⁴ × 5 = 0.00113
 
-- These numbers reflect **temperature-related mortality** only. Many mitigation actions also cut **air pollution**, producing near-term health gains not fully captured here and likely improving cost-per-QALY further ([IPCC AR6 WGII, Ch. 7](https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-7/); health fact sheet: [IPCC AR6 WGII](https://www.ipcc.ch/report/ar6/wg2/downloads/outreach/IPCC_AR6_WGII_FactSheet_Health.pdf)).
-- Advocacy impacts are **risky and lumpy**: expected tons per dollar are uncertain and vary by policy window and geography (see FP’s own uncertainty notes and EA community critiques/discussions, e.g., [EA Forum discussion](https://forum.effectivealtruism.org/posts/NbWeRmEsBEknNHqZP/longterm-cost-effectiveness-of-founders-pledge-s-climate)).
-- Climate impacts are **highly unequal** by region and age; the QALY mapping should be read as a global average simplification consistent with the major mortality studies’ global framing ([Carleton QJE 2022](https://academic.oup.com/qje/article/137/4/2037/6571943)).
+**Step 3 — Cost per QALY:**
 
-**Bottom line.**
-For donations to top, policy-oriented climate nonprofits, the best current evidence implies a cost per QALY on the order of **low thousands of dollars**, with a central estimate near **\$900–\$1,300 per QALY** and a wide but bounded range reflecting advocacy uncertainty and the age profile of climate-attributable deaths.
+At \$1 per tCO₂e averted:
+$$\text{Cost per QALY} = \dfrac{\$1}{0.00113} \approx \$885$$
 
-_Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
+Using a more conservative \$1.50/tCO₂e yields approximately \$1,300/QALY. We use \$900 as the point estimate.
+
+**Range:** Bounding inputs at \$0.30–\$10/tCO₂e and 2–10 QALYs/death spans approximately \$150–\$20,000/QALY.
+
+**Caveats:**
+
+- These numbers reflect temperature-related mortality only. Many mitigation actions also reduce air pollution, producing additional near-term health gains. ([IPCC AR6](https://www.ipcc.ch/report/ar6/wg2/chapter/chapter-7/))
+- Advocacy impacts are risky and lumpy—expected tons per dollar are uncertain and vary by policy window. ([EA Forum discussion](https://forum.effectivealtruism.org/posts/NbWeRmEsBEknNHqZP/longterm-cost-effectiveness-of-founders-pledge-s-climate))
+
+### Start Time
+
+The 7-year start time reflects the delay between policy wins and realized emissions reductions. Donations translate into regulatory changes within a few legislative cycles, with emissions effects beginning as rules take effect and projects build out.
+
+### Duration
+
+The 80-year duration reflects that avoided CO₂ today reduces temperature-related health harms across the remainder of the century (Assumption 7). Major climate-mortality studies quantify impacts on a 2020–2100 horizon.
+
+---
+
+_These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes
-
-GPT5:
-
-## Start time & duration (for modeling)
-
-- **Start time:** **3 years** (range **1–7 years**).  
-  _Why:_ For top climate nonprofits focused on policy and technology advocacy, donations typically translate into policy wins or regulatory changes within a few budget/legislative cycles; emissions effects begin as rules take effect and projects build out (e.g., rapid post-policy scale-up observed in recent U.S./EU packages).
-
-- **Duration of benefit:** **70 years** (range **40–80 years**).  
-  _Why:_ Avoided CO₂ today reduces temperature-related health harms across the remainder of the century. Major climate-mortality studies quantify impacts on a 2020–2100 horizon, so benefits accrue over multiple decades.

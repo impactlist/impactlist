@@ -5,7 +5,7 @@ effects:
   - effectId: standard
     startTime: 3
     windowLength: 20
-    costPerQALY: 6_000
+    costPerQALY: 1_200
 ---
 
 # Justification of cost per life
@@ -20,7 +20,7 @@ This effect captures welfare gains from charities that improve how high-stakes i
 
 ## Point Estimates
 
-- **Cost per QALY:** \$6,000 (\$1,500–\$60,000)
+- **Cost per QALY:** \$1,200 (\$500–\$50,000)
 - **Start time:** 3 years
 - **Duration:** 20 years
 
@@ -39,7 +39,7 @@ This effect captures welfare gains from charities that improve how high-stakes i
 
 ### Cost per QALY
 
-The point estimate (\$6,000/QALY) and range (\$1,500–\$60,000/QALY) are derived from modeling a program that installs calibrated forecasting and decision protocols across high-stakes government choices.
+The point estimate (\$1,200/QALY) and range (\$500–\$50,000/QALY) are derived from modeling a program that installs calibrated forecasting and decision protocols across high-stakes government choices.
 
 **Model parameters:**
 
@@ -47,7 +47,7 @@ The point estimate (\$6,000/QALY) and range (\$1,500–\$60,000/QALY) are derive
 - $f$ = Proportional improvement in choice quality: 0.3% (Assumption 6)
 - $h$ = Share of benefits that are QALY-relevant: 50%
 - $v$ = Money-metric value per QALY: \$100,000 (Assumption 7)
-- $d$ = Years of effect persistence: 10 (Assumption 8)
+- $d$ = Years of effect persistence: 20 (Assumption 8)
 - $C$ = Philanthropic cost: \$18 million
 
 **Calculation:**
@@ -56,14 +56,12 @@ Annual QALYs produced:
 $$\text{QALYs}_{\text{per year}} = \dfrac{h \times f \times R}{v} = \dfrac{0.5 \times 0.003 \times \$50{,}000{,}000{,}000}{\$100{,}000} = 750 \text{ QALYs}$$
 
 Total QALYs over the window:
-$$\text{QALYs}_{\text{total}} = d \times \text{QALYs}_{\text{per year}} = 10 \times 750 = 7{,}500 \text{ QALYs}$$
+$$\text{QALYs}_{\text{total}} = d \times \text{QALYs}_{\text{per year}} = 20 \times 750 = 15{,}000 \text{ QALYs}$$
 
 Cost per QALY:
-$$\text{Cost per QALY} = \dfrac{C}{\text{QALYs}_{\text{total}}} = \dfrac{\$18{,}000{,}000}{7{,}500} = \$2{,}400$$
+$$\text{Cost per QALY} = \dfrac{C}{\text{QALYs}_{\text{total}}} = \dfrac{\$18{,}000{,}000}{15{,}000} = \$1{,}200$$
 
-**Note:** The model uses a 10-year persistence parameter ($d$) for the cost-effectiveness calculation, representing the expected value across a distribution of outcomes—some programs fail quickly while others become permanently institutionalized. The 20-year window duration reflects the full time horizon over which effects could plausibly persist for successful implementations.
-
-**Range:** Varying parameters ($R$: \$20–100B; $f$: 0.1–1.0%; $h$: 30–60%; $d$: 5–20 years; $C$: \$10–40M) yields approximately \$1,500–\$60,000/QALY. Lower values correspond to successful institutionalization; higher values reflect limited adoption or rapid decay.
+**Range:** Varying parameters ($R$: \$20–100B; $f$: 0.1–1.0%; $h$: 30–60%; $d$: 5–30 years; $C$: \$10–40M) yields approximately \$500–\$50,000/QALY. Lower values correspond to successful institutionalization; higher values reflect limited adoption or rapid decay.
 
 ### Start Time
 

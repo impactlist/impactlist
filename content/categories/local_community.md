@@ -49,13 +49,3 @@ In wealthy countries, high-performing **local community charities** that target 
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **0.25 years** (range **0–0.5 years**).  
-  _Why:_ Benefits from leading community programs generally begin quickly: naloxone distribution prevents overdose deaths immediately; fall-prevention home visits and modifications reduce injuries within months; domestic-violence advocacy and smoking-cessation outreach produce near-term gains as services start. (Examples: naloxone economic review and effectiveness summaries; a 12-month fall-prevention evaluation; smoking-cessation clinical and system-level strategies.)  
-  Sources: [Cherrier et al., 2021](https://doi.org/10.1007/s41669-021-00309-z); [Niedermann et al., 2024](https://bmcgeriatr.biomedcentral.com/articles/10.1186/s12877-024-05586-x); [US Surgeon General, 2020](https://www.hhs.gov/sites/default/files/2020-cessation-sgr-full-report.pdf).
-
-- **Duration of benefit:** **12 years** (range **5–20 years**).  
-  _Why:_ Saved overdoses confer multi-year survival; quitting smoking yields large, persistent risk reductions over a decade or more; effects of home-safety modifications and trauma/abuse reduction can last for years but may attenuate.  
-  Sources: [US Surgeon General, 2020](https://www.hhs.gov/sites/default/files/2020-cessation-sgr-full-report.pdf); [Cherrier et al., 2021](https://doi.org/10.1007/s41669-021-00309-z); [Olij et al., 2018](https://shantysterke.nl/wp-content/uploads/2018/12/J-Am-Geriatr-Soc.pdf).

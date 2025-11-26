@@ -62,15 +62,3 @@ Weighting toward research (as is typical for this cause area) but anchored by th
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-GPT5:
-
-## Start time & duration (for modeling)
-
-- **Start time:** **12 years** (range **0.5–25 years**).  
-  _Why:_ Donations here mostly fund **medical research**, where meta-evaluations find a **~17-year** median lag from research to widespread health impact; a minority funds **direct patient programs** whose effects begin within months. A weighted blend yields ~12 years.  
-  Sources: research lag **10–25 years (mid-point 17)** in UK “_Medical Research: What’s it worth?_” ([UKRI/RAND](https://www.ukri.org/wp-content/uploads/2022/02/MRC-030222-medical-research-whats-it-worth.pdf), pp. 26, 45); examples of fast-start direct programs (e.g., team-based hypertension care) summarized by the **CDC** ([CDC](https://www.cdc.gov/nccdphp/priorities/high-blood-pressure.html)).
-
-- **Duration of benefit:** **20 years** (range **10–30 years**).  
-  _Why:_ For **research**, once an innovation reaches practice, benefits accrue over multiple decades as uptake scales; for **direct treatment**, risk reductions (e.g., quitting smoking, sustained BP control) generate long-lived health gains.  
-  Sources: long-lived returns stream discussed in _What’s it worth?_ (pp. 32–33, 44–55) ([UKRI/RAND](https://www.ukri.org/wp-content/uploads/2022/02/MRC-030222-medical-research-whats-it-worth.pdf)); smoking-cessation risk reductions persisting **10–15+ years** ([US Surgeon General 2020](https://www.hhs.gov/sites/default/files/2020-cessation-sgr-full-report.pdf)).

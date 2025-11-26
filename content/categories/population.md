@@ -98,11 +98,3 @@ We explicitly separate (A) the **new person’s own wellbeing** and (B) **positi
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **1.5 years** (range **0.75–3 years**).  
-  _Why:_ For direct support (e.g., IVF grants), benefits begin at birth after a typical 9–18 month lag from application to delivery. Policy/advocacy efforts can be slower; our central estimate blends these timelines.
-
-- **Duration of benefit:** **80 years** (range **70–85 years**).  
-  _Why:_ We model benefits as the lifetime of the additional person born in high-income countries.

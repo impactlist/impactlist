@@ -80,11 +80,3 @@ Bold, charter-city-scale institutional upgrades in wealthy countries can plausib
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **4 years** (range **2–8 years**).  
-  _Why:_ Large, structural reforms (e.g., sweeping land-use liberalization or special-jurisdiction “governance zones”) require legislation, rulemaking, and early build-out before benefits are felt. Evidence on big zoning reforms suggests multi-year lags before large supply/economic responses are visible (e.g., Auckland’s 2016 upzoning with permit surges over ~5 years; Minneapolis 2040 effects appearing over several years). See [Greenaway-McGrevy et al. (Auckland)](https://www.auckland.ac.nz/assets/business/our-research/docs/economic-policy-centre/Working%20paper%2017.pdf) and [Gu (2025) on Minneapolis 2040](https://www.econstor.eu/bitstream/10419/320557/1/GLO-DP-1629.pdf).
-
-- **Duration of benefit:** **20 years** (range **10–30 years**).  
-  _Why:_ Once new legal frameworks and physical investments are in place, gains (productivity, housing abundance, agglomeration effects) tend to persist across cycles. Macro work implies long-lived GDP impacts from relaxing spatial constraints. See [Hsieh & Moretti 2019](https://www.aeaweb.org/articles?id=10.1257%2Fmac.20170388).

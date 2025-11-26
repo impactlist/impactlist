@@ -81,11 +81,3 @@ Because relatively **small** increases in the probability that a geroprotective 
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **8 years** (range **5–15 years**).  
-  _Why:_ Philanthropic dollars here mostly fund translational geroscience (biomarkers, enabling trials, regulatory acceptance). Large-scale impacts tend to arrive after multi-year studies and follow-on approvals. Example anchors: the planned multi-site **TAME** metformin trial (budget ≈ **\$75M**, multi-year) and early human signals from **mTOR** inhibitors and **senolytics** that still require larger trials and uptake. See [AFAR/TAME](https://www.afar.org/tame-trial), [AFAR annual report](https://www.afar.org/imported/2017_AFAR_Annual_Report_Web_copy.pdf), [Mannick et al. 2014](https://pubmed.ncbi.nlm.nih.gov/25540326/), [Justice et al. 2019](https://pubmed.ncbi.nlm.nih.gov/30616998/).
-
-- **Duration of benefit:** **15 years** (range **10–30 years**).  
-  _Why:_ Once a geroprotective approach is validated, benefits accrue across multiple cohorts as uptake scales; “delayed aging” scenarios project persistent healthspan gains (e.g., **+2.2** healthy years in the U.S. modeling). See [Goldman et al., _Health Affairs_](https://pubmed.ncbi.nlm.nih.gov/24101058/).

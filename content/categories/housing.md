@@ -47,11 +47,3 @@ When directed to highly effective homelessness/housing programs in rich countrie
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **0.25 years** (range **0.05–0.75 years**).  
-  _Why:_ Leading programs (e.g., rapid rehousing, temporary financial assistance, hospital discharge teams) typically place or stabilize clients within weeks to a few months of enrollment. See U.S. HUD guidance indicating rapid rehousing assistance begins immediately and can cover move-in costs and early rent support ([HUD Exchange, RRH](https://www.hudexchange.info/homelessness-assistance/coc-esg-virtual-binders/coc-program-components/permanent-housing/rapid-re-housing/)).
-
-- **Duration of benefit:** **2 years** (range **1–5 years**).  
-  _Why:_ Rapid rehousing and prevention supports are commonly time-limited to **3–24 months** ([24 CFR §576.106](https://www.ecfr.gov/current/title-24/subtitle-B/chapter-V/subchapter-C/part-576#576.106)), with health and housing stability effects often measured over 1–2 years in cost-utility models. Permanent supportive housing can be indefinite ([HUD PSH overview](https://www.hudexchange.info/homelessness-assistance/coc-esg-virtual-binders/coc-program-components/permanent-housing/permanent-supportive-housing/)), but philanthropic dollars frequently purchase 1–2 years of services; we model a conservative 2-year effect window.

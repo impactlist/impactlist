@@ -51,13 +51,3 @@ Source: GiveWell summary of the Disease Control Priorities (2nd ed.) chapter cri
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **0.10 years** (≈5 weeks; range **0.01–0.25 years**).  
-  _Why:_ International search-and-rescue (USAR) and emergency WASH start within days, while reactive public-health campaigns (e.g., oral cholera vaccine, OCV) typically organize within weeks. International USAR teams often arrive 36–72 hours or more after impact; reactive OCV campaigns in Haiti and elsewhere were mounted over the next 1–2 months.  
-  Sources: USAR deployment and timing; most rescues occur locally and numbers saved by international teams are small. [BMJ Global Health review](https://pmc.ncbi.nlm.nih.gov/articles/PMC7745699/). OCV rollouts in Haiti (cost & logistics) [CDC/Am. J. Trop. Med. Hyg.](https://pmc.ncbi.nlm.nih.gov/articles/PMC5676633/); effectiveness window 4–24 months [Lancet Global Health](https://www.thelancet.com/journals/langlo/article/PIIS2214-109X%2814%2970368-7/fulltext).
-
-- **Duration of benefit:** **15 years** (range **3–40 years**).  
-  _Why:_ A share of benefits comes from **lives saved** (e.g., extrication, emergency care, outbreak control), which accrue over survivors’ remaining lifetimes (often adults and older adults in earthquakes), while morbidity reductions (injuries, diarrheal disease) are concentrated in months–years. We therefore use a blended duration substantially shorter than “child-survival” programs but much longer than the immediate response window.  
-  Sources: earthquake mortality skews older; remaining life-years are limited relative to child survival [Population Health Metrics](https://pophealthmetrics.biomedcentral.com/articles/10.1186/1478-7954-11-5). OCV protection and reactive campaigns typically protect for 2–3 years [Lancet Global Health](https://www.thelancet.com/journals/langlo/article/PIIS2214-109X%2814%2970368-7/fulltext).

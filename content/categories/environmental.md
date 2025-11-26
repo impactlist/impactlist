@@ -46,11 +46,3 @@ Weighting toward the **best-evidenced, health-first opportunities** in this caus
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **1.0 years** (range **0.25–3 years**).  
-  _Why:_ For top opportunities (e.g., lead paint regulation, industrial emission standards, hot-spot cleanups), detectable exposure reductions typically begin within months of policy adoption, supplier reformulation, or site remediation; many campaigns run 6–24 months from grant to implementation. See examples from **LEEP**’s rapid market shifts after regulations and enforcement ([LEEP 2023 review](https://leadelimination.org/2023-annual-review/)) and timelines for clean-air policy rollouts (overview in **Clean Air Fund**’s funding reports, 2019–2025, e.g., [2025 report](https://www.cleanairfund.org/resource/air-quality-funding-2025/)).
-
-- **Duration of benefit:** **20 years** (range **10–40 years**).  
-  _Why:_ Once in place, **air-quality standards** and **lead regulations** prevent exposures across many cohorts and persist until superseded; **toxic-site cleanups** often yield long-lived risk reductions. See methodological guidance on durable benefit streams in environmental regulation (e.g., **EPA**’s _Guidelines for Preparing Economic Analyses_, 2024 edition, chs. 7–9; [PDF](https://www.epa.gov/system/files/documents/2024-12/guidelines-for-preparing-economic-analyses_final_508-compliant_compressed.pdf)).

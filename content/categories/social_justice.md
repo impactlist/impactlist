@@ -90,11 +90,3 @@ Donations to well-run, politically contentious “social justice” organization
 _Our current cost per life estimates are very approximate and we're looking for help improving them. Read about how you can contribute [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)_
 
 # Internal Notes
-
-## Start time & duration (for modeling)
-
-- **Start time:** **1.5 years** (range **0.2–4 years**).  
-  _Why:_ Direct services (e.g., legal aid or community programs) begin helping within months, while policy or litigation wins typically take 1–3 years to implement.
-
-- **Duration of benefit:** **5 years** (range **2–10 years**).  
-  _Why:_ Individual outcomes (e.g., safer policing practices in a city department, protections for targeted groups at schools/workplaces) often persist several years but can attenuate or be reversed by policy churn.

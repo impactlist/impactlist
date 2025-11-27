@@ -32,26 +32,22 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 ## Assumptions
 
-1. Toby Ord estimates 10% probability of existential catastrophe from unaligned AI this century, higher than all other anthropogenic existential risks combined. ([The Precipice Revisited](https://www.tobyord.com/writing/the-precipice-revisited))
-2. The 2022 AI Impacts Expert Survey asked hundreds of ML researchers about "human extinction or similarly permanent and severe disempowerment" from future AI; many assigned several percent probability or more. ([AI Impacts](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/))
-3. A 2024–2025 survey of 2,778 AI researchers found 38–51% gave ≥10% chance to extinction-level outcomes from advanced AI. ([Grace et al. 2024](https://arxiv.org/abs/2401.02843))
-4. Geoffrey Hinton estimates ~20% chance AI leads to human extinction. ([The Guardian](https://www.theguardian.com/technology/2024/dec/27/godfather-of-ai-raises-odds-of-the-technology-wiping-out-humanity-over-next-30-years))
-5. Dario Amodei estimates ~25% chance of extremely bad AI outcomes including extinction. ([Axios](https://www.axios.com/2025/09/17/anthropic-dario-amodei-p-doom-25-percent))
-6. Global life expectancy is ~73 years; healthy life expectancy (HALE) is ~63–64 years, implying average quality weight ~0.85–0.9. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-7. World population projected to peak at ~10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf))
-8. For currently alive people, average remaining life expectancy is ~40 years with ~0.9 quality weight, yielding ~36 QALYs per person.
-9. Cumulative AI safety spending through 2025 is ~\$1 billion (Open Philanthropy ~\$400M, SFF ~\$53M, FTX Future Fund ~\$32M, LTFF ~\$10M, plus lab safety teams ~\$32M/year and government programs). ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [TIME](https://time.com/7012763/cari-tuna/))
-10. Total cost per AI safety employee is ~2× salary (~\$400–500k/year) including benefits, compute, and overhead. ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation))
-11. AI research scientist salaries in the US are ~\$180–220k/year. ([Glassdoor](https://www.glassdoor.com/Salaries/ai-research-scientist-salary-SRCH_KO0%2C21.htm))
-12. One AI safety career may avert 1–50 microdooms, with central estimate ~10. ([Jurkovic 2023](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety))
+1. The baseline probability of AI-caused extinction this century is approximately 10%, with mainstream expert estimates ranging from a few percent to over 25%. ([Ord 2024](https://www.tobyord.com/writing/the-precipice-revisited), [AI Impacts 2022](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/), [Grace et al. 2024](https://arxiv.org/abs/2401.02843), [Hinton via Guardian](https://www.theguardian.com/technology/2024/dec/27/godfather-of-ai-raises-odds-of-the-technology-wiping-out-humanity-over-next-30-years), [Amodei via Axios](https://www.axios.com/2025/09/17/anthropic-dario-amodei-p-doom-25-percent))
+2. Global life expectancy is ~73 years; healthy life expectancy (HALE) is ~63–64 years, implying average quality weight ~0.85–0.9. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
+3. World population projected to peak at ~10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf))
+4. For currently alive people, average remaining life expectancy is ~40 years with ~0.9 quality weight, yielding ~36 QALYs per person.
+5. Cumulative AI safety spending through 2025 is approximately \$1 billion (Open Philanthropy ~\$400M, SFF ~\$53M, FTX Future Fund ~\$32M, LTFF ~\$10M, plus lab safety teams ~\$32M/year and government programs). ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [TIME](https://time.com/7012763/cari-tuna/))
+6. Total cost per AI safety employee is approximately 2× salary (~\$400–500k/year) including benefits, compute, and overhead. ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation))
+7. AI research scientist salaries in the US are ~\$180–220k/year. ([Glassdoor](https://www.glassdoor.com/Salaries/ai-research-scientist-salary-SRCH_KO0%2C21.htm))
+8. One AI safety career may avert 1–50 microdooms (one-in-a-million risk reductions), with central estimate ~10. ([Jurkovic 2023](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety))
 
 ## Why Take This Risk Seriously?
 
-Several lines of evidence suggest that experts take AI existential risk seriously:
+The 10% baseline probability (Assumption 1) reflects a rough consensus among experts who take this risk seriously:
 
-- In _The Precipice_, philosopher Toby Ord gives 10% probability to existential catastrophe from unaligned AI this century (Assumption 1). He reiterates this in his 2024 follow-up.
-- The 2022 AI Impacts survey and the 2024–2025 survey of 2,778 AI researchers (Assumptions 2, 3) found that many researchers assign several percent or more to extinction-level outcomes.
-- High-profile AI scientists like Geoffrey Hinton (~20%) and Dario Amodei (~25%) have publicly given non-trivial "p(doom)" estimates (Assumptions 4, 5).
+- Philosopher Toby Ord gives 10% probability to existential catastrophe from unaligned AI this century, higher than all other anthropogenic existential risks combined.
+- The 2022 AI Impacts survey and a 2024–2025 survey of 2,778 AI researchers found 38–51% gave ≥10% chance to extinction-level outcomes.
+- High-profile AI scientists like Geoffrey Hinton (~20%) and Dario Amodei (~25%) have publicly given non-trivial "p(doom)" estimates.
 
 Not all experts agree—figures like Yann LeCun argue these risks are exaggerated. But there is a live, mainstream scientific and policy discussion about whether AGI/ASI could end human civilization. Even if the true risk were "only" 1%, reducing it by a tiny absolute amount could be extremely valuable in expectation.
 
@@ -63,7 +59,7 @@ The point estimate (\$2 million/microprobability) and range (\$0.2–\$20 millio
 
 **Approach 1 — Field-level estimate:**
 
-We estimate how much risk reduction ~\$1 billion in cumulative AI safety spending (Assumption 9) has achieved. Many visible AI safety ideas—alignment, RLHF, evaluations, red-teaming, the concept of "p(doom)"—were developed or amplified by this community and now influence lab practices, public policy, and scientific debate. It would be overconfident to claim huge risk reductions, but hard to believe decades of safety work had zero effect.
+We estimate how much risk reduction ~\$1 billion in cumulative AI safety spending (Assumption 5) has achieved. Many visible AI safety ideas—alignment, RLHF, evaluations, red-teaming, the concept of "p(doom)"—were developed or amplified by this community and now influence lab practices, public policy, and scientific debate. It would be overconfident to claim huge risk reductions, but hard to believe decades of safety work had zero effect.
 
 We assume this spending reduced extinction risk by ~0.03 percentage points (from 10.00% to 9.97%):
 
@@ -75,13 +71,13 @@ Optimistic (0.3pp reduction with \$0.5B): \$170,000/microprobability
 
 **Approach 2 — Career-level estimate:**
 
-A "microdoom" is a one-in-a-million reduction in AI existential risk. Jurkovic (2023) explores several models for how much risk reduction an additional AI safety professional might achieve (Assumption 12):
+A "microdoom" is a one-in-a-million reduction in AI existential risk. Jurkovic (2023) explores several models for how much risk reduction an additional AI safety professional might achieve (Assumption 8):
 
 - Linear-growth model: ~10 microdooms per career
 - Diminishing returns model: ~49 microdooms per career
 - Pareto model (10% of people account for 90% of impact): 10–270 microdooms
 
-We use a central estimate of 10 microdooms per career. If a typical AI safety career costs ~\$10 million (Assumptions 10, 11: ~\$450k/year × 22 years):
+We use a central estimate of 10 microdooms per career. If a typical AI safety career costs ~\$10 million (Assumptions 6, 7: ~\$450k/year × 22 years):
 
 - Cost per microprobability: \$10M / 10 = **\$1 million**
 
@@ -102,11 +98,11 @@ Note: This modeling only counts QALYs for humans, not for non-human animals or o
 
 The point estimate (0.9) and range (0.7–1.0) represent the average quality-of-life weight for human existence.
 
-WHO estimates healthy life expectancy (HALE) at ~63–64 years vs. ~73 years total life expectancy (Assumption 6), implying people spend most of their lives in reasonably good health. This suggests an average quality-of-life weight of ~0.85–0.9. We use 0.9 QALYs per year, treating this as all-things-considered quality including work, relationships, culture, and periods of hardship.
+WHO estimates healthy life expectancy (HALE) at ~63–64 years vs. ~73 years total life expectancy (Assumption 2), implying people spend most of their lives in reasonably good health. This suggests an average quality-of-life weight of ~0.85–0.9. We use 0.9 QALYs per year, treating this as all-things-considered quality including work, relationships, culture, and periods of hardship.
 
 **How total QALYs scale with time limit:**
 
-The cost per QALY depends on the duration (time limit) the user chooses. With world population of ~10 billion (Assumption 7) and 0.9 QALYs per person per year:
+The cost per QALY depends on the duration (time limit) the user chooses. With world population of ~10 billion (Assumption 3) and 0.9 QALYs per person per year:
 
 **Example 1 — Time limit = 40 years (currently alive people only):**
 

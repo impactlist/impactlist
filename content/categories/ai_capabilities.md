@@ -171,7 +171,7 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 ### Assumptions
 
-1. Total probability of AI-caused extinction this century is ~10%. ([Ord, The Precipice](https://www.tobyord.com/writing/the-precipice-revisited))
+1. The probability of AI-caused extinction this century is approximately 10%, with mainstream expert estimates ranging from a few percent to over 25%. ([Ord 2024](https://www.tobyord.com/writing/the-precipice-revisited), [AI Impacts 2022](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/), [Grace et al. 2024](https://arxiv.org/abs/2401.02843))
 2. Total cumulative AI capabilities spending will be ~\$10 trillion (\$5–30 trillion range).
 3. Marginal risk per dollar scales with overall capabilities effort: $dP/dS \approx P_{\text{doom}}/S_{\text{total}}$.
 4. Philanthropic capabilities funding is more concentrated on frontier research than average AI spending—leverage factor $L = 3$ (range 0.5–5).

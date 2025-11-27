@@ -32,12 +32,11 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 ## Assumptions
 
-1. A US–Russia nuclear exchange could inject enough soot to cut global calorie production by ~90%, killing >5 billion people from famine. ([Xia et al. 2022](https://www.nature.com/articles/s43016-022-00573-0))
-2. Rodriguez's Rethink Priorities analysis estimates ~5–5.5 billion total deaths in full-scale war scenarios. ([EA Forum](https://forum.effectivealtruism.org/posts/MCim4PoqmFPCcPy9m/updated-estimates-of-the-severity-of-a-nuclear-war))
-3. Probability of full-scale nuclear war over 100 years is on the order of a few percent (~5%). ([Ord, The Precipice](https://www.tobyord.com/writing/the-precipice-revisited))
-4. Philanthropic funding for nuclear security is only ~\$30 million/year, yet past work has influenced major arms-control milestones. ([Founders Pledge](https://www.founderspledge.com/research/global-catastrophic-nuclear-risk-a-guide-for-philanthropists))
-5. Open Philanthropy's existential-risk benchmark is roughly \$2 million per microprobability of catastrophe.
-6. Each death corresponds to ~36 QALYs lost (40 years remaining × 0.9 quality); survivors lose ~7 QALYs on average from prolonged hardship.
+1. A full-scale US–Russia nuclear exchange would kill approximately 5–5.5 billion people, primarily from nuclear winter-induced famine that could cut global calorie production by ~90%. ([Xia et al. 2022](https://www.nature.com/articles/s43016-022-00573-0), [Rodriguez/Rethink Priorities](https://forum.effectivealtruism.org/posts/MCim4PoqmFPCcPy9m/updated-estimates-of-the-severity-of-a-nuclear-war))
+2. The probability of full-scale nuclear war over 100 years is approximately 5% (~1 in 20). ([Ord, The Precipice](https://www.tobyord.com/writing/the-precipice-revisited))
+3. Philanthropic funding for nuclear security is only ~\$30 million/year, yet past work has influenced major arms-control milestones. ([Founders Pledge](https://www.founderspledge.com/research/global-catastrophic-nuclear-risk-a-guide-for-philanthropists))
+4. Open Philanthropy's existential-risk benchmark is roughly \$2 million per microprobability of catastrophe.
+5. Each death corresponds to ~36 QALYs lost (40 years remaining × 0.9 quality); survivors lose ~7 QALYs on average from prolonged hardship.
 
 ## Details
 

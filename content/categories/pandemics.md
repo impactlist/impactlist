@@ -34,11 +34,10 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 1. The 1918 influenza killed ~50 million people (possibly 100 million) when global population was 1.8 billion. ([CDC](https://archive.cdc.gov/www_cdc_gov/flu/pandemic-resources/1918-commemoration/1918-pandemic-history.htm))
 2. Future biological threats—especially engineered pathogens—could kill hundreds of millions or billions. ([Founders Pledge GCBR](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf))
-3. Toby Ord estimates 1 in 30 (~3.3%) chance of existential catastrophe from pandemics this century. ([The Precipice Revisited](https://www.tobyord.com/writing/the-precipice-revisited))
-4. Gregory Lewis estimates anthropogenic GCBRs at ~1% or greater this century. ([80,000 Hours](https://80000hours.org/problem-profiles/preventing-catastrophic-pandemics/full-report/))
-5. Gain-of-function research on virulent influenza carries 0.01–0.1% probability per lab-year of triggering a pandemic killing 2 million to 1.4 billion. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
-6. Philanthropic funding for GCBRs is tiny (<2% of health security spending is truly focused on catastrophic risks). ([Founders Pledge](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf))
-7. Each pandemic death corresponds to ~36 QALYs lost (40 years × 0.9 quality); survivors lose ~2 QALYs on average from long-term effects.
+3. The probability of existential or catastrophic pandemic this century is approximately 1–3%, with anthropogenic risks (engineered pathogens) being the primary concern. ([Ord, The Precipice](https://www.tobyord.com/writing/the-precipice-revisited), [Lewis/80,000 Hours](https://80000hours.org/problem-profiles/preventing-catastrophic-pandemics/full-report/))
+4. Gain-of-function research on virulent influenza carries 0.01–0.1% probability per lab-year of triggering a pandemic killing 2 million to 1.4 billion. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
+5. Philanthropic funding for GCBRs is tiny (<2% of health security spending is truly focused on catastrophic risks). ([Founders Pledge](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf))
+6. Each pandemic death corresponds to ~36 QALYs lost (40 years × 0.9 quality); survivors lose ~2 QALYs on average from long-term effects.
 
 ## Details
 

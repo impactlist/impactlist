@@ -5,7 +5,7 @@ effects:
   - effectId: population
     startTime: 15
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 2_000_000
+    costPerMicroprobability: 700_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: 1.0
 ---
@@ -22,7 +22,7 @@ This effect captures welfare gains from reducing the probability of human extinc
 
 ## Point Estimates
 
-- **Cost per microprobability:** \$2 million (\$0.2–\$20 million)
+- **Cost per microprobability:** \$700,000 (\$50,000–\$10 million)
 - **Population fraction affected:** 1.0 (by definition, everyone dies)
 - **QALY improvement per affected person per year:** 0.9 (0.7–1.0)
 - **Start time:** 15 years
@@ -37,7 +37,7 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 3. World population projected to peak at ~10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf))
 4. For currently alive people, average remaining life expectancy is ~40 years with ~0.9 quality weight, yielding ~36 QALYs per person.
 5. Cumulative AI safety spending through 2025 is approximately \$1 billion (Open Philanthropy ~\$400M, SFF ~\$53M, FTX Future Fund ~\$32M, LTFF ~\$10M, plus lab safety teams ~\$32M/year and government programs). ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [TIME](https://time.com/7012763/cari-tuna/))
-6. This cumulative spending has reduced extinction risk by approximately 0.03 percentage points (range 0.003–0.3pp). This is a rough estimate based on the field's influence on lab practices, public policy, and scientific debate. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending))
+6. This cumulative spending has reduced extinction risk by approximately 0.2 percentage points (range 0.02–2pp). This is a rough estimate based on the field's influence on lab practices, public policy, and scientific debate. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending))
 7. Total cost per AI safety employee is approximately 2× salary (~\$400–500k/year) including benefits, compute, and overhead. ([EA Forum](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation))
 8. AI research scientist salaries in the US are ~\$180–220k/year. ([Glassdoor](https://www.glassdoor.com/Salaries/ai-research-scientist-salary-SRCH_KO0%2C21.htm))
 9. One AI safety career may avert 1–50 microdooms (one-in-a-million risk reductions), with central estimate ~10. ([Jurkovic 2023](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety))
@@ -46,19 +46,19 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 ### Cost per Microprobability
 
-The point estimate (\$2 million/microprobability) and range (\$0.2–\$20 million) are derived from two approaches.
+The point estimate (\$700,000/microprobability) and range (\$50,000–\$10 million) are derived from two approaches.
 
 **Approach 1 — Field-level estimate:**
 
 We estimate how much risk reduction ~\$1 billion in cumulative AI safety spending (Assumption 5) has achieved. Many visible AI safety ideas—alignment, RLHF, evaluations, red-teaming, the concept of "p(doom)"—were developed or amplified by this community and now influence lab practices, public policy, and scientific debate. It would be overconfident to claim huge risk reductions, but hard to believe decades of safety work had zero effect.
 
-Per Assumption 6, this spending reduced extinction risk by ~0.03 percentage points (from 10.00% to 9.97%):
+Per Assumption 6, this spending reduced extinction risk by ~0.2 percentage points (from 10.00% to 9.80%):
 
-- Microprobabilities averted: 0.0003 / 10⁻⁶ = 300
-- Cost per microprobability: \$1B / 300 = **\$3.3 million**
+- Microprobabilities averted: 0.002 / 10⁻⁶ = 2,000
+- Cost per microprobability: \$1B / 2,000 = **\$500,000**
 
-Pessimistic (only 0.003pp reduction): \$33 million/microprobability
-Optimistic (0.3pp reduction with \$0.5B): \$170,000/microprobability
+Pessimistic (only 0.02pp reduction): \$5 million/microprobability
+Optimistic (2pp reduction with \$0.5B): \$25,000/microprobability
 
 **Approach 2 — Career-level estimate:**
 
@@ -75,7 +75,7 @@ We use a central estimate of 10 microdooms per career. If a typical AI safety ca
 Best case (\$5M cost, 50 microdooms): \$100,000/microprobability
 Worst case (\$20M cost, 1 microdoom): \$20 million/microprobability
 
-**Combined:** These approaches broadly agree on the order of magnitude. Taking a logarithmic middle ground between \$1M and \$3.3M yields **\$2 million** as the central estimate.
+**Combined:** These approaches broadly agree on the order of magnitude. Taking a logarithmic middle ground between \$500k and \$1M yields **\$700,000** as the central estimate.
 
 ### Population Fraction Affected
 
@@ -99,19 +99,19 @@ The cost per QALY depends on the duration (time limit) the user chooses. With wo
 
 - Total QALYs lost: 10B × 0.9 × 40 = **360 billion QALYs**
 - QALYs saved per microprobability: 360B × 10⁻⁶ = 360,000
-- Cost per QALY: \$2M / 360,000 ≈ **\$6/QALY**
+- Cost per QALY: \$700k / 360,000 ≈ **\$2/QALY**
 
 **Example 2 — Time limit = 100 years (default, ~2–3 generations):**
 
 - Total QALYs lost: 10B × 0.9 × 100 = **900 billion QALYs**
 - QALYs saved per microprobability: 900B × 10⁻⁶ = 900,000
-- Cost per QALY: \$2M / 900,000 ≈ **\$2.20/QALY**
+- Cost per QALY: \$700k / 900,000 ≈ **\$0.78/QALY**
 
 **Example 3 — Time limit = 1,000 years (~25 generations):**
 
 - Total QALYs lost: 10B × 0.9 × 1,000 = **9 trillion QALYs**
 - QALYs saved per microprobability: 9T × 10⁻⁶ = 9 billion
-- Cost per QALY: \$2M / 9B ≈ **\$0.0002/QALY**
+- Cost per QALY: \$700k / 9B ≈ **\$0.00008/QALY**
 
 These examples assume constant population for simplicity. The actual calculation uses global parameters that define the future population curve, so scaling may not be exactly linear. The default time limit is 100 years; users can adjust this to match their values.
 

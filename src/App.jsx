@@ -8,6 +8,7 @@ import RecipientDetail from './pages/RecipientDetail';
 import RecipientList from './pages/RecipientList';
 import CategoryList from './pages/CategoryList';
 import CategoryDetail from './pages/CategoryDetail';
+import AssumptionDetail from './pages/AssumptionDetail';
 import DonationCalculator from './pages/DonationCalculator';
 import FAQ from './pages/FAQ';
 import { AssumptionsProvider } from './contexts/AssumptionsContext';
@@ -103,6 +104,7 @@ const AppContent = () => {
             <Route path="/donor/:donorId" element={<DonorDetail />} />
             <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
             <Route path="/category/:categoryId" element={<CategoryDetail />} />
+            <Route path="/assumption/:assumptionId" element={<AssumptionDetail />} />
             <Route path="/categories" element={<CategoryList />} />
             <Route path="/recipients" element={<RecipientList />} />
             <Route path="/calculator" element={<DonationCalculator />} />

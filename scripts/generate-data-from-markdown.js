@@ -318,6 +318,45 @@ function loadDonations() {
   return donations;
 }
 
+// Load all assumptions
+function loadAssumptions() {
+  const assumptionsDir = path.join(__dirname, '../content/assumptions');
+
+  // Return empty object if directory doesn't exist
+  if (!fs.existsSync(assumptionsDir)) {
+    return {};
+  }
+
+  const assumptionFiles = glob.sync(path.join(assumptionsDir, '*.md'));
+  const assumptions = {};
+
+  assumptionFiles.forEach((file) => {
+    if (path.basename(file) === '_index.md') return;
+
+    const fileContent = fs.readFileSync(file, 'utf8');
+    const { data, content } = matter(fileContent);
+
+    // Validate required fields
+    if (!data.id || typeof data.id !== 'string') {
+      throw new Error(`Error: Assumption file ${path.basename(file)} is missing required 'id' field.`);
+    }
+    if (!data.name || typeof data.name !== 'string') {
+      throw new Error(`Error: Assumption file ${path.basename(file)} is missing required 'name' field.`);
+    }
+
+    // Extract content excluding "Internal Notes" section
+    const extractedContent = extractContentExcludingInternalNotes(content);
+
+    assumptions[data.id] = {
+      id: data.id,
+      name: data.name,
+      content: extractedContent || '',
+    };
+  });
+
+  return assumptions;
+}
+
 // Load global parameters
 function loadGlobalParameters() {
   if (!fs.existsSync(globalParametersFile)) {
@@ -448,6 +487,9 @@ function generateJavaScriptFile() {
   console.log('Loading global parameters...');
   const globalParameters = loadGlobalParameters();
 
+  console.log('Loading assumptions...');
+  const assumptions = loadAssumptions();
+
   console.log('Validating data integrity...');
   validateDataIntegrity(categories, donors, recipients, rawDonations);
 
@@ -484,6 +526,9 @@ export const donorsById = ${JSON.stringify(filteredDonors, null, 2)};
 
 // Recipients by ID
 export const recipientsById = ${JSON.stringify(filteredRecipients, null, 2)};
+
+// Assumptions by ID
+export const assumptionsById = ${JSON.stringify(assumptions, null, 2)};
 
 // All donations
 export const allDonations = ${JSON.stringify(donations, null, 2)};

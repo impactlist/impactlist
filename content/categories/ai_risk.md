@@ -42,16 +42,6 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 8. AI research scientist salaries in the US are ~\$180–220k/year. ([Glassdoor](https://www.glassdoor.com/Salaries/ai-research-scientist-salary-SRCH_KO0%2C21.htm))
 9. One AI safety career may avert 1–50 microdooms (one-in-a-million risk reductions), with central estimate ~10. ([Jurkovic 2023](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety))
 
-## Why Take This Risk Seriously?
-
-The 10% baseline probability (Assumption 1) reflects a rough consensus among experts who take this risk seriously:
-
-- Philosopher Toby Ord gives 10% probability to existential catastrophe from unaligned AI this century, higher than all other anthropogenic existential risks combined.
-- The 2022 AI Impacts survey and a 2024–2025 survey of 2,778 AI researchers found 38–51% gave ≥10% chance to extinction-level outcomes.
-- High-profile AI scientists like Geoffrey Hinton (~20%) and Dario Amodei (~25%) have publicly given non-trivial "p(doom)" estimates.
-
-Not all experts agree—figures like Yann LeCun argue these risks are exaggerated. But there is a live, mainstream scientific and policy discussion about whether AGI/ASI could end human civilization. Even if the true risk were "only" 1%, reducing it by a tiny absolute amount could be extremely valuable in expectation.
-
 ## Details
 
 ### Cost per Microprobability
@@ -182,8 +172,6 @@ These numbers are order-of-magnitude guesses, not precise forecasts. Major uncer
 5. **Valuing future generations.** The default time limit (100 years) includes 2–3 generations beyond those currently alive. Users can adjust this: shorter (~40 years) for only currently alive people, or much longer (up to 1 trillion years) for full longtermist weight. This choice dramatically affects the implied cost per QALY.
 
 6. **Non-human welfare.** If misaligned AI destroys most animal life, welfare losses for non-human animals could be enormous. On the flip side, aligned AI might vastly reduce wild-animal suffering or improve farmed animal lives. Our framework here is human-centric.
-
-Given these uncertainties, these estimates are rough tools for comparison. With the default 100-year time limit, top AI existential risk charities achieve roughly **\$2/QALY**. With shorter horizons (40 years, currently alive only) the cost rises to ~\$6/QALY; with longer horizons it drops further.
 
 ---
 

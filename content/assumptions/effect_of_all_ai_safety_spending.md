@@ -20,7 +20,7 @@ Let:
 
 For concreteness, suppose the “baseline” current estimate (with spending) is:
 
-- $p_{\text{with}} \approx 10\%$ probability of AI-caused extinction this century, reflecting a rough synthesis of expert surveys and public estimates such as:
+- $p_{\text{with}} \approx 8\%$ probability of AI-caused extinction this century, reflecting a rough synthesis of expert surveys and public estimates such as:
   - Toby Ord’s updated piece, [“The Precipice Revisited”](https://www.tobyord.com/writing/the-precipice-revisited).
   - The [2022 Expert Survey on Progress in AI](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/) by AI Impacts (also summarized on their [wiki](https://wiki.aiimpacts.org/ai_timelines/predictions_of_human-level_ai_timelines/ai_timeline_surveys/2022_expert_survey_on_progress_in_ai)).
   - Grace et al. (2024), “Thousands of AI Authors on the Future of AI,” on arXiv: [html](https://arxiv.org/html/2401.02843v3) / [PDF](https://arxiv.org/pdf/2401.02843).
@@ -39,7 +39,7 @@ A reasonable summary is:
 - **Plausible range**:  
   $Y \approx 0.01$ percentage points, $Z \approx 1$ percentage point.
 
-That is, cumulative AI safety–related spending to date (roughly \$1 billion) has plausibly reduced AI-caused extinction risk this century by about **0.2 percentage points** (from, say, 10.2% to 10.0%), with a wide uncertainty range of **0.01–1 percentage points**.
+That is, cumulative AI safety–related spending to date (roughly \$1 billion) has plausibly reduced AI-caused extinction risk this century by about **0.2 percentage points** (from, say, 8.2% to 8.0%), with a wide uncertainty range of **0.01–1 percentage points**.
 
 ---
 
@@ -53,11 +53,11 @@ $$
 
 measured in **percentage points**.
 
-For example, if $X = 0.2$ percentage points and $p_{\text{with}} = 10\%$:
+For example, if $X = 0.2$ percentage points and $p_{\text{with}} = 8\%$:
 
-- $p_{\text{without}} \approx 10.2\%$
-- $p_{\text{with}} \approx 10.0\%$
-- Relative risk reduction is about $0.2 / 10.2 \approx 2$–$3\%$.
+- $p_{\text{without}} \approx 8.2\%$
+- $p_{\text{with}} \approx 8.0\%$
+- Relative risk reduction is about $0.2 / 8.2 \approx 2$–$3\%$.
 
 Most formal work does **not** try to estimate $X$ directly. Instead, it estimates **cost-effectiveness** in terms of:
 
@@ -295,17 +295,17 @@ If cumulative AI safety–related spending to date is roughly \$1B, then:
   - $Y \approx 0.01$ percentage points,
   - $Z \approx 1$ percentage point.
 
-Under the illustrative baseline $p_{\text{with}} = 10\%$:
+Under the illustrative baseline $p_{\text{with}} = 8\%$:
 
-- $p_{\text{without}} = p_{\text{with}} + X \approx 10.2\%$ (best guess).
+- $p_{\text{without}} = p_{\text{with}} + X \approx 8.2\%$ (best guess).
 - So $X = 0.2$ percentage points corresponds to a **relative risk reduction** of:
   $$
-  \frac{0.2}{10.2} \approx 2\% \text{–} 3\% \,.
+  \frac{0.2}{8.2} \approx 2\% \text{–} 3\% \,.
   $$
 
 In words:
 
-> A reasonable best-guess is that AI safety–related spending to date has reduced AI-caused extinction risk this century by something like **a few percent in relative terms**, e.g., from roughly 10.2% to 10%, with a plausible absolute range of about 0.01–1 percentage points.
+> A reasonable best-guess is that AI safety–related spending to date has reduced AI-caused extinction risk this century by something like **a few percent in relative terms**, e.g., from roughly 8.2% to 8%, with a plausible absolute range of about 0.01–1 percentage points.
 
 ### 4.3 Implied Cost per Basis Point
 

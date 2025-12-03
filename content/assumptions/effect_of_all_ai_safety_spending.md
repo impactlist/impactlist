@@ -3,6 +3,8 @@ id: effect-of-all-ai-safety-spending
 name: 'Effect of all previous AI safety spending'
 ---
 
+_The following analysis was done on November 26th 2025 by GPT 5.1 Thinking._
+
 ## How much has existing AI safety spending reduced AI extinction risk?
 
 This document analyzes the question:

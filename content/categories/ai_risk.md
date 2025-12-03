@@ -32,7 +32,7 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 ## Assumptions
 
-1. The baseline probability of AI-caused extinction this century is approximately 10%, with mainstream expert estimates ranging from a few percent to over 25%. ([Ord 2024](https://www.tobyord.com/writing/the-precipice-revisited), [AI Impacts 2022](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/), [Grace et al. 2024](https://arxiv.org/abs/2401.02843), [Hinton via Guardian](https://www.theguardian.com/technology/2024/dec/27/godfather-of-ai-raises-odds-of-the-technology-wiping-out-humanity-over-next-30-years), [Amodei via Axios](https://www.axios.com/2025/09/17/anthropic-dario-amodei-p-doom-25-percent))
+1. The baseline probability of AI-caused extinction this century is approximately 10%. ([See detailed justification](/assumption/ai-doom-probability))
 2. Global life expectancy is ~73 years; healthy life expectancy (HALE) is ~63–64 years, implying average quality weight ~0.85–0.9. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 3. World population projected to peak at ~10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf))
 4. For currently alive people, average remaining life expectancy is ~40 years with ~0.9 quality weight, yielding ~36 QALYs per person.

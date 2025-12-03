@@ -32,7 +32,7 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 ## Assumptions
 
-1. The baseline probability of AI-caused extinction this century is approximately 10%. ([See detailed justification](/assumption/ai-doom-probability))
+1. The baseline probability of AI-caused extinction this century is approximately 8%. ([See detailed justification](/assumption/ai-doom-probability))
 2. Global life expectancy is ~73 years; healthy life expectancy (HALE) is ~63–64 years, implying average quality weight ~0.85–0.9. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 3. World population projected to peak at ~10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf))
 4. For currently alive people, average remaining life expectancy is ~40 years with ~0.9 quality weight, yielding ~36 QALYs per person.
@@ -52,7 +52,7 @@ The point estimate (\$700,000/microprobability) and range (\$50,000–\$10 milli
 
 We estimate how much risk reduction ~\$1 billion in cumulative AI safety spending (Assumption 5) has achieved. Many visible AI safety ideas—alignment, RLHF, evaluations, red-teaming, the concept of "p(doom)"—were developed or amplified by this community and now influence lab practices, public policy, and scientific debate. It would be overconfident to claim huge risk reductions, but hard to believe decades of safety work had zero effect.
 
-Per Assumption 6, this spending reduced extinction risk by ~0.2 percentage points (from 10.00% to 9.80%):
+Per Assumption 6, this spending reduced extinction risk by ~0.2 percentage points (from 8.00% to 7.80%):
 
 - Microprobabilities averted: 0.002 / 10⁻⁶ = 2,000
 - Cost per microprobability: \$1B / 2,000 = **\$500,000**
@@ -178,16 +178,3 @@ These numbers are order-of-magnitude guesses, not precise forecasts. Major uncer
 _These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes
-
-https://80000hours.org/articles/existential-risks/ argues the cost is about \$1000, but maybe \$100, counting existing people
-
-We've already spent between 600 million and a billion dollars on AI safety. Assume we've reduced xrisk by 1%. Assume the marginal value of the next billion is the same.
-
-So 1 billion --> 1% chance of saving 8 billion people --> 80 million lives in EV... but each person's life is already half over, so 40 million lives for a billion, or \$25 per life.
-
-Note that this assumes that in a good AI future our longevity is not increased at all -- everyone just lives a normally long life, of equal quality to their life now.
-But in reality a good AGI outcome would likely significantly extend our lives, possibly up to a trillion years or more.
-
-If people lived a million years on average after a good AGI outcome, then that multiplies the lives by 12500, \$25/12500 = \$0.002
-
-Each person lives a billion years --> \$0.000002

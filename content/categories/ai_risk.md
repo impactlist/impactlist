@@ -5,7 +5,7 @@ effects:
   - effectId: population
     startTime: 15
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 700_000
+    costPerMicroprobability: 500_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: 1.0
 ---
@@ -22,7 +22,7 @@ This effect captures welfare gains from reducing the probability of human extinc
 
 ## Point Estimates
 
-- **Cost per microprobability:** \$700,000 (\$50,000–\$10 million)
+- **Cost per microprobability:** \$500,000 (\$50,000–\$10 million)
 - **Population fraction affected:** 1.0 (by definition, everyone dies)
 - **QALY improvement per affected person per year:** 0.9 (0.7–1.0)
 - **Start time:** 15 years
@@ -46,7 +46,7 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 
 ### Cost per Microprobability
 
-The point estimate (\$700,000/microprobability) and range (\$50,000–\$10 million) are derived from two approaches.
+The point estimate (\$500,000/microprobability) and range (\$50,000–\$10 million) are derived from two approaches.
 
 **Approach 1 — Field-level estimate:**
 
@@ -75,7 +75,7 @@ We use a central estimate of 10 microdooms per career. If a typical AI safety ca
 Best case (\$5M cost, 50 microdooms): \$100,000/microprobability
 Worst case (\$20M cost, 1 microdoom): \$20 million/microprobability
 
-**Combined:** These approaches broadly agree on the order of magnitude. Taking a logarithmic middle ground between \$500k and \$1M yields **\$700,000** as the central estimate.
+**Combined:** We use Approach 1 as the central estimate (**\$500,000**) because it synthesizes multiple independent frameworks and accounts for both positive and negative effects of AI safety spending. Approach 2 provides a useful sanity check—the \$1M figure is within the same order of magnitude, suggesting our estimate is not wildly off. However, we do not average the two approaches, as Approach 2 relies on a single speculative model with much greater internal uncertainty.
 
 ### Population Fraction Affected
 
@@ -99,19 +99,19 @@ The cost per QALY depends on the duration (time limit) the user chooses. With wo
 
 - Total QALYs lost: 10B × 0.9 × 40 = **360 billion QALYs**
 - QALYs saved per microprobability: 360B × 10⁻⁶ = 360,000
-- Cost per QALY: \$700k / 360,000 ≈ **\$2/QALY**
+- Cost per QALY: \$500k / 360,000 ≈ **\$1.40/QALY**
 
 **Example 2 — Time limit = 100 years (default, ~2–3 generations):**
 
 - Total QALYs lost: 10B × 0.9 × 100 = **900 billion QALYs**
 - QALYs saved per microprobability: 900B × 10⁻⁶ = 900,000
-- Cost per QALY: \$700k / 900,000 ≈ **\$0.78/QALY**
+- Cost per QALY: \$500k / 900,000 ≈ **\$0.56/QALY**
 
 **Example 3 — Time limit = 1,000 years (~25 generations):**
 
 - Total QALYs lost: 10B × 0.9 × 1,000 = **9 trillion QALYs**
 - QALYs saved per microprobability: 9T × 10⁻⁶ = 9 billion
-- Cost per QALY: \$700k / 9B ≈ **\$0.00008/QALY**
+- Cost per QALY: \$500k / 9B ≈ **\$0.00006/QALY**
 
 These examples assume constant population for simplicity. The actual calculation uses global parameters that define the future population curve, so scaling may not be exactly linear. The default time limit is 100 years; users can adjust this to match their values.
 

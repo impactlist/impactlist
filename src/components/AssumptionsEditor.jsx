@@ -417,7 +417,7 @@ const AssumptionsEditor = () => {
         className={
           editingCategoryId || editingRecipient
             ? 'flex flex-col flex-grow min-h-0 overflow-hidden'
-            : 'overflow-y-auto p-3 flex-grow h-[calc(100vh-18rem)] min-h-[400px]'
+            : 'flex-1 min-h-0 overflow-y-auto p-3 overscroll-contain'
         }
       >
         {editingCategoryId ? (

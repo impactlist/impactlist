@@ -463,7 +463,7 @@ const RecipientEffectEditor = ({
         />
 
         {/* Effects List */}
-        <div className="overflow-y-auto px-3 py-2 max-h-[calc(80vh-300px)]">
+        <div className="flex-1 min-h-0 overflow-y-auto px-3 py-2 overscroll-contain">
           {/* Cost per life display - only show when there are multiple effects */}
           {tempEditToEffects.length > 1 && (
             <div className="mb-3 p-2 bg-gray-50 rounded-lg">

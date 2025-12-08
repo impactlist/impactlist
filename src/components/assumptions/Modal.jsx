@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Modal = ({ isOpen, onClose, title, description, children }) => {
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      // Only restore if we're the ones who set it (still 'hidden')
+      if (document.body.style.overflow === 'hidden') {
+        document.body.style.overflow = previousOverflow;
+      }
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
         onClick={onClose}
         role="presentation"
       >
         <motion.div
-          className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+          className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] max-h-[90dvh] overflow-hidden flex flex-col"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}

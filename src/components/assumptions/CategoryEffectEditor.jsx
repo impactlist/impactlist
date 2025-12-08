@@ -151,7 +151,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   return (
     <div className="h-full p-2">
-      <div className="h-full flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
+      <div className="h-full flex flex-col min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={`Editing assumptions for category: ${category.name}`}
           description={
@@ -175,7 +175,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         />
 
         {/* Effects List */}
-        <div className="overflow-y-auto px-3 py-3 max-h-[calc(80vh-300px)]">
+        <div className="flex-1 min-h-0 overflow-y-auto px-3 py-3 overscroll-contain">
           <div className="space-y-3">
             {tempEditToEffects.map((effect, index) => {
               const effectType = getEffectType(effect);

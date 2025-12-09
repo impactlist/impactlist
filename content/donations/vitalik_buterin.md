@@ -37,10 +37,10 @@ donations:
 
   - date: 2021-05-12
     recipient: india-covid-crypto-relief-fund
-    amount: 4_000_000
+    amount: 463_000_000
     credit:
       vitalik-buterin: 1.0
-    source: 'https://www.indiatoday.in/technology/news/story/vitalik-donates-1-billion-worth-shiba-inu-and-ethereum-to-india-covid-19-relief-fund-1802009-2021-05-13'
+    source: 'https://updates.cryptorelief.in/p/what-happened-to-the-shib-donation'
 
   - date: 2021-05-12
     recipient: gitcoin
@@ -76,6 +76,13 @@ donations:
     credit:
       vitalik-buterin: 1.0
     source: 'https://www.newsbtc.com/news/ethereum/vitalik-buterin-dumps-shib-price-tanks/'
+
+  - date: 2021-05-12
+    recipient: future-of-life-institute
+    amount: 665_080_000
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://www.politico.com/news/2024/03/25/a-665m-crypto-war-chest-roils-ai-safety-fight-00148621'
 
   - date: 2022-04-04
     recipient: aid-for-ukraine

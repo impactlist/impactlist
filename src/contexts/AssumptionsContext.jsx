@@ -239,7 +239,7 @@ export const AssumptionsProvider = ({ children }) => {
 
   // ============ GLOBAL PARAMETER OPERATIONS ============
   const updateGlobalParameterValue = (parameterName, value) => {
-    setUserAssumptions((prev) => apiHelpers.setGlobalParameter(prev, parameterName, value));
+    setUserAssumptions((prev) => apiHelpers.setGlobalParameter(prev, defaultAssumptions, parameterName, value));
   };
 
   const resetGlobalParameter = (parameterName) => {

@@ -5,7 +5,6 @@ import BackButton from '../components/shared/BackButton';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../utils/donationDataHelpers';
-import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import SampleDonationCalculator from '../components/shared/SampleDonationCalculator';
 import { donations } from '../data/generatedData';
@@ -105,8 +104,6 @@ const CategoryDetail = () => {
             totalReceived: categoryInfo.totalDonated,
           }}
           entityType="recipient" // Reuse recipient styling
-          customValuesIndicator={<CustomValuesIndicator />}
-          onAdjustAssumptions={openModal}
           costPerLifeAction={
             <button
               type="button"

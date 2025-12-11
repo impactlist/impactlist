@@ -9,14 +9,12 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
-import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
 
 const CategoryList = () => {
   const [categoryStats, setCategoryStats] = useState([]);
-  const { combinedAssumptions, openModal } = useAssumptions();
+  const { combinedAssumptions } = useAssumptions();
 
   useEffect(() => {
     // Get all categories
@@ -145,12 +143,6 @@ const CategoryList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="flex justify-end items-center mb-4">
-            <div className="flex items-center space-x-3">
-              <CustomValuesIndicator />
-              <AdjustAssumptionsButton onClick={openModal} />
-            </div>
-          </div>
           <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
             <div className="overflow-x-auto">
               <SortableTable

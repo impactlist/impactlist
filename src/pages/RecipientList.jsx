@@ -14,16 +14,14 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
-import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
 import SearchInput from '../components/shared/SearchInput';
 
 const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const { combinedAssumptions, openModal } = useAssumptions();
+  const { combinedAssumptions } = useAssumptions();
 
   useEffect(() => {
     if (!combinedAssumptions) {
@@ -193,13 +191,9 @@ const RecipientList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+          <div className="mb-4">
             <div className="w-full sm:max-w-md">
               <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
-            </div>
-            <div className="flex items-center space-x-3 self-end sm:self-auto">
-              <CustomValuesIndicator />
-              <AdjustAssumptionsButton onClick={openModal} />
             </div>
           </div>
           <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">

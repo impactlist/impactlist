@@ -5,12 +5,38 @@
 /**
  * Set a custom value for a specific field in a category effect
  * The value is stored directly on the effect field, not in an overrides object
+ * If value matches default, removes the field instead
  */
 export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categoryId, effectId, fieldName, value) => {
   // Validate that the effect exists in defaults
   const defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
   if (!defaultEffect) {
     throw new Error(`Effect ${effectId} not found in category ${categoryId}`);
+  }
+
+  // Check if value matches default - if so, remove instead of storing
+  const defaultValue = defaultEffect[fieldName];
+  if (areValuesEqual(value, defaultValue)) {
+    if (!userAssumptions?.categories?.[categoryId]?.effects) {
+      return userAssumptions;
+    }
+    const newData = JSON.parse(JSON.stringify(userAssumptions));
+    const effectIndex = newData.categories[categoryId].effects.findIndex((e) => e.effectId === effectId);
+    if (effectIndex !== -1) {
+      delete newData.categories[categoryId].effects[effectIndex][fieldName];
+      // Prune empty effect (only has effectId)
+      if (Object.keys(newData.categories[categoryId].effects[effectIndex]).length === 1) {
+        newData.categories[categoryId].effects.splice(effectIndex, 1);
+      }
+    }
+    // Prune empty structures
+    if (newData.categories[categoryId].effects.length === 0) {
+      delete newData.categories[categoryId];
+    }
+    if (Object.keys(newData.categories).length === 0) {
+      delete newData.categories;
+    }
+    return Object.keys(newData).length > 0 ? newData : null;
   }
 
   // Deep clone or create new structure
@@ -28,24 +54,14 @@ export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categ
   }
 
   const effect = newData.categories[categoryId].effects[effectIndex];
-
-  // Always store the value to respect user's explicit input
   effect[fieldName] = value;
 
   return newData;
 };
 
 /**
- * Set all custom values for a category effect at once (batch update)
- * Only stores fields that differ from defaults
+ * Helper to check if two values are equal (handles arrays and NaN)
  */
-const normalizeFieldValue = (fieldName, value) => {
-  if (fieldName === 'disabled') {
-    return value === undefined ? false : Boolean(value);
-  }
-  return value;
-};
-
 const areValuesEqual = (valueA, valueB) => {
   if (Array.isArray(valueA) && Array.isArray(valueB)) {
     if (valueA.length !== valueB.length) {
@@ -63,6 +79,17 @@ const areValuesEqual = (valueA, valueB) => {
   }
 
   return typeof valueA === 'number' && typeof valueB === 'number' && Number.isNaN(valueA) && Number.isNaN(valueB);
+};
+
+/**
+ * Set all custom values for a category effect at once (batch update)
+ * Only stores fields that differ from defaults
+ */
+const normalizeFieldValue = (fieldName, value) => {
+  if (fieldName === 'disabled') {
+    return value === undefined ? false : Boolean(value);
+  }
+  return value;
 };
 
 const shouldSkipField = (fieldName) => {
@@ -157,6 +184,7 @@ export const clearCategoryCustomValues = (userAssumptions, categoryId) => {
 /**
  * Set an override for a specific field in a recipient's category effect
  * Removes any existing multiplier for the same field
+ * If value matches default, removes the override instead
  */
 export const setRecipientFieldOverride = (
   userAssumptions,
@@ -182,6 +210,38 @@ export const setRecipientFieldOverride = (
     throw new Error(`Effect ${effectId} not found for recipient ${recipientId} category ${categoryId}`);
   }
 
+  // Check if value matches default - if so, remove instead of storing
+  const defaultValue = defaultEffect[fieldName];
+  if (areValuesEqual(value, defaultValue)) {
+    if (!userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects) {
+      return userAssumptions;
+    }
+    const newData = JSON.parse(JSON.stringify(userAssumptions));
+    const effects = newData.recipients[recipientId].categories[categoryId].effects;
+    const effectIndex = effects.findIndex((e) => e.effectId === effectId);
+    if (effectIndex !== -1 && effects[effectIndex].overrides) {
+      delete effects[effectIndex].overrides[fieldName];
+      if (Object.keys(effects[effectIndex].overrides).length === 0) {
+        delete effects[effectIndex].overrides;
+      }
+      // Prune empty effect (only has effectId)
+      if (Object.keys(effects[effectIndex]).length === 1) {
+        effects.splice(effectIndex, 1);
+      }
+    }
+    // Prune empty structures
+    if (effects.length === 0) {
+      delete newData.recipients[recipientId].categories[categoryId];
+    }
+    if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
+      delete newData.recipients[recipientId];
+    }
+    if (Object.keys(newData.recipients).length === 0) {
+      delete newData.recipients;
+    }
+    return Object.keys(newData).length > 0 ? newData : null;
+  }
+
   // Deep clone or create new structure
   const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
 
@@ -202,7 +262,6 @@ export const setRecipientFieldOverride = (
 
   const effect = effects[effectIndex];
 
-  // Always set the override to respect user's explicit input
   if (!effect.overrides) effect.overrides = {};
   effect.overrides[fieldName] = value;
 
@@ -220,6 +279,7 @@ export const setRecipientFieldOverride = (
 /**
  * Set a multiplier for a specific field in a recipient's category effect
  * Removes any existing override for the same field
+ * If multiplier is 1 (no change), removes the multiplier instead
  */
 export const setRecipientFieldMultiplier = (
   userAssumptions,
@@ -245,6 +305,37 @@ export const setRecipientFieldMultiplier = (
     throw new Error(`Effect ${effectId} not found for recipient ${recipientId} category ${categoryId}`);
   }
 
+  // A multiplier of 1 means "no change" - remove instead of storing
+  if (multiplier === 1) {
+    if (!userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects) {
+      return userAssumptions;
+    }
+    const newData = JSON.parse(JSON.stringify(userAssumptions));
+    const effects = newData.recipients[recipientId].categories[categoryId].effects;
+    const effectIndex = effects.findIndex((e) => e.effectId === effectId);
+    if (effectIndex !== -1 && effects[effectIndex].multipliers) {
+      delete effects[effectIndex].multipliers[fieldName];
+      if (Object.keys(effects[effectIndex].multipliers).length === 0) {
+        delete effects[effectIndex].multipliers;
+      }
+      // Prune empty effect (only has effectId)
+      if (Object.keys(effects[effectIndex]).length === 1) {
+        effects.splice(effectIndex, 1);
+      }
+    }
+    // Prune empty structures
+    if (effects.length === 0) {
+      delete newData.recipients[recipientId].categories[categoryId];
+    }
+    if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
+      delete newData.recipients[recipientId];
+    }
+    if (Object.keys(newData.recipients).length === 0) {
+      delete newData.recipients;
+    }
+    return Object.keys(newData).length > 0 ? newData : null;
+  }
+
   // Deep clone or create new structure
   const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
 
@@ -265,7 +356,6 @@ export const setRecipientFieldMultiplier = (
 
   const effect = effects[effectIndex];
 
-  // Always set the multiplier to respect user's explicit input
   if (!effect.multipliers) effect.multipliers = {};
   effect.multipliers[fieldName] = multiplier;
 
@@ -326,8 +416,16 @@ export const clearRecipientCategoryOverrides = (userAssumptions, recipientId, ca
 
 /**
  * Set a global parameter override
+ * If value matches the default, clears the override instead
  */
-export const setGlobalParameter = (userAssumptions, parameterName, value) => {
+export const setGlobalParameter = (userAssumptions, defaultAssumptions, parameterName, value) => {
+  // Check if value matches the default
+  const defaultValue = defaultAssumptions?.globalParameters?.[parameterName];
+  if (areValuesEqual(value, defaultValue)) {
+    // Value matches default, clear the override
+    return clearGlobalParameter(userAssumptions, parameterName);
+  }
+
   const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
 
   if (!newData.globalParameters) newData.globalParameters = {};
@@ -340,7 +438,7 @@ export const setGlobalParameter = (userAssumptions, parameterName, value) => {
  * Clear a specific global parameter override
  */
 export const clearGlobalParameter = (userAssumptions, parameterName) => {
-  if (!userAssumptions?.globalParameters?.[parameterName]) {
+  if (!userAssumptions?.globalParameters || !Object.hasOwn(userAssumptions.globalParameters, parameterName)) {
     return userAssumptions;
   }
 

@@ -9,10 +9,8 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import SpecificDonationModal from '../components/SpecificDonationModal';
 import PageHeader from '../components/shared/PageHeader';
-import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
 
 // Import new components
 import CalculatorStats from '../components/calculator/CalculatorStats';
@@ -46,7 +44,7 @@ const DonationCalculator = () => {
     twoBelow: null,
     twoAbove: null,
   });
-  const { combinedAssumptions, openModal } = useAssumptions();
+  const { combinedAssumptions } = useAssumptions();
 
   // For specific donation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -377,13 +375,6 @@ const DonationCalculator = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="flex justify-end items-center mb-6">
-            <div className="flex items-center space-x-3">
-              <CustomValuesIndicator />
-              <AdjustAssumptionsButton onClick={openModal} />
-            </div>
-          </div>
-
           {/* Impact Summary */}
           <CalculatorStats
             totalDonated={totalDonated}

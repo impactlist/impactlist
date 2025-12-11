@@ -17,7 +17,6 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
@@ -37,7 +36,7 @@ const RecipientDetail = () => {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
-  const { combinedAssumptions, openModal } = useAssumptions();
+  const { combinedAssumptions } = useAssumptions();
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -363,8 +362,6 @@ const RecipientDetail = () => {
             categoryBreakdown: recipientInfo.categoryBreakdown,
           }}
           entityType="recipient"
-          customValuesIndicator={<CustomValuesIndicator />}
-          onAdjustAssumptions={openModal}
           currentYear={getCurrentYear()}
         />
 

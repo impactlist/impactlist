@@ -18,7 +18,6 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import EntityChartSection from '../components/entity/EntityChartSection';
@@ -38,7 +37,7 @@ const DonorDetail = () => {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
-  const { combinedAssumptions, openModal } = useAssumptions();
+  const { combinedAssumptions } = useAssumptions();
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -464,8 +463,6 @@ const DonorDetail = () => {
           stats={donorStats}
           entityType="donor"
           photoComponent={<DonorPhoto donorId={donorId} donorName={donorStats.name} size="large" />}
-          customValuesIndicator={<CustomValuesIndicator />}
-          onAdjustAssumptions={openModal}
         />
 
         {/* Donation categories visualization */}

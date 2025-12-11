@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import StatisticsCard from '../shared/StatisticsCard';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
-import AdjustAssumptionsButton from '../shared/AdjustAssumptionsButton';
 
 /**
  * Displays key statistics for donors or recipients with consistent styling.
@@ -12,8 +11,6 @@ const EntityStatistics = ({
   stats,
   entityType,
   className = '',
-  customValuesIndicator = null,
-  onAdjustAssumptions = null,
   currentYear = null,
   costPerLifeAction = null,
   photoComponent = null,
@@ -116,32 +113,21 @@ const EntityStatistics = ({
   );
 
   return (
-    <>
-      {(customValuesIndicator || onAdjustAssumptions) && (
-        <div className="flex justify-end mb-4">
-          <div className="flex items-center space-x-3">
-            {customValuesIndicator}
-            {onAdjustAssumptions && <AdjustAssumptionsButton onClick={onAdjustAssumptions} />}
-          </div>
+    <motion.div
+      className={`bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200 ${className}`}
+      initial={{ y: 10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.1, duration: 0.4 }}
+    >
+      {hasPhoto && isDonor ? (
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+          {photoComponent}
+          <div className="flex-1">{renderDonorPhotoStats()}</div>
         </div>
+      ) : (
+        renderBannerStats()
       )}
-
-      <motion.div
-        className={`bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200 ${className}`}
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.4 }}
-      >
-        {hasPhoto && isDonor ? (
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            {photoComponent}
-            <div className="flex-1">{renderDonorPhotoStats()}</div>
-          </div>
-        ) : (
-          renderBannerStats()
-        )}
-      </motion.div>
-    </>
+    </motion.div>
   );
 };
 
@@ -166,8 +152,6 @@ EntityStatistics.propTypes = {
   }).isRequired,
   entityType: PropTypes.oneOf(['donor', 'recipient']).isRequired,
   className: PropTypes.string,
-  customValuesIndicator: PropTypes.node,
-  onAdjustAssumptions: PropTypes.func,
   currentYear: PropTypes.number,
   costPerLifeAction: PropTypes.node,
   photoComponent: PropTypes.node,

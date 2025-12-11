@@ -29,35 +29,66 @@ const EntityStatistics = ({
     ? `Default: ${stats.defaultCostPerLife === 0 ? '∞' : formatCurrency(stats.defaultCostPerLife)}`
     : undefined;
 
+  const costPerLifeSubtext =
+    defaultCostPerLifeText ||
+    (stats.categoryCostPerLife !== undefined
+      ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
+      : undefined);
+
+  // Shared stat card definitions (defined once, used in multiple layouts)
+  const livesSavedCard = (
+    <StatisticsCard
+      label="Lives Saved"
+      value={formatNumber(Math.round(stats.totalLivesSaved))}
+      valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
+    />
+  );
+
+  const costPerLifeCard = (
+    <StatisticsCard
+      label={currentYear && !isDonor ? `Cost Per Life (${currentYear})` : 'Cost Per Life'}
+      value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
+      valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
+      valueAction={costPerLifeAction}
+      subtext={costPerLifeSubtext}
+    />
+  );
+
+  const totalDonatedCard = (
+    <StatisticsCard
+      label="Total Donated"
+      value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
+      subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
+    />
+  );
+
+  const impactRankCard = <StatisticsCard label="Impact Rank" value={`#${stats.rank}`} />;
+
+  const netWorthCard = <StatisticsCard label="Net Worth" value={formatCurrency(stats.netWorth)} />;
+
+  // For banner layout: shows rank OR net worth (not both)
+  const impactRankOrNetWorthCard = (
+    <StatisticsCard
+      label={stats.rank ? 'Impact Rank' : 'Net Worth'}
+      value={stats.rank ? `#${stats.rank}` : formatCurrency(stats.netWorth)}
+    />
+  );
+
+  const totalReceivedCard = <StatisticsCard label="Total Received" value={formatCurrency(stats.totalReceived)} />;
+
+  const focusAreaCard =
+    stats.categoryBreakdown?.length === 1 ? (
+      <StatisticsCard label="Focus Area" value={stats.categoryBreakdown[0].name} />
+    ) : null;
+
   // Stats grid for donor with photo layout (5 stats: 3 top, 2 bottom)
   const renderDonorPhotoStats = () => (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-      {/* Row 1: Impact Rank, Lives Saved, Cost/Life */}
-      <StatisticsCard label="Impact Rank" value={`#${stats.rank}`} />
-      <StatisticsCard
-        label="Lives Saved"
-        value={formatNumber(Math.round(stats.totalLivesSaved))}
-        valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
-      />
-      <StatisticsCard
-        label="Cost Per Life"
-        value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
-        valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
-        valueAction={costPerLifeAction}
-        subtext={
-          defaultCostPerLifeText ||
-          (stats.categoryCostPerLife !== undefined
-            ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
-            : undefined)
-        }
-      />
-      {/* Row 2: Total Donated, Net Worth */}
-      <StatisticsCard
-        label="Total Donated"
-        value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
-        subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
-      />
-      <StatisticsCard label="Net Worth" value={formatCurrency(stats.netWorth)} />
+      {impactRankCard}
+      {livesSavedCard}
+      {costPerLifeCard}
+      {totalDonatedCard}
+      {netWorthCard}
     </div>
   );
 
@@ -68,48 +99,17 @@ const EntityStatistics = ({
         (stats.categoryBreakdown?.length === 1 && !isDonor) || isDonor ? 'md:grid-cols-4' : 'md:grid-cols-3'
       } gap-6`}
     >
-      {/* Common statistics for both donors and recipients */}
-      <StatisticsCard
-        label={'Lives Saved'}
-        value={formatNumber(Math.round(stats.totalLivesSaved))}
-        valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
-      />
-
-      <StatisticsCard
-        label={currentYear && !isDonor ? `Cost Per Life (${currentYear})` : 'Cost Per Life'}
-        value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
-        valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
-        valueAction={costPerLifeAction}
-        subtext={
-          defaultCostPerLifeText ||
-          (stats.categoryCostPerLife !== undefined
-            ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
-            : undefined)
-        }
-      />
-
-      {/* Donor-specific statistics */}
+      {livesSavedCard}
+      {costPerLifeCard}
       {isDonor ? (
         <>
-          <StatisticsCard
-            label="Total Donated"
-            value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
-            subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
-          />
-
-          <StatisticsCard
-            label={stats.rank ? 'Impact Rank' : 'Net Worth'}
-            value={stats.rank ? `#${stats.rank}` : formatCurrency(stats.netWorth)}
-          />
+          {totalDonatedCard}
+          {impactRankOrNetWorthCard}
         </>
       ) : (
         <>
-          <StatisticsCard label="Total Received" value={formatCurrency(stats.totalReceived)} />
-
-          {/* Focus Area - Only shown for recipients with a single category */}
-          {stats.categoryBreakdown?.length === 1 && (
-            <StatisticsCard label="Focus Area" value={stats.categoryBreakdown[0].name} />
-          )}
+          {totalReceivedCard}
+          {focusAreaCard}
         </>
       )}
     </div>

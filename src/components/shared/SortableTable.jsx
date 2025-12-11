@@ -15,7 +15,9 @@ const SortableTable = ({
 
   // Helper function to get column padding class
   const getColumnPadding = (columnKey) => {
-    return columnKey === 'rank' || columnKey === 'photo' ? 'px-2' : 'px-4';
+    if (columnKey === 'photo') return 'px-2';
+    if (columnKey === 'rank') return 'pl-3 pr-2';
+    return 'px-4';
   };
 
   // Helper function to apply tiebreaker comparison
@@ -168,7 +170,7 @@ const SortableTable = ({
             <th
               key={column.key}
               scope="col"
-              className={`${getColumnPadding(column.key)} py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer group hover:bg-slate-200 transition-colors ${column.key === 'name' ? 'w-[300px]' : ''} ${column.key === 'rank' ? 'w-10' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
+              className={`${getColumnPadding(column.key)} py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer group hover:bg-slate-200 transition-colors ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
               onClick={() => handleSort(column.key)}
             >
               <div className="flex items-center">
@@ -206,7 +208,7 @@ const SortableTable = ({
             {columns.map((column) => (
               <td
                 key={`cell-${column.key}-${index}`}
-                className={`${getColumnPadding(column.key)} py-4 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-10' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
+                className={`${getColumnPadding(column.key)} py-4 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
               >
                 {column.render ? column.render(item) : item[column.key]}
               </td>

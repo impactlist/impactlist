@@ -201,7 +201,7 @@ const SortableTable = ({
             {columns.map((column) => (
               <td
                 key={`cell-${column.key}-${index}`}
-                className={`${column.key === 'rank' ? 'px-2' : 'px-6'} py-5 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-10' : ''}`}
+                className={`${column.key === 'rank' || column.key === 'photo' ? 'px-2' : 'px-4'} py-4 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-10' : ''}`}
               >
                 {column.render ? column.render(item) : item[column.key]}
               </td>

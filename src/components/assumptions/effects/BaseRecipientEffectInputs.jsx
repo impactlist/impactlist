@@ -184,7 +184,7 @@ const BaseRecipientEffectInputs = ({
   const effectiveWindowLength = getEffectiveValue('windowLength');
 
   return (
-    <div className="grid items-start gap-x-2 gap-y-4" style={{ gridTemplateColumns: 'max-content max-content 160px' }}>
+    <div className="flex flex-wrap items-start gap-3 sm:grid sm:items-start sm:gap-x-3 sm:gap-y-4 min-w-0 sm:grid-cols-[max-content_max-content_minmax(120px,160px)]">
       {fields.map((field) => {
         // Support both string fields and object fields (for backward compatibility)
         const fieldName = typeof field === 'string' ? field : field.name;
@@ -201,10 +201,12 @@ const BaseRecipientEffectInputs = ({
         const placeholder = getPlaceholder(fieldName);
 
         return (
-          <React.Fragment key={fieldName}>
+          <div key={fieldName} className="flex flex-col items-start gap-2 w-full sm:contents">
             {/* Field label with tooltip */}
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-900 whitespace-nowrap">{fieldLabel}</label>
+            <div className="flex items-center gap-2 min-w-0">
+              <label className="text-sm font-medium text-gray-900 whitespace-normal sm:whitespace-nowrap">
+                {fieldLabel}
+              </label>
               {fieldTooltip && (
                 <div className="group relative inline-block">
                   <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
@@ -224,7 +226,7 @@ const BaseRecipientEffectInputs = ({
             />
 
             {/* Single context-aware input with error/helper text below */}
-            <div className="space-y-1">
+            <div className="space-y-1 w-40 sm:w-auto">
               <input
                 type="text"
                 value={formatNumberWithCommas(currentValue)}
@@ -237,7 +239,7 @@ const BaseRecipientEffectInputs = ({
                 }}
                 placeholder={placeholder}
                 disabled={isDisabled}
-                className={`w-40 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
+                className={`w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
                   if (isDisabled) {
                     return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
                   }
@@ -285,7 +287,7 @@ const BaseRecipientEffectInputs = ({
                 />
               )}
             </div>
-          </React.Fragment>
+          </div>
         );
       })}
     </div>

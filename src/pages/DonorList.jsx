@@ -76,8 +76,36 @@ const DonorList = () => {
     setRecipientStats(recipientStats);
   }, [combinedAssumptions]);
 
+  // Donor thumbnail component with fallback
+  const DonorThumbnail = ({ donor }) => {
+    const [imageSrc, setImageSrc] = useState(`/images/people/small/${donor.id}.jpeg`);
+    const [triedJpg, setTriedJpg] = useState(false);
+
+    const handleError = () => {
+      if (!triedJpg) {
+        // Try .jpg extension as fallback
+        setTriedJpg(true);
+        setImageSrc(`/images/people/small/${donor.id}.jpg`);
+      } else {
+        // Fall back to default image
+        setImageSrc('/images/people/small/unknown.jpeg');
+      }
+    };
+
+    return <img src={imageSrc} alt={donor.name} className="w-20 h-20 rounded object-cover" onError={handleError} />;
+  };
+
   // Donor table columns configuration
   const donorColumns = [
+    {
+      key: 'photo',
+      label: '',
+      render: (donor) => (
+        <div className="flex justify-center">
+          <DonorThumbnail donor={donor} />
+        </div>
+      ),
+    },
     {
       key: 'rank',
       label: 'Rank',

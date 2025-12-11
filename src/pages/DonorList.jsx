@@ -92,7 +92,9 @@ const DonorList = () => {
       }
     };
 
-    return <img src={imageSrc} alt={donor.name} className="w-20 h-20 rounded object-cover" onError={handleError} />;
+    return (
+      <img src={imageSrc} alt={donor.name} className="w-20 h-20 shrink-0 rounded object-cover" onError={handleError} />
+    );
   };
 
   // Donor table columns configuration

@@ -3,6 +3,39 @@
 // They handle the complex nested structure of effects with overrides and multipliers
 
 /**
+ * Prune empty category structures from data object.
+ * Removes categoryId if effects array is empty, removes categories if empty.
+ * Returns the pruned data or null if completely empty.
+ */
+const pruneCategoryStructure = (data, categoryId) => {
+  if (data.categories?.[categoryId]?.effects?.length === 0) {
+    delete data.categories[categoryId];
+  }
+  if (data.categories && Object.keys(data.categories).length === 0) {
+    delete data.categories;
+  }
+  return Object.keys(data).length > 0 ? data : null;
+};
+
+/**
+ * Prune empty recipient structures from data object.
+ * Removes category if effects array is empty, removes recipient if no categories, removes recipients if empty.
+ * Returns the pruned data or null if completely empty.
+ */
+const pruneRecipientStructure = (data, recipientId, categoryId) => {
+  if (data.recipients?.[recipientId]?.categories?.[categoryId]?.effects?.length === 0) {
+    delete data.recipients[recipientId].categories[categoryId];
+  }
+  if (data.recipients?.[recipientId]?.categories && Object.keys(data.recipients[recipientId].categories).length === 0) {
+    delete data.recipients[recipientId];
+  }
+  if (data.recipients && Object.keys(data.recipients).length === 0) {
+    delete data.recipients;
+  }
+  return Object.keys(data).length > 0 ? data : null;
+};
+
+/**
  * Set a custom value for a specific field in a category effect
  * The value is stored directly on the effect field, not in an overrides object
  * If value matches default, removes the field instead
@@ -29,14 +62,7 @@ export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categ
         newData.categories[categoryId].effects.splice(effectIndex, 1);
       }
     }
-    // Prune empty structures
-    if (newData.categories[categoryId].effects.length === 0) {
-      delete newData.categories[categoryId];
-    }
-    if (Object.keys(newData.categories).length === 0) {
-      delete newData.categories;
-    }
-    return Object.keys(newData).length > 0 ? newData : null;
+    return pruneCategoryStructure(newData, categoryId);
   }
 
   // Deep clone or create new structure
@@ -173,12 +199,7 @@ export const clearCategoryCustomValues = (userAssumptions, categoryId) => {
   const newData = JSON.parse(JSON.stringify(userAssumptions));
   delete newData.categories[categoryId];
 
-  // Clean up empty structures
-  if (Object.keys(newData.categories).length === 0) {
-    delete newData.categories;
-  }
-
-  return Object.keys(newData).length > 0 ? newData : null;
+  return pruneCategoryStructure(newData, categoryId);
 };
 
 /**
@@ -229,17 +250,7 @@ export const setRecipientFieldOverride = (
         effects.splice(effectIndex, 1);
       }
     }
-    // Prune empty structures
-    if (effects.length === 0) {
-      delete newData.recipients[recipientId].categories[categoryId];
-    }
-    if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
-      delete newData.recipients[recipientId];
-    }
-    if (Object.keys(newData.recipients).length === 0) {
-      delete newData.recipients;
-    }
-    return Object.keys(newData).length > 0 ? newData : null;
+    return pruneRecipientStructure(newData, recipientId, categoryId);
   }
 
   // Deep clone or create new structure
@@ -323,17 +334,7 @@ export const setRecipientFieldMultiplier = (
         effects.splice(effectIndex, 1);
       }
     }
-    // Prune empty structures
-    if (effects.length === 0) {
-      delete newData.recipients[recipientId].categories[categoryId];
-    }
-    if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
-      delete newData.recipients[recipientId];
-    }
-    if (Object.keys(newData.recipients).length === 0) {
-      delete newData.recipients;
-    }
-    return Object.keys(newData).length > 0 ? newData : null;
+    return pruneRecipientStructure(newData, recipientId, categoryId);
   }
 
   // Deep clone or create new structure
@@ -400,18 +401,7 @@ export const clearRecipientCategoryOverrides = (userAssumptions, recipientId, ca
   const newData = JSON.parse(JSON.stringify(userAssumptions));
   delete newData.recipients[recipientId].categories[categoryId];
 
-  // Clean up empty structures
-  if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
-    delete newData.recipients[recipientId].categories;
-    // If recipient has no categories left, remove it entirely
-    delete newData.recipients[recipientId];
-
-    if (Object.keys(newData.recipients).length === 0) {
-      delete newData.recipients;
-    }
-  }
-
-  return Object.keys(newData).length > 0 ? newData : null;
+  return pruneRecipientStructure(newData, recipientId, categoryId);
 };
 
 /**

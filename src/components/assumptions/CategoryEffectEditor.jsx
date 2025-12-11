@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import QalyEffectInputs from './effects/QalyEffectInputs';
 import PopulationEffectInputs from './effects/PopulationEffectInputs';
@@ -153,7 +154,14 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     <div className="h-full p-2">
       <div className="h-full flex flex-col min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
-          title={`Editing assumptions for category: ${category.name}`}
+          title={
+            <>
+              Editing assumptions for category:{' '}
+              <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
+                {category.name}
+              </Link>
+            </>
+          }
           description={
             tempEditToEffects.length > 1 && hasTimeIntervals ? (
               <div className="flex items-center gap-2">

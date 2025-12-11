@@ -37,7 +37,7 @@ const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombi
 };
 
 EffectEditorHeader.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.node.isRequired,
   description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   combinedCostPerLife: PropTypes.number,
   showCombinedCost: PropTypes.bool,

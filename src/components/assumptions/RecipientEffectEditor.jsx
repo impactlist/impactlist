@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import RecipientQalyEffectInputs from './effects/RecipientQalyEffectInputs';
 import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffectInputs';
@@ -436,7 +437,18 @@ const RecipientEffectEditor = ({
     <div className="flex flex-col h-full p-2">
       <div className="flex flex-col flex-1 min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
-          title={`Edit Effects: ${recipient.name} - ${category.name}`}
+          title={
+            <>
+              Edit Effects:{' '}
+              <Link to={`/recipient/${recipientId}`} className="text-blue-600 hover:underline">
+                {recipient.name}
+              </Link>
+              {' - '}
+              <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
+                {category.name}
+              </Link>
+            </>
+          }
           description={
             <div>
               <p>

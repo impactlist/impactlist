@@ -184,7 +184,7 @@ const BaseRecipientEffectInputs = ({
   const effectiveWindowLength = getEffectiveValue('windowLength');
 
   return (
-    <div className="flex flex-wrap items-start gap-3 sm:grid sm:items-start sm:gap-x-3 sm:gap-y-4 min-w-0 sm:grid-cols-[max-content_max-content_minmax(120px,160px)]">
+    <div className="grid items-start gap-x-3 gap-y-4 min-w-0 grid-cols-[max-content_max-content_minmax(80px,160px)] max-xs:flex max-xs:flex-col max-xs:gap-4">
       {fields.map((field) => {
         // Support both string fields and object fields (for backward compatibility)
         const fieldName = typeof field === 'string' ? field : field.name;
@@ -201,12 +201,13 @@ const BaseRecipientEffectInputs = ({
         const placeholder = getPlaceholder(fieldName);
 
         return (
-          <div key={fieldName} className="flex flex-col items-start gap-2 w-full sm:contents">
+          <div
+            key={fieldName}
+            className="contents max-xs:flex max-xs:flex-col max-xs:items-start max-xs:gap-2 max-xs:w-full"
+          >
             {/* Field label with tooltip */}
             <div className="flex items-center gap-2 min-w-0">
-              <label className="text-sm font-medium text-gray-900 whitespace-normal sm:whitespace-nowrap">
-                {fieldLabel}
-              </label>
+              <label className="text-sm font-medium text-gray-900 whitespace-nowrap">{fieldLabel}</label>
               {fieldTooltip && (
                 <div className="group relative inline-block">
                   <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
@@ -226,7 +227,7 @@ const BaseRecipientEffectInputs = ({
             />
 
             {/* Single context-aware input with error/helper text below */}
-            <div className="space-y-1 w-40 sm:w-auto">
+            <div className="space-y-1 w-auto max-xs:w-40">
               <input
                 type="text"
                 value={formatNumberWithCommas(currentValue)}

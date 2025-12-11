@@ -151,8 +151,8 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   if (!category) return null;
 
   return (
-    <div className="h-full p-2">
-      <div className="h-full flex flex-col min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
+    <div className="flex-1 min-h-0 p-2 flex flex-col">
+      <div className="flex-1 min-h-0 flex flex-col border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={
             <>

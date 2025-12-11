@@ -434,7 +434,7 @@ const RecipientEffectEditor = ({
   };
 
   return (
-    <div className="flex flex-col h-full p-2">
+    <div className="flex flex-col flex-1 min-h-0 p-2">
       <div className="flex flex-col flex-1 min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
         <EffectEditorHeader
           title={

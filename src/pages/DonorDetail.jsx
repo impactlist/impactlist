@@ -19,7 +19,10 @@ import {
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
-import EntityStatistics from '../components/entity/EntityStatistics';
+import DonorPhoto from '../components/shared/DonorPhoto';
+import StatisticsCard from '../components/shared/StatisticsCard';
+import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
+import { formatNumber, formatCurrency } from '../utils/formatters';
 import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
@@ -455,16 +458,55 @@ const DonorDetail = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
+        {/* Donor profile card */}
+        <div className="flex justify-end mb-4">
+          <div className="flex items-center space-x-3">
+            <CustomValuesIndicator />
+            <AdjustAssumptionsButton onClick={openModal} />
+          </div>
+        </div>
+
         {/* Donor name */}
         <h1 className="text-4xl font-bold text-slate-900 mb-6 text-center">{donorStats.name}</h1>
 
-        {/* Donor stats card */}
-        <EntityStatistics
-          stats={donorStats}
-          entityType="donor"
-          customValuesIndicator={<CustomValuesIndicator />}
-          onAdjustAssumptions={openModal}
-        />
+        <motion.div
+          className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200"
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+        >
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+            {/* Photo */}
+            <DonorPhoto donorId={donorId} donorName={donorStats.name} size="large" />
+
+            {/* Stats grid */}
+            <div className="flex-1">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {/* Row 1: Impact Rank, Lives Saved, Cost/Life */}
+                <StatisticsCard label="Impact Rank" value={`#${donorStats.rank}`} />
+                <StatisticsCard
+                  label="Lives Saved"
+                  value={formatNumber(Math.round(donorStats.totalLivesSaved))}
+                  valueClassName={donorStats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
+                />
+                <StatisticsCard
+                  label="Cost Per Life"
+                  value={donorStats.costPerLife === 0 ? '∞' : formatCurrency(donorStats.costPerLife)}
+                  valueClassName={donorStats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
+                />
+                {/* Row 2: Total Donated, Net Worth */}
+                <StatisticsCard
+                  label="Total Donated"
+                  value={formatCurrency(donorStats.totalDonatedField || donorStats.totalDonated)}
+                  subtext={
+                    donorStats.totalDonatedField ? `${formatCurrency(donorStats.knownDonations)} known` : undefined
+                  }
+                />
+                <StatisticsCard label="Net Worth" value={formatCurrency(donorStats.netWorth)} />
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Donation categories visualization */}
         <EntityChartSection

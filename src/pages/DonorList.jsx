@@ -18,6 +18,7 @@ import CustomValuesIndicator from '../components/shared/CustomValuesIndicator';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import AdjustAssumptionsButton from '../components/shared/AdjustAssumptionsButton';
+import DonorPhoto from '../components/shared/DonorPhoto';
 
 const DonorList = () => {
   const [donorStats, setDonorStats] = useState([]);
@@ -76,27 +77,6 @@ const DonorList = () => {
     setRecipientStats(recipientStats);
   }, [combinedAssumptions]);
 
-  // Donor thumbnail component with fallback
-  const DonorThumbnail = ({ donor }) => {
-    const [imageSrc, setImageSrc] = useState(`/images/people/small/${donor.id}.jpeg`);
-    const [triedJpg, setTriedJpg] = useState(false);
-
-    const handleError = () => {
-      if (!triedJpg) {
-        // Try .jpg extension as fallback
-        setTriedJpg(true);
-        setImageSrc(`/images/people/small/${donor.id}.jpg`);
-      } else {
-        // Fall back to default image
-        setImageSrc('/images/people/small/unknown.jpeg');
-      }
-    };
-
-    return (
-      <img src={imageSrc} alt={donor.name} className="w-20 h-20 shrink-0 rounded object-cover" onError={handleError} />
-    );
-  };
-
   // Donor table columns configuration
   const donorColumns = [
     {
@@ -104,7 +84,7 @@ const DonorList = () => {
       label: '',
       render: (donor) => (
         <div className="flex justify-center">
-          <DonorThumbnail donor={donor} />
+          <DonorPhoto donorId={donor.id} donorName={donor.name} size="small" />
         </div>
       ),
     },

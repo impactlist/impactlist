@@ -16,8 +16,10 @@ const EntityStatistics = ({
   onAdjustAssumptions = null,
   currentYear = null,
   costPerLifeAction = null,
+  photoComponent = null,
 }) => {
   const isDonor = entityType === 'donor';
+  const hasPhoto = photoComponent !== null;
 
   // Determine if we need to show the default cost per life
   const showDefaultCostPerLife =
@@ -26,6 +28,92 @@ const EntityStatistics = ({
   const defaultCostPerLifeText = showDefaultCostPerLife
     ? `Default: ${stats.defaultCostPerLife === 0 ? '∞' : formatCurrency(stats.defaultCostPerLife)}`
     : undefined;
+
+  // Stats grid for donor with photo layout (5 stats: 3 top, 2 bottom)
+  const renderDonorPhotoStats = () => (
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {/* Row 1: Impact Rank, Lives Saved, Cost/Life */}
+      <StatisticsCard label="Impact Rank" value={`#${stats.rank}`} />
+      <StatisticsCard
+        label="Lives Saved"
+        value={formatNumber(Math.round(stats.totalLivesSaved))}
+        valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
+      />
+      <StatisticsCard
+        label="Cost Per Life"
+        value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
+        valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
+        valueAction={costPerLifeAction}
+        subtext={
+          defaultCostPerLifeText ||
+          (stats.categoryCostPerLife !== undefined
+            ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
+            : undefined)
+        }
+      />
+      {/* Row 2: Total Donated, Net Worth */}
+      <StatisticsCard
+        label="Total Donated"
+        value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
+        subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
+      />
+      <StatisticsCard label="Net Worth" value={formatCurrency(stats.netWorth)} />
+    </div>
+  );
+
+  // Original stats grid (banner layout without photo)
+  const renderBannerStats = () => (
+    <div
+      className={`grid grid-cols-1 ${
+        (stats.categoryBreakdown?.length === 1 && !isDonor) || isDonor ? 'md:grid-cols-4' : 'md:grid-cols-3'
+      } gap-6`}
+    >
+      {/* Common statistics for both donors and recipients */}
+      <StatisticsCard
+        label={'Lives Saved'}
+        value={formatNumber(Math.round(stats.totalLivesSaved))}
+        valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
+      />
+
+      <StatisticsCard
+        label={currentYear && !isDonor ? `Cost Per Life (${currentYear})` : 'Cost Per Life'}
+        value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
+        valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
+        valueAction={costPerLifeAction}
+        subtext={
+          defaultCostPerLifeText ||
+          (stats.categoryCostPerLife !== undefined
+            ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
+            : undefined)
+        }
+      />
+
+      {/* Donor-specific statistics */}
+      {isDonor ? (
+        <>
+          <StatisticsCard
+            label="Total Donated"
+            value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
+            subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
+          />
+
+          <StatisticsCard
+            label={stats.rank ? 'Impact Rank' : 'Net Worth'}
+            value={stats.rank ? `#${stats.rank}` : formatCurrency(stats.netWorth)}
+          />
+        </>
+      ) : (
+        <>
+          <StatisticsCard label="Total Received" value={formatCurrency(stats.totalReceived)} />
+
+          {/* Focus Area - Only shown for recipients with a single category */}
+          {stats.categoryBreakdown?.length === 1 && (
+            <StatisticsCard label="Focus Area" value={stats.categoryBreakdown[0].name} />
+          )}
+        </>
+      )}
+    </div>
+  );
 
   return (
     <>
@@ -44,56 +132,14 @@ const EntityStatistics = ({
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.4 }}
       >
-        <div
-          className={`grid grid-cols-1 ${
-            (stats.categoryBreakdown?.length === 1 && !isDonor) || isDonor ? 'md:grid-cols-4' : 'md:grid-cols-3'
-          } gap-6`}
-        >
-          {/* Common statistics for both donors and recipients */}
-          <StatisticsCard
-            label={'Lives Saved'}
-            value={formatNumber(Math.round(stats.totalLivesSaved))}
-            valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
-          />
-
-          <StatisticsCard
-            label={currentYear && !isDonor ? `Cost Per Life (${currentYear})` : 'Cost Per Life'}
-            value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
-            valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
-            valueAction={costPerLifeAction}
-            subtext={
-              defaultCostPerLifeText ||
-              (stats.categoryCostPerLife !== undefined
-                ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
-                : undefined)
-            }
-          />
-
-          {/* Donor-specific statistics */}
-          {isDonor ? (
-            <>
-              <StatisticsCard
-                label="Total Donated"
-                value={formatCurrency(stats.totalDonatedField || stats.totalDonated)}
-                subtext={stats.totalDonatedField ? `${formatCurrency(stats.knownDonations)} known` : undefined}
-              />
-
-              <StatisticsCard
-                label={stats.rank ? 'Impact Rank' : 'Net Worth'}
-                value={stats.rank ? `#${stats.rank}` : formatCurrency(stats.netWorth)}
-              />
-            </>
-          ) : (
-            <>
-              <StatisticsCard label="Total Received" value={formatCurrency(stats.totalReceived)} />
-
-              {/* Focus Area - Only shown for recipients with a single category */}
-              {stats.categoryBreakdown?.length === 1 && (
-                <StatisticsCard label="Focus Area" value={stats.categoryBreakdown[0].name} />
-              )}
-            </>
-          )}
-        </div>
+        {hasPhoto && isDonor ? (
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+            {photoComponent}
+            <div className="flex-1">{renderDonorPhotoStats()}</div>
+          </div>
+        ) : (
+          renderBannerStats()
+        )}
       </motion.div>
     </>
   );
@@ -124,6 +170,7 @@ EntityStatistics.propTypes = {
   onAdjustAssumptions: PropTypes.func,
   currentYear: PropTypes.number,
   costPerLifeAction: PropTypes.node,
+  photoComponent: PropTypes.node,
 };
 
 export default React.memo(EntityStatistics);

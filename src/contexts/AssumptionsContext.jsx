@@ -7,11 +7,15 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import * as apiHelpers from '../utils/assumptionsAPIHelpers';
+import { normalizeUserAssumptions } from '../utils/assumptionsAPIHelpers';
 
 /* global localStorage */
 
 // Create context
 const AssumptionsContext = createContext();
+
+// Create default assumptions once at module load (pure function, no dependencies)
+const defaultAssumptions = createDefaultAssumptions();
 
 // Custom hook to use the context
 export const useAssumptions = () => {
@@ -24,16 +28,17 @@ export const useAssumptions = () => {
 
 // Provider component
 export const AssumptionsProvider = ({ children }) => {
-  // Create default assumptions once
-  const defaultAssumptions = useMemo(() => createDefaultAssumptions(), []);
-
-  // Initialize user assumptions from localStorage or defaults (new format)
+  // Initialize user assumptions from localStorage, normalizing to remove legacy default values
   const [userAssumptions, setUserAssumptions] = useState(() => {
     // Clean up old format data
     localStorage.removeItem('customCostPerLifeValues');
 
     const savedData = localStorage.getItem('customEffectsData');
-    return savedData ? JSON.parse(savedData) : null;
+    if (!savedData) return null;
+
+    // Normalize saved data to remove any values that match defaults
+    const parsed = JSON.parse(savedData);
+    return normalizeUserAssumptions(parsed, defaultAssumptions);
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,7 +49,7 @@ export const AssumptionsProvider = ({ children }) => {
   // Create combined assumptions whenever userAssumptions changes
   const combinedAssumptions = useMemo(() => {
     return createCombinedAssumptions(defaultAssumptions, userAssumptions);
-  }, [defaultAssumptions, userAssumptions]);
+  }, [userAssumptions]);
 
   // Save to localStorage when userAssumptions changes
   useEffect(() => {

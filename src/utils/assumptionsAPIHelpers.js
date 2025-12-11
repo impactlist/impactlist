@@ -463,3 +463,133 @@ export const clearAllGlobalParameters = (userAssumptions) => {
 export const clearAllOverrides = () => {
   return null;
 };
+
+/**
+ * Normalize user assumptions by removing any values that match defaults.
+ * This cleans up legacy saved data where defaults were stored.
+ * Returns the pruned data or null if completely empty.
+ */
+export const normalizeUserAssumptions = (userAssumptions, defaultAssumptions) => {
+  if (!userAssumptions) {
+    return null;
+  }
+
+  let data = JSON.parse(JSON.stringify(userAssumptions));
+
+  // Normalize global parameters
+  if (data.globalParameters) {
+    for (const paramName of Object.keys(data.globalParameters)) {
+      const userValue = data.globalParameters[paramName];
+      const defaultValue = defaultAssumptions.globalParameters?.[paramName];
+      if (areValuesEqual(userValue, defaultValue)) {
+        delete data.globalParameters[paramName];
+      }
+    }
+    if (Object.keys(data.globalParameters).length === 0) {
+      delete data.globalParameters;
+    }
+  }
+
+  // Normalize categories
+  if (data.categories) {
+    for (const categoryId of Object.keys(data.categories)) {
+      const categoryData = data.categories[categoryId];
+      if (categoryData.effects) {
+        for (let i = categoryData.effects.length - 1; i >= 0; i--) {
+          const effect = categoryData.effects[i];
+          const defaultEffect = defaultAssumptions.categories?.[categoryId]?.effects?.find(
+            (e) => e.effectId === effect.effectId
+          );
+          if (defaultEffect) {
+            // Remove fields that match defaults
+            for (const fieldName of Object.keys(effect)) {
+              if (fieldName === 'effectId') continue;
+              if (areValuesEqual(effect[fieldName], defaultEffect[fieldName])) {
+                delete effect[fieldName];
+              }
+            }
+          }
+          // Remove effect if only effectId remains
+          if (Object.keys(effect).length === 1) {
+            categoryData.effects.splice(i, 1);
+          }
+        }
+      }
+      // Remove category if effects array is empty
+      if (!categoryData.effects || categoryData.effects.length === 0) {
+        delete data.categories[categoryId];
+      }
+    }
+    if (Object.keys(data.categories).length === 0) {
+      delete data.categories;
+    }
+  }
+
+  // Normalize recipients
+  if (data.recipients) {
+    for (const recipientId of Object.keys(data.recipients)) {
+      const recipientData = data.recipients[recipientId];
+      if (recipientData.categories) {
+        for (const categoryId of Object.keys(recipientData.categories)) {
+          const categoryData = recipientData.categories[categoryId];
+          if (categoryData.effects) {
+            for (let i = categoryData.effects.length - 1; i >= 0; i--) {
+              const effect = categoryData.effects[i];
+              // Get default effect (check recipient-specific first, then category)
+              let defaultEffect = defaultAssumptions.recipients?.[recipientId]?.categories?.[categoryId]?.effects?.find(
+                (e) => e.effectId === effect.effectId
+              );
+              if (!defaultEffect) {
+                defaultEffect = defaultAssumptions.categories?.[categoryId]?.effects?.find(
+                  (e) => e.effectId === effect.effectId
+                );
+              }
+
+              // Normalize overrides
+              if (effect.overrides && defaultEffect) {
+                for (const fieldName of Object.keys(effect.overrides)) {
+                  if (areValuesEqual(effect.overrides[fieldName], defaultEffect[fieldName])) {
+                    delete effect.overrides[fieldName];
+                  }
+                }
+                if (Object.keys(effect.overrides).length === 0) {
+                  delete effect.overrides;
+                }
+              }
+
+              // Normalize multipliers (1 means no change)
+              if (effect.multipliers) {
+                for (const fieldName of Object.keys(effect.multipliers)) {
+                  if (effect.multipliers[fieldName] === 1) {
+                    delete effect.multipliers[fieldName];
+                  }
+                }
+                if (Object.keys(effect.multipliers).length === 0) {
+                  delete effect.multipliers;
+                }
+              }
+
+              // Remove effect if only effectId remains
+              if (Object.keys(effect).length === 1) {
+                categoryData.effects.splice(i, 1);
+              }
+            }
+          }
+          // Remove category if effects array is empty
+          if (!categoryData.effects || categoryData.effects.length === 0) {
+            delete recipientData.categories[categoryId];
+          }
+        }
+        // Remove recipient if no categories
+        if (Object.keys(recipientData.categories).length === 0) {
+          delete data.recipients[recipientId];
+        }
+      }
+    }
+    if (Object.keys(data.recipients).length === 0) {
+      delete data.recipients;
+    }
+  }
+
+  return Object.keys(data).length > 0 ? data : null;
+};

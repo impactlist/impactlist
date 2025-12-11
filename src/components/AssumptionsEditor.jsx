@@ -38,6 +38,7 @@ const AssumptionsEditor = () => {
     updateGlobalParameter,
     resetAllGlobalParameters,
     resetRecipientToDefaults,
+    resetToDefaults,
     getCategoryValue,
     getRecipientValue,
     getGlobalParameter,
@@ -49,6 +50,7 @@ const AssumptionsEditor = () => {
     setActiveTab,
     recipientSearchTerm,
     setRecipientSearchTerm,
+    isUsingCustomValues,
   } = useAssumptions();
 
   const [editingCategoryId, setEditingCategoryId] = useState(null);
@@ -353,8 +355,34 @@ const AssumptionsEditor = () => {
     return null;
   };
 
+  // Handle reset all button - must reset both context AND form states
+  const handleResetAll = () => {
+    // Reset context state
+    resetToDefaults();
+    // Reset all form states to defaults
+    globalForm.reset();
+    categoryForm.reset();
+    recipientForm.reset();
+  };
+
+  const headerExtra = isUsingCustomValues ? (
+    <div className="relative inline-flex items-center ml-2 group">
+      <span className="text-sm text-indigo-600 font-medium cursor-help">(customized)</span>
+      <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+        Using custom assumptions
+        <button
+          type="button"
+          onClick={handleResetAll}
+          className="ml-2 underline hover:no-underline pointer-events-auto"
+        >
+          Reset All
+        </button>
+      </div>
+    </div>
+  ) : null;
+
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal} title="Edit Assumptions">
+    <Modal isOpen={isModalOpen} onClose={closeModal} title="Edit Assumptions" headerExtra={headerExtra}>
       {!editingCategoryId && !editingRecipient && (
         <>
           {/* Tabs and actions bar */}

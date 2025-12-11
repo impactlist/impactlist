@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Modal = ({ isOpen, onClose, title, description, children }) => {
+const Modal = ({ isOpen, onClose, title, description, headerExtra = null, children }) => {
   // Lock body scroll when modal is open
   useEffect(() => {
     if (!isOpen) return;
@@ -37,7 +37,10 @@ const Modal = ({ isOpen, onClose, title, description, children }) => {
         >
           <div className="p-6 border-b border-gray-200">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+              <div className="flex items-center">
+                <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+                {headerExtra}
+              </div>
               <button onClick={onClose} className="text-gray-500 hover:text-gray-700 focus:outline-none">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +67,7 @@ Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
+  headerExtra: PropTypes.node,
   children: PropTypes.node.isRequired,
 };
 

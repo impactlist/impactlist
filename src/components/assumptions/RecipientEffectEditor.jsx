@@ -483,7 +483,11 @@ const RecipientEffectEditor = ({
             <div className="mb-3 p-2 bg-gray-50 rounded-lg">
               <div className="text-lg font-medium text-gray-800">
                 Combined cost per life:{' '}
-                <span className={combinedCostPerLife === Infinity ? 'text-red-600' : 'text-green-600'}>
+                <span
+                  className={
+                    combinedCostPerLife === Infinity || combinedCostPerLife < 0 ? 'text-red-600' : 'text-green-600'
+                  }
+                >
                   ${combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife).replace('$', '')}
                 </span>
               </div>

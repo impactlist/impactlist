@@ -18,7 +18,9 @@ const EffectCostDisplay = ({ cost, baseCost, label = 'Cost per life:', showInfin
     <div className={`${className}`}>
       <div className="text-sm text-gray-600">
         <span className="font-bold">{label} </span>
-        <span className={`font-medium ${isInvalid ? 'text-red-600' : 'text-green-600'}`}>${formattedCost}</span>
+        <span className={`font-medium ${isInvalid || cost < 0 ? 'text-red-600' : 'text-green-600'}`}>
+          ${formattedCost}
+        </span>
       </div>
       {showBaseCost && formattedBaseCost && (
         <div className="text-xs text-gray-400 mt-0.5">(Base cost/life: ${formattedBaseCost})</div>

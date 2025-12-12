@@ -8,7 +8,7 @@ const AdjustAssumptionsButton = ({ onClick, className = '', isUsingCustomValues 
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isUsingCustomValues ? 'bg-indigo-100 hover:bg-indigo-200' : 'bg-white hover:bg-indigo-50'} ${className}`}
+      className={`inline-flex items-center px-3 py-1.5 border border-white text-white rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-300 ${isUsingCustomValues ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-indigo-700 hover:bg-indigo-600'} ${className}`}
     >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
         <path

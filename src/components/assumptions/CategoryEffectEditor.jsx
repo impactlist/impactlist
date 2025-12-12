@@ -173,9 +173,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                   className=""
                 />
               </div>
-            ) : (
-              `Preview calculations for year ${previewYear}`
-            )
+            ) : null
           }
           combinedCostPerLife={tempEditToEffects.length > 1 ? combinedCostPerLife : undefined}
           showCombinedCost={tempEditToEffects.length > 1}

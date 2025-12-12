@@ -156,7 +156,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         <EffectEditorHeader
           title={
             <>
-              Editing assumptions for category:{' '}
+              Edit effects for category:{' '}
               <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
                 {category.name}
               </Link>

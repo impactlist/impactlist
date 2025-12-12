@@ -211,7 +211,7 @@ const BaseRecipientEffectInputs = ({
               {fieldTooltip && (
                 <div className="group relative inline-block">
                   <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
-                  <div className="invisible group-hover:visible absolute z-10 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
+                  <div className="invisible group-hover:visible absolute z-50 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
                     {fieldTooltip}
                   </div>
                 </div>

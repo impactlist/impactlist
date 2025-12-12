@@ -439,7 +439,7 @@ const RecipientEffectEditor = ({
         <EffectEditorHeader
           title={
             <>
-              Edit Effects
+              Edit effects for recipient:{' '}
               <span className="group align-middle">
                 <span className="text-sm text-gray-500 cursor-help ml-2 align-top">ⓘ</span>
                 <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">

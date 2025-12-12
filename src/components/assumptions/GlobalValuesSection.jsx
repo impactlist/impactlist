@@ -155,7 +155,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
       </div>
 
       {/* Note about adjusting animal welfare weights */}
-      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+      <div className="mt-4 p-4 bg-yellow-50/50 border border-blue-200 rounded-lg">
         <div className="flex">
           <svg className="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path

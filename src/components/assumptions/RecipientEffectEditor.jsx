@@ -439,7 +439,16 @@ const RecipientEffectEditor = ({
         <EffectEditorHeader
           title={
             <>
-              Edit Effects:{' '}
+              Edit Effects
+              <span className="group align-middle">
+                <span className="text-sm text-gray-500 cursor-help ml-2 align-top">ⓘ</span>
+                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
+                  Set at most one value (override or multiplier) for each parameter. An override replaces the default
+                  value for the category, while a multiplier multiplies the default category value. These are the
+                  underlying parameters that are used to compute the cost per life.
+                </span>
+              </span>{' '}
+              :{' '}
               <Link to={`/recipient/${recipientId}`} className="text-blue-600 hover:underline">
                 {recipient.name}
               </Link>
@@ -450,24 +459,17 @@ const RecipientEffectEditor = ({
             </>
           }
           description={
-            <div>
-              <p>
-                Set at most one value (override or multiplier) for each parameter. An override replaces the default
-                value for the category, while a multiplier multiplies the default category value. These are the
-                underlying parameters that are used to compute the cost per life.
-              </p>
-              {tempEditToEffects.length > 1 && hasTimeIntervals && (
-                <div className="flex items-center gap-2 mt-2">
-                  <YearSelector
-                    value={previewYear}
-                    onChange={setPreviewYear}
-                    label="Preview calculations for year:"
-                    id="recipient-effect-preview-year"
-                    className=""
-                  />
-                </div>
-              )}
-            </div>
+            tempEditToEffects.length > 1 && hasTimeIntervals ? (
+              <div className="flex items-center gap-2">
+                <YearSelector
+                  value={previewYear}
+                  onChange={setPreviewYear}
+                  label="Preview calculations for year:"
+                  id="recipient-effect-preview-year"
+                  className=""
+                />
+              </div>
+            ) : null
           }
           combinedCostPerLife={combinedCostPerLife}
           showCombinedCost={false}

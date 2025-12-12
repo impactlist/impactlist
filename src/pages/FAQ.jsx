@@ -100,8 +100,8 @@ const FAQ = () => {
                   they seem reasonable to you. If not, you have a few options:
                   <br />
                   <br />
-                  (1) Use the 'Adjust Assumptions' button on the top right of most pages on this site. This gives you
-                  full control over the assumptions to see how your preferred values would affect the rankings.
+                  (1) Use the 'Edit Assumptions' button on the site header. This gives you full control over the
+                  assumptions to see how your preferred values would affect the rankings.
                   <br />
                   (2) Help us improve the estimates. Email us (see below) or join our{' '}
                   <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">

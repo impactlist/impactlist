@@ -66,7 +66,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ }) => 
             >
               FAQ
             </Link>
-            {/* Adjust Assumptions button - always visible, same spacing as nav items */}
+            {/* Edit Assumptions button - always visible, same spacing as nav items */}
             <AdjustAssumptionsButton onClick={openModal} isUsingCustomValues={isUsingCustomValues} />
             {/* Hamburger Menu Button - visible below md */}
             <button

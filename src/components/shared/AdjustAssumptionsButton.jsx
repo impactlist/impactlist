@@ -17,7 +17,7 @@ const AdjustAssumptionsButton = ({ onClick, className = '', isUsingCustomValues 
           clipRule="evenodd"
         />
       </svg>
-      Adjust Assumptions
+      Edit Assumptions
     </button>
   );
 };

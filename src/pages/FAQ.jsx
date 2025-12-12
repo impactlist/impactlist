@@ -150,6 +150,108 @@ const FAQ = () => {
               </div>
 
               <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  Some donations are showing as resulting in negative lives saved. Why is that?
+                </h3>
+                <p className="text-gray-600">
+                  This represents a case where the organization in question is actually making the world worse (usually
+                  despite good intentions). For instance in our view some organizations that were created with the goal
+                  of reducing existential risk from AI have actually ended up increasing it.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  A cost per life of -$5,000 means that every $5,000 donated is expected on average to harm the world as
+                  much as one person dying. (Which is the opposite of what positive cost per life values represent.)
+                  This means that the worst organizations have negative cost per life values very close to zero, similar
+                  to how the best organizations have positive cost per life values very close to zero.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  How do I edit the assumptions that are used to calculate the impact rankings?
+                </h3>
+                <p className="text-gray-600">
+                  The 'Edit Assumptions' button in the header of the site allows you to adjust three types of
+                  assumptions: global parameters, category effects, and recipient effects. Each has its own tab in the
+                  editor.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  Global parameters are assumptions about the world as a whole that affect the calculations for many
+                  charitable categories. For instance the population growth rate or the discount rate (how much less
+                  valuable future life-years are compared to present life-years).
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  Each category refers to a type of charitable activity. For instance 'Global Health' refers to
+                  donations to charities that aim to improve the health of the global population. When you edit the
+                  assumptions for a category, you'll see one or more effects which each describe a different way that
+                  organizations in that category impact the world. Almost all categories have only one effect. The 'AGI
+                  Development' category has three effects, because it's a complex category that has multiple different
+                  ways that AI development can impact the world. For instance AI development has positive effects on
+                  productivity similar to other technologies, but it may also increase the probability of catastrophy.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  Each recipeent is an organization/charity that recieves donations and uses them to try to have some
+                  impact on the world. A recipient can be associated with one or more categories, and each category has
+                  its own effects. When you edit the assumptions for a recipient, you'll see one or more effects for
+                  every category they are associated with. By default each recipients inherits the assumptions of each
+                  category they are associated with. You can override these defaults by setting either an override or
+                  multiplier for each parameter. Overrides completely replace the default value for the category, while
+                  multipliers multiply the default value for the parameter in the category.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  Each type of parameter that a category or recipient has is described by a tooltip by that paremters
+                  name in the editor.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  What types of effect can each category or recipient have?
+                </h3>
+                <p className="text-gray-600">
+                  There are currently only two types of effects: 'standard' and 'population'.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  Standard effects are the type of effect that is most intutive. They describe a type of impact where
+                  the more money you spend on something, the more impact you get. For instance a charity that provides
+                  mosquito nets can buy more nets the more money that it recieves from donors, so each donation has a
+                  fairly direct impact on the world.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  The key parameter for a standard effect is 'cost per QALY' (QALYs are explained in a previous
+                  question) which is an estimate of the wellbeing that is produced for every dollar donated. Standard
+                  effects only have two other parameters: 'start time' and 'duration'. The start time is the number of
+                  years after the donation that the effect starts, and the duration is the number of years that the
+                  effect lasts. For simplicity we assume that the benefits are evenly distributed over the duration.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  Population effects are effects that we model as having some (usually small) probability of happening,
+                  and then affecting a large fraction of the population if it does happen. For instance a pandemic that
+                  kills 10% of the population is a population effect, because it has a small probability of happening,
+                  and if it does happen it will affect a large fraction of the population.
+                </p>
+                <br />
+                <p className="text-gray-600">
+                  The key parameter associated with population effects is 'cost per microprobability' which is an
+                  estimate of how much more/less likely an event is to happen for every dollar donated. A
+                  microprobability represents a 1 in 1,000,000 chance of the event happening. The other parameters
+                  unique to population effects are 'population fraction affected' and 'qaly improvement per year'. The
+                  population fraction affected is the fraction of the population that is affected if the event happens,
+                  and the qaly improvement per year is the amount of QALYs that is gained or lost per person per year if
+                  the event happens. Population effects also have 'start time' and 'duration' parameters which have the
+                  same interpretation as in standard effects.
+                </p>
+              </div>
+
+              <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">How can I get involved?</h3>
                 <p className="text-gray-600">
                   We're actively seeking volunteers to help with the project. We're looking for people to research the

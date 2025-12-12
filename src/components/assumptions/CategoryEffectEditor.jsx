@@ -160,7 +160,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
               <span className="group align-middle">
                 <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
                 <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
-                  See the FAQ for a description of what effects are and how to edit them.
+                  See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
                 </span>
               </span>{' '}
               :{' '}

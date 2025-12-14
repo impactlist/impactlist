@@ -37,3 +37,8 @@ However we categorize this as an AI capabilities donation.
 # Internal Notes
 
 We're approximating the 30 million donation by 0.6% of their total spending, since we're currently not tracking donations from foundations but instead are estimating their donations to each category. The 0.6% might need to be updated in the future if we add more spending for them. But it may also be reasonable to assume their future distribution will be the same as their past distribution until we do a more thorough investigation.
+
+# Justification of cost per life
+
+The cost per life of this recipient is assumed to be the same as for the average recipient in each of its categories.
+You can see how the cost per life was calculated by going to the page for one of its categories.

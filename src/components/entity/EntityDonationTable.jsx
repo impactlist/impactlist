@@ -100,6 +100,12 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
     {
       key: 'livesSaved',
       label: 'Lives Saved',
+      tooltip: (
+        <div>
+          Expected lives saved from this donation, based on the value in the cost/life column together with the amount
+          donated.
+        </div>
+      ),
       render: (donation) => (
         <div
           className={`text-sm ${
@@ -113,6 +119,12 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
     {
       key: 'costPerLife',
       label: 'Cost/Life',
+      tooltip: (
+        <div>
+          Cost/life comes from our effectiveness estimates for this recipient at the time of the donation. It's the
+          estimated amount needed to save the equivalent of one life.
+        </div>
+      ),
       render: (donation) => (
         <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 'text-slate-900'}`}>
           {donation.totalLivesSaved === 0 ? (

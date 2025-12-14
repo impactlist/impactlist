@@ -130,6 +130,12 @@ const DonorList = () => {
     {
       key: 'costPerLife',
       label: 'Cost/Life',
+      tooltip: (
+        <div>
+          Cost/Life is the amount donated divided by the lives saved. For every dollar amount shown here, the equivalent
+          of one life is expected to be saved.
+        </div>
+      ),
       render: (donor) => (
         <div className={`text-sm ${donor.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
           {donor.totalLivesSaved === 0 ? '∞' : formatCurrency(donor.costPerLife)}

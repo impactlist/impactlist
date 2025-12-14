@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import StatisticsCard from '../shared/StatisticsCard';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 
@@ -75,7 +76,17 @@ const EntityStatistics = ({
 
   const focusAreaCard =
     stats.categoryBreakdown?.length === 1 ? (
-      <StatisticsCard label="Focus Area" value={stats.categoryBreakdown[0].name} />
+      <StatisticsCard
+        label="Focus Area"
+        value={
+          <Link
+            to={`/category/${encodeURIComponent(stats.categoryBreakdown[0].id)}`}
+            className="text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            {stats.categoryBreakdown[0].name}
+          </Link>
+        }
+      />
     ) : null;
 
   // Stats grid for donor with photo layout (5 stats: 3 top, 2 bottom)

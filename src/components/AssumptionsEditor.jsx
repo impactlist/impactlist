@@ -55,7 +55,7 @@ const AssumptionsEditor = () => {
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editingRecipient, setEditingRecipient] = useState(null);
   const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
-
+  const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
   // Clear editing states when modal closes (but preserve activeTab)
   useEffect(() => {
     if (!isModalOpen) {
@@ -73,19 +73,37 @@ const AssumptionsEditor = () => {
 
     if (modalConfig.tab) {
       setActiveTab(modalConfig.tab);
+    } else if (modalConfig.recipientId) {
+      setActiveTab('recipients');
     } else if (modalConfig.categoryId) {
       setActiveTab('categories');
     }
 
-    if (modalConfig.categoryId) {
+    if (modalConfig.recipientId) {
+      setEditingCategoryId(null);
+      const recipient = allRecipients.find((r) => r.id === modalConfig.recipientId);
+      if (!recipient) {
+        throw new Error(`Recipient ${modalConfig.recipientId} not found in default assumptions`);
+      }
+      const recipientCategoryId =
+        modalConfig.categoryId || Object.keys(recipient.categories || {})[0] || modalConfig.categoryId;
+      if (!recipientCategoryId) {
+        throw new Error(`Recipient ${recipient.name} has no categories to edit`);
+      }
+      const category = getCategoryFromDefaults(defaultAssumptions, recipientCategoryId);
+      setEditingRecipient({
+        recipient,
+        recipientId: recipient.id,
+        categoryId: recipientCategoryId,
+        category,
+      });
+    } else if (modalConfig.categoryId) {
       setEditingRecipient(null);
       setEditingCategoryId(modalConfig.categoryId);
     }
 
     setModalConfig(null);
-  }, [modalConfig, setActiveTab, setModalConfig]);
-
-  const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
+  }, [modalConfig, setActiveTab, setModalConfig, allRecipients, defaultAssumptions]);
 
   // Track which categories have custom effect values
   const categoriesWithCustomValues = useMemo(() => {

@@ -36,7 +36,7 @@ const RecipientDetail = () => {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
-  const { combinedAssumptions } = useAssumptions();
+  const { combinedAssumptions, openModal } = useAssumptions();
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -329,6 +329,11 @@ const RecipientDetail = () => {
     setChartView(view);
   };
 
+  const handleEditRecipientAssumptions = () => {
+    if (!recipientInfo?.categoryId) return;
+    openModal({ tab: 'recipients', recipientId, categoryId: recipientInfo.categoryId });
+  };
+
   if (!recipientInfo) {
     return <div className="p-8 text-center">Loading...</div>;
   }
@@ -363,6 +368,15 @@ const RecipientDetail = () => {
           }}
           entityType="recipient"
           currentYear={getCurrentYear()}
+          costPerLifeAction={
+            <button
+              type="button"
+              onClick={handleEditRecipientAssumptions}
+              className="inline-flex items-center px-2 py-0.5 border border-indigo-200 text-xs font-semibold text-indigo-600 rounded hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500"
+            >
+              Edit
+            </button>
+          }
         />
 
         {/* Sample donation calculator */}

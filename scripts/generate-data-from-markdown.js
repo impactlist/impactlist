@@ -261,10 +261,11 @@ function loadDonations() {
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data } = matter(fileContent);
 
-    if (!data.donations || !Array.isArray(data.donations)) {
-      throw new Error(
-        `Error: File ${file} is missing required 'donations' array property. Each donation file must contain a 'donations' array with donation objects.`
+    if (!data.donations || !Array.isArray(data.donations) || data.donations.length === 0) {
+      console.warn(
+        `Warning: File ${file} has no valid donations array (missing, empty, or not an array). This file will be skipped.`
       );
+      return;
     }
 
     data.donations.forEach((donation) => {

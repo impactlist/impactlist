@@ -119,6 +119,12 @@ const RecipientList = () => {
     {
       key: 'totalLivesSaved',
       label: 'Lives Saved',
+      tooltip: (
+        <div>
+          Expected lives saved from donations to this organization, using our effectiveness estimates from the cost/life
+          column together with the total amount given.
+        </div>
+      ),
       render: (recipient) => (
         <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-red-700' : 'text-slate-900'}`}>
           {formatNumber(Math.round(recipient.totalLivesSaved))}
@@ -128,6 +134,12 @@ const RecipientList = () => {
     {
       key: 'costPerLife',
       label: 'Cost/Life',
+      tooltip: (
+        <div>
+          Cost/Life comes from our cost-effectiveness estimates for this organization. It is the estimated amount one
+          would need to donate to this organization to save the equivalent of one life.
+        </div>
+      ),
       render: (recipient) => {
         return (
           <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>

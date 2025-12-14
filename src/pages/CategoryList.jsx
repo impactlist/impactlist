@@ -99,6 +99,12 @@ const CategoryList = () => {
     {
       key: 'actualCostPerLife',
       label: 'Cost/Life',
+      tooltip: (
+        <div>
+          Cost/Life comes from our cost-effectiveness estimates for this category. It is the estimated donation needed
+          to save the equivalent of one life in this area.
+        </div>
+      ),
       render: (category) => {
         return (
           <div className={`text-sm ${category.actualCostPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
@@ -110,6 +116,12 @@ const CategoryList = () => {
     {
       key: 'totalLivesSaved',
       label: 'Lives Saved',
+      tooltip: (
+        <div>
+          Expected lives saved from donations to this category, using the value from the cost/life column together with
+          the total amount given.
+        </div>
+      ),
       render: (category) => (
         <div className={`text-sm ${category.totalLivesSaved < 0 ? 'text-red-700' : 'text-slate-900'}`}>
           {formatNumber(Math.round(category.totalLivesSaved))}

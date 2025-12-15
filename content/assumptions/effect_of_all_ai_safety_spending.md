@@ -406,3 +406,7 @@ These figures:
 - Reflect the fact that current AI safety spending is **tiny relative to what economic models suggest would be optimal**, implying that most of the tractable risk-reduction potential remains ahead rather than behind.
 
 From this perspective, it is reasonable to treat $X \approx 0.2$ percentage points (with $Y$–$Z \approx 0.01$–$1$) as a **working quantitative characterization** of the realized effect of AI safety spending to date on AI-extinction risk this century.
+
+---
+
+_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._

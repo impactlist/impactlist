@@ -47,6 +47,7 @@ The point estimate (\$2.5 million/microprobability) and range (\$0.5–\$10 mill
 **Approach 1 — Near-term lives saved:**
 
 From Davis's analysis: if there's a 40% chance of full-scale war this century killing 5 billion people, and \$25 billion could reduce that by 1 percentage point:
+
 - Expected deaths averted: 5B × 0.01 × 0.40 = 20 million
 - Cost per death: \$25B / 20M ≈ \$1,250
 - 1 percentage point = 10,000 microprobabilities
@@ -73,6 +74,7 @@ Even regions escaping bombardment would face food, medicine, energy, and governa
 The point estimate (0.75) and range (0.5–1.0) are derived by distributing total QALY losses across affected population and duration.
 
 **Stylized breakdown for 10 billion population:**
+
 - ~5 billion die: 36 QALYs each = 180 billion QALYs
 - ~4 billion severe survivors: 7 QALYs each = 28 billion QALYs
 - ~1 billion mildly affected: 1 QALY each = 1 billion QALYs
@@ -89,12 +91,13 @@ The 25-year start time reflects the expected timing of risk, acknowledging that 
 ### Duration
 
 The 30-year duration balances:
+
 - Short-term devastation (10–15 years of acute famine/conflict)
 - Long-term loss of life expectancy for those who die
 - Slow institutional and environmental recovery
 
 ---
 
-_These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
+_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes

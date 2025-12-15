@@ -48,6 +48,7 @@ The point estimate (\$1 million/microprobability) and range (\$0.1–\$10 millio
 **Approach 1 — Field-level estimate:**
 
 If ~\$3 billion in targeted GCBR spending to date (governments + philanthropy) reduced catastrophic pandemic risk by ~0.3 percentage points (from 1.3% to 1.0%):
+
 - Microprobabilities averted: 0.003 / 10⁻⁶ = 3,000
 - Cost per microprobability: \$3B / 3,000 = **\$1 million**
 
@@ -57,6 +58,7 @@ Optimistic (\$1B reduces risk by 0.3pp): \$0.3 million/microprobability
 **Approach 2 — Micro-level (gain-of-function policy):**
 
 If \$20 million advocacy campaign prevents 10 high-risk lab-years, each with ~0.003% catastrophic pandemic probability:
+
 - Risk reduction: 10 × 3×10⁻⁵ = 3×10⁻⁴ = 300 microprobabilities
 - Cost per microprobability: \$20M / 300 ≈ **\$67,000**
 
@@ -77,6 +79,7 @@ The point estimate (0.8) and range (0.5–1.0) reflect that catastrophic pandemi
 The point estimate (0.5) and range (0.3–0.8) distribute total QALY losses across affected population and duration.
 
 **Stylized breakdown for 10 billion population:**
+
 - 1 billion die: 36 QALYs each = 36 billion QALYs
 - 3 billion severely affected survivors: 2 QALYs each = 6 billion QALYs
 - 6 billion indirectly affected: 0.25 QALYs each = 1.5 billion QALYs
@@ -93,11 +96,12 @@ The 20-year start time reflects that GCBR risk is rising with advances in biotec
 ### Duration
 
 The 10-year duration reflects that:
+
 - For deaths, long-term losses are folded into an "equivalent" intense 10-year impact
 - For survivors, worst effects (health, economic, institutional) concentrate in first 5–20 years
 
 ---
 
-_These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
+_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes

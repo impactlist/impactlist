@@ -135,6 +135,7 @@ $$
 $$
 
 Using central values (Assumptions 1–6):
+
 - $p_{\text{good}} = 0.3$
 - $a_{\text{cap}} = 0.05$
 - $S_{\text{total}} = 10^{13}$
@@ -219,6 +220,7 @@ The point estimate (1.0) reflects that extinction kills everyone. There are no s
 The value is **-1.0** because this effect represents harm: increasing the probability of extinction destroys QALYs rather than creating them.
 
 With the default 100-year time limit, world population of 10 billion, and 1.0 QALY/year impact:
+
 - Total QALYs at stake: 10B × 1.0 × 100 = **1 trillion QALYs**
 - Per microprobability: 1 million QALYs
 
@@ -233,6 +235,7 @@ The 15-year start time reflects typical expert timelines to transformative AI wh
 The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Because extinction means no future generations ever exist, the choice of time horizon significantly affects the estimated harm.
 
 Example time limits:
+
 - **40 years** counts only currently alive people's remaining lifespans
 - **100 years** (default) includes roughly 2–3 generations
 - **1,000 years** includes roughly 25 generations
@@ -242,7 +245,7 @@ These examples assume constant population for simplicity. The actual calculation
 
 ---
 
-_These estimates are approximate and we welcome contributions to improve them. Learn how you can help [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
+_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
 
 # Internal Notes
 

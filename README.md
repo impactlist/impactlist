@@ -10,7 +10,7 @@ See [this description of the project](https://forum.effectivealtruism.org/posts/
 
 We’re actively seeking volunteers to help with the project. 
 
-See CONTRIBUTING.md for how to contribute research to the site. This includes keeping the donations up to date and accurate for existing people, adding more people (and all their donations), and helping to improve our research into the effectiveness of various charities or general types of charity. 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute research to the site. This includes keeping the donations up to date and accurate for existing people, adding more people (and all their donations), and helping to improve our research into the effectiveness of various charities or general types of charity. 
 
 We also are looking for volunteer developers and UX people to help improve the functionality and appearance of the website. 
 
@@ -21,8 +21,9 @@ Join [the discord](https://discord.gg/6GNre8U2ta) to learn more about these and 
 - React
 - Tailwind CSS
 - Vite
+- Vitest
 
-## Getting Started
+## How to run the site locally so you can make changes
 
 1. Clone this repository
 2. Install dependencies:

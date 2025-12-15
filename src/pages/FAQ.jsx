@@ -26,13 +26,12 @@ const FAQ = () => {
             <div className="space-y-8">
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">What is Impact List?</h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-3">
                   Impact List is a project that aims to build and maintain a list which ranks the top ~1,000 living
                   people by their positive impact on the world via donations. We do this by building a database of
                   donations, making estimates about the effectiveness of those donations, and trying to present this
                   data in a useful way.
                 </p>
-                <br />
                 <p className="text-gray-600">
                   The site also contains a{' '}
                   <a href="/calculator" className="text-blue-600 hover:text-blue-800 underline">
@@ -67,7 +66,7 @@ const FAQ = () => {
                   <a href="https://forms.gle/NEC6LNics3n6WVo47" className="text-blue-600 hover:text-blue-800 underline">
                     this form
                   </a>
-                  {'.'}.
+                  .
                 </p>
               </div>
 
@@ -75,7 +74,7 @@ const FAQ = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   How do you calculate the effectiveness of different charities?
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-3">
                   Initially we've mostly focused on calculating the effectiveness of different{' '}
                   <strong>categories</strong> of donations, such as global health, poverty, animal welfare, etc. We
                   currently have 27 categories. You can see the effectiveness estimates for each category by going{' '}
@@ -86,7 +85,6 @@ const FAQ = () => {
                   effectiveness of specific charities. We've only done that for a handful so far, but plan to add more
                   in the future.
                 </p>
-                <br />
                 <p className="text-gray-600">
                   Because we have very few staff, we've initially made heavy use of large language models (mostly
                   ChatGPT 5.1 Thinking) to help us with the estimation process. We encourage the LLMs to make use of
@@ -107,36 +105,39 @@ const FAQ = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   The charity effectiveness estimates seem arbitrary. Why should I trust them?
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-3">
                   Our goal is to make the assumptions and the details of the calculations as transparent as possible. We
                   encourage you to read the justifications for the effectiveness estimates for each category, and see if
                   they seem reasonable to you. If not, you have a few options:
-                  <br />
-                  <br />
-                  (1) Use the 'Edit Assumptions' button on the site header. This gives you full control over the
-                  assumptions to see how your preferred values would affect the rankings.
-                  <br />
-                  (2) Help us improve the estimates. Email us (see below) or join our{' '}
-                  <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">
-                    Discord
-                  </a>{' '}
-                  and let us know why you disagree and we may incorporate your feedback into the estimates. You can also
-                  help us improve the estimates more directly by making a{' '}
-                  <a
-                    href="https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md"
-                    className="text-blue-600 hover:text-blue-800 underline"
-                  >
-                    github pull request
-                  </a>
-                  {'.'}
                 </p>
+                <ol className="list-decimal list-inside space-y-2 text-gray-600 ml-2">
+                  <li>
+                    <strong>Edit the assumptions yourself:</strong> Use the "Edit Assumptions" button on the site
+                    header. This gives you full control over the assumptions to see how your preferred values would
+                    affect the rankings.
+                  </li>
+                  <li>
+                    <strong>Help us improve the estimates:</strong> Email us (see below) or join our{' '}
+                    <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">
+                      Discord
+                    </a>{' '}
+                    and let us know why you disagree. You can also contribute more directly by making a{' '}
+                    <a
+                      href="https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md"
+                      className="text-blue-600 hover:text-blue-800 underline"
+                    >
+                      GitHub pull request
+                    </a>
+                    .
+                  </li>
+                </ol>
               </div>
 
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   How does it make sense to estimate the lives saved of a charity that doesn't try to save lives?
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-3">
                   We use the concept of a{' '}
                   <a
                     href="https://en.wikipedia.org/wiki/Quality-adjusted_life_year"
@@ -147,16 +148,15 @@ const FAQ = () => {
                   to estimate the lives saved of a donation. One QALY represents the value of a life year lived in good
                   health. To compare different cause areas, we need to convert the effects of charities into QALYs.
                 </p>
-                <br />
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-3">
                   For instance, if a charity cures someone's blindness we would need to estimate how much better their
                   life is per year now that they can see, as a fraction of a life year. We might estimate that a year of
                   not being able to see is 15% less good than a year of being able to see. So curing someone's blindness
                   for a year is equivalent to 0.15 QALYs. We would then multiply this by the amount of years we expect
                   them to be able to see for. If we expect them to be able to see for 10 years, then we would estimate
                   that curing their blindness is equivalent to 1.5 QALYs.
-                  <br />
-                  <br />
+                </p>
+                <p className="text-gray-600">
                   This process inherently involves approximations and a lot of uncertainty, but we think it's better
                   than not trying to compare different charitable causes at all.
                 </p>
@@ -166,12 +166,11 @@ const FAQ = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   Some donations are showing as resulting in negative lives saved. Why is that?
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-3">
                   This represents a case where the organization in question is actually making the world worse (usually
                   despite good intentions). For instance in our view some organizations that were created with the goal
                   of reducing existential risk from AI have actually ended up increasing it.
                 </p>
-                <br />
                 <p className="text-gray-600">
                   A cost per life of -$5,000 means that every $5,000 donated is expected on average to harm the world as
                   much as one person dying. (Which is the opposite of what positive cost per life values represent.)
@@ -184,41 +183,56 @@ const FAQ = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   How do I edit the assumptions that are used to calculate the impact rankings?
                 </h3>
-                <p className="text-gray-600">
-                  The 'Edit Assumptions' button in the header of the site allows you to adjust three types of
-                  assumptions: global parameters, category effects, and recipient effects. Each has its own tab in the
-                  editor.
+                <p className="text-gray-600 mb-4">
+                  The "Edit Assumptions" button in the header of the site allows you to adjust three types of
+                  assumptions. Each has its own tab in the editor:
                 </p>
-                <br />
-                <p className="text-gray-600">
-                  Global parameters are assumptions about the world as a whole that affect the calculations for many
-                  charitable categories. For instance the population growth rate or the discount rate (how much less
-                  valuable future life-years are compared to present life-years).
-                </p>
-                <br />
-                <p className="text-gray-600">
-                  Each category refers to a type of charitable activity. For instance 'Global Health' refers to
-                  donations to charities that aim to improve the health of the global population. When you edit the
-                  assumptions for a category, you'll see one or more effects which each describe a different way that
-                  organizations in that category impact the world. Almost all categories have only one effect. The 'AGI
-                  Development' category has three effects, because it's a complex category that has multiple different
-                  ways that AI development can impact the world. For instance AI development has positive effects on
-                  productivity similar to other technologies, but it may also increase the probability of catastrophy.
-                </p>
-                <br />
-                <p className="text-gray-600">
-                  Each recipeent is an organization/charity that recieves donations and uses them to try to have some
-                  impact on the world. A recipient can be associated with one or more categories, and each category has
-                  its own effects. When you edit the assumptions for a recipient, you'll see one or more effects for
-                  every category they are associated with. By default each recipients inherits the assumptions of each
-                  category they are associated with. You can override these defaults by setting either an override or
-                  multiplier for each parameter. Overrides completely replace the default value for the category, while
-                  multipliers multiply the default value for the parameter in the category.
-                </p>
-                <br />
-                <p className="text-gray-600">
-                  Each type of parameter that a category or recipient has is described by a tooltip by that paremters
-                  name in the editor.
+
+                <div className="space-y-4 ml-2">
+                  <div>
+                    <p className="text-gray-700 font-semibold">Global Parameters</p>
+                    <p className="text-gray-600">
+                      Assumptions about the world as a whole that affect calculations for many charitable categories.
+                      Examples include the population growth rate and the discount rate (how much less valuable future
+                      life-years are compared to present life-years).
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-gray-700 font-semibold">Categories</p>
+                    <p className="text-gray-600">
+                      Each category refers to a type of charitable activity. For instance "Global Health" refers to
+                      donations to charities that aim to improve the health of the global population. When you edit a
+                      category, you'll see one or more effects describing different ways organizations in that category
+                      impact the world. Most categories have only one effect, but complex categories like "AGI
+                      Development" have multiple effects (e.g., productivity gains and catastrophic risk).
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-gray-700 font-semibold">Recipients</p>
+                    <p className="text-gray-600 mb-2">
+                      Each recipient is an organization/charity that receives donations. A recipient can be associated
+                      with one or more categories. When editing a recipient, you'll see effects for every category
+                      they're associated with.
+                    </p>
+                    <p className="text-gray-600">
+                      By default, each recipient inherits the assumptions of its categories. You can customize these
+                      using:
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 ml-2 mt-1">
+                      <li>
+                        <strong>Overrides:</strong> Completely replace the default value
+                      </li>
+                      <li>
+                        <strong>Multipliers:</strong> Multiply the default value by a factor
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 mt-4">
+                  Each parameter has a tooltip next to its name in the editor that describes what it does.
                 </p>
               </div>
 
@@ -226,52 +240,80 @@ const FAQ = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
                   What types of effect can each category or recipient have?
                 </h3>
-                <p className="text-gray-600">
-                  There are currently only two types of effects: 'standard' and 'population'.
+                <p className="text-gray-600 mb-4">
+                  There are currently two types of effects: "standard" and "population".
                 </p>
-                <br />
-                <p className="text-gray-600">
-                  Standard effects are the type of effect that is most intutive. They describe a type of impact where
-                  the more money you spend on something, the more impact you get. For instance a charity that provides
-                  mosquito nets can buy more nets the more money that it recieves from donors, so each donation has a
-                  fairly direct impact on the world.
-                </p>
-                <br />
-                <p className="text-gray-600">
-                  The key parameter for a standard effect is 'cost per QALY' (QALYs are explained in a previous
-                  question) which is an estimate of the wellbeing that is produced for every dollar donated. Standard
-                  effects only have two other parameters: 'start time' and 'duration'. The start time is the number of
-                  years after the donation that the effect starts, and the duration is the number of years that the
-                  effect lasts. For simplicity we assume that the benefits are evenly distributed over the duration.
-                </p>
-                <br />
-                <p className="text-gray-600">
-                  Population effects are effects that we model as having some (usually small) probability of happening,
-                  and then affecting a large fraction of the population if it does happen. For instance a pandemic that
-                  kills 10% of the population is a population effect, because it has a small probability of happening,
-                  and if it does happen it will affect a large fraction of the population.
-                </p>
-                <br />
-                <p className="text-gray-600">
-                  The key parameter associated with population effects is 'cost per microprobability' which is an
-                  estimate of how much more/less likely an event is to happen for every dollar donated. A
-                  microprobability represents a 1 in 1,000,000 chance of the event happening. The other parameters
-                  unique to population effects are 'population fraction affected' and 'qaly improvement per year'. The
-                  population fraction affected is the fraction of the population that is affected if the event happens,
-                  and the qaly improvement per year is the amount of QALYs that is gained or lost per person per year if
-                  the event happens. Population effects also have 'start time' and 'duration' parameters which have the
-                  same interpretation as in standard effects.
-                </p>
+
+                <div className="space-y-4 ml-2">
+                  <div>
+                    <p className="text-gray-700 font-semibold">Standard Effects</p>
+                    <p className="text-gray-600 mb-2">
+                      The most intuitive type. The more money you spend, the more impact you get. For example, a charity
+                      providing mosquito nets can buy more nets with more donations, creating a direct relationship
+                      between funding and impact.
+                    </p>
+                    <p className="text-gray-600 mb-1">
+                      <strong>Parameters:</strong>
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 ml-2">
+                      <li>
+                        <strong>Cost per QALY:</strong> The wellbeing produced per dollar donated (see QALY explanation
+                        above)
+                      </li>
+                      <li>
+                        <strong>Start time:</strong> Years after donation before the effect begins
+                      </li>
+                      <li>
+                        <strong>Duration:</strong> How many years the effect lasts (benefits assumed evenly distributed)
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-gray-700 font-semibold">Population Effects</p>
+                    <p className="text-gray-600 mb-2">
+                      Effects with a small probability of occurring, but that affect a large fraction of the population
+                      if they do. For example, a pandemic that kills 10% of the population has a small probability of
+                      happening, but would affect billions of people.
+                    </p>
+                    <p className="text-gray-600 mb-1">
+                      <strong>Parameters:</strong>
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 ml-2">
+                      <li>
+                        <strong>Cost per microprobability:</strong> How much donations change the likelihood of an event
+                        (a microprobability = 1 in 1,000,000 chance)
+                      </li>
+                      <li>
+                        <strong>Population fraction affected:</strong> What fraction of the population is impacted if
+                        the event occurs
+                      </li>
+                      <li>
+                        <strong>QALY improvement per year:</strong> QALYs gained or lost per person per year if the
+                        event happens
+                      </li>
+                      <li>
+                        <strong>Start time / Duration:</strong> Same meaning as standard effects
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">How can I get involved?</h3>
+                <p className="text-gray-600 mb-3">
+                  We're actively seeking volunteers to help with the project in several areas:
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-gray-600 ml-2 mb-3">
+                  <li>Researching the effectiveness of different categories of donations</li>
+                  <li>Evaluating the effectiveness of specific organizations</li>
+                  <li>Tracking which donations individuals on the list have made</li>
+                  <li>Adding new people to the list</li>
+                  <li>React development for the website</li>
+                </ul>
                 <p className="text-gray-600">
-                  We're actively seeking volunteers to help with the project. We're looking for people to research the
-                  effectiveness of different categories of donations, the effectiveness of specific organizations, and
-                  which donations individuals on the list have made (this includes adding new people to our list). We're
-                  also looking for React developers to help with the website. If you think you can help in other ways
-                  not mentioned here, please reach out. Join our{' '}
+                  If you think you can help in other ways not mentioned here, please reach out. Join our{' '}
                   <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">
                     Discord
                   </a>{' '}

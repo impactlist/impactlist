@@ -60,6 +60,19 @@ const FAQ = () => {
 
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  How can I send some quick feedback about this site?
+                </h3>
+                <p className="text-gray-600">
+                  Use{' '}
+                  <a href="https://forms.gle/NEC6LNics3n6WVo47" className="text-blue-600 hover:text-blue-800 underline">
+                    this form
+                  </a>
+                  {'.'}.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
                   How do you calculate the effectiveness of different charities?
                 </h3>
                 <p className="text-gray-600">

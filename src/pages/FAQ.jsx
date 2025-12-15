@@ -75,9 +75,9 @@ const FAQ = () => {
                   How do you calculate the effectiveness of different charities?
                 </h3>
                 <p className="text-gray-600 mb-3">
-                  Initially we've mostly focused on calculating the effectiveness of different{' '}
-                  <strong>categories</strong> of donations, such as global health, poverty, animal welfare, etc. We
-                  currently have 27 categories. You can see the effectiveness estimates for each category by going{' '}
+                  Initially we've mostly focused on calculating the effectiveness of different categories of donations,
+                  such as global health, poverty, animal welfare, etc. We currently have 27 categories. You can see the
+                  effectiveness estimates for each category by going{' '}
                   <a href="/categories" className="text-blue-600 hover:text-blue-800 underline">
                     here
                   </a>{' '}
@@ -86,9 +86,9 @@ const FAQ = () => {
                   in the future.
                 </p>
                 <p className="text-gray-600">
-                  Because we have very few staff, we've initially made heavy use of large language models (mostly
-                  ChatGPT 5.1 Thinking) to help us with the estimation process. We encourage the LLMs to make use of
-                  existing work by organizations such as{' '}
+                  Because we have very few staff, we've initially made heavy use of large language models to help us
+                  with the estimation process. We encourage the LLMs to make use of existing work by organizations such
+                  as{' '}
                   <a href="https://www.givewell.org/" className="text-blue-600 hover:text-blue-800 underline">
                     GiveWell
                   </a>{' '}
@@ -96,7 +96,7 @@ const FAQ = () => {
                   <a href="https://www.openphilanthropy.org/" className="text-blue-600 hover:text-blue-800 underline">
                     Open Philanthropy
                   </a>
-                  , who have already done a lot of the hard work of estimating charity effectiveness. We plan to refine
+                  , who have already done a lot of the hard work of estimating charity effectiveness. We plan to improve
                   our estimates over time with human experts.
                 </p>
               </div>
@@ -117,11 +117,20 @@ const FAQ = () => {
                     affect the rankings.
                   </li>
                   <li>
-                    <strong>Help us improve the estimates:</strong> Email us (see below) or join our{' '}
+                    <strong>Help us improve the estimates:</strong> For quick feedback use{' '}
+                    <a
+                      href="https://forms.gle/NEC6LNics3n6WVo47"
+                      className="text-blue-600 hover:text-blue-800 underline"
+                    >
+                      this form
+                    </a>
+                    {'. '}
+                    Or join our{' '}
                     <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">
                       Discord
                     </a>{' '}
-                    and let us know why you disagree. You can also contribute more directly by making a{' '}
+                    and let us know why you disagree. You can also suggest changes to our research more directly by
+                    making a{' '}
                     <a
                       href="https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md"
                       className="text-blue-600 hover:text-blue-800 underline"
@@ -293,7 +302,7 @@ const FAQ = () => {
                         event happens
                       </li>
                       <li>
-                        <strong>Start time / Duration:</strong> Same meaning as standard effects
+                        <strong>Start time / Duration:</strong> Same meaning as for the standard effects
                       </li>
                     </ul>
                   </div>
@@ -306,11 +315,10 @@ const FAQ = () => {
                   We're actively seeking volunteers to help with the project in several areas:
                 </p>
                 <ul className="list-disc list-inside space-y-1 text-gray-600 ml-2 mb-3">
-                  <li>Researching the effectiveness of different categories of donations</li>
-                  <li>Evaluating the effectiveness of specific organizations</li>
-                  <li>Tracking which donations individuals on the list have made</li>
-                  <li>Adding new people to the list</li>
-                  <li>React development for the website</li>
+                  <li>Researching the effectiveness of specific charities and of general types of charities</li>
+                  <li>Maintaining the list of donations that individuals on Impact List have made</li>
+                  <li>Adding new donors (and all their donations)</li>
+                  <li>Improving the functionality and UI of the site</li>
                 </ul>
                 <p className="text-gray-600">
                   If you think you can help in other ways not mentioned here, please reach out. Join our{' '}

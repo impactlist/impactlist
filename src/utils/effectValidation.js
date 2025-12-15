@@ -2,6 +2,8 @@
  * Shared validation utilities for effect fields
  */
 
+import { getEffectFieldNames } from '../constants/effectFieldDefinitions';
+
 /**
  * Detect the type of an effect based on its fields
  */
@@ -179,13 +181,8 @@ export const validateEffect = (effect, effectIndex = 0) => {
   const effectType = getEffectType(effect);
 
   // Get all fields that need validation based on effect type
-  const fieldsToValidate = ['startTime', 'windowLength'];
-
-  if (effectType === 'qaly') {
-    fieldsToValidate.push('costPerQALY');
-  } else if (effectType === 'population') {
-    fieldsToValidate.push('costPerMicroprobability', 'populationFractionAffected', 'qalyImprovementPerYear');
-  }
+  const fieldsFromSchema = getEffectFieldNames(effect);
+  const fieldsToValidate = fieldsFromSchema.length > 0 ? fieldsFromSchema : ['startTime', 'windowLength'];
 
   // Validate each field
   fieldsToValidate.forEach((fieldName) => {

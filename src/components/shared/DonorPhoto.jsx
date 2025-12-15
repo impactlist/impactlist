@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 const sizeClasses = {
@@ -13,6 +13,12 @@ const sizeClasses = {
 const DonorPhoto = ({ donorId, donorName, size = 'small', className = '' }) => {
   const [imageSrc, setImageSrc] = useState(`/images/people/small/${donorId}.jpeg`);
   const [triedJpg, setTriedJpg] = useState(false);
+
+  // Reset the photo source when the donor changes so sorting keeps photos aligned
+  useEffect(() => {
+    setImageSrc(`/images/people/small/${donorId}.jpeg`);
+    setTriedJpg(false);
+  }, [donorId]);
 
   const handleError = () => {
     if (!triedJpg) {

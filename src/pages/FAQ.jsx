@@ -50,6 +50,8 @@ const FAQ = () => {
                   <a
                     href="https://forum.effectivealtruism.org/posts/LCJa4AAi7YBcyro2H/proposal-impact-list-like-the-forbes-list-except-for-impact"
                     className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     this description of the project
                   </a>{' '}
@@ -63,7 +65,12 @@ const FAQ = () => {
                 </h3>
                 <p className="text-gray-600">
                   Use{' '}
-                  <a href="https://forms.gle/NEC6LNics3n6WVo47" className="text-blue-600 hover:text-blue-800 underline">
+                  <a
+                    href="https://forms.gle/NEC6LNics3n6WVo47"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     this form
                   </a>
                   .
@@ -89,11 +96,21 @@ const FAQ = () => {
                   Because we have very few staff, we've initially made heavy use of large language models to help us
                   with the estimation process. We encourage the LLMs to make use of existing work by organizations such
                   as{' '}
-                  <a href="https://www.givewell.org/" className="text-blue-600 hover:text-blue-800 underline">
+                  <a
+                    href="https://www.givewell.org/"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     GiveWell
                   </a>{' '}
                   and{' '}
-                  <a href="https://www.openphilanthropy.org/" className="text-blue-600 hover:text-blue-800 underline">
+                  <a
+                    href="https://www.openphilanthropy.org/"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Open Philanthropy
                   </a>
                   , who have already done a lot of the hard work of estimating charity effectiveness. We plan to improve
@@ -121,12 +138,19 @@ const FAQ = () => {
                     <a
                       href="https://forms.gle/NEC6LNics3n6WVo47"
                       className="text-blue-600 hover:text-blue-800 underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       this form
                     </a>
                     {'. '}
                     Or join our{' '}
-                    <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">
+                    <a
+                      href="https://discord.gg/6GNre8U2ta"
+                      className="text-blue-600 hover:text-blue-800 underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Discord
                     </a>{' '}
                     and let us know why you disagree. You can also suggest changes to our research more directly by
@@ -134,6 +158,8 @@ const FAQ = () => {
                     <a
                       href="https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md"
                       className="text-blue-600 hover:text-blue-800 underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       GitHub pull request
                     </a>
@@ -151,6 +177,8 @@ const FAQ = () => {
                   <a
                     href="https://en.wikipedia.org/wiki/Quality-adjusted_life_year"
                     className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     quality adjusted life year (QALY)
                   </a>{' '}
@@ -322,13 +350,20 @@ const FAQ = () => {
                 </ul>
                 <p className="text-gray-600">
                   If you think you can help in other ways not mentioned here, please reach out. Join our{' '}
-                  <a href="https://discord.gg/6GNre8U2ta" className="text-blue-600 hover:text-blue-800 underline">
+                  <a
+                    href="https://discord.gg/6GNre8U2ta"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Discord
                   </a>{' '}
                   and check out our{' '}
                   <a
                     href="https://github.com/impactlist/impactlist"
                     className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     GitHub repository
                   </a>
@@ -340,7 +375,12 @@ const FAQ = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">How can I stay updated?</h3>
                 <p className="text-gray-600">
                   Keep up with the latest developments by following us on{' '}
-                  <a href="https://x.com/impactlist_" className="text-blue-600 hover:text-blue-800 underline">
+                  <a
+                    href="https://x.com/impactlist_"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Twitter
                   </a>
                   . We haven't posted much yet because we haven't officially launched, but once we do this will be the

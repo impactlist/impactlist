@@ -23,7 +23,7 @@ import EntityStatistics from '../components/entity/EntityStatistics';
 import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
-import { CHART_ANIMATION_DURATION } from '../utils/constants';
+import { CHART_ANIMATION_DURATION, DONATION_FEEDBACK_NOTE } from '../utils/constants';
 
 const DonorDetail = () => {
   const { donorId } = useParams();
@@ -488,6 +488,29 @@ const DonorDetail = () => {
 
         {/* Donations list */}
         <EntityDonationTable donations={donorDonations} entityType="donor" combinedAssumptions={combinedAssumptions} />
+
+        {/* Feedback note */}
+        <p className="text-gray-600 italic mt-4 mb-8 text-center">
+          {DONATION_FEEDBACK_NOTE.text}{' '}
+          <a
+            href={DONATION_FEEDBACK_NOTE.formUrl}
+            className="text-blue-600 hover:text-blue-800 underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {DONATION_FEEDBACK_NOTE.formLinkText}
+          </a>{' '}
+          {DONATION_FEEDBACK_NOTE.middleText}{' '}
+          <a
+            href={DONATION_FEEDBACK_NOTE.contributingUrl}
+            className="text-blue-600 hover:text-blue-800 underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {DONATION_FEEDBACK_NOTE.contributingLinkText}
+          </a>
+          .
+        </p>
       </motion.div>
     </motion.div>
   );

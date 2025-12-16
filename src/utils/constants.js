@@ -56,3 +56,13 @@ export const CHART_COLORS = [
   '#bcbd22',
   '#17becf',
 ];
+
+// Feedback note for donation pages
+export const DONATION_FEEDBACK_NOTE = {
+  text: 'Does this data look incorrect or incomplete? You can submit quick feedback with',
+  formLinkText: 'this form',
+  formUrl: 'https://forms.gle/NEC6LNics3n6WVo47',
+  middleText: 'or get more involved',
+  contributingLinkText: 'here',
+  contributingUrl: 'https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md',
+};

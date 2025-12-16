@@ -6,7 +6,7 @@ import rehypeKatex from 'rehype-katex';
 // Custom link component that opens external links in a new tab
 // eslint-disable-next-line no-unused-vars
 const ExternalLink = ({ node, href, children, ...props }) => {
-  const isExternal = href && (href.startsWith('http://') || href.startsWith('https://'));
+  const isExternal = href && (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'));
 
   if (isExternal) {
     return (

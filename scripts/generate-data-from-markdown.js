@@ -20,6 +20,21 @@ const donationsDir = path.join(__dirname, '../content/donations');
 const globalParametersFile = path.join(__dirname, '../content/globalParameters.md');
 const outputFile = path.join(__dirname, '../src/data/generatedData.js');
 
+// Shared text variables for markdown substitution
+const MARKDOWN_VARIABLES = {
+  CONTRIBUTION_NOTE: `_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
+};
+
+// Replace {{VARIABLE_NAME}} placeholders with actual values
+function replaceVariables(content) {
+  if (!content) return content;
+  let result = content;
+  for (const [key, value] of Object.entries(MARKDOWN_VARIABLES)) {
+    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+  }
+  return result;
+}
+
 // Helper function to format date as YYYY-MM-DD
 function formatDateString(dateString) {
   const date = new Date(dateString);
@@ -119,7 +134,7 @@ function loadCategories() {
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
     if (extractedContent) {
-      categories[data.id].content = extractedContent;
+      categories[data.id].content = replaceVariables(extractedContent);
     }
   });
 
@@ -161,7 +176,7 @@ function loadDonors() {
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
     if (extractedContent) {
-      donors[data.id].content = extractedContent;
+      donors[data.id].content = replaceVariables(extractedContent);
     }
   });
 
@@ -243,7 +258,7 @@ function loadRecipients() {
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content);
     if (extractedContent) {
-      recipients[data.id].content = extractedContent;
+      recipients[data.id].content = replaceVariables(extractedContent);
     }
   });
 
@@ -351,7 +366,7 @@ function loadAssumptions() {
     assumptions[data.id] = {
       id: data.id,
       name: data.name,
-      content: extractedContent || '',
+      content: replaceVariables(extractedContent) || '',
     };
   });
 

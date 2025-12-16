@@ -53,6 +53,6 @@ The 60-year duration matches the estimated remaining life expectancy for benefic
 
 ---
 
-_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._
+{{CONTRIBUTION_NOTE}}
 
 # Internal Notes

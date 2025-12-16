@@ -23,6 +23,8 @@ const outputFile = path.join(__dirname, '../src/data/generatedData.js');
 // Shared text variables for markdown substitution
 const MARKDOWN_VARIABLES = {
   CONTRIBUTION_NOTE: `_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
+  RECIPIENT_DEFAULT_JUSTIFICATION: `The cost per life of this recipient is assumed to be the same as for the average recipient in each of its categories.
+You can see how the cost per life was calculated by going to the page for one of its categories.`,
 };
 
 // Replace {{VARIABLE_NAME}} placeholders with actual values

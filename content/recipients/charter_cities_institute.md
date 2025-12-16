@@ -22,7 +22,7 @@ This effect captures the welfare gains from creating "Charter Cities"—new urba
 
 ## Point Estimates
 
-- **Multiplier:** 0.1x (relative to baseline)
+- **Cost per QALY multiplier:** 0.1x (relative to baseline)
 
 If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
 

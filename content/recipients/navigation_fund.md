@@ -11,9 +11,9 @@ categories:
   - id: social-justice
     fraction: 0.10
   - id: science-tech
-    fraction: 0.15
+    fraction: 0.18
   - id: ai-risk
-    fraction: 0.05
+    fraction: 0.02
 ---
 
 # Justification of cost per life

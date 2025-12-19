@@ -14,12 +14,13 @@ donations:
       larry-page: 1.0
     source: 'https://www.influencewatch.org/person/larry-page/'
 
-  - date: 2008-12-31
-    recipient: president-barack-obama-inaugural-committee
-    amount: 25_000
-    credit:
-      larry-page: 1.0
-    source: 'https://www.influencewatch.org/person/larry-page/'
+  # Commented out: political candidate donation - unclear whether positive or negative effect
+  # - date: 2008-12-31
+  #   recipient: president-barack-obama-inaugural-committee
+  #   amount: 25_000
+  #   credit:
+  #     larry-page: 1.0
+  #   source: 'https://www.influencewatch.org/person/larry-page/'
 
   - date: 2014-11-10
     recipient: ebola-relief-efforts

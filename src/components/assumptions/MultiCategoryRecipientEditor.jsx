@@ -271,18 +271,21 @@ const CategoryEffectSection = ({
               {category.name}
             </Link>
           </h3>
-          <div className="text-sm">
-            <span className="text-gray-600">Cost per life: </span>
-            <span
-              className={
-                combinedCostPerLife === Infinity || combinedCostPerLife < 0
-                  ? 'text-red-600 font-medium'
-                  : 'text-green-600 font-medium'
-              }
-            >
-              {combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife)}
-            </span>
-          </div>
+          {/* Only show combined cost when there are multiple effects */}
+          {tempEditToEffects.length > 1 && (
+            <div className="text-sm">
+              <span className="text-gray-600">Combined cost per life: </span>
+              <span
+                className={
+                  combinedCostPerLife === Infinity || combinedCostPerLife < 0
+                    ? 'text-red-600 font-medium'
+                    : 'text-green-600 font-medium'
+                }
+              >
+                {combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife)}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

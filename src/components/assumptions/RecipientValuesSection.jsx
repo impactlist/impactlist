@@ -10,7 +10,7 @@ import { mergeGlobalParameters, recipientHasMeaningfulCustomValues } from '../..
 
 /**
  * Component for displaying recipient-specific cost per life values.
- * Now read-only with Edit buttons to open RecipientEffectEditor
+ * Shows a single combined cost per life with Edit button to open the multi-category editor.
  */
 const RecipientValuesSection = ({
   filteredRecipients,
@@ -28,36 +28,27 @@ const RecipientValuesSection = ({
   );
 
   // Calculate the cost per life for a recipient's category
-  const getRecipientCostPerLife = (recipientId, recipient, categoryId) => {
-    // Get the actual category data with effects from defaultAssumptions
+  const getRecipientCategoryCostPerLife = (recipientId, recipient, categoryId) => {
     const category = defaultAssumptions?.categories?.[categoryId];
 
     if (!category || !category.effects || category.effects.length === 0) {
       return null;
     }
 
-    // Get default recipient effects if they exist
     const defaultRecipientEffects = defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-
-    // Get user overrides if they exist
     const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
 
-    // Determine which effects to use (user overrides default)
     let effectsToApply = null;
     if (userRecipientEffects && userRecipientEffects.length > 0) {
-      // User has overrides, use them
       effectsToApply = userRecipientEffects;
     } else if (defaultRecipientEffects && defaultRecipientEffects.length > 0) {
-      // No user overrides but recipient has default effects (like Anthropic's multiplier)
       effectsToApply = defaultRecipientEffects;
     }
 
-    // If no recipient effects at all, return base category cost
     if (!effectsToApply) {
       return calculateCostPerLife(category.effects, mergedGlobalParameters, previewYear || getCurrentYear());
     }
 
-    // Apply recipient effects to base category effects
     const modifiedEffects = category.effects.map((baseEffect) => {
       const recipientEffect = effectsToApply.find((e) => e.effectId === baseEffect.effectId);
       if (
@@ -69,8 +60,46 @@ const RecipientValuesSection = ({
       return baseEffect;
     });
 
-    // Calculate cost per life from modified effects
     return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, previewYear || getCurrentYear());
+  };
+
+  // Calculate combined/weighted cost per life across all categories for a recipient
+  const getCombinedCostPerLife = (recipientId, recipient) => {
+    const categories = Object.entries(recipient.categories || {});
+    if (categories.length === 0) return null;
+
+    // For single category, just return that category's cost
+    if (categories.length === 1) {
+      const [categoryId] = categories[0];
+      return getRecipientCategoryCostPerLife(recipientId, recipient, categoryId);
+    }
+
+    // For multiple categories, calculate weighted average
+    let totalWeightedCost = 0;
+    let totalWeight = 0;
+
+    for (const [categoryId, categoryData] of categories) {
+      const fraction = categoryData.fraction || 0;
+      const cost = getRecipientCategoryCostPerLife(recipientId, recipient, categoryId);
+
+      if (cost !== null && cost !== Infinity && fraction > 0) {
+        totalWeightedCost += cost * fraction;
+        totalWeight += fraction;
+      }
+    }
+
+    if (totalWeight === 0) return Infinity;
+    return totalWeightedCost / totalWeight;
+  };
+
+  // Check if recipient has any custom values across all categories
+  const recipientHasAnyCustomValues = (recipientId, recipient) => {
+    const categories = Object.keys(recipient.categories || {});
+    return categories.some((categoryId) => {
+      const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+      const defaultRecipientEffects = defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+      return recipientHasMeaningfulCustomValues(userRecipientEffects, defaultRecipientEffects);
+    });
   };
 
   return (
@@ -100,97 +129,44 @@ const RecipientValuesSection = ({
               const recipientCategories = Object.entries(recipient.categories || {});
               if (recipientCategories.length === 0) return null;
 
-              // Get recipient ID for lookups
               const recipientId = getRecipientId(recipient);
+              const combinedCost = getCombinedCostPerLife(recipientId, recipient);
+              const formattedCost = combinedCost !== null ? formatCurrency(combinedCost).replace('$', '') : '—';
+              const hasCustomValues = recipientHasAnyCustomValues(recipientId, recipient);
+              const categoryCount = recipientCategories.length;
 
               return (
                 <div key={recipient.name} className="border border-gray-400 rounded-md p-3 inline-block bg-white">
-                  <h3 className="font-medium mb-2">
+                  <div className="flex items-center gap-4">
+                    {/* Recipient name */}
                     <Link
                       to={`/recipient/${encodeURIComponent(recipientId)}`}
-                      className="text-indigo-600 hover:text-indigo-800"
+                      className="text-indigo-600 hover:text-indigo-800 font-medium flex-shrink-0"
                     >
                       {recipient.name}
                     </Link>
-                  </h3>
-                  <div className="space-y-1">
-                    {recipientCategories.map(([categoryId]) => {
-                      const category = defaultAssumptions?.categories?.[categoryId];
-                      const categoryName = category?.name || categoryId;
 
-                      // Calculate base category cost per life (without recipient modifications)
-                      let categoryCostPerLife = 0;
-                      if (category?.effects && category.effects.length > 0) {
-                        categoryCostPerLife = calculateCostPerLife(
-                          category.effects,
-                          defaultAssumptions.globalParameters,
-                          previewYear || getCurrentYear()
-                        );
+                    {/* Combined cost per life with Edit button */}
+                    <CurrencyInput
+                      id={`recipient-${recipientId}`}
+                      value={formattedCost}
+                      onChange={() => {}}
+                      className="w-32"
+                      disabled={true}
+                      isCustom={hasCustomValues}
+                      rightElement={
+                        <button
+                          type="button"
+                          onClick={() => onEditRecipient(recipient, recipientId)}
+                          className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                        >
+                          Edit
+                        </button>
                       }
-
-                      // Calculate recipient's actual cost per life (with any modifications)
-                      const recipientCostPerLife = recipientId
-                        ? getRecipientCostPerLife(recipientId, recipient, categoryId)
-                        : null;
-
-                      // Check if recipient has user custom values that differ from the recipient's defaults
-                      const userRecipientEffects =
-                        userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-                      const defaultRecipientEffects =
-                        defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-
-                      const hasUserCustomValues = recipientHasMeaningfulCustomValues(
-                        userRecipientEffects,
-                        defaultRecipientEffects
-                      );
-
-                      // Show category cost in parentheses if recipient cost differs
-                      // Compare formatted values to determine if they're visually different
-                      const formattedRecipientCost = formatCurrency(
-                        recipientCostPerLife || categoryCostPerLife
-                      ).replace('$', '');
-                      const formattedCategoryCost = formatCurrency(categoryCostPerLife).replace('$', '');
-                      const recipientCostDiffers = formattedRecipientCost !== formattedCategoryCost;
-
-                      return (
-                        <div key={categoryId} className="flex items-start gap-4">
-                          {/* Category name */}
-                          <Link
-                            to={`/explore/${categoryId}`}
-                            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 flex-shrink-0 w-40 mt-1"
-                          >
-                            {categoryName}
-                          </Link>
-
-                          {/* Cost per life input with Edit button */}
-                          <div className="flex-1 max-w-[200px]">
-                            <CurrencyInput
-                              id={`recipient-${recipientId}-${categoryId}`}
-                              value={formattedRecipientCost}
-                              onChange={() => {}} // Read-only, no-op
-                              className="w-full"
-                              disabled={true}
-                              isCustom={hasUserCustomValues}
-                              placeholder={formattedCategoryCost}
-                              rightElement={
-                                <button
-                                  type="button"
-                                  onClick={() => onEditRecipient(recipient, recipientId, categoryId)}
-                                  className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                                >
-                                  Edit
-                                </button>
-                              }
-                            />
-                            {/* Show category cost below input if different */}
-                            {recipientCostDiffers && (
-                              <p className="text-xs text-gray-500 mt-0.5">Category: ${formattedCategoryCost}</p>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                    />
                   </div>
+                  {/* Show category count for multi-category recipients */}
+                  {categoryCount > 1 && <p className="text-xs text-gray-500 mt-1">{categoryCount} categories</p>}
                 </div>
               );
             })}

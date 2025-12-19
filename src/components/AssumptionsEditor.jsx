@@ -291,9 +291,27 @@ const AssumptionsEditor = () => {
   };
 
   // Handle editing a recipient's effects
-  const handleEditRecipient = (recipient, recipientId, categoryId) => {
-    const category = getCategoryFromDefaults(defaultAssumptions, categoryId);
-    setEditingRecipient({ recipient, recipientId, categoryId, category });
+  const handleEditRecipient = (recipient, recipientId) => {
+    // Get ALL categories from the recipient data
+    const categoryIds = Object.keys(recipient.categories || {});
+    if (categoryIds.length === 0) return;
+
+    const isMultiCategory = categoryIds.length > 1;
+    const firstCategoryId = categoryIds[0];
+
+    setEditingRecipient({
+      recipient,
+      recipientId,
+      categories: categoryIds.map((catId) => ({
+        categoryId: catId,
+        category: getCategoryFromDefaults(defaultAssumptions, catId),
+      })),
+      isMultiCategory,
+      activeCategory: firstCategoryId,
+      // Keep single-category fields for backward compatibility
+      categoryId: firstCategoryId,
+      category: getCategoryFromDefaults(defaultAssumptions, firstCategoryId),
+    });
   };
 
   // Handle saving category effects

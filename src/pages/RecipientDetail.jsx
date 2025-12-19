@@ -331,7 +331,7 @@ const RecipientDetail = () => {
 
   const handleEditRecipientAssumptions = () => {
     if (!recipientInfo?.categoryId) return;
-    openModal({ tab: 'recipients', recipientId, categoryId: recipientInfo.categoryId });
+    openModal({ tab: 'recipients', recipientId, activeCategory: recipientInfo.categoryId });
   };
 
   if (!recipientInfo) {

@@ -21,6 +21,7 @@ import RecipientValuesSection from './assumptions/RecipientValuesSection';
 import GlobalValuesSection from './assumptions/GlobalValuesSection';
 import CategoryEffectEditor from './assumptions/CategoryEffectEditor';
 import RecipientEffectEditor from './assumptions/RecipientEffectEditor';
+import MultiCategoryRecipientEditor from './assumptions/MultiCategoryRecipientEditor';
 import Modal from './assumptions/Modal';
 import TabNavigation from './assumptions/TabNavigation';
 import FormActions from './assumptions/FormActions';
@@ -85,17 +86,30 @@ const AssumptionsEditor = () => {
       if (!recipient) {
         throw new Error(`Recipient ${modalConfig.recipientId} not found in default assumptions`);
       }
-      const recipientCategoryId =
-        modalConfig.categoryId || Object.keys(recipient.categories || {})[0] || modalConfig.categoryId;
-      if (!recipientCategoryId) {
+
+      // Get ALL categories from the recipient data
+      const categoryIds = Object.keys(recipient.categories || {});
+      if (categoryIds.length === 0) {
         throw new Error(`Recipient ${recipient.name} has no categories to edit`);
       }
-      const category = getCategoryFromDefaults(defaultAssumptions, recipientCategoryId);
+
+      const isMultiCategory = categoryIds.length > 1;
+
+      // activeCategory is optional - for scrolling to a specific category
+      const activeCategory = modalConfig.activeCategory || modalConfig.categoryId || categoryIds[0];
+
       setEditingRecipient({
         recipient,
         recipientId: recipient.id,
-        categoryId: recipientCategoryId,
-        category,
+        categories: categoryIds.map((catId) => ({
+          categoryId: catId,
+          category: getCategoryFromDefaults(defaultAssumptions, catId),
+        })),
+        isMultiCategory,
+        activeCategory,
+        // Keep single-category fields for backward compatibility
+        categoryId: activeCategory,
+        category: getCategoryFromDefaults(defaultAssumptions, activeCategory),
       });
     } else if (modalConfig.categoryId) {
       setEditingRecipient(null);
@@ -353,6 +367,34 @@ const AssumptionsEditor = () => {
     setEditingRecipient(null);
   };
 
+  // Handle saving multi-category recipient effects
+  const handleSaveMultiCategoryEffects = (allCategoryEffects) => {
+    if (!editingRecipient) return;
+
+    const { recipient } = editingRecipient;
+
+    // Process each category's effects
+    Object.entries(allCategoryEffects).forEach(([categoryId, effects]) => {
+      // Clear existing effects for this category first
+      clearRecipientEffect(recipient.name, categoryId, null);
+
+      // Then save the new effects
+      effects.forEach((effect) => {
+        const effectData = {
+          overrides: effect.overrides || {},
+          multipliers: effect.multipliers || {},
+        };
+        if (effect.disabled !== undefined) {
+          effectData.disabled = effect.disabled;
+        }
+        updateRecipientEffect(recipient.name, categoryId, effect.effectId, effectData);
+      });
+    });
+
+    // Close the editor
+    setEditingRecipient(null);
+  };
+
   // Handle canceling recipient edit
   const handleCancelRecipientEdit = () => {
     setEditingRecipient(null);
@@ -457,8 +499,19 @@ const AssumptionsEditor = () => {
             onSave={handleSaveCategoryEffects}
             onCancel={handleCancelCategoryEdit}
           />
+        ) : editingRecipient?.isMultiCategory ? (
+          // Show multi-category editor for recipients with multiple categories
+          <MultiCategoryRecipientEditor
+            recipient={editingRecipient.recipient}
+            recipientId={editingRecipient.recipientId}
+            categories={editingRecipient.categories}
+            activeCategory={editingRecipient.activeCategory}
+            globalParameters={mergedGlobalParameters}
+            onSave={handleSaveMultiCategoryEffects}
+            onCancel={handleCancelRecipientEdit}
+          />
         ) : editingRecipient ? (
-          // Show recipient effect editor when editing a recipient
+          // Show single-category recipient effect editor
           <RecipientEffectEditor
             recipient={editingRecipient.recipient}
             recipientId={editingRecipient.recipientId}

@@ -22,3 +22,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Error handling: Never fail silently when something unexpected happens. We always want to fail hard and loudly to not let subtle bugs persist.
 - Comments: Document complex logic and public interfaces
 - Please only use pure JavaScript (ES6), plus React, plus Tailwind, plus Vite.
+
+## Math rendering
+
+Math in markdown files is rendered with KaTeX, which is why:
+
+- Dollar signs in currency need escaping (\$)
+- \dfrac works better than \frac for display-style fractions
+- Large number separators use {,} syntax (e.g., \$400{,}000)
+- Inline math is put between single dollar signs, and math blocks are delimited by double dollar signs.

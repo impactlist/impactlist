@@ -435,7 +435,7 @@ const RecipientEffectEditor = ({
 
   return (
     <div className="p-2">
-      <div className="rounded-lg bg-white shadow-md">
+      <div className="bg-white">
         <EffectEditorHeader
           title={
             <>

@@ -7,7 +7,7 @@ import EffectCostDisplay from './EffectCostDisplay';
  */
 const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombinedCost = true, onClose }) => {
   return (
-    <div className="px-6 py-4 bg-gray-50 rounded-t-lg">
+    <div className="px-6 py-4 rounded-t-lg">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>

@@ -264,7 +264,7 @@ const CategoryEffectSection = ({
   return (
     <div ref={sectionRef} className="rounded-lg bg-white shadow-sm mb-4">
       {/* Category header */}
-      <div className="px-4 py-3 bg-gray-50 rounded-t-lg">
+      <div className="px-4 py-3 rounded-t-lg">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-800">
             <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
@@ -310,7 +310,7 @@ const CategoryEffectSection = ({
           const isFullyDisabled = isDisabledByCategory || isDisabledByRecipient;
 
           return (
-            <div key={effect.effectId} className="rounded-lg p-3 shadow-sm bg-gray-50 transition-all duration-200">
+            <div key={effect.effectId} className="rounded-lg p-3 shadow-sm bg-gray-100 transition-all duration-200">
               <div className="mb-2">
                 <div className="flex flex-wrap justify-between items-start gap-2">
                   <div className="flex flex-wrap items-center gap-2">

@@ -196,7 +196,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
               return (
                 <div
                   key={index}
-                  className={`rounded-lg p-3 shadow-sm bg-gray-50 transition-all duration-200 ${
+                  className={`rounded-lg p-3 shadow-sm bg-gray-100 transition-all duration-200 ${
                     effect.disabled ? 'effect-disabled' : ''
                   }`}
                 >

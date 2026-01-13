@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const TabNavigation = ({ activeTab, onTabChange, tabs }) => {
   return (
-    <div className="flex space-x-4 border-b">
+    <div className="flex space-x-4">
       {tabs.map((tab) => (
         <button
           key={tab.id}

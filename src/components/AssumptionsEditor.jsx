@@ -499,7 +499,7 @@ const AssumptionsEditor = ({
       {!editingCategoryId && !editingRecipient && (
         <>
           {/* Tabs and actions bar */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-6">
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
               <div className="order-2 sm:order-1 flex items-center">
                 <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />

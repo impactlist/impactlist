@@ -11,7 +11,7 @@ import { calculateCostPerLife } from '../utils/effectsCalculation';
 /**
  * Custom hook for managing category form state
  */
-export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategoryValue, isModalOpen) => {
+export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategoryValue, isActive) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -39,13 +39,9 @@ export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategory
     return result;
   }, [defaultAssumptions, userAssumptions]);
 
-  // Initialize form values when modal opens, clear when it closes
+  // Initialize form values when active and data is available
   useEffect(() => {
-    if (!isModalOpen) {
-      // Clear form state when modal closes to discard unsaved changes
-      setFormValues({});
-      setErrors({});
-    } else if (isModalOpen) {
+    if (isActive && Object.keys(formValues).length === 0 && Object.keys(categoriesData).length > 0) {
       const initialValues = {};
       Object.entries(categoriesData).forEach(([key, category]) => {
         const customValue = getCategoryValue(key);
@@ -59,7 +55,7 @@ export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategory
       setFormValues(initialValues);
       setErrors({});
     }
-  }, [isModalOpen, categoriesData, getCategoryValue]);
+  }, [isActive, categoriesData, getCategoryValue, formValues]);
 
   const clearError = useCallback(
     (key) => {
@@ -132,18 +128,11 @@ export const useCategoryForm = (defaultAssumptions, userAssumptions, getCategory
 
 /**
  * Custom hook for managing recipient form state
+ * Form state clears naturally on unmount when navigating away
  */
-export const useRecipientForm = (isModalOpen) => {
+export const useRecipientForm = () => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
-
-  // Clear form state when modal closes to discard unsaved changes
-  useEffect(() => {
-    if (!isModalOpen) {
-      setFormValues({});
-      setErrors({});
-    }
-  }, [isModalOpen]);
 
   const clearError = useCallback(
     (fieldKey) => {
@@ -218,7 +207,8 @@ export const useRecipientSearch = (
   userAssumptions,
   recipientFormValues,
   getRecipientValue,
-  isModalOpen,
+  isActive,
+  activeTab,
   searchTerm,
   setSearchTerm
 ) => {
@@ -230,15 +220,6 @@ export const useRecipientSearch = (
   useEffect(() => {
     recipientFormValuesRef.current = recipientFormValues;
   }, [recipientFormValues]);
-
-  // Clear search state when modal closes (but keep searchTerm)
-  useEffect(() => {
-    if (!isModalOpen) {
-      // Don't clear searchTerm - it's now managed in context
-      setFilteredRecipients([]);
-      setShowOnlyCustom(true);
-    }
-  }, [isModalOpen]);
 
   const filterRecipients = useCallback(
     (term, onlyCustom) => {
@@ -332,6 +313,13 @@ export const useRecipientSearch = (
     },
     [filterRecipients, setSearchTerm]
   );
+
+  // Initialize filtered recipients when recipients tab is active
+  useEffect(() => {
+    if (isActive && activeTab === 'recipients') {
+      filterRecipients(searchTerm, searchTerm === '');
+    }
+  }, [isActive, activeTab, filterRecipients, searchTerm]);
 
   return {
     searchTerm,

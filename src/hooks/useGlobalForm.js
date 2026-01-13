@@ -7,20 +7,16 @@ import { validateGlobalField } from '../utils/effectValidation';
  * @param {Object} globalParameters - Global parameters from combinedAssumptions
  * @param {Object} defaultGlobalParameters - Default global parameters
  * @param {Function} getGlobalParameter - Function to get custom global parameter value
- * @param {boolean} isModalOpen - Whether the modal is open
+ * @param {boolean} isActive - Whether the form is active (page is mounted)
  * @returns {Object} Form state and handlers
  */
-export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlobalParameter, isModalOpen) => {
+export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlobalParameter, isActive) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
-  // Initialize form values when modal opens, clear when it closes
+  // Initialize form values when active and data is available
   useEffect(() => {
-    if (!isModalOpen) {
-      // Clear form state when modal closes to discard unsaved changes
-      setFormValues({});
-      setErrors({});
-    } else if (isModalOpen && globalParameters && Object.keys(formValues).length === 0) {
+    if (isActive && globalParameters && Object.keys(formValues).length === 0) {
       const initialValues = {};
 
       // Initialize all global parameter fields
@@ -37,7 +33,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
       setFormValues(initialValues);
       setErrors({}); // Start with no errors - data should be valid
     }
-  }, [isModalOpen, globalParameters, getGlobalParameter, formValues]);
+  }, [isActive, globalParameters, getGlobalParameter, formValues]);
 
   // Get the format type for a parameter
   const getParameterFormat = (paramKey) => {

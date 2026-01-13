@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
-import AdjustAssumptionsButton from '../shared/AdjustAssumptionsButton';
 
-const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ }) => {
+const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAssumptions }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { openModal, isUsingCustomValues } = useAssumptions();
+  const { isUsingCustomValues } = useAssumptions();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -66,8 +65,23 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ }) => 
             >
               FAQ
             </Link>
-            {/* Edit Assumptions button - always visible, same spacing as nav items */}
-            <AdjustAssumptionsButton onClick={openModal} isUsingCustomValues={isUsingCustomValues} />
+            {/* Assumptions link - visible on desktop */}
+            <Link
+              to="/assumptions"
+              className={`hidden sm:inline-flex items-center text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAssumptions ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Assumptions
+              {isUsingCustomValues && (
+                <span className="ml-1 w-2 h-2 bg-yellow-400 rounded-full" title="Using custom values" />
+              )}
+            </Link>
             {/* Hamburger Menu Button - visible below md */}
             <button
               onClick={toggleMobileMenu}
@@ -137,6 +151,29 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ }) => 
                 >
                   FAQ
                 </Link>
+                {/* Assumptions link - shown only on mobile (hidden on sm+ where it's in main nav) */}
+                <Link
+                  to="/assumptions"
+                  className={`sm:hidden flex items-center text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAssumptions ? 'bg-indigo-600 text-white' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Assumptions
+                  {isUsingCustomValues && (
+                    <span className="ml-1 w-2 h-2 bg-yellow-400 rounded-full" title="Using custom values" />
+                  )}
+                </Link>
               </div>
             </nav>
           </motion.div>
@@ -152,6 +189,7 @@ Header.propTypes = {
   isCalculator: PropTypes.bool,
   isCategories: PropTypes.bool,
   isFAQ: PropTypes.bool,
+  isAssumptions: PropTypes.bool,
 };
 
 Header.defaultProps = {
@@ -160,6 +198,7 @@ Header.defaultProps = {
   isCalculator: false,
   isCategories: false,
   isFAQ: false,
+  isAssumptions: false,
 };
 
 export default Header;

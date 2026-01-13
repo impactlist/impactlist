@@ -11,8 +11,8 @@ import CategoryDetail from './pages/CategoryDetail';
 import AssumptionDetail from './pages/AssumptionDetail';
 import DonationCalculator from './pages/DonationCalculator';
 import FAQ from './pages/FAQ';
+import AssumptionsPage from './pages/AssumptionsPage';
 import { AssumptionsProvider } from './contexts/AssumptionsContext';
-import AssumptionsEditorWrapper from './components/AssumptionsEditorWrapper';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { validateDataOnStartup } from './utils/startupValidation';
@@ -86,6 +86,7 @@ const AppContent = () => {
   const isCategories = location.pathname === '/categories';
   const isCalculator = location.pathname === '/calculator';
   const isFAQ = location.pathname === '/faq';
+  const isAssumptions = location.pathname === '/assumptions';
 
   return (
     <>
@@ -97,6 +98,7 @@ const AppContent = () => {
           isCategories={isCategories}
           isCalculator={isCalculator}
           isFAQ={isFAQ}
+          isAssumptions={isAssumptions}
         />
         <div className="flex-grow bg-slate-50">
           <Routes>
@@ -109,6 +111,7 @@ const AppContent = () => {
             <Route path="/recipients" element={<RecipientList />} />
             <Route path="/calculator" element={<DonationCalculator />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/assumptions" element={<AssumptionsPage />} />
           </Routes>
         </div>
         <Footer />
@@ -171,7 +174,6 @@ const App = () => {
       <AssumptionsProvider>
         <Router>
           <AppContent />
-          <AssumptionsEditorWrapper />
         </Router>
       </AssumptionsProvider>
     </ErrorBoundary>

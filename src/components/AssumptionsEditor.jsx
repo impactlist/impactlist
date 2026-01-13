@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import {
   validateCategoryValues,
@@ -22,12 +23,21 @@ import GlobalValuesSection from './assumptions/GlobalValuesSection';
 import CategoryEffectEditor from './assumptions/CategoryEffectEditor';
 import RecipientEffectEditor from './assumptions/RecipientEffectEditor';
 import MultiCategoryRecipientEditor from './assumptions/MultiCategoryRecipientEditor';
-import Modal from './assumptions/Modal';
 import TabNavigation from './assumptions/TabNavigation';
 import FormActions from './assumptions/FormActions';
 import YearSelector from './shared/YearSelector';
 
-const AssumptionsEditor = () => {
+// Valid tab values - defined outside component to avoid recreating on each render
+const VALID_TABS = ['global', 'categories', 'recipients'];
+
+const AssumptionsEditor = ({
+  initialTab = 'global',
+  initialCategoryId = null,
+  initialRecipientId = null,
+  initialActiveCategory = null,
+  onParamsChange = () => {},
+  isActive = true,
+}) => {
   const {
     defaultAssumptions,
     userAssumptions,
@@ -42,10 +52,6 @@ const AssumptionsEditor = () => {
     getCategoryValue,
     getRecipientValue,
     getGlobalParameter,
-    isModalOpen,
-    closeModal,
-    modalConfig,
-    setModalConfig,
     activeTab,
     setActiveTab,
     recipientSearchTerm,
@@ -57,67 +63,77 @@ const AssumptionsEditor = () => {
   const [editingRecipient, setEditingRecipient] = useState(null);
   const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
   const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
-  // Clear editing states when modal closes (but preserve activeTab)
+
+  // Sync state with URL params whenever they change (supports Back/Forward navigation)
   useEffect(() => {
-    if (!isModalOpen) {
-      // Don't reset activeTab - let it persist
-      setEditingCategoryId(null);
-      setEditingRecipient(null);
-    }
-  }, [isModalOpen]);
+    // 1. Determine target tab - infer from entity params if tab not explicitly set
+    let targetTab = VALID_TABS.includes(initialTab) ? initialTab : 'global';
 
-  // Handle deep-linking requests when the modal is opened from elsewhere
-  useEffect(() => {
-    if (!modalConfig) {
-      return;
+    // If entity params are provided without matching tab, infer the correct tab
+    if (initialRecipientId && targetTab !== 'recipients') {
+      targetTab = 'recipients';
+    } else if (initialCategoryId && !initialRecipientId && targetTab !== 'categories') {
+      targetTab = 'categories';
     }
 
-    if (modalConfig.tab) {
-      setActiveTab(modalConfig.tab);
-    } else if (modalConfig.recipientId) {
-      setActiveTab('recipients');
-    } else if (modalConfig.categoryId) {
-      setActiveTab('categories');
+    if (targetTab !== activeTab) {
+      setActiveTab(targetTab);
     }
 
-    if (modalConfig.recipientId) {
-      setEditingCategoryId(null);
-      const recipient = allRecipients.find((r) => r.id === modalConfig.recipientId);
-      if (!recipient) {
-        throw new Error(`Recipient ${modalConfig.recipientId} not found in default assumptions`);
+    // 2. Handle deep-linking to specific entity
+    // Only run this logic if we aren't already editing the requested entity
+    if (initialRecipientId && editingRecipient?.recipientId !== initialRecipientId) {
+      const recipient = allRecipients.find((r) => r.id === initialRecipientId);
+      if (recipient) {
+        const categoryIds = Object.keys(recipient.categories || {});
+        if (categoryIds.length > 0) {
+          const isMultiCategory = categoryIds.length > 1;
+          const validActiveCategory =
+            initialActiveCategory && categoryIds.includes(initialActiveCategory)
+              ? initialActiveCategory
+              : categoryIds[0];
+
+          setEditingRecipient({
+            recipient,
+            recipientId: recipient.id,
+            categories: categoryIds.map((catId) => ({
+              categoryId: catId,
+              category: getCategoryFromDefaults(defaultAssumptions, catId),
+            })),
+            isMultiCategory,
+            activeCategory: validActiveCategory,
+            categoryId: validActiveCategory,
+            category: getCategoryFromDefaults(defaultAssumptions, validActiveCategory),
+          });
+        }
       }
-
-      // Get ALL categories from the recipient data
-      const categoryIds = Object.keys(recipient.categories || {});
-      if (categoryIds.length === 0) {
-        throw new Error(`Recipient ${recipient.name} has no categories to edit`);
+    } else if (initialCategoryId && editingCategoryId !== initialCategoryId && !initialRecipientId) {
+      // Only enter category edit mode if we aren't editing a recipient
+      try {
+        const category = getCategoryFromDefaults(defaultAssumptions, initialCategoryId);
+        if (category) {
+          setEditingCategoryId(initialCategoryId);
+        }
+      } catch {
+        // Category not found
       }
-
-      const isMultiCategory = categoryIds.length > 1;
-
-      // activeCategory is optional - for scrolling to a specific category
-      const activeCategory = modalConfig.activeCategory || modalConfig.categoryId || categoryIds[0];
-
-      setEditingRecipient({
-        recipient,
-        recipientId: recipient.id,
-        categories: categoryIds.map((catId) => ({
-          categoryId: catId,
-          category: getCategoryFromDefaults(defaultAssumptions, catId),
-        })),
-        isMultiCategory,
-        activeCategory,
-        // Keep single-category fields for backward compatibility
-        categoryId: activeCategory,
-        category: getCategoryFromDefaults(defaultAssumptions, activeCategory),
-      });
-    } else if (modalConfig.categoryId) {
-      setEditingRecipient(null);
-      setEditingCategoryId(modalConfig.categoryId);
+    } else if (!initialRecipientId && !initialCategoryId) {
+      // Clear editing state if URL has no entity params (e.g. user hit Back to root tab)
+      if (editingRecipient) setEditingRecipient(null);
+      if (editingCategoryId) setEditingCategoryId(null);
     }
-
-    setModalConfig(null);
-  }, [modalConfig, setActiveTab, setModalConfig, allRecipients, defaultAssumptions]);
+  }, [
+    initialTab,
+    initialRecipientId,
+    initialCategoryId,
+    initialActiveCategory,
+    activeTab,
+    editingRecipient,
+    editingCategoryId,
+    setActiveTab,
+    allRecipients,
+    defaultAssumptions,
+  ]);
 
   // Track which categories have custom effect values
   const categoriesWithCustomValues = useMemo(() => {
@@ -141,39 +157,31 @@ const AssumptionsEditor = () => {
     mergedGlobalParameters,
     defaultAssumptions.globalParameters,
     getGlobalParameter,
-    isModalOpen
+    isActive
   );
-  const categoryForm = useCategoryForm(defaultAssumptions, userAssumptions, getCategoryValue, isModalOpen);
-  const recipientForm = useRecipientForm(isModalOpen);
+  const categoryForm = useCategoryForm(defaultAssumptions, userAssumptions, getCategoryValue, isActive);
+  const recipientForm = useRecipientForm();
   const recipientSearch = useRecipientSearch(
     allRecipients,
     defaultAssumptions,
     userAssumptions,
     recipientForm.formValues,
     getRecipientValue,
-    isModalOpen,
+    isActive,
+    activeTab,
     recipientSearchTerm,
     setRecipientSearchTerm
   );
 
-  // Handle tab switching
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    if (tab === 'recipients') {
-      // Initialize filtered recipients based on current filter settings
-      recipientSearch.filterRecipients(recipientSearch.searchTerm, recipientSearch.showOnlyCustom);
-    }
-  };
-
-  // Destructure to avoid infinite loops
-  const { filterRecipients, searchTerm } = recipientSearch;
-
-  // Initialize filtered recipients when modal opens or tab changes
-  useEffect(() => {
-    if (isModalOpen && activeTab === 'recipients') {
-      filterRecipients(searchTerm, searchTerm === '');
-    }
-  }, [isModalOpen, activeTab, filterRecipients, searchTerm]);
+  // Handle tab switching with URL sync
+  const handleTabChange = useCallback(
+    (tab) => {
+      setActiveTab(tab);
+      // Sync URL - use replace for tab changes (no history entry)
+      onParamsChange({ tab }, false);
+    },
+    [setActiveTab, onParamsChange]
+  );
 
   // Validate all values before submission
   const validateAllValues = () => {
@@ -255,7 +263,7 @@ const AssumptionsEditor = () => {
       }
     });
 
-    closeModal();
+    // Stay on page after save (no navigation)
   };
 
   // Handle reset button for global parameters
@@ -286,33 +294,44 @@ const AssumptionsEditor = () => {
   };
 
   // Handle editing a category's effects
-  const handleEditCategory = (categoryId) => {
-    setEditingCategoryId(categoryId);
-  };
+  const handleEditCategory = useCallback(
+    (categoryId) => {
+      setEditingCategoryId(categoryId);
+      // Sync URL - use push for entity entry (creates history entry)
+      onParamsChange({ tab: 'categories', categoryId }, true);
+    },
+    [onParamsChange]
+  );
 
   // Handle editing a recipient's effects
-  const handleEditRecipient = (recipient, recipientId) => {
-    // Get ALL categories from the recipient data
-    const categoryIds = Object.keys(recipient.categories || {});
-    if (categoryIds.length === 0) return;
+  const handleEditRecipient = useCallback(
+    (recipient, recipientId) => {
+      // Get ALL categories from the recipient data
+      const categoryIds = Object.keys(recipient.categories || {});
+      if (categoryIds.length === 0) return;
 
-    const isMultiCategory = categoryIds.length > 1;
-    const firstCategoryId = categoryIds[0];
+      const isMultiCategory = categoryIds.length > 1;
+      const firstCategoryId = categoryIds[0];
 
-    setEditingRecipient({
-      recipient,
-      recipientId,
-      categories: categoryIds.map((catId) => ({
-        categoryId: catId,
-        category: getCategoryFromDefaults(defaultAssumptions, catId),
-      })),
-      isMultiCategory,
-      activeCategory: firstCategoryId,
-      // Keep single-category fields for backward compatibility
-      categoryId: firstCategoryId,
-      category: getCategoryFromDefaults(defaultAssumptions, firstCategoryId),
-    });
-  };
+      setEditingRecipient({
+        recipient,
+        recipientId,
+        categories: categoryIds.map((catId) => ({
+          categoryId: catId,
+          category: getCategoryFromDefaults(defaultAssumptions, catId),
+        })),
+        isMultiCategory,
+        activeCategory: firstCategoryId,
+        // Keep single-category fields for backward compatibility
+        categoryId: firstCategoryId,
+        category: getCategoryFromDefaults(defaultAssumptions, firstCategoryId),
+      });
+
+      // Sync URL - use push for entity entry (creates history entry)
+      onParamsChange({ tab: 'recipients', recipientId, activeCategory: firstCategoryId }, true);
+    },
+    [defaultAssumptions, onParamsChange]
+  );
 
   // Handle saving category effects
   const handleSaveCategoryEffects = (updatedEffects) => {
@@ -352,12 +371,16 @@ const AssumptionsEditor = () => {
 
     // Return to category list view
     setEditingCategoryId(null);
+    // Sync URL - use replace for entity exit (so back returns to prior page)
+    onParamsChange({ tab: 'categories' }, false);
   };
 
   // Handle canceling category edit
-  const handleCancelCategoryEdit = () => {
+  const handleCancelCategoryEdit = useCallback(() => {
     setEditingCategoryId(null);
-  };
+    // Sync URL - use replace for entity exit (so back returns to prior page)
+    onParamsChange({ tab: 'categories' }, false);
+  }, [onParamsChange]);
 
   // Handle saving recipient effects
   const handleSaveRecipientEffects = (updatedEffects) => {
@@ -383,6 +406,8 @@ const AssumptionsEditor = () => {
 
     // Close the editor
     setEditingRecipient(null);
+    // Sync URL - use replace for entity exit (so back returns to prior page)
+    onParamsChange({ tab: 'recipients' }, false);
   };
 
   // Handle saving multi-category recipient effects
@@ -411,12 +436,16 @@ const AssumptionsEditor = () => {
 
     // Close the editor
     setEditingRecipient(null);
+    // Sync URL - use replace for entity exit (so back returns to prior page)
+    onParamsChange({ tab: 'recipients' }, false);
   };
 
   // Handle canceling recipient edit
-  const handleCancelRecipientEdit = () => {
+  const handleCancelRecipientEdit = useCallback(() => {
     setEditingRecipient(null);
-  };
+    // Sync URL - use replace for entity exit (so back returns to prior page)
+    onParamsChange({ tab: 'recipients' }, false);
+  }, [onParamsChange]);
 
   const tabs = [
     { id: 'global', label: 'Global' },
@@ -432,7 +461,8 @@ const AssumptionsEditor = () => {
     return null;
   };
 
-  const headerExtra = isUsingCustomValues ? (
+  // Show customized indicator if using custom values
+  const customizedIndicator = isUsingCustomValues ? (
     <div className="relative inline-flex items-center ml-2 group">
       <span className="text-sm text-indigo-600 font-medium cursor-help">(customized)</span>
       <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 w-64">
@@ -442,14 +472,15 @@ const AssumptionsEditor = () => {
   ) : null;
 
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal} title="Edit Assumptions" headerExtra={headerExtra}>
+    <div className="flex flex-col">
       {!editingCategoryId && !editingRecipient && (
         <>
           {/* Tabs and actions bar */}
           <div className="p-6 border-b border-gray-200">
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
-              <div className="order-2 sm:order-1">
+              <div className="order-2 sm:order-1 flex items-center">
                 <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
+                {customizedIndicator}
               </div>
               <div className="order-1 sm:order-2">
                 <FormActions
@@ -484,7 +515,7 @@ const AssumptionsEditor = () => {
             {activeTab === 'global' ? (
               <p className="text-base font-semibold text-gray-700">{getDescription()}</p>
             ) : (
-              <div className="flex items-center text-base font-semibold text-gray-700">
+              <div className="flex items-center flex-wrap text-base font-semibold text-gray-700">
                 <span>Cost to save a life in</span>
                 <YearSelector
                   value={previewYear}
@@ -501,13 +532,7 @@ const AssumptionsEditor = () => {
       )}
 
       {/* Tab content container */}
-      <div
-        className={
-          editingCategoryId || editingRecipient
-            ? 'flex flex-col flex-grow min-h-0 overflow-hidden'
-            : 'flex-1 min-h-0 overflow-y-auto p-3 overscroll-contain'
-        }
-      >
+      <div className="p-3">
         {editingCategoryId ? (
           // Show category effect editor when editing a category
           <CategoryEffectEditor
@@ -575,8 +600,17 @@ const AssumptionsEditor = () => {
           />
         )}
       </div>
-    </Modal>
+    </div>
   );
+};
+
+AssumptionsEditor.propTypes = {
+  initialTab: PropTypes.string,
+  initialCategoryId: PropTypes.string,
+  initialRecipientId: PropTypes.string,
+  initialActiveCategory: PropTypes.string,
+  onParamsChange: PropTypes.func,
+  isActive: PropTypes.bool,
 };
 
 export default AssumptionsEditor;

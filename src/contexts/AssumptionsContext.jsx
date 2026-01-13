@@ -41,10 +41,9 @@ export const AssumptionsProvider = ({ children }) => {
     return normalizeUserAssumptions(parsed, defaultAssumptions);
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Shared editor state (persists across page navigation)
   const [activeTab, setActiveTab] = useState('global');
   const [recipientSearchTerm, setRecipientSearchTerm] = useState('');
-  const [modalConfig, setModalConfig] = useState(null);
 
   // Create combined assumptions whenever userAssumptions changes
   const combinedAssumptions = useMemo(() => {
@@ -435,30 +434,6 @@ export const AssumptionsProvider = ({ children }) => {
   // Determine if custom values are being used
   const isUsingCustomValues = hasCustomValues(userAssumptions);
 
-  // Open/close the edit modal. Optional config lets callers focus on a specific tab/entity.
-  const openModal = (optionsOrEvent = {}, additionalOptions = {}) => {
-    let options = {};
-
-    if (optionsOrEvent && typeof optionsOrEvent.preventDefault === 'function') {
-      // Called directly as an event handler (e.g., onClick={openModal})
-      options = additionalOptions;
-    } else if (typeof optionsOrEvent === 'object' && optionsOrEvent !== null) {
-      options = optionsOrEvent;
-    }
-
-    if (options.tab) {
-      setActiveTab(options.tab);
-    }
-
-    const hasOptions = options && Object.keys(options).length > 0;
-    setModalConfig(hasOptions ? options : null);
-    setIsModalOpen(true);
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalConfig(null);
-  };
-
   // Context value - exposing both new API and legacy wrappers
   const contextValue = {
     // Direct data access (read-only by convention)
@@ -468,11 +443,8 @@ export const AssumptionsProvider = ({ children }) => {
 
     // State flags
     isUsingCustomValues,
-    isModalOpen,
-    openModal,
-    closeModal,
-    modalConfig,
-    setModalConfig,
+
+    // Shared editor state
     activeTab,
     setActiveTab,
     recipientSearchTerm,

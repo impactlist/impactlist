@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
@@ -26,6 +26,7 @@ import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
 const RecipientDetail = () => {
   const { recipientId } = useParams();
+  const navigate = useNavigate();
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [recipientContent, setRecipientContent] = useState(null);
   const [recipientDonations, setRecipientDonations] = useState([]);
@@ -36,7 +37,7 @@ const RecipientDetail = () => {
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
   const chartContainerRef = useRef(null);
-  const { combinedAssumptions, openModal } = useAssumptions();
+  const { combinedAssumptions } = useAssumptions();
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -331,7 +332,7 @@ const RecipientDetail = () => {
 
   const handleEditRecipientAssumptions = () => {
     if (!recipientInfo?.categoryId) return;
-    openModal({ tab: 'recipients', recipientId, activeCategory: recipientInfo.categoryId });
+    navigate(`/assumptions?tab=recipients&recipientId=${recipientId}&activeCategory=${recipientInfo.categoryId}`);
   };
 
   if (!recipientInfo) {

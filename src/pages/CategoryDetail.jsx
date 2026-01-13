@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
@@ -12,10 +12,11 @@ import MarkdownContent from '../components/shared/MarkdownContent';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();
+  const navigate = useNavigate();
   const [categoryInfo, setCategoryInfo] = useState(null);
-  const { combinedAssumptions, openModal } = useAssumptions();
+  const { combinedAssumptions } = useAssumptions();
   const handleEditCategoryAssumptions = () => {
-    openModal({ tab: 'categories', categoryId });
+    navigate(`/assumptions?tab=categories&categoryId=${categoryId}`);
   };
 
   useEffect(() => {

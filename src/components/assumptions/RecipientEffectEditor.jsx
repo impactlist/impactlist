@@ -434,8 +434,8 @@ const RecipientEffectEditor = ({
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 p-2">
-      <div className="flex flex-col flex-1 min-h-0 rounded-lg bg-white shadow-md">
+    <div className="p-2">
+      <div className="rounded-lg bg-white shadow-md">
         <EffectEditorHeader
           title={
             <>
@@ -474,7 +474,7 @@ const RecipientEffectEditor = ({
         />
 
         {/* Effects List */}
-        <div className="flex-1 min-h-0 overflow-y-auto px-3 py-2 overscroll-contain">
+        <div className="px-3 py-2">
           {/* Cost per life display - only show when there are multiple effects */}
           {tempEditToEffects.length > 1 && (
             <div className="mb-3 p-2 bg-gray-50 rounded-lg">

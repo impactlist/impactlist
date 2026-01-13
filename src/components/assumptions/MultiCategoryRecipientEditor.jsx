@@ -595,8 +595,8 @@ const MultiCategoryRecipientEditor = ({
   }, [categories]);
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 p-2">
-      <div className="flex flex-col flex-1 min-h-0 rounded-lg bg-white shadow-md">
+    <div className="p-2">
+      <div className="rounded-lg bg-white shadow-md">
         <EffectEditorHeader
           title={
             <>
@@ -630,7 +630,7 @@ const MultiCategoryRecipientEditor = ({
         />
 
         {/* Scrollable container for all category sections */}
-        <div ref={scrollContainerRef} className="flex-1 min-h-0 overflow-y-auto px-3 py-2 overscroll-contain">
+        <div ref={scrollContainerRef} className="px-3 py-2">
           {categories.map(({ categoryId, category }) => (
             <CategoryEffectSection
               key={categoryId}

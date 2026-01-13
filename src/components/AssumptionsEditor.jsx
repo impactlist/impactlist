@@ -81,8 +81,10 @@ const AssumptionsEditor = ({
     }
 
     // 2. Handle deep-linking to specific entity
-    // Only run this logic if we aren't already editing the requested entity
-    if (initialRecipientId && editingRecipient?.recipientId !== initialRecipientId) {
+    if (initialRecipientId) {
+      // Clear category editing state when navigating to recipient
+      if (editingCategoryId) setEditingCategoryId(null);
+
       const recipient = allRecipients.find((r) => r.id === initialRecipientId);
       if (recipient) {
         const categoryIds = Object.keys(recipient.categories || {});
@@ -93,32 +95,53 @@ const AssumptionsEditor = ({
               ? initialActiveCategory
               : categoryIds[0];
 
-          setEditingRecipient({
-            recipient,
-            recipientId: recipient.id,
-            categories: categoryIds.map((catId) => ({
-              categoryId: catId,
-              category: getCategoryFromDefaults(defaultAssumptions, catId),
-            })),
-            isMultiCategory,
-            activeCategory: validActiveCategory,
-            categoryId: validActiveCategory,
-            category: getCategoryFromDefaults(defaultAssumptions, validActiveCategory),
-          });
+          // Check if we need to update: different recipient OR different activeCategory
+          const recipientChanged = editingRecipient?.recipientId !== initialRecipientId;
+          const activeCategoryChanged = editingRecipient?.activeCategory !== validActiveCategory;
+
+          if (recipientChanged || activeCategoryChanged) {
+            setEditingRecipient({
+              recipient,
+              recipientId: recipient.id,
+              categories: categoryIds.map((catId) => ({
+                categoryId: catId,
+                category: getCategoryFromDefaults(defaultAssumptions, catId),
+              })),
+              isMultiCategory,
+              activeCategory: validActiveCategory,
+              categoryId: validActiveCategory,
+              category: getCategoryFromDefaults(defaultAssumptions, validActiveCategory),
+            });
+          }
+        } else {
+          // Recipient has no categories - clear editing state, show list
+          if (editingRecipient) setEditingRecipient(null);
+        }
+      } else {
+        // Invalid recipientId - clear editing state, show list
+        if (editingRecipient) setEditingRecipient(null);
+      }
+    } else if (initialCategoryId) {
+      // Clear recipient editing state when navigating to category
+      if (editingRecipient) setEditingRecipient(null);
+
+      // Only update category if different from current
+      if (editingCategoryId !== initialCategoryId) {
+        try {
+          const category = getCategoryFromDefaults(defaultAssumptions, initialCategoryId);
+          if (category) {
+            setEditingCategoryId(initialCategoryId);
+          } else {
+            // Invalid categoryId - clear editing state, show list
+            if (editingCategoryId) setEditingCategoryId(null);
+          }
+        } catch {
+          // Category not found - clear editing state, show list
+          if (editingCategoryId) setEditingCategoryId(null);
         }
       }
-    } else if (initialCategoryId && editingCategoryId !== initialCategoryId && !initialRecipientId) {
-      // Only enter category edit mode if we aren't editing a recipient
-      try {
-        const category = getCategoryFromDefaults(defaultAssumptions, initialCategoryId);
-        if (category) {
-          setEditingCategoryId(initialCategoryId);
-        }
-      } catch {
-        // Category not found
-      }
-    } else if (!initialRecipientId && !initialCategoryId) {
-      // Clear editing state if URL has no entity params (e.g. user hit Back to root tab)
+    } else {
+      // No entity params - clear all editing state (e.g. user hit Back to root tab)
       if (editingRecipient) setEditingRecipient(null);
       if (editingCategoryId) setEditingCategoryId(null);
     }

@@ -262,9 +262,9 @@ const CategoryEffectSection = ({
   }, [effectCostPerLife]);
 
   return (
-    <div ref={sectionRef} className="border border-gray-300 rounded-lg bg-white mb-4">
+    <div ref={sectionRef} className="rounded-lg bg-white shadow-sm mb-4">
       {/* Category header */}
-      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+      <div className="px-4 py-3 bg-gray-50 rounded-t-lg">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-800">
             <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
@@ -310,7 +310,7 @@ const CategoryEffectSection = ({
           const isFullyDisabled = isDisabledByCategory || isDisabledByRecipient;
 
           return (
-            <div key={effect.effectId} className="border border-gray-400 rounded-lg p-3 transition-all duration-200">
+            <div key={effect.effectId} className="rounded-lg p-3 shadow-sm bg-gray-50 transition-all duration-200">
               <div className="mb-2">
                 <div className="flex flex-wrap justify-between items-start gap-2">
                   <div className="flex flex-wrap items-center gap-2">
@@ -596,7 +596,7 @@ const MultiCategoryRecipientEditor = ({
 
   return (
     <div className="flex flex-col flex-1 min-h-0 p-2">
-      <div className="flex flex-col flex-1 min-h-0 border border-gray-300 rounded-lg bg-white shadow-sm">
+      <div className="flex flex-col flex-1 min-h-0 rounded-lg bg-white shadow-md">
         <EffectEditorHeader
           title={
             <>

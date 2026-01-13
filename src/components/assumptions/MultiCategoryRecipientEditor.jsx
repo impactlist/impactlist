@@ -627,7 +627,6 @@ const MultiCategoryRecipientEditor = ({
             </div>
           }
           showCombinedCost={false}
-          onClose={onCancel}
         />
 
         {/* Scrollable container for all category sections */}

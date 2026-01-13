@@ -471,7 +471,6 @@ const RecipientEffectEditor = ({
           }
           combinedCostPerLife={combinedCostPerLife}
           showCombinedCost={false}
-          onClose={onCancel}
         />
 
         {/* Effects List */}

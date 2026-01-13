@@ -184,7 +184,6 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
           }
           combinedCostPerLife={tempEditToEffects.length > 1 ? combinedCostPerLife : undefined}
           showCombinedCost={tempEditToEffects.length > 1}
-          onClose={onCancel}
         />
 
         {/* Effects List */}

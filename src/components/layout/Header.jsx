@@ -39,33 +39,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
             >
               Impact List
             </Link>
-            {/* Calculator, Categories - hidden on mobile, visible on sm+ */}
-            <Link
-              to="/calculator"
-              className={`hidden sm:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
-            >
-              Calculator
-            </Link>
-            <Link
-              to="/categories"
-              className={`hidden sm:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
-            >
-              Categories
-            </Link>
-            {/* Recipients, FAQ - hidden on mobile/tablet, visible on md+ */}
-            <Link
-              to="/recipients"
-              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
-            >
-              Recipients
-            </Link>
-            <Link
-              to="/faq"
-              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
-            >
-              FAQ
-            </Link>
-            {/* Assumptions link - visible on desktop */}
+            {/* Assumptions - high priority, visible on sm+ */}
             <Link
               to="/assumptions"
               className={`hidden sm:inline-flex items-center text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAssumptions ? 'bg-indigo-600 text-white' : ''}`}
@@ -81,6 +55,32 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
               {isUsingCustomValues && (
                 <span className="ml-1 w-2 h-2 bg-yellow-400 rounded-full" title="Using custom values" />
               )}
+            </Link>
+            {/* Calculator - visible on sm+ */}
+            <Link
+              to="/calculator"
+              className={`hidden sm:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              Calculator
+            </Link>
+            {/* Categories, Recipients, FAQ - visible on md+ */}
+            <Link
+              to="/categories"
+              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              Categories
+            </Link>
+            <Link
+              to="/recipients"
+              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              Recipients
+            </Link>
+            <Link
+              to="/faq"
+              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
+            >
+              FAQ
             </Link>
             {/* Hamburger Menu Button - visible below md */}
             <button
@@ -121,37 +121,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
           >
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="flex flex-col space-y-2">
-                {/* Show Calculator and Categories only on mobile (below sm) */}
-                <Link
-                  to="/calculator"
-                  className={`sm:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
-                  onClick={closeMobileMenu}
-                >
-                  Calculator
-                </Link>
-                <Link
-                  to="/categories"
-                  className={`sm:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
-                  onClick={closeMobileMenu}
-                >
-                  Categories
-                </Link>
-                {/* Show Recipients and FAQ on both mobile and tablet */}
-                <Link
-                  to="/recipients"
-                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
-                  onClick={closeMobileMenu}
-                >
-                  Recipients
-                </Link>
-                <Link
-                  to="/faq"
-                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
-                  onClick={closeMobileMenu}
-                >
-                  FAQ
-                </Link>
-                {/* Assumptions link - shown only on mobile (hidden on sm+ where it's in main nav) */}
+                {/* Assumptions - shown only on mobile (hidden on sm+ where it's in main nav) */}
                 <Link
                   to="/assumptions"
                   className={`sm:hidden flex items-center text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAssumptions ? 'bg-indigo-600 text-white' : ''}`}
@@ -173,6 +143,36 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                   {isUsingCustomValues && (
                     <span className="ml-1 w-2 h-2 bg-yellow-400 rounded-full" title="Using custom values" />
                   )}
+                </Link>
+                {/* Calculator - shown only on mobile (hidden on sm+ where it's in main nav) */}
+                <Link
+                  to="/calculator"
+                  className={`sm:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  Calculator
+                </Link>
+                {/* Categories, Recipients, FAQ - shown on mobile and tablet (hidden on md+ where they're in main nav) */}
+                <Link
+                  to="/categories"
+                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  Categories
+                </Link>
+                <Link
+                  to="/recipients"
+                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  Recipients
+                </Link>
+                <Link
+                  to="/faq"
+                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  FAQ
                 </Link>
               </div>
             </nav>

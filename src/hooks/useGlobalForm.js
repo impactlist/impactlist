@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { formatNumberWithCommas } from '../utils/formatters';
 import { validateGlobalField } from '../utils/effectValidation';
 
@@ -145,11 +145,50 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
     setErrors({});
   };
 
+  const hasUnsavedChanges = useMemo(() => {
+    if (!isActive || !globalParameters || Object.keys(formValues).length === 0) {
+      return false;
+    }
+
+    const getBaselineValue = (paramKey) => {
+      const savedValue = getGlobalParameter(paramKey);
+      if (savedValue !== null && savedValue !== undefined) {
+        return savedValue;
+      }
+      if (defaultGlobalParameters && defaultGlobalParameters[paramKey] !== undefined) {
+        return defaultGlobalParameters[paramKey];
+      }
+      return globalParameters[paramKey];
+    };
+
+    const valuesMatch = (currentValue, baselineValue) => {
+      if (currentValue === baselineValue) {
+        return true;
+      }
+      if (typeof currentValue === 'number' && typeof baselineValue === 'number') {
+        return Number.isNaN(currentValue) && Number.isNaN(baselineValue);
+      }
+      return false;
+    };
+
+    return Object.keys(globalParameters).some((paramKey) => {
+      const baselineValue = getBaselineValue(paramKey);
+      const currentRaw = formValues[paramKey]?.raw;
+      const currentValue =
+        currentRaw === '' || currentRaw === null || currentRaw === undefined
+          ? (defaultGlobalParameters?.[paramKey] ?? globalParameters[paramKey])
+          : currentRaw;
+
+      return !valuesMatch(currentValue, baselineValue);
+    });
+  }, [isActive, globalParameters, defaultGlobalParameters, getGlobalParameter, formValues]);
+
   return {
     formValues,
     errors,
     setErrors,
     handleChange,
     reset,
+    hasUnsavedChanges,
   };
 };

@@ -246,6 +246,10 @@ const AssumptionsEditor = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (activeTab === 'global' && !globalForm.hasUnsavedChanges) {
+      return;
+    }
+
     // Validate all values
     if (!validateAllValues()) {
       return; // Stop if there are errors
@@ -528,6 +532,7 @@ const AssumptionsEditor = ({
                     Object.keys(categoryForm.errors).length > 0 ||
                     Object.keys(recipientForm.errors).length > 0
                   }
+                  hasUnsavedChanges={globalForm.hasUnsavedChanges}
                 />
               </div>
             </div>

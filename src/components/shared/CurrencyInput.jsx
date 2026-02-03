@@ -127,7 +127,7 @@ const CurrencyInput = ({
               ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
               : isCustom
                 ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
-                : 'border-slate-300 focus:ring-indigo-500 focus:border-indigo-500'
+                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
           } ${disabled && !isCustom ? 'bg-gray-100 text-gray-500' : disabled ? 'text-gray-600' : ''}`}
         />
         {rightElement && <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">{rightElement}</div>}

@@ -61,7 +61,7 @@ const CategoryValuesSection = ({
     return result;
   }, [defaultAssumptions, userAssumptions, mergedGlobalParameters, previewYear]);
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 ${className}`}>
+    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ${className}`}>
       {Object.entries(categoriesData)
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
         .map(([key, categoryData]) => {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import SearchInput from '../shared/SearchInput';
 import CurrencyInput from '../shared/CurrencyInput';
+import SectionCard from '../shared/SectionCard';
 import { formatCurrency } from '../../utils/formatters';
 import { getRecipientId, getCurrentYear } from '../../utils/donationDataHelpers';
 import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
@@ -136,7 +137,7 @@ const RecipientValuesSection = ({
               const categoryCount = recipientCategories.length;
 
               return (
-                <div key={recipient.name} className="border border-gray-400 rounded-md p-3 inline-block bg-white">
+                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="default" className="inline-block">
                   <div className="flex items-center gap-4">
                     {/* Recipient name */}
                     <Link
@@ -167,7 +168,7 @@ const RecipientValuesSection = ({
                   </div>
                   {/* Show category count for multi-category recipients */}
                   {categoryCount > 1 && <p className="text-xs text-gray-500 mt-1">{categoryCount} categories</p>}
-                </div>
+                </SectionCard>
               );
             })}
         </div>

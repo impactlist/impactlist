@@ -56,7 +56,6 @@ const AssumptionsEditor = ({
     setActiveTab,
     recipientSearchTerm,
     setRecipientSearchTerm,
-    isUsingCustomValues,
   } = useAssumptions();
 
   const [editingCategoryId, setEditingCategoryId] = useState(null);
@@ -488,16 +487,6 @@ const AssumptionsEditor = ({
     return null;
   };
 
-  // Show customized indicator if using custom values
-  const customizedIndicator = isUsingCustomValues ? (
-    <div className="relative inline-flex items-center ml-2 group">
-      <span className="text-sm text-indigo-600 font-medium cursor-help">(customized)</span>
-      <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 w-64">
-        Using custom assumptions. These can be reset within the Global, Categories, or Recipients tabs.
-      </div>
-    </div>
-  ) : null;
-
   return (
     <div className="flex flex-col">
       {!editingCategoryId && !editingRecipient && (
@@ -507,7 +496,6 @@ const AssumptionsEditor = ({
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
               <div className="order-2 sm:order-1 flex items-center">
                 <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
-                {customizedIndicator}
               </div>
               <div className="order-1 sm:order-2">
                 <FormActions

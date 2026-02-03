@@ -10,6 +10,7 @@ import DisableToggleButton from '../shared/DisableToggleButton';
 import {
   calculateEffectCostPerLife,
   cleanEffectsForSave,
+  haveEffectsChanged,
   sortEffectsByActiveDate,
 } from '../../utils/effectEditorUtils';
 import { calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
@@ -37,22 +38,20 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     return defaultAssumptions.categories[categoryId].effects;
   }, [defaultAssumptions, categoryId]);
 
+  const baselineEffects = useMemo(() => {
+    if (!category?.effects) {
+      return [];
+    }
+
+    const userEffects = userAssumptions?.categories?.[categoryId]?.effects;
+    const mergedEffects = mergeEffects(category.effects, userEffects);
+    return sortEffectsByActiveDate(mergedEffects);
+  }, [category, categoryId, userAssumptions]);
+
   // Initialize temp effects from category with user overrides if they exist
   useEffect(() => {
-    if (category && category.effects) {
-      // Get user effects if they exist
-      const userEffects = userAssumptions?.categories?.[categoryId]?.effects;
-
-      // Use the existing mergeEffects function to properly merge user and default effects
-      const mergedEffects = mergeEffects(category.effects, userEffects);
-
-      // Sort effects by active date (latest to earliest)
-      const sortedEffects = sortEffectsByActiveDate(mergedEffects);
-
-      // Set the sorted effects (already deep cloned by mergeEffects)
-      setTempEditToEffects(sortedEffects);
-    }
-  }, [category, categoryId, userAssumptions]);
+    setTempEditToEffects(baselineEffects);
+  }, [baselineEffects]);
 
   // Validate all effects on mount and when effects change
   useEffect(() => {
@@ -129,8 +128,16 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     return Object.keys(errors).length > 0;
   }, [errors]);
 
+  const hasUnsavedChanges = useMemo(() => {
+    return haveEffectsChanged(tempEditToEffects, baselineEffects);
+  }, [tempEditToEffects, baselineEffects]);
+
   // Handle save
   const handleSave = () => {
+    if (!hasUnsavedChanges) {
+      return;
+    }
+
     try {
       const cleanedEffects = cleanEffectsForSave(tempEditToEffects);
 
@@ -274,7 +281,12 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
           </div>
         </div>
 
-        <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} />
+        <EffectEditorFooter
+          onSave={handleSave}
+          onCancel={onCancel}
+          hasErrors={hasErrors}
+          disabled={!hasUnsavedChanges}
+        />
       </div>
     </div>
   );

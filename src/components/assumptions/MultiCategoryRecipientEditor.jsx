@@ -8,9 +8,15 @@ import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import DisableToggleButton from '../shared/DisableToggleButton';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
-import { calculateEffectCostPerLife, sortEffectsByActiveDate } from '../../utils/effectEditorUtils';
+import {
+  buildRecipientEditableEffects,
+  calculateEffectCostPerLife,
+  getRecipientEffectsChangeState,
+  haveEffectsChanged,
+  initializeRecipientFieldModes,
+} from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
-import { getEffectType, validateRecipientEffectField, cleanAndParseValue } from '../../utils/effectValidation';
+import { getEffectType, validateRecipientEffectField } from '../../utils/effectValidation';
 import { getEffectFieldNames } from '../../constants/effectFieldDefinitions';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
@@ -50,85 +56,29 @@ const CategoryEffectSection = ({
     return category.effects;
   }, [category]);
 
+  const baselineEffects = useMemo(() => {
+    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+    return buildRecipientEditableEffects({
+      baseCategoryEffects,
+      defaultRecipientEffects,
+      userRecipientEffects,
+    });
+  }, [baseCategoryEffects, defaultRecipientEffects, userAssumptions, recipientId, categoryId]);
+
   // Initialize temp effects from recipient's current effects
   useEffect(() => {
-    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+    setTempEditToEffects(baselineEffects);
+    setFieldModes(initializeRecipientFieldModes(baselineEffects));
+  }, [baselineEffects]);
 
-    const initialEffects = baseCategoryEffects.map((effect) => {
-      const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
-      const userEffect = userRecipientEffects?.find((e) => e.effectId === effect.effectId);
-
-      let effectOverrides = {};
-      let effectMultipliers = {};
-
-      if (defaultRecipientEffect?.overrides) {
-        effectOverrides = { ...defaultRecipientEffect.overrides };
-      }
-      if (defaultRecipientEffect?.multipliers) {
-        effectMultipliers = { ...defaultRecipientEffect.multipliers };
-      }
-
-      if (userEffect) {
-        if (userEffect.overrides) {
-          Object.keys(userEffect.overrides).forEach((field) => {
-            effectOverrides[field] = userEffect.overrides[field];
-            delete effectMultipliers[field];
-          });
-        }
-        if (userEffect.multipliers) {
-          Object.keys(userEffect.multipliers).forEach((field) => {
-            effectMultipliers[field] = userEffect.multipliers[field];
-            delete effectOverrides[field];
-          });
-        }
-      }
-
-      return {
-        effectId: effect.effectId,
-        overrides: effectOverrides,
-        multipliers: effectMultipliers,
-        disabled: userEffect?.disabled || defaultRecipientEffect?.disabled || false,
-        _baseEffect: effect,
-        _defaultRecipientEffect: defaultRecipientEffect,
-        _userEffect: userEffect,
-      };
-    });
-
-    const sortedEffects = sortEffectsByActiveDate(initialEffects);
-    setTempEditToEffects(sortedEffects);
-
-    // Initialize field modes
-    const modes = {};
-    sortedEffects.forEach((effect, effectIndex) => {
-      const fieldNames = getEffectFieldNames(effect._baseEffect);
-      fieldNames.forEach((fieldName) => {
-        const modeKey = `${effectIndex}-${fieldName}`;
-        if (
-          effect.overrides &&
-          effect.overrides[fieldName] !== undefined &&
-          effect.overrides[fieldName] !== null &&
-          effect.overrides[fieldName] !== ''
-        ) {
-          modes[modeKey] = 'override';
-        } else if (
-          effect.multipliers &&
-          effect.multipliers[fieldName] !== undefined &&
-          effect.multipliers[fieldName] !== null &&
-          effect.multipliers[fieldName] !== ''
-        ) {
-          modes[modeKey] = 'multiplier';
-        } else {
-          modes[modeKey] = 'override';
-        }
-      });
-    });
-    setFieldModes(modes);
-  }, [recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects, userAssumptions]);
+  const hasUnsavedChanges = useMemo(() => {
+    return haveEffectsChanged(tempEditToEffects, baselineEffects);
+  }, [tempEditToEffects, baselineEffects]);
 
   // Report changes to parent whenever effects or errors change
   useEffect(() => {
-    onEffectsChange(categoryId, tempEditToEffects, errors, fieldModes);
-  }, [categoryId, tempEditToEffects, errors, fieldModes, onEffectsChange]);
+    onEffectsChange(categoryId, tempEditToEffects, errors, fieldModes, hasUnsavedChanges);
+  }, [categoryId, tempEditToEffects, errors, fieldModes, hasUnsavedChanges, onEffectsChange]);
 
   const toggleEffectDisabled = (effectIndex) => {
     setTempEditToEffects((prev) => {
@@ -444,10 +394,10 @@ const MultiCategoryRecipientEditor = ({
   }, [activeCategory]);
 
   // Handle effects change from a category section
-  const handleEffectsChange = useCallback((categoryId, effects, errors, fieldModes) => {
+  const handleEffectsChange = useCallback((categoryId, effects, errors, fieldModes, hasUnsavedChanges) => {
     setCategoryData((prev) => ({
       ...prev,
-      [categoryId]: { effects, errors, fieldModes },
+      [categoryId]: { effects, errors, fieldModes, hasUnsavedChanges },
     }));
   }, []);
 
@@ -456,39 +406,13 @@ const MultiCategoryRecipientEditor = ({
     return Object.values(categoryData).some((data) => Object.keys(data.errors || {}).length > 0);
   }, [categoryData]);
 
-  // Helper function to check if two values are meaningfully different
-  const isDifferentFromDefault = (currentValue, defaultValue) => {
-    if (
-      (currentValue === null || currentValue === undefined || currentValue === '') &&
-      (defaultValue === null || defaultValue === undefined || defaultValue === '')
-    ) {
-      return false;
-    }
-
-    if (
-      currentValue === null ||
-      currentValue === undefined ||
-      currentValue === '' ||
-      defaultValue === null ||
-      defaultValue === undefined ||
-      defaultValue === ''
-    ) {
-      return true;
-    }
-
-    const current = parseFloat(currentValue);
-    const defaultNum = parseFloat(defaultValue);
-
-    if (isNaN(current) || isNaN(defaultNum)) {
-      return currentValue !== defaultValue;
-    }
-
-    return Math.abs(current - defaultNum) >= 0.0001;
-  };
+  const hasUnsavedChanges = useMemo(() => {
+    return Object.values(categoryData).some((data) => data.hasUnsavedChanges);
+  }, [categoryData]);
 
   // Handle save - collect and clean effects from all categories
   const handleSave = () => {
-    if (hasErrors) return;
+    if (hasErrors || !hasUnsavedChanges) return;
 
     const allCategoryEffects = {};
 
@@ -496,85 +420,7 @@ const MultiCategoryRecipientEditor = ({
       const { effects, fieldModes } = data;
       if (!effects) return;
 
-      const effectsToSave = effects
-        .map((effect, effectIndex) => {
-          const cleanEffect = {
-            effectId: effect.effectId,
-            overrides: {},
-            multipliers: {},
-            disabled: effect.disabled || false,
-          };
-
-          const fieldNames = getEffectFieldNames(effect._baseEffect);
-          const defaultRecipientEffect = effect._defaultRecipientEffect;
-          const userEffect = effect._userEffect;
-          const defaultDisabled = defaultRecipientEffect?.disabled || false;
-          const userDisabled = userEffect?.disabled;
-          const currentDisabled = effect.disabled || false;
-          const disabledDiffersFromDefault = currentDisabled !== defaultDisabled;
-          // Also need to clear if user had a custom disabled value that's now reverted
-          const userHadDisabledOverride = userDisabled !== undefined;
-          const disabledNeedsClearing = userHadDisabledOverride && currentDisabled === defaultDisabled;
-
-          let needsClearing = disabledNeedsClearing;
-
-          fieldNames.forEach((fieldName) => {
-            const modeKey = `${effectIndex}-${fieldName}`;
-            const selectedMode = fieldModes[modeKey] || 'override';
-
-            const currentValue =
-              selectedMode === 'override' ? effect.overrides?.[fieldName] : effect.multipliers?.[fieldName];
-
-            const defaultValue =
-              selectedMode === 'override'
-                ? defaultRecipientEffect?.overrides?.[fieldName]
-                : defaultRecipientEffect?.multipliers?.[fieldName];
-
-            // Check if user previously had a custom value for this field
-            const userHadOverride =
-              userEffect?.overrides?.[fieldName] !== undefined && userEffect?.overrides?.[fieldName] !== null;
-            const userHadMultiplier =
-              userEffect?.multipliers?.[fieldName] !== undefined && userEffect?.multipliers?.[fieldName] !== null;
-            const userHadCustomValue = selectedMode === 'override' ? userHadOverride : userHadMultiplier;
-
-            if (isDifferentFromDefault(currentValue, defaultValue)) {
-              if (currentValue !== null && currentValue !== undefined && currentValue !== '') {
-                const { numValue } = cleanAndParseValue(currentValue);
-                if (!isNaN(numValue)) {
-                  if (selectedMode === 'override') {
-                    cleanEffect.overrides[fieldName] = numValue;
-                  } else {
-                    cleanEffect.multipliers[fieldName] = numValue;
-                  }
-                }
-              } else {
-                if (defaultValue !== null && defaultValue !== undefined && defaultValue !== '') {
-                  needsClearing = true;
-                }
-              }
-            } else if (
-              userHadCustomValue &&
-              (currentValue === null || currentValue === undefined || currentValue === '')
-            ) {
-              // User had a custom value but now cleared it - need to clear even if default is also empty
-              needsClearing = true;
-            }
-          });
-
-          if (
-            Object.keys(cleanEffect.overrides).length > 0 ||
-            Object.keys(cleanEffect.multipliers).length > 0 ||
-            disabledDiffersFromDefault ||
-            needsClearing
-          ) {
-            if (!disabledDiffersFromDefault) {
-              delete cleanEffect.disabled;
-            }
-            return cleanEffect;
-          }
-          return null;
-        })
-        .filter(Boolean);
+      const { effectsToSave } = getRecipientEffectsChangeState(effects, fieldModes);
 
       if (effectsToSave.length > 0) {
         allCategoryEffects[categoryId] = effectsToSave;
@@ -647,7 +493,12 @@ const MultiCategoryRecipientEditor = ({
           ))}
         </div>
 
-        <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} />
+        <EffectEditorFooter
+          onSave={handleSave}
+          onCancel={onCancel}
+          hasErrors={hasErrors}
+          disabled={!hasUnsavedChanges}
+        />
       </div>
     </div>
   );

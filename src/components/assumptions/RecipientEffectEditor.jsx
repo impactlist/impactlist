@@ -8,9 +8,15 @@ import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import DisableToggleButton from '../shared/DisableToggleButton';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
-import { calculateEffectCostPerLife, sortEffectsByActiveDate } from '../../utils/effectEditorUtils';
+import {
+  buildRecipientEditableEffects,
+  calculateEffectCostPerLife,
+  getRecipientEffectsChangeState,
+  haveEffectsChanged,
+  initializeRecipientFieldModes,
+} from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
-import { getEffectType, validateRecipientEffectField, cleanAndParseValue } from '../../utils/effectValidation';
+import { getEffectType, validateRecipientEffectField } from '../../utils/effectValidation';
 import { getEffectFieldNames } from '../../constants/effectFieldDefinitions';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
@@ -50,96 +56,20 @@ const RecipientEffectEditor = ({
     return category.effects;
   }, [category]);
 
+  const baselineEffects = useMemo(() => {
+    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+    return buildRecipientEditableEffects({
+      baseCategoryEffects,
+      defaultRecipientEffects,
+      userRecipientEffects,
+    });
+  }, [baseCategoryEffects, defaultRecipientEffects, userAssumptions, recipientId, categoryId]);
+
   // Initialize temp effects from recipient's current effects
   useEffect(() => {
-    // Get user's actual values (not merged with defaults)
-    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-
-    // Always start with base structure
-    const initialEffects = baseCategoryEffects.map((effect) => {
-      const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
-      const userEffect = userRecipientEffects?.find((e) => e.effectId === effect.effectId);
-
-      // Merge user values with default recipient values
-      // Default recipient values should appear as actual editable values
-      let effectOverrides = {};
-      let effectMultipliers = {};
-
-      // Start with default recipient values as the base
-      if (defaultRecipientEffect?.overrides) {
-        effectOverrides = { ...defaultRecipientEffect.overrides };
-      }
-      if (defaultRecipientEffect?.multipliers) {
-        effectMultipliers = { ...defaultRecipientEffect.multipliers };
-      }
-
-      // Merge user values on top (field by field, not wholesale replacement)
-      if (userEffect) {
-        if (userEffect.overrides) {
-          // Merge user overrides with default overrides
-          Object.keys(userEffect.overrides).forEach((field) => {
-            // User override takes precedence
-            effectOverrides[field] = userEffect.overrides[field];
-            // Clear any multiplier for this field
-            delete effectMultipliers[field];
-          });
-        }
-        if (userEffect.multipliers) {
-          // Merge user multipliers with default multipliers
-          Object.keys(userEffect.multipliers).forEach((field) => {
-            // User multiplier takes precedence
-            effectMultipliers[field] = userEffect.multipliers[field];
-            // Clear any override for this field
-            delete effectOverrides[field];
-          });
-        }
-      }
-
-      return {
-        effectId: effect.effectId,
-        overrides: effectOverrides,
-        multipliers: effectMultipliers,
-        disabled: userEffect?.disabled || defaultRecipientEffect?.disabled || false,
-        // Keep base values for reference during editing
-        _baseEffect: effect,
-        _defaultRecipientEffect: defaultRecipientEffect,
-        _userEffect: userEffect,
-      };
-    });
-
-    // Sort effects by active date (latest to earliest)
-    const sortedEffects = sortEffectsByActiveDate(initialEffects);
-
-    setTempEditToEffects(sortedEffects);
-
-    // Initialize field modes based on the sorted effects
-    const modes = {};
-    sortedEffects.forEach((effect, effectIndex) => {
-      const fieldNames = getEffectFieldNames(effect._baseEffect);
-      fieldNames.forEach((fieldName) => {
-        const modeKey = `${effectIndex}-${fieldName}`;
-        // Check if there's an override or multiplier to determine initial mode
-        if (
-          effect.overrides &&
-          effect.overrides[fieldName] !== undefined &&
-          effect.overrides[fieldName] !== null &&
-          effect.overrides[fieldName] !== ''
-        ) {
-          modes[modeKey] = 'override';
-        } else if (
-          effect.multipliers &&
-          effect.multipliers[fieldName] !== undefined &&
-          effect.multipliers[fieldName] !== null &&
-          effect.multipliers[fieldName] !== ''
-        ) {
-          modes[modeKey] = 'multiplier';
-        } else {
-          modes[modeKey] = 'override'; // Default to override mode
-        }
-      });
-    });
-    setFieldModes(modes);
-  }, [recipientId, categoryId, baseCategoryEffects, defaultRecipientEffects, userAssumptions]);
+    setTempEditToEffects(baselineEffects);
+    setFieldModes(initializeRecipientFieldModes(baselineEffects));
+  }, [baselineEffects]);
 
   // Toggle disabled state for a recipient effect
   const toggleEffectDisabled = (effectIndex) => {
@@ -303,40 +233,9 @@ const RecipientEffectEditor = ({
     return Object.keys(errors).length > 0;
   }, [errors]);
 
-  // Helper function to check if two values are meaningfully different
-  const isDifferentFromDefault = (currentValue, defaultValue) => {
-    // Both empty/null/undefined - no difference
-    if (
-      (currentValue === null || currentValue === undefined || currentValue === '') &&
-      (defaultValue === null || defaultValue === undefined || defaultValue === '')
-    ) {
-      return false;
-    }
-
-    // One empty, one not - there's a difference
-    if (
-      currentValue === null ||
-      currentValue === undefined ||
-      currentValue === '' ||
-      defaultValue === null ||
-      defaultValue === undefined ||
-      defaultValue === ''
-    ) {
-      return true;
-    }
-
-    // Parse numeric values and compare with tolerance for floating point
-    const current = parseFloat(currentValue);
-    const defaultNum = parseFloat(defaultValue);
-
-    if (isNaN(current) || isNaN(defaultNum)) {
-      // If either can't be parsed as number, do string comparison
-      return currentValue !== defaultValue;
-    }
-
-    // Use small tolerance for floating-point comparison
-    return Math.abs(current - defaultNum) >= 0.0001;
-  };
+  const hasUnsavedChanges = useMemo(() => {
+    return haveEffectsChanged(tempEditToEffects, baselineEffects);
+  }, [tempEditToEffects, baselineEffects]);
 
   // Handle save
   const handleSave = () => {
@@ -344,92 +243,11 @@ const RecipientEffectEditor = ({
       return;
     }
 
-    // Clean up effects for saving
-    const effectsToSave = tempEditToEffects
-      .map((effect, effectIndex) => {
-        const cleanEffect = {
-          effectId: effect.effectId,
-          overrides: {},
-          multipliers: {},
-          disabled: effect.disabled || false,
-        };
+    if (!hasUnsavedChanges) {
+      return;
+    }
 
-        // Get field names for this effect
-        const fieldNames = getEffectFieldNames(effect._baseEffect);
-
-        // Check if there were any default recipient values
-        const defaultRecipientEffect = effect._defaultRecipientEffect;
-
-        // Check if disabled state differs from default
-        const defaultDisabled = defaultRecipientEffect?.disabled || false;
-        const currentDisabled = effect.disabled || false;
-        const disabledDiffersFromDefault = currentDisabled !== defaultDisabled;
-
-        // Track if we need to save this effect (even with empty values) to clear defaults
-        let needsClearing = false;
-
-        // Process each field based on its selected mode
-        fieldNames.forEach((fieldName) => {
-          const modeKey = `${effectIndex}-${fieldName}`;
-          const selectedMode = fieldModes[modeKey] || 'override';
-
-          // Get the current value based on selected mode
-          const currentValue =
-            selectedMode === 'override' ? effect.overrides?.[fieldName] : effect.multipliers?.[fieldName];
-
-          // Get the default value for comparison
-          const defaultValue =
-            selectedMode === 'override'
-              ? defaultRecipientEffect?.overrides?.[fieldName]
-              : defaultRecipientEffect?.multipliers?.[fieldName];
-
-          // Check if current value differs from default
-          if (isDifferentFromDefault(currentValue, defaultValue)) {
-            // Value is different from default, save it
-            if (currentValue !== null && currentValue !== undefined && currentValue !== '') {
-              const { numValue } = cleanAndParseValue(currentValue);
-              if (!isNaN(numValue)) {
-                if (selectedMode === 'override') {
-                  cleanEffect.overrides[fieldName] = numValue;
-                } else {
-                  cleanEffect.multipliers[fieldName] = numValue;
-                }
-              } else {
-                throw new Error(
-                  `Failed to convert ${selectedMode} ${fieldName} to number in effect ${effect.effectId}. Value: "${currentValue}"`
-                );
-              }
-            } else {
-              // User explicitly cleared a field that had a default value
-              // We need to save this as an explicit clearing
-              if (defaultValue !== null && defaultValue !== undefined && defaultValue !== '') {
-                // Mark that we need to save this effect to record the clearing
-                needsClearing = true;
-                // Don't store null - the absence of the field indicates it should not use the default
-                // The needsClearing flag ensures we still save the effect to record the user's intent
-              }
-            }
-          }
-          // If value matches default, don't save it (no action needed)
-        });
-
-        // Include effect if it has values different from defaults, disabled state differs, or needs clearing
-        if (
-          Object.keys(cleanEffect.overrides).length > 0 ||
-          Object.keys(cleanEffect.multipliers).length > 0 ||
-          disabledDiffersFromDefault ||
-          needsClearing
-        ) {
-          // Only include disabled flag if it differs from default
-          if (!disabledDiffersFromDefault) {
-            delete cleanEffect.disabled;
-          }
-          return cleanEffect;
-        }
-        return null;
-      })
-      .filter(Boolean);
-
+    const { effectsToSave } = getRecipientEffectsChangeState(tempEditToEffects, fieldModes);
     onSave(effectsToSave);
   };
 
@@ -609,7 +427,12 @@ const RecipientEffectEditor = ({
           </div>
         </div>
 
-        <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} />
+        <EffectEditorFooter
+          onSave={handleSave}
+          onCancel={onCancel}
+          hasErrors={hasErrors}
+          disabled={!hasUnsavedChanges}
+        />
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
 
   return (
     <motion.div
-      className="w-full bg-indigo-700 py-4 shadow-lg relative"
+      className="w-full bg-orange-700 py-4 shadow-lg relative"
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
@@ -34,7 +34,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
             {/* Impact List - always visible */}
             <Link
               to="/"
-              className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isHome ? 'bg-indigo-600 text-white' : ''}`}
+              className={`text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isHome ? 'bg-orange-600 text-white' : ''}`}
               onClick={closeMobileMenu}
             >
               Impact List
@@ -42,7 +42,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
             {/* Assumptions - high priority, visible on sm+ */}
             <Link
               to="/assumptions"
-              className={`hidden sm:inline-flex items-center text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAssumptions ? 'bg-indigo-600 text-white' : ''}`}
+              className={`hidden sm:inline-flex items-center text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isAssumptions ? 'bg-orange-600 text-white' : ''}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path
@@ -59,33 +59,33 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
             {/* Calculator - visible on sm+ */}
             <Link
               to="/calculator"
-              className={`hidden sm:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
+              className={`hidden sm:inline-block text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isCalculator ? 'bg-orange-600 text-white' : ''}`}
             >
               Calculator
             </Link>
             {/* Categories, Recipients, FAQ - visible on md+ */}
             <Link
               to="/categories"
-              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
+              className={`hidden md:inline-block text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isCategories ? 'bg-orange-600 text-white' : ''}`}
             >
               Categories
             </Link>
             <Link
               to="/recipients"
-              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
+              className={`hidden md:inline-block text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isRecipients ? 'bg-orange-600 text-white' : ''}`}
             >
               Recipients
             </Link>
             <Link
               to="/faq"
-              className={`hidden md:inline-block text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
+              className={`hidden md:inline-block text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isFAQ ? 'bg-orange-600 text-white' : ''}`}
             >
               FAQ
             </Link>
             {/* Hamburger Menu Button - visible below md */}
             <button
               onClick={toggleMobileMenu}
-              className="md:hidden text-indigo-100 hover:text-white hover:bg-indigo-600 p-2 rounded-md transition-colors"
+              className="md:hidden text-orange-100 hover:text-white hover:bg-orange-600 p-2 rounded-md transition-colors"
               aria-label="Toggle mobile menu"
             >
               <motion.svg
@@ -113,7 +113,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="md:hidden absolute top-full left-0 right-0 bg-indigo-700 shadow-lg border-t border-indigo-600 z-50"
+            className="md:hidden absolute top-full left-0 right-0 bg-orange-700 shadow-lg border-t border-orange-600 z-50"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -124,7 +124,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                 {/* Assumptions - shown only on mobile (hidden on sm+ where it's in main nav) */}
                 <Link
                   to="/assumptions"
-                  className={`sm:hidden flex items-center text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isAssumptions ? 'bg-indigo-600 text-white' : ''}`}
+                  className={`sm:hidden flex items-center text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isAssumptions ? 'bg-orange-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
                   <svg
@@ -147,7 +147,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                 {/* Calculator - shown only on mobile (hidden on sm+ where it's in main nav) */}
                 <Link
                   to="/calculator"
-                  className={`sm:hidden text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCalculator ? 'bg-indigo-600 text-white' : ''}`}
+                  className={`sm:hidden text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isCalculator ? 'bg-orange-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
                   Calculator
@@ -155,21 +155,21 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                 {/* Categories, Recipients, FAQ - shown on mobile and tablet (hidden on md+ where they're in main nav) */}
                 <Link
                   to="/categories"
-                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isCategories ? 'bg-indigo-600 text-white' : ''}`}
+                  className={`text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isCategories ? 'bg-orange-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
                   Categories
                 </Link>
                 <Link
                   to="/recipients"
-                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isRecipients ? 'bg-indigo-600 text-white' : ''}`}
+                  className={`text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isRecipients ? 'bg-orange-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
                   Recipients
                 </Link>
                 <Link
                   to="/faq"
-                  className={`text-indigo-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors ${isFAQ ? 'bg-indigo-600 text-white' : ''}`}
+                  className={`text-orange-100 px-3 py-2 rounded-md text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors ${isFAQ ? 'bg-orange-600 text-white' : ''}`}
                   onClick={closeMobileMenu}
                 >
                   FAQ

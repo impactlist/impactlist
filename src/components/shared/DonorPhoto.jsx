@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 const sizeClasses = {
   small: 'w-20 h-20 rounded',
+  featured: 'w-28 h-28 rounded-md shadow-sm',
   large: 'w-48 h-48 rounded-lg shadow-md border border-slate-200',
 };
 
@@ -44,7 +45,7 @@ const DonorPhoto = ({ donorId, donorName, size = 'small', className = '' }) => {
 DonorPhoto.propTypes = {
   donorId: PropTypes.string.isRequired,
   donorName: PropTypes.string.isRequired,
-  size: PropTypes.oneOf(['small', 'large']),
+  size: PropTypes.oneOf(['small', 'featured', 'large']),
   className: PropTypes.string,
 };
 

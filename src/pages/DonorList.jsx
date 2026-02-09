@@ -82,7 +82,7 @@ const DonorList = () => {
       label: '',
       render: (donor) => (
         <div className="flex justify-center">
-          <DonorPhoto donorId={donor.id} donorName={donor.name} size="small" />
+          <DonorPhoto donorId={donor.id} donorName={donor.name} size={donor.rank === 1 ? 'featured' : 'small'} />
         </div>
       ),
     },

@@ -135,7 +135,7 @@ const AssumptionsEditor = ({
 
   const handleResetRecipients = useCallback(() => {
     recipientSearch.filteredRecipients.forEach((recipient) => {
-      resetRecipientToDefaults(recipient.name);
+      resetRecipientToDefaults(recipient.id);
     });
   }, [recipientSearch.filteredRecipients, resetRecipientToDefaults]);
 

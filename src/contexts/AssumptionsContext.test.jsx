@@ -41,7 +41,6 @@ const findRecipientScenario = (context) => {
       if (category?.effects?.length > 0) {
         return {
           recipientId,
-          recipientName: recipient.name,
           categoryId,
           effectId: category.effects[0].effectId,
         };
@@ -92,23 +91,26 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('persists updates and resetToDefaults clears saved assumptions', async () => {
+  it('persists category updates and resetToDefaults clears saved assumptions', async () => {
     const { getContext } = await renderWithProvider();
     const context = getContext();
-
     const firstCategoryId = Object.keys(context.defaultAssumptions.categories)[0];
     const firstEffect = context.defaultAssumptions.categories[firstCategoryId].effects[0];
-    const nextStartTime = firstEffect.startTime + 1;
 
     act(() => {
-      context.updateCategoryFieldValue(firstCategoryId, firstEffect.effectId, 'startTime', nextStartTime);
+      context.replaceCategoryEffects(firstCategoryId, [
+        {
+          effectId: firstEffect.effectId,
+          startTime: firstEffect.startTime + 1,
+        },
+      ]);
     });
 
     await waitFor(() => {
       const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
       expect(persisted.categories[firstCategoryId].effects[0]).toMatchObject({
         effectId: firstEffect.effectId,
-        startTime: nextStartTime,
+        startTime: firstEffect.startTime + 1,
       });
     });
 
@@ -122,27 +124,7 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('updateRecipientEffect applies overrides-only updates', async () => {
-    const { getContext } = await renderWithProvider();
-    const scenario = findRecipientScenario(getContext());
-
-    act(() => {
-      getContext().updateRecipientEffect(scenario.recipientName, scenario.categoryId, scenario.effectId, {
-        overrides: { startTime: 7 },
-      });
-    });
-
-    await waitFor(() => {
-      const effect =
-        getContext().userAssumptions.recipients[scenario.recipientId].categories[scenario.categoryId].effects[0];
-      expect(effect).toEqual({
-        effectId: scenario.effectId,
-        overrides: { startTime: 7 },
-      });
-    });
-  });
-
-  it('replaceCategoryEffects writes the entire category effect payload in one call', async () => {
+  it('replaceCategoryEffects writes only default-diff values', async () => {
     const { getContext } = await renderWithProvider();
     const context = getContext();
     const firstCategoryId = Object.keys(context.defaultAssumptions.categories)[0];
@@ -169,56 +151,19 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('updateRecipientEffect applies multipliers-only updates', async () => {
+  it('replaceRecipientCategoryEffects applies overrides, multipliers and disabled', async () => {
     const { getContext } = await renderWithProvider();
     const scenario = findRecipientScenario(getContext());
 
     act(() => {
-      getContext().updateRecipientEffect(scenario.recipientName, scenario.categoryId, scenario.effectId, {
-        multipliers: { startTime: 2 },
-      });
-    });
-
-    await waitFor(() => {
-      const effect =
-        getContext().userAssumptions.recipients[scenario.recipientId].categories[scenario.categoryId].effects[0];
-      expect(effect).toEqual({
-        effectId: scenario.effectId,
-        multipliers: { startTime: 2 },
-      });
-    });
-  });
-
-  it('updateRecipientEffect handles disabled-only updates by creating nested structure', async () => {
-    const { getContext } = await renderWithProvider();
-    const scenario = findRecipientScenario(getContext());
-
-    act(() => {
-      getContext().updateRecipientEffect(scenario.recipientName, scenario.categoryId, scenario.effectId, {
-        disabled: true,
-      });
-    });
-
-    await waitFor(() => {
-      const effect =
-        getContext().userAssumptions.recipients[scenario.recipientId].categories[scenario.categoryId].effects[0];
-      expect(effect).toEqual({
-        effectId: scenario.effectId,
-        disabled: true,
-      });
-    });
-  });
-
-  it('updateRecipientEffect combines overrides, multipliers, and disabled with precedence', async () => {
-    const { getContext } = await renderWithProvider();
-    const scenario = findRecipientScenario(getContext());
-
-    act(() => {
-      getContext().updateRecipientEffect(scenario.recipientName, scenario.categoryId, scenario.effectId, {
-        overrides: { startTime: 6, windowLength: 11 },
-        multipliers: { startTime: 1.5, costPerQALY: 2 },
-        disabled: true,
-      });
+      getContext().replaceRecipientCategoryEffects(scenario.recipientId, scenario.categoryId, [
+        {
+          effectId: scenario.effectId,
+          overrides: { startTime: 6, windowLength: 11 },
+          multipliers: { costPerQALY: 2 },
+          disabled: true,
+        },
+      ]);
     });
 
     await waitFor(() => {
@@ -226,9 +171,8 @@ describe('AssumptionsContext integration', () => {
         getContext().userAssumptions.recipients[scenario.recipientId].categories[scenario.categoryId].effects[0];
       expect(effect.effectId).toBe(scenario.effectId);
       expect(effect.disabled).toBe(true);
-      expect(effect.overrides).toEqual({ windowLength: 11 });
-      expect(effect.multipliers).toEqual({ startTime: 1.5, costPerQALY: 2 });
-      expect(effect.overrides.startTime).toBeUndefined();
+      expect(effect.overrides).toEqual({ startTime: 6, windowLength: 11 });
+      expect(effect.multipliers).toEqual({ costPerQALY: 2 });
     });
   });
 
@@ -247,19 +191,35 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('updateRecipientEffect logs error and leaves state unchanged when recipient is not found', async () => {
+  it('replaceRecipientEffectsByCategory applies updates across multiple categories', async () => {
     const { getContext } = await renderWithProvider();
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const context = getContext();
+
+    const recipientEntry = Object.entries(context.combinedAssumptions.recipients).find(([, recipient]) => {
+      const categoryIds = Object.keys(recipient.categories || {});
+      return categoryIds.length >= 2;
+    });
+
+    if (!recipientEntry) {
+      throw new Error('Expected at least one recipient with multiple categories');
+    }
+
+    const [recipientId, recipient] = recipientEntry;
+    const [firstCategoryId, secondCategoryId] = Object.keys(recipient.categories);
+    const firstEffectId = context.combinedAssumptions.categories[firstCategoryId].effects[0].effectId;
+    const secondEffectId = context.combinedAssumptions.categories[secondCategoryId].effects[0].effectId;
 
     act(() => {
-      getContext().updateRecipientEffect('Recipient That Does Not Exist', 'health', 'effect-does-not-matter', {
-        disabled: true,
+      getContext().replaceRecipientEffectsByCategory(recipientId, {
+        [firstCategoryId]: [{ effectId: firstEffectId, overrides: { startTime: 5 } }],
+        [secondCategoryId]: [{ effectId: secondEffectId, multipliers: { costPerQALY: 1.4 } }],
       });
     });
 
     await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Recipient Recipient That Does Not Exist not found');
-      expect(getContext().userAssumptions).toBeNull();
+      const recipientData = getContext().userAssumptions?.recipients?.[recipientId];
+      expect(recipientData?.categories?.[firstCategoryId]?.effects?.[0]?.overrides?.startTime).toBe(5);
+      expect(recipientData?.categories?.[secondCategoryId]?.effects?.[0]?.multipliers?.costPerQALY).toBe(1.4);
     });
   });
 
@@ -270,7 +230,12 @@ describe('AssumptionsContext integration', () => {
     const firstEffect = context.defaultAssumptions.categories[firstCategoryId].effects[0];
 
     act(() => {
-      context.updateCategoryFieldValue(firstCategoryId, firstEffect.effectId, 'startTime', firstEffect.startTime + 2);
+      context.replaceCategoryEffects(firstCategoryId, [
+        {
+          effectId: firstEffect.effectId,
+          startTime: firstEffect.startTime + 2,
+        },
+      ]);
     });
 
     await waitFor(() => {
@@ -287,14 +252,14 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('resetRecipientToDefaults clears recipient overrides resolved by recipient name', async () => {
+  it('resetRecipientToDefaults clears recipient overrides by recipient id', async () => {
     const { getContext } = await renderWithProvider();
     const scenario = findRecipientScenario(getContext());
 
     act(() => {
-      getContext().updateRecipientEffect(scenario.recipientName, scenario.categoryId, scenario.effectId, {
-        overrides: { startTime: 9 },
-      });
+      getContext().replaceRecipientCategoryEffects(scenario.recipientId, scenario.categoryId, [
+        { effectId: scenario.effectId, overrides: { startTime: 9 } },
+      ]);
     });
 
     await waitFor(() => {
@@ -302,7 +267,7 @@ describe('AssumptionsContext integration', () => {
     });
 
     act(() => {
-      getContext().resetRecipientToDefaults(scenario.recipientName);
+      getContext().resetRecipientToDefaults(scenario.recipientId);
     });
 
     await waitFor(() => {

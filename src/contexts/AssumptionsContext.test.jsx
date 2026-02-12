@@ -91,7 +91,7 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('persists category updates and resetToDefaults clears saved assumptions', async () => {
+  it('persists category updates to localStorage', async () => {
     const { getContext } = await renderWithProvider();
     const context = getContext();
     const firstCategoryId = Object.keys(context.defaultAssumptions.categories)[0];
@@ -112,15 +112,6 @@ describe('AssumptionsContext integration', () => {
         effectId: firstEffect.effectId,
         startTime: firstEffect.startTime + 1,
       });
-    });
-
-    act(() => {
-      getContext().resetToDefaults();
-    });
-
-    await waitFor(() => {
-      expect(getContext().userAssumptions).toBeNull();
-      expect(localStorage.getItem('customEffectsData')).toBeNull();
     });
   });
 

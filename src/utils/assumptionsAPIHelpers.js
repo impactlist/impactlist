@@ -638,13 +638,6 @@ export const clearAllGlobalParameters = (userAssumptions) => {
 };
 
 /**
- * Clear all user overrides (reset everything to defaults)
- */
-export const clearAllOverrides = () => {
-  return null;
-};
-
-/**
  * Remove keys from obj where predicate(key, value) returns true.
  * Deletes the obj key from parent if obj becomes empty.
  */

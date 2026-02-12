@@ -105,10 +105,6 @@ export const AssumptionsProvider = ({ children }) => {
     setUserAssumptions((prev) => apiHelpers.clearAllGlobalParameters(prev));
   };
 
-  const resetToDefaults = () => {
-    setUserAssumptions(apiHelpers.clearAllOverrides());
-  };
-
   const contextValue = {
     defaultAssumptions,
     userAssumptions,
@@ -122,7 +118,6 @@ export const AssumptionsProvider = ({ children }) => {
     updateGlobalParameterValue,
     resetGlobalParameter,
     resetAllGlobalParameters,
-    resetToDefaults,
   };
 
   return <AssumptionsContext.Provider value={contextValue}>{children}</AssumptionsContext.Provider>;

@@ -13,7 +13,6 @@ import {
   setGlobalParameter,
   clearGlobalParameter,
   clearAllGlobalParameters,
-  clearAllOverrides,
   normalizeUserAssumptions,
 } from './assumptionsAPIHelpers';
 
@@ -360,10 +359,6 @@ describe('assumptionsAPIHelpers', () => {
         },
       },
     });
-  });
-
-  it('clearAllOverrides returns null for full reset', () => {
-    expect(clearAllOverrides()).toBeNull();
   });
 
   it('normalizeUserAssumptions removes default-equivalent values and keeps real customizations', () => {

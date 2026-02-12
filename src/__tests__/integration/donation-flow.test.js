@@ -97,12 +97,46 @@ describe('Donation Flow Integration', () => {
       ];
 
       const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
-      const donationAmount = 100000;
-      const livesSaved = donationAmount / costPerLife;
+      const donationAmountA = 100000;
+      const donationAmountB = 50000;
+      const livesSavedA = donationAmountA / costPerLife;
+      const livesSavedB = donationAmountB / costPerLife;
+      const doubledCostEffect = [{ ...effects[0], costPerMicroprobability: 20 }];
+      const doubledFractionEffect = [{ ...effects[0], populationFractionAffected: 0.2 }];
+      const doubledCostPerLife = calculateCostPerLife(doubledCostEffect, globalParams, 2020);
+      const doubledFractionCostPerLife = calculateCostPerLife(doubledFractionEffect, globalParams, 2020);
 
+      // Validate linear scaling and core population-effect proportionality.
       expect(costPerLife).toBeGreaterThan(0);
-      expect(costPerLife).toBeLessThan(Infinity);
-      expect(livesSaved).toBeGreaterThan(0);
+      expect(livesSavedA).toBeCloseTo(livesSavedB * 2, 10);
+      expect(doubledCostPerLife).toBeCloseTo(costPerLife * 2, 10);
+      expect(doubledFractionCostPerLife).toBeCloseTo(costPerLife / 2, 10);
+    });
+
+    it('should combine mixed effect types using harmonic-sum math', () => {
+      const qalyEffect = {
+        type: 'qaly',
+        costPerQALY: 100,
+        startTime: 0,
+        windowLength: 10,
+      };
+      const populationEffect = {
+        type: 'population',
+        costPerMicroprobability: 50,
+        populationFractionAffected: 0.05,
+        qalyImprovementPerYear: 0.5,
+        startTime: 10,
+        windowLength: 20,
+      };
+
+      const costQalyOnly = calculateCostPerLife([qalyEffect], globalParams, 2020);
+      const costPopulationOnly = calculateCostPerLife([populationEffect], globalParams, 2020);
+      const mixedCost = calculateCostPerLife([qalyEffect, populationEffect], globalParams, 2020);
+
+      const expectedMixedCost = 1 / (1 / costQalyOnly + 1 / costPopulationOnly);
+      expect(mixedCost).toBeCloseTo(expectedMixedCost, 10);
+      expect(mixedCost).toBeLessThan(costQalyOnly);
+      expect(mixedCost).toBeLessThan(costPopulationOnly);
     });
 
     it('should handle edge case: zero discount rate', () => {
@@ -150,33 +184,6 @@ describe('Donation Flow Integration', () => {
       const donationAmount = 100000;
       const livesSaved = donationAmount / costPerLife;
       expect(livesSaved).toBe(0);
-    });
-
-    it('should handle mixed effect types', () => {
-      const effects = [
-        {
-          type: 'qaly',
-          costPerQALY: 100,
-          startTime: 0,
-          windowLength: 10,
-        },
-        {
-          type: 'population',
-          costPerMicroprobability: 50,
-          populationFractionAffected: 0.05,
-          qalyImprovementPerYear: 0.5,
-          startTime: 10,
-          windowLength: 20,
-        },
-      ];
-
-      const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
-      const donationAmount = 100000;
-      const livesSaved = donationAmount / costPerLife;
-
-      expect(costPerLife).toBeGreaterThan(0);
-      expect(costPerLife).toBeLessThan(Infinity);
-      expect(livesSaved).toBeGreaterThan(0);
     });
   });
 

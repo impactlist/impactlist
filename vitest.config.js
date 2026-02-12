@@ -17,12 +17,11 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: [
-        'node_modules/',
+        ...configDefaults.coverage.exclude,
         'src/test-setup.js',
-        '*.config.js',
-        '**/*.test.js',
-        '**/*.test.jsx',
-        'src/__tests__/**',
+        'src/data/generatedData.js',
+        'e2e/**',
+        '.claude/**',
       ],
       thresholds: {
         global: {

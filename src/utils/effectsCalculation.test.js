@@ -138,10 +138,9 @@ describe('effectsCalculation', () => {
       expect(result).toBeLessThan(0);
     });
 
-    it('should throw for invalid effect type', () => {
+    it('should throw when effect is missing both cost fields', () => {
       const effects = [
         {
-          type: 'invalid',
           startTime: 0,
           windowLength: 10,
           someField: 1000,

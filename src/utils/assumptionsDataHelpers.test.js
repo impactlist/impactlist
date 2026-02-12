@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import {
+  createDefaultAssumptions,
   mergeEffects,
   mergeRecipientEffects,
   createCombinedAssumptions,
@@ -7,9 +8,18 @@ import {
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForDonationFromCombined,
   calculateLivesSavedForCategoryFromCombined,
+  calculateDonorStatsFromCombined,
   getActualCostPerLifeForCategoryDataFromCombined,
   getEffectiveCostPerLifeFromCombined,
+  isCategoryCustomized,
+  isRecipientCategoryCustomized,
+  isGlobalParameterCustomized,
+  getCustomizedCategories,
+  getCustomizedRecipients,
+  getCustomizedGlobalParameters,
 } from './assumptionsDataHelpers';
+import * as donationDataHelpers from './donationDataHelpers';
+import { categoriesById, globalParameters, recipientsById } from '../data/generatedData.js';
 
 const buildGlobalParameters = () => ({
   yearsPerLife: 50,
@@ -97,6 +107,29 @@ const buildDefaults = () => ({
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
 describe('assumptionsDataHelpers', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('createDefaultAssumptions returns deep copies of generated data', () => {
+    const defaults = createDefaultAssumptions();
+
+    expect(defaults.globalParameters).toEqual(globalParameters);
+
+    const categoryId = Object.keys(defaults.categories)[0];
+    const recipientId = Object.keys(defaults.recipients)[0];
+    expect(categoryId).toBeDefined();
+    expect(recipientId).toBeDefined();
+
+    defaults.globalParameters.discountRate = 123;
+    defaults.categories[categoryId].name = 'Mutated Category';
+    defaults.recipients[recipientId].name = 'Mutated Recipient';
+
+    expect(globalParameters.discountRate).not.toBe(123);
+    expect(categoriesById[categoryId].name).not.toBe('Mutated Category');
+    expect(recipientsById[recipientId].name).not.toBe('Mutated Recipient');
+  });
+
   it('mergeEffects overlays user fields, appends unknown effects, and does not mutate defaults', () => {
     const defaultEffects = [{ effectId: 'e1', costPerQALY: 100, startTime: 0, windowLength: 10 }];
     const originalDefaults = clone(defaultEffects);
@@ -135,6 +168,8 @@ describe('assumptionsDataHelpers', () => {
 
     const merged = mergeRecipientEffects(defaultEffects, userEffects);
 
+    // Intentional behavior: user overrides/multipliers replace the default nested structures,
+    // rather than deep-merging into default overrides/multipliers.
     expect(merged[0]).toEqual({
       effectId: 'e1',
       costPerQALY: 100,
@@ -256,5 +291,82 @@ describe('assumptionsDataHelpers', () => {
     expect(() => getEffectiveCostPerLifeFromCombined(combined, {}, 2020)).toThrow(
       'No valid calculation method found for cost per life.'
     );
+  });
+
+  it('calculateDonorStatsFromCombined handles known and unknown donation amounts', () => {
+    const combined = createCombinedAssumptions(buildDefaults(), null);
+    const recipientCost = getCostPerLifeFromCombined(combined, 'health', 2020);
+
+    vi.spyOn(donationDataHelpers, 'getAllDonors').mockReturnValue([
+      { id: 'donor-one', name: 'Donor One', netWorth: 1000000, totalDonated: 3000 },
+      { id: 'donor-two', name: 'Donor Two', netWorth: 2000000 },
+    ]);
+    vi.spyOn(donationDataHelpers, 'getDonorId').mockImplementation((donor) => donor.id);
+    vi.spyOn(donationDataHelpers, 'getDonationsForDonor').mockImplementation((donorId) => {
+      if (donorId === 'donor-one') {
+        return [
+          {
+            recipientId: 'recipientA',
+            amount: 1000,
+            credit: 1,
+            date: '2020-01-01',
+          },
+        ];
+      }
+      return [];
+    });
+
+    const stats = calculateDonorStatsFromCombined(combined);
+
+    expect(stats).toHaveLength(1);
+    expect(stats[0]).toMatchObject({
+      id: 'donor-one',
+      knownDonations: 1000,
+      totalDonated: 3000,
+      totalDonatedField: 3000,
+      rank: 1,
+    });
+    expect(stats[0].unknownLivesSaved).toBeGreaterThan(0);
+    expect(stats[0].totalLivesSaved).toBeCloseTo(3000 / recipientCost, 10);
+    expect(stats[0].costPerLife).toBeCloseTo(recipientCost, 10);
+  });
+
+  it('customization helpers return expected flags and keys', () => {
+    const userAssumptions = {
+      globalParameters: {
+        discountRate: 0.03,
+      },
+      categories: {
+        health: {
+          effects: [{ effectId: 'health-effect', costPerQALY: 150 }],
+        },
+      },
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'health-effect', overrides: { startTime: 3 } }],
+            },
+          },
+        },
+      },
+    };
+
+    expect(isCategoryCustomized(userAssumptions, 'health')).toBe(true);
+    expect(isCategoryCustomized(userAssumptions, 'aid')).toBe(false);
+
+    expect(isRecipientCategoryCustomized(userAssumptions, 'recipientA', 'health')).toBe(true);
+    expect(isRecipientCategoryCustomized(userAssumptions, 'recipientA', 'aid')).toBe(false);
+
+    expect(isGlobalParameterCustomized(userAssumptions, 'discountRate')).toBe(true);
+    expect(isGlobalParameterCustomized(userAssumptions, 'timeLimit')).toBe(false);
+
+    expect(getCustomizedCategories(userAssumptions)).toEqual(['health']);
+    expect(getCustomizedRecipients(userAssumptions)).toEqual(['recipientA']);
+    expect(getCustomizedGlobalParameters(userAssumptions)).toEqual(['discountRate']);
+
+    expect(getCustomizedCategories(null)).toEqual([]);
+    expect(getCustomizedRecipients(null)).toEqual([]);
+    expect(getCustomizedGlobalParameters(null)).toEqual([]);
   });
 });

@@ -2,10 +2,15 @@ import { describe, it, expect } from 'vitest';
 import {
   setCategoryFieldValue,
   setCategoryEffect,
+  clearCategoryCustomValues,
   setRecipientFieldOverride,
   setRecipientFieldMultiplier,
+  clearRecipientOverrides,
   clearRecipientCategoryOverrides,
   setGlobalParameter,
+  clearGlobalParameter,
+  clearAllGlobalParameters,
+  clearAllOverrides,
   normalizeUserAssumptions,
 } from './assumptionsAPIHelpers';
 
@@ -99,6 +104,20 @@ describe('assumptionsAPIHelpers', () => {
         },
       },
     });
+  });
+
+  it('setCategoryEffect treats disabled=undefined as default false and prunes empty updates', () => {
+    const defaults = buildDefaultAssumptions();
+
+    const result = setCategoryEffect(null, defaults, 'health', 'e1', {
+      effectId: 'e1',
+      costPerQALY: 100,
+      startTime: 0,
+      windowLength: 10,
+      disabled: undefined,
+    });
+
+    expect(result).toBeNull();
   });
 
   it('setRecipientFieldOverride removes conflicting multiplier for the same field', () => {
@@ -205,6 +224,76 @@ describe('assumptionsAPIHelpers', () => {
     expect(userAssumptions).toEqual(original);
   });
 
+  it('clearCategoryCustomValues removes only the target category', () => {
+    const userAssumptions = {
+      globalParameters: {
+        timeLimit: 250,
+      },
+      categories: {
+        health: {
+          effects: [{ effectId: 'e1', costPerQALY: 120 }],
+        },
+        aid: {
+          effects: [{ effectId: 'e2', costPerQALY: 200 }],
+        },
+      },
+    };
+
+    const result = clearCategoryCustomValues(userAssumptions, 'health');
+
+    expect(result).toEqual({
+      globalParameters: {
+        timeLimit: 250,
+      },
+      categories: {
+        aid: {
+          effects: [{ effectId: 'e2', costPerQALY: 200 }],
+        },
+      },
+    });
+  });
+
+  it('clearRecipientOverrides removes only the target recipient branch', () => {
+    const userAssumptions = {
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'e1', overrides: { startTime: 3 } }],
+            },
+          },
+        },
+        recipientB: {
+          categories: {
+            aid: {
+              effects: [{ effectId: 'e2', multipliers: { costPerQALY: 1.2 } }],
+            },
+          },
+        },
+      },
+      globalParameters: {
+        timeLimit: 120,
+      },
+    };
+
+    const result = clearRecipientOverrides(userAssumptions, 'recipientA');
+
+    expect(result).toEqual({
+      recipients: {
+        recipientB: {
+          categories: {
+            aid: {
+              effects: [{ effectId: 'e2', multipliers: { costPerQALY: 1.2 } }],
+            },
+          },
+        },
+      },
+      globalParameters: {
+        timeLimit: 120,
+      },
+    });
+  });
+
   it('clearRecipientCategoryOverrides removes empty recipient branches', () => {
     const userAssumptions = {
       recipients: {
@@ -221,6 +310,57 @@ describe('assumptionsAPIHelpers', () => {
     const result = clearRecipientCategoryOverrides(userAssumptions, 'recipientA', 'health');
 
     expect(result).toBeNull();
+  });
+
+  it('clearGlobalParameter removes one key and clearAllGlobalParameters removes all global overrides', () => {
+    const userAssumptions = {
+      globalParameters: {
+        discountRate: 0.05,
+        timeLimit: 150,
+      },
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'e1', overrides: { startTime: 3 } }],
+            },
+          },
+        },
+      },
+    };
+
+    const clearedOne = clearGlobalParameter(userAssumptions, 'discountRate');
+    expect(clearedOne).toEqual({
+      globalParameters: {
+        timeLimit: 150,
+      },
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'e1', overrides: { startTime: 3 } }],
+            },
+          },
+        },
+      },
+    });
+
+    const clearedAll = clearAllGlobalParameters(clearedOne);
+    expect(clearedAll).toEqual({
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'e1', overrides: { startTime: 3 } }],
+            },
+          },
+        },
+      },
+    });
+  });
+
+  it('clearAllOverrides returns null for full reset', () => {
+    expect(clearAllOverrides()).toBeNull();
   });
 
   it('normalizeUserAssumptions removes default-equivalent values and keeps real customizations', () => {
@@ -290,5 +430,35 @@ describe('assumptionsAPIHelpers', () => {
     const twice = setRecipientFieldOverride(once, defaults, 'recipientA', 'health', 'e1', 'startTime', 3);
 
     expect(twice).toEqual(once);
+  });
+
+  it('setCategoryFieldValue treats equal arrays as unchanged (areValuesEqual array path)', () => {
+    const defaults = buildDefaultAssumptions();
+    defaults.categories.health.effects[0].validTimeInterval = [2010, null];
+    const userAssumptions = {
+      categories: {
+        health: {
+          effects: [{ effectId: 'e1', validTimeInterval: [2010, null] }],
+        },
+      },
+    };
+
+    const result = setCategoryFieldValue(userAssumptions, defaults, 'health', 'e1', 'validTimeInterval', [2010, null]);
+
+    expect(result).toBeNull();
+  });
+
+  it('setGlobalParameter treats NaN as equal to NaN defaults (areValuesEqual NaN path)', () => {
+    const defaults = buildDefaultAssumptions();
+    defaults.globalParameters.discountRate = Number.NaN;
+    const userAssumptions = {
+      globalParameters: {
+        discountRate: 0.07,
+      },
+    };
+
+    const result = setGlobalParameter(userAssumptions, defaults, 'discountRate', Number.NaN);
+
+    expect(result).toBeNull();
   });
 });

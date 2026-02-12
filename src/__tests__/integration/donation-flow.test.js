@@ -32,11 +32,8 @@ describe('Donation Flow Integration', () => {
       const donationAmount = 10000;
       const livesSaved = donationAmount / costPerLife;
 
-      // Verify the calculation produces reasonable results
-      expect(costPerLife).toBeGreaterThan(0);
-      expect(costPerLife).toBeLessThan(10000);
-      expect(livesSaved).toBeGreaterThan(0);
-      expect(livesSaved).toBeLessThan(donationAmount);
+      expect(costPerLife).toBeCloseTo(5511.394348736568, 8);
+      expect(livesSaved).toBeCloseTo(1.8144228787207723, 8);
     });
 
     it('should handle multiple effects correctly', () => {
@@ -59,9 +56,8 @@ describe('Donation Flow Integration', () => {
       const donationAmount = 50000;
       const livesSaved = donationAmount / costPerLife;
 
-      // The combined effect should be between the individual effects
-      expect(costPerLife).toBeGreaterThan(0);
-      expect(livesSaved).toBeGreaterThan(0);
+      expect(costPerLife).toBeCloseTo(3908.3076008594635, 8);
+      expect(livesSaved).toBeCloseTo(12.79326120313679, 8);
     });
 
     it('should format currency and lives correctly', () => {
@@ -82,9 +78,10 @@ describe('Donation Flow Integration', () => {
       const formattedCost = formatCurrency(costPerLife);
       const formattedLives = formatLives(livesSaved);
 
-      expect(formattedCost).toMatch(/^\$/);
-      expect(formattedLives).toBeDefined();
-      expect(typeof formattedLives).toBe('string');
+      expect(costPerLife).toBeCloseTo(60553.18478463219, 8);
+      expect(livesSaved).toBeCloseTo(1.651440801266972, 8);
+      expect(formattedCost).toBe('$60,553');
+      expect(formattedLives).toBe('1.65');
     });
 
     it('should handle population effects', () => {
@@ -120,8 +117,7 @@ describe('Donation Flow Integration', () => {
       ];
 
       const costPerLife = calculateCostPerLife(effects, zeroDiscountParams, 2020);
-      expect(costPerLife).toBeGreaterThan(0);
-      expect(costPerLife).toBeLessThan(Infinity);
+      expect(costPerLife).toBe(5000);
     });
 
     it('should handle edge case: very short effect', () => {
@@ -135,8 +131,7 @@ describe('Donation Flow Integration', () => {
       ];
 
       const costPerLife = calculateCostPerLife(effects, globalParams, 2020);
-      expect(costPerLife).toBeGreaterThan(0);
-      expect(costPerLife).toBeLessThan(Infinity);
+      expect(costPerLife).toBeCloseTo(5049.669960525826, 8);
     });
 
     it('should handle edge case: effects beyond time limit', () => {

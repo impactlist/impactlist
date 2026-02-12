@@ -142,10 +142,14 @@ describe('effectsCalculation', () => {
       const effects = [
         {
           type: 'invalid',
+          startTime: 0,
+          windowLength: 10,
           someField: 1000,
         },
       ];
-      expect(() => calculateCostPerLife(effects, baseGlobalParams)).toThrow();
+      expect(() => calculateCostPerLife(effects, baseGlobalParams, 2020)).toThrow(
+        'Effect must have either costPerQALY or costPerMicroprobability'
+      );
     });
   });
 
@@ -910,14 +914,14 @@ describe('effectsCalculation', () => {
       const atCurrent = effectToCostPerLife(effect, params, 2024);
 
       // Donation just after current year
-      const justAfter = effectToCostPerLife(effect, params, 2024);
+      const justAfter = effectToCostPerLife(effect, params, 2025);
 
-      // Should show smooth transition (no huge jumps)
+      // Should show smooth transition (no huge jumps) up to current year
       const diff1 = Math.abs(atCurrent - justBefore) / atCurrent;
-      const diff2 = Math.abs(justAfter - atCurrent) / atCurrent;
 
       expect(diff1).toBeLessThan(0.1); // Less than 10% change
-      expect(diff2).toBeLessThan(0.1); // Less than 10% change
+      // Future donations are clamped to current year for consistency
+      expect(justAfter).toBe(atCurrent);
     });
 
     it('should handle very short effects in the past correctly', () => {

@@ -224,12 +224,14 @@ const BaseRecipientEffectInputs = ({
               value={mode}
               onChange={(newMode) => handleModeChange(fieldName, newMode)}
               disabled={isDisabled}
+              testIdPrefix={`recipient-effect-mode-${effectIndex}-${fieldName}`}
             />
 
             {/* Single context-aware input with error/helper text below */}
             <div className="space-y-1 w-auto max-xs:w-40">
               <input
                 type="text"
+                data-testid={`recipient-effect-input-${effectIndex}-${fieldName}`}
                 value={formatNumberWithCommas(currentValue)}
                 onChange={(e) => {
                   const inputElement = e.target;

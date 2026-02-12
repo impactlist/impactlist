@@ -325,7 +325,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div
+      data-testid="specific-donation-modal"
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+    >
       <motion.div
         className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden"
         initial={{ opacity: 0 }}
@@ -410,11 +413,15 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   {showDropdown && searchTerm && filteredRecipients.length > 0 && (
                     <div
                       ref={dropdownRef}
+                      role="listbox"
+                      aria-label="Recipient search results"
                       className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm"
                     >
                       {filteredRecipients.map((recipient, index) => (
                         <div
                           key={recipient.name}
+                          role="option"
+                          aria-selected={index === highlightedIndex}
                           onClick={() => handleSelectRecipient(recipient)}
                           className={`cursor-pointer px-4 py-2 recipient-item ${
                             index === highlightedIndex ? 'bg-indigo-100 text-indigo-900' : 'hover:bg-indigo-50'
@@ -528,10 +535,13 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
           )}
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Donation Amount</label>
+            <label htmlFor="specific-donation-amount" className="block text-sm font-medium text-gray-700 mb-1">
+              Donation Amount
+            </label>
             <div className="flex items-center">
               <span className="mr-1 text-gray-600">$</span>
               <input
+                id="specific-donation-amount"
                 type="text"
                 inputMode="numeric"
                 value={formatWithCommas(amount)}
@@ -546,8 +556,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+            <label htmlFor="specific-donation-year" className="block text-sm font-medium text-gray-700 mb-1">
+              Year
+            </label>
             <input
+              id="specific-donation-year"
               type="text"
               inputMode="numeric"
               value={donationYear}

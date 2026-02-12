@@ -2,9 +2,12 @@ import { describe, it, expect } from 'vitest';
 import {
   setCategoryFieldValue,
   setCategoryEffect,
+  setCategoryEffects,
   clearCategoryCustomValues,
   setRecipientFieldOverride,
   setRecipientFieldMultiplier,
+  setRecipientCategoryEffects,
+  setRecipientEffectsByCategory,
   clearRecipientOverrides,
   clearRecipientCategoryOverrides,
   setGlobalParameter,
@@ -460,5 +463,93 @@ describe('assumptionsAPIHelpers', () => {
     const result = setGlobalParameter(userAssumptions, defaults, 'discountRate', Number.NaN);
 
     expect(result).toBeNull();
+  });
+
+  it('setCategoryEffects replaces a category with only default-diff fields', () => {
+    const defaults = buildDefaultAssumptions();
+    const userAssumptions = {
+      globalParameters: { timeLimit: 120 },
+      categories: {
+        health: {
+          effects: [{ effectId: 'e1', costPerQALY: 150 }],
+        },
+      },
+    };
+
+    const result = setCategoryEffects(userAssumptions, defaults, 'health', [
+      {
+        effectId: 'e1',
+        costPerQALY: 100,
+        startTime: 4,
+        windowLength: 10,
+        disabled: false,
+      },
+    ]);
+
+    expect(result).toEqual({
+      globalParameters: { timeLimit: 120 },
+      categories: {
+        health: {
+          effects: [{ effectId: 'e1', startTime: 4 }],
+        },
+      },
+    });
+  });
+
+  it('setRecipientCategoryEffects clears branch when all values normalize back to defaults', () => {
+    const defaults = buildDefaultAssumptions();
+    const userAssumptions = {
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'e1', overrides: { startTime: 3 } }],
+            },
+          },
+        },
+      },
+    };
+
+    const result = setRecipientCategoryEffects(userAssumptions, defaults, 'recipientA', 'health', [
+      { effectId: 'e1', disabled: false },
+    ]);
+
+    expect(result).toBeNull();
+  });
+
+  it('setRecipientEffectsByCategory applies updates to multiple categories for one recipient', () => {
+    const defaults = buildDefaultAssumptions();
+    defaults.categories.aid = {
+      effects: [
+        {
+          effectId: 'e2',
+          costPerQALY: 200,
+          startTime: 0,
+          windowLength: 5,
+          disabled: false,
+        },
+      ],
+    };
+    defaults.recipients.recipientA.categories.aid = { fraction: 1 };
+
+    const result = setRecipientEffectsByCategory(null, defaults, 'recipientA', {
+      health: [{ effectId: 'e1', overrides: { startTime: 6 } }],
+      aid: [{ effectId: 'e2', multipliers: { costPerQALY: 1.5 } }],
+    });
+
+    expect(result).toEqual({
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'e1', overrides: { startTime: 6 } }],
+            },
+            aid: {
+              effects: [{ effectId: 'e2', multipliers: { costPerQALY: 1.5 } }],
+            },
+          },
+        },
+      },
+    });
   });
 });

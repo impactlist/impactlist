@@ -7,16 +7,15 @@ import { validateGlobalField } from '../utils/effectValidation';
  * @param {Object} globalParameters - Global parameters from combinedAssumptions
  * @param {Object} defaultGlobalParameters - Default global parameters
  * @param {Function} getGlobalParameter - Function to get custom global parameter value
- * @param {boolean} isActive - Whether the form is active (page is mounted)
  * @returns {Object} Form state and handlers
  */
-export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlobalParameter, isActive) => {
+export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlobalParameter) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
   // Initialize form values when active and data is available
   useEffect(() => {
-    if (isActive && globalParameters && Object.keys(formValues).length === 0) {
+    if (globalParameters && Object.keys(formValues).length === 0) {
       const initialValues = {};
 
       // Initialize all global parameter fields
@@ -33,7 +32,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
       setFormValues(initialValues);
       setErrors({}); // Start with no errors - data should be valid
     }
-  }, [isActive, globalParameters, getGlobalParameter, formValues]);
+  }, [globalParameters, getGlobalParameter, formValues]);
 
   // Get the format type for a parameter
   const getParameterFormat = (paramKey) => {
@@ -146,7 +145,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
   };
 
   const hasUnsavedChanges = useMemo(() => {
-    if (!isActive || !globalParameters || Object.keys(formValues).length === 0) {
+    if (!globalParameters || Object.keys(formValues).length === 0) {
       return false;
     }
 
@@ -181,7 +180,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
 
       return !valuesMatch(currentValue, baselineValue);
     });
-  }, [isActive, globalParameters, defaultGlobalParameters, getGlobalParameter, formValues]);
+  }, [globalParameters, defaultGlobalParameters, getGlobalParameter, formValues]);
 
   return {
     formValues,

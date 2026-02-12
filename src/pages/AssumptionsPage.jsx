@@ -1,26 +1,17 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import AssumptionsEditor from '../components/AssumptionsEditor';
-import { useAssumptions } from '../contexts/AssumptionsContext';
 
 const AssumptionsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { setRecipientSearchTerm } = useAssumptions();
 
   // Parse URL params
   const initialTab = searchParams.get('tab') || 'global';
   const initialCategoryId = searchParams.get('categoryId') || null;
   const initialRecipientId = searchParams.get('recipientId') || null;
   const initialActiveCategory = searchParams.get('activeCategory') || null;
-
-  // Cleanup on unmount - clear recipient search term from context
-  useEffect(() => {
-    return () => {
-      setRecipientSearchTerm('');
-    };
-  }, [setRecipientSearchTerm]);
 
   // Handle URL param changes from the editor
   // Uses replace for tab changes, push for entity edit/exit
@@ -82,7 +73,6 @@ const AssumptionsPage = () => {
             initialRecipientId={initialRecipientId}
             initialActiveCategory={initialActiveCategory}
             onParamsChange={handleParamsChange}
-            isActive={true}
           />
         </div>
       </motion.div>

@@ -142,6 +142,33 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
+  it('replaceCategoryEffects writes the entire category effect payload in one call', async () => {
+    const { getContext } = await renderWithProvider();
+    const context = getContext();
+    const firstCategoryId = Object.keys(context.defaultAssumptions.categories)[0];
+    const firstEffect = context.defaultAssumptions.categories[firstCategoryId].effects[0];
+
+    act(() => {
+      getContext().replaceCategoryEffects(firstCategoryId, [
+        {
+          effectId: firstEffect.effectId,
+          startTime: firstEffect.startTime + 3,
+          windowLength: firstEffect.windowLength,
+          disabled: firstEffect.disabled,
+        },
+      ]);
+    });
+
+    await waitFor(() => {
+      expect(getContext().userAssumptions?.categories?.[firstCategoryId]?.effects).toEqual([
+        {
+          effectId: firstEffect.effectId,
+          startTime: firstEffect.startTime + 3,
+        },
+      ]);
+    });
+  });
+
   it('updateRecipientEffect applies multipliers-only updates', async () => {
     const { getContext } = await renderWithProvider();
     const scenario = findRecipientScenario(getContext());
@@ -202,6 +229,21 @@ describe('AssumptionsContext integration', () => {
       expect(effect.overrides).toEqual({ windowLength: 11 });
       expect(effect.multipliers).toEqual({ startTime: 1.5, costPerQALY: 2 });
       expect(effect.overrides.startTime).toBeUndefined();
+    });
+  });
+
+  it('replaceRecipientCategoryEffects clears custom branch when saving default-equivalent values', async () => {
+    const { getContext } = await renderWithProvider();
+    const scenario = findRecipientScenario(getContext());
+
+    act(() => {
+      getContext().replaceRecipientCategoryEffects(scenario.recipientId, scenario.categoryId, [
+        { effectId: scenario.effectId, disabled: false },
+      ]);
+    });
+
+    await waitFor(() => {
+      expect(getContext().userAssumptions).toBeNull();
     });
   });
 

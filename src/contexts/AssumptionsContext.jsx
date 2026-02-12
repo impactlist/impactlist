@@ -41,10 +41,6 @@ export const AssumptionsProvider = ({ children }) => {
     return normalizeUserAssumptions(parsed, defaultAssumptions);
   });
 
-  // Shared editor state (persists across page navigation)
-  const [activeTab, setActiveTab] = useState('global');
-  const [recipientSearchTerm, setRecipientSearchTerm] = useState('');
-
   // Create combined assumptions whenever userAssumptions changes
   const combinedAssumptions = useMemo(() => {
     return createCombinedAssumptions(defaultAssumptions, userAssumptions);
@@ -94,6 +90,15 @@ export const AssumptionsProvider = ({ children }) => {
       const newData = apiHelpers.setCategoryEffect(prev, defaultAssumptions, categoryId, effectId, effectData);
       return newData;
     });
+  };
+
+  // Replace all category effects in one operation
+  const replaceCategoryEffects = (categoryId, effectsData) => {
+    if (!categoryId) {
+      throw new Error("Required parameter 'categoryId' is missing");
+    }
+
+    setUserAssumptions((prev) => apiHelpers.setCategoryEffects(prev, defaultAssumptions, categoryId, effectsData));
   };
 
   // Reset category to defaults
@@ -226,6 +231,31 @@ export const AssumptionsProvider = ({ children }) => {
 
       return newData;
     });
+  };
+
+  // Replace all effects in a recipient/category in one operation
+  const replaceRecipientCategoryEffects = (recipientId, categoryId, effectsData) => {
+    if (!recipientId) {
+      throw new Error("Required parameter 'recipientId' is missing");
+    }
+    if (!categoryId) {
+      throw new Error("Required parameter 'categoryId' is missing");
+    }
+
+    setUserAssumptions((prev) =>
+      apiHelpers.setRecipientCategoryEffects(prev, defaultAssumptions, recipientId, categoryId, effectsData)
+    );
+  };
+
+  // Replace effects across multiple categories for one recipient
+  const replaceRecipientEffectsByCategory = (recipientId, effectsByCategory) => {
+    if (!recipientId) {
+      throw new Error("Required parameter 'recipientId' is missing");
+    }
+
+    setUserAssumptions((prev) =>
+      apiHelpers.setRecipientEffectsByCategory(prev, defaultAssumptions, recipientId, effectsByCategory)
+    );
   };
 
   // Clear all overrides/multipliers for a specific recipient effect
@@ -444,19 +474,16 @@ export const AssumptionsProvider = ({ children }) => {
     // State flags
     isUsingCustomValues,
 
-    // Shared editor state
-    activeTab,
-    setActiveTab,
-    recipientSearchTerm,
-    setRecipientSearchTerm,
-
     // New API functions
     updateCategoryFieldValue,
     updateCategoryEffect,
+    replaceCategoryEffects,
     resetCategoryToDefaults,
     updateRecipientFieldOverride,
     updateRecipientFieldMultiplier,
     updateRecipientEffect,
+    replaceRecipientCategoryEffects,
+    replaceRecipientEffectsByCategory,
     clearRecipientEffect,
     resetRecipientToDefaults,
     updateGlobalParameterValue,

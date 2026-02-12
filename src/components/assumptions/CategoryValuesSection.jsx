@@ -15,8 +15,6 @@ import { getCurrentYear } from '../../utils/donationDataHelpers';
 const CategoryValuesSection = ({
   defaultAssumptions,
   userAssumptions,
-  errors,
-  onChange,
   onEditCategory,
   onResetCategory,
   categoriesWithCustomValues,
@@ -67,7 +65,6 @@ const CategoryValuesSection = ({
         .map(([key, categoryData]) => {
           const defaultValue = categoryData.defaultCostPerLife;
           const currentValue = categoryData.currentCostPerLife;
-          const hasError = errors[key];
 
           // Check if this category has any custom effect parameters
           const isCustom = categoriesWithCustomValues && categoriesWithCustomValues.has(key);
@@ -77,7 +74,7 @@ const CategoryValuesSection = ({
           const formattedCurrent = formatCurrency(currentValue).replace('$', '');
 
           return (
-            <SectionCard key={key} hasError={hasError} isCustom={isCustom} padding="sm">
+            <SectionCard key={key} isCustom={isCustom} padding="sm">
               <div className="flex justify-between items-start mb-2">
                 <label
                   className="text-sm font-medium truncate pr-2"
@@ -93,10 +90,7 @@ const CategoryValuesSection = ({
                 </label>
                 <CustomValueIndicator
                   isCustom={isCustom}
-                  hasError={hasError}
                   onReset={() => {
-                    // Reset both the form display and the actual category data
-                    onChange(key, formattedDefault);
                     if (onResetCategory) {
                       onResetCategory(key);
                     }
@@ -106,8 +100,7 @@ const CategoryValuesSection = ({
               <CurrencyInput
                 id={`category-${key}`}
                 value={formattedCurrent} // Use calculated value directly (no form state needed for read-only)
-                onChange={(value) => onChange(key, value)}
-                error={hasError}
+                onChange={() => {}}
                 className="w-full"
                 validateOnBlur={true} // Only validate on blur, not while typing
                 placeholder={formattedDefault} // Use formatted default as placeholder
@@ -127,9 +120,7 @@ const CategoryValuesSection = ({
                   </button>
                 }
               />
-              {isCustom && !hasError && (
-                <div className="text-xs text-gray-500 mt-0.5">Default: ${formattedDefault}</div>
-              )}
+              {isCustom && <div className="text-xs text-gray-500 mt-0.5">Default: ${formattedDefault}</div>}
             </SectionCard>
           );
         })}
@@ -140,8 +131,6 @@ const CategoryValuesSection = ({
 CategoryValuesSection.propTypes = {
   defaultAssumptions: PropTypes.object.isRequired,
   userAssumptions: PropTypes.object,
-  errors: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
   onEditCategory: PropTypes.func,
   onResetCategory: PropTypes.func,
   categoriesWithCustomValues: PropTypes.object,

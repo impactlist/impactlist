@@ -189,6 +189,69 @@ export const setCategoryEffect = (userAssumptions, defaultAssumptions, categoryI
 };
 
 /**
+ * Replace all custom effects for a category in one operation.
+ * Stores only fields that differ from defaults.
+ */
+export const setCategoryEffects = (userAssumptions, defaultAssumptions, categoryId, effectsData) => {
+  if (!defaultAssumptions?.categories?.[categoryId]?.effects) {
+    throw new Error(`Category ${categoryId} not found in defaults`);
+  }
+
+  const defaultEffects = defaultAssumptions.categories[categoryId].effects;
+  const nextCustomEffects = [];
+
+  (effectsData || []).forEach((effectData) => {
+    if (!effectData?.effectId) {
+      return;
+    }
+
+    const defaultEffect = defaultEffects.find((entry) => entry.effectId === effectData.effectId);
+    if (!defaultEffect) {
+      throw new Error(`Effect ${effectData.effectId} not found in category ${categoryId}`);
+    }
+
+    const nextEffect = { effectId: effectData.effectId };
+
+    Object.keys(effectData).forEach((fieldName) => {
+      if (shouldSkipField(fieldName)) {
+        return;
+      }
+
+      const value = effectData[fieldName];
+      if (value === undefined) {
+        return;
+      }
+
+      const normalizedValue = normalizeFieldValue(fieldName, value);
+      const defaultValue = normalizeFieldValue(fieldName, defaultEffect[fieldName]);
+
+      if (!areValuesEqual(normalizedValue, defaultValue)) {
+        nextEffect[fieldName] = normalizedValue;
+      }
+    });
+
+    if (Object.keys(nextEffect).length > 1) {
+      nextCustomEffects.push(nextEffect);
+    }
+  });
+
+  const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
+
+  if (nextCustomEffects.length > 0) {
+    if (!newData.categories) newData.categories = {};
+    newData.categories[categoryId] = { effects: nextCustomEffects };
+  } else if (newData.categories?.[categoryId]) {
+    delete newData.categories[categoryId];
+  }
+
+  if (newData.categories && Object.keys(newData.categories).length === 0) {
+    delete newData.categories;
+  }
+
+  return Object.keys(newData).length > 0 ? newData : null;
+};
+
+/**
  * Clear all custom values for a category (reset to defaults)
  */
 export const clearCategoryCustomValues = (userAssumptions, categoryId) => {
@@ -404,6 +467,115 @@ export const clearRecipientCategoryOverrides = (userAssumptions, recipientId, ca
   return pruneRecipientStructure(newData, recipientId, categoryId);
 };
 
+const sanitizeNumericMap = (map) => {
+  if (!map) return null;
+
+  const cleaned = Object.entries(map).reduce((acc, [fieldName, value]) => {
+    if (value !== null && value !== undefined && value !== '') {
+      acc[fieldName] = value;
+    }
+    return acc;
+  }, {});
+
+  return Object.keys(cleaned).length > 0 ? cleaned : null;
+};
+
+const sanitizeRecipientEffects = (effectsData = []) => {
+  const cleanedEffects = [];
+
+  effectsData.forEach((effect) => {
+    if (!effect?.effectId) {
+      return;
+    }
+
+    const cleanedEffect = { effectId: effect.effectId };
+
+    const overrides = sanitizeNumericMap(effect.overrides);
+    if (overrides) {
+      cleanedEffect.overrides = overrides;
+    }
+
+    const multipliers = sanitizeNumericMap(effect.multipliers);
+    if (multipliers) {
+      cleanedEffect.multipliers = multipliers;
+    }
+
+    if (effect.disabled !== undefined) {
+      cleanedEffect.disabled = Boolean(effect.disabled);
+    }
+
+    if (
+      cleanedEffect.disabled !== undefined ||
+      cleanedEffect.overrides !== undefined ||
+      cleanedEffect.multipliers !== undefined
+    ) {
+      cleanedEffects.push(cleanedEffect);
+    }
+  });
+
+  return cleanedEffects;
+};
+
+/**
+ * Replace all custom effects for a specific recipient category in one operation.
+ */
+export const setRecipientCategoryEffects = (
+  userAssumptions,
+  defaultAssumptions,
+  recipientId,
+  categoryId,
+  effectsData
+) => {
+  const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
+  const cleanedEffects = sanitizeRecipientEffects(effectsData);
+
+  if (cleanedEffects.length > 0) {
+    if (!newData.recipients) newData.recipients = {};
+    if (!newData.recipients[recipientId]) newData.recipients[recipientId] = { categories: {} };
+    if (!newData.recipients[recipientId].categories) newData.recipients[recipientId].categories = {};
+
+    newData.recipients[recipientId].categories[categoryId] = {
+      effects: cleanedEffects,
+    };
+  } else if (newData.recipients?.[recipientId]?.categories?.[categoryId]) {
+    delete newData.recipients[recipientId].categories[categoryId];
+
+    if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
+      delete newData.recipients[recipientId];
+    }
+    if (newData.recipients && Object.keys(newData.recipients).length === 0) {
+      delete newData.recipients;
+    }
+  }
+
+  return normalizeUserAssumptions(newData, defaultAssumptions);
+};
+
+/**
+ * Replace custom effects for multiple categories of one recipient in one operation.
+ */
+export const setRecipientEffectsByCategory = (
+  userAssumptions,
+  defaultAssumptions,
+  recipientId,
+  effectsByCategory = {}
+) => {
+  const categoryEntries = Object.entries(effectsByCategory);
+
+  if (categoryEntries.length === 0) {
+    return userAssumptions;
+  }
+
+  // Intentionally composes per-category updates for clarity and reuse.
+  // Current recipients have few categories, so repeated normalization cost is acceptable.
+  let nextData = userAssumptions;
+  categoryEntries.forEach(([categoryId, effects]) => {
+    nextData = setRecipientCategoryEffects(nextData, defaultAssumptions, recipientId, categoryId, effects);
+  });
+
+  return nextData;
+};
+
 /**
  * Set a global parameter override
  * If value matches the default, clears the override instead
@@ -496,6 +668,15 @@ const normalizeEffects = (effects, getDefaultEffect, isRecipientEffect = false) 
         pruneObject(effect, 'overrides', (field, val) => areValuesEqual(val, defaultEffect[field]));
       }
       pruneObject(effect, 'multipliers', (_, val) => val === 1);
+
+      if (Object.hasOwn(effect, 'disabled')) {
+        const defaultDisabled = defaultEffect ? Boolean(defaultEffect.disabled) : false;
+        if (Boolean(effect.disabled) === defaultDisabled) {
+          delete effect.disabled;
+        } else {
+          effect.disabled = Boolean(effect.disabled);
+        }
+      }
     } else if (defaultEffect) {
       // Category effects store values directly
       for (const field of Object.keys(effect)) {

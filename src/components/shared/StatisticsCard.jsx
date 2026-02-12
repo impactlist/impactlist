@@ -12,13 +12,16 @@ const StatisticsCard = ({
   className = '',
   icon = null,
   valueAction = null,
+  valueTestId = undefined,
 }) => {
   return (
     <div className={`flex flex-col items-center p-4 bg-slate-50 rounded-lg ${className}`}>
       <span className="text-sm text-slate-600 uppercase font-semibold">{label}</span>
       <div className="flex items-center mt-1 space-x-2">
         {icon && <span>{icon}</span>}
-        <span className={`text-3xl font-bold ${valueClassName}`}>{value}</span>
+        <span data-testid={valueTestId} className={`text-3xl font-bold ${valueClassName}`}>
+          {value}
+        </span>
         {valueAction && <div className="flex-shrink-0">{valueAction}</div>}
       </div>
       {subtext && <span className="text-xs text-slate-500 mt-1">{subtext}</span>}
@@ -34,6 +37,7 @@ StatisticsCard.propTypes = {
   className: PropTypes.string,
   icon: PropTypes.node,
   valueAction: PropTypes.node,
+  valueTestId: PropTypes.string,
 };
 
 export default React.memo(StatisticsCard);

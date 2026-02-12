@@ -28,6 +28,8 @@ src/data/generatedData.js
 
 # Test artifacts
 coverage/
+playwright-report/
+test-results/
 
 # Local agent/worktree state
 .claude/worktrees/

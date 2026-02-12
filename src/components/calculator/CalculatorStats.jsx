@@ -26,12 +26,18 @@ const CalculatorStats = ({
       <h2 className="text-xl font-bold text-indigo-800 mb-4">Your Impact Summary</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-        <StatisticsCard label="Total Donated" value={formatCurrency(totalDonated)} className="bg-white shadow-sm" />
+        <StatisticsCard
+          label="Total Donated"
+          value={formatCurrency(totalDonated)}
+          valueTestId="calculator-total-donated-value"
+          className="bg-white shadow-sm"
+        />
 
         <StatisticsCard
           label="Lives Saved"
           value={totalLivesSaved < 0 ? `-${formatLives(Math.abs(totalLivesSaved))}` : formatLives(totalLivesSaved)}
           valueClassName={totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}
+          valueTestId="calculator-lives-saved-value"
           className="bg-white shadow-sm"
         />
 
@@ -39,6 +45,7 @@ const CalculatorStats = ({
           label="Average Cost Per Life"
           value={totalLivesSaved !== 0 ? formatCurrency(costPerLife) : '—'}
           valueClassName={costPerLife < 0 ? 'text-red-700' : 'text-slate-800'}
+          valueTestId="calculator-cost-per-life-value"
           className="bg-white shadow-sm"
         />
       </div>

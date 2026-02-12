@@ -516,6 +516,34 @@ const sanitizeRecipientEffects = (effectsData = []) => {
   return cleanedEffects;
 };
 
+const applyRecipientCategoryEffectsToData = (data, recipientId, categoryId, effectsData) => {
+  const cleanedEffects = sanitizeRecipientEffects(effectsData);
+
+  if (cleanedEffects.length > 0) {
+    if (!data.recipients) data.recipients = {};
+    if (!data.recipients[recipientId]) data.recipients[recipientId] = { categories: {} };
+    if (!data.recipients[recipientId].categories) data.recipients[recipientId].categories = {};
+
+    data.recipients[recipientId].categories[categoryId] = {
+      effects: cleanedEffects,
+    };
+    return;
+  }
+
+  if (!data.recipients?.[recipientId]?.categories?.[categoryId]) {
+    return;
+  }
+
+  delete data.recipients[recipientId].categories[categoryId];
+
+  if (Object.keys(data.recipients[recipientId].categories).length === 0) {
+    delete data.recipients[recipientId];
+  }
+  if (data.recipients && Object.keys(data.recipients).length === 0) {
+    delete data.recipients;
+  }
+};
+
 /**
  * Replace all custom effects for a specific recipient category in one operation.
  */
@@ -527,26 +555,7 @@ export const setRecipientCategoryEffects = (
   effectsData
 ) => {
   const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
-  const cleanedEffects = sanitizeRecipientEffects(effectsData);
-
-  if (cleanedEffects.length > 0) {
-    if (!newData.recipients) newData.recipients = {};
-    if (!newData.recipients[recipientId]) newData.recipients[recipientId] = { categories: {} };
-    if (!newData.recipients[recipientId].categories) newData.recipients[recipientId].categories = {};
-
-    newData.recipients[recipientId].categories[categoryId] = {
-      effects: cleanedEffects,
-    };
-  } else if (newData.recipients?.[recipientId]?.categories?.[categoryId]) {
-    delete newData.recipients[recipientId].categories[categoryId];
-
-    if (Object.keys(newData.recipients[recipientId].categories).length === 0) {
-      delete newData.recipients[recipientId];
-    }
-    if (newData.recipients && Object.keys(newData.recipients).length === 0) {
-      delete newData.recipients;
-    }
-  }
+  applyRecipientCategoryEffectsToData(newData, recipientId, categoryId, effectsData);
 
   return normalizeUserAssumptions(newData, defaultAssumptions);
 };
@@ -566,14 +575,13 @@ export const setRecipientEffectsByCategory = (
     return userAssumptions;
   }
 
-  // Intentionally composes per-category updates for clarity and reuse.
-  // Current recipients have few categories, so repeated normalization cost is acceptable.
-  let nextData = userAssumptions;
+  const nextData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
+
   categoryEntries.forEach(([categoryId, effects]) => {
-    nextData = setRecipientCategoryEffects(nextData, defaultAssumptions, recipientId, categoryId, effects);
+    applyRecipientCategoryEffectsToData(nextData, recipientId, categoryId, effects);
   });
 
-  return nextData;
+  return normalizeUserAssumptions(nextData, defaultAssumptions);
 };
 
 /**

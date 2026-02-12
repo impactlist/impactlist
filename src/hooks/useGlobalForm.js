@@ -6,10 +6,10 @@ import { validateGlobalField } from '../utils/effectValidation';
  * Custom hook for managing global parameter form state
  * @param {Object} globalParameters - Global parameters from combinedAssumptions
  * @param {Object} defaultGlobalParameters - Default global parameters
- * @param {Function} getGlobalParameter - Function to get custom global parameter value
+ * @param {Object} userGlobalParameters - User overrides for global parameters
  * @returns {Object} Form state and handlers
  */
-export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlobalParameter) => {
+export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlobalParameters) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -20,8 +20,8 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
 
       // Initialize all global parameter fields
       Object.keys(globalParameters).forEach((paramKey) => {
-        const customValue = getGlobalParameter(paramKey);
-        const value = customValue !== null ? customValue : globalParameters[paramKey];
+        const customValue = userGlobalParameters?.[paramKey];
+        const value = customValue !== undefined ? customValue : globalParameters[paramKey];
 
         initialValues[paramKey] = {
           raw: value,
@@ -32,7 +32,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
       setFormValues(initialValues);
       setErrors({}); // Start with no errors - data should be valid
     }
-  }, [globalParameters, getGlobalParameter, formValues]);
+  }, [globalParameters, userGlobalParameters, formValues]);
 
   // Get the format type for a parameter
   const getParameterFormat = (paramKey) => {
@@ -150,8 +150,8 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
     }
 
     const getBaselineValue = (paramKey) => {
-      const savedValue = getGlobalParameter(paramKey);
-      if (savedValue !== null && savedValue !== undefined) {
+      const savedValue = userGlobalParameters?.[paramKey];
+      if (savedValue !== undefined) {
         return savedValue;
       }
       if (defaultGlobalParameters && defaultGlobalParameters[paramKey] !== undefined) {
@@ -180,7 +180,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, getGlob
 
       return !valuesMatch(currentValue, baselineValue);
     });
-  }, [globalParameters, defaultGlobalParameters, getGlobalParameter, formValues]);
+  }, [globalParameters, defaultGlobalParameters, userGlobalParameters, formValues]);
 
   return {
     formValues,

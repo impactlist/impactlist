@@ -41,11 +41,11 @@ const AssumptionsEditor = ({
     replaceCategoryEffects,
     replaceRecipientCategoryEffects,
     replaceRecipientEffectsByCategory,
-    updateGlobalParameter,
+    updateGlobalParameterValue,
+    resetGlobalParameter,
     resetAllGlobalParameters,
     resetCategoryToDefaults,
     resetRecipientToDefaults,
-    getGlobalParameter,
   } = useAssumptions();
 
   const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
@@ -81,7 +81,11 @@ const AssumptionsEditor = ({
     [defaultAssumptions.globalParameters, userAssumptions]
   );
 
-  const globalForm = useGlobalForm(mergedGlobalParameters, defaultAssumptions.globalParameters, getGlobalParameter);
+  const globalForm = useGlobalForm(
+    mergedGlobalParameters,
+    defaultAssumptions.globalParameters,
+    userAssumptions?.globalParameters
+  );
 
   const recipientSearch = useRecipientSearch(
     allRecipients,
@@ -107,16 +111,16 @@ const AssumptionsEditor = ({
       const rawValue = valueObj.raw;
 
       if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
-        updateGlobalParameter(paramKey, '');
+        resetGlobalParameter(paramKey);
         return;
       }
 
       const { numValue } = cleanAndParseValue(rawValue);
       if (!isNaN(numValue)) {
-        updateGlobalParameter(paramKey, numValue);
+        updateGlobalParameterValue(paramKey, numValue);
       }
     });
-  }, [globalForm, mergedGlobalParameters, updateGlobalParameter]);
+  }, [globalForm, mergedGlobalParameters, resetGlobalParameter, updateGlobalParameterValue]);
 
   const handleGlobalReset = useCallback(() => {
     globalForm.reset();

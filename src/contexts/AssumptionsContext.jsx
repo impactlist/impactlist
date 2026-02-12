@@ -1,11 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
-import {
-  createDefaultAssumptions,
-  createCombinedAssumptions,
-  getCostPerLifeFromCombined,
-  getActualCostPerLifeForCategoryDataFromCombined,
-} from '../utils/assumptionsDataHelpers';
-import { getCurrentYear } from '../utils/donationDataHelpers';
+import { createDefaultAssumptions, createCombinedAssumptions } from '../utils/assumptionsDataHelpers';
 import * as apiHelpers from '../utils/assumptionsAPIHelpers';
 import { normalizeUserAssumptions } from '../utils/assumptionsAPIHelpers';
 
@@ -289,164 +283,6 @@ export const AssumptionsProvider = ({ children }) => {
     setUserAssumptions(apiHelpers.clearAllOverrides());
   };
 
-  // Legacy wrapper: Reset category to defaults when cleared
-  const updateCategoryValue = (categoryKey, value) => {
-    if (value === '' || isNaN(value) || value === null) {
-      resetCategoryToDefaults(categoryKey);
-    }
-    // Don't do anything else - categories should only be edited through CategoryEffectEditor
-  };
-
-  // Legacy wrapper: Update a recipient's override values - type can be 'multiplier' or 'costPerLife'
-  const updateRecipientValue = (recipientName, categoryId, type, value) => {
-    if (!recipientName) {
-      throw new Error("Required parameter 'recipientName' is missing");
-    }
-    if (!categoryId) {
-      throw new Error("Required parameter 'categoryId' is missing");
-    }
-    if (!type) {
-      throw new Error("Required parameter 'type' is missing");
-    }
-    if (type !== 'multiplier' && type !== 'costPerLife') {
-      throw new Error(`Invalid type '${type}'. Must be 'multiplier' or 'costPerLife'`);
-    }
-
-    // Handle special cases for valid inputs in intermediate states
-    const valueStr = String(value);
-    const isIntermediateState = valueStr === '-' || valueStr === '.' || valueStr.endsWith('.');
-
-    if (value === '' || isIntermediateState) {
-      // For empty or intermediate states, remove the override
-      const recipientId = combinedAssumptions.findRecipientId(recipientName);
-      if (recipientId) {
-        setUserAssumptions((prev) => apiHelpers.clearRecipientCategoryOverrides(prev, recipientId, categoryId));
-      }
-    } else if (!isNaN(Number(value))) {
-      const numValue = Number(value);
-
-      // Get the base category effect to use as template
-      const baseCategory = combinedAssumptions.getCategoryById(categoryId);
-      if (!baseCategory || !baseCategory.effects || baseCategory.effects.length === 0) {
-        throw new Error(`Category ${categoryId} has no base effects to override`);
-      }
-
-      const effectId = baseCategory.effects[0].effectId;
-
-      if (type === 'costPerLife') {
-        // Skip - costPerLife is a calculated value, not a direct parameter
-        // The recipients tab will be updated to use actual parameters instead
-        return;
-      } else if (type === 'multiplier') {
-        updateRecipientFieldMultiplier(recipientName, categoryId, effectId, 'costPerQALY', numValue);
-      }
-    }
-  };
-
-  // Update multiple values at once (expects new effects format)
-  const updateValues = (newData) => {
-    setUserAssumptions(newData);
-  };
-
-  // Legacy wrapper: Update a specific global parameter value
-  const updateGlobalParameter = (parameterKey, value) => {
-    if (value === '' || value === null) {
-      resetGlobalParameter(parameterKey);
-    } else {
-      updateGlobalParameterValue(parameterKey, Number(value));
-    }
-  };
-
-  // Get global parameter custom value for display
-  const getGlobalParameter = (parameterKey) => {
-    if (
-      !userAssumptions ||
-      !userAssumptions.globalParameters ||
-      userAssumptions.globalParameters[parameterKey] === undefined
-    ) {
-      return null;
-    }
-    return userAssumptions.globalParameters[parameterKey];
-  };
-
-  // Get recipient custom value for display (converts from effects back to simple value)
-  const getRecipientValue = (recipientName, categoryId, type) => {
-    if (!userAssumptions || !userAssumptions.recipients) {
-      return null;
-    }
-
-    // Find the recipient ID by name
-    const recipientId = combinedAssumptions.findRecipientId(recipientName);
-    if (!recipientId) {
-      return null;
-    }
-
-    // Check if this recipient/category has custom effects in user assumptions
-    const recipientData = userAssumptions.recipients[recipientId];
-    if (
-      !recipientData ||
-      !recipientData.categories ||
-      !recipientData.categories[categoryId] ||
-      !recipientData.categories[categoryId].effects ||
-      recipientData.categories[categoryId].effects.length === 0
-    ) {
-      return null;
-    }
-
-    if (type === 'costPerLife') {
-      // Get the recipient data from combined assumptions (which has proper names and structure)
-      const recipient = combinedAssumptions.recipients[recipientId];
-      const categoryData = recipient.categories[categoryId];
-
-      // Calculate the actual cost per life for this recipient/category using the combined data
-      return getActualCostPerLifeForCategoryDataFromCombined(
-        combinedAssumptions,
-        recipientId,
-        categoryId,
-        categoryData,
-        getCurrentYear()
-      );
-    } else if (type === 'multiplier') {
-      // Calculate multiplier by comparing base category vs recipient-specific cost per life
-      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear());
-
-      const recipient = combinedAssumptions.recipients[recipientId];
-      const categoryData = recipient.categories[categoryId];
-      const recipientCostPerLife = getActualCostPerLifeForCategoryDataFromCombined(
-        combinedAssumptions,
-        recipientId,
-        categoryId,
-        categoryData,
-        getCurrentYear()
-      );
-
-      // Multiplier is the ratio (inverted because lower cost per life = higher multiplier)
-      return baseCostPerLife / recipientCostPerLife;
-    }
-
-    return null;
-  };
-
-  // Get category custom value for display (converts from effects back to simple cost per life)
-  const getCategoryValue = (categoryId) => {
-    if (
-      !userAssumptions ||
-      !userAssumptions.categories ||
-      !userAssumptions.categories[categoryId] ||
-      !userAssumptions.categories[categoryId].effects
-    ) {
-      return null;
-    }
-
-    const effects = userAssumptions.categories[categoryId].effects;
-    if (!effects || effects.length === 0) {
-      return null;
-    }
-
-    // Use the combined assumptions which has the proper merged data with names
-    return getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear());
-  };
-
   // Helper function to check if userAssumptions contains any actual overrides
   const hasCustomValues = (assumptions) => {
     if (!assumptions) return false;
@@ -464,7 +300,7 @@ export const AssumptionsProvider = ({ children }) => {
   // Determine if custom values are being used
   const isUsingCustomValues = hasCustomValues(userAssumptions);
 
-  // Context value - exposing both new API and legacy wrappers
+  // Context value
   const contextValue = {
     // Direct data access (read-only by convention)
     defaultAssumptions,
@@ -490,15 +326,8 @@ export const AssumptionsProvider = ({ children }) => {
     resetGlobalParameter,
     resetAllGlobalParameters,
 
-    // Legacy wrappers for backward compatibility
+    // Compatibility helper
     resetToDefaults,
-    updateCategoryValue,
-    updateRecipientValue,
-    updateGlobalParameter,
-    updateValues,
-    getRecipientValue,
-    getCategoryValue,
-    getGlobalParameter,
   };
 
   return <AssumptionsContext.Provider value={contextValue}>{children}</AssumptionsContext.Provider>;

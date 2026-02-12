@@ -552,4 +552,52 @@ describe('assumptionsAPIHelpers', () => {
       },
     });
   });
+
+  it('setRecipientEffectsByCategory can clear one category while updating another in one call', () => {
+    const defaults = buildDefaultAssumptions();
+    defaults.categories.aid = {
+      effects: [
+        {
+          effectId: 'e2',
+          costPerQALY: 200,
+          startTime: 0,
+          windowLength: 5,
+          disabled: false,
+        },
+      ],
+    };
+    defaults.recipients.recipientA.categories.aid = { fraction: 1 };
+
+    const existing = {
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'e1', overrides: { startTime: 2 } }],
+            },
+            aid: {
+              effects: [{ effectId: 'e2', multipliers: { costPerQALY: 1.2 } }],
+            },
+          },
+        },
+      },
+    };
+
+    const result = setRecipientEffectsByCategory(existing, defaults, 'recipientA', {
+      health: [{ effectId: 'e1', disabled: false }],
+      aid: [{ effectId: 'e2', overrides: { startTime: 3 } }],
+    });
+
+    expect(result).toEqual({
+      recipients: {
+        recipientA: {
+          categories: {
+            aid: {
+              effects: [{ effectId: 'e2', overrides: { startTime: 3 } }],
+            },
+          },
+        },
+      },
+    });
+  });
 });

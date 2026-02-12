@@ -25,3 +25,9 @@ dist-ssr
 
 # Generated data files
 src/data/generatedData.js
+
+# Test artifacts
+coverage/
+
+# Local agent/worktree state
+.claude/worktrees/

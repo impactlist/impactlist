@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { formatNumberWithCommas } from '../utils/formatters';
-import { validateGlobalField } from '../utils/effectValidation';
+import { cleanAndParseValue, isPartialInput, validateGlobalField } from '../utils/effectValidation';
 
 /**
  * Custom hook for managing global parameter form state
@@ -75,26 +75,23 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
       return '';
     }
 
-    if (format === 'percentage') {
-      // Remove % sign if present
-      const percentValue = cleanValue.replace('%', '').trim();
-      if (percentValue === '') {
-        return '';
-      }
-      const numValue = parseFloat(percentValue);
-      if (!isNaN(numValue)) {
-        return numValue / 100; // Convert percentage to decimal
-      }
+    const normalizedValue = format === 'percentage' ? cleanValue.replace('%', '').trim() : cleanValue;
+    if (normalizedValue === '') {
+      return '';
     }
 
-    if (format === 'number') {
-      const numValue = parseFloat(cleanValue);
-      if (!isNaN(numValue)) {
-        return numValue;
-      }
+    const { cleanValue: parsedCleanValue, numValue } = cleanAndParseValue(normalizedValue);
+
+    if (typeof parsedCleanValue === 'string' && isPartialInput(parsedCleanValue)) {
+      return parsedCleanValue;
     }
 
-    return cleanValue;
+    if (!isNaN(numValue)) {
+      return format === 'percentage' ? numValue / 100 : numValue;
+    }
+
+    // Preserve invalid input so validation can surface an explicit error instead of truncating via parseFloat.
+    return normalizedValue;
   };
 
   // Handle form value changes

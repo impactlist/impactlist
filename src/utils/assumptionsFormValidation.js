@@ -4,7 +4,7 @@
  * as opposed to dataValidation.js which does runtime data structure validation
  */
 
-import { cleanAndParseValue, validateGlobalField } from './effectValidation';
+import { cleanAndParseValue, isPartialInput, validateGlobalField } from './effectValidation';
 import { calculateCostPerLife } from './effectsCalculation';
 import { getCurrentYear } from './donationDataHelpers';
 
@@ -126,6 +126,13 @@ export const validateGlobalParameterValues = (formValues, globalParameters) => {
 
     // Empty values are valid - they'll use the default value
     if (rawValue === null || rawValue === undefined || (typeof rawValue === 'string' && rawValue.trim() === '')) {
+      return;
+    }
+
+    const { cleanValue } = cleanAndParseValue(rawValue);
+    if (typeof cleanValue === 'string' && isPartialInput(cleanValue)) {
+      errors[paramKey] = 'Please enter a complete number';
+      hasErrors = true;
       return;
     }
 

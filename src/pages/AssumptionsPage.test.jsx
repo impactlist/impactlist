@@ -1,10 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
+
+/* global localStorage */
 
 const assumptionsData = createDefaultAssumptions();
 const firstValidCategoryId = Object.keys(assumptionsData.categories)[0];
@@ -58,6 +60,10 @@ const renderAssumptionsRoute = (initialEntry) => {
 };
 
 describe('AssumptionsPage routing integration', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it('shows recipients list for an invalid recipient deep-link instead of opening an editor', async () => {
     renderAssumptionsRoute('/assumptions?recipientId=recipient-that-does-not-exist');
 
@@ -177,5 +183,41 @@ describe('AssumptionsPage routing integration', () => {
       expect(screen.getByText(/Edit effects for recipient/i)).toBeInTheDocument();
       expect(screen.getByTestId('location-probe').textContent).toContain('recipientId=');
     });
+  });
+
+  it('saves and resets global parameter overrides from the global tab', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '150');
+
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
+      expect(persisted.globalParameters.timeLimit).toBe(150);
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Reset Global' }));
+
+    await waitFor(() => {
+      expect(localStorage.getItem('customEffectsData')).toBeNull();
+    });
+  });
+
+  it('blocks global save when input is incomplete', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const discountRateInput = await screen.findByLabelText('Discount Rate (%)');
+    await user.clear(discountRateInput);
+    await user.type(discountRateInput, '-');
+
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(await screen.findByText('Please enter a complete number')).toBeInTheDocument();
+    expect(localStorage.getItem('customEffectsData')).toBeNull();
   });
 });

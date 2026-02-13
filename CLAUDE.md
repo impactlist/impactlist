@@ -25,9 +25,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Math rendering
 
-Math in markdown files is rendered with KaTeX, which is why:
+Markdown content is rendered via `react-markdown` with `remark-math` and `rehype-katex` plugins (configured in `src/components/shared/MarkdownContent.jsx`). KaTeX CSS is imported in `src/main.jsx`.
 
-- Dollar signs in currency need escaping (\$)
-- \dfrac works better than \frac for display-style fractions
-- Large number separators use {,} syntax (e.g., \$400{,}000)
-- Inline math is put between single dollar signs, and math blocks are delimited by double dollar signs.
+### Delimiters
+
+Both forms are used in the codebase:
+
+- Inline math: `$...$` (used heavily in assumptions and variable definitions)
+- Block math: `$$...$$` (used for standalone equations)
+
+### Escaping rules
+
+- **Currency dollar signs** should be escaped as `\$` whenever you intend a literal dollar sign (especially inside math), because `$` is the math delimiter.
+- **Thousands separators** in math often use `{,}` (e.g., `\$40{,}000`) and this is a good default for consistency/readability. Existing content also contains plain commas in some equations.
+- **En-dashes/ranges** inside math blocks use `\text{–}` (e.g., `0.1\text{–}0.2`).
+
+### Common LaTeX conventions used in content
+
+- Both `\dfrac{...}{...}` and `\frac{...}{...}` are used in existing content. Prefer consistency with the file you are editing.
+- `\text{...}` for words/labels inside equations
+- `\approx` for approximation
+- Subscripts with text: `Q_{\text{extra}}`

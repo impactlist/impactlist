@@ -31,9 +31,12 @@ This plan uses Upstash Redis and intentionally avoids user accounts for the MVP.
 - Slugs are public aliases; they are not ownership/auth.
 
 ### 4) Local override behavior on open
-- If local custom assumptions already exist: show modal asking whether to replace local assumptions.
+- If local custom assumptions already exist: show modal with three options:
+  - `Save Mine First` (open share modal for current local assumptions, then import incoming shared assumptions)
+  - `Replace Mine` (import incoming shared assumptions now)
+  - `Keep Mine` (ignore incoming shared assumptions)
 - If no local custom assumptions: auto-import and show success toast.
-- If user chooses "Keep mine": do not modify local assumptions.
+- If user chooses `Keep Mine`: do not modify local assumptions.
 
 ### 5) Data payload
 - Store the normalized `userAssumptions` override object (not full derived data).
@@ -56,10 +59,12 @@ This plan uses Upstash Redis and intentionally avoids user accounts for the MVP.
 - Add server endpoints for create/read shared snapshots.
 - Upstash Redis stores snapshot records and slug mappings.
 - Redis credentials only on server.
+- All Redis access must go through these server endpoints (thin proxy); do not call Upstash directly from browser code.
 
 ### Hosting notes
 - Current `vercel.json` rewrites all routes to `/index.html`.
-- API routes must bypass SPA rewrite (or be explicitly configured) so `/api/*` hits server functions.
+- In Phase 0, verify whether `/api/*` already bypasses SPA rewrites in this deployment setup.
+- Only change `vercel.json` if verification shows `/api/*` is being swallowed by the SPA rewrite.
 
 ## Redis Data Model
 
@@ -88,6 +93,10 @@ This plan uses Upstash Redis and intentionally avoids user accounts for the MVP.
 - Store with expiry at write time.
 - If TTL strategy changes later, keep key namespace stable.
 
+### ID policy
+- Generate high-entropy canonical IDs (recommended 12+ chars via `nanoid` or equivalent CSPRNG output).
+- Do not use short IDs that raise collision risk as volume grows.
+
 ## API Contract
 
 ### 1) Create snapshot
@@ -105,12 +114,19 @@ Request:
 Response 201:
 ```json
 {
-  "id": "k9f2m7q1",
+  "id": "k9f2m7q1x4bp",
   "slug": "my-ai-risk-model",
   "reference": "my-ai-risk-model",
   "shareUrl": "https://impactlist.xyz/assumptions?shared=my-ai-risk-model"
 }
 ```
+
+Implementation requirements:
+- Slug claims must be atomic (`SET assumptions:slug:<slug> <id> NX EX <ttl>`) to prevent race conditions.
+- Snapshot+alias writes must be consistency-safe:
+  - Preferred: single transaction/script for multi-key write.
+  - Acceptable fallback: deterministic rollback on partial failure.
+- `shareUrl` must be built from runtime origin (request host/proto) or controlled env fallback, not hardcoded.
 
 Errors:
 - `400` invalid payload/invalid slug/no effective assumptions.
@@ -130,7 +146,7 @@ Errors:
 Response 200:
 ```json
 {
-  "id": "k9f2m7q1",
+  "id": "k9f2m7q1x4bp",
   "slug": "my-ai-risk-model",
   "name": "optional name",
   "createdAt": "2026-02-13T22:00:00.000Z",
@@ -156,6 +172,7 @@ Errors:
 
 ### Collision handling
 - First-write wins.
+- Enforce first-write atomically with `SET NX`; never rely on `EXISTS` + `SET`.
 - If taken: return `409`.
 - Optional response metadata can include suggestions:
   - `<slug>-2`
@@ -168,6 +185,9 @@ Errors:
   - `globalParameters`, `categories`, `recipients`.
 - Drop unknown keys.
 - Normalize against defaults via `normalizeUserAssumptions`.
+- Keep server validation/runtime code server-safe:
+  - Use a shared pure validation module that does not import browser-only modules.
+  - Avoid coupling API handlers to client-only code paths.
 - Reject if normalized result is null/empty.
 
 ### Payload limits
@@ -175,7 +195,7 @@ Errors:
 - Max stored assumptions length safeguard.
 
 ### Abuse controls
-- IP-based rate limit on create endpoint.
+- IP-based rate limit on create endpoint (recommended baseline: 10 saves/hour per IP).
 - Optional separate limit for read endpoint if needed.
 - Basic slug moderation rules (deny obvious abusive terms).
 
@@ -207,16 +227,21 @@ Errors:
 ### C) Open shared link (existing local custom assumptions)
 1. User lands with `shared`.
 2. App fetches snapshot.
-3. Show confirm modal:
-   - Primary: `Replace mine`
-   - Secondary: `Keep mine`
-4. If replace:
+3. Show confirm modal with three actions:
+   - `Save Mine First`
+   - `Replace Mine`
+   - `Keep Mine`
+4. If `Save Mine First`:
+   - Open share modal prefilled from local assumptions.
+   - After successful save, import fetched shared assumptions.
+   - If user cancels save flow, return to decision modal and do not import.
+5. If `Replace Mine`:
    - Apply snapshot.
    - Show success toast.
-5. If keep:
+6. If `Keep Mine`:
    - No data change.
    - Optional info toast.
-6. Remove `shared` param regardless of choice.
+7. Remove `shared` param regardless of choice.
 
 ### D) Error states
 - Not found/expired: toast + drop `shared`.
@@ -238,6 +263,7 @@ Add shared import orchestration:
 - Parse `shared` query param.
 - Fetch snapshot once per unique `shared` value.
 - Coordinate modal/toasts and apply decision.
+- Include `Save Mine First` branch that launches share modal, then imports incoming snapshot.
 - Remove only `shared` from URL with `replace`.
 
 ### Editor/actions UI (`src/components/AssumptionsEditor.jsx`, `src/components/assumptions/FormActions.jsx`)
@@ -246,10 +272,20 @@ Add share controls:
 - Modal or inline form for optional slug and optional name.
 - Display generated link and copy action.
 
+### Share modal component
+Add a reusable share modal component (recommended path: `src/components/ShareAssumptionsModal.jsx`):
+- Inputs: optional name, optional custom slug.
+- Live slug preview and client-side format checks.
+- States: idle, saving, success, error.
+- Can be invoked from both:
+  - Main `Save & Share` button.
+  - `Save Mine First` branch during shared-import conflict resolution.
+
 ### API utilities
 Add client-side helper module for HTTP calls:
 - `createSharedAssumptionsSnapshot(payload)`
 - `fetchSharedAssumptionsSnapshot(reference)`
+- Optional helper in same module: `slugify(name)` for preview UX.
 
 ### Server API files
 Add route handlers under whichever server function convention is used in deployment (example path names):
@@ -257,18 +293,23 @@ Add route handlers under whichever server function convention is used in deploym
 - `api/shared-assumptions/[reference].js` (GET)
 
 ### Config
-Update routing config so `/api/*` is not rewritten to SPA index.
+Verification-first:
+- Add a simple API smoke endpoint/check in Phase 0 and test on preview deployment.
+- If and only if API routes are intercepted by SPA rewrite, update `vercel.json` to keep explicit `/api/(.*)` passthrough ahead of SPA catch-all rewrite.
 
 ## Detailed Implementation Phases
 
 ### Phase 0: API foundation + config
 1. Add Redis client wiring and env var validation.
 2. Add POST/GET endpoints with schema validation.
-3. Add rewrite/config updates for API routes.
-4. Add server-side unit tests for slug and payload validation.
+3. Verify API routing behavior in deployment (smoke-check `/api/*` endpoint on preview).
+4. Only if needed, add rewrite/config updates for API routes.
+5. Implement atomic slug claim and consistency-safe snapshot/alias writes.
+6. Add server-side unit tests for slug, payload validation, and write consistency.
 
 Exit criteria:
 - Can create and fetch snapshots via local/dev requests.
+- Preview deployment confirms `/api/*` routes work correctly without leaking Redis credentials client-side.
 
 ### Phase 1: Context replacement API
 1. Add `setAllUserAssumptions`.
@@ -281,11 +322,12 @@ Exit criteria:
 ### Phase 2: Shared import flow on assumptions page
 1. Detect `shared` in query params.
 2. Fetch snapshot and branch by local-custom state.
-3. Implement replace/keep modal.
+3. Implement three-choice modal (`Save Mine First`, `Replace Mine`, `Keep Mine`).
 4. Remove `shared` param after handling.
 5. Add integration tests for:
    - auto-load with empty local
    - prompt with existing local
+   - save-mine-first then import path
    - keep mine path
    - invalid shared reference path
    - preserving non-shared params
@@ -322,7 +364,7 @@ Exit criteria:
 ### Integration tests (frontend)
 - Query param import workflow branches.
 - URL cleanup behavior with preserved params.
-- Modal decision behavior.
+- Modal decision behavior, including `Save Mine First` continuation/cancel behavior.
 - Save/share form and error paths.
 
 ### End-to-end tests (optional initial pass)
@@ -357,8 +399,21 @@ Exit criteria:
 3. Should "Keep mine" still show the imported snapshot summary (name/date) anywhere?
 4. Do we want an explicit "Clear my custom assumptions" action in the import modal as fallback?
 
+## Verification Checklist
+1. Configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` locally and in production.
+2. Create custom assumptions and save via `Save & Share`; verify share URL generation and copy.
+3. Open share URL in a clean browser profile; verify auto-import and success message.
+4. Open share URL with existing local assumptions; verify three-option modal appears.
+5. Test `Save Mine First`; verify local assumptions are saved to a new link and incoming assumptions are then imported.
+6. Test `Replace Mine`; verify immediate import.
+7. Test `Keep Mine`; verify no data change.
+8. Test slug collision; verify `409` handling and user-facing message.
+9. Test invalid/expired reference; verify error handling and `shared` param removal.
+10. Verify URL cleanup preserves other query params (`tab`, `categoryId`, `recipientId`, `activeCategory`).
+
 ## Initial Recommendation Summary
 - Implement immutable snapshots with optional custom slugs.
 - Keep `shared` as one-time import instruction and drop it from URL after handling.
 - Use context-level full-replacement API for clean import semantics.
+- Require atomic slug claiming and consistency-safe multi-key writes.
 - Ship in phased steps with tests at each phase.

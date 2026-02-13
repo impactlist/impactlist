@@ -235,4 +235,66 @@ describe('AssumptionsPage shared import flow', () => {
       fetchMock.mock.calls.some(([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST')
     ).toBe(true);
   });
+
+  it('returns to decision modal when Save Mine First is canceled and does not import', async () => {
+    const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 15;
+    const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 65;
+
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: currentTimeLimit,
+        },
+      })
+    );
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'incoming-cancel',
+        assumptions: {
+          globalParameters: {
+            timeLimit: incomingTimeLimit,
+          },
+        },
+      }),
+    });
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions?shared=incoming-cancel');
+
+    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Save Mine First' }));
+    expect(await screen.findByRole('heading', { name: 'Save Yours First' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
+    expect(screen.getByTestId('location-probe').textContent).toContain('shared=incoming-cancel');
+    expect(getPersistedCustomEffectsData()).toEqual({
+      globalParameters: {
+        timeLimit: currentTimeLimit,
+      },
+    });
+  });
+
+  it('shows error and removes shared param when shared snapshot lookup fails', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 404,
+      json: async () => ({
+        error: 'not_found',
+        message: 'Shared assumptions were not found.',
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions?tab=recipients&shared=missing-reference');
+
+    expect(await screen.findByText('Shared assumptions were not found.')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=recipients');
+    });
+  });
 });

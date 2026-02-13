@@ -14,8 +14,8 @@ const assertRedisConfigured = () => {
   return config;
 };
 
-const assertValidPipelineResult = (payload) => {
-  if (!Array.isArray(payload) || payload.length === 0) {
+const assertValidPipelineResult = (payload, expectedLength) => {
+  if (!Array.isArray(payload) || payload.length === 0 || payload.length !== expectedLength) {
     throw createSharedAssumptionsError(500, 'redis_invalid_response', 'Invalid Redis response shape.');
   }
 
@@ -52,7 +52,7 @@ export const runRedisPipeline = async (commands) => {
   }
 
   const payload = await response.json();
-  assertValidPipelineResult(payload);
+  assertValidPipelineResult(payload, commands.length);
   return payload.map((entry) => entry.result);
 };
 

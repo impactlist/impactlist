@@ -67,6 +67,20 @@ describe('upstashRedisClient', () => {
     await expect(runRedisCommand('GET', 'foo')).rejects.toBeInstanceOf(SharedAssumptionsError);
   });
 
+  it('throws when redis pipeline response count does not match command count', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => [{ result: 'only-one-result' }],
+    });
+
+    await expect(
+      runRedisPipeline([
+        ['GET', 'foo'],
+        ['GET', 'bar'],
+      ])
+    ).rejects.toMatchObject({ code: 'redis_invalid_response' });
+  });
+
   it('throws when redis config is missing', async () => {
     globalThis.process = {
       ...globalThis.process,

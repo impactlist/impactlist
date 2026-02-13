@@ -11,11 +11,20 @@ import {
   getPublicSiteOrigin,
 } from './sharedAssumptionsConfig';
 import { createSharedAssumptionsError } from './sharedAssumptionsErrors';
-import { runRedisCommand } from './upstashRedisClient';
+import { runRedisCommand, runRedisPipeline } from './upstashRedisClient';
 
 const ID_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 const ID_LENGTH = 12;
 const MAX_UNBIASED_BYTE = 252;
+const RATE_LIMIT_LUA = `
+local key = KEYS[1]
+local window = tonumber(ARGV[1])
+local count = redis.call('INCR', key)
+if count == 1 then
+  redis.call('EXPIRE', key, window)
+end
+return count
+`;
 
 const generateSnapshotId = () => {
   let id = '';
@@ -62,18 +71,17 @@ export const getRequestOrigin = (req) => {
   }
 
   const forwardedProto = req.headers['x-forwarded-proto'];
-  const protocol = typeof forwardedProto === 'string' && forwardedProto.length > 0 ? forwardedProto : 'https';
+  const protocol =
+    typeof forwardedProto === 'string' && forwardedProto.trim().length > 0
+      ? forwardedProto.split(',')[0].trim() || 'https'
+      : 'https';
   return `${protocol}://${host}`;
 };
 
 const enforceRateLimit = async (clientIp) => {
   const key = buildRateLimitKey(clientIp);
-  const countResult = await runRedisCommand('INCR', key);
+  const countResult = await runRedisCommand('EVAL', RATE_LIMIT_LUA, '1', key, String(RATE_LIMIT_WINDOW_SECONDS));
   const count = Number(countResult || 0);
-
-  if (count === 1) {
-    await runRedisCommand('EXPIRE', key, String(RATE_LIMIT_WINDOW_SECONDS));
-  }
 
   if (count > RATE_LIMIT_MAX_SAVES) {
     throw createSharedAssumptionsError(
@@ -162,9 +170,14 @@ export const createSharedSnapshot = async ({ assumptions, name, slug, clientIp, 
 };
 
 export const getSharedSnapshot = async (reference) => {
-  const mappedId = await runRedisCommand('GET', buildSlugKey(reference));
+  const [mappedId, directSnapshot] = await runRedisPipeline([
+    ['GET', buildSlugKey(reference)],
+    ['GET', buildSnapshotKey(reference)],
+  ]);
+
   const snapshotId = mappedId || reference;
-  const rawSnapshot = await runRedisCommand('GET', buildSnapshotKey(snapshotId));
+  const rawSnapshot =
+    mappedId && mappedId !== reference ? await runRedisCommand('GET', buildSnapshotKey(mappedId)) : directSnapshot;
 
   if (!rawSnapshot) {
     throw createSharedAssumptionsError(404, 'not_found', 'Shared assumptions were not found.');

@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
+import { MAX_ASSUMPTIONS_BYTES } from './sharedAssumptionsConfig';
+import { serverDefaultAssumptions } from './sharedAssumptionsNormalization';
 import { validateCreatePayload, validateReference } from './sharedAssumptionsValidation';
 import { SharedAssumptionsError } from './sharedAssumptionsErrors';
 
-const defaults = createDefaultAssumptions();
+const defaults = serverDefaultAssumptions;
 const [firstGlobalParamName, firstGlobalParamValue] = Object.entries(defaults.globalParameters)[0];
 
 const buildValidPayload = () => ({
@@ -60,5 +61,24 @@ describe('sharedAssumptionsValidation', () => {
   it('validates shared reference', () => {
     expect(validateReference('  abc-123  ')).toBe('abc-123');
     expect(() => validateReference('')).toThrowError(SharedAssumptionsError);
+  });
+
+  it('rejects assumptions payload that exceeds max size', () => {
+    const hugeValue = 'x'.repeat(MAX_ASSUMPTIONS_BYTES + 1);
+
+    try {
+      validateCreatePayload({
+        assumptions: {
+          globalParameters: {
+            [firstGlobalParamName]: Number(firstGlobalParamValue) + 1,
+            hugeValue,
+          },
+        },
+      });
+      throw new Error('Expected payload to be rejected for size');
+    } catch (error) {
+      expect(error).toBeInstanceOf(SharedAssumptionsError);
+      expect(error.code).toBe('assumptions_too_large');
+    }
   });
 });

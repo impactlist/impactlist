@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { runRedisCommand } from './upstashRedisClient';
+import { runRedisCommand, runRedisPipeline } from './upstashRedisClient';
 import { SharedAssumptionsError } from './sharedAssumptionsErrors';
 
 describe('upstashRedisClient', () => {
@@ -24,21 +24,38 @@ describe('upstashRedisClient', () => {
     };
   });
 
-  it('sends command to upstash pipeline endpoint', async () => {
+  it('sends multi-command pipeline to upstash', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => [{ result: 'value-1' }, { result: 'value-2' }],
+    });
+
+    const result = await runRedisPipeline([
+      ['GET', 'foo'],
+      ['GET', 'bar'],
+    ]);
+
+    expect(result).toEqual(['value-1', 'value-2']);
+    expect(fetchSpy).toHaveBeenCalledWith(
+      'https://example.upstash.io/pipeline',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify([
+          ['GET', 'foo'],
+          ['GET', 'bar'],
+        ]),
+      })
+    );
+  });
+
+  it('runRedisCommand wraps single commands through pipeline helper', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       json: async () => [{ result: 'value' }],
     });
 
     const result = await runRedisCommand('GET', 'foo');
-
     expect(result).toBe('value');
-    expect(fetchSpy).toHaveBeenCalledWith(
-      'https://example.upstash.io/pipeline',
-      expect.objectContaining({
-        method: 'POST',
-      })
-    );
   });
 
   it('throws when redis returns command error', async () => {

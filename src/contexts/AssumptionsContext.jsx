@@ -105,6 +105,15 @@ export const AssumptionsProvider = ({ children }) => {
     setUserAssumptions((prev) => apiHelpers.clearAllGlobalParameters(prev));
   };
 
+  const setAllUserAssumptions = (nextUserAssumptions) => {
+    const normalized = apiHelpers.normalizeUserAssumptions(nextUserAssumptions, defaultAssumptions);
+    setUserAssumptions(normalized);
+  };
+
+  const getNormalizedUserAssumptionsForSharing = () => {
+    return apiHelpers.normalizeUserAssumptions(userAssumptions, defaultAssumptions);
+  };
+
   const contextValue = {
     defaultAssumptions,
     userAssumptions,
@@ -118,6 +127,8 @@ export const AssumptionsProvider = ({ children }) => {
     updateGlobalParameterValue,
     resetGlobalParameter,
     resetAllGlobalParameters,
+    setAllUserAssumptions,
+    getNormalizedUserAssumptionsForSharing,
   };
 
   return <AssumptionsContext.Provider value={contextValue}>{children}</AssumptionsContext.Provider>;

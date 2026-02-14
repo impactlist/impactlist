@@ -12,7 +12,7 @@ const handler = async (req, res) => {
     const snapshot = await getSharedSnapshot(reference);
     sendJson(res, 200, snapshot);
   } catch (error) {
-    handleApiError(res, error);
+    handleApiError(req, res, error);
   }
 };
 

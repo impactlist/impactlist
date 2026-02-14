@@ -23,7 +23,7 @@ const handler = async (req, res) => {
 
     sendJson(res, 201, created);
   } catch (error) {
-    handleApiError(res, error);
+    handleApiError(req, res, error);
   }
 };
 

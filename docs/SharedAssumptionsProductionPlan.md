@@ -67,6 +67,9 @@ Isolation requirements:
 ### 2. Validate secrets are present at runtime
 - Deploy preview.
 - Verify `GET /api/health` returns `{ "ok": true }`.
+- Verify `GET /api/health?check=redis` returns success for:
+  - `checks.redisPing`
+  - `checks.redisEval`
 - Attempt one API create call and one read call in preview (via UI or curl).
 
 Exit criteria:

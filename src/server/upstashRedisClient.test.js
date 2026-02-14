@@ -81,6 +81,34 @@ describe('upstashRedisClient', () => {
     ).rejects.toMatchObject({ code: 'redis_invalid_response' });
   });
 
+  it('maps upstream 429 responses to retryable service errors', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 429,
+      clone: () => ({
+        json: async () => ({ error: 'daily request limit exceeded' }),
+        text: async () => 'daily request limit exceeded',
+      }),
+    });
+
+    await expect(runRedisCommand('GET', 'foo')).rejects.toMatchObject({
+      status: 503,
+      code: 'redis_quota_or_rate_limited',
+    });
+  });
+
+  it('maps quota-related command errors to retryable service errors', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => [{ error: 'max request limit exceeded' }],
+    });
+
+    await expect(runRedisCommand('GET', 'foo')).rejects.toMatchObject({
+      status: 503,
+      code: 'redis_quota_or_rate_limited',
+    });
+  });
+
   it('throws when redis config is missing', async () => {
     globalThis.process = {
       ...globalThis.process,

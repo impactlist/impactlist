@@ -95,8 +95,33 @@ export const parseJsonBody = async (req) => {
   }
 };
 
-export const handleApiError = (res, error) => {
+const getRequestContext = (req) => {
+  if (!req) {
+    return {};
+  }
+
+  return {
+    method: req.method || 'unknown',
+    url: req.url || 'unknown',
+  };
+};
+
+export const handleApiError = (reqOrRes, resOrError, maybeError) => {
+  const hasRequestArg = maybeError !== undefined;
+  const req = hasRequestArg ? reqOrRes : null;
+  const res = hasRequestArg ? resOrError : reqOrRes;
+  const error = hasRequestArg ? maybeError : resOrError;
+
   if (isSharedAssumptionsError(error)) {
+    if (error.status >= 500) {
+      console.error('[shared-assumptions] API error', {
+        ...getRequestContext(req),
+        status: error.status,
+        code: error.code,
+        message: error.message,
+      });
+    }
+
     sendJson(res, error.status, {
       error: error.code,
       message: error.message,
@@ -104,7 +129,10 @@ export const handleApiError = (res, error) => {
     return;
   }
 
-  console.error('[shared-assumptions] Unexpected API error', error);
+  console.error('[shared-assumptions] Unexpected API error', {
+    ...getRequestContext(req),
+    error,
+  });
   sendJson(res, 500, {
     error: 'internal_error',
     message: 'An unexpected error occurred.',

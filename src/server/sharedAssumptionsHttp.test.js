@@ -57,4 +57,22 @@ describe('sharedAssumptionsHttp', () => {
       message: 'Missing',
     });
   });
+
+  it('logs known server errors with request context', () => {
+    const response = createMockResponse();
+    const loggerSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const request = {
+      method: 'POST',
+      url: '/api/shared-assumptions',
+    };
+
+    handleApiError(request, response, createSharedAssumptionsError(500, 'redis_request_failed', 'Redis failed.'));
+
+    expect(response.statusCode).toBe(500);
+    expect(loggerSpy).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(response.payload)).toEqual({
+      error: 'redis_request_failed',
+      message: 'Redis failed.',
+    });
+  });
 });

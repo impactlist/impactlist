@@ -21,7 +21,11 @@ describe('shareAssumptions utils', () => {
   it('saveSharedAssumptions posts payload', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
-      json: async () => ({ reference: 'abc123' }),
+      json: async () => ({
+        id: 'abc123',
+        reference: 'abc123',
+        shareUrl: 'https://impactlist.xyz/assumptions?shared=abc123',
+      }),
     });
 
     const result = await saveSharedAssumptions({
@@ -42,5 +46,29 @@ describe('shareAssumptions utils', () => {
     });
 
     await expect(fetchSharedAssumptions('missing')).rejects.toBeInstanceOf(ShareAssumptionsAPIError);
+  });
+
+  it('throws invalid_response when server returns malformed JSON payload', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => {
+        throw new Error('Malformed JSON');
+      },
+    });
+
+    await expect(fetchSharedAssumptions('bad-payload')).rejects.toMatchObject({
+      code: 'invalid_response',
+    });
+  });
+
+  it('throws invalid_response when snapshot payload has no assumptions object', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: 'abc123' }),
+    });
+
+    await expect(fetchSharedAssumptions('bad-shape')).rejects.toMatchObject({
+      code: 'invalid_response',
+    });
   });
 });

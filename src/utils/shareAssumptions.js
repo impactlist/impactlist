@@ -18,6 +18,14 @@ const parseJsonSafely = async (response) => {
   }
 };
 
+const isPlainObject = (value) => {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+};
+
+const isNonEmptyString = (value) => {
+  return typeof value === 'string' && value.trim().length > 0;
+};
+
 const requestJson = async (url, options = {}) => {
   const response = await globalThis.fetch(url, options);
   const payload = await parseJsonSafely(response);
@@ -28,6 +36,10 @@ const requestJson = async (url, options = {}) => {
       payload?.error || 'request_failed',
       payload?.message || 'Request failed.'
     );
+  }
+
+  if (!isPlainObject(payload)) {
+    throw new ShareAssumptionsAPIError(500, 'invalid_response', 'Server returned invalid JSON.');
   }
 
   return payload;
@@ -51,7 +63,7 @@ export const isValidSlug = (value) => {
 };
 
 export const saveSharedAssumptions = async ({ assumptions, name, slug }) => {
-  return requestJson(SHARED_ASSUMPTIONS_BASE_PATH, {
+  const payload = await requestJson(SHARED_ASSUMPTIONS_BASE_PATH, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,9 +74,21 @@ export const saveSharedAssumptions = async ({ assumptions, name, slug }) => {
       slug: slug || null,
     }),
   });
+
+  if (!isNonEmptyString(payload.id) || !isNonEmptyString(payload.reference) || !isNonEmptyString(payload.shareUrl)) {
+    throw new ShareAssumptionsAPIError(500, 'invalid_response', 'Server returned an invalid save response.');
+  }
+
+  return payload;
 };
 
 export const fetchSharedAssumptions = async (reference) => {
   const encodedReference = encodeURIComponent(reference);
-  return requestJson(`${SHARED_ASSUMPTIONS_BASE_PATH}/${encodedReference}`);
+  const payload = await requestJson(`${SHARED_ASSUMPTIONS_BASE_PATH}/${encodedReference}`);
+
+  if (!isPlainObject(payload.assumptions)) {
+    throw new ShareAssumptionsAPIError(500, 'invalid_response', 'Server returned an invalid snapshot response.');
+  }
+
+  return payload;
 };

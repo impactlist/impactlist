@@ -297,4 +297,38 @@ describe('AssumptionsPage shared import flow', () => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=recipients');
     });
   });
+
+  it('does not clear local assumptions when shared snapshot response is invalid', async () => {
+    const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 22;
+
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: currentTimeLimit,
+        },
+      })
+    );
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'bad-shape',
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions?shared=bad-shape');
+
+    expect(await screen.findByText('Server returned an invalid snapshot response.')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
+    });
+
+    expect(getPersistedCustomEffectsData()).toEqual({
+      globalParameters: {
+        timeLimit: currentTimeLimit,
+      },
+    });
+  });
 });

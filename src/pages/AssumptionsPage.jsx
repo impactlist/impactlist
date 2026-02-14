@@ -8,6 +8,10 @@ import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { fetchSharedAssumptions } from '../utils/shareAssumptions';
 
+const isPlainObject = (value) => {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+};
+
 const AssumptionsPage = () => {
   const { isUsingCustomValues, setAllUserAssumptions, getNormalizedUserAssumptionsForSharing } = useAssumptions();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -110,10 +114,18 @@ const AssumptionsPage = () => {
 
   const applySharedSnapshot = useCallback(
     (snapshot, reference) => {
+      if (!isPlainObject(snapshot) || !isPlainObject(snapshot.assumptions)) {
+        setPageStatus('error', 'Shared assumptions payload is invalid.');
+        setPendingSharedSnapshot(null);
+        removeSharedParam(reference);
+        return false;
+      }
+
       setAllUserAssumptions(snapshot.assumptions);
       setPageStatus('success', 'Shared assumptions loaded.');
       setPendingSharedSnapshot(null);
       removeSharedParam(reference);
+      return true;
     },
     [removeSharedParam, setAllUserAssumptions, setPageStatus]
   );

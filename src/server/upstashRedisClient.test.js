@@ -10,8 +10,8 @@ describe('upstashRedisClient', () => {
       ...globalThis.process,
       env: {
         ...(originalEnv || {}),
-        UPSTASH_REDIS_REST_URL: 'https://example.upstash.io',
-        UPSTASH_REDIS_REST_TOKEN: 'token',
+        SHARED_ASSUMPTIONS_REDIS_REST_URL: 'https://example.upstash.io',
+        SHARED_ASSUMPTIONS_REDIS_REST_TOKEN: 'token',
       },
     };
   });

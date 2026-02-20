@@ -33,8 +33,8 @@ export const RESERVED_SLUGS = new Set([
 
 export const getRedisConfig = () => {
   const env = globalThis.process?.env || {};
-  const restUrl = env.UPSTASH_REDIS_REST_URL;
-  const restToken = env.UPSTASH_REDIS_REST_TOKEN;
+  const restUrl = env.SHARED_ASSUMPTIONS_REDIS_REST_URL;
+  const restToken = env.SHARED_ASSUMPTIONS_REDIS_REST_TOKEN;
 
   if (!restUrl || !restToken) {
     return null;

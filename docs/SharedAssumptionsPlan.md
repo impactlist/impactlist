@@ -373,8 +373,8 @@ Exit criteria:
 ## Operational Considerations
 
 ### Environment variables (example names)
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
+- `SHARED_ASSUMPTIONS_REDIS_REST_URL`
+- `SHARED_ASSUMPTIONS_REDIS_REST_TOKEN`
 - `PUBLIC_SITE_ORIGIN` (for returned absolute share URL)
 
 ### Observability
@@ -400,7 +400,7 @@ Exit criteria:
 4. Do we want an explicit "Clear my custom assumptions" action in the import modal as fallback?
 
 ## Verification Checklist
-1. Configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` locally and in production.
+1. Configure `SHARED_ASSUMPTIONS_REDIS_REST_URL` and `SHARED_ASSUMPTIONS_REDIS_REST_TOKEN` locally and in production.
 2. Create custom assumptions and save via `Save & Share`; verify share URL generation and copy.
 3. Open share URL in a clean browser profile; verify auto-import and success message.
 4. Open share URL with existing local assumptions; verify three-option modal appears.

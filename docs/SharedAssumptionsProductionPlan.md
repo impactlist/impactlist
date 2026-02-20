@@ -51,8 +51,8 @@ If shared Redis is unavoidable:
 ### 1. Configure required environment variables
 Set these in Vercel for each environment you use (`Preview`, `Production`):
 
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
+- `SHARED_ASSUMPTIONS_REDIS_REST_URL`
+- `SHARED_ASSUMPTIONS_REDIS_REST_TOKEN`
 - `PUBLIC_SITE_ORIGIN` (recommended; avoids host/proto ambiguity in generated share URLs)
 
 Required values:

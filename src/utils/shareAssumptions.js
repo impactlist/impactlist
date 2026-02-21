@@ -29,12 +29,13 @@ const isNonEmptyString = (value) => {
 const requestJson = async (url, options = {}) => {
   const response = await globalThis.fetch(url, options);
   const payload = await parseJsonSafely(response);
+  const fallbackErrorMessage = `Request failed (${response.status}${response.statusText ? ` ${response.statusText}` : ''}).`;
 
   if (!response.ok) {
     throw new ShareAssumptionsAPIError(
       response.status,
       payload?.error || 'request_failed',
-      payload?.message || 'Request failed.'
+      payload?.message || fallbackErrorMessage
     );
   }
 

@@ -23,7 +23,7 @@ Join [the discord](https://discord.gg/6GNre8U2ta) to learn more about these and 
 - Vite
 - Vitest
 
-## How to run the site locally so you can make changes
+## Local development
 
 1. Clone this repository
 2. Install dependencies:
@@ -34,15 +34,25 @@ Join [the discord](https://discord.gg/6GNre8U2ta) to learn more about these and 
    ```
    npm run generate-data
    ```
-4. Start development server:
+4. Start development server (recommended):
+   ```
+   vercel dev
+   ```
+   This is the default way to run locally because it serves both:
+   - the Vite frontend
+   - Vercel serverless routes under `/api/*` (used by shared assumptions and health checks)
+
+5. Optional frontend-only dev server:
    ```
    npm run dev
    ```
-5. Build for production:
+   Use this only when you do not need `/api/*` routes.
+
+6. Build for production:
    ```
    npm run build
    ```
-6. Preview production build:
+7. Preview production build:
    ```
    npm run preview
    ```

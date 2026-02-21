@@ -1,4 +1,4 @@
-import { createSharedAssumptionsError, isSharedAssumptionsError } from './sharedAssumptionsErrors';
+import { createSharedAssumptionsError, isSharedAssumptionsError } from './sharedAssumptionsErrors.js';
 
 const MAX_BODY_BYTES = 120 * 1024;
 const textEncoder = new globalThis.TextEncoder();

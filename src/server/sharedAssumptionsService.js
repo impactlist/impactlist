@@ -9,9 +9,9 @@ import {
   buildSnapshotKey,
   getAppDataVersion,
   getPublicSiteOrigin,
-} from './sharedAssumptionsConfig';
-import { createSharedAssumptionsError } from './sharedAssumptionsErrors';
-import { runRedisCommand, runRedisPipeline } from './upstashRedisClient';
+} from './sharedAssumptionsConfig.js';
+import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
+import { runRedisCommand, runRedisPipeline } from './upstashRedisClient.js';
 
 const ID_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 const ID_LENGTH = 12;

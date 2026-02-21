@@ -1,14 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { RATE_LIMIT_MAX_SAVES } from './sharedAssumptionsConfig';
+import { RATE_LIMIT_MAX_SAVES } from './sharedAssumptionsConfig.js';
 
-vi.mock('./upstashRedisClient', () => ({
+vi.mock('./upstashRedisClient.js', () => ({
   runRedisCommand: vi.fn(),
   runRedisPipeline: vi.fn(),
 }));
 
-import { createSharedSnapshot, extractClientIp, getRequestOrigin, getSharedSnapshot } from './sharedAssumptionsService';
-import { SharedAssumptionsError } from './sharedAssumptionsErrors';
-import { runRedisCommand, runRedisPipeline } from './upstashRedisClient';
+import {
+  createSharedSnapshot,
+  extractClientIp,
+  getRequestOrigin,
+  getSharedSnapshot,
+} from './sharedAssumptionsService.js';
+import { SharedAssumptionsError } from './sharedAssumptionsErrors.js';
+import { runRedisCommand, runRedisPipeline } from './upstashRedisClient.js';
 
 describe('sharedAssumptionsService', () => {
   const originalEnv = globalThis.process?.env;

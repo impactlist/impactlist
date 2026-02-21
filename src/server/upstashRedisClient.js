@@ -1,5 +1,5 @@
-import { createSharedAssumptionsError } from './sharedAssumptionsErrors';
-import { getRedisConfig } from './sharedAssumptionsConfig';
+import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
+import { getRedisConfig } from './sharedAssumptionsConfig.js';
 
 const buildHeaders = (token) => ({
   Authorization: `Bearer ${token}`,

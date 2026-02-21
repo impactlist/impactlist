@@ -6,9 +6,9 @@ import {
   MAX_SLUG_LENGTH,
   RESERVED_SLUGS,
   SLUG_REGEX,
-} from './sharedAssumptionsConfig';
-import { createSharedAssumptionsError } from './sharedAssumptionsErrors';
-import { normalizeSharedUserAssumptions, serverDefaultAssumptions } from './sharedAssumptionsNormalization';
+} from './sharedAssumptionsConfig.js';
+import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
+import { normalizeSharedUserAssumptions, serverDefaultAssumptions } from './sharedAssumptionsNormalization.js';
 
 const ALLOWED_TOP_LEVEL_KEYS = ['globalParameters', 'categories', 'recipients'];
 

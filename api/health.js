@@ -1,6 +1,6 @@
-import { runRedisCommand } from '../src/server/upstashRedisClient';
-import { sendJson } from '../src/server/sharedAssumptionsHttp';
-import { isSharedAssumptionsError } from '../src/server/sharedAssumptionsErrors';
+import { runRedisCommand } from '../src/server/upstashRedisClient.js';
+import { sendJson } from '../src/server/sharedAssumptionsHttp.js';
+import { isSharedAssumptionsError } from '../src/server/sharedAssumptionsErrors.js';
 
 const HEALTH_EVAL_SCRIPT = "return 'ok'";
 

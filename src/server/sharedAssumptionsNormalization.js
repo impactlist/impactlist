@@ -1,4 +1,4 @@
-import { categoriesById, globalParameters, recipientsById } from '../data/generatedData';
+import { categoriesById, globalParameters, recipientsById } from '../data/generatedData.js';
 
 const createServerDefaultAssumptions = () => {
   return {

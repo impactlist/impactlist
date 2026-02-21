@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { runRedisCommand, runRedisPipeline } from './upstashRedisClient';
-import { SharedAssumptionsError } from './sharedAssumptionsErrors';
+import { runRedisCommand, runRedisPipeline } from './upstashRedisClient.js';
+import { SharedAssumptionsError } from './sharedAssumptionsErrors.js';
 
 describe('upstashRedisClient', () => {
   const originalEnv = globalThis.process?.env;

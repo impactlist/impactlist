@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createSharedAssumptionsError } from '../src/server/sharedAssumptionsErrors';
+import { createSharedAssumptionsError } from '../src/server/sharedAssumptionsErrors.js';
 
-vi.mock('../src/server/upstashRedisClient', () => ({
+vi.mock('../src/server/upstashRedisClient.js', () => ({
   runRedisCommand: vi.fn(),
 }));
 
 import handler from './health';
-import { runRedisCommand } from '../src/server/upstashRedisClient';
+import { runRedisCommand } from '../src/server/upstashRedisClient.js';
 
 const createResponse = () => {
   const response = {

@@ -1,6 +1,6 @@
-import { createSharedSnapshot, extractClientIp, getRequestOrigin } from '../../src/server/sharedAssumptionsService';
-import { validateCreatePayload } from '../../src/server/sharedAssumptionsValidation';
-import { handleApiError, parseJsonBody, requireMethod, sendJson } from '../../src/server/sharedAssumptionsHttp';
+import { createSharedSnapshot, extractClientIp, getRequestOrigin } from '../../src/server/sharedAssumptionsService.js';
+import { validateCreatePayload } from '../../src/server/sharedAssumptionsValidation.js';
+import { handleApiError, parseJsonBody, requireMethod, sendJson } from '../../src/server/sharedAssumptionsHttp.js';
 
 const handler = async (req, res) => {
   if (!requireMethod(req, res, 'POST')) {

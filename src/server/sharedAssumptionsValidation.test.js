@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_ASSUMPTIONS_BYTES } from './sharedAssumptionsConfig';
-import { serverDefaultAssumptions } from './sharedAssumptionsNormalization';
-import { validateCreatePayload, validateReference } from './sharedAssumptionsValidation';
-import { SharedAssumptionsError } from './sharedAssumptionsErrors';
+import { MAX_ASSUMPTIONS_BYTES } from './sharedAssumptionsConfig.js';
+import { serverDefaultAssumptions } from './sharedAssumptionsNormalization.js';
+import { validateCreatePayload, validateReference } from './sharedAssumptionsValidation.js';
+import { SharedAssumptionsError } from './sharedAssumptionsErrors.js';
 
 const defaults = serverDefaultAssumptions;
 const [firstGlobalParamName, firstGlobalParamValue] = Object.entries(defaults.globalParameters)[0];

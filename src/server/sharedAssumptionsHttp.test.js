@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { describe, expect, it, vi } from 'vitest';
-import { createSharedAssumptionsError } from './sharedAssumptionsErrors';
-import { handleApiError, parseJsonBody } from './sharedAssumptionsHttp';
+import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
+import { handleApiError, parseJsonBody } from './sharedAssumptionsHttp.js';
 
 const createMockResponse = () => {
   const response = {

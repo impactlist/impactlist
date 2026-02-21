@@ -83,3 +83,6 @@ Test Scripts Available:
 - npm run test:run - Run once and exit
 - npm run test:coverage - Generate coverage report
 - npm run test:watch - Explicit watch mode
+
+## Other
+When running 'npm audit fix', and '--omit=dev' to analyze only the dependencies in the deployed app/runtime.

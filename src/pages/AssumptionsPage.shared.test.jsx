@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
@@ -15,8 +16,8 @@ const LocationProbe = () => {
   return <div data-testid="location-probe">{`${location.pathname}${location.search}`}</div>;
 };
 
-const renderAssumptionsRoute = (initialEntry) => {
-  render(
+const renderAssumptionsRoute = (initialEntry, { strictMode = false } = {}) => {
+  const tree = (
     <MemoryRouter initialEntries={[initialEntry]}>
       <LocationProbe />
       <Routes>
@@ -31,6 +32,8 @@ const renderAssumptionsRoute = (initialEntry) => {
       </Routes>
     </MemoryRouter>
   );
+
+  render(strictMode ? <React.StrictMode>{tree}</React.StrictMode> : tree);
 };
 
 const getPersistedCustomEffectsData = () => {
@@ -52,6 +55,7 @@ describe('AssumptionsPage shared import flow', () => {
 
   it('auto-imports shared assumptions when no local custom assumptions exist', async () => {
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 25;
+    const user = userEvent.setup();
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
@@ -71,6 +75,44 @@ describe('AssumptionsPage shared import flow', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=categories');
+    });
+
+    await waitFor(() => {
+      expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: {
+          timeLimit: incomingTimeLimit,
+        },
+      });
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Global' }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(String(incomingTimeLimit));
+    });
+  });
+
+  it('auto-imports shared assumptions in React StrictMode', async () => {
+    const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 28;
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'strict123',
+        assumptions: {
+          globalParameters: {
+            timeLimit: incomingTimeLimit,
+          },
+        },
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions?shared=strict123', { strictMode: true });
+
+    expect(await screen.findByText('Shared assumptions loaded.')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
     });
 
     await waitFor(() => {
@@ -111,6 +153,9 @@ describe('AssumptionsPage shared import flow', () => {
     renderAssumptionsRoute('/assumptions?shared=shared123');
 
     expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Loading shared assumptions...')).not.toBeInTheDocument();
+    });
     await user.click(screen.getByRole('button', { name: 'Keep Mine' }));
 
     await waitFor(() => {
@@ -329,6 +374,30 @@ describe('AssumptionsPage shared import flow', () => {
       globalParameters: {
         timeLimit: currentTimeLimit,
       },
+    });
+  });
+
+  it('shows error when shared snapshot contains no usable custom assumptions', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'no-custom',
+        assumptions: {
+          globalParameters: {},
+          categories: {},
+          recipients: {},
+        },
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions?shared=no-custom');
+
+    expect(
+      await screen.findByText('Shared assumptions link did not contain usable custom assumptions.')
+    ).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
     });
   });
 

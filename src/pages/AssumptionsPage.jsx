@@ -6,14 +6,29 @@ import AssumptionsEditor from '../components/AssumptionsEditor';
 import ShareAssumptionsModal from '../components/ShareAssumptionsModal';
 import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
+import { normalizeUserAssumptions } from '../utils/assumptionsAPIHelpers';
 import { fetchSharedAssumptions } from '../utils/shareAssumptions';
 
 const isPlainObject = (value) => {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 };
 
+const stableStringify = (value) => {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(',')}]`;
+  }
+
+  if (value && typeof value === 'object') {
+    const keys = Object.keys(value).sort();
+    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(',')}}`;
+  }
+
+  return JSON.stringify(value);
+};
+
 const AssumptionsPage = () => {
-  const { isUsingCustomValues, setAllUserAssumptions, getNormalizedUserAssumptionsForSharing } = useAssumptions();
+  const { defaultAssumptions, isUsingCustomValues, setAllUserAssumptions, getNormalizedUserAssumptionsForSharing } =
+    useAssumptions();
   const [searchParams, setSearchParams] = useSearchParams();
   const [statusMessage, setStatusMessage] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -22,6 +37,7 @@ const AssumptionsPage = () => {
   const [isLoadingSharedSnapshot, setIsLoadingSharedSnapshot] = useState(false);
   const requestedSharedReferenceRef = useRef(null);
   const assumptionsEditorRef = useRef(null);
+  const isMountedRef = useRef(true);
 
   // Parse URL params
   const initialTab = searchParams.get('tab') || 'global';
@@ -37,10 +53,11 @@ const AssumptionsPage = () => {
 
   useEffect(() => {
     if (!statusMessage) return undefined;
+    if (statusMessage.type === 'error') return undefined;
 
     const timeoutId = setTimeout(() => {
       setStatusMessage(null);
-    }, 4500);
+    }, 20000);
 
     return () => clearTimeout(timeoutId);
   }, [statusMessage]);
@@ -68,6 +85,14 @@ const AssumptionsPage = () => {
     },
     [setSearchParams]
   );
+
+  useEffect(() => {
+    isMountedRef.current = true;
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!sharedReference) {
@@ -122,13 +147,35 @@ const AssumptionsPage = () => {
         return false;
       }
 
-      setAllUserAssumptions(snapshot.assumptions);
+      const normalizedIncoming = normalizeUserAssumptions(snapshot.assumptions, defaultAssumptions);
+      if (!normalizedIncoming) {
+        setPageStatus('error', 'Shared assumptions link did not contain usable custom assumptions.');
+        setPendingSharedSnapshot(null);
+        removeSharedParam(reference);
+        return false;
+      }
+
+      const currentNormalized = getNormalizedUserAssumptionsForSharing();
+      if (stableStringify(normalizedIncoming) === stableStringify(currentNormalized)) {
+        setPageStatus('info', 'Shared assumptions are already applied in this browser.');
+        setPendingSharedSnapshot(null);
+        removeSharedParam(reference);
+        return true;
+      }
+
+      setAllUserAssumptions(normalizedIncoming);
       setPageStatus('success', 'Shared assumptions loaded.');
       setPendingSharedSnapshot(null);
       removeSharedParam(reference);
       return true;
     },
-    [removeSharedParam, setAllUserAssumptions, setPageStatus]
+    [
+      defaultAssumptions,
+      getNormalizedUserAssumptionsForSharing,
+      removeSharedParam,
+      setAllUserAssumptions,
+      setPageStatus,
+    ]
   );
 
   useEffect(() => {
@@ -140,40 +187,36 @@ const AssumptionsPage = () => {
       return;
     }
 
-    let isCancelled = false;
-    requestedSharedReferenceRef.current = sharedReference;
+    const requestReference = sharedReference;
+    requestedSharedReferenceRef.current = requestReference;
     setIsLoadingSharedSnapshot(true);
 
     Promise.resolve()
-      .then(() => fetchSharedAssumptions(sharedReference))
+      .then(() => fetchSharedAssumptions(requestReference))
       .then((snapshot) => {
-        if (isCancelled) {
+        if (!isMountedRef.current || requestedSharedReferenceRef.current !== requestReference) {
           return;
         }
 
         if (isUsingCustomValues) {
-          setPendingSharedSnapshot({ reference: sharedReference, snapshot });
+          setPendingSharedSnapshot({ reference: requestReference, snapshot });
         } else {
-          applySharedSnapshot(snapshot, sharedReference);
+          applySharedSnapshot(snapshot, requestReference);
         }
       })
       .catch((error) => {
-        if (isCancelled) {
+        if (!isMountedRef.current || requestedSharedReferenceRef.current !== requestReference) {
           return;
         }
         setPageStatus('error', error.message || 'Could not load shared assumptions.');
         setPendingSharedSnapshot(null);
-        removeSharedParam(sharedReference);
+        removeSharedParam(requestReference);
       })
       .finally(() => {
-        if (!isCancelled) {
+        if (isMountedRef.current && requestedSharedReferenceRef.current === requestReference) {
           setIsLoadingSharedSnapshot(false);
         }
       });
-
-    return () => {
-      isCancelled = true;
-    };
   }, [
     applySharedSnapshot,
     isUsingCustomValues,

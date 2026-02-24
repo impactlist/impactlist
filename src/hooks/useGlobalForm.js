@@ -13,26 +13,28 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
-  // Initialize form values when active and data is available
+  // Rehydrate form values whenever the assumptions source changes
+  // (for example after importing shared assumptions).
   useEffect(() => {
-    if (globalParameters && Object.keys(formValues).length === 0) {
-      const initialValues = {};
-
-      // Initialize all global parameter fields
-      Object.keys(globalParameters).forEach((paramKey) => {
-        const customValue = userGlobalParameters?.[paramKey];
-        const value = customValue !== undefined ? customValue : globalParameters[paramKey];
-
-        initialValues[paramKey] = {
-          raw: value,
-          formatted: formatValue(value, getParameterFormat(paramKey)),
-        };
-      });
-
-      setFormValues(initialValues);
-      setErrors({}); // Start with no errors - data should be valid
+    if (!globalParameters) {
+      return;
     }
-  }, [globalParameters, userGlobalParameters, formValues]);
+
+    const initialValues = {};
+
+    Object.keys(globalParameters).forEach((paramKey) => {
+      const customValue = userGlobalParameters?.[paramKey];
+      const value = customValue !== undefined ? customValue : globalParameters[paramKey];
+
+      initialValues[paramKey] = {
+        raw: value,
+        formatted: formatValue(value, getParameterFormat(paramKey)),
+      };
+    });
+
+    setFormValues(initialValues);
+    setErrors({});
+  }, [globalParameters, userGlobalParameters]);
 
   // Get the format type for a parameter
   const getParameterFormat = (paramKey) => {

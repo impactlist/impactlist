@@ -124,7 +124,7 @@ describe('AssumptionsPage shared import flow', () => {
     });
   });
 
-  it('keeps local assumptions when user chooses Keep Mine', async () => {
+  it('keeps local assumptions when user chooses Cancel', async () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 10;
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 30;
 
@@ -156,7 +156,7 @@ describe('AssumptionsPage shared import flow', () => {
     await waitFor(() => {
       expect(screen.queryByText('Loading shared assumptions...')).not.toBeInTheDocument();
     });
-    await user.click(screen.getByRole('button', { name: 'Keep Mine' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).not.toContain('shared=');
@@ -171,7 +171,7 @@ describe('AssumptionsPage shared import flow', () => {
     });
   });
 
-  it('replaces local assumptions when user chooses Replace Mine', async () => {
+  it('replaces local assumptions when user chooses Continue (Replace Mine)', async () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 12;
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 44;
 
@@ -200,7 +200,7 @@ describe('AssumptionsPage shared import flow', () => {
     renderAssumptionsRoute('/assumptions?shared=shared456');
 
     expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Replace Mine' }));
+    await user.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).not.toContain('shared=');
@@ -212,127 +212,6 @@ describe('AssumptionsPage shared import flow', () => {
           timeLimit: incomingTimeLimit,
         },
       });
-    });
-  });
-
-  it('saves local assumptions first, then imports incoming shared assumptions', async () => {
-    const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 7;
-    const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 55;
-
-    localStorage.setItem(
-      'customEffectsData',
-      JSON.stringify({
-        globalParameters: {
-          timeLimit: currentTimeLimit,
-        },
-      })
-    );
-
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (url, options = {}) => {
-      if (url === '/api/shared-assumptions' && options.method === 'POST') {
-        return {
-          ok: true,
-          json: async () => ({
-            id: 'savedmine123',
-            reference: 'saved-mine',
-            shareUrl: 'https://impactlist.xyz/assumptions?shared=saved-mine',
-          }),
-        };
-      }
-
-      return {
-        ok: true,
-        json: async () => ({
-          id: 'incoming123',
-          assumptions: {
-            globalParameters: {
-              timeLimit: incomingTimeLimit,
-            },
-          },
-        }),
-      };
-    });
-
-    const user = userEvent.setup();
-    renderAssumptionsRoute('/assumptions?shared=incoming123');
-
-    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Save Mine First' }));
-    expect(await screen.findByRole('heading', { name: 'Save Yours First' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Save Backup Link' }));
-
-    expect(
-      await screen.findByText('Backup link created. Copy it, then continue to load shared assumptions.')
-    ).toBeInTheDocument();
-    expect(screen.getByTestId('location-probe').textContent).toContain('shared=incoming123');
-    expect(getPersistedCustomEffectsData()).toEqual({
-      globalParameters: {
-        timeLimit: currentTimeLimit,
-      },
-    });
-
-    await user.click(screen.getByRole('button', { name: 'Continue with Shared Assumptions' }));
-
-    await waitFor(() => {
-      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
-    });
-
-    await waitFor(() => {
-      expect(getPersistedCustomEffectsData()).toEqual({
-        globalParameters: {
-          timeLimit: incomingTimeLimit,
-        },
-      });
-    });
-
-    expect(fetchMock.mock.calls.some(([url]) => url === '/api/shared-assumptions/incoming123')).toBe(true);
-    expect(
-      fetchMock.mock.calls.some(([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST')
-    ).toBe(true);
-  });
-
-  it('returns to decision modal when Save Mine First is canceled and does not import', async () => {
-    const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 15;
-    const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 65;
-
-    localStorage.setItem(
-      'customEffectsData',
-      JSON.stringify({
-        globalParameters: {
-          timeLimit: currentTimeLimit,
-        },
-      })
-    );
-
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        id: 'incoming-cancel',
-        assumptions: {
-          globalParameters: {
-            timeLimit: incomingTimeLimit,
-          },
-        },
-      }),
-    });
-
-    const user = userEvent.setup();
-    renderAssumptionsRoute('/assumptions?shared=incoming-cancel');
-
-    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Save Mine First' }));
-    expect(await screen.findByRole('heading', { name: 'Save Yours First' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Cancel' }));
-
-    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
-    expect(screen.getByTestId('location-probe').textContent).toContain('shared=incoming-cancel');
-    expect(getPersistedCustomEffectsData()).toEqual({
-      globalParameters: {
-        timeLimit: currentTimeLimit,
-      },
     });
   });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const SharedImportDecisionModal = ({ isOpen, onSaveMineFirst, onReplaceMine, onKeepMine, isBusy }) => {
+const SharedImportDecisionModal = ({ isOpen, onContinue, onCancel, isBusy }) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -27,34 +27,27 @@ const SharedImportDecisionModal = ({ isOpen, onSaveMineFirst, onReplaceMine, onK
             >
               <h2 className="text-xl font-bold text-slate-900">Import Shared Assumptions?</h2>
               <p className="mt-2 text-sm text-slate-600">
-                You already have custom assumptions in this browser. Choose how to handle the shared assumptions link.
+                You already have custom assumptions in this browser. Continuing will replace them. If you want to keep a
+                link to your current assumptions, click Cancel, then use Share Assumptions to get a link.
               </p>
               <div className="mt-6 space-y-2">
                 <button
                   type="button"
-                  onClick={onSaveMineFirst}
+                  onClick={onContinue}
                   disabled={isBusy}
                   className={`w-full rounded-md px-3 py-2 text-sm font-medium text-white ${
                     isBusy ? 'cursor-not-allowed bg-slate-400' : 'bg-indigo-600 hover:bg-indigo-700'
                   }`}
                 >
-                  Save Mine First
+                  Continue (Replace Mine)
                 </button>
                 <button
                   type="button"
-                  onClick={onReplaceMine}
+                  onClick={onCancel}
                   disabled={isBusy}
                   className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Replace Mine
-                </button>
-                <button
-                  type="button"
-                  onClick={onKeepMine}
-                  disabled={isBusy}
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  Keep Mine
+                  Cancel
                 </button>
               </div>
             </motion.div>
@@ -67,9 +60,8 @@ const SharedImportDecisionModal = ({ isOpen, onSaveMineFirst, onReplaceMine, onK
 
 SharedImportDecisionModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  onSaveMineFirst: PropTypes.func.isRequired,
-  onReplaceMine: PropTypes.func.isRequired,
-  onKeepMine: PropTypes.func.isRequired,
+  onContinue: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
   isBusy: PropTypes.bool,
 };
 

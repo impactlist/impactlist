@@ -32,7 +32,6 @@ const AssumptionsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [statusMessage, setStatusMessage] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [shareModalMode, setShareModalMode] = useState('manual');
   const [pendingSharedSnapshot, setPendingSharedSnapshot] = useState(null);
   const [isLoadingSharedSnapshot, setIsLoadingSharedSnapshot] = useState(false);
   const requestedSharedReferenceRef = useRef(null);
@@ -233,7 +232,7 @@ const AssumptionsPage = () => {
     applySharedSnapshot(pendingSharedSnapshot.snapshot, pendingSharedSnapshot.reference);
   }, [applySharedSnapshot, pendingSharedSnapshot]);
 
-  const handleKeepMine = useCallback(() => {
+  const handleCancelImport = useCallback(() => {
     if (!pendingSharedSnapshot) {
       return;
     }
@@ -242,11 +241,6 @@ const AssumptionsPage = () => {
     removeSharedParam(pendingSharedSnapshot.reference);
   }, [pendingSharedSnapshot, removeSharedParam, setPageStatus]);
 
-  const handleSaveMineFirst = useCallback(() => {
-    setShareModalMode('saveMineFirst');
-    setShareModalOpen(true);
-  }, []);
-
   const handleShareButtonClick = useCallback(() => {
     const prepareResult = assumptionsEditorRef.current?.prepareForShare?.();
     if (prepareResult && prepareResult.ok === false) {
@@ -254,7 +248,6 @@ const AssumptionsPage = () => {
       return;
     }
 
-    setShareModalMode('manual');
     setShareModalOpen(true);
   }, [setPageStatus]);
 
@@ -262,19 +255,9 @@ const AssumptionsPage = () => {
     setShareModalOpen(false);
   }, []);
 
-  const handleContinueAfterSaveMineFirst = useCallback(() => {
-    if (pendingSharedSnapshot) {
-      applySharedSnapshot(pendingSharedSnapshot.snapshot, pendingSharedSnapshot.reference);
-    }
-    setShareModalOpen(false);
-  }, [applySharedSnapshot, pendingSharedSnapshot]);
-
   const handleShareSaved = useCallback(() => {
-    if (shareModalMode === 'saveMineFirst') {
-      return;
-    }
     setPageStatus('success', 'Share link created.');
-  }, [setPageStatus, shareModalMode]);
+  }, [setPageStatus]);
 
   const showImportDecisionModal = Boolean(pendingSharedSnapshot) && !shareModalOpen;
 
@@ -341,9 +324,8 @@ const AssumptionsPage = () => {
 
         <SharedImportDecisionModal
           isOpen={showImportDecisionModal}
-          onSaveMineFirst={handleSaveMineFirst}
-          onReplaceMine={handleReplaceMine}
-          onKeepMine={handleKeepMine}
+          onContinue={handleReplaceMine}
+          onCancel={handleCancelImport}
           isBusy={isLoadingSharedSnapshot}
         />
 
@@ -352,9 +334,7 @@ const AssumptionsPage = () => {
           onClose={handleShareModalClose}
           assumptions={assumptionsForSharing}
           onSaved={handleShareSaved}
-          saveMineFirstMode={shareModalMode === 'saveMineFirst'}
-          onContinueAfterSave={handleContinueAfterSaveMineFirst}
-          title={shareModalMode === 'saveMineFirst' ? 'Save Yours First' : 'Share Assumptions'}
+          title="Share Assumptions"
         />
       </motion.div>
     </motion.div>

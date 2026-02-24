@@ -262,15 +262,19 @@ const AssumptionsPage = () => {
     setShareModalOpen(false);
   }, []);
 
-  const handleShareSaved = useCallback(() => {
-    if (shareModalMode === 'saveMineFirst' && pendingSharedSnapshot) {
+  const handleContinueAfterSaveMineFirst = useCallback(() => {
+    if (pendingSharedSnapshot) {
       applySharedSnapshot(pendingSharedSnapshot.snapshot, pendingSharedSnapshot.reference);
-      setShareModalOpen(false);
+    }
+    setShareModalOpen(false);
+  }, [applySharedSnapshot, pendingSharedSnapshot]);
+
+  const handleShareSaved = useCallback(() => {
+    if (shareModalMode === 'saveMineFirst') {
       return;
     }
-
     setPageStatus('success', 'Share link created.');
-  }, [applySharedSnapshot, pendingSharedSnapshot, setPageStatus, shareModalMode]);
+  }, [setPageStatus, shareModalMode]);
 
   const showImportDecisionModal = Boolean(pendingSharedSnapshot) && !shareModalOpen;
 
@@ -348,7 +352,8 @@ const AssumptionsPage = () => {
           onClose={handleShareModalClose}
           assumptions={assumptionsForSharing}
           onSaved={handleShareSaved}
-          autoCloseOnSave={shareModalMode === 'saveMineFirst'}
+          saveMineFirstMode={shareModalMode === 'saveMineFirst'}
+          onContinueAfterSave={handleContinueAfterSaveMineFirst}
           title={shareModalMode === 'saveMineFirst' ? 'Save Yours First' : 'Share Assumptions'}
         />
       </motion.div>

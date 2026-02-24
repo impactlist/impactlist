@@ -8,7 +8,8 @@ const ShareAssumptionsModal = ({
   onClose,
   assumptions,
   onSaved,
-  autoCloseOnSave = false,
+  saveMineFirstMode = false,
+  onContinueAfterSave,
   title = 'Share Assumptions',
 }) => {
   const [name, setName] = useState('');
@@ -76,12 +77,6 @@ const ShareAssumptionsModal = ({
         name: name.trim() || null,
         slug: normalizedSlug || null,
       });
-
-      if (autoCloseOnSave) {
-        onSaved(result);
-        onClose();
-        return;
-      }
 
       setSavedResult(result);
       onSaved(result);
@@ -198,13 +193,17 @@ const ShareAssumptionsModal = ({
                         isSaving ? 'cursor-not-allowed bg-slate-400' : 'bg-indigo-600 hover:bg-indigo-700'
                       }`}
                     >
-                      {isSaving ? 'Saving...' : autoCloseOnSave ? 'Save & Continue' : 'Create Link'}
+                      {isSaving ? 'Saving...' : saveMineFirstMode ? 'Save Backup Link' : 'Create Link'}
                     </button>
                   </div>
                 </>
               ) : (
                 <>
-                  <p className="mb-3 text-sm text-emerald-700">Share link created.</p>
+                  <p className="mb-3 text-sm text-emerald-700">
+                    {saveMineFirstMode
+                      ? 'Backup link created. Copy it, then continue to load shared assumptions.'
+                      : 'Share link created.'}
+                  </p>
                   <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
                     <p className="break-all text-sm text-slate-800">{savedResult.shareUrl}</p>
                   </div>
@@ -213,10 +212,10 @@ const ShareAssumptionsModal = ({
                   <div className="mt-6 flex justify-end space-x-2">
                     <button
                       type="button"
-                      onClick={onClose}
+                      onClick={saveMineFirstMode ? onContinueAfterSave : onClose}
                       className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                     >
-                      Done
+                      {saveMineFirstMode ? 'Continue with Shared Assumptions' : 'Done'}
                     </button>
                     <button
                       type="button"
@@ -244,14 +243,16 @@ ShareAssumptionsModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   assumptions: PropTypes.object,
   onSaved: PropTypes.func,
-  autoCloseOnSave: PropTypes.bool,
+  saveMineFirstMode: PropTypes.bool,
+  onContinueAfterSave: PropTypes.func,
   title: PropTypes.string,
 };
 
 ShareAssumptionsModal.defaultProps = {
   assumptions: null,
   onSaved: () => {},
-  autoCloseOnSave: false,
+  saveMineFirstMode: false,
+  onContinueAfterSave: () => {},
   title: 'Share Assumptions',
 };
 

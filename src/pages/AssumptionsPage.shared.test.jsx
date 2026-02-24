@@ -261,7 +261,19 @@ describe('AssumptionsPage shared import flow', () => {
     await user.click(screen.getByRole('button', { name: 'Save Mine First' }));
     expect(await screen.findByRole('heading', { name: 'Save Yours First' })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Save & Continue' }));
+    await user.click(screen.getByRole('button', { name: 'Save Backup Link' }));
+
+    expect(
+      await screen.findByText('Backup link created. Copy it, then continue to load shared assumptions.')
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('location-probe').textContent).toContain('shared=incoming123');
+    expect(getPersistedCustomEffectsData()).toEqual({
+      globalParameters: {
+        timeLimit: currentTimeLimit,
+      },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Continue with Shared Assumptions' }));
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');

@@ -24,7 +24,6 @@ describe('shareAssumptions utils', () => {
       json: async () => ({
         id: 'abc123',
         reference: 'abc123',
-        shareUrl: 'https://impactlist.xyz/assumptions?shared=abc123',
       }),
     });
 
@@ -35,6 +34,7 @@ describe('shareAssumptions utils', () => {
     });
 
     expect(result.reference).toBe('abc123');
+    expect(result.shareUrl).toContain('/assumptions?shared=abc123');
     expect(fetchSpy).toHaveBeenCalledWith('/api/shared-assumptions', expect.objectContaining({ method: 'POST' }));
   });
 

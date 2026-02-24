@@ -46,15 +46,6 @@ export const getRedisConfig = () => {
   };
 };
 
-export const getPublicSiteOrigin = () => {
-  const env = globalThis.process?.env || {};
-  const origin = env.PUBLIC_SITE_ORIGIN;
-  if (!origin) {
-    return null;
-  }
-  return origin.replace(/\/$/, '');
-};
-
 export const getAppDataVersion = () => {
   const env = globalThis.process?.env || {};
   return env.VERCEL_GIT_COMMIT_SHA || env.SOURCE_VERSION || 'unknown';

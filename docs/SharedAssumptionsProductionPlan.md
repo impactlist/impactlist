@@ -53,12 +53,6 @@ Set these in Vercel for each environment you use (`Preview`, `Production`):
 
 - `SHARED_ASSUMPTIONS_REDIS_REST_URL`
 - `SHARED_ASSUMPTIONS_REDIS_REST_TOKEN`
-- `PUBLIC_SITE_ORIGIN` (recommended; avoids host/proto ambiguity in generated share URLs)
-
-Required values:
-- Production `PUBLIC_SITE_ORIGIN` should be the canonical prod host (example: `https://impactlist.xyz`).
-- Preview `PUBLIC_SITE_ORIGIN` should be the preview domain if you want preview-generated links to stay in preview.
-  - If omitted, links are built from request host/proto.
 
 Isolation requirements:
 - Preview should point to preview Redis credentials.

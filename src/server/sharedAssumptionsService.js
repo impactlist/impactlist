@@ -8,7 +8,6 @@ import {
   buildSlugKey,
   buildSnapshotKey,
   getAppDataVersion,
-  getPublicSiteOrigin,
 } from './sharedAssumptionsConfig.js';
 import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
 import { runRedisCommand, runRedisPipeline } from './upstashRedisClient.js';
@@ -57,25 +56,6 @@ export const extractClientIp = (req) => {
   }
 
   return 'unknown';
-};
-
-export const getRequestOrigin = (req) => {
-  const configuredOrigin = getPublicSiteOrigin();
-  if (configuredOrigin) {
-    return configuredOrigin;
-  }
-
-  const host = req.headers.host;
-  if (!host) {
-    return null;
-  }
-
-  const forwardedProto = req.headers['x-forwarded-proto'];
-  const protocol =
-    typeof forwardedProto === 'string' && forwardedProto.trim().length > 0
-      ? forwardedProto.split(',')[0].trim() || 'https'
-      : 'https';
-  return `${protocol}://${host}`;
 };
 
 const enforceRateLimit = async (clientIp) => {
@@ -142,7 +122,7 @@ const rollbackSlugClaim = async (slug) => {
   }
 };
 
-export const createSharedSnapshot = async ({ assumptions, name, slug, clientIp, origin }) => {
+export const createSharedSnapshot = async ({ assumptions, name, slug, clientIp }) => {
   await enforceRateLimit(clientIp);
 
   const snapshotId = generateSnapshotId();
@@ -158,14 +138,10 @@ export const createSharedSnapshot = async ({ assumptions, name, slug, clientIp, 
   }
 
   const reference = slug || snapshotId;
-  const relativeSharePath = `/assumptions?shared=${encodeURIComponent(reference)}`;
-  const shareUrl = origin ? `${origin}${relativeSharePath}` : relativeSharePath;
-
   return {
     id: snapshotId,
     slug: slug || null,
     reference,
-    shareUrl,
   };
 };
 

@@ -116,8 +116,7 @@ Response 201:
 {
   "id": "k9f2m7q1x4bp",
   "slug": "my-ai-risk-model",
-  "reference": "my-ai-risk-model",
-  "shareUrl": "https://impactlist.xyz/assumptions?shared=my-ai-risk-model"
+  "reference": "my-ai-risk-model"
 }
 ```
 
@@ -126,7 +125,7 @@ Implementation requirements:
 - Snapshot+alias writes must be consistency-safe:
   - Preferred: single transaction/script for multi-key write.
   - Acceptable fallback: deterministic rollback on partial failure.
-- `shareUrl` must be built from runtime origin (request host/proto) or controlled env fallback, not hardcoded.
+- Client constructs `shareUrl` from `window.location.origin` plus `/assumptions?shared=<reference>`.
 
 Errors:
 - `400` invalid payload/invalid slug/no effective assumptions.
@@ -375,7 +374,6 @@ Exit criteria:
 ### Environment variables (example names)
 - `SHARED_ASSUMPTIONS_REDIS_REST_URL`
 - `SHARED_ASSUMPTIONS_REDIS_REST_TOKEN`
-- `PUBLIC_SITE_ORIGIN` (for returned absolute share URL)
 
 ### Observability
 - Log structured fields:

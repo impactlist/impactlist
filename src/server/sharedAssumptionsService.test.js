@@ -6,36 +6,18 @@ vi.mock('./upstashRedisClient.js', () => ({
   runRedisPipeline: vi.fn(),
 }));
 
-import {
-  createSharedSnapshot,
-  extractClientIp,
-  getRequestOrigin,
-  getSharedSnapshot,
-} from './sharedAssumptionsService.js';
+import { createSharedSnapshot, extractClientIp, getSharedSnapshot } from './sharedAssumptionsService.js';
 import { SharedAssumptionsError } from './sharedAssumptionsErrors.js';
 import { runRedisCommand, runRedisPipeline } from './upstashRedisClient.js';
 
 describe('sharedAssumptionsService', () => {
-  const originalEnv = globalThis.process?.env;
-
   beforeEach(() => {
     vi.mocked(runRedisCommand).mockReset();
     vi.mocked(runRedisPipeline).mockReset();
-    globalThis.process = {
-      ...globalThis.process,
-      env: {
-        ...(originalEnv || {}),
-        PUBLIC_SITE_ORIGIN: '',
-      },
-    };
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    globalThis.process = {
-      ...globalThis.process,
-      env: originalEnv || {},
-    };
   });
 
   it('creates snapshot with slug and returns share metadata', async () => {
@@ -49,13 +31,11 @@ describe('sharedAssumptionsService', () => {
       name: 'Scenario',
       slug: 'scenario-a',
       clientIp: '1.2.3.4',
-      origin: 'https://impactlist.xyz',
     });
 
     expect(result.slug).toBe('scenario-a');
     expect(result.reference).toBe('scenario-a');
     expect(result.id).toHaveLength(12);
-    expect(result.shareUrl).toBe('https://impactlist.xyz/assumptions?shared=scenario-a');
 
     expect(runRedisCommand).toHaveBeenNthCalledWith(
       2,
@@ -77,12 +57,10 @@ describe('sharedAssumptionsService', () => {
       assumptions: { globalParameters: { timeLimit: 700 } },
       name: 'No Slug Scenario',
       clientIp: '4.3.2.1',
-      origin: 'https://impactlist.xyz',
     });
 
     expect(result.slug).toBeNull();
     expect(result.reference).toBe(result.id);
-    expect(result.shareUrl).toBe(`https://impactlist.xyz/assumptions?shared=${result.id}`);
   });
 
   it('rejects when rate limit is exceeded', async () => {
@@ -92,7 +70,6 @@ describe('sharedAssumptionsService', () => {
       createSharedSnapshot({
         assumptions: { globalParameters: { timeLimit: 500 } },
         clientIp: '1.2.3.4',
-        origin: 'https://impactlist.xyz',
       })
     ).rejects.toMatchObject({ status: 429, code: 'rate_limited' });
   });
@@ -107,7 +84,6 @@ describe('sharedAssumptionsService', () => {
         assumptions: { globalParameters: { timeLimit: 500 } },
         slug: 'taken-slug',
         clientIp: '1.2.3.4',
-        origin: 'https://impactlist.xyz',
       })
     ).rejects.toMatchObject({ status: 409, code: 'slug_taken' });
   });
@@ -124,7 +100,6 @@ describe('sharedAssumptionsService', () => {
         assumptions: { globalParameters: { timeLimit: 500 } },
         slug: 'rollback-me',
         clientIp: '1.2.3.4',
-        origin: 'https://impactlist.xyz',
       })
     ).rejects.toBeTruthy();
 
@@ -186,16 +161,5 @@ describe('sharedAssumptionsService', () => {
         },
       })
     ).toBe('198.51.100.20');
-  });
-
-  it('getRequestOrigin uses first forwarded protocol when header has multiple values', () => {
-    const origin = getRequestOrigin({
-      headers: {
-        host: 'impactlist.xyz',
-        'x-forwarded-proto': 'https, http',
-      },
-    });
-
-    expect(origin).toBe('https://impactlist.xyz');
   });
 });

@@ -26,6 +26,19 @@ const isNonEmptyString = (value) => {
   return typeof value === 'string' && value.trim().length > 0;
 };
 
+const buildSharePath = (reference) => `/assumptions?shared=${encodeURIComponent(reference)}`;
+
+const buildShareUrl = (reference) => {
+  const sharePath = buildSharePath(reference);
+  const origin = globalThis.location?.origin;
+
+  if (!origin) {
+    return sharePath;
+  }
+
+  return new globalThis.URL(sharePath, origin).toString();
+};
+
 const requestJson = async (url, options = {}) => {
   const response = await globalThis.fetch(url, options);
   const payload = await parseJsonSafely(response);
@@ -76,11 +89,14 @@ export const saveSharedAssumptions = async ({ assumptions, name, slug }) => {
     }),
   });
 
-  if (!isNonEmptyString(payload.id) || !isNonEmptyString(payload.reference) || !isNonEmptyString(payload.shareUrl)) {
+  if (!isNonEmptyString(payload.id) || !isNonEmptyString(payload.reference)) {
     throw new ShareAssumptionsAPIError(500, 'invalid_response', 'Server returned an invalid save response.');
   }
 
-  return payload;
+  return {
+    ...payload,
+    shareUrl: buildShareUrl(payload.reference),
+  };
 };
 
 export const fetchSharedAssumptions = async (reference) => {

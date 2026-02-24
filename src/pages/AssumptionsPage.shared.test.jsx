@@ -331,4 +331,56 @@ describe('AssumptionsPage shared import flow', () => {
       },
     });
   });
+
+  it('commits unsaved global edits before creating a share link', async () => {
+    const initialTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 5;
+    const unsavedTimeLimit = initialTimeLimit + 40;
+
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: initialTimeLimit,
+        },
+      })
+    );
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (url, options = {}) => {
+      if (url === '/api/shared-assumptions' && options.method === 'POST') {
+        return {
+          ok: true,
+          json: async () => ({
+            id: 'save-with-unsaved',
+            reference: 'save-with-unsaved',
+          }),
+        };
+      }
+
+      throw new Error(`Unexpected fetch call: ${String(url)}`);
+    });
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(unsavedTimeLimit));
+
+    await user.click(screen.getByRole('button', { name: 'Share Assumptions' }));
+    expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Create Link' }));
+
+    await waitFor(() => {
+      expect(
+        fetchMock.mock.calls.some(([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST')
+      ).toBe(true);
+    });
+
+    const postCall = fetchMock.mock.calls.find(
+      ([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST'
+    );
+    const payload = JSON.parse(postCall[1].body);
+    expect(payload.assumptions.globalParameters.timeLimit).toBe(unsavedTimeLimit);
+  });
 });

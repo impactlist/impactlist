@@ -198,7 +198,7 @@ const ShareAssumptionsModal = ({
                         isSaving ? 'cursor-not-allowed bg-slate-400' : 'bg-indigo-600 hover:bg-indigo-700'
                       }`}
                     >
-                      {isSaving ? 'Saving...' : autoCloseOnSave ? 'Save & Continue' : 'Save & Share'}
+                      {isSaving ? 'Saving...' : autoCloseOnSave ? 'Save & Continue' : 'Create Link'}
                     </button>
                   </div>
                 </>

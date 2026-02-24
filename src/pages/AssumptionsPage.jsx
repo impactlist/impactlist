@@ -21,6 +21,7 @@ const AssumptionsPage = () => {
   const [pendingSharedSnapshot, setPendingSharedSnapshot] = useState(null);
   const [isLoadingSharedSnapshot, setIsLoadingSharedSnapshot] = useState(false);
   const requestedSharedReferenceRef = useRef(null);
+  const assumptionsEditorRef = useRef(null);
 
   // Parse URL params
   const initialTab = searchParams.get('tab') || 'global';
@@ -204,9 +205,15 @@ const AssumptionsPage = () => {
   }, []);
 
   const handleShareButtonClick = useCallback(() => {
+    const prepareResult = assumptionsEditorRef.current?.prepareForShare?.();
+    if (prepareResult && prepareResult.ok === false) {
+      setPageStatus('error', prepareResult.message || 'Resolve unsaved edits before sharing.');
+      return;
+    }
+
     setShareModalMode('manual');
     setShareModalOpen(true);
-  }, []);
+  }, [setPageStatus]);
 
   const handleShareModalClose = useCallback(() => {
     setShareModalOpen(false);
@@ -248,7 +255,7 @@ const AssumptionsPage = () => {
               onClick={handleShareButtonClick}
               className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
             >
-              Save & Share
+              Share Assumptions
             </button>
           )}
         </div>
@@ -276,6 +283,7 @@ const AssumptionsPage = () => {
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <AssumptionsEditor
+            ref={assumptionsEditorRef}
             initialTab={initialTab}
             initialCategoryId={initialCategoryId}
             initialRecipientId={initialRecipientId}

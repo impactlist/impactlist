@@ -57,7 +57,7 @@ const AssumptionsPage = () => {
 
     const timeoutId = setTimeout(() => {
       setStatusMessage(null);
-    }, 20000);
+    }, 6000);
 
     return () => clearTimeout(timeoutId);
   }, [statusMessage]);

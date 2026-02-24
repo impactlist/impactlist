@@ -1,12 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { isValidSlug, saveSharedAssumptions, slugify } from '../utils/shareAssumptions';
+import { isValidSlug, saveSharedAssumptions } from '../utils/shareAssumptions';
 
 const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 'Share Assumptions' }) => {
-  const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
-  const [slugTouched, setSlugTouched] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
   const [error, setError] = useState('');
@@ -15,9 +13,7 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
 
   useEffect(() => {
     if (!isOpen) {
-      setName('');
       setSlug('');
-      setSlugTouched(false);
       setIsSaving(false);
       setIsCopying(false);
       setError('');
@@ -26,26 +22,9 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
     }
   }, [isOpen]);
 
-  const previewSlug = useMemo(() => {
-    if (slugTouched) {
-      return slug;
-    }
-    return slugify(name);
-  }, [name, slug, slugTouched]);
-
   const handleSlugChange = (event) => {
-    setSlugTouched(true);
     setSlug(event.target.value.toLowerCase());
     setError('');
-  };
-
-  const handleNameChange = (event) => {
-    const nextName = event.target.value;
-    setName(nextName);
-    setError('');
-    if (!slugTouched) {
-      setSlug(slugify(nextName));
-    }
   };
 
   const handleSave = async () => {
@@ -56,7 +35,7 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
 
     const normalizedSlug = slug.trim().toLowerCase();
     if (normalizedSlug && !isValidSlug(normalizedSlug)) {
-      setError('Slug must use lowercase letters, numbers, and dashes (3-40 chars).');
+      setError('Custom link text must use lowercase letters, numbers, and dashes (3-40 chars).');
       return;
     }
 
@@ -66,7 +45,6 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
     try {
       const result = await saveSharedAssumptions({
         assumptions,
-        name: name.trim() || null,
         slug: normalizedSlug || null,
       });
 
@@ -74,7 +52,7 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
       onSaved(result);
     } catch (apiError) {
       if (apiError.status === 409) {
-        setError('That slug is already taken. Try a different slug.');
+        setError('That custom link text is already taken. Try a different one.');
       } else {
         setError(apiError.message || 'Unable to create shared assumptions link.');
       }
@@ -139,21 +117,8 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
                   </p>
                   <div className="space-y-4">
                     <div>
-                      <label htmlFor="share-name" className="mb-1 block text-sm font-semibold text-slate-700">
-                        Name (optional)
-                      </label>
-                      <input
-                        id="share-name"
-                        type="text"
-                        value={name}
-                        onChange={handleNameChange}
-                        placeholder="My assumptions scenario"
-                        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      />
-                    </div>
-                    <div>
                       <label htmlFor="share-slug" className="mb-1 block text-sm font-semibold text-slate-700">
-                        Custom URL slug (optional)
+                        Custom link text (optional)
                       </label>
                       <input
                         id="share-slug"
@@ -164,7 +129,8 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
                         className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm lowercase focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                       <p className="mt-1 text-xs text-slate-500">
-                        Preview: <span className="font-mono">{previewSlug || '(auto-generated id)'}</span>
+                        This sets the readable part of your link (letters, numbers, and dashes). Leave blank for an
+                        auto-generated link.
                       </p>
                     </div>
                   </div>

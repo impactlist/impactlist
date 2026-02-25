@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 const formatTimestamp = (isoString) => {
@@ -14,16 +14,7 @@ const formatTimestamp = (isoString) => {
   return new Date(timestamp).toLocaleString();
 };
 
-const SavedAssumptionsPanel = ({
-  entries,
-  activeId,
-  hasUnsavedChanges,
-  onLoad,
-  onRename,
-  onDelete,
-  onCopyLink,
-  onDeleteAllImported,
-}) => {
+const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, onRename, onDelete, onCopyLink }) => {
   const [editingId, setEditingId] = useState(null);
   const [editLabel, setEditLabel] = useState('');
   const [isSmallScreen, setIsSmallScreen] = useState(() => {
@@ -34,8 +25,6 @@ const SavedAssumptionsPanel = ({
   });
   const [isCollapsed, setIsCollapsed] = useState(isSmallScreen);
   const [hasUserToggledCollapse, setHasUserToggledCollapse] = useState(false);
-
-  const importedCount = useMemo(() => entries.filter((entry) => entry.source === 'imported').length, [entries]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -205,18 +194,6 @@ const SavedAssumptionsPanel = ({
               })}
             </div>
           )}
-
-          {importedCount > 0 && (
-            <div className="mt-4">
-              <button
-                type="button"
-                onClick={onDeleteAllImported}
-                className="rounded-md border border-red-300 px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-50"
-              >
-                Delete All Imported
-              </button>
-            </div>
-          )}
         </div>
       )}
     </section>
@@ -241,7 +218,6 @@ SavedAssumptionsPanel.propTypes = {
   onRename: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onCopyLink: PropTypes.func.isRequired,
-  onDeleteAllImported: PropTypes.func.isRequired,
 };
 
 SavedAssumptionsPanel.defaultProps = {

@@ -576,25 +576,6 @@ export const deleteSavedAssumptions = (id) => {
   return { ok: true };
 };
 
-export const deleteAllImportedAssumptions = () => {
-  const current = loadSavedAssumptionsUnsafe();
-  const next = current.filter((entry) => entry.source !== 'imported');
-  const deletedCount = current.length - next.length;
-
-  const persistResult = persistSavedAssumptions(next, { emitChange: false });
-  if (!persistResult.ok) {
-    return { ok: false, errorCode: 'storage_write_failed', deletedCount: 0 };
-  }
-
-  const activeId = getActiveSavedAssumptionsId();
-  if (activeId && !next.some((entry) => entry.id === activeId)) {
-    clearActiveSavedAssumptionsId({ emitChange: false });
-  }
-
-  emitSavedAssumptionsChanged();
-  return { ok: true, deletedCount };
-};
-
 export const loadSavedAssumptionsById = (id) => {
   const current = loadSavedAssumptionsUnsafe();
   const entry = current.find((candidate) => candidate.id === id);

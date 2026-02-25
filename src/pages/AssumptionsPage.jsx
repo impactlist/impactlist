@@ -12,10 +12,10 @@ import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotifications } from '../contexts/NotificationContext';
 import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
+import { isPlainObject } from '../utils/typeGuards';
 import {
   completeSavedAssumptionsMigration,
   createAssumptionsFingerprint,
-  deleteAllImportedAssumptions,
   deleteSavedAssumptions,
   getActiveSavedAssumptionsId,
   getSavedAssumptions,
@@ -31,6 +31,23 @@ import {
 const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
 const STORAGE_LIMIT_ERROR_MESSAGE = 'Saved assumptions are full. Delete some saved assumptions and try again.';
 
+const createComparableAssumptionsFingerprint = (assumptions) => {
+  if (!isPlainObject(assumptions)) {
+    return '';
+  }
+
+  const next = {};
+
+  ['globalParameters', 'categories', 'recipients'].forEach((key) => {
+    const value = assumptions[key];
+    if (isPlainObject(value) && Object.keys(value).length > 0) {
+      next[key] = value;
+    }
+  });
+
+  return createAssumptionsFingerprint(next);
+};
+
 const AssumptionsPage = () => {
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotifications();
@@ -42,7 +59,6 @@ const AssumptionsPage = () => {
   const [activeSavedAssumptionsId, setActiveSavedAssumptionsIdState] = useState(null);
   const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
   const [pendingDeleteEntryId, setPendingDeleteEntryId] = useState(null);
-  const [isDeleteImportedConfirmOpen, setIsDeleteImportedConfirmOpen] = useState(false);
   const [migrationPromptOpen, setMigrationPromptOpen] = useState(false);
   const [migrationDefaultLabel, setMigrationDefaultLabel] = useState('My Current Assumptions');
   const [migrationCheckDone, setMigrationCheckDone] = useState(false);
@@ -54,15 +70,27 @@ const AssumptionsPage = () => {
   const initialActiveCategory = searchParams.get('activeCategory') || null;
   const assumptionsForSharing = getNormalizedUserAssumptionsForSharing();
   const currentFingerprint = useMemo(
-    () => createAssumptionsFingerprint(assumptionsForSharing),
+    () => createComparableAssumptionsFingerprint(assumptionsForSharing),
     [assumptionsForSharing]
   );
   const activeSavedAssumptionsEntry = useMemo(
     () => savedAssumptions.find((entry) => entry.id === activeSavedAssumptionsId) || null,
     [activeSavedAssumptionsId, savedAssumptions]
   );
+  const activeSavedAssumptionsFingerprint = useMemo(
+    () => createComparableAssumptionsFingerprint(activeSavedAssumptionsEntry?.assumptions),
+    [activeSavedAssumptionsEntry?.assumptions]
+  );
   const hasUnsavedChanges =
-    Boolean(activeSavedAssumptionsEntry) && activeSavedAssumptionsEntry.fingerprint !== currentFingerprint;
+    Boolean(activeSavedAssumptionsEntry) && activeSavedAssumptionsFingerprint !== currentFingerprint;
+  const isCurrentStateRepresentedBySavedAssumptions = useMemo(
+    () =>
+      Boolean(currentFingerprint) &&
+      savedAssumptions.some(
+        (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
+      ),
+    [currentFingerprint, savedAssumptions]
+  );
   const canUpdateExisting = Boolean(activeSavedAssumptionsEntry && hasUnsavedChanges);
 
   const refreshSavedAssumptions = useCallback(() => {
@@ -192,7 +220,8 @@ const AssumptionsPage = () => {
         return;
       }
 
-      if (entry.fingerprint && entry.fingerprint === currentFingerprint) {
+      const entryFingerprint = createComparableAssumptionsFingerprint(entry.assumptions);
+      if (entryFingerprint && entryFingerprint === currentFingerprint) {
         const loadedResult = markSavedAssumptionsLoaded(entry.id);
         if (loadedResult.ok) {
           persistAsActive(entry.id);
@@ -205,7 +234,7 @@ const AssumptionsPage = () => {
         return;
       }
 
-      if (isUsingCustomValues) {
+      if (isUsingCustomValues && !isCurrentStateRepresentedBySavedAssumptions) {
         setPendingLoadEntry(entry);
         return;
       }
@@ -216,6 +245,7 @@ const AssumptionsPage = () => {
       activeSavedAssumptionsId,
       applySavedAssumptionsEntry,
       currentFingerprint,
+      isCurrentStateRepresentedBySavedAssumptions,
       isUsingCustomValues,
       persistAsActive,
       showNotification,
@@ -371,21 +401,6 @@ const AssumptionsPage = () => {
     [refreshSavedAssumptions, showNotification]
   );
 
-  const handleRequestDeleteAllImported = useCallback(() => {
-    setIsDeleteImportedConfirmOpen(true);
-  }, []);
-
-  const handleDeleteAllImported = useCallback(() => {
-    const result = deleteAllImportedAssumptions();
-    if (!result.ok) {
-      showNotification('error', STORAGE_ERROR_MESSAGE);
-      return;
-    }
-
-    refreshSavedAssumptions();
-    showNotification('success', `Deleted ${result.deletedCount} imported saved assumptions entries.`);
-  }, [refreshSavedAssumptions, showNotification]);
-
   const handleCopySavedLink = useCallback(
     async (entry) => {
       if (!entry?.shareUrl) {
@@ -482,7 +497,6 @@ const AssumptionsPage = () => {
           onRename={handleRenameSavedAssumptions}
           onDelete={handleRequestDeleteSavedAssumptions}
           onCopyLink={handleCopySavedLink}
-          onDeleteAllImported={handleRequestDeleteAllImported}
         />
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -539,19 +553,6 @@ const AssumptionsPage = () => {
             setPendingDeleteEntryId(null);
           }}
           onCancel={() => setPendingDeleteEntryId(null)}
-        />
-
-        <ConfirmActionModal
-          isOpen={isDeleteImportedConfirmOpen}
-          title="Delete All Imported?"
-          description="All imported saved assumptions will be removed from this browser."
-          confirmLabel="Delete All Imported"
-          cancelLabel="Cancel"
-          onConfirm={() => {
-            handleDeleteAllImported();
-            setIsDeleteImportedConfirmOpen(false);
-          }}
-          onCancel={() => setIsDeleteImportedConfirmOpen(false)}
         />
       </motion.div>
     </motion.div>

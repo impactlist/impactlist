@@ -6,11 +6,7 @@ import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
-import {
-  saveNewAssumptions,
-  setActiveSavedAssumptionsId,
-  upsertImportedSavedAssumptions,
-} from '../utils/savedAssumptionsStore';
+import { saveNewAssumptions, setActiveSavedAssumptionsId } from '../utils/savedAssumptionsStore';
 
 /* global localStorage */
 
@@ -344,8 +340,55 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
-  it('deletes all imported saved assumptions entries', async () => {
+  it('loads without replace confirmation when current assumptions match a saved entry', async () => {
     const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 140,
+        },
+      })
+    );
+
+    const currentSaved = saveNewAssumptions({
+      label: 'Current Saved',
+      assumptions: {
+        globalParameters: { timeLimit: 140 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    const targetSaved = saveNewAssumptions({
+      label: 'Target Saved',
+      assumptions: {
+        globalParameters: { timeLimit: 200 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!currentSaved.ok || !targetSaved.ok) {
+      throw new Error('Expected saved entries to seed successfully');
+    }
+    setActiveSavedAssumptionsId(currentSaved.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const targetRow = within(panel).getByText('Target Saved').closest('div.rounded-md');
+    const loadButton = within(targetRow).getByRole('button', { name: 'Load' });
+    await user.click(loadButton);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Load Saved Assumptions?')).not.toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('200');
+    });
+  });
+
+  it('does not show Delete All Imported button', async () => {
     saveNewAssumptions({
       label: 'Local Baseline',
       assumptions: {
@@ -353,45 +396,22 @@ describe('AssumptionsPage routing integration', () => {
         categories: {},
         recipients: {},
       },
+      source: 'local',
     });
-    upsertImportedSavedAssumptions({
-      label: 'Friend 1',
+    saveNewAssumptions({
+      label: 'Imported Baseline',
       assumptions: {
         globalParameters: { timeLimit: 180 },
         categories: {},
         recipients: {},
       },
-      reference: 'friend-1',
+      source: 'imported',
+      reference: 'imported-baseline',
     });
-    const friend2 = upsertImportedSavedAssumptions({
-      label: 'Friend 2',
-      assumptions: {
-        globalParameters: { timeLimit: 190 },
-        categories: {},
-        recipients: {},
-      },
-      reference: 'friend-2',
-    });
-    if (!friend2.ok) {
-      throw new Error('Expected imported entries to seed successfully');
-    }
-    setActiveSavedAssumptionsId(friend2.entry.id);
 
     renderAssumptionsRoute('/assumptions');
-
-    expect(await screen.findByText('Friend 1')).toBeInTheDocument();
-    expect(screen.getByText('Friend 2')).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Delete All Imported' }));
-    expect(await screen.findByRole('heading', { name: 'Delete All Imported?' })).toBeInTheDocument();
-    const confirmButtons = screen.getAllByRole('button', { name: 'Delete All Imported' });
-    await user.click(confirmButtons[confirmButtons.length - 1]);
-
-    await waitFor(() => {
-      expect(screen.queryByText('Friend 1')).not.toBeInTheDocument();
-      expect(screen.queryByText('Friend 2')).not.toBeInTheDocument();
-    });
-    expect(screen.getByText('Local Baseline')).toBeInTheDocument();
+    expect(await screen.findByText('Imported Baseline')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Delete All Imported' })).not.toBeInTheDocument();
   });
 
   it('renames a saved assumptions entry from the panel', async () => {

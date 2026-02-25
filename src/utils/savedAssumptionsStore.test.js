@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   completeSavedAssumptionsMigration,
   createAssumptionsFingerprint,
-  deleteAllImportedAssumptions,
   deleteSavedAssumptions,
   getActiveSavedAssumptionsId,
   getSavedAssumptions,
@@ -105,20 +104,6 @@ describe('savedAssumptionsStore', () => {
 
     const entries = getSavedAssumptions();
     expect(entries[0].lastLoadedAt).toBeTruthy();
-  });
-
-  it('deletes all imported assumptions while preserving local ones', () => {
-    saveNewAssumptions({ label: 'Local 1', assumptions: buildAssumptions(101) });
-    upsertImportedSavedAssumptions({ label: 'Imported 1', assumptions: buildAssumptions(102), reference: 'imp-1' });
-    upsertImportedSavedAssumptions({ label: 'Imported 2', assumptions: buildAssumptions(103), reference: 'imp-2' });
-
-    const deleteResult = deleteAllImportedAssumptions();
-    expect(deleteResult.ok).toBe(true);
-    expect(deleteResult.deletedCount).toBe(2);
-
-    const entries = getSavedAssumptions();
-    expect(entries).toHaveLength(1);
-    expect(entries[0].source).toBe('local');
   });
 
   it('runs one-time migration and records migration flag on decline', () => {

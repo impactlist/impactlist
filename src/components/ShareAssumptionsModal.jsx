@@ -125,7 +125,7 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
                         type="text"
                         value={slug}
                         onChange={handleSlugChange}
-                        placeholder="my-ai-risk-model"
+                        placeholder="bobs-longtermist-model"
                         className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm lowercase focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                       <p className="mt-1 text-xs text-slate-500">

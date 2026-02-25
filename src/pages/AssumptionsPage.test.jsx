@@ -417,6 +417,47 @@ describe('AssumptionsPage routing integration', () => {
     ).toBe(true);
   });
 
+  it('shows existing share link immediately for active remote assumptions without creating a new link', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 160,
+        },
+      })
+    );
+
+    const remoteSeed = saveNewAssumptions({
+      label: 'Existing Remote',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 160,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+      reference: 'existing-remote',
+    });
+    if (!remoteSeed.ok) {
+      throw new Error('Expected seeded remote entry');
+    }
+    setActiveSavedAssumptionsId(remoteSeed.entry.id);
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+
+    renderAssumptionsRoute('/assumptions');
+
+    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
+    expect(screen.getByText('This assumptions set already has a share link.')).toBeInTheDocument();
+    expect(screen.getByText((text) => text.includes('?shared=existing-remote'))).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Copy Link' }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('button', { name: 'Create Link' })).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
     const user = userEvent.setup();
     localStorage.setItem(

@@ -35,6 +35,7 @@ const AssumptionsPage = () => {
   const { showNotification } = useNotificationActions();
   const [searchParams, setSearchParams] = useSearchParams();
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareModalInitialResult, setShareModalInitialResult] = useState(null);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [saveModalDefaultLabel, setSaveModalDefaultLabel] = useState('My Current Assumptions');
   const [savedAssumptions, setSavedAssumptions] = useState([]);
@@ -257,8 +258,26 @@ const AssumptionsPage = () => {
       return;
     }
 
+    if (isActiveSavedAssumptionsRemote && !hasUnsavedChanges && activeSavedAssumptionsEntry?.shareUrl) {
+      setShareModalInitialResult({
+        id: activeSavedAssumptionsEntry.id,
+        reference: activeSavedAssumptionsEntry.reference,
+        shareUrl: activeSavedAssumptionsEntry.shareUrl,
+      });
+    } else {
+      setShareModalInitialResult(null);
+    }
+
     setShareModalOpen(true);
-  }, [commitPendingEdits, showNotification]);
+  }, [
+    activeSavedAssumptionsEntry?.id,
+    activeSavedAssumptionsEntry?.reference,
+    activeSavedAssumptionsEntry?.shareUrl,
+    commitPendingEdits,
+    hasUnsavedChanges,
+    isActiveSavedAssumptionsRemote,
+    showNotification,
+  ]);
 
   const handleSaveAssumptionsClick = useCallback(() => {
     const prepareResult = commitPendingEdits();
@@ -284,6 +303,7 @@ const AssumptionsPage = () => {
 
   const handleShareModalClose = useCallback(() => {
     setShareModalOpen(false);
+    setShareModalInitialResult(null);
   }, []);
 
   const handleSaveModalClose = useCallback(() => {
@@ -523,6 +543,7 @@ const AssumptionsPage = () => {
           assumptions={assumptionsForSharing}
           onSaved={handleShareSaved}
           title="Share Assumptions"
+          initialSavedResult={shareModalInitialResult}
         />
 
         <SaveAssumptionsModal

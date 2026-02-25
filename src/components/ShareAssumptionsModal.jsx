@@ -3,13 +3,21 @@ import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isValidSlug, normalizeSlugInput, saveSharedAssumptions, slugify } from '../utils/shareAssumptions';
 
-const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 'Share Assumptions' }) => {
+const ShareAssumptionsModal = ({
+  isOpen,
+  onClose,
+  assumptions,
+  onSaved,
+  title = 'Share Assumptions',
+  initialSavedResult = null,
+}) => {
   const [slug, setSlug] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
   const [error, setError] = useState('');
   const [savedResult, setSavedResult] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [startedWithExistingLink, setStartedWithExistingLink] = useState(false);
 
   useEffect(() => {
     if (!isOpen) {
@@ -19,8 +27,18 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
       setError('');
       setSavedResult(null);
       setCopied(false);
+      setStartedWithExistingLink(false);
+      return;
     }
-  }, [isOpen]);
+
+    setSlug('');
+    setSavedResult(initialSavedResult);
+    setStartedWithExistingLink(Boolean(initialSavedResult));
+    setIsSaving(false);
+    setIsCopying(false);
+    setError('');
+    setCopied(false);
+  }, [initialSavedResult, isOpen]);
 
   const handleSlugChange = (event) => {
     setSlug(normalizeSlugInput(event.target.value));
@@ -157,7 +175,9 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
                 </>
               ) : (
                 <>
-                  <p className="mb-3 text-sm text-emerald-700">Share link created.</p>
+                  <p className="mb-3 text-sm text-emerald-700">
+                    {startedWithExistingLink ? 'This assumptions set already has a share link.' : 'Share link created.'}
+                  </p>
                   <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
                     <p className="break-all text-sm text-slate-800">{savedResult.shareUrl}</p>
                   </div>
@@ -198,12 +218,18 @@ ShareAssumptionsModal.propTypes = {
   assumptions: PropTypes.object,
   onSaved: PropTypes.func,
   title: PropTypes.string,
+  initialSavedResult: PropTypes.shape({
+    id: PropTypes.string,
+    reference: PropTypes.string,
+    shareUrl: PropTypes.string,
+  }),
 };
 
 ShareAssumptionsModal.defaultProps = {
   assumptions: null,
   onSaved: () => {},
   title: 'Share Assumptions',
+  initialSavedResult: null,
 };
 
 export default ShareAssumptionsModal;

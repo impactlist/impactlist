@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { isValidSlug, saveSharedAssumptions } from '../utils/shareAssumptions';
+import { isValidSlug, normalizeSlugInput, saveSharedAssumptions, slugify } from '../utils/shareAssumptions';
 
 const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 'Share Assumptions' }) => {
   const [slug, setSlug] = useState('');
@@ -23,7 +23,7 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
   }, [isOpen]);
 
   const handleSlugChange = (event) => {
-    setSlug(event.target.value.toLowerCase());
+    setSlug(normalizeSlugInput(event.target.value));
     setError('');
   };
 
@@ -33,7 +33,7 @@ const ShareAssumptionsModal = ({ isOpen, onClose, assumptions, onSaved, title = 
       return;
     }
 
-    const normalizedSlug = slug.trim().toLowerCase();
+    const normalizedSlug = slugify(slug);
     if (normalizedSlug && !isValidSlug(normalizedSlug)) {
       setError('Custom link text must use lowercase letters, numbers, and dashes (3-40 chars).');
       return;

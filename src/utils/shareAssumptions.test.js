@@ -3,6 +3,7 @@ import {
   ShareAssumptionsAPIError,
   fetchSharedAssumptions,
   isValidSlug,
+  normalizeSlugInput,
   saveSharedAssumptions,
   slugify,
 } from './shareAssumptions';
@@ -16,6 +17,37 @@ describe('shareAssumptions utils', () => {
     expect(slugify('  My Optimistic Scenario!  ')).toBe('my-optimistic-scenario');
     expect(isValidSlug('my-optimistic-scenario')).toBe(true);
     expect(isValidSlug('bad slug')).toBe(false);
+  });
+
+  it('normalizeSlugInput converts non-alphanumeric input to dashes', () => {
+    expect(normalizeSlugInput("Bob's Cool Model 2026")).toBe('bob-s-cool-model-2026');
+    expect(normalizeSlugInput('Bob’s Cool Model 2026')).toBe('bob-s-cool-model-2026');
+    expect(normalizeSlugInput('___A__B___C___')).toBe('-a-b-c-');
+    expect(normalizeSlugInput('!@#$%^&*()')).toBe('-');
+    expect(normalizeSlugInput('alpha-beta')).toBe('alpha-beta');
+    expect(normalizeSlugInput('alpha beta')).toBe('alpha-beta');
+  });
+
+  it('slugify(normalizeSlugInput(x)) is empty or a valid slug for noisy input', () => {
+    const cases = [
+      '___A__B___C___',
+      '  hello world  ',
+      "Bob's Optimistic Model!!!",
+      'Bob’s Optimistic Model!!!',
+      '--alpha---beta--',
+      '!@#$%^&*()',
+      '123',
+      'Mixed CASE + punctuation / slash',
+      'a'.repeat(100),
+    ];
+
+    cases.forEach((value) => {
+      const canonical = slugify(normalizeSlugInput(value));
+      expect(canonical.length).toBeLessThanOrEqual(40);
+      if (canonical !== '') {
+        expect(isValidSlug(canonical)).toBe(true);
+      }
+    });
   });
 
   it('saveSharedAssumptions posts payload', async () => {

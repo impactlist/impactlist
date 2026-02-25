@@ -71,6 +71,15 @@ export const slugify = (value) => {
     .slice(0, 40);
 };
 
+export const normalizeSlugInput = (value) => {
+  if (!value) return '';
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 40);
+};
+
 export const isValidSlug = (value) => {
   if (!value) return false;
   return SLUG_REGEX.test(value);

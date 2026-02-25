@@ -122,9 +122,10 @@ const ShareAssumptionsModal = ({
                 <button
                   type="button"
                   onClick={onClose}
+                  aria-label="Close modal"
                   className="rounded px-2 py-1 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
                 >
-                  Close
+                  X
                 </button>
               </div>
 
@@ -175,9 +176,7 @@ const ShareAssumptionsModal = ({
                 </>
               ) : (
                 <>
-                  <p className="mb-3 text-sm text-emerald-700">
-                    {startedWithExistingLink ? 'This assumptions set already has a share link.' : 'Share link created.'}
-                  </p>
+                  {!startedWithExistingLink && <p className="mb-3 text-sm text-emerald-700">Share link created.</p>}
                   <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
                     <p className="break-all text-sm text-slate-800">{savedResult.shareUrl}</p>
                   </div>

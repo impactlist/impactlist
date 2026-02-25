@@ -77,9 +77,10 @@ const SaveAssumptionsModal = ({ isOpen, onClose, onSubmit, defaultLabel = '', ca
                 <button
                   type="button"
                   onClick={onClose}
+                  aria-label="Close modal"
                   className="rounded px-2 py-1 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
                 >
-                  Close
+                  X
                 </button>
               </div>
 

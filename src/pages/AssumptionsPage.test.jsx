@@ -451,7 +451,6 @@ describe('AssumptionsPage routing integration', () => {
 
     await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
     expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
-    expect(screen.getByText('This assumptions set already has a share link.')).toBeInTheDocument();
     expect(screen.getByText((text) => text.includes('?shared=existing-remote'))).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Copy Link' }).length).toBeGreaterThan(0);
     expect(screen.queryByRole('button', { name: 'Create Link' })).not.toBeInTheDocument();

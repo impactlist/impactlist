@@ -1,109 +1,29 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import AssumptionsEditor from '../components/AssumptionsEditor';
 import ShareAssumptionsModal from '../components/ShareAssumptionsModal';
-import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { normalizeUserAssumptions } from '../utils/assumptionsAPIHelpers';
-import { fetchSharedAssumptions } from '../utils/shareAssumptions';
-
-const isPlainObject = (value) => {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-};
-
-const stableStringify = (value) => {
-  if (Array.isArray(value)) {
-    return `[${value.map(stableStringify).join(',')}]`;
-  }
-
-  if (value && typeof value === 'object') {
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(',')}}`;
-  }
-
-  return JSON.stringify(value);
-};
+import { useNotifications } from '../contexts/NotificationContext';
 
 const AssumptionsPage = () => {
-  const { defaultAssumptions, isUsingCustomValues, setAllUserAssumptions, getNormalizedUserAssumptionsForSharing } =
-    useAssumptions();
+  const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing } = useAssumptions();
+  const { showNotification } = useNotifications();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [statusMessage, setStatusMessage] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [pendingSharedSnapshot, setPendingSharedSnapshot] = useState(null);
-  const [isLoadingSharedSnapshot, setIsLoadingSharedSnapshot] = useState(false);
-  const requestedSharedReferenceRef = useRef(null);
   const assumptionsEditorRef = useRef(null);
-  const isMountedRef = useRef(true);
 
-  // Parse URL params
   const initialTab = searchParams.get('tab') || 'global';
   const initialCategoryId = searchParams.get('categoryId') || null;
   const initialRecipientId = searchParams.get('recipientId') || null;
   const initialActiveCategory = searchParams.get('activeCategory') || null;
-  const sharedReference = searchParams.get('shared');
   const assumptionsForSharing = getNormalizedUserAssumptionsForSharing();
-
-  const setPageStatus = useCallback((type, text) => {
-    setStatusMessage({ type, text });
-  }, []);
-
-  useEffect(() => {
-    if (!statusMessage) return undefined;
-    if (statusMessage.type === 'error') return undefined;
-
-    const timeoutId = setTimeout(() => {
-      setStatusMessage(null);
-    }, 6000);
-
-    return () => clearTimeout(timeoutId);
-  }, [statusMessage]);
-
-  const removeSharedParam = useCallback(
-    (referenceToRemove = null) => {
-      setSearchParams(
-        (currentParams) => {
-          const nextParams = new globalThis.URLSearchParams(currentParams);
-          const currentShared = nextParams.get('shared');
-
-          if (!currentShared) {
-            return currentParams;
-          }
-
-          if (referenceToRemove && currentShared !== referenceToRemove) {
-            return currentParams;
-          }
-
-          nextParams.delete('shared');
-          return nextParams;
-        },
-        { replace: true }
-      );
-    },
-    [setSearchParams]
-  );
-
-  useEffect(() => {
-    isMountedRef.current = true;
-
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!sharedReference) {
-      requestedSharedReferenceRef.current = null;
-    }
-  }, [sharedReference]);
 
   // Handle URL param changes from the editor
   // Uses replace for tab changes, push for entity edit/exit
   const handleParamsChange = useCallback(
     (newParams, usePush = false) => {
-      // Build new search params as object
       const paramsObj = {};
 
       if (newParams.tab && newParams.tab !== 'global') {
@@ -118,12 +38,12 @@ const AssumptionsPage = () => {
       if (newParams.activeCategory) {
         paramsObj.activeCategory = newParams.activeCategory;
       }
+      // Preserve `shared` while route-local query params are updated, so global import
+      // is not interrupted if users switch assumptions tabs before it completes.
       if (searchParams.get('shared')) {
         paramsObj.shared = searchParams.get('shared');
       }
 
-      // Only update if params actually changed (avoid update loops)
-      // Compare by checking each expected param
       const hasChanged =
         searchParams.get('tab') !== (paramsObj.tab || null) ||
         searchParams.get('categoryId') !== (paramsObj.categoryId || null) ||
@@ -137,129 +57,23 @@ const AssumptionsPage = () => {
     [searchParams, setSearchParams]
   );
 
-  const applySharedSnapshot = useCallback(
-    (snapshot, reference) => {
-      if (!isPlainObject(snapshot) || !isPlainObject(snapshot.assumptions)) {
-        setPageStatus('error', 'Shared assumptions payload is invalid.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(reference);
-        return false;
-      }
-
-      const normalizedIncoming = normalizeUserAssumptions(snapshot.assumptions, defaultAssumptions);
-      if (!normalizedIncoming) {
-        setPageStatus('error', 'Shared assumptions link did not contain usable custom assumptions.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(reference);
-        return false;
-      }
-
-      const currentNormalized = getNormalizedUserAssumptionsForSharing();
-      if (stableStringify(normalizedIncoming) === stableStringify(currentNormalized)) {
-        setPageStatus('info', 'Shared assumptions are already applied in this browser.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(reference);
-        return true;
-      }
-
-      setAllUserAssumptions(normalizedIncoming);
-      setPageStatus('success', 'Shared assumptions loaded.');
-      setPendingSharedSnapshot(null);
-      removeSharedParam(reference);
-      return true;
-    },
-    [
-      defaultAssumptions,
-      getNormalizedUserAssumptionsForSharing,
-      removeSharedParam,
-      setAllUserAssumptions,
-      setPageStatus,
-    ]
-  );
-
-  useEffect(() => {
-    if (
-      !sharedReference ||
-      pendingSharedSnapshot?.reference === sharedReference ||
-      requestedSharedReferenceRef.current === sharedReference
-    ) {
-      return;
-    }
-
-    const requestReference = sharedReference;
-    requestedSharedReferenceRef.current = requestReference;
-    setIsLoadingSharedSnapshot(true);
-
-    Promise.resolve()
-      .then(() => fetchSharedAssumptions(requestReference))
-      .then((snapshot) => {
-        if (!isMountedRef.current || requestedSharedReferenceRef.current !== requestReference) {
-          return;
-        }
-
-        if (isUsingCustomValues) {
-          setPendingSharedSnapshot({ reference: requestReference, snapshot });
-        } else {
-          applySharedSnapshot(snapshot, requestReference);
-        }
-      })
-      .catch((error) => {
-        if (!isMountedRef.current || requestedSharedReferenceRef.current !== requestReference) {
-          return;
-        }
-        setPageStatus('error', error.message || 'Could not load shared assumptions.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(requestReference);
-      })
-      .finally(() => {
-        if (isMountedRef.current && requestedSharedReferenceRef.current === requestReference) {
-          setIsLoadingSharedSnapshot(false);
-        }
-      });
-  }, [
-    applySharedSnapshot,
-    isUsingCustomValues,
-    pendingSharedSnapshot?.reference,
-    removeSharedParam,
-    setPageStatus,
-    sharedReference,
-  ]);
-
-  const handleReplaceMine = useCallback(() => {
-    if (!pendingSharedSnapshot) {
-      return;
-    }
-    applySharedSnapshot(pendingSharedSnapshot.snapshot, pendingSharedSnapshot.reference);
-  }, [applySharedSnapshot, pendingSharedSnapshot]);
-
-  const handleCancelImport = useCallback(() => {
-    if (!pendingSharedSnapshot) {
-      return;
-    }
-    setPendingSharedSnapshot(null);
-    setPageStatus('info', 'Kept your local assumptions.');
-    removeSharedParam(pendingSharedSnapshot.reference);
-  }, [pendingSharedSnapshot, removeSharedParam, setPageStatus]);
-
   const handleShareButtonClick = useCallback(() => {
     const prepareResult = assumptionsEditorRef.current?.prepareForShare?.();
     if (prepareResult && prepareResult.ok === false) {
-      setPageStatus('error', prepareResult.message || 'Resolve unsaved edits before sharing.');
+      showNotification('error', prepareResult.message || 'Resolve unsaved edits before sharing.');
       return;
     }
 
     setShareModalOpen(true);
-  }, [setPageStatus]);
+  }, [showNotification]);
 
   const handleShareModalClose = useCallback(() => {
     setShareModalOpen(false);
   }, []);
 
   const handleShareSaved = useCallback(() => {
-    setPageStatus('success', 'Share link created.');
-  }, [setPageStatus]);
-
-  const showImportDecisionModal = Boolean(pendingSharedSnapshot) && !shareModalOpen;
+    showNotification('success', 'Share link created.');
+  }, [showNotification]);
 
   return (
     <motion.div
@@ -290,27 +104,6 @@ const AssumptionsPage = () => {
           )}
         </div>
 
-        {statusMessage && (
-          <div
-            className={`mb-4 rounded-md px-4 py-3 text-sm ${
-              statusMessage.type === 'error'
-                ? 'bg-red-50 text-red-700'
-                : statusMessage.type === 'info'
-                  ? 'bg-slate-100 text-slate-700'
-                  : 'bg-emerald-50 text-emerald-700'
-            }`}
-            role="status"
-          >
-            {statusMessage.text}
-          </div>
-        )}
-
-        {isLoadingSharedSnapshot && (
-          <div className="mb-4 rounded-md bg-slate-100 px-4 py-3 text-sm text-slate-700">
-            Loading shared assumptions...
-          </div>
-        )}
-
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <AssumptionsEditor
             ref={assumptionsEditorRef}
@@ -321,13 +114,6 @@ const AssumptionsPage = () => {
             onParamsChange={handleParamsChange}
           />
         </div>
-
-        <SharedImportDecisionModal
-          isOpen={showImportDecisionModal}
-          onContinue={handleReplaceMine}
-          onCancel={handleCancelImport}
-          isBusy={isLoadingSharedSnapshot}
-        />
 
         <ShareAssumptionsModal
           isOpen={shareModalOpen}

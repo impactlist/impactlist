@@ -5,7 +5,10 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
+import { NotificationProvider } from '../contexts/NotificationContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
+import GlobalSharedAssumptionsImport from '../components/shared/GlobalSharedAssumptionsImport';
+import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
 
 /* global localStorage */
 
@@ -16,21 +19,21 @@ const LocationProbe = () => {
   return <div data-testid="location-probe">{`${location.pathname}${location.search}`}</div>;
 };
 
-const renderAssumptionsRoute = (initialEntry, { strictMode = false } = {}) => {
+const renderAppRoutes = (initialEntry, { strictMode = false } = {}) => {
   const tree = (
-    <MemoryRouter initialEntries={[initialEntry]}>
-      <LocationProbe />
-      <Routes>
-        <Route
-          path="/assumptions"
-          element={
-            <AssumptionsProvider>
-              <AssumptionsPage />
-            </AssumptionsProvider>
-          }
-        />
-      </Routes>
-    </MemoryRouter>
+    <NotificationProvider>
+      <AssumptionsProvider>
+        <MemoryRouter initialEntries={[initialEntry]}>
+          <GlobalNotificationBanner />
+          <GlobalSharedAssumptionsImport />
+          <LocationProbe />
+          <Routes>
+            <Route path="/" element={<div>Home</div>} />
+            <Route path="/assumptions" element={<AssumptionsPage />} />
+          </Routes>
+        </MemoryRouter>
+      </AssumptionsProvider>
+    </NotificationProvider>
   );
 
   render(strictMode ? <React.StrictMode>{tree}</React.StrictMode> : tree);
@@ -41,7 +44,7 @@ const getPersistedCustomEffectsData = () => {
   return raw ? JSON.parse(raw) : null;
 };
 
-describe('AssumptionsPage shared import flow', () => {
+describe('Global shared assumptions import flow', () => {
   const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
@@ -53,7 +56,7 @@ describe('AssumptionsPage shared import flow', () => {
     globalThis.fetch = originalFetch;
   });
 
-  it('auto-imports shared assumptions when no local custom assumptions exist', async () => {
+  it('auto-imports shared assumptions and preserves non-shared query params', async () => {
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 25;
     const user = userEvent.setup();
 
@@ -69,7 +72,7 @@ describe('AssumptionsPage shared import flow', () => {
       }),
     });
 
-    renderAssumptionsRoute('/assumptions?tab=categories&shared=abc123');
+    renderAppRoutes('/assumptions?tab=categories&shared=abc123');
 
     expect(await screen.findByText('Shared assumptions loaded.')).toBeInTheDocument();
 
@@ -92,7 +95,7 @@ describe('AssumptionsPage shared import flow', () => {
     });
   });
 
-  it('auto-imports shared assumptions in React StrictMode', async () => {
+  it('auto-imports shared assumptions from home route in React StrictMode', async () => {
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 28;
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
@@ -107,12 +110,12 @@ describe('AssumptionsPage shared import flow', () => {
       }),
     });
 
-    renderAssumptionsRoute('/assumptions?shared=strict123', { strictMode: true });
+    renderAppRoutes('/?shared=strict123', { strictMode: true });
 
     expect(await screen.findByText('Shared assumptions loaded.')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
+      expect(screen.getByTestId('location-probe').textContent).toBe('/');
     });
 
     await waitFor(() => {
@@ -150,16 +153,17 @@ describe('AssumptionsPage shared import flow', () => {
     });
 
     const user = userEvent.setup();
-    renderAssumptionsRoute('/assumptions?shared=shared123');
+    renderAppRoutes('/assumptions?shared=shared123');
 
     expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.queryByText('Loading shared assumptions...')).not.toBeInTheDocument();
     });
+
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(screen.getByTestId('location-probe').textContent).not.toContain('shared=');
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
     });
 
     await waitFor(() => {
@@ -197,13 +201,13 @@ describe('AssumptionsPage shared import flow', () => {
     });
 
     const user = userEvent.setup();
-    renderAssumptionsRoute('/assumptions?shared=shared456');
+    renderAppRoutes('/?shared=shared456');
 
     expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
 
     await waitFor(() => {
-      expect(screen.getByTestId('location-probe').textContent).not.toContain('shared=');
+      expect(screen.getByTestId('location-probe').textContent).toBe('/');
     });
 
     await waitFor(() => {
@@ -225,7 +229,7 @@ describe('AssumptionsPage shared import flow', () => {
       }),
     });
 
-    renderAssumptionsRoute('/assumptions?tab=recipients&shared=missing-reference');
+    renderAppRoutes('/assumptions?tab=recipients&shared=missing-reference');
 
     expect(await screen.findByText('Shared assumptions were not found.')).toBeInTheDocument();
 
@@ -253,7 +257,7 @@ describe('AssumptionsPage shared import flow', () => {
       }),
     });
 
-    renderAssumptionsRoute('/assumptions?shared=bad-shape');
+    renderAppRoutes('/assumptions?shared=bad-shape');
 
     expect(await screen.findByText('Server returned an invalid snapshot response.')).toBeInTheDocument();
 
@@ -281,7 +285,7 @@ describe('AssumptionsPage shared import flow', () => {
       }),
     });
 
-    renderAssumptionsRoute('/assumptions?shared=no-custom');
+    renderAppRoutes('/assumptions?shared=no-custom');
 
     expect(
       await screen.findByText('Shared assumptions link did not contain usable custom assumptions.')
@@ -320,7 +324,7 @@ describe('AssumptionsPage shared import flow', () => {
     });
 
     const user = userEvent.setup();
-    renderAssumptionsRoute('/assumptions');
+    renderAppRoutes('/assumptions');
 
     const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
     await user.clear(timeLimitInput);

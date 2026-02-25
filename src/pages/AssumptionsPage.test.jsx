@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-rou
 import { beforeEach, describe, expect, it } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
+import { NotificationProvider } from '../contexts/NotificationContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
 
 /* global localStorage */
@@ -42,20 +43,17 @@ const RouterControls = () => {
 
 const renderAssumptionsRoute = (initialEntry) => {
   render(
-    <MemoryRouter initialEntries={[initialEntry]}>
-      <RouterControls />
-      <Routes>
-        <Route path="/" element={<div>Home</div>} />
-        <Route
-          path="/assumptions"
-          element={
-            <AssumptionsProvider>
-              <AssumptionsPage />
-            </AssumptionsProvider>
-          }
-        />
-      </Routes>
-    </MemoryRouter>
+    <NotificationProvider>
+      <AssumptionsProvider>
+        <MemoryRouter initialEntries={[initialEntry]}>
+          <RouterControls />
+          <Routes>
+            <Route path="/" element={<div>Home</div>} />
+            <Route path="/assumptions" element={<AssumptionsPage />} />
+          </Routes>
+        </MemoryRouter>
+      </AssumptionsProvider>
+    </NotificationProvider>
   );
 };
 

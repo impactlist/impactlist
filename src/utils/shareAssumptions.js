@@ -26,7 +26,7 @@ const isNonEmptyString = (value) => {
   return typeof value === 'string' && value.trim().length > 0;
 };
 
-const buildSharePath = (reference) => `/assumptions?shared=${encodeURIComponent(reference)}`;
+const buildSharePath = (reference) => `/?shared=${encodeURIComponent(reference)}`;
 
 const buildShareUrl = (reference) => {
   const sharePath = buildSharePath(reference);
@@ -99,9 +99,9 @@ export const saveSharedAssumptions = async ({ assumptions, name, slug }) => {
   };
 };
 
-export const fetchSharedAssumptions = async (reference) => {
+export const fetchSharedAssumptions = async (reference, options = {}) => {
   const encodedReference = encodeURIComponent(reference);
-  const payload = await requestJson(`${SHARED_ASSUMPTIONS_BASE_PATH}/${encodedReference}`);
+  const payload = await requestJson(`${SHARED_ASSUMPTIONS_BASE_PATH}/${encodedReference}`, options);
 
   if (!isPlainObject(payload.assumptions)) {
     throw new ShareAssumptionsAPIError(500, 'invalid_response', 'Server returned an invalid snapshot response.');

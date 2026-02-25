@@ -34,7 +34,7 @@ describe('shareAssumptions utils', () => {
     });
 
     expect(result.reference).toBe('abc123');
-    expect(result.shareUrl).toContain('/assumptions?shared=abc123');
+    expect(result.shareUrl).toContain('/?shared=abc123');
     expect(fetchSpy).toHaveBeenCalledWith('/api/shared-assumptions', expect.objectContaining({ method: 'POST' }));
   });
 

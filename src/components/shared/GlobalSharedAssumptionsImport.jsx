@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
-import { useNotifications } from '../../contexts/NotificationContext';
+import { useNotificationActions } from '../../contexts/NotificationContext';
 import { normalizeUserAssumptions } from '../../utils/assumptionsAPIHelpers';
 import { fetchSharedAssumptions } from '../../utils/shareAssumptions';
 import { buildEvictionNotificationMessage } from '../../utils/savedAssumptionsMessages';
@@ -16,7 +16,7 @@ import { isPlainObject } from '../../utils/typeGuards';
 const GlobalSharedAssumptionsImport = () => {
   const { defaultAssumptions, isUsingCustomValues, setAllUserAssumptions, getNormalizedUserAssumptionsForSharing } =
     useAssumptions();
-  const { showNotification } = useNotifications();
+  const { showNotification } = useNotificationActions();
   const [searchParams, setSearchParams] = useSearchParams();
   const [pendingSharedSnapshot, setPendingSharedSnapshot] = useState(null);
   const [isLoadingSharedSnapshot, setIsLoadingSharedSnapshot] = useState(false);

@@ -1,7 +1,8 @@
-import { useNotifications } from '../../contexts/NotificationContext';
+import { useNotificationActions, useNotificationState } from '../../contexts/NotificationContext';
 
 const GlobalNotificationBanner = () => {
-  const { notification, clearNotification } = useNotifications();
+  const notification = useNotificationState();
+  const { clearNotification } = useNotificationActions();
 
   if (!notification) {
     return null;

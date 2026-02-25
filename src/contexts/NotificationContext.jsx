@@ -2,14 +2,32 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 
 const DEFAULT_AUTO_DISMISS_MS = 6000;
 
-const NotificationContext = createContext();
+const NotificationStateContext = createContext();
+const NotificationActionsContext = createContext();
+
+const useRequiredContext = (context, contextName, hookName) => {
+  const value = useContext(context);
+  if (value === undefined) {
+    throw new Error(`${hookName} must be used within a ${contextName}`);
+  }
+  return value;
+};
 
 export const useNotifications = () => {
-  const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
-  }
-  return context;
+  const notification = useRequiredContext(NotificationStateContext, 'NotificationProvider', 'useNotifications');
+  const actions = useRequiredContext(NotificationActionsContext, 'NotificationProvider', 'useNotifications');
+  return {
+    notification,
+    ...actions,
+  };
+};
+
+export const useNotificationState = () => {
+  return useRequiredContext(NotificationStateContext, 'NotificationProvider', 'useNotificationState');
+};
+
+export const useNotificationActions = () => {
+  return useRequiredContext(NotificationActionsContext, 'NotificationProvider', 'useNotificationActions');
 };
 
 export const NotificationProvider = ({ children }) => {
@@ -53,16 +71,17 @@ export const NotificationProvider = ({ children }) => {
     return () => clearTimeout(timeoutId);
   }, [notification]);
 
-  const contextValue = useMemo(
+  const actionsValue = useMemo(
     () => ({
-      notification,
       showNotification,
       clearNotification,
     }),
-    [notification, showNotification, clearNotification]
+    [showNotification, clearNotification]
   );
 
-  return <NotificationContext.Provider value={contextValue}>{children}</NotificationContext.Provider>;
+  return (
+    <NotificationActionsContext.Provider value={actionsValue}>
+      <NotificationStateContext.Provider value={notification}>{children}</NotificationStateContext.Provider>
+    </NotificationActionsContext.Provider>
+  );
 };
-
-export default NotificationContext;

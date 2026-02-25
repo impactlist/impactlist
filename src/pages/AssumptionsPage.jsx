@@ -10,7 +10,7 @@ import SavedAssumptionsPanel from '../components/SavedAssumptionsPanel';
 import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { useNotifications } from '../contexts/NotificationContext';
+import { useNotificationActions } from '../contexts/NotificationContext';
 import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
 import { isPlainObject } from '../utils/typeGuards';
 import {
@@ -51,7 +51,7 @@ const createComparableAssumptionsFingerprint = (assumptions) => {
 
 const AssumptionsPage = () => {
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
-  const { showNotification } = useNotifications();
+  const { showNotification } = useNotificationActions();
   const [searchParams, setSearchParams] = useSearchParams();
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);

@@ -301,6 +301,65 @@ describe('AssumptionsPage routing integration', () => {
     expect(savedEntries[0].assumptions.globalParameters.timeLimit).toBe(205);
   });
 
+  it('does not allow replacing remote saved assumptions and saves as new local instead', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
+
+    const remoteSeed = saveNewAssumptions({
+      label: 'Remote Snapshot',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 150,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+      reference: 'remote-snapshot',
+    });
+    if (!remoteSeed.ok) {
+      throw new Error('Expected seeded remote entry');
+    }
+    setActiveSavedAssumptionsId(remoteSeed.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '205');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
+    expect(await screen.findByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Update Current Saved Assumptions' })).not.toBeInTheDocument();
+
+    const labelInput = screen.getByLabelText('Label');
+    await user.clear(labelInput);
+    await user.type(labelInput, 'Local Fork');
+    const saveButtons = screen.getAllByRole('button', { name: 'Save Assumptions' });
+    await user.click(saveButtons[saveButtons.length - 1]);
+
+    const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    expect(savedEntries).toHaveLength(2);
+
+    const originalRemote = savedEntries.find((entry) => entry.id === remoteSeed.entry.id);
+    expect(originalRemote.reference).toBe('remote-snapshot');
+    expect(originalRemote.assumptions.globalParameters.timeLimit).toBe(150);
+
+    const localFork = savedEntries.find((entry) => entry.label === 'Local Fork');
+    expect(localFork).toBeTruthy();
+    expect(localFork.reference).toBeNull();
+    expect(localFork.source).toBe('local');
+    expect(localFork.assumptions.globalParameters.timeLimit).toBe(205);
+  });
+
   it('updates matching saved assumptions entry with share reference after link creation', async () => {
     const user = userEvent.setup();
     localStorage.setItem(

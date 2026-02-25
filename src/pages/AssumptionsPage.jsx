@@ -65,6 +65,7 @@ const AssumptionsPage = () => {
   );
   const hasUnsavedChanges =
     Boolean(activeSavedAssumptionsEntry) && activeSavedAssumptionsFingerprint !== currentFingerprint;
+  const isActiveSavedAssumptionsRemote = Boolean(activeSavedAssumptionsEntry?.reference);
   const isCurrentStateRepresentedBySavedAssumptions = useMemo(
     () =>
       Boolean(currentFingerprint) &&
@@ -73,7 +74,9 @@ const AssumptionsPage = () => {
       ),
     [currentFingerprint, savedAssumptions]
   );
-  const canUpdateExisting = Boolean(activeSavedAssumptionsEntry && hasUnsavedChanges);
+  const canUpdateExisting = Boolean(
+    activeSavedAssumptionsEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote
+  );
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
@@ -320,7 +323,7 @@ const AssumptionsPage = () => {
       }
 
       const result =
-        mode === 'update' && canUpdateExisting && activeSavedAssumptionsEntry
+        mode === 'update' && canUpdateExisting && activeSavedAssumptionsEntry && !activeSavedAssumptionsEntry.reference
           ? updateSavedAssumptions(activeSavedAssumptionsEntry.id, {
               label,
               assumptions: currentAssumptions,

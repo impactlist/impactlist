@@ -29,8 +29,6 @@ import {
 } from '../utils/savedAssumptionsStore';
 
 const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
-const STORAGE_LIMIT_ERROR_MESSAGE = 'Saved assumptions are full. Delete some saved assumptions and try again.';
-const DUPLICATE_LABEL_ERROR_MESSAGE = 'You already have saved assumptions with that name. Choose a different name.';
 
 const createComparableAssumptionsFingerprint = (assumptions) => {
   if (!isPlainObject(assumptions)) {
@@ -314,8 +312,7 @@ const AssumptionsPage = () => {
     ({ label, mode }) => {
       const currentAssumptions = getNormalizedUserAssumptionsForSharing();
       if (!currentAssumptions) {
-        showNotification('error', 'No custom assumptions to save.');
-        return;
+        return { ok: false, errorCode: 'no_custom_assumptions' };
       }
 
       const result =
@@ -333,14 +330,10 @@ const AssumptionsPage = () => {
             });
 
       if (!result.ok) {
-        if (result.errorCode === 'over_limit') {
-          showNotification('error', STORAGE_LIMIT_ERROR_MESSAGE);
-        } else if (result.errorCode === 'duplicate_label') {
-          showNotification('error', DUPLICATE_LABEL_ERROR_MESSAGE);
-        } else {
+        if (result.errorCode !== 'duplicate_label' && result.errorCode !== 'over_limit') {
           showNotification('error', STORAGE_ERROR_MESSAGE);
         }
-        return;
+        return { ok: false, errorCode: result.errorCode || 'unknown_error' };
       }
 
       const nextActiveId = result.entry?.id || activeSavedAssumptionsEntry?.id;
@@ -357,6 +350,7 @@ const AssumptionsPage = () => {
         result,
       });
       showNotification(evictionMessage ? 'info' : 'success', evictionMessage || successMessage);
+      return { ok: true };
     },
     [
       activeSavedAssumptionsEntry,
@@ -372,16 +366,15 @@ const AssumptionsPage = () => {
     (entryId, nextLabel) => {
       const result = renameSavedAssumptions(entryId, nextLabel);
       if (!result.ok) {
-        if (result.errorCode === 'duplicate_label') {
-          showNotification('error', DUPLICATE_LABEL_ERROR_MESSAGE);
-        } else {
+        if (result.errorCode !== 'duplicate_label') {
           showNotification('error', STORAGE_ERROR_MESSAGE);
         }
-        return;
+        return { ok: false, errorCode: result.errorCode || 'unknown_error' };
       }
 
       refreshSavedAssumptions();
       showNotification('success', 'Renamed saved assumptions.');
+      return { ok: true };
     },
     [refreshSavedAssumptions, showNotification]
   );

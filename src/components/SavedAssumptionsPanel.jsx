@@ -14,9 +14,18 @@ const formatTimestamp = (isoString) => {
   return new Date(timestamp).toLocaleString();
 };
 
+const getRenameErrorMessage = (errorCode) => {
+  if (errorCode === 'duplicate_label') {
+    return 'You already have saved assumptions with that name. Choose a different name.';
+  }
+
+  return 'Could not rename saved assumptions.';
+};
+
 const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, onRename, onDelete, onCopyLink }) => {
   const [editingId, setEditingId] = useState(null);
   const [editLabel, setEditLabel] = useState('');
+  const [renameError, setRenameError] = useState('');
   const [isSmallScreen, setIsSmallScreen] = useState(() => {
     if (typeof globalThis.window === 'undefined') {
       return false;
@@ -46,6 +55,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
   const beginRename = (entry) => {
     setEditingId(entry.id);
     setEditLabel(entry.label);
+    setRenameError('');
   };
 
   const commitRename = () => {
@@ -58,14 +68,21 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
       return;
     }
 
-    onRename(editingId, normalized);
+    const result = onRename(editingId, normalized);
+    if (result?.ok === false) {
+      setRenameError(getRenameErrorMessage(result.errorCode));
+      return;
+    }
+
     setEditingId(null);
     setEditLabel('');
+    setRenameError('');
   };
 
   const cancelRename = () => {
     setEditingId(null);
     setEditLabel('');
+    setRenameError('');
   };
 
   return (
@@ -102,7 +119,10 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                             <input
                               type="text"
                               value={editLabel}
-                              onChange={(event) => setEditLabel(event.target.value)}
+                              onChange={(event) => {
+                                setEditLabel(event.target.value);
+                                setRenameError('');
+                              }}
                               onKeyDown={(event) => {
                                 if (event.key === 'Enter') {
                                   event.preventDefault();
@@ -148,6 +168,10 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         )}
                       </div>
                     </div>
+
+                    {isEditing && renameError && (
+                      <p className="mt-2 rounded-md bg-red-50 px-2 py-1 text-xs text-red-700">{renameError}</p>
+                    )}
 
                     <div className="mt-2 text-xs text-slate-600">
                       Updated: {formatTimestamp(entry.updatedAt)}

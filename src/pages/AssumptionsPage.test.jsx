@@ -446,6 +446,42 @@ describe('AssumptionsPage routing integration', () => {
     expect(savedEntries[0].label).toBe('New Label');
   });
 
+  it('shows inline rename error for duplicate saved assumptions name', async () => {
+    const user = userEvent.setup();
+    saveNewAssumptions({
+      label: 'First Label',
+      assumptions: {
+        globalParameters: { timeLimit: 115 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    saveNewAssumptions({
+      label: 'Second Label',
+      assumptions: {
+        globalParameters: { timeLimit: 130 },
+        categories: {},
+        recipients: {},
+      },
+    });
+
+    renderAssumptionsRoute('/assumptions');
+    const panel = await screen.findByText('Saved Assumptions');
+    const section = panel.closest('section');
+    const secondRow = within(section).getByText('Second Label').closest('div.rounded-md');
+
+    await user.click(within(secondRow).getByRole('button', { name: 'Rename' }));
+    const input = within(secondRow).getByDisplayValue('Second Label');
+    await user.clear(input);
+    await user.type(input, 'first label');
+    await user.keyboard('{Enter}');
+
+    expect(
+      within(secondRow).getByText('You already have saved assumptions with that name. Choose a different name.')
+    ).toBeInTheDocument();
+    expect(within(secondRow).getByDisplayValue('first label')).toBeInTheDocument();
+  });
+
   it('prevents saving assumptions with a duplicate name', async () => {
     const user = userEvent.setup();
     localStorage.setItem(
@@ -479,6 +515,9 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(saveButtons[saveButtons.length - 1]);
 
     expect(screen.getByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
+    expect(
+      screen.getByText('You already have saved assumptions with that name. Choose a different name.')
+    ).toBeInTheDocument();
 
     const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
     expect(entries).toHaveLength(1);

@@ -2,6 +2,22 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
 
+const getSubmitErrorMessage = (errorCode) => {
+  if (errorCode === 'duplicate_label') {
+    return 'You already have saved assumptions with that name. Choose a different name.';
+  }
+
+  if (errorCode === 'over_limit') {
+    return 'Saved assumptions are full. Delete some saved assumptions and try again.';
+  }
+
+  if (errorCode === 'no_custom_assumptions') {
+    return 'No custom assumptions to save.';
+  }
+
+  return 'Could not save assumptions locally. Delete some saved assumptions and try again.';
+};
+
 const SaveAssumptionsModal = ({ isOpen, onClose, onSubmit, defaultLabel = '', canUpdateExisting = false }) => {
   const [label, setLabel] = useState(defaultLabel);
   const [error, setError] = useState('');
@@ -27,7 +43,10 @@ const SaveAssumptionsModal = ({ isOpen, onClose, onSubmit, defaultLabel = '', ca
       return;
     }
 
-    onSubmit({ label: normalizedLabel, mode });
+    const result = onSubmit({ label: normalizedLabel, mode });
+    if (result?.ok === false) {
+      setError(getSubmitErrorMessage(result.errorCode));
+    }
   };
 
   return (

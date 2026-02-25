@@ -1,3 +1,5 @@
+import { isPlainObject } from './typeGuards';
+
 const SHARED_ASSUMPTIONS_BASE_PATH = '/api/shared-assumptions';
 const SLUG_REGEX = /^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/;
 
@@ -16,10 +18,6 @@ const parseJsonSafely = async (response) => {
   } catch {
     return null;
   }
-};
-
-const isPlainObject = (value) => {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
 };
 
 const isNonEmptyString = (value) => {

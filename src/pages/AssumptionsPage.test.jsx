@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -6,6 +6,11 @@ import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
+import {
+  saveNewAssumptions,
+  setActiveSavedAssumptionsId,
+  upsertImportedSavedAssumptions,
+} from '../utils/savedAssumptionsStore';
 
 /* global localStorage */
 
@@ -217,5 +222,207 @@ describe('AssumptionsPage routing integration', () => {
 
     expect(await screen.findByText('Please enter a complete number')).toBeInTheDocument();
     expect(localStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('hides Save Assumptions when there are no custom assumptions', async () => {
+    renderAssumptionsRoute('/assumptions');
+    expect(await screen.findByText('Assumptions')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Save Assumptions' })).not.toBeInTheDocument();
+  });
+
+  it('saves current assumptions to Saved Assumptions and marks entry active', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '175');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
+    expect(await screen.findByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
+
+    const labelInput = screen.getByLabelText('Label');
+    await user.clear(labelInput);
+    await user.type(labelInput, 'My Local Snapshot');
+    const saveButtons = screen.getAllByRole('button', { name: 'Save Assumptions' });
+    await user.click(saveButtons[saveButtons.length - 1]);
+
+    expect(await screen.findByText('My Local Snapshot')).toBeInTheDocument();
+    expect(screen.getByText('Active')).toBeInTheDocument();
+
+    const savedRaw = localStorage.getItem('savedAssumptions:v1');
+    expect(savedRaw).toBeTruthy();
+    const savedEntries = JSON.parse(savedRaw);
+    expect(savedEntries).toHaveLength(1);
+    expect(savedEntries[0].label).toBe('My Local Snapshot');
+  });
+
+  it('updates the active saved assumptions entry in place', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
+
+    const seeded = saveNewAssumptions({
+      label: 'Current Working Model',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 150,
+        },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '205');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
+    expect(await screen.findByRole('button', { name: 'Update Current Saved Assumptions' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Update Current Saved Assumptions' }));
+
+    const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    expect(savedEntries).toHaveLength(1);
+    expect(savedEntries[0].id).toBe(seeded.entry.id);
+    expect(savedEntries[0].assumptions.globalParameters.timeLimit).toBe(205);
+  });
+
+  it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 140,
+        },
+      })
+    );
+
+    const savedResult = saveNewAssumptions({
+      label: 'Imported From Friend',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 220,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'imported',
+      reference: 'friend-model',
+    });
+
+    if (!savedResult.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+
+    renderAssumptionsRoute('/assumptions');
+    expect(await screen.findByText('Imported From Friend')).toBeInTheDocument();
+
+    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const loadButton = within(panel).getByRole('button', { name: 'Load' });
+    await user.click(loadButton);
+
+    expect(await screen.findByText('Load Saved Assumptions?')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('220');
+    });
+  });
+
+  it('deletes all imported saved assumptions entries', async () => {
+    const user = userEvent.setup();
+    saveNewAssumptions({
+      label: 'Local Baseline',
+      assumptions: {
+        globalParameters: { timeLimit: 100 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    upsertImportedSavedAssumptions({
+      label: 'Friend 1',
+      assumptions: {
+        globalParameters: { timeLimit: 180 },
+        categories: {},
+        recipients: {},
+      },
+      reference: 'friend-1',
+    });
+    const friend2 = upsertImportedSavedAssumptions({
+      label: 'Friend 2',
+      assumptions: {
+        globalParameters: { timeLimit: 190 },
+        categories: {},
+        recipients: {},
+      },
+      reference: 'friend-2',
+    });
+    if (!friend2.ok) {
+      throw new Error('Expected imported entries to seed successfully');
+    }
+    setActiveSavedAssumptionsId(friend2.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    expect(await screen.findByText('Friend 1')).toBeInTheDocument();
+    expect(screen.getByText('Friend 2')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Delete All Imported' }));
+    expect(await screen.findByRole('heading', { name: 'Delete All Imported?' })).toBeInTheDocument();
+    const confirmButtons = screen.getAllByRole('button', { name: 'Delete All Imported' });
+    await user.click(confirmButtons[confirmButtons.length - 1]);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Friend 1')).not.toBeInTheDocument();
+      expect(screen.queryByText('Friend 2')).not.toBeInTheDocument();
+    });
+    expect(screen.getByText('Local Baseline')).toBeInTheDocument();
+  });
+
+  it('renames a saved assumptions entry from the panel', async () => {
+    const user = userEvent.setup();
+    const seeded = saveNewAssumptions({
+      label: 'Old Label',
+      assumptions: {
+        globalParameters: { timeLimit: 115 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected saved entry to seed successfully');
+    }
+
+    renderAssumptionsRoute('/assumptions');
+    expect(await screen.findByText('Old Label')).toBeInTheDocument();
+
+    const panel = screen.getByText('Saved Assumptions').closest('section');
+    await user.click(within(panel).getByRole('button', { name: 'Rename' }));
+
+    const input = within(panel).getByDisplayValue('Old Label');
+    await user.clear(input);
+    await user.type(input, 'New Label');
+    await user.keyboard('{Enter}');
+
+    expect(await screen.findByText('New Label')).toBeInTheDocument();
+    expect(screen.queryByText('Old Label')).not.toBeInTheDocument();
+
+    const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    expect(savedEntries[0].label).toBe('New Label');
   });
 });

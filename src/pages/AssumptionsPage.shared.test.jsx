@@ -88,6 +88,18 @@ describe('Global shared assumptions import flow', () => {
       });
     });
 
+    const savedAssumptionsRaw = localStorage.getItem('savedAssumptions:v1');
+    expect(savedAssumptionsRaw).toBeTruthy();
+    const savedAssumptions = JSON.parse(savedAssumptionsRaw);
+    expect(savedAssumptions).toHaveLength(1);
+    expect(savedAssumptions[0]).toMatchObject({
+      source: 'imported',
+      reference: 'abc123',
+    });
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
+    expect(await screen.findByText('abc123')).toBeInTheDocument();
+    expect(screen.getByText('Active')).toBeInTheDocument();
+
     await user.click(screen.getByRole('button', { name: 'Global' }));
 
     await waitFor(() => {

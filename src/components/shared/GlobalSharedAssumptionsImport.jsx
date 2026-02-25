@@ -5,23 +5,13 @@ import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { normalizeUserAssumptions } from '../../utils/assumptionsAPIHelpers';
 import { fetchSharedAssumptions } from '../../utils/shareAssumptions';
-
-const isPlainObject = (value) => {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-};
-
-const stableStringify = (value) => {
-  if (Array.isArray(value)) {
-    return `[${value.map(stableStringify).join(',')}]`;
-  }
-
-  if (value && typeof value === 'object') {
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(',')}}`;
-  }
-
-  return JSON.stringify(value);
-};
+import { buildEvictionNotificationMessage } from '../../utils/savedAssumptionsMessages';
+import {
+  createAssumptionsFingerprint,
+  setActiveSavedAssumptionsId,
+  upsertImportedSavedAssumptions,
+} from '../../utils/savedAssumptionsStore';
+import { isPlainObject } from '../../utils/typeGuards';
 
 const GlobalSharedAssumptionsImport = () => {
   const { defaultAssumptions, isUsingCustomValues, setAllUserAssumptions, getNormalizedUserAssumptionsForSharing } =
@@ -75,8 +65,9 @@ const GlobalSharedAssumptionsImport = () => {
         return false;
       }
 
-      const currentNormalized = getNormalizedUserAssumptionsForSharing();
-      if (stableStringify(normalizedIncoming) === stableStringify(currentNormalized)) {
+      const incomingFingerprint = createAssumptionsFingerprint(normalizedIncoming);
+      const currentFingerprint = createAssumptionsFingerprint(getNormalizedUserAssumptionsForSharing());
+      if (incomingFingerprint && incomingFingerprint === currentFingerprint) {
         showNotification('info', 'Shared assumptions are already applied in this browser.');
         setPendingSharedSnapshot(null);
         removeSharedParam(reference);
@@ -84,7 +75,29 @@ const GlobalSharedAssumptionsImport = () => {
       }
 
       setAllUserAssumptions(normalizedIncoming);
-      showNotification('success', 'Shared assumptions loaded.');
+      const upsertResult = upsertImportedSavedAssumptions({
+        label: snapshot?.name || snapshot?.slug || reference,
+        assumptions: normalizedIncoming,
+        reference,
+      });
+
+      if (upsertResult.ok && upsertResult.entry?.id) {
+        setActiveSavedAssumptionsId(upsertResult.entry.id);
+      }
+
+      if (!upsertResult.ok) {
+        const failureMessage =
+          upsertResult.errorCode === 'over_limit'
+            ? 'Shared assumptions loaded. Saved Assumptions is full, so this import was not added.'
+            : 'Shared assumptions loaded. Could not save them to Saved Assumptions locally.';
+        showNotification('info', failureMessage);
+      } else {
+        const evictionMessage = buildEvictionNotificationMessage({
+          prefix: 'Shared assumptions loaded.',
+          result: upsertResult,
+        });
+        showNotification(evictionMessage ? 'info' : 'success', evictionMessage || 'Shared assumptions loaded.');
+      }
       setPendingSharedSnapshot(null);
       removeSharedParam(reference);
       return true;

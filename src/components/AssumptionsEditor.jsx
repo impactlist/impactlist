@@ -141,30 +141,32 @@ const AssumptionsEditor = forwardRef(
       commitGlobalChanges();
     }, [commitGlobalChanges]);
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        prepareForShare: () => {
-          if (editingCategoryId || editingRecipient) {
-            return {
-              ok: false,
-              message: 'Save or cancel your in-progress edits before sharing.',
-            };
-          }
+    useImperativeHandle(ref, () => {
+      const commitPendingAssumptionsEdits = () => {
+        if (editingCategoryId || editingRecipient) {
+          return {
+            ok: false,
+            message: 'Save or cancel your in-progress edits before continuing.',
+          };
+        }
 
-          const globalSaved = commitGlobalChanges();
-          if (!globalSaved) {
-            return {
-              ok: false,
-              message: 'Fix global parameter errors before sharing.',
-            };
-          }
+        const globalSaved = commitGlobalChanges();
+        if (!globalSaved) {
+          return {
+            ok: false,
+            message: 'Fix global parameter errors before continuing.',
+          };
+        }
 
-          return { ok: true };
-        },
-      }),
-      [commitGlobalChanges, editingCategoryId, editingRecipient]
-    );
+        return { ok: true };
+      };
+
+      return {
+        commitPendingAssumptionsEdits,
+        // Backward-compatible alias while callers migrate to the generic name.
+        prepareForShare: commitPendingAssumptionsEdits,
+      };
+    }, [commitGlobalChanges, editingCategoryId, editingRecipient]);
 
     const handleGlobalReset = useCallback(() => {
       globalForm.reset();

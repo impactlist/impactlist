@@ -9,12 +9,9 @@ import {
 } from './sharedAssumptionsConfig.js';
 import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
 import { normalizeSharedUserAssumptions, serverDefaultAssumptions } from './sharedAssumptionsNormalization.js';
+import { isPlainObject } from '../utils/typeGuards.js';
 
 const ALLOWED_TOP_LEVEL_KEYS = ['globalParameters', 'categories', 'recipients'];
-
-const isPlainObject = (value) => {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-};
 
 const cloneJson = (value) => JSON.parse(JSON.stringify(value));
 

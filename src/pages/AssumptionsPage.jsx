@@ -1,17 +1,51 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import AssumptionsEditor from '../components/AssumptionsEditor';
 import ShareAssumptionsModal from '../components/ShareAssumptionsModal';
+import SaveAssumptionsModal from '../components/SaveAssumptionsModal';
+import SavedAssumptionsMigrationModal from '../components/SavedAssumptionsMigrationModal';
+import SavedAssumptionsPanel from '../components/SavedAssumptionsPanel';
+import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
+import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotifications } from '../contexts/NotificationContext';
+import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
+import {
+  completeSavedAssumptionsMigration,
+  createAssumptionsFingerprint,
+  deleteAllImportedAssumptions,
+  deleteSavedAssumptions,
+  getActiveSavedAssumptionsId,
+  getSavedAssumptions,
+  markSavedAssumptionsLoaded,
+  maybeRunSavedAssumptionsMigration,
+  renameSavedAssumptions,
+  saveNewAssumptions,
+  SAVED_ASSUMPTIONS_CHANGED_EVENT,
+  setActiveSavedAssumptionsId,
+  updateSavedAssumptions,
+} from '../utils/savedAssumptionsStore';
+
+const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
+const STORAGE_LIMIT_ERROR_MESSAGE = 'Saved assumptions are full. Delete some saved assumptions and try again.';
 
 const AssumptionsPage = () => {
-  const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing } = useAssumptions();
+  const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotifications();
   const [searchParams, setSearchParams] = useSearchParams();
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [saveModalDefaultLabel, setSaveModalDefaultLabel] = useState('My Current Assumptions');
+  const [savedAssumptions, setSavedAssumptions] = useState([]);
+  const [activeSavedAssumptionsId, setActiveSavedAssumptionsIdState] = useState(null);
+  const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
+  const [pendingDeleteEntryId, setPendingDeleteEntryId] = useState(null);
+  const [isDeleteImportedConfirmOpen, setIsDeleteImportedConfirmOpen] = useState(false);
+  const [migrationPromptOpen, setMigrationPromptOpen] = useState(false);
+  const [migrationDefaultLabel, setMigrationDefaultLabel] = useState('My Current Assumptions');
+  const [migrationCheckDone, setMigrationCheckDone] = useState(false);
   const assumptionsEditorRef = useRef(null);
 
   const initialTab = searchParams.get('tab') || 'global';
@@ -19,6 +53,65 @@ const AssumptionsPage = () => {
   const initialRecipientId = searchParams.get('recipientId') || null;
   const initialActiveCategory = searchParams.get('activeCategory') || null;
   const assumptionsForSharing = getNormalizedUserAssumptionsForSharing();
+  const currentFingerprint = useMemo(
+    () => createAssumptionsFingerprint(assumptionsForSharing),
+    [assumptionsForSharing]
+  );
+  const activeSavedAssumptionsEntry = useMemo(
+    () => savedAssumptions.find((entry) => entry.id === activeSavedAssumptionsId) || null,
+    [activeSavedAssumptionsId, savedAssumptions]
+  );
+  const hasUnsavedChanges =
+    Boolean(activeSavedAssumptionsEntry) && activeSavedAssumptionsEntry.fingerprint !== currentFingerprint;
+  const canUpdateExisting = Boolean(activeSavedAssumptionsEntry && hasUnsavedChanges);
+
+  const refreshSavedAssumptions = useCallback(() => {
+    const entries = getSavedAssumptions();
+    const activeId = getActiveSavedAssumptionsId();
+    const activeExists = activeId && entries.some((entry) => entry.id === activeId);
+
+    if (activeId && !activeExists) {
+      setActiveSavedAssumptionsId(null);
+      setActiveSavedAssumptionsIdState(null);
+    } else {
+      setActiveSavedAssumptionsIdState(activeId || null);
+    }
+
+    setSavedAssumptions(entries);
+  }, []);
+
+  useEffect(() => {
+    refreshSavedAssumptions();
+  }, [refreshSavedAssumptions]);
+
+  useEffect(() => {
+    const handleSavedAssumptionsChanged = () => {
+      refreshSavedAssumptions();
+    };
+
+    globalThis.addEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
+    return () => {
+      globalThis.removeEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
+    };
+  }, [refreshSavedAssumptions]);
+
+  useEffect(() => {
+    if (migrationCheckDone) {
+      return;
+    }
+
+    const migrationResult = maybeRunSavedAssumptionsMigration({
+      currentAssumptions: assumptionsForSharing,
+      defaultLabel: 'My Current Assumptions',
+    });
+
+    if (migrationResult.shouldPrompt) {
+      setMigrationDefaultLabel(migrationResult.defaultLabel || 'My Current Assumptions');
+      setMigrationPromptOpen(true);
+    }
+
+    setMigrationCheckDone(true);
+  }, [assumptionsForSharing, migrationCheckDone]);
 
   // Handle URL param changes from the editor
   // Uses replace for tab changes, push for entity edit/exit
@@ -57,23 +150,289 @@ const AssumptionsPage = () => {
     [searchParams, setSearchParams]
   );
 
+  const commitPendingEdits = useCallback(() => {
+    const result =
+      assumptionsEditorRef.current?.commitPendingAssumptionsEdits?.() ||
+      assumptionsEditorRef.current?.prepareForShare?.();
+    return result || { ok: true };
+  }, []);
+
+  const persistAsActive = useCallback(
+    (entryId) => {
+      setActiveSavedAssumptionsId(entryId);
+      setActiveSavedAssumptionsIdState(entryId);
+      refreshSavedAssumptions();
+    },
+    [refreshSavedAssumptions]
+  );
+
+  const applySavedAssumptionsEntry = useCallback(
+    (entry) => {
+      if (!entry?.assumptions) {
+        showNotification('error', 'Saved assumptions entry is invalid.');
+        return;
+      }
+
+      setAllUserAssumptions(entry.assumptions);
+      const loadedResult = markSavedAssumptionsLoaded(entry.id);
+      if (!loadedResult.ok) {
+        showNotification('error', STORAGE_ERROR_MESSAGE);
+        return;
+      }
+
+      persistAsActive(entry.id);
+      showNotification('success', 'Loaded saved assumptions.');
+    },
+    [persistAsActive, setAllUserAssumptions, showNotification]
+  );
+
+  const handleLoadSavedAssumptions = useCallback(
+    (entry) => {
+      if (!entry) {
+        return;
+      }
+
+      if (entry.fingerprint && entry.fingerprint === currentFingerprint) {
+        const loadedResult = markSavedAssumptionsLoaded(entry.id);
+        if (loadedResult.ok) {
+          persistAsActive(entry.id);
+        }
+        const isSameActiveEntry = activeSavedAssumptionsId === entry.id;
+        showNotification(
+          'info',
+          isSameActiveEntry ? 'These assumptions are already loaded.' : 'Switched active saved assumptions entry.'
+        );
+        return;
+      }
+
+      if (isUsingCustomValues) {
+        setPendingLoadEntry(entry);
+        return;
+      }
+
+      applySavedAssumptionsEntry(entry);
+    },
+    [
+      activeSavedAssumptionsId,
+      applySavedAssumptionsEntry,
+      currentFingerprint,
+      isUsingCustomValues,
+      persistAsActive,
+      showNotification,
+    ]
+  );
+
+  const handleContinuePendingLoad = useCallback(() => {
+    if (!pendingLoadEntry) {
+      return;
+    }
+    applySavedAssumptionsEntry(pendingLoadEntry);
+    setPendingLoadEntry(null);
+  }, [applySavedAssumptionsEntry, pendingLoadEntry]);
+
+  const handleCancelPendingLoad = useCallback(() => {
+    setPendingLoadEntry(null);
+    showNotification('info', 'Kept your current assumptions.');
+  }, [showNotification]);
+
   const handleShareButtonClick = useCallback(() => {
-    const prepareResult = assumptionsEditorRef.current?.prepareForShare?.();
-    if (prepareResult && prepareResult.ok === false) {
+    const prepareResult = commitPendingEdits();
+    if (prepareResult?.ok === false) {
       showNotification('error', prepareResult.message || 'Resolve unsaved edits before sharing.');
       return;
     }
 
     setShareModalOpen(true);
-  }, [showNotification]);
+  }, [commitPendingEdits, showNotification]);
+
+  const handleSaveAssumptionsClick = useCallback(() => {
+    const prepareResult = commitPendingEdits();
+    if (prepareResult?.ok === false) {
+      showNotification('error', prepareResult.message || 'Resolve unsaved edits before saving.');
+      return;
+    }
+
+    const currentAssumptions = getNormalizedUserAssumptionsForSharing();
+    if (!currentAssumptions) {
+      showNotification('error', 'No custom assumptions to save.');
+      return;
+    }
+
+    setSaveModalDefaultLabel(activeSavedAssumptionsEntry?.label || 'My Current Assumptions');
+    setSaveModalOpen(true);
+  }, [
+    activeSavedAssumptionsEntry?.label,
+    commitPendingEdits,
+    getNormalizedUserAssumptionsForSharing,
+    showNotification,
+  ]);
 
   const handleShareModalClose = useCallback(() => {
     setShareModalOpen(false);
   }, []);
 
+  const handleSaveModalClose = useCallback(() => {
+    setSaveModalOpen(false);
+  }, []);
+
   const handleShareSaved = useCallback(() => {
     showNotification('success', 'Share link created.');
   }, [showNotification]);
+
+  const handleSaveAssumptionsSubmit = useCallback(
+    ({ label, mode }) => {
+      const currentAssumptions = getNormalizedUserAssumptionsForSharing();
+      if (!currentAssumptions) {
+        showNotification('error', 'No custom assumptions to save.');
+        return;
+      }
+
+      const result =
+        mode === 'update' && canUpdateExisting && activeSavedAssumptionsEntry
+          ? updateSavedAssumptions(activeSavedAssumptionsEntry.id, {
+              label,
+              assumptions: currentAssumptions,
+              source: activeSavedAssumptionsEntry.source,
+              reference: activeSavedAssumptionsEntry.reference,
+            })
+          : saveNewAssumptions({
+              label,
+              assumptions: currentAssumptions,
+              source: 'local',
+            });
+
+      if (!result.ok) {
+        if (result.errorCode === 'over_limit') {
+          showNotification('error', STORAGE_LIMIT_ERROR_MESSAGE);
+        } else {
+          showNotification('error', STORAGE_ERROR_MESSAGE);
+        }
+        return;
+      }
+
+      const nextActiveId = result.entry?.id || activeSavedAssumptionsEntry?.id;
+      if (nextActiveId) {
+        persistAsActive(nextActiveId);
+      } else {
+        refreshSavedAssumptions();
+      }
+      setSaveModalOpen(false);
+
+      const successMessage = mode === 'update' ? 'Updated saved assumptions.' : 'Saved assumptions.';
+      const evictionMessage = buildEvictionNotificationMessage({
+        prefix: successMessage,
+        result,
+      });
+      showNotification(evictionMessage ? 'info' : 'success', evictionMessage || successMessage);
+    },
+    [
+      activeSavedAssumptionsEntry,
+      canUpdateExisting,
+      getNormalizedUserAssumptionsForSharing,
+      persistAsActive,
+      refreshSavedAssumptions,
+      showNotification,
+    ]
+  );
+
+  const handleRenameSavedAssumptions = useCallback(
+    (entryId, nextLabel) => {
+      const result = renameSavedAssumptions(entryId, nextLabel);
+      if (!result.ok) {
+        showNotification('error', STORAGE_ERROR_MESSAGE);
+        return;
+      }
+
+      refreshSavedAssumptions();
+      showNotification('success', 'Renamed saved assumptions.');
+    },
+    [refreshSavedAssumptions, showNotification]
+  );
+
+  const handleRequestDeleteSavedAssumptions = useCallback((entryId) => {
+    setPendingDeleteEntryId(entryId);
+  }, []);
+
+  const handleDeleteSavedAssumptions = useCallback(
+    (entryId) => {
+      if (!entryId) {
+        return;
+      }
+
+      const result = deleteSavedAssumptions(entryId);
+      if (!result.ok) {
+        showNotification('error', STORAGE_ERROR_MESSAGE);
+        return;
+      }
+
+      refreshSavedAssumptions();
+      showNotification('success', 'Deleted saved assumptions.');
+    },
+    [refreshSavedAssumptions, showNotification]
+  );
+
+  const handleRequestDeleteAllImported = useCallback(() => {
+    setIsDeleteImportedConfirmOpen(true);
+  }, []);
+
+  const handleDeleteAllImported = useCallback(() => {
+    const result = deleteAllImportedAssumptions();
+    if (!result.ok) {
+      showNotification('error', STORAGE_ERROR_MESSAGE);
+      return;
+    }
+
+    refreshSavedAssumptions();
+    showNotification('success', `Deleted ${result.deletedCount} imported saved assumptions entries.`);
+  }, [refreshSavedAssumptions, showNotification]);
+
+  const handleCopySavedLink = useCallback(
+    async (entry) => {
+      if (!entry?.shareUrl) {
+        showNotification('error', 'No share link available for this entry.');
+        return;
+      }
+
+      try {
+        await globalThis.navigator.clipboard.writeText(entry.shareUrl);
+        showNotification('success', 'Copied share link.');
+      } catch {
+        showNotification('error', 'Could not copy link automatically. Please copy it manually.');
+      }
+    },
+    [showNotification]
+  );
+
+  const handleMigrationSave = useCallback(() => {
+    const result = completeSavedAssumptionsMigration({
+      accepted: true,
+      currentAssumptions: assumptionsForSharing,
+      label: migrationDefaultLabel,
+    });
+
+    if (!result.ok) {
+      showNotification('error', STORAGE_ERROR_MESSAGE);
+      return;
+    }
+
+    setMigrationPromptOpen(false);
+    refreshSavedAssumptions();
+    showNotification('success', 'Saved your current assumptions.');
+  }, [assumptionsForSharing, migrationDefaultLabel, refreshSavedAssumptions, showNotification]);
+
+  const handleMigrationSkip = useCallback(() => {
+    const result = completeSavedAssumptionsMigration({
+      accepted: false,
+      currentAssumptions: assumptionsForSharing,
+    });
+
+    if (!result.ok) {
+      showNotification('error', STORAGE_ERROR_MESSAGE);
+      return;
+    }
+
+    setMigrationPromptOpen(false);
+  }, [assumptionsForSharing, showNotification]);
 
   return (
     <motion.div
@@ -93,16 +452,38 @@ const AssumptionsPage = () => {
       >
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-4xl font-bold text-slate-900 text-center sm:text-left">Assumptions</h1>
-          {isUsingCustomValues && (
-            <button
-              type="button"
-              onClick={handleShareButtonClick}
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-            >
-              Share Assumptions
-            </button>
-          )}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
+            {isUsingCustomValues && (
+              <button
+                type="button"
+                onClick={handleSaveAssumptionsClick}
+                className="rounded-md border border-indigo-300 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
+              >
+                Save Assumptions
+              </button>
+            )}
+            {isUsingCustomValues && (
+              <button
+                type="button"
+                onClick={handleShareButtonClick}
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              >
+                Share Assumptions
+              </button>
+            )}
+          </div>
         </div>
+
+        <SavedAssumptionsPanel
+          entries={savedAssumptions}
+          activeId={activeSavedAssumptionsId}
+          hasUnsavedChanges={hasUnsavedChanges}
+          onLoad={handleLoadSavedAssumptions}
+          onRename={handleRenameSavedAssumptions}
+          onDelete={handleRequestDeleteSavedAssumptions}
+          onCopyLink={handleCopySavedLink}
+          onDeleteAllImported={handleRequestDeleteAllImported}
+        />
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <AssumptionsEditor
@@ -121,6 +502,56 @@ const AssumptionsPage = () => {
           assumptions={assumptionsForSharing}
           onSaved={handleShareSaved}
           title="Share Assumptions"
+        />
+
+        <SaveAssumptionsModal
+          isOpen={saveModalOpen}
+          onClose={handleSaveModalClose}
+          onSubmit={handleSaveAssumptionsSubmit}
+          defaultLabel={saveModalDefaultLabel}
+          canUpdateExisting={canUpdateExisting}
+        />
+
+        <SharedImportDecisionModal
+          isOpen={Boolean(pendingLoadEntry)}
+          onContinue={handleContinuePendingLoad}
+          onCancel={handleCancelPendingLoad}
+          title="Load Saved Assumptions?"
+          description="You already have custom assumptions in this browser. Continuing will replace them with this saved entry."
+          continueLabel="Continue (Replace Mine)"
+          cancelLabel="Cancel"
+        />
+
+        <SavedAssumptionsMigrationModal
+          isOpen={migrationPromptOpen}
+          onSaveCurrent={handleMigrationSave}
+          onSkip={handleMigrationSkip}
+        />
+
+        <ConfirmActionModal
+          isOpen={Boolean(pendingDeleteEntryId)}
+          title="Delete Saved Assumptions?"
+          description="This saved assumptions entry will be removed from this browser."
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          onConfirm={() => {
+            handleDeleteSavedAssumptions(pendingDeleteEntryId);
+            setPendingDeleteEntryId(null);
+          }}
+          onCancel={() => setPendingDeleteEntryId(null)}
+        />
+
+        <ConfirmActionModal
+          isOpen={isDeleteImportedConfirmOpen}
+          title="Delete All Imported?"
+          description="All imported saved assumptions will be removed from this browser."
+          confirmLabel="Delete All Imported"
+          cancelLabel="Cancel"
+          onConfirm={() => {
+            handleDeleteAllImported();
+            setIsDeleteImportedConfirmOpen(false);
+          }}
+          onCancel={() => setIsDeleteImportedConfirmOpen(false)}
         />
       </motion.div>
     </motion.div>

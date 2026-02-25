@@ -393,6 +393,22 @@ const trimLabel = (label) => {
   return label.trim();
 };
 
+const normalizeLabelKey = (label) => trimLabel(label).toLowerCase();
+
+const hasDuplicateLabel = (entries, label, { excludeId = null } = {}) => {
+  const labelKey = normalizeLabelKey(label);
+  if (!labelKey) {
+    return false;
+  }
+
+  return entries.some((entry) => {
+    if (excludeId && entry.id === excludeId) {
+      return false;
+    }
+    return normalizeLabelKey(entry.label) === labelKey;
+  });
+};
+
 const buildLocalEntry = ({ label, assumptions, nowIso }) => {
   const normalizedLabel = trimLabel(label);
   if (!normalizedLabel) {
@@ -511,6 +527,10 @@ export const saveNewAssumptions = ({ label, assumptions, source = 'local', refer
   };
 
   const current = loadSavedAssumptionsUnsafe();
+  if (hasDuplicateLabel(current, entry.label)) {
+    return { ok: false, errorCode: 'duplicate_label' };
+  }
+
   const withNew = [entry, ...current];
   const persistResult = persistSavedAssumptions(withNew, { protectEntryIds: new Set([entry.id]) });
 
@@ -532,6 +552,11 @@ export const updateSavedAssumptions = (id, updates = {}) => {
   const existing = current.find((entry) => entry.id === id);
   if (!existing) {
     return { ok: false, errorCode: 'not_found' };
+  }
+
+  const requestedLabel = updates.label !== undefined ? updates.label : existing.label;
+  if (hasDuplicateLabel(current, requestedLabel, { excludeId: id })) {
+    return { ok: false, errorCode: 'duplicate_label' };
   }
 
   const nowIso = createNowIso();

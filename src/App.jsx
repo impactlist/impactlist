@@ -104,8 +104,12 @@ const AppContent = () => {
           isAssumptions={isAssumptions}
         />
         <div className="flex-grow bg-slate-50">
-          <GlobalNotificationBanner />
-          <GlobalSharedAssumptionsImport />
+          <div className="mx-auto mt-4 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="min-h-[56px] space-y-2">
+              <GlobalNotificationBanner />
+              <GlobalSharedAssumptionsImport />
+            </div>
+          </div>
           <Routes>
             <Route path="/" element={<DonorList />} />
             <Route path="/donor/:donorId" element={<DonorDetail />} />

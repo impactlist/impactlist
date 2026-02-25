@@ -229,4 +229,39 @@ describe('savedAssumptionsStore', () => {
 
     expect(fp1).toBe(fp2);
   });
+
+  it('rejects saving a new entry with a duplicate label (case-insensitive)', () => {
+    const first = saveNewAssumptions({
+      label: 'My Model',
+      assumptions: buildAssumptions(100),
+    });
+    expect(first.ok).toBe(true);
+
+    const duplicate = saveNewAssumptions({
+      label: ' my model ',
+      assumptions: buildAssumptions(120),
+    });
+    expect(duplicate.ok).toBe(false);
+    expect(duplicate.errorCode).toBe('duplicate_label');
+
+    const entries = getSavedAssumptions();
+    expect(entries).toHaveLength(1);
+  });
+
+  it('rejects renaming an entry to a label already used by another entry', () => {
+    const first = saveNewAssumptions({
+      label: 'First Label',
+      assumptions: buildAssumptions(100),
+    });
+    const second = saveNewAssumptions({
+      label: 'Second Label',
+      assumptions: buildAssumptions(120),
+    });
+    expect(first.ok).toBe(true);
+    expect(second.ok).toBe(true);
+
+    const renameResult = renameSavedAssumptions(second.entry.id, ' first label ');
+    expect(renameResult.ok).toBe(false);
+    expect(renameResult.errorCode).toBe('duplicate_label');
+  });
 });

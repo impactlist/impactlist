@@ -30,6 +30,7 @@ import {
 
 const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
 const STORAGE_LIMIT_ERROR_MESSAGE = 'Saved assumptions are full. Delete some saved assumptions and try again.';
+const DUPLICATE_LABEL_ERROR_MESSAGE = 'You already have saved assumptions with that name. Choose a different name.';
 
 const createComparableAssumptionsFingerprint = (assumptions) => {
   if (!isPlainObject(assumptions)) {
@@ -334,6 +335,8 @@ const AssumptionsPage = () => {
       if (!result.ok) {
         if (result.errorCode === 'over_limit') {
           showNotification('error', STORAGE_LIMIT_ERROR_MESSAGE);
+        } else if (result.errorCode === 'duplicate_label') {
+          showNotification('error', DUPLICATE_LABEL_ERROR_MESSAGE);
         } else {
           showNotification('error', STORAGE_ERROR_MESSAGE);
         }
@@ -369,7 +372,11 @@ const AssumptionsPage = () => {
     (entryId, nextLabel) => {
       const result = renameSavedAssumptions(entryId, nextLabel);
       if (!result.ok) {
-        showNotification('error', STORAGE_ERROR_MESSAGE);
+        if (result.errorCode === 'duplicate_label') {
+          showNotification('error', DUPLICATE_LABEL_ERROR_MESSAGE);
+        } else {
+          showNotification('error', STORAGE_ERROR_MESSAGE);
+        }
         return;
       }
 

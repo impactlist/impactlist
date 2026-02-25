@@ -445,4 +445,42 @@ describe('AssumptionsPage routing integration', () => {
     const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
     expect(savedEntries[0].label).toBe('New Label');
   });
+
+  it('prevents saving assumptions with a duplicate name', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 140,
+        },
+      })
+    );
+    const existing = saveNewAssumptions({
+      label: 'Taken Name',
+      assumptions: {
+        globalParameters: { timeLimit: 120 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!existing.ok) {
+      throw new Error('Expected seeded entry');
+    }
+
+    renderAssumptionsRoute('/assumptions');
+    await user.click(await screen.findByRole('button', { name: 'Save Assumptions' }));
+
+    const labelInput = await screen.findByLabelText('Label');
+    await user.clear(labelInput);
+    await user.type(labelInput, ' taken name ');
+
+    const saveButtons = screen.getAllByRole('button', { name: 'Save Assumptions' });
+    await user.click(saveButtons[saveButtons.length - 1]);
+
+    expect(screen.getByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
+
+    const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    expect(entries).toHaveLength(1);
+  });
 });

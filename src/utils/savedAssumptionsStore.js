@@ -137,6 +137,22 @@ const pruneToSerializableAssumptions = (assumptions) => {
   return Object.keys(output).length > 0 ? output : null;
 };
 
+export const pruneEmptyTopLevelAssumptions = (assumptions) => {
+  const serializable = pruneToSerializableAssumptions(assumptions);
+  if (!serializable) {
+    return null;
+  }
+
+  const output = {};
+  ['globalParameters', 'categories', 'recipients'].forEach((key) => {
+    if (isPlainObject(serializable[key]) && Object.keys(serializable[key]).length > 0) {
+      output[key] = serializable[key];
+    }
+  });
+
+  return Object.keys(output).length > 0 ? output : null;
+};
+
 const validateEntry = (entry) => {
   if (!isPlainObject(entry)) {
     return null;
@@ -515,6 +531,11 @@ export const createAssumptionsFingerprint = (assumptions) => {
   return cleanAssumptions ? createFingerprint(cleanAssumptions) : '';
 };
 
+export const createComparableAssumptionsFingerprint = (assumptions) => {
+  const comparableAssumptions = pruneEmptyTopLevelAssumptions(assumptions);
+  return comparableAssumptions ? createFingerprint(comparableAssumptions) : '';
+};
+
 export const saveNewAssumptions = ({ label, assumptions, source = 'local', reference = null }) => {
   const nowIso = createNowIso();
   const baseEntry = buildLocalEntry({ label, assumptions, nowIso });
@@ -616,6 +637,56 @@ export const loadSavedAssumptionsById = (id) => {
 
 export const markSavedAssumptionsLoaded = (id) => {
   return updateSavedAssumptions(id, { markLoaded: true });
+};
+
+export const attachSavedAssumptionsShareReference = ({ reference, assumptions, preferredId = null }) => {
+  const normalizedReference = typeof reference === 'string' ? reference.trim() : '';
+  if (!normalizedReference) {
+    return { ok: false, errorCode: 'invalid_reference' };
+  }
+
+  const normalizedAssumptions = pruneToSerializableAssumptions(assumptions);
+  if (!normalizedAssumptions) {
+    return { ok: false, errorCode: 'invalid_assumptions' };
+  }
+
+  const current = loadSavedAssumptionsUnsafe();
+  const incomingFingerprint = createComparableAssumptionsFingerprint(normalizedAssumptions);
+  if (!incomingFingerprint) {
+    return { ok: false, errorCode: 'invalid_assumptions' };
+  }
+
+  const preferredEntry = preferredId ? current.find((entry) => entry.id === preferredId) : null;
+  const preferredMatchesFingerprint =
+    Boolean(preferredEntry) &&
+    createComparableAssumptionsFingerprint(preferredEntry.assumptions) === incomingFingerprint;
+
+  const targetEntry =
+    (preferredMatchesFingerprint && preferredEntry) ||
+    current.find((entry) => createComparableAssumptionsFingerprint(entry.assumptions) === incomingFingerprint);
+
+  if (!targetEntry) {
+    return { ok: false, errorCode: 'not_found' };
+  }
+
+  if (targetEntry.reference === normalizedReference) {
+    return { ok: true, entry: targetEntry, wasUpdated: false };
+  }
+
+  const updateResult = updateSavedAssumptions(targetEntry.id, {
+    reference: normalizedReference,
+    source: targetEntry.source,
+  });
+
+  if (!updateResult.ok) {
+    return { ok: false, errorCode: updateResult.errorCode || 'storage_write_failed' };
+  }
+
+  return {
+    ok: true,
+    entry: updateResult.entry,
+    wasUpdated: true,
+  };
 };
 
 export const upsertImportedSavedAssumptions = ({ label, assumptions, reference }) => {

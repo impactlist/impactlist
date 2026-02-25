@@ -12,10 +12,10 @@ import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
 import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
-import { isPlainObject } from '../utils/typeGuards';
 import {
+  attachSavedAssumptionsShareReference,
   completeSavedAssumptionsMigration,
-  createAssumptionsFingerprint,
+  createComparableAssumptionsFingerprint,
   deleteSavedAssumptions,
   getActiveSavedAssumptionsId,
   getSavedAssumptions,
@@ -29,23 +29,6 @@ import {
 } from '../utils/savedAssumptionsStore';
 
 const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
-
-const createComparableAssumptionsFingerprint = (assumptions) => {
-  if (!isPlainObject(assumptions)) {
-    return '';
-  }
-
-  const next = {};
-
-  ['globalParameters', 'categories', 'recipients'].forEach((key) => {
-    const value = assumptions[key];
-    if (isPlainObject(value) && Object.keys(value).length > 0) {
-      next[key] = value;
-    }
-  });
-
-  return createAssumptionsFingerprint(next);
-};
 
 const AssumptionsPage = () => {
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
@@ -304,9 +287,30 @@ const AssumptionsPage = () => {
     setSaveModalOpen(false);
   }, []);
 
-  const handleShareSaved = useCallback(() => {
-    showNotification('success', 'Share link created.');
-  }, [showNotification]);
+  const handleShareSaved = useCallback(
+    (sharedResult) => {
+      const sharedReference = typeof sharedResult?.reference === 'string' ? sharedResult.reference.trim() : '';
+      const assumptionsToShare = getNormalizedUserAssumptionsForSharing();
+
+      if (sharedReference && assumptionsToShare) {
+        const attachResult = attachSavedAssumptionsShareReference({
+          reference: sharedReference,
+          assumptions: assumptionsToShare,
+          preferredId: activeSavedAssumptionsEntry?.id || null,
+        });
+
+        if (attachResult.ok && attachResult.entry?.id) {
+          persistAsActive(attachResult.entry.id);
+        } else if (!attachResult.ok && attachResult.errorCode !== 'not_found') {
+          showNotification('error', 'Share link created, but could not sync it to Saved Assumptions.');
+          return;
+        }
+      }
+
+      showNotification('success', 'Share link created.');
+    },
+    [activeSavedAssumptionsEntry?.id, getNormalizedUserAssumptionsForSharing, persistAsActive, showNotification]
+  );
 
   const handleSaveAssumptionsSubmit = useCallback(
     ({ label, mode }) => {

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  attachSavedAssumptionsShareReference,
   completeSavedAssumptionsMigration,
   createAssumptionsFingerprint,
   deleteSavedAssumptions,
@@ -104,6 +105,30 @@ describe('savedAssumptionsStore', () => {
 
     const entries = getSavedAssumptions();
     expect(entries[0].lastLoadedAt).toBeTruthy();
+  });
+
+  it('attaches a share reference to a matching local entry', () => {
+    const saved = saveNewAssumptions({
+      label: 'Local Snapshot',
+      assumptions: buildAssumptions(140),
+      source: 'local',
+    });
+
+    expect(saved.ok).toBe(true);
+
+    const attachResult = attachSavedAssumptionsShareReference({
+      reference: 'shared-140',
+      assumptions: buildAssumptions(140),
+      preferredId: saved.entry.id,
+    });
+
+    expect(attachResult.ok).toBe(true);
+
+    const entries = getSavedAssumptions();
+    expect(entries).toHaveLength(1);
+    expect(entries[0].source).toBe('local');
+    expect(entries[0].reference).toBe('shared-140');
+    expect(entries[0].shareUrl).toBe(`${window.location.origin}/?shared=shared-140`);
   });
 
   it('runs one-time migration and records migration flag on decline', () => {

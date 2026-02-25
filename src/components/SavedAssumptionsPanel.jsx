@@ -110,6 +110,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
               {entries.map((entry) => {
                 const isActive = activeId === entry.id;
                 const isEditing = editingId === entry.id;
+                const isRemote = Boolean(entry.reference);
                 return (
                   <div key={entry.id} className="rounded-md border border-slate-200 bg-slate-50 p-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -153,8 +154,12 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         ) : (
                           <span className="text-sm font-semibold text-slate-900">{entry.label}</span>
                         )}
-                        <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-700">
-                          {entry.source === 'imported' ? 'Imported' : 'Local'}
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                            isRemote ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-200 text-slate-700'
+                          }`}
+                        >
+                          {isRemote ? 'Remote' : 'Local'}
                         </span>
                         {isActive && (
                           <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">

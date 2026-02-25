@@ -1,7 +1,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
@@ -61,6 +61,10 @@ const renderAssumptionsRoute = (initialEntry) => {
 describe('AssumptionsPage routing integration', () => {
   beforeEach(() => {
     localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('shows recipients list for an invalid recipient deep-link instead of opening an editor', async () => {
@@ -295,6 +299,63 @@ describe('AssumptionsPage routing integration', () => {
     expect(savedEntries).toHaveLength(1);
     expect(savedEntries[0].id).toBe(seeded.entry.id);
     expect(savedEntries[0].assumptions.globalParameters.timeLimit).toBe(205);
+  });
+
+  it('updates matching saved assumptions entry with share reference after link creation', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 175,
+        },
+      })
+    );
+
+    const seeded = saveNewAssumptions({
+      label: 'My Snapshot',
+      assumptions: {
+        globalParameters: { timeLimit: 175 },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'share-175',
+        reference: 'share-175',
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions');
+
+    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    await user.click(await screen.findByRole('button', { name: 'Create Link' }));
+    expect(await screen.findByText('Share link created.')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Done' }));
+
+    await waitFor(() => {
+      const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+      expect(entries).toHaveLength(1);
+      expect(entries[0].reference).toBe('share-175');
+      expect(entries[0].source).toBe('local');
+    });
+
+    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const row = within(panel).getByText('My Snapshot').closest('div.rounded-md');
+    expect(within(row).getByText('Remote')).toBeInTheDocument();
+    expect(within(row).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
+
+    expect(
+      fetchMock.mock.calls.some(([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST')
+    ).toBe(true);
   });
 
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {

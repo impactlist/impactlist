@@ -457,6 +457,52 @@ describe('AssumptionsPage routing integration', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it('loads default assumptions from Saved Assumptions panel and clears active saved entry', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 160,
+        },
+      })
+    );
+
+    const seeded = saveNewAssumptions({
+      label: 'Current Custom',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 160,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded local entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = screen.getByText('Saved Assumptions').closest('section');
+    await user.click(within(panel).getByRole('button', { name: /Show Inactive/i }));
+    await user.click(within(panel).getByRole('button', { name: 'Load Default' }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(
+        String(assumptionsData.globalParameters.timeLimit)
+      );
+    });
+
+    expect(localStorage.getItem('customEffectsData')).toBeNull();
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
+
+    const defaultRow = within(panel).getByText('Default').closest('div.rounded-md');
+    expect(within(defaultRow).getByText('Active')).toBeInTheDocument();
+  });
+
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
     const user = userEvent.setup();
     localStorage.setItem(
@@ -572,6 +618,7 @@ describe('AssumptionsPage routing integration', () => {
     });
 
     renderAssumptionsRoute('/assumptions');
+    await userEvent.click(await screen.findByRole('button', { name: /Show Inactive/i }));
     expect(await screen.findByText('Imported Baseline')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Delete All Imported' })).not.toBeInTheDocument();
   });
@@ -591,6 +638,7 @@ describe('AssumptionsPage routing integration', () => {
     }
 
     renderAssumptionsRoute('/assumptions');
+    await user.click(await screen.findByRole('button', { name: /Show Inactive/i }));
     expect(await screen.findByText('Old Label')).toBeInTheDocument();
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
@@ -630,6 +678,7 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
     const panel = await screen.findByText('Saved Assumptions');
     const section = panel.closest('section');
+    await user.click(within(section).getByRole('button', { name: /Show Inactive/i }));
     const secondRow = within(section).getByText('Second Label').closest('div.rounded-md');
 
     await user.click(within(secondRow).getByRole('button', { name: 'Rename' }));

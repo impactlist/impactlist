@@ -29,6 +29,7 @@ import {
 } from '../utils/savedAssumptionsStore';
 
 const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
+const DEFAULT_ASSUMPTIONS_ENTRY_ID = '__default__';
 
 const AssumptionsPage = () => {
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
@@ -67,14 +68,20 @@ const AssumptionsPage = () => {
   const hasUnsavedChanges =
     Boolean(activeSavedAssumptionsEntry) && activeSavedAssumptionsFingerprint !== currentFingerprint;
   const isActiveSavedAssumptionsRemote = Boolean(activeSavedAssumptionsEntry?.reference);
-  const isCurrentStateRepresentedBySavedAssumptions = useMemo(
-    () =>
-      Boolean(currentFingerprint) &&
-      savedAssumptions.some(
-        (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
-      ),
-    [currentFingerprint, savedAssumptions]
-  );
+  const activePanelEntryId = activeSavedAssumptionsId || (!isUsingCustomValues ? DEFAULT_ASSUMPTIONS_ENTRY_ID : null);
+  const isCurrentStateRepresentedBySavedAssumptions = useMemo(() => {
+    if (!isUsingCustomValues) {
+      return true;
+    }
+
+    if (!currentFingerprint) {
+      return false;
+    }
+
+    return savedAssumptions.some(
+      (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
+    );
+  }, [currentFingerprint, isUsingCustomValues, savedAssumptions]);
   const canUpdateExisting = Boolean(
     activeSavedAssumptionsEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote
   );
@@ -200,9 +207,32 @@ const AssumptionsPage = () => {
     [persistAsActive, setAllUserAssumptions, showNotification]
   );
 
+  const applyDefaultAssumptions = useCallback(() => {
+    setAllUserAssumptions(null);
+    setActiveSavedAssumptionsId(null);
+    setActiveSavedAssumptionsIdState(null);
+    refreshSavedAssumptions();
+    showNotification('success', 'Loaded default assumptions.');
+  }, [refreshSavedAssumptions, setAllUserAssumptions, showNotification]);
+
   const handleLoadSavedAssumptions = useCallback(
     (entry) => {
       if (!entry) {
+        return;
+      }
+
+      if (entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
+        if (!isUsingCustomValues) {
+          showNotification('info', 'Default assumptions are already loaded.');
+          return;
+        }
+
+        if (!isCurrentStateRepresentedBySavedAssumptions) {
+          setPendingLoadEntry(entry);
+          return;
+        }
+
+        applyDefaultAssumptions();
         return;
       }
 
@@ -229,6 +259,7 @@ const AssumptionsPage = () => {
     },
     [
       activeSavedAssumptionsId,
+      applyDefaultAssumptions,
       applySavedAssumptionsEntry,
       currentFingerprint,
       isCurrentStateRepresentedBySavedAssumptions,
@@ -242,9 +273,14 @@ const AssumptionsPage = () => {
     if (!pendingLoadEntry) {
       return;
     }
+    if (pendingLoadEntry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
+      applyDefaultAssumptions();
+      setPendingLoadEntry(null);
+      return;
+    }
     applySavedAssumptionsEntry(pendingLoadEntry);
     setPendingLoadEntry(null);
-  }, [applySavedAssumptionsEntry, pendingLoadEntry]);
+  }, [applyDefaultAssumptions, applySavedAssumptionsEntry, pendingLoadEntry]);
 
   const handleCancelPendingLoad = useCallback(() => {
     setPendingLoadEntry(null);
@@ -518,7 +554,7 @@ const AssumptionsPage = () => {
 
         <SavedAssumptionsPanel
           entries={savedAssumptions}
-          activeId={activeSavedAssumptionsId}
+          activeId={activePanelEntryId}
           hasUnsavedChanges={hasUnsavedChanges}
           onLoad={handleLoadSavedAssumptions}
           onRename={handleRenameSavedAssumptions}

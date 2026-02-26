@@ -50,6 +50,8 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
     ? [...primaryEntries, ...(showInactiveEntries ? inactiveEntries : [])]
     : [DEFAULT_ENTRY, ...entries];
   const inactiveToggleLabel = showInactiveEntries ? 'Hide Inactive' : `Show Inactive (${inactiveEntries.length})`;
+  const shouldShowInactiveToggle = shouldPrioritizeActiveEntry && inactiveEntries.length > 0;
+  const shouldShowInactiveToggleAtTop = shouldShowInactiveToggle && entries.length >= 3 && showInactiveEntries;
 
   const beginRename = (entry) => {
     setEditingId(entry.id);
@@ -92,6 +94,18 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
 
       <div className="border-t border-slate-200 px-4 py-4">
         <div className="space-y-3">
+          {shouldShowInactiveToggleAtTop && (
+            <button
+              type="button"
+              onClick={() => {
+                setShowInactiveEntries((current) => !current);
+              }}
+              className="self-start text-sm font-medium text-slate-500 underline underline-offset-2 hover:text-slate-700"
+            >
+              {inactiveToggleLabel}
+            </button>
+          )}
+
           {visibleEntries.map((entry) => {
             const isDefaultEntry = entry.id === DEFAULT_ENTRY_ID;
             const isActive = activeId === entry.id;
@@ -227,13 +241,13 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
             );
           })}
 
-          {shouldPrioritizeActiveEntry && inactiveEntries.length > 0 && (
+          {shouldShowInactiveToggle && (
             <button
               type="button"
               onClick={() => {
                 setShowInactiveEntries((current) => !current);
               }}
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="self-start text-sm font-medium text-slate-500 underline underline-offset-2 hover:text-slate-700"
             >
               {inactiveToggleLabel}
             </button>

@@ -2,7 +2,7 @@
 id: 'bill-gates'
 name: 'Bill Gates'
 netWorth: 106_300_000_000
-about: 'Bill Gates is the co-founder of Microsoft and a major global philanthropist. His giving has focused on global health, development, education, and scientific research.'
+about: 'Bill Gates co-founded Microsoft with Paul Allen in 1975 and led it as CEO until 2000. Born in 1955 in Seattle, he dropped out of Harvard to start the company. He was previously married to [Melinda French Gates](https://en.wikipedia.org/wiki/Melinda_French_Gates). [Wikipedia](https://en.wikipedia.org/wiki/Bill_Gates)'
 #totalDonated: 39_500_000_000
 ---
 

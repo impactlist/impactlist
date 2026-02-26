@@ -2,5 +2,5 @@
 id: 'larry-ellison'
 name: 'Larry Ellison'
 netWorth: 270_000_000_000
-about: 'Larry Ellison is co-founder and longtime leader of Oracle. His philanthropy has focused on medical research, global health, and higher education.'
+about: 'Larry Ellison co-founded Oracle Corporation in 1977. Born in 1944 in New York City, he grew up in Chicago. He is known for his interests in sailing, tennis, and Japanese architecture. [Wikipedia](https://en.wikipedia.org/wiki/Larry_Ellison)'
 ---

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 const formatTimestamp = (isoString) => {
@@ -26,31 +26,13 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
   const [editingId, setEditingId] = useState(null);
   const [editLabel, setEditLabel] = useState('');
   const [renameError, setRenameError] = useState('');
-  const [isSmallScreen, setIsSmallScreen] = useState(() => {
-    if (typeof globalThis.window === 'undefined') {
-      return false;
-    }
-    return globalThis.window.innerWidth < 640;
-  });
-  const [isCollapsed, setIsCollapsed] = useState(isSmallScreen);
-  const [hasUserToggledCollapse, setHasUserToggledCollapse] = useState(false);
+  const [showInactiveEntries, setShowInactiveEntries] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(globalThis.window.innerWidth < 640);
-    };
-
-    globalThis.window.addEventListener('resize', handleResize);
-    return () => {
-      globalThis.window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!hasUserToggledCollapse) {
-      setIsCollapsed(isSmallScreen);
-    }
-  }, [hasUserToggledCollapse, isSmallScreen]);
+  const activeEntry = entries.find((entry) => entry.id === activeId) || null;
+  const primaryEntries = activeEntry ? [activeEntry] : entries;
+  const inactiveEntries = activeEntry ? entries.filter((entry) => entry.id !== activeEntry.id) : [];
+  const visibleEntries = activeEntry ? [...primaryEntries, ...(showInactiveEntries ? inactiveEntries : [])] : entries;
+  const inactiveToggleLabel = showInactiveEntries ? 'Hide Inactive' : `Show Inactive (${inactiveEntries.length})`;
 
   const beginRename = (entry) => {
     setEditingId(entry.id);
@@ -87,144 +69,144 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
 
   return (
     <section className="mb-4 rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="flex items-center px-4 py-3">
         <h2 className="text-lg font-semibold text-slate-900">Saved Assumptions</h2>
-        <button
-          type="button"
-          onClick={() => {
-            setHasUserToggledCollapse(true);
-            setIsCollapsed((current) => !current);
-          }}
-          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-        >
-          {isCollapsed ? 'Expand' : 'Collapse'}
-        </button>
       </div>
 
-      {!isCollapsed && (
-        <div className="border-t border-slate-200 px-4 py-4">
-          {entries.length === 0 ? (
-            <p className="text-sm text-slate-600">No saved assumptions yet.</p>
-          ) : (
-            <div className="space-y-3">
-              {entries.map((entry) => {
-                const isActive = activeId === entry.id;
-                const isEditing = editingId === entry.id;
-                const isRemote = Boolean(entry.reference);
-                return (
-                  <div key={entry.id} className="rounded-md border border-slate-200 bg-slate-50 p-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        {isEditing ? (
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="text"
-                              value={editLabel}
-                              onChange={(event) => {
-                                setEditLabel(event.target.value);
-                                setRenameError('');
-                              }}
-                              onKeyDown={(event) => {
-                                if (event.key === 'Enter') {
-                                  event.preventDefault();
-                                  commitRename();
-                                } else if (event.key === 'Escape') {
-                                  event.preventDefault();
-                                  cancelRename();
-                                }
-                              }}
-                              className="rounded-md border border-slate-300 px-2 py-1 text-sm"
-                              autoFocus
-                            />
-                            <button
-                              type="button"
-                              onClick={commitRename}
-                              className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
-                            >
-                              Save
-                            </button>
-                            <button
-                              type="button"
-                              onClick={cancelRename}
-                              className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
-                          <span className="text-sm font-semibold text-slate-900">{entry.label}</span>
-                        )}
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                            isRemote ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-200 text-slate-700'
-                          }`}
-                        >
-                          {isRemote ? 'Remote' : 'Local'}
-                        </span>
-                        {isActive && (
-                          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
-                            Active
-                          </span>
-                        )}
-                        {isActive && hasUnsavedChanges && (
-                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
-                            Unsaved changes
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {isEditing && renameError && (
-                      <p className="mt-2 rounded-md bg-red-50 px-2 py-1 text-xs text-red-700">{renameError}</p>
-                    )}
-
-                    <div className="mt-2 text-xs text-slate-600">
-                      Updated: {formatTimestamp(entry.updatedAt)}
-                      {entry.lastLoadedAt && ` • Last loaded: ${formatTimestamp(entry.lastLoadedAt)}`}
-                      {entry.reference && ` • Ref: ${entry.reference}`}
-                    </div>
-
-                    {!isEditing && (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          onClick={() => onLoad(entry)}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
-                        >
-                          Load
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => beginRename(entry)}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
-                        >
-                          Rename
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onDelete(entry.id)}
-                          className="rounded-md border border-red-300 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
-                        >
-                          Delete
-                        </button>
-                        {entry.shareUrl && (
+      <div className="border-t border-slate-200 px-4 py-4">
+        {entries.length === 0 ? (
+          <p className="text-sm text-slate-600">No saved assumptions yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {visibleEntries.map((entry) => {
+              const isActive = activeId === entry.id;
+              const isEditing = editingId === entry.id;
+              const isRemote = Boolean(entry.reference);
+              return (
+                <div key={entry.id} className="rounded-md border border-slate-200 bg-slate-50 p-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {isEditing ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={editLabel}
+                            onChange={(event) => {
+                              setEditLabel(event.target.value);
+                              setRenameError('');
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key === 'Enter') {
+                                event.preventDefault();
+                                commitRename();
+                              } else if (event.key === 'Escape') {
+                                event.preventDefault();
+                                cancelRename();
+                              }
+                            }}
+                            className="rounded-md border border-slate-300 px-2 py-1 text-sm"
+                            autoFocus
+                          />
                           <button
                             type="button"
-                            onClick={() => onCopyLink(entry)}
-                            className="rounded-md border border-indigo-300 px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50"
+                            onClick={commitRename}
+                            className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
                           >
-                            Copy Link
+                            Save
                           </button>
-                        )}
-                      </div>
-                    )}
+                          <button
+                            type="button"
+                            onClick={cancelRename}
+                            className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-sm font-semibold text-slate-900">{entry.label}</span>
+                      )}
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                          isRemote ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-200 text-slate-700'
+                        }`}
+                      >
+                        {isRemote ? 'Remote' : 'Local'}
+                      </span>
+                      {isActive && (
+                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                          Active
+                        </span>
+                      )}
+                      {isActive && hasUnsavedChanges && (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                          Unsaved changes
+                        </span>
+                      )}
+                    </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
+
+                  {isEditing && renameError && (
+                    <p className="mt-2 rounded-md bg-red-50 px-2 py-1 text-xs text-red-700">{renameError}</p>
+                  )}
+
+                  <div className="mt-2 text-xs text-slate-600">
+                    Updated: {formatTimestamp(entry.updatedAt)}
+                    {entry.lastLoadedAt && ` • Last loaded: ${formatTimestamp(entry.lastLoadedAt)}`}
+                    {entry.reference && ` • Ref: ${entry.reference}`}
+                  </div>
+
+                  {!isEditing && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => onLoad(entry)}
+                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                      >
+                        Load
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => beginRename(entry)}
+                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                      >
+                        Rename
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onDelete(entry.id)}
+                        className="rounded-md border border-red-300 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
+                      >
+                        Delete
+                      </button>
+                      {entry.shareUrl && (
+                        <button
+                          type="button"
+                          onClick={() => onCopyLink(entry)}
+                          className="rounded-md border border-indigo-300 px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50"
+                        >
+                          Copy Link
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {inactiveEntries.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setShowInactiveEntries((current) => !current);
+                }}
+                className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
+                {inactiveToggleLabel}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </section>
   );
 };

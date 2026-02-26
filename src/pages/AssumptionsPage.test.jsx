@@ -534,6 +534,8 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
+    await user.click(screen.getByRole('button', { name: /Show Inactive/i }));
+
     const panel = screen.getByText('Saved Assumptions').closest('section');
     const targetRow = within(panel).getByText('Target Saved').closest('div.rounded-md');
     const loadButton = within(targetRow).getByRole('button', { name: 'Load' });

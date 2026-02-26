@@ -94,5 +94,43 @@ Test Scripts Available:
 - npm run test:coverage - Generate coverage report
 - npm run test:watch - Explicit watch mode
 
+## Shared Assumptions Redis Setup Across Branches/Worktrees
+
+### Why this is needed
+Environment variables are configured per **Vercel project/environment**, not per git branch directly.  
+Each worktree can be linked to a different Vercel project, and `vercel pull` overwrites `.env.local` with values from the linked project.
+
+### How to make it work everywhere
+
+1. For each Vercel project you use (`orange`, `impactlist`, etc.), add:
+   - `SHARED_ASSUMPTIONS_REDIS_REST_URL`
+   - `SHARED_ASSUMPTIONS_REDIS_REST_TOKEN`
+
+2. Add them for at least:
+   - `development`
+   - (recommended) `preview`
+   - (recommended) `production`
+
+3. In each branch/worktree:
+   - run `vercel link` and confirm which project it points to
+   - run `vercel pull --environment=development`
+   - run `vercel dev`
+
+### Quick checklist per branch/worktree
+
+1. Check linked project:
+   - `.vercel/project.json`
+
+2. Ensure linked project has these vars in `development`:
+   - `SHARED_ASSUMPTIONS_REDIS_REST_URL`
+   - `SHARED_ASSUMPTIONS_REDIS_REST_TOKEN`
+
+3. Refresh local env:
+   - `vercel pull --yes --environment=development`
+
+4. Verify Redis is configured:
+   - `curl http://localhost:3003/api/health?check=redis`
+   - Response should indicate Redis checks are OK.
+
 ## Other
 When running 'npm audit fix', and '--omit=dev' to analyze only the dependencies in the deployed app/runtime.

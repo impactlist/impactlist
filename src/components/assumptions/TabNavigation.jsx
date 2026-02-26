@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 
 const TabNavigation = ({ activeTab, onTabChange, tabs }) => {
   return (
-    <div className="flex space-x-4">
+    <div className="inline-flex rounded-lg bg-slate-100 p-1">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           type="button"
           onClick={() => onTabChange(tab.id)}
-          className={`px-4 py-2 text-sm font-medium ${
-            activeTab === tab.id ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-500 hover:text-gray-700'
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+            activeTab === tab.id
+              ? 'bg-white text-indigo-700 shadow-sm ring-1 ring-indigo-100'
+              : 'text-slate-500 hover:text-slate-700'
           }`}
         >
           {tab.label}

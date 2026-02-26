@@ -212,11 +212,11 @@ const CategoryEffectSection = ({
   }, [effectCostPerLife]);
 
   return (
-    <div ref={sectionRef} className="rounded-lg bg-white shadow-sm mb-4">
+    <div ref={sectionRef} className="rounded-xl bg-white shadow-sm border border-slate-200 mb-4">
       {/* Category header */}
-      <div className="px-4 py-3 rounded-t-lg">
+      <div className="px-4 py-3 rounded-t-xl border-b border-slate-100">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3 className="text-lg font-semibold text-slate-800">
             <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
               {category.name}
             </Link>
@@ -224,12 +224,12 @@ const CategoryEffectSection = ({
           {/* Only show combined cost when there are multiple effects */}
           {tempEditToEffects.length > 1 && (
             <div className="text-sm">
-              <span className="text-gray-600">Combined cost per life: </span>
+              <span className="text-slate-500">Combined cost per life: </span>
               <span
                 className={
                   combinedCostPerLife === Infinity || combinedCostPerLife < 0
                     ? 'text-red-600 font-medium'
-                    : 'text-green-600 font-medium'
+                    : 'text-emerald-600 font-medium'
                 }
               >
                 {combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife)}
@@ -240,7 +240,7 @@ const CategoryEffectSection = ({
       </div>
 
       {/* Effects list */}
-      <div className="p-3 space-y-3">
+      <div className="p-4 space-y-4">
         {tempEditToEffects.map((effect, index) => {
           const baseEffect = effect._baseEffect;
           const effectType = getEffectType(baseEffect);
@@ -260,13 +260,15 @@ const CategoryEffectSection = ({
           const isFullyDisabled = isDisabledByCategory || isDisabledByRecipient;
 
           return (
-            <div key={effect.effectId} className="rounded-lg p-3 shadow-sm bg-gray-100 transition-all duration-200">
+            <div
+              key={effect.effectId}
+              className="rounded-xl p-4 border border-slate-200 bg-slate-50 transition-all duration-200"
+            >
               <div className="mb-2">
                 <div className="flex flex-wrap justify-between items-start gap-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <h4
-                      className="text-base font-medium text-gray-800 whitespace-nowrap"
-                      style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                      className={`text-base font-medium text-slate-800 whitespace-nowrap ${isFullyDisabled ? 'grayscale opacity-60' : ''}`}
                     >
                       Effect {index + 1}: {effect.effectId}
                     </h4>
@@ -274,17 +276,13 @@ const CategoryEffectSection = ({
                       <DisableToggleButton
                         isDisabled={isDisabledByRecipient}
                         onToggle={() => toggleEffectDisabled(index)}
-                        className={isDisabledByRecipient ? 'enable-button' : ''}
-                        style={{ pointerEvents: 'auto' }}
                       />
                     )}
                     {isDisabledByCategory && (
-                      <span className="text-xs text-gray-500" style={{ filter: 'grayscale(100%)', opacity: 0.6 }}>
-                        (Disabled in category)
-                      </span>
+                      <span className="text-xs text-slate-500 grayscale opacity-60">(Disabled in category)</span>
                     )}
                   </div>
-                  <div style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                  <div className={isFullyDisabled ? 'grayscale opacity-60' : ''}>
                     <EffectCostDisplay
                       cost={costPerLife}
                       baseCost={baseCost}
@@ -294,10 +292,7 @@ const CategoryEffectSection = ({
                   </div>
                 </div>
                 {baseEffect?.validTimeInterval && (
-                  <p
-                    className="text-xs text-gray-500 mt-1"
-                    style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                  >
+                  <p className={`text-xs text-slate-500 mt-1 ${isFullyDisabled ? 'grayscale opacity-60' : ''}`}>
                     Active:{' '}
                     {baseEffect.validTimeInterval[0] === null
                       ? `Until ${baseEffect.validTimeInterval[1]}`
@@ -310,7 +305,7 @@ const CategoryEffectSection = ({
                 )}
               </div>
 
-              <div style={isFullyDisabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+              <div className={isFullyDisabled ? 'pointer-events-none grayscale opacity-60' : ''}>
                 {effectType === 'qaly' ? (
                   <RecipientQalyEffectInputs
                     effectIndex={index}
@@ -448,8 +443,8 @@ const MultiCategoryRecipientEditor = ({
             <>
               Edit effects for recipient
               <span className="group align-middle">
-                <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
-                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
+                <span className="text-sm text-slate-500 cursor-help ml-1 align-top">ⓘ</span>
+                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-slate-800 rounded-lg shadow-lg">
                   See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
                 </span>
               </span>{' '}
@@ -461,7 +456,7 @@ const MultiCategoryRecipientEditor = ({
           }
           description={
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">{categories.length} categories</span>
+              <span className="text-sm text-slate-500">{categories.length} categories</span>
               {hasTimeIntervals && (
                 <YearSelector
                   value={previewYear}
@@ -476,7 +471,7 @@ const MultiCategoryRecipientEditor = ({
         />
 
         {/* Scrollable container for all category sections */}
-        <div ref={scrollContainerRef} className="px-3 py-2">
+        <div ref={scrollContainerRef} className="px-6 py-4">
           {categories.map(({ categoryId, category }) => (
             <CategoryEffectSection
               key={categoryId}

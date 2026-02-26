@@ -207,11 +207,11 @@ const BaseRecipientEffectInputs = ({
           >
             {/* Field label with tooltip */}
             <div className="flex items-center gap-2 min-w-0">
-              <label className="text-sm font-medium text-gray-900 whitespace-nowrap">{fieldLabel}</label>
+              <label className="text-sm font-medium text-slate-900 whitespace-nowrap">{fieldLabel}</label>
               {fieldTooltip && (
                 <div className="group relative inline-block">
-                  <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
-                  <div className="invisible group-hover:visible absolute z-50 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
+                  <span className="text-xs text-slate-500 cursor-help">ⓘ</span>
+                  <div className="invisible group-hover:visible absolute z-50 w-64 p-2 mt-1 text-xs text-white bg-slate-800 rounded-lg shadow-lg">
                     {fieldTooltip}
                   </div>
                 </div>
@@ -242,13 +242,13 @@ const BaseRecipientEffectInputs = ({
                 }}
                 placeholder={placeholder}
                 disabled={isDisabled}
-                className={`w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
+                className={`w-full px-2 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-colors duration-150 placeholder:text-slate-400 ${(() => {
                   if (isDisabled) {
-                    return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
+                    return 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200';
                   }
 
                   if (error) {
-                    return 'border-red-300 focus:ring-red-500';
+                    return 'border-red-300 focus:ring-red-500/20 focus:border-red-400';
                   }
 
                   // Check if this is a custom value (different from default)
@@ -274,13 +274,13 @@ const BaseRecipientEffectInputs = ({
                   }
 
                   return isCustomValue
-                    ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
-                    : 'border-gray-300 focus:ring-indigo-500';
+                    ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500/20'
+                    : 'border-slate-200 focus:ring-indigo-500/20';
                 })()}`}
               />
               {/* Error message and helper text */}
               {error && <p className="text-xs text-red-600">{error}</p>}
-              {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
+              {helperText && <p className="text-xs text-slate-500">{helperText}</p>}
               {/* Show time limit message only for windowLength field */}
               {fieldName === 'windowLength' && (
                 <TimeLimitMessage

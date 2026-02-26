@@ -259,8 +259,8 @@ const RecipientEffectEditor = ({
             <>
               Edit effects for recipient
               <span className="group align-middle">
-                <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
-                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
+                <span className="text-sm text-slate-500 cursor-help ml-1 align-top">ⓘ</span>
+                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-slate-800 rounded-lg shadow-lg">
                   See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
                 </span>
               </span>{' '}
@@ -292,15 +292,15 @@ const RecipientEffectEditor = ({
         />
 
         {/* Effects List */}
-        <div className="px-3 py-2">
+        <div className="px-6 py-4">
           {/* Cost per life display - only show when there are multiple effects */}
           {tempEditToEffects.length > 1 && (
-            <div className="mb-3 p-2 bg-gray-50 rounded-lg">
-              <div className="text-lg font-medium text-gray-800">
+            <div className="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-lg font-medium text-slate-800">
                 Combined cost per life:{' '}
                 <span
                   className={
-                    combinedCostPerLife === Infinity || combinedCostPerLife < 0 ? 'text-red-600' : 'text-green-600'
+                    combinedCostPerLife === Infinity || combinedCostPerLife < 0 ? 'text-red-600' : 'text-emerald-600'
                   }
                 >
                   ${combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife).replace('$', '')}
@@ -310,7 +310,7 @@ const RecipientEffectEditor = ({
           )}
 
           {/* Effects */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {tempEditToEffects.map((effect, index) => {
               const baseEffect = effect._baseEffect;
               const effectType = getEffectType(baseEffect);
@@ -333,32 +333,27 @@ const RecipientEffectEditor = ({
               return (
                 <div
                   key={effect.effectId}
-                  className={`rounded-lg p-3 shadow-sm bg-gray-100 transition-all duration-200`}
+                  className="rounded-xl p-4 border border-slate-200 bg-slate-50 transition-all duration-200"
                 >
                   <div className="mb-2">
                     <div className="flex flex-wrap justify-between items-start gap-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3
-                          className="text-lg font-medium text-gray-800 whitespace-nowrap"
-                          style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                        <h4
+                          className={`text-base font-medium text-slate-800 whitespace-nowrap ${isFullyDisabled ? 'grayscale opacity-60' : ''}`}
                         >
                           Effect {index + 1}: {effect.effectId}
-                        </h3>
+                        </h4>
                         {!isDisabledByCategory && (
                           <DisableToggleButton
                             isDisabled={isDisabledByRecipient}
                             onToggle={() => toggleEffectDisabled(index)}
-                            className={isDisabledByRecipient ? 'enable-button' : ''}
-                            style={{ pointerEvents: 'auto' }}
                           />
                         )}
                         {isDisabledByCategory && (
-                          <span className="text-xs text-gray-500" style={{ filter: 'grayscale(100%)', opacity: 0.6 }}>
-                            (Disabled in category)
-                          </span>
+                          <span className="text-xs text-slate-500 grayscale opacity-60">(Disabled in category)</span>
                         )}
                       </div>
-                      <div style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                      <div className={isFullyDisabled ? 'grayscale opacity-60' : ''}>
                         <EffectCostDisplay
                           cost={costPerLife}
                           baseCost={baseCost}
@@ -368,10 +363,7 @@ const RecipientEffectEditor = ({
                       </div>
                     </div>
                     {baseEffect?.validTimeInterval && (
-                      <p
-                        className="text-xs text-gray-500 mt-1"
-                        style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                      >
+                      <p className={`text-xs text-slate-500 mt-1 ${isFullyDisabled ? 'grayscale opacity-60' : ''}`}>
                         Active:{' '}
                         {baseEffect.validTimeInterval[0] === null
                           ? `Until ${baseEffect.validTimeInterval[1]}`
@@ -384,9 +376,7 @@ const RecipientEffectEditor = ({
                     )}
                   </div>
 
-                  <div
-                    style={isFullyDisabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                  >
+                  <div className={isFullyDisabled ? 'pointer-events-none grayscale opacity-60' : ''}>
                     {effectType === 'qaly' ? (
                       <RecipientQalyEffectInputs
                         effectIndex={index}

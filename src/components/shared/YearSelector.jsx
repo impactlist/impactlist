@@ -53,7 +53,7 @@ const YearSelector = ({
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {label && (
-        <label htmlFor={id} className="text-sm text-gray-600">
+        <label htmlFor={id} className="text-sm text-slate-500">
           {label}
         </label>
       )}
@@ -65,7 +65,7 @@ const YearSelector = ({
         onBlur={handleBlur}
         min={minYear}
         max={maxYear}
-        className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-20 px-2 py-1 text-sm tabular-nums border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-colors duration-150"
       />
     </div>
   );

@@ -107,7 +107,7 @@ const RecipientValuesSection = ({
     <div>
       <div className="mb-4 flex flex-col space-y-2">
         <SearchInput value={searchTerm} onChange={onSearch} placeholder="Search recipients..." />
-        <div className="text-sm text-gray-600 italic">
+        <div className="text-sm text-slate-500">
           {searchTerm === ''
             ? 'Showing only recipients with custom values. Use search to find others.'
             : filteredRecipients.length >= 10
@@ -117,13 +117,13 @@ const RecipientValuesSection = ({
       </div>
 
       {filteredRecipients.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-slate-500">
           {searchTerm
             ? 'No recipients found matching your search'
             : 'No recipients with custom values found. Search for a specific recipient.'}
         </div>
       ) : (
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredRecipients
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((recipient) => {
@@ -137,12 +137,12 @@ const RecipientValuesSection = ({
               const categoryCount = recipientCategories.length;
 
               return (
-                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="default" className="inline-block">
+                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="default">
                   <div className="flex items-center gap-4">
                     {/* Recipient name */}
                     <Link
                       to={`/recipient/${encodeURIComponent(recipientId)}`}
-                      className="text-indigo-600 hover:text-indigo-800 font-medium flex-shrink-0"
+                      className="text-slate-800 hover:text-indigo-600 font-semibold min-w-0 truncate transition-colors"
                     >
                       {recipient.name}
                     </Link>
@@ -159,7 +159,7 @@ const RecipientValuesSection = ({
                         <button
                           type="button"
                           onClick={() => onEditRecipient(recipient, recipientId)}
-                          className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                          className="text-xs text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-md font-medium transition-colors"
                         >
                           Edit
                         </button>
@@ -167,7 +167,7 @@ const RecipientValuesSection = ({
                     />
                   </div>
                   {/* Show category count for multi-category recipients */}
-                  {categoryCount > 1 && <p className="text-xs text-gray-500 mt-1">{categoryCount} categories</p>}
+                  {categoryCount > 1 && <p className="text-xs text-slate-500 mt-1">{categoryCount} categories</p>}
                 </SectionCard>
               );
             })}

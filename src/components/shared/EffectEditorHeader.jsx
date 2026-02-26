@@ -7,19 +7,23 @@ import EffectCostDisplay from './EffectCostDisplay';
  */
 const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombinedCost = true, onClose }) => {
   return (
-    <div className="px-6 py-4 rounded-t-lg">
+    <div className="px-6 py-5 border-b border-slate-100 rounded-t-lg">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
           {description &&
             (typeof description === 'string' ? (
-              <p className="mt-1 text-sm text-gray-600">{description}</p>
+              <p className="mt-1 text-sm text-slate-500">{description}</p>
             ) : (
-              <div className="mt-1 text-sm text-gray-600">{description}</div>
+              <div className="mt-1 text-sm text-slate-500">{description}</div>
             ))}
         </div>
         {onClose && (
-          <button type="button" onClick={onClose} className="ml-4 text-gray-400 hover:text-gray-500">
+          <button
+            type="button"
+            onClick={onClose}
+            className="ml-4 p-1.5 text-slate-400 hover:text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+          >
             <span className="sr-only">Close</span>
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

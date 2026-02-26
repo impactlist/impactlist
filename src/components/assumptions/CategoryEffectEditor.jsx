@@ -165,8 +165,8 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
             <>
               Edit effects for category
               <span className="group align-middle">
-                <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
-                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
+                <span className="text-sm text-slate-500 cursor-help ml-1 align-top">ⓘ</span>
+                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-slate-800 rounded-lg shadow-lg">
                   See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
                 </span>
               </span>{' '}
@@ -194,8 +194,8 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         />
 
         {/* Effects List */}
-        <div className="px-3 py-3">
-          <div className="space-y-3">
+        <div className="px-6 py-4">
+          <div className="space-y-4">
             {tempEditToEffects.map((effect, index) => {
               const effectType = getEffectType(effect);
               const costPerLife = effectCostPerLife[index];
@@ -203,7 +203,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
               return (
                 <div
                   key={index}
-                  className={`rounded-lg p-3 shadow-sm bg-gray-100 transition-all duration-200 ${
+                  className={`rounded-xl p-4 border border-slate-200 bg-slate-50 transition-all duration-200 ${
                     effect.disabled ? 'effect-disabled' : ''
                   }`}
                 >
@@ -211,19 +211,16 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                     <div className="flex flex-wrap justify-between items-start gap-2">
                       <div className="flex flex-wrap items-center gap-2">
                         <h4
-                          className="text-sm font-medium text-gray-900 whitespace-nowrap"
-                          style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                          className={`text-base font-medium text-slate-800 whitespace-nowrap ${effect.disabled ? 'grayscale opacity-60' : ''}`}
                         >
                           Effect {index + 1}: {effect.effectId}
                         </h4>
                         <DisableToggleButton
                           isDisabled={effect.disabled || false}
                           onToggle={() => toggleEffectDisabled(index)}
-                          className={effect.disabled ? 'enable-button' : ''}
-                          style={{ pointerEvents: 'auto' }}
                         />
                       </div>
-                      <div style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                      <div className={effect.disabled ? 'grayscale opacity-60' : ''}>
                         <EffectCostDisplay
                           cost={costPerLife}
                           showInfinity={true}
@@ -232,10 +229,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                       </div>
                     </div>
                     {effect.validTimeInterval && (
-                      <p
-                        className="text-xs text-gray-500 mt-1"
-                        style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                      >
+                      <p className={`text-xs text-slate-500 mt-1 ${effect.disabled ? 'grayscale opacity-60' : ''}`}>
                         Active:{' '}
                         {effect.validTimeInterval[0] === null
                           ? `Until ${effect.validTimeInterval[1]}`
@@ -248,9 +242,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                     )}
                   </div>
 
-                  <div
-                    style={effect.disabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                  >
+                  <div className={effect.disabled ? 'pointer-events-none grayscale opacity-60' : ''}>
                     {effectType === 'qaly' ? (
                       <QalyEffectInputs
                         effect={effect}

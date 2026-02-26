@@ -5,24 +5,26 @@ import PropTypes from 'prop-types';
  * Shared card wrapper component with consistent styling for form sections
  */
 const SectionCard = ({ children, hasError = false, isCustom = false, className = '', padding = 'default' }) => {
-  const borderColorClass = hasError ? 'border-red-300' : isCustom ? 'border-indigo-300' : 'border-gray-200';
-
-  const bgColorClass = hasError ? 'bg-red-50' : isCustom ? 'bg-indigo-50' : '';
+  const stateClasses = hasError
+    ? 'border-red-200 ring-1 ring-red-100 bg-red-50/50'
+    : isCustom
+      ? 'border-indigo-200 ring-1 ring-indigo-100 bg-indigo-50/40'
+      : 'border-slate-200';
 
   const paddingClasses = {
     none: '',
-    sm: 'py-1.5 px-2',
-    default: 'py-2 px-3',
-    lg: 'py-3 px-4',
+    sm: 'p-3',
+    default: 'p-4',
+    lg: 'p-5',
   };
 
   return (
     <div
       className={`
-        rounded border 
-        ${borderColorClass} 
-        ${bgColorClass} 
-        ${paddingClasses[padding]} 
+        rounded-xl border shadow-sm
+        hover:shadow-md transition-shadow duration-200
+        ${stateClasses}
+        ${paddingClasses[padding]}
         ${className}
       `}
     >

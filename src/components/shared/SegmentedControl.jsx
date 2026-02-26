@@ -2,15 +2,13 @@ import React from 'react';
 
 /**
  * Segmented control component for selecting between multiple options
- * Styled as a connected button group
+ * Styled as a pill-in-container pattern matching TabNavigation
  */
 const SegmentedControl = ({ options, value, onChange, disabled = false, testIdPrefix = undefined }) => {
   return (
-    <div className="inline-flex rounded-md shadow-sm" role="group">
-      {options.map((option, index) => {
+    <div className="inline-flex rounded-lg bg-slate-100 p-1" role="group">
+      {options.map((option) => {
         const isSelected = value === option.value;
-        const isFirst = index === 0;
-        const isLast = index === options.length - 1;
 
         return (
           <button
@@ -20,15 +18,8 @@ const SegmentedControl = ({ options, value, onChange, disabled = false, testIdPr
             disabled={disabled}
             data-testid={testIdPrefix ? `${testIdPrefix}-${option.value}` : undefined}
             className={`
-              px-3 py-1 text-xs font-medium border transition-colors
-              ${isFirst ? 'rounded-l-md' : ''}
-              ${isLast ? 'rounded-r-md' : ''}
-              ${!isFirst ? 'border-l-0' : ''}
-              ${
-                isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600 z-10'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-              }
+              px-3 py-1 text-xs font-medium rounded-md transition-all duration-200
+              ${isSelected ? 'bg-white text-indigo-700 shadow-sm ring-1 ring-indigo-100' : 'text-slate-500 hover:text-slate-700'}
               ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
             `}
           >

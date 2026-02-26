@@ -59,7 +59,7 @@ const CategoryValuesSection = ({
     return result;
   }, [defaultAssumptions, userAssumptions, mergedGlobalParameters, previewYear]);
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ${className}`}>
+    <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ${className}`}>
       {Object.entries(categoriesData)
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
         .map(([key, categoryData]) => {
@@ -77,13 +77,13 @@ const CategoryValuesSection = ({
             <SectionCard key={key} isCustom={isCustom} padding="sm">
               <div className="flex justify-between items-start mb-2">
                 <label
-                  className="text-sm font-medium truncate pr-2"
+                  className="text-sm font-semibold truncate pr-2"
                   htmlFor={`category-${key}`}
                   title={categoryData.name}
                 >
                   <Link
                     to={`/category/${encodeURIComponent(key)}`}
-                    className="text-indigo-600 hover:text-indigo-800 hover:underline"
+                    className="text-slate-800 hover:text-indigo-600 transition-colors"
                   >
                     {categoryData.name}
                   </Link>
@@ -114,13 +114,13 @@ const CategoryValuesSection = ({
                       }
                       onEditCategory(key);
                     }}
-                    className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                    className="text-xs text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-md font-medium transition-colors"
                   >
                     Edit
                   </button>
                 }
               />
-              {isCustom && <div className="text-xs text-gray-500 mt-0.5">Default: ${formattedDefault}</div>}
+              {isCustom && <div className="text-xs text-slate-500 mt-0.5">Default: ${formattedDefault}</div>}
             </SectionCard>
           );
         })}

@@ -122,13 +122,16 @@ const CurrencyInput = ({
           disabled={disabled}
           aria-invalid={!!error}
           aria-errormessage={error ? `${id}-error` : undefined}
-          className={`w-full pl-5 ${rightElement ? 'pr-10' : 'pr-2'} py-1 text-sm border rounded focus:ring-1 focus:outline-none ${
-            error
-              ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-              : isCustom
-                ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
-                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-          } ${disabled && !isCustom ? 'bg-gray-100 text-gray-500' : disabled ? 'text-gray-600' : ''}`}
+          className={`w-full pl-5 ${rightElement ? 'pr-10' : 'pr-2'} py-2 text-sm border rounded-lg
+            focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none
+            transition-colors duration-150
+            placeholder:text-slate-400 ${
+              error
+                ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500/20 focus:border-red-400'
+                : isCustom
+                  ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500/20 focus:border-indigo-400'
+                  : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-400'
+            } ${disabled && !isCustom ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : disabled ? 'text-slate-500 cursor-not-allowed' : ''}`}
         />
         {rightElement && <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">{rightElement}</div>}
       </div>

@@ -74,7 +74,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {parameters.map((param) => {
           // For NumericInput, we need to pass the correct value based on format
           // For percentages: use formatted (already in percentage form, e.g., "2" for 2%)
@@ -93,10 +93,15 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
           return (
             <SectionCard key={param.id} hasError={hasError} isCustom={isCustom} padding="default">
               <div className="flex justify-between items-start mb-2">
-                <label htmlFor={param.id} className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                <label htmlFor={param.id} className="text-sm font-medium text-slate-700 flex items-center gap-1">
                   {param.label}
                   <Tooltip content={param.description}>
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-3.5 h-3.5 text-slate-300 hover:text-slate-500 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -125,7 +130,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   value={formatDisplayValue(defaultValue, param.format)}
                   readOnly={true}
                   disabled={true}
-                  className="w-full px-2 py-1 text-sm border rounded focus:ring-1 focus:outline-none bg-gray-100 border-gray-200 text-gray-600 cursor-not-allowed"
+                  className="w-full px-2 py-2 text-sm border rounded-lg bg-slate-100 border-slate-200 text-slate-600 cursor-not-allowed"
                 />
               ) : (
                 <NumericInput
@@ -145,7 +150,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                 />
               )}
               {isCustom && !hasError && (
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Default: {formatDisplayValue(defaultValue, param.format)}
                 </p>
               )}
@@ -155,20 +160,20 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
       </div>
 
       {/* Note about adjusting animal welfare weights */}
-      <div className="mt-4 p-4 bg-yellow-50/50 border border-blue-200 rounded-lg">
+      <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
         <div className="flex">
-          <svg className="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="h-5 w-5 text-slate-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
               clipRule="evenodd"
             />
           </svg>
-          <div className="text-sm text-blue-800">
-            <p className="font-semibold mb-1">Note: Animal lives vs. human lives</p>
+          <div className="text-sm text-slate-600">
+            <p className="text-slate-700 font-medium mb-1">Note: Animal lives vs. human lives</p>
             <p className="mb-2">
               You can adjust the relative value of human lives vs. animal lives by editing the assumptions of the{' '}
-              <a href="/category/animal-welfare" className="text-blue-700 underline hover:text-blue-900">
+              <a href="/category/animal-welfare" className="text-indigo-600 underline hover:text-indigo-800">
                 Animal Welfare
               </a>{' '}
               category (or any recipient in that category).

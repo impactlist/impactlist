@@ -78,29 +78,32 @@ const NumericInput = ({
   );
 
   const inputClasses = `
-    w-full py-1 text-sm border rounded focus:ring-1 focus:outline-none
+    w-full py-2 text-sm border rounded-lg
+    focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none
+    transition-colors duration-150
+    placeholder:text-slate-400
     ${prefix ? 'pl-6 pr-2' : 'px-2'}
     ${
       error
-        ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
+        ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500/20 focus:border-red-400'
         : isCustom
-          ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
-          : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+          ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500/20 focus:border-indigo-400'
+          : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-400'
     }
-    ${disabled ? 'bg-gray-100 text-gray-500' : ''}
+    ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : ''}
   `.trim();
 
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={id} className="block text-xs font-medium text-gray-700 mb-1">
+        <label htmlFor={id} className="block text-xs font-medium text-slate-700 mb-1">
           {label}
         </label>
       )}
       <div className="relative">
         {prefix && (
           <span
-            className={`absolute left-2 top-1/2 -translate-y-1/2 text-sm ${error ? 'text-red-500' : 'text-gray-500'}`}
+            className={`absolute left-2 top-1/2 -translate-y-1/2 text-sm ${error ? 'text-red-500' : 'text-slate-500'}`}
           >
             {prefix}
           </span>

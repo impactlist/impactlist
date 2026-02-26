@@ -13,10 +13,16 @@ const CustomValueIndicator = ({ isCustom, hasError = false, onReset, className =
     md: 'text-base',
   };
 
-  const colorClasses = hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800';
+  const colorClasses = hasError
+    ? 'text-red-600 hover:text-red-800 hover:bg-red-50'
+    : 'text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50';
 
   return (
-    <button type="button" className={`${sizeClasses[size]} ${colorClasses} font-medium ${className}`} onClick={onReset}>
+    <button
+      type="button"
+      className={`${sizeClasses[size]} ${colorClasses} font-medium px-2 py-0.5 rounded-md transition-colors ${className}`}
+      onClick={onReset}
+    >
       Reset
     </button>
   );

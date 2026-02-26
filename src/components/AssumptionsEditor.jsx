@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { validateGlobalParameterValues, scrollToFirstError } from '../utils/assumptionsFormValidation';
 import { cleanAndParseValue } from '../utils/effectValidation';
@@ -53,6 +54,7 @@ const AssumptionsEditor = forwardRef(
     } = useAssumptions();
 
     const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
+    const prefersReducedMotion = useReducedMotion();
 
     const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
 
@@ -225,7 +227,7 @@ const AssumptionsEditor = forwardRef(
       <div className="flex flex-col">
         {!editingCategoryId && !editingRecipient && (
           <>
-            <div className="p-6">
+            <div className="px-6 pt-6 pb-4">
               <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
                 <div className="order-2 sm:order-1 flex items-center">
                   <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
@@ -255,14 +257,14 @@ const AssumptionsEditor = forwardRef(
               </div>
             </div>
 
-            <div className="px-6 py-3">
+            <div className="px-6 pb-4">
               {activeTab === 'global' ? (
-                <p className="text-base font-semibold text-gray-700">
+                <p className="text-sm text-slate-500 leading-relaxed">
                   Global parameters that affect the calculations of the cost to save one life for each category or
                   recipient:
                 </p>
               ) : (
-                <div className="flex items-center flex-wrap text-base font-semibold text-gray-700">
+                <div className="flex items-center flex-wrap text-sm text-slate-500 leading-relaxed">
                   <span>Cost to save a life in</span>
                   <YearSelector
                     value={previewYear}
@@ -275,66 +277,78 @@ const AssumptionsEditor = forwardRef(
                 </div>
               )}
             </div>
+
+            <div className="mx-6 border-t border-slate-100" />
           </>
         )}
 
-        <div className="p-3">
-          {editingCategoryId ? (
-            <CategoryEffectEditor
-              category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}
-              categoryId={editingCategoryId}
-              globalParameters={mergedGlobalParameters}
-              onSave={handleSaveCategoryEffects}
-              onCancel={handleCancelCategoryEdit}
-            />
-          ) : editingRecipient?.isMultiCategory ? (
-            <MultiCategoryRecipientEditor
-              recipient={editingRecipient.recipient}
-              recipientId={editingRecipient.recipientId}
-              categories={editingRecipient.categories}
-              activeCategory={editingRecipient.activeCategory}
-              globalParameters={mergedGlobalParameters}
-              onSave={handleSaveMultiCategoryEffects}
-              onCancel={handleCancelRecipientEdit}
-            />
-          ) : editingRecipient ? (
-            <RecipientEffectEditor
-              recipient={editingRecipient.recipient}
-              recipientId={editingRecipient.recipientId}
-              category={editingRecipient.category}
-              categoryId={editingRecipient.categoryId}
-              globalParameters={mergedGlobalParameters}
-              onSave={handleSaveRecipientEffects}
-              onCancel={handleCancelRecipientEdit}
-            />
-          ) : activeTab === 'global' ? (
-            <GlobalValuesSection
-              globalParameters={mergedGlobalParameters}
-              defaultGlobalParameters={defaultAssumptions.globalParameters}
-              formValues={globalForm.formValues}
-              errors={globalForm.errors}
-              onChange={globalForm.handleChange}
-            />
-          ) : activeTab === 'categories' ? (
-            <CategoryValuesSection
-              defaultAssumptions={defaultAssumptions}
-              userAssumptions={userAssumptions}
-              onEditCategory={handleEditCategory}
-              onResetCategory={resetCategoryToDefaults}
-              categoriesWithCustomValues={categoriesWithCustomValues}
-              previewYear={previewYear}
-            />
-          ) : (
-            <RecipientValuesSection
-              filteredRecipients={recipientSearch.filteredRecipients}
-              onSearch={recipientSearch.handleSearchChange}
-              searchTerm={recipientSearch.searchTerm}
-              defaultAssumptions={defaultAssumptions}
-              userAssumptions={userAssumptions}
-              onEditRecipient={handleEditRecipient}
-              previewYear={previewYear}
-            />
-          )}
+        <div className="p-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={editingCategoryId || editingRecipient?.recipientId || activeTab}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
+            >
+              {editingCategoryId ? (
+                <CategoryEffectEditor
+                  category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}
+                  categoryId={editingCategoryId}
+                  globalParameters={mergedGlobalParameters}
+                  onSave={handleSaveCategoryEffects}
+                  onCancel={handleCancelCategoryEdit}
+                />
+              ) : editingRecipient?.isMultiCategory ? (
+                <MultiCategoryRecipientEditor
+                  recipient={editingRecipient.recipient}
+                  recipientId={editingRecipient.recipientId}
+                  categories={editingRecipient.categories}
+                  activeCategory={editingRecipient.activeCategory}
+                  globalParameters={mergedGlobalParameters}
+                  onSave={handleSaveMultiCategoryEffects}
+                  onCancel={handleCancelRecipientEdit}
+                />
+              ) : editingRecipient ? (
+                <RecipientEffectEditor
+                  recipient={editingRecipient.recipient}
+                  recipientId={editingRecipient.recipientId}
+                  category={editingRecipient.category}
+                  categoryId={editingRecipient.categoryId}
+                  globalParameters={mergedGlobalParameters}
+                  onSave={handleSaveRecipientEffects}
+                  onCancel={handleCancelRecipientEdit}
+                />
+              ) : activeTab === 'global' ? (
+                <GlobalValuesSection
+                  globalParameters={mergedGlobalParameters}
+                  defaultGlobalParameters={defaultAssumptions.globalParameters}
+                  formValues={globalForm.formValues}
+                  errors={globalForm.errors}
+                  onChange={globalForm.handleChange}
+                />
+              ) : activeTab === 'categories' ? (
+                <CategoryValuesSection
+                  defaultAssumptions={defaultAssumptions}
+                  userAssumptions={userAssumptions}
+                  onEditCategory={handleEditCategory}
+                  onResetCategory={resetCategoryToDefaults}
+                  categoriesWithCustomValues={categoriesWithCustomValues}
+                  previewYear={previewYear}
+                />
+              ) : (
+                <RecipientValuesSection
+                  filteredRecipients={recipientSearch.filteredRecipients}
+                  onSearch={recipientSearch.handleSearchChange}
+                  searchTerm={recipientSearch.searchTerm}
+                  defaultAssumptions={defaultAssumptions}
+                  userAssumptions={userAssumptions}
+                  onEditRecipient={handleEditRecipient}
+                  previewYear={previewYear}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     );

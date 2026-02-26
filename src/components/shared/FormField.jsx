@@ -80,23 +80,28 @@ const FormField = ({
 
   return (
     <div
-      className={`py-2 px-3 rounded border ${
+      className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-shadow duration-200 ${
         disabled
-          ? 'border-gray-200 bg-gray-50 opacity-75'
+          ? 'border-slate-200 bg-slate-50 opacity-75'
           : hasError
-            ? 'border-red-300 bg-red-50'
+            ? 'border-red-200 ring-1 ring-red-100 bg-red-50/50'
             : isCustom
-              ? 'border-indigo-300 bg-indigo-50'
-              : 'border-gray-200'
+              ? 'border-indigo-200 ring-1 ring-indigo-100 bg-indigo-50/40'
+              : 'border-slate-200'
       }`}
     >
       {/* Label and Reset button */}
       <div className="flex justify-between items-start mb-2">
-        <label htmlFor={id} className="text-sm font-medium text-gray-700 flex items-center gap-1">
+        <label htmlFor={id} className="text-sm font-medium text-slate-700 flex items-center gap-1">
           {label}
           {description && (
             <Tooltip content={description}>
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-3.5 h-3.5 text-slate-300 hover:text-slate-500 transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -110,7 +115,7 @@ const FormField = ({
         {isCustom && !disabled && (
           <button
             type="button"
-            className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-xs text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 px-2 py-0.5 rounded-md font-medium transition-colors"
             onClick={handleReset}
           >
             Reset
@@ -122,7 +127,7 @@ const FormField = ({
       <div className="relative">
         {prefix && (
           <span
-            className={`absolute left-2 top-1/2 -translate-y-1/2 text-sm ${hasError ? 'text-red-500' : 'text-gray-500'}`}
+            className={`absolute left-2 top-1/2 -translate-y-1/2 text-sm ${hasError ? 'text-red-500' : 'text-slate-500'}`}
           >
             {prefix}
           </span>
@@ -136,14 +141,17 @@ const FormField = ({
           placeholder={placeholderValue}
           disabled={disabled}
           className={`
-            w-full py-1 text-sm border rounded focus:ring-1 focus:outline-none
+            w-full py-2 text-sm border rounded-lg
+            focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none
+            transition-colors duration-150
+            placeholder:text-slate-400
             ${prefix ? 'pl-6 pr-2' : 'px-2'}
             ${
               disabled
-                ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
+                ? 'bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200'
                 : hasError
-                  ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                  ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500/20 focus:border-red-400'
+                  : 'border-slate-200 focus:ring-indigo-500/20 focus:border-indigo-400'
             }
           `}
         />
@@ -158,7 +166,7 @@ const FormField = ({
 
       {/* Default value display */}
       {isCustom && !hasError && (
-        <p className="text-xs text-gray-500 mt-0.5">
+        <p className="text-xs text-slate-500 mt-0.5">
           Default: {prefix || ''}
           {formatDefaultDisplay(defaultValue)}
         </p>

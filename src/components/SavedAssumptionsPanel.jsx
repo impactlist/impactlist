@@ -23,21 +23,14 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
 
   const activeEntry = entries.find((entry) => entry.id === activeId) || null;
   const isDefaultActive = activeId === DEFAULT_ENTRY_ID;
-  const shouldPrioritizeActiveEntry = Boolean(activeEntry) || isDefaultActive;
-  const primaryEntries = shouldPrioritizeActiveEntry ? [isDefaultActive ? DEFAULT_ENTRY : activeEntry] : [];
-  const inactiveCustomEntries = shouldPrioritizeActiveEntry
-    ? entries.filter((entry) => entry.id !== activeEntry?.id)
-    : entries;
-  const inactiveEntries = shouldPrioritizeActiveEntry
-    ? isDefaultActive
-      ? inactiveCustomEntries
-      : [DEFAULT_ENTRY, ...inactiveCustomEntries]
-    : [];
-  const visibleEntries = shouldPrioritizeActiveEntry
-    ? [...primaryEntries, ...(showInactiveEntries ? inactiveEntries : [])]
-    : [DEFAULT_ENTRY, ...entries];
-  const inactiveToggleLabel = showInactiveEntries ? 'Hide Inactive' : `Show Inactive (${inactiveEntries.length})`;
-  const shouldShowInactiveToggle = shouldPrioritizeActiveEntry && inactiveEntries.length > 0;
+  const primaryEntry = isDefaultActive ? DEFAULT_ENTRY : activeEntry;
+  const primaryEntries = primaryEntry ? [primaryEntry] : [];
+  const inactiveCustomEntries = entries.filter((entry) => entry.id !== activeEntry?.id);
+  const inactiveEntries = isDefaultActive ? inactiveCustomEntries : [DEFAULT_ENTRY, ...inactiveCustomEntries];
+  const visibleEntries = [...primaryEntries, ...(showInactiveEntries ? inactiveEntries : [])];
+  const inactiveEntriesCount = inactiveEntries.length;
+  const inactiveToggleLabel = showInactiveEntries ? 'Hide Inactive' : `Show Inactive (${inactiveEntriesCount})`;
+  const shouldShowInactiveToggle = inactiveEntries.length > 0;
   const shouldShowInactiveToggleAtTop = shouldShowInactiveToggle && entries.length >= 3 && showInactiveEntries;
 
   const beginRename = (entry) => {
@@ -157,7 +150,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         Active
                       </span>
                     )}
-                    {isActive && hasUnsavedChanges && !isDefaultEntry && (
+                    {isActive && hasUnsavedChanges && (
                       <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
                         Unsaved changes
                       </span>

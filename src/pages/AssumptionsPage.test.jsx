@@ -634,6 +634,7 @@ describe('AssumptionsPage routing integration', () => {
     }
 
     renderAssumptionsRoute('/assumptions');
+    await user.click(await screen.findByRole('button', { name: /Show Inactive/i }));
     expect(await screen.findByText('Imported From Friend')).toBeInTheDocument();
 
     const panel = screen.getByText('Saved Assumptions').closest('section');

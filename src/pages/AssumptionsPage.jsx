@@ -65,10 +65,11 @@ const AssumptionsPage = () => {
     () => createComparableAssumptionsFingerprint(activeSavedAssumptionsEntry?.assumptions),
     [activeSavedAssumptionsEntry?.assumptions]
   );
-  const hasUnsavedChanges =
-    Boolean(activeSavedAssumptionsEntry) && activeSavedAssumptionsFingerprint !== currentFingerprint;
+  const hasUnsavedChanges = activeSavedAssumptionsEntry
+    ? activeSavedAssumptionsFingerprint !== currentFingerprint
+    : isUsingCustomValues;
   const isActiveSavedAssumptionsRemote = Boolean(activeSavedAssumptionsEntry?.reference);
-  const activePanelEntryId = activeSavedAssumptionsId || (!isUsingCustomValues ? DEFAULT_ASSUMPTIONS_ENTRY_ID : null);
+  const activePanelEntryId = activeSavedAssumptionsId || DEFAULT_ASSUMPTIONS_ENTRY_ID;
   const isCurrentStateRepresentedBySavedAssumptions = useMemo(() => {
     if (!isUsingCustomValues) {
       return true;

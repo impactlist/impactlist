@@ -85,6 +85,23 @@ const AssumptionsPage = () => {
   const canUpdateExisting = Boolean(
     activeSavedAssumptionsEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote
   );
+  const duplicateSavedAssumptionsLabel = useMemo(() => {
+    if (!currentFingerprint) {
+      return null;
+    }
+
+    if (activeSavedAssumptionsEntry) {
+      const activeFingerprint = createComparableAssumptionsFingerprint(activeSavedAssumptionsEntry.assumptions);
+      if (activeFingerprint && activeFingerprint === currentFingerprint) {
+        return activeSavedAssumptionsEntry.label;
+      }
+    }
+
+    const matchingEntry = savedAssumptions.find(
+      (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
+    );
+    return matchingEntry?.label || null;
+  }, [activeSavedAssumptionsEntry, currentFingerprint, savedAssumptions]);
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
@@ -588,6 +605,7 @@ const AssumptionsPage = () => {
           onSubmit={handleSaveAssumptionsSubmit}
           defaultLabel={saveModalDefaultLabel}
           canUpdateExisting={canUpdateExisting}
+          duplicateOfLabel={duplicateSavedAssumptionsLabel}
         />
 
         <SharedImportDecisionModal

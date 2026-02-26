@@ -598,6 +598,73 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
+  it('disables load for active saved assumptions when there are no unsaved changes', async () => {
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 140,
+        },
+      })
+    );
+
+    const currentSaved = saveNewAssumptions({
+      label: 'Current Saved',
+      assumptions: {
+        globalParameters: { timeLimit: 140 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!currentSaved.ok) {
+      throw new Error('Expected saved entry to seed successfully');
+    }
+    setActiveSavedAssumptionsId(currentSaved.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = await screen.findByText('Saved Assumptions');
+    const section = panel.closest('section');
+    const activeRow = within(section).getByText('Current Saved').closest('div.rounded-md');
+    expect(within(activeRow).getByRole('button', { name: 'Load' })).toBeDisabled();
+  });
+
+  it('keeps load enabled for active saved assumptions when there are unsaved changes', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 140,
+        },
+      })
+    );
+
+    const currentSaved = saveNewAssumptions({
+      label: 'Current Saved',
+      assumptions: {
+        globalParameters: { timeLimit: 140 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!currentSaved.ok) {
+      throw new Error('Expected saved entry to seed successfully');
+    }
+    setActiveSavedAssumptionsId(currentSaved.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const activeRow = within(panel).getByText('Current Saved').closest('div.rounded-md');
+    expect(within(activeRow).getByRole('button', { name: 'Load' })).toBeEnabled();
+  });
+
   it('does not show Delete All Imported button', async () => {
     saveNewAssumptions({
       label: 'Local Baseline',
@@ -734,5 +801,38 @@ describe('AssumptionsPage routing integration', () => {
 
     const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
     expect(entries).toHaveLength(1);
+  });
+
+  it('warns when saving unchanged assumptions would duplicate an existing saved entry', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
+
+    const seeded = saveNewAssumptions({
+      label: 'Baseline Model',
+      assumptions: {
+        globalParameters: { timeLimit: 150 },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+    await user.click(await screen.findByRole('button', { name: 'Save Assumptions' }));
+
+    expect(screen.getByText(/You are about to save a duplicate copy of/i)).toHaveTextContent(
+      'You are about to save a duplicate copy of Baseline Model.'
+    );
   });
 });

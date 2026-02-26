@@ -18,7 +18,14 @@ const getSubmitErrorMessage = (errorCode) => {
   return 'Could not save assumptions locally. Delete some saved assumptions and try again.';
 };
 
-const SaveAssumptionsModal = ({ isOpen, onClose, onSubmit, defaultLabel = '', canUpdateExisting = false }) => {
+const SaveAssumptionsModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  defaultLabel = '',
+  canUpdateExisting = false,
+  duplicateOfLabel = null,
+}) => {
   const [label, setLabel] = useState(defaultLabel);
   const [error, setError] = useState('');
 
@@ -88,6 +95,13 @@ const SaveAssumptionsModal = ({ isOpen, onClose, onSubmit, defaultLabel = '', ca
                 Save the current assumptions to your local Saved Assumptions list.
               </p>
 
+              {duplicateOfLabel && (
+                <p className="mb-4 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                  You are about to save a duplicate copy of{' '}
+                  <strong className="font-semibold">{duplicateOfLabel}</strong>.
+                </p>
+              )}
+
               <label htmlFor="save-assumptions-label" className="mb-1 block text-sm font-semibold text-slate-700">
                 Label
               </label>
@@ -146,11 +160,13 @@ SaveAssumptionsModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
   canUpdateExisting: PropTypes.bool,
+  duplicateOfLabel: PropTypes.string,
 };
 
 SaveAssumptionsModal.defaultProps = {
   defaultLabel: '',
   canUpdateExisting: false,
+  duplicateOfLabel: null,
 };
 
 export default SaveAssumptionsModal;

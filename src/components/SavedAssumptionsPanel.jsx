@@ -111,6 +111,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
             const isActive = activeId === entry.id;
             const isEditing = !isDefaultEntry && editingId === entry.id;
             const isRemote = !isDefaultEntry && Boolean(entry.reference);
+            const isLoadDisabled = isActive && !hasUnsavedChanges;
 
             return (
               <div key={entry.id} className="rounded-md border border-slate-200 bg-slate-50 p-3">
@@ -197,7 +198,8 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                       <button
                         type="button"
                         onClick={() => onLoad({ id: DEFAULT_ENTRY_ID })}
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                        disabled={isLoadDisabled}
+                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
                       >
                         Load
                       </button>
@@ -206,7 +208,8 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         <button
                           type="button"
                           onClick={() => onLoad(entry)}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                          disabled={isLoadDisabled}
+                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
                         >
                           Load
                         </button>

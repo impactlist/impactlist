@@ -417,6 +417,107 @@ describe('AssumptionsPage routing integration', () => {
     ).toBe(true);
   });
 
+  it('creates and activates a saved assumptions entry when sharing unsaved custom assumptions', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 185,
+        },
+      })
+    );
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'share-185',
+        reference: 'custom-slug-185',
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions');
+
+    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    await user.click(await screen.findByRole('button', { name: 'Create Link' }));
+    expect(await screen.findByText('Share link created.')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Done' }));
+
+    await waitFor(() => {
+      const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+      expect(entries).toHaveLength(1);
+      expect(entries[0].label).toBe('custom-slug-185');
+      expect(entries[0].reference).toBe('custom-slug-185');
+      expect(entries[0].source).toBe('local');
+      expect(entries[0].assumptions.globalParameters.timeLimit).toBe(185);
+      expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(entries[0].id);
+    });
+
+    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const row = within(panel).getByText('custom-slug-185').closest('div.rounded-md');
+    expect(within(row).getByText('Active')).toBeInTheDocument();
+    expect(within(row).getByText('Remote')).toBeInTheDocument();
+
+    expect(
+      fetchMock.mock.calls.some(([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST')
+    ).toBe(true);
+  });
+
+  it('uses a unique local label when sharing unsaved assumptions and the slug label already exists', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 186,
+        },
+      })
+    );
+
+    const existing = saveNewAssumptions({
+      label: 'duplicate-slug',
+      assumptions: {
+        globalParameters: { timeLimit: 120 },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+    });
+    if (!existing.ok) {
+      throw new Error('Expected seeded entry');
+    }
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'share-186',
+        reference: 'duplicate-slug',
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions');
+
+    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    await user.click(await screen.findByRole('button', { name: 'Create Link' }));
+    expect(await screen.findByText('Share link created.')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Done' }));
+
+    await waitFor(() => {
+      const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+      expect(entries).toHaveLength(2);
+
+      const newEntry = entries.find((entry) => entry.label === 'duplicate-slug (2)');
+      expect(newEntry).toBeTruthy();
+      expect(newEntry.reference).toBe('duplicate-slug');
+      expect(newEntry.assumptions.globalParameters.timeLimit).toBe(186);
+      expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(newEntry.id);
+    });
+
+    expect(
+      fetchMock.mock.calls.some(([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST')
+    ).toBe(true);
+  });
+
   it('shows existing share link immediately for active remote assumptions without creating a new link', async () => {
     const user = userEvent.setup();
     localStorage.setItem(

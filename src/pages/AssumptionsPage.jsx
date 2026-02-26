@@ -367,6 +367,29 @@ const AssumptionsPage = () => {
     (sharedResult) => {
       const sharedReference = typeof sharedResult?.reference === 'string' ? sharedResult.reference.trim() : '';
       const assumptionsToShare = getNormalizedUserAssumptionsForSharing();
+      const saveSharedAsNewEntry = ({ reference, assumptions }) => {
+        const MAX_ATTEMPTS = 100;
+
+        for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+          const candidateLabel = attempt === 1 ? reference : `${reference} (${attempt})`;
+          const result = saveNewAssumptions({
+            label: candidateLabel,
+            assumptions,
+            source: 'local',
+            reference,
+          });
+
+          if (result.ok) {
+            return result;
+          }
+
+          if (result.errorCode !== 'duplicate_label') {
+            return result;
+          }
+        }
+
+        return { ok: false, errorCode: 'duplicate_label' };
+      };
 
       if (sharedReference && assumptionsToShare) {
         const attachResult = attachSavedAssumptionsShareReference({
@@ -377,7 +400,19 @@ const AssumptionsPage = () => {
 
         if (attachResult.ok && attachResult.entry?.id) {
           persistAsActive(attachResult.entry.id);
-        } else if (!attachResult.ok && attachResult.errorCode !== 'not_found') {
+        } else if (!attachResult.ok && attachResult.errorCode === 'not_found') {
+          const createResult = saveSharedAsNewEntry({
+            reference: sharedReference,
+            assumptions: assumptionsToShare,
+          });
+
+          if (!createResult.ok || !createResult.entry?.id) {
+            showNotification('error', 'Share link created, but could not save it to Saved Assumptions.');
+            return;
+          }
+
+          persistAsActive(createResult.entry.id);
+        } else {
           showNotification('error', 'Share link created, but could not sync it to Saved Assumptions.');
           return;
         }

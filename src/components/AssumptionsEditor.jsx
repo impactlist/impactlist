@@ -146,7 +146,7 @@ const AssumptionsEditor = forwardRef(
         if (editingCategoryId || editingRecipient) {
           return {
             ok: false,
-            message: 'Save or cancel your in-progress edits before continuing.',
+            message: 'Apply or cancel your in-progress edits before continuing.',
           };
         }
 

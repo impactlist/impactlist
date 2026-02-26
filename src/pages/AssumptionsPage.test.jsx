@@ -196,7 +196,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.clear(timeLimitInput);
     await user.type(timeLimitInput, '150');
 
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     await waitFor(() => {
       const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
@@ -218,7 +218,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.clear(discountRateInput);
     await user.type(discountRateInput, '-');
 
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     expect(await screen.findByText('Please enter a complete number')).toBeInTheDocument();
     expect(localStorage.getItem('customEffectsData')).toBeNull();
@@ -237,7 +237,7 @@ describe('AssumptionsPage routing integration', () => {
     const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
     await user.clear(timeLimitInput);
     await user.type(timeLimitInput, '175');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
     expect(await screen.findByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
@@ -289,7 +289,7 @@ describe('AssumptionsPage routing integration', () => {
     const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
     await user.clear(timeLimitInput);
     await user.type(timeLimitInput, '205');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
     expect(await screen.findByRole('button', { name: 'Update Current Saved Assumptions' })).toBeInTheDocument();
@@ -334,7 +334,7 @@ describe('AssumptionsPage routing integration', () => {
     const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
     await user.clear(timeLimitInput);
     await user.type(timeLimitInput, '205');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
     expect(await screen.findByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
@@ -658,7 +658,7 @@ describe('AssumptionsPage routing integration', () => {
     const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
     await user.clear(timeLimitInput);
     await user.type(timeLimitInput, '155');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
     const activeRow = within(panel).getByText('Current Saved').closest('div.rounded-md');

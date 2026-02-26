@@ -8,8 +8,8 @@ const EffectEditorFooter = ({
   onSave,
   onCancel,
   hasErrors = false,
-  errorMessage = 'Please fix errors before saving',
-  saveLabel = 'Save Changes',
+  errorMessage = 'Please fix errors before applying',
+  saveLabel = 'Apply',
   cancelLabel = 'Cancel',
   disabled = false,
 }) => {

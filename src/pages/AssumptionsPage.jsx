@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import AssumptionsEditor from '../components/AssumptionsEditor';
 import ShareAssumptionsModal from '../components/ShareAssumptionsModal';
@@ -34,6 +34,7 @@ const DEFAULT_ASSUMPTIONS_ENTRY_ID = '__default__';
 const AssumptionsPage = () => {
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotificationActions();
+  const shouldReduceMotion = useReducedMotion();
   const [searchParams, setSearchParams] = useSearchParams();
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareModalInitialResult, setShareModalInitialResult] = useState(null);
@@ -547,38 +548,49 @@ const AssumptionsPage = () => {
 
   return (
     <motion.div
-      className="min-h-screen bg-slate-50"
-      initial={{ opacity: 0 }}
+      className="assumptions-page min-h-screen pb-8"
+      initial={shouldReduceMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      exit={shouldReduceMotion ? undefined : { opacity: 0 }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.28 }}
     >
-      <BackButton to="/" label="Back to top donors" />
+      <BackButton
+        to="/"
+        label="Back to top donors"
+        className="assumptions-link !text-[var(--accent-strong)] no-underline"
+        containerProps={{
+          className: 'relative z-10 mx-auto mb-2 mt-4 flex max-w-7xl justify-start px-4 sm:px-6 lg:px-8',
+        }}
+        motion={shouldReduceMotion ? { initial: false, animate: { opacity: 1 } } : undefined}
+      />
 
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8"
-        initial={{ y: 20, opacity: 0 }}
+        className="relative z-10 mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8"
+        initial={shouldReduceMotion ? false : { y: 16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4 }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.36, delay: 0.02 }}
       >
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-4xl font-bold text-slate-900 text-center sm:text-left">Assumptions</h1>
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
+              Research Dashboard
+            </p>
+            <h1 className="assumptions-title text-center text-4xl font-bold text-[var(--text-strong)] sm:text-left sm:text-5xl">
+              Assumptions
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-[var(--text-muted)]">
+              Configure model assumptions with a clear default-vs-custom signal before saving or sharing your launch
+              scenario.
+            </p>
+          </div>
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
             {isUsingCustomValues && (
-              <button
-                type="button"
-                onClick={handleSaveAssumptionsClick}
-                className="rounded-md border border-indigo-300 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
-              >
+              <button type="button" onClick={handleSaveAssumptionsClick} className="impact-btn impact-btn--secondary">
                 Save Assumptions
               </button>
             )}
             {isUsingCustomValues && (
-              <button
-                type="button"
-                onClick={handleShareButtonClick}
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-              >
+              <button type="button" onClick={handleShareButtonClick} className="impact-btn impact-btn--primary">
                 Share Assumptions
               </button>
             )}
@@ -595,7 +607,7 @@ const AssumptionsPage = () => {
           onCopyLink={handleCopySavedLink}
         />
 
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="assumptions-shell overflow-hidden">
           <AssumptionsEditor
             ref={assumptionsEditorRef}
             initialTab={initialTab}

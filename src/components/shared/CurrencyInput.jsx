@@ -101,15 +101,23 @@ const CurrencyInput = ({
     }
   }, [localValue, onChange, validateOnBlur]);
 
+  const state = error ? 'error' : isCustom ? 'custom' : 'default';
+
   return (
-    <div className={`${className}`}>
+    <div className={`impact-field ${className}`.trim()} data-state={state}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
+        <label htmlFor={id} className="impact-field__label">
           {label}
         </label>
       )}
-      <div className={`flex items-center relative ${error ? 'text-red-500' : ''}`}>
-        <span className={`text-slate-700 absolute left-2 text-sm ${error ? 'text-red-500' : ''}`}>$</span>
+      <div className="impact-field__control">
+        <span
+          className="impact-field__prefix"
+          style={error ? { color: 'var(--danger)' } : undefined}
+          aria-hidden={true}
+        >
+          $
+        </span>
         <input
           ref={inputRef}
           id={id}
@@ -122,18 +130,14 @@ const CurrencyInput = ({
           disabled={disabled}
           aria-invalid={!!error}
           aria-errormessage={error ? `${id}-error` : undefined}
-          className={`w-full pl-5 ${rightElement ? 'pr-10' : 'pr-2'} py-1 text-sm border rounded focus:ring-1 focus:outline-none ${
-            error
-              ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-              : isCustom
-                ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
-                : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-          } ${disabled && !isCustom ? 'bg-gray-100 text-gray-500' : disabled ? 'text-gray-600' : ''}`}
+          className={`impact-field__input impact-field__input--with-prefix ${
+            rightElement ? 'impact-field__input--with-right' : ''
+          }`.trim()}
         />
-        {rightElement && <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">{rightElement}</div>}
+        {rightElement && <div className="absolute right-2 top-1/2 z-10 -translate-y-1/2">{rightElement}</div>}
       </div>
       {error && (
-        <p id={`${id}-error`} className="mt-1 text-xs text-red-600">
+        <p id={`${id}-error`} className="impact-field__error">
           {error}
         </p>
       )}

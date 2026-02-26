@@ -221,64 +221,65 @@ const AssumptionsEditor = forwardRef(
       [editingRecipient, replaceRecipientEffectsByCategory, handleCancelRecipientEdit]
     );
 
-    return (
-      <div className="flex flex-col">
-        {!editingCategoryId && !editingRecipient && (
-          <>
-            <div className="p-6">
-              <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between">
-                <div className="order-2 sm:order-1 flex items-center">
-                  <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
-                </div>
-                <div className="order-1 sm:order-2">
-                  <FormActions
-                    onReset={
-                      activeTab === 'global'
-                        ? handleGlobalReset
-                        : activeTab === 'categories'
-                          ? handleCategoryReset
-                          : handleResetRecipients
-                    }
-                    onSave={handleSaveGlobal}
-                    showSave={activeTab === 'global'}
-                    resetLabel={
-                      activeTab === 'global'
-                        ? 'Reset Global'
-                        : activeTab === 'categories'
-                          ? 'Reset Categories'
-                          : 'Reset Recipients'
-                    }
-                    hasErrors={Object.keys(globalForm.errors).length > 0}
-                    hasUnsavedChanges={globalForm.hasUnsavedChanges}
-                  />
-                </div>
-              </div>
-            </div>
+    const isEditingEffects = Boolean(editingCategoryId || editingRecipient);
+    const activePanelId = `assumptions-panel-${activeTab}`;
 
-            <div className="px-6 py-3">
+    return (
+      <div className="flex flex-col gap-3 p-3 sm:p-4">
+        {!isEditingEffects && (
+          <div className="assumptions-toolbar">
+            <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} idBase="assumptions" />
+
+            <div className="assumptions-context flex min-w-[250px] flex-1 items-center justify-center px-2 text-center sm:text-left">
               {activeTab === 'global' ? (
-                <p className="text-base font-semibold text-gray-700">
-                  Global parameters that affect the calculations of the cost to save one life for each category or
-                  recipient:
+                <p>
+                  Global parameters that shape all projected cost-per-life calculations across categories and
+                  recipients.
                 </p>
               ) : (
-                <div className="flex items-center flex-wrap text-base font-semibold text-gray-700">
-                  <span>Cost to save a life in</span>
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                  <span className="font-semibold text-[var(--text-strong)]">Preview for year</span>
                   <YearSelector
                     value={previewYear}
                     onChange={setPreviewYear}
                     id="assumptions-preview-year"
                     label=""
-                    className="mx-2"
+                    className=""
                   />
-                  <span>for each {activeTab === 'categories' ? 'cause category' : 'recipient'}:</span>
+                  <span>across {activeTab === 'categories' ? 'cause categories' : 'recipient profiles'}.</span>
                 </div>
               )}
             </div>
-          </>
+
+            <FormActions
+              onReset={
+                activeTab === 'global'
+                  ? handleGlobalReset
+                  : activeTab === 'categories'
+                    ? handleCategoryReset
+                    : handleResetRecipients
+              }
+              onSave={handleSaveGlobal}
+              showSave={activeTab === 'global'}
+              resetLabel={
+                activeTab === 'global'
+                  ? 'Reset Global'
+                  : activeTab === 'categories'
+                    ? 'Reset Categories'
+                    : 'Reset Recipients'
+              }
+              hasErrors={Object.keys(globalForm.errors).length > 0}
+              hasUnsavedChanges={globalForm.hasUnsavedChanges}
+            />
+          </div>
         )}
 
-        <div className="p-3">
+        <div
+          className={isEditingEffects ? '' : 'assumptions-tabpanel'}
+          id={isEditingEffects ? undefined : activePanelId}
+          role={isEditingEffects ? undefined : 'tabpanel'}
+          aria-labelledby={isEditingEffects ? undefined : `assumptions-tab-${activeTab}`}
+        >
           {editingCategoryId ? (
             <CategoryEffectEditor
               category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}

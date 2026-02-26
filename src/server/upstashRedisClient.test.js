@@ -117,4 +117,29 @@ describe('upstashRedisClient', () => {
 
     await expect(runRedisCommand('GET', 'foo')).rejects.toBeInstanceOf(SharedAssumptionsError);
   });
+
+  it('uses KV_REST_API_* env vars as fallback when shared assumptions vars are missing', async () => {
+    globalThis.process = {
+      ...globalThis.process,
+      env: {
+        ...(originalEnv || {}),
+        KV_REST_API_URL: 'https://kv-only.upstash.io',
+        KV_REST_API_TOKEN: 'kv-token',
+      },
+    };
+
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => [{ result: 'kv-value' }],
+    });
+
+    const result = await runRedisCommand('GET', 'foo');
+    expect(result).toBe('kv-value');
+    expect(fetchSpy).toHaveBeenCalledWith(
+      'https://kv-only.upstash.io/pipeline',
+      expect.objectContaining({
+        method: 'POST',
+      })
+    );
+  });
 });

@@ -78,7 +78,7 @@ describe('AssumptionsPage routing integration', () => {
   it('shows categories list for an invalid category deep-link instead of opening an editor', async () => {
     renderAssumptionsRoute('/assumptions?tab=categories&categoryId=missing-category');
 
-    expect(await screen.findByText(/for each cause category/i)).toBeInTheDocument();
+    expect(await screen.findByText(/cause categories/i)).toBeInTheDocument();
     expect(screen.queryByText(/Edit effects for category/i)).not.toBeInTheDocument();
   });
 
@@ -144,19 +144,62 @@ describe('AssumptionsPage routing integration', () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(screen.getByRole('button', { name: 'Categories' }));
+    await user.click(screen.getByRole('tab', { name: 'Categories' }));
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=categories');
     });
 
-    await user.click(screen.getByRole('button', { name: 'Recipients' }));
+    await user.click(screen.getByRole('tab', { name: 'Recipients' }));
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=recipients');
     });
 
-    await user.click(screen.getByRole('button', { name: 'Global' }));
+    await user.click(screen.getByRole('tab', { name: 'Global' }));
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
+    });
+  });
+
+  it('supports keyboard navigation across tabs with Home and End keys', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const globalTab = screen.getByRole('tab', { name: 'Global' });
+    globalTab.focus();
+    expect(globalTab).toHaveFocus();
+
+    await user.keyboard('{ArrowRight}');
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Categories' })).toHaveAttribute('aria-selected', 'true');
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=categories');
+    });
+
+    await user.keyboard('{End}');
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Recipients' })).toHaveAttribute('aria-selected', 'true');
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=recipients');
+    });
+
+    await user.keyboard('{Home}');
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Global' })).toHaveAttribute('aria-selected', 'true');
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
+    });
+  });
+
+  it('shows parameter tooltip content on keyboard focus', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const tooltipTriggers = await screen.findAllByRole('button', { name: 'More information' });
+    await user.click(tooltipTriggers[0]);
+
+    expect(await screen.findByRole('tooltip')).toBeInTheDocument();
+    expect(screen.getByRole('tooltip')).toHaveTextContent(/annual discount rate/i);
+
+    await user.tab();
+    await waitFor(() => {
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
     });
   });
 
@@ -408,7 +451,7 @@ describe('AssumptionsPage routing integration', () => {
     });
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
-    const row = within(panel).getByText('My Snapshot').closest('div.rounded-md');
+    const row = within(panel).getByText('My Snapshot').closest('.assumptions-entry');
     expect(within(row).getByText('Remote')).toBeInTheDocument();
     expect(within(row).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
 
@@ -454,7 +497,7 @@ describe('AssumptionsPage routing integration', () => {
     });
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
-    const row = within(panel).getByText('custom-slug-185').closest('div.rounded-md');
+    const row = within(panel).getByText('custom-slug-185').closest('.assumptions-entry');
     expect(within(row).getByText('Active')).toBeInTheDocument();
     expect(within(row).getByText('Remote')).toBeInTheDocument();
 
@@ -589,7 +632,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
     await user.click(within(panel).getByRole('button', { name: /Show Inactive/i }));
-    const defaultRow = within(panel).getByText('Default').closest('div.rounded-md');
+    const defaultRow = within(panel).getByText('Default').closest('.assumptions-entry');
     await user.click(within(defaultRow).getByRole('button', { name: 'Load' }));
 
     await waitFor(() => {
@@ -601,7 +644,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(localStorage.getItem('customEffectsData')).toBeNull();
     expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
 
-    const activeDefaultRow = within(panel).getByText('Default').closest('div.rounded-md');
+    const activeDefaultRow = within(panel).getByText('Default').closest('.assumptions-entry');
     expect(within(activeDefaultRow).getByText('Active')).toBeInTheDocument();
   });
 
@@ -638,7 +681,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(await screen.findByText('Imported From Friend')).toBeInTheDocument();
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
-    const importedRow = within(panel).getByText('Imported From Friend').closest('div.rounded-md');
+    const importedRow = within(panel).getByText('Imported From Friend').closest('.assumptions-entry');
     const loadButton = within(importedRow).getByRole('button', { name: 'Load' });
     await user.click(loadButton);
 
@@ -687,7 +730,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: /Show Inactive/i }));
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
-    const targetRow = within(panel).getByText('Target Saved').closest('div.rounded-md');
+    const targetRow = within(panel).getByText('Target Saved').closest('.assumptions-entry');
     const loadButton = within(targetRow).getByRole('button', { name: 'Load' });
     await user.click(loadButton);
 
@@ -727,7 +770,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const panel = await screen.findByText('Saved Assumptions');
     const section = panel.closest('section');
-    const activeRow = within(section).getByText('Current Saved').closest('div.rounded-md');
+    const activeRow = within(section).getByText('Current Saved').closest('.assumptions-entry');
     expect(within(activeRow).getByRole('button', { name: 'Load' })).toBeDisabled();
   });
 
@@ -763,7 +806,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
-    const activeRow = within(panel).getByText('Current Saved').closest('div.rounded-md');
+    const activeRow = within(panel).getByText('Current Saved').closest('.assumptions-entry');
     expect(within(activeRow).getByRole('button', { name: 'Load' })).toBeEnabled();
   });
 
@@ -850,7 +893,7 @@ describe('AssumptionsPage routing integration', () => {
     const panel = await screen.findByText('Saved Assumptions');
     const section = panel.closest('section');
     await user.click(within(section).getByRole('button', { name: /Show Inactive/i }));
-    const secondRow = within(section).getByText('Second Label').closest('div.rounded-md');
+    const secondRow = within(section).getByText('Second Label').closest('.assumptions-entry');
 
     await user.click(within(secondRow).getByRole('button', { name: 'Rename' }));
     const input = within(secondRow).getByDisplayValue('Second Label');

@@ -67,12 +67,12 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
   };
 
   return (
-    <section className="mb-4 rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center px-4 py-3">
-        <h2 className="text-lg font-semibold text-slate-900">Saved Assumptions</h2>
+    <section className="assumptions-shell mb-5 overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 sm:px-5">
+        <h2 className="assumptions-title text-2xl font-semibold text-[var(--text-strong)]">Saved Assumptions</h2>
       </div>
 
-      <div className="border-t border-slate-200 px-4 py-4">
+      <div className="border-t border-[var(--border-subtle)] px-4 py-4 sm:px-5">
         <div className="space-y-3">
           {shouldShowInactiveToggleAtTop && (
             <button
@@ -80,7 +80,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
               onClick={() => {
                 setShowInactiveEntries((current) => !current);
               }}
-              className="self-start text-sm font-medium text-slate-500 underline underline-offset-2 hover:text-slate-700"
+              className="impact-btn impact-btn--ghost text-xs"
             >
               {inactiveToggleLabel}
             </button>
@@ -94,7 +94,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
             const isLoadDisabled = isActive && !hasUnsavedChanges;
 
             return (
-              <div key={entry.id} className="rounded-md border border-slate-200 bg-slate-50 p-3">
+              <div key={entry.id} className="assumptions-entry" data-active={isActive}>
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="flex flex-wrap items-center gap-2">
                     {isEditing ? (
@@ -115,52 +115,61 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                               cancelRename();
                             }
                           }}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-sm"
+                          className="impact-field__input h-8 rounded-md px-2 text-sm"
                           autoFocus
                         />
                         <button
                           type="button"
                           onClick={commitRename}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                          className="impact-btn impact-btn--secondary py-2 text-xs"
                         >
                           Save
                         </button>
                         <button
                           type="button"
                           onClick={cancelRename}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                          className="impact-btn impact-btn--secondary py-2 text-xs"
                         >
                           Cancel
                         </button>
                       </div>
                     ) : (
-                      <span className="text-sm font-semibold text-slate-900">{entry.label}</span>
+                      <span className="text-sm font-semibold text-[var(--text-strong)]">{entry.label}</span>
                     )}
                     {!isDefaultEntry && (
                       <span
-                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                          isRemote ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-200 text-slate-700'
-                        }`}
+                        className="impact-muted-pill"
+                        style={
+                          isRemote
+                            ? {
+                                background: 'color-mix(in srgb, var(--accent-soft) 65%, white 35%)',
+                                color: 'var(--accent-strong)',
+                              }
+                            : undefined
+                        }
                       >
                         {isRemote ? 'Remote' : 'Local'}
                       </span>
                     )}
                     {isActive && (
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                      <span className="assumption-state-pill" data-state="custom">
                         Active
                       </span>
                     )}
                     {isActive && hasUnsavedChanges && (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                      <span
+                        className="assumption-state-pill"
+                        style={{ background: 'color-mix(in srgb, #f2dfbc 78%, white 22%)', color: 'var(--warning)' }}
+                      >
                         Unsaved changes
                       </span>
                     )}
-                    {isRemote && <span className="text-xs text-slate-600">(Ref: {entry.reference})</span>}
+                    {isRemote && <span className="text-xs text-[var(--text-muted)]">(Ref: {entry.reference})</span>}
                   </div>
                 </div>
 
                 {isEditing && renameError && (
-                  <p className="mt-2 rounded-md bg-red-50 px-2 py-1 text-xs text-red-700">{renameError}</p>
+                  <p className="mt-2 rounded-md bg-[#fff1f1] px-2 py-1 text-xs text-[var(--danger)]">{renameError}</p>
                 )}
 
                 {!isEditing && (
@@ -170,7 +179,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         type="button"
                         onClick={() => onLoad({ id: DEFAULT_ENTRY_ID })}
                         disabled={isLoadDisabled}
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+                        className="impact-btn impact-btn--secondary py-2 text-xs"
                       >
                         Load
                       </button>
@@ -180,21 +189,21 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                           type="button"
                           onClick={() => onLoad(entry)}
                           disabled={isLoadDisabled}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+                          className="impact-btn impact-btn--secondary py-2 text-xs"
                         >
                           Load
                         </button>
                         <button
                           type="button"
                           onClick={() => beginRename(entry)}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
+                          className="impact-btn impact-btn--secondary py-2 text-xs"
                         >
                           Rename
                         </button>
                         <button
                           type="button"
                           onClick={() => onDelete(entry.id)}
-                          className="rounded-md border border-red-300 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
+                          className="impact-btn impact-btn--danger py-2 text-xs"
                         >
                           Delete
                         </button>
@@ -202,7 +211,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                           <button
                             type="button"
                             onClick={() => onCopyLink(entry)}
-                            className="rounded-md border border-indigo-300 px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50"
+                            className="impact-btn impact-btn--secondary py-2 text-xs"
                           >
                             Copy Link
                           </button>
@@ -221,13 +230,13 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
               onClick={() => {
                 setShowInactiveEntries((current) => !current);
               }}
-              className="self-start text-sm font-medium text-slate-500 underline underline-offset-2 hover:text-slate-700"
+              className="impact-btn impact-btn--ghost text-xs"
             >
               {inactiveToggleLabel}
             </button>
           )}
 
-          {entries.length === 0 && <p className="text-sm text-slate-600">No saved assumptions yet.</p>}
+          {entries.length === 0 && <p className="text-sm text-[var(--text-muted)]">No saved assumptions yet.</p>}
         </div>
       </div>
     </section>

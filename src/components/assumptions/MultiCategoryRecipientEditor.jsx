@@ -212,12 +212,12 @@ const CategoryEffectSection = ({
   }, [effectCostPerLife]);
 
   return (
-    <div ref={sectionRef} className="rounded-lg bg-white shadow-sm mb-4">
+    <div ref={sectionRef} className="mb-4 rounded-lg border border-[var(--border-subtle)] bg-white shadow-sm">
       {/* Category header */}
-      <div className="px-4 py-3 rounded-t-lg">
+      <div className="rounded-t-lg bg-[var(--bg-surface-alt)] px-4 py-3">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-800">
-            <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
+            <Link to={`/category/${categoryId}`} className="assumptions-link">
               {category.name}
             </Link>
           </h3>
@@ -260,7 +260,10 @@ const CategoryEffectSection = ({
           const isFullyDisabled = isDisabledByCategory || isDisabledByRecipient;
 
           return (
-            <div key={effect.effectId} className="rounded-lg p-3 shadow-sm bg-gray-100 transition-all duration-200">
+            <div
+              key={effect.effectId}
+              className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-3 shadow-sm transition-all duration-200"
+            >
               <div className="mb-2">
                 <div className="flex flex-wrap justify-between items-start gap-2">
                   <div className="flex flex-wrap items-center gap-2">
@@ -441,65 +444,58 @@ const MultiCategoryRecipientEditor = ({
   }, [categories]);
 
   return (
-    <div className="p-2">
-      <div className="bg-white">
-        <EffectEditorHeader
-          title={
-            <>
-              Edit effects for recipient
-              <span className="group align-middle">
-                <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
-                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
-                  See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
-                </span>
-              </span>{' '}
-              :{' '}
-              <Link to={`/recipient/${recipientId}`} className="text-blue-600 hover:underline">
-                {recipient.name}
-              </Link>
-            </>
-          }
-          description={
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">{categories.length} categories</span>
-              {hasTimeIntervals && (
-                <YearSelector
-                  value={previewYear}
-                  onChange={setPreviewYear}
-                  label="Preview for year:"
-                  id="multi-category-preview-year"
-                />
-              )}
-            </div>
-          }
-          showCombinedCost={false}
-        />
+    <div className="assumptions-shell overflow-hidden">
+      <EffectEditorHeader
+        title={
+          <>
+            Edit effects for recipient
+            <span className="group align-middle">
+              <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
+              <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
+                See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
+              </span>
+            </span>{' '}
+            :{' '}
+            <Link to={`/recipient/${recipientId}`} className="assumptions-link">
+              {recipient.name}
+            </Link>
+          </>
+        }
+        description={
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">{categories.length} categories</span>
+            {hasTimeIntervals && (
+              <YearSelector
+                value={previewYear}
+                onChange={setPreviewYear}
+                label="Preview for year:"
+                id="multi-category-preview-year"
+              />
+            )}
+          </div>
+        }
+        showCombinedCost={false}
+      />
 
-        {/* Scrollable container for all category sections */}
-        <div ref={scrollContainerRef} className="px-3 py-2">
-          {categories.map(({ categoryId, category }) => (
-            <CategoryEffectSection
-              key={categoryId}
-              recipientId={recipientId}
-              category={category}
-              categoryId={categoryId}
-              globalParameters={globalParameters}
-              previewYear={previewYear}
-              onEffectsChange={handleEffectsChange}
-              sectionRef={(el) => {
-                sectionRefs.current[categoryId] = el;
-              }}
-            />
-          ))}
-        </div>
-
-        <EffectEditorFooter
-          onSave={handleSave}
-          onCancel={onCancel}
-          hasErrors={hasErrors}
-          disabled={!hasUnsavedChanges}
-        />
+      {/* Scrollable container for all category sections */}
+      <div ref={scrollContainerRef} className="px-3 py-2">
+        {categories.map(({ categoryId, category }) => (
+          <CategoryEffectSection
+            key={categoryId}
+            recipientId={recipientId}
+            category={category}
+            categoryId={categoryId}
+            globalParameters={globalParameters}
+            previewYear={previewYear}
+            onEffectsChange={handleEffectsChange}
+            sectionRef={(el) => {
+              sectionRefs.current[categoryId] = el;
+            }}
+          />
+        ))}
       </div>
+
+      <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} disabled={!hasUnsavedChanges} />
     </div>
   );
 };

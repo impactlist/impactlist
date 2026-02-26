@@ -158,136 +158,123 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   if (!category) return null;
 
   return (
-    <div className="p-2">
-      <div className="bg-white">
-        <EffectEditorHeader
-          title={
-            <>
-              Edit effects for category
-              <span className="group align-middle">
-                <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
-                <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
-                  See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
-                </span>
-              </span>{' '}
-              :{' '}
-              <Link to={`/category/${categoryId}`} className="text-blue-600 hover:underline">
-                {category.name}
-              </Link>
-            </>
-          }
-          description={
-            tempEditToEffects.length > 1 && hasTimeIntervals ? (
-              <div className="flex items-center gap-2">
-                <YearSelector
-                  value={previewYear}
-                  onChange={setPreviewYear}
-                  label="Preview calculations for year:"
-                  id="category-effect-preview-year"
-                  className=""
-                />
-              </div>
-            ) : null
-          }
-          combinedCostPerLife={tempEditToEffects.length > 1 ? combinedCostPerLife : undefined}
-          showCombinedCost={tempEditToEffects.length > 1}
-        />
+    <div className="assumptions-shell overflow-hidden">
+      <EffectEditorHeader
+        title={
+          <>
+            Edit effects for category
+            <span className="group align-middle">
+              <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
+              <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
+                See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
+              </span>
+            </span>{' '}
+            :{' '}
+            <Link to={`/category/${categoryId}`} className="assumptions-link">
+              {category.name}
+            </Link>
+          </>
+        }
+        description={
+          tempEditToEffects.length > 1 && hasTimeIntervals ? (
+            <div className="flex items-center gap-2">
+              <YearSelector
+                value={previewYear}
+                onChange={setPreviewYear}
+                label="Preview calculations for year:"
+                id="category-effect-preview-year"
+                className=""
+              />
+            </div>
+          ) : null
+        }
+        combinedCostPerLife={tempEditToEffects.length > 1 ? combinedCostPerLife : undefined}
+        showCombinedCost={tempEditToEffects.length > 1}
+      />
 
-        {/* Effects List */}
-        <div className="px-3 py-3">
-          <div className="space-y-3">
-            {tempEditToEffects.map((effect, index) => {
-              const effectType = getEffectType(effect);
-              const costPerLife = effectCostPerLife[index];
+      {/* Effects List */}
+      <div className="px-3 py-3">
+        <div className="space-y-3">
+          {tempEditToEffects.map((effect, index) => {
+            const effectType = getEffectType(effect);
+            const costPerLife = effectCostPerLife[index];
 
-              return (
-                <div
-                  key={index}
-                  className={`rounded-lg p-3 shadow-sm bg-gray-100 transition-all duration-200 ${
-                    effect.disabled ? 'effect-disabled' : ''
-                  }`}
-                >
-                  <div className="mb-2">
-                    <div className="flex flex-wrap justify-between items-start gap-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h4
-                          className="text-sm font-medium text-gray-900 whitespace-nowrap"
-                          style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                        >
-                          Effect {index + 1}: {effect.effectId}
-                        </h4>
-                        <DisableToggleButton
-                          isDisabled={effect.disabled || false}
-                          onToggle={() => toggleEffectDisabled(index)}
-                          className={effect.disabled ? 'enable-button' : ''}
-                          style={{ pointerEvents: 'auto' }}
-                        />
-                      </div>
-                      <div style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
-                        <EffectCostDisplay
-                          cost={costPerLife}
-                          showInfinity={true}
-                          className="text-sm whitespace-nowrap"
-                        />
-                      </div>
-                    </div>
-                    {effect.validTimeInterval && (
-                      <p
-                        className="text-xs text-gray-500 mt-1"
+            return (
+              <div
+                key={index}
+                className={`rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-3 shadow-sm transition-all duration-200 ${
+                  effect.disabled ? 'effect-disabled' : ''
+                }`}
+              >
+                <div className="mb-2">
+                  <div className="flex flex-wrap justify-between items-start gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4
+                        className="text-sm font-medium text-gray-900 whitespace-nowrap"
                         style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
                       >
-                        Active:{' '}
-                        {effect.validTimeInterval[0] === null
-                          ? `Until ${effect.validTimeInterval[1]}`
-                          : `${effect.validTimeInterval[0]} - ${effect.validTimeInterval[1] || 'present'}`}
-                        {(previewYear < effect.validTimeInterval[0] ||
-                          (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
-                          <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
-                        )}
-                      </p>
-                    )}
-                  </div>
-
-                  <div
-                    style={effect.disabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                  >
-                    {effectType === 'qaly' ? (
-                      <QalyEffectInputs
-                        effect={effect}
-                        effectIndex={index}
-                        defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
-                        errors={errors}
-                        onChange={updateEffectField}
-                        globalParameters={globalParameters}
+                        Effect {index + 1}: {effect.effectId}
+                      </h4>
+                      <DisableToggleButton
                         isDisabled={effect.disabled || false}
+                        onToggle={() => toggleEffectDisabled(index)}
+                        className={effect.disabled ? 'enable-button' : ''}
+                        style={{ pointerEvents: 'auto' }}
                       />
-                    ) : effectType === 'population' ? (
-                      <PopulationEffectInputs
-                        effect={effect}
-                        effectIndex={index}
-                        defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
-                        errors={errors}
-                        onChange={updateEffectField}
-                        globalParameters={globalParameters}
-                        isDisabled={effect.disabled || false}
-                      />
-                    ) : (
-                      <div className="text-sm text-red-600">Unknown effect type</div>
-                    )}
+                    </div>
+                    <div style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                      <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm whitespace-nowrap" />
+                    </div>
                   </div>
+                  {effect.validTimeInterval && (
+                    <p
+                      className="text-xs text-gray-500 mt-1"
+                      style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
+                    >
+                      Active:{' '}
+                      {effect.validTimeInterval[0] === null
+                        ? `Until ${effect.validTimeInterval[1]}`
+                        : `${effect.validTimeInterval[0]} - ${effect.validTimeInterval[1] || 'present'}`}
+                      {(previewYear < effect.validTimeInterval[0] ||
+                        (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
+                        <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
+                      )}
+                    </p>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        </div>
 
-        <EffectEditorFooter
-          onSave={handleSave}
-          onCancel={onCancel}
-          hasErrors={hasErrors}
-          disabled={!hasUnsavedChanges}
-        />
+                <div style={effect.disabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                  {effectType === 'qaly' ? (
+                    <QalyEffectInputs
+                      effect={effect}
+                      effectIndex={index}
+                      defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
+                      errors={errors}
+                      onChange={updateEffectField}
+                      globalParameters={globalParameters}
+                      isDisabled={effect.disabled || false}
+                    />
+                  ) : effectType === 'population' ? (
+                    <PopulationEffectInputs
+                      effect={effect}
+                      effectIndex={index}
+                      defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
+                      errors={errors}
+                      onChange={updateEffectField}
+                      globalParameters={globalParameters}
+                      isDisabled={effect.disabled || false}
+                    />
+                  ) : (
+                    <div className="text-sm text-red-600">Unknown effect type</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
+
+      <EffectEditorFooter onSave={handleSave} onCancel={onCancel} hasErrors={hasErrors} disabled={!hasUnsavedChanges} />
     </div>
   );
 };

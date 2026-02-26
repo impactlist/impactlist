@@ -101,7 +101,7 @@ describe('Global shared assumptions import flow', () => {
     expect(await screen.findByText('abc123')).toBeInTheDocument();
     expect(screen.getByText('Active')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Global' }));
+    await user.click(screen.getByRole('tab', { name: 'Global' }));
 
     await waitFor(() => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(String(incomingTimeLimit));

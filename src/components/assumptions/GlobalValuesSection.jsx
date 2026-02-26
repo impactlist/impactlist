@@ -74,13 +74,13 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {parameters.map((param) => {
           // For NumericInput, we need to pass the correct value based on format
           // For percentages: use formatted (already in percentage form, e.g., "2" for 2%)
           // For numbers: use formatted (with commas)
           const value = formValues[param.id]?.formatted || '';
-          const hasError = errors[param.id];
+          const hasError = Boolean(errors[param.id]);
           const defaultValue = defaultGlobalParameters[param.id];
           const currentValue = formValues[param.id]?.raw;
           // Check if value is custom - handle both undefined/empty and actual value comparison
@@ -90,88 +90,113 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
             currentValue !== null &&
             Math.abs(Number(currentValue) - Number(defaultValue)) > 0.0000001;
 
+          const state = hasError ? 'error' : isCustom ? 'custom' : 'default';
+
           return (
-            <SectionCard key={param.id} hasError={hasError} isCustom={isCustom} padding="default">
-              <div className="flex justify-between items-start mb-2">
-                <label htmlFor={param.id} className="text-sm font-medium text-gray-700 flex items-center gap-1">
-                  {param.label}
-                  <Tooltip content={param.description}>
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            <SectionCard
+              key={param.id}
+              hasError={hasError}
+              isCustom={isCustom}
+              padding="default"
+              showStateBadge={false}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-[220px] flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <label htmlFor={param.id} className="text-sm font-semibold text-[var(--text-strong)]">
+                      {param.label}
+                    </label>
+                    <Tooltip content={param.description}>
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden={true}>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </Tooltip>
+                  </div>
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">
+                    {param.readonly ? 'Fixed benchmark value used for all calculations.' : 'Editable assumption.'}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {!param.readonly && (
+                    <CustomValueIndicator
+                      isCustom={isCustom}
+                      hasError={hasError}
+                      onReset={() => {
+                        const formattedValue = formatDisplayValue(defaultValue, param.format);
+                        onChange(param.id, formattedValue);
+                      }}
+                    />
+                  )}
+                  {param.readonly && <span className="impact-muted-pill">Fixed</span>}
+                  <span className="assumption-state-pill" data-state={state}>
+                    {hasError ? 'Error' : isCustom ? 'Custom' : 'Default'}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-3">
+                {param.readonly ? (
+                  <div className="impact-field">
+                    <div className="impact-field__control">
+                      <input
+                        type="text"
+                        id={param.id}
+                        name={param.id}
+                        value={formatDisplayValue(defaultValue, param.format)}
+                        readOnly={true}
+                        disabled={true}
+                        className="impact-field__input"
                       />
-                    </svg>
-                  </Tooltip>
-                </label>
-                {!param.readonly && (
-                  <CustomValueIndicator
-                    isCustom={isCustom}
-                    hasError={hasError}
-                    onReset={() => {
-                      const formattedValue = formatDisplayValue(defaultValue, param.format);
-                      onChange(param.id, formattedValue);
+                    </div>
+                  </div>
+                ) : (
+                  <NumericInput
+                    id={param.id}
+                    value={value}
+                    onChange={(newValue) => {
+                      // NumericInput returns a number or string
+                      // For percentages, newValue is already in percentage form (e.g., 2 for 2%)
+                      // For numbers, it's the actual value
+                      const formatted =
+                        typeof newValue === 'number' ? formatNumberWithCommas(newValue.toString()) : newValue;
+                      onChange(param.id, formatted);
                     }}
+                    placeholder={formatDisplayValue(defaultValue, param.format)}
+                    error={hasError ? errors[param.id] : undefined}
+                    isCustom={isCustom}
                   />
                 )}
               </div>
-              {param.readonly ? (
-                <input
-                  type="text"
-                  id={param.id}
-                  name={param.id}
-                  value={formatDisplayValue(defaultValue, param.format)}
-                  readOnly={true}
-                  disabled={true}
-                  className="w-full px-2 py-1 text-sm border rounded focus:ring-1 focus:outline-none bg-gray-100 border-gray-200 text-gray-600 cursor-not-allowed"
-                />
-              ) : (
-                <NumericInput
-                  id={param.id}
-                  value={value}
-                  onChange={(newValue) => {
-                    // NumericInput returns a number or string
-                    // For percentages, newValue is already in percentage form (e.g., 2 for 2%)
-                    // For numbers, it's the actual value
-                    const formatted =
-                      typeof newValue === 'number' ? formatNumberWithCommas(newValue.toString()) : newValue;
-                    onChange(param.id, formatted);
-                  }}
-                  placeholder={formatDisplayValue(defaultValue, param.format)}
-                  error={hasError ? errors[param.id] : undefined}
-                  isCustom={isCustom}
-                />
-              )}
               {isCustom && !hasError && (
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Default: {formatDisplayValue(defaultValue, param.format)}
-                </p>
+                <p className="impact-field__helper mt-2">Default: {formatDisplayValue(defaultValue, param.format)}</p>
               )}
             </SectionCard>
           );
         })}
       </div>
 
-      {/* Note about adjusting animal welfare weights */}
-      <div className="mt-4 p-4 bg-yellow-50/50 border border-blue-200 rounded-lg">
-        <div className="flex">
-          <svg className="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+      <div className="assumptions-info-block mt-5 p-4">
+        <div className="flex items-start gap-2">
+          <svg className="mt-0.5 h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden={true}>
             <path
               fillRule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
               clipRule="evenodd"
             />
           </svg>
-          <div className="text-sm text-blue-800">
-            <p className="font-semibold mb-1">Note: Animal lives vs. human lives</p>
-            <p className="mb-2">
-              You can adjust the relative value of human lives vs. animal lives by editing the assumptions of the{' '}
-              <a href="/category/animal-welfare" className="text-blue-700 underline hover:text-blue-900">
+          <div className="text-sm">
+            <p className="mb-1 font-semibold">Note: Animal lives vs. human lives</p>
+            <p>
+              Adjust relative value assumptions inside{' '}
+              <a href="/category/animal-welfare" className="assumptions-link">
                 Animal Welfare
               </a>{' '}
-              category (or any recipient in that category).
+              category settings, or for any specific recipient in that category.
             </p>
           </div>
         </div>

@@ -23,7 +23,7 @@ const BackButton = ({ to, label = 'Back', className = '', motion: motionProps = 
   const animation = { ...defaultAnimation, ...motionProps };
 
   // Default styles for the button/link
-  const defaultClassName = 'text-indigo-600 hover:text-indigo-800 hover:underline flex items-center';
+  const defaultClassName = 'flex items-center text-slate-700 hover:text-slate-900 hover:underline';
   const buttonClassName = `${defaultClassName} ${className}`;
 
   // Default container props

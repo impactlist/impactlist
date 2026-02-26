@@ -105,9 +105,9 @@ const RecipientValuesSection = ({
 
   return (
     <div>
-      <div className="mb-4 flex flex-col space-y-2">
+      <div className="mb-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-3 shadow-[var(--shadow-1)]">
         <SearchInput value={searchTerm} onChange={onSearch} placeholder="Search recipients..." />
-        <div className="text-sm text-gray-600 italic">
+        <div className="mt-2 text-sm italic text-[var(--text-muted)]">
           {searchTerm === ''
             ? 'Showing only recipients with custom values. Use search to find others.'
             : filteredRecipients.length >= 10
@@ -117,13 +117,13 @@ const RecipientValuesSection = ({
       </div>
 
       {filteredRecipients.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="assumptions-empty-state py-10 text-sm">
           {searchTerm
             ? 'No recipients found matching your search'
             : 'No recipients with custom values found. Search for a specific recipient.'}
         </div>
       ) : (
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           {filteredRecipients
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((recipient) => {
@@ -137,37 +137,51 @@ const RecipientValuesSection = ({
               const categoryCount = recipientCategories.length;
 
               return (
-                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="default" className="inline-block">
-                  <div className="flex items-center gap-4">
-                    {/* Recipient name */}
-                    <Link
-                      to={`/recipient/${encodeURIComponent(recipientId)}`}
-                      className="text-indigo-600 hover:text-indigo-800 font-medium flex-shrink-0"
-                    >
-                      {recipient.name}
-                    </Link>
+                <SectionCard
+                  key={recipient.name}
+                  isCustom={hasCustomValues}
+                  padding="default"
+                  showStateBadge={false}
+                  className="h-full"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <Link
+                        to={`/recipient/${encodeURIComponent(recipientId)}`}
+                        className="assumptions-link block truncate text-base"
+                        title={recipient.name}
+                      >
+                        {recipient.name}
+                      </Link>
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">
+                        {categoryCount > 1
+                          ? `${categoryCount} categories weighted into one combined estimate.`
+                          : 'Single-category recipient estimate.'}
+                      </p>
+                    </div>
 
-                    {/* Combined cost per life with Edit button */}
+                    <span className="assumption-state-pill" data-state={hasCustomValues ? 'custom' : 'default'}>
+                      {hasCustomValues ? 'Custom' : 'Default'}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                     <CurrencyInput
                       id={`recipient-${recipientId}`}
                       value={formattedCost}
                       onChange={() => {}}
-                      className="w-32"
+                      className="w-[185px]"
                       disabled={true}
                       isCustom={hasCustomValues}
-                      rightElement={
-                        <button
-                          type="button"
-                          onClick={() => onEditRecipient(recipient, recipientId)}
-                          className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                        >
-                          Edit
-                        </button>
-                      }
                     />
+                    <button
+                      type="button"
+                      onClick={() => onEditRecipient(recipient, recipientId)}
+                      className="impact-btn impact-btn--secondary py-2 text-xs"
+                    >
+                      Edit
+                    </button>
                   </div>
-                  {/* Show category count for multi-category recipients */}
-                  {categoryCount > 1 && <p className="text-xs text-gray-500 mt-1">{categoryCount} categories</p>}
                 </SectionCard>
               );
             })}

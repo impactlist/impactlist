@@ -13,10 +13,15 @@ const CustomValueIndicator = ({ isCustom, hasError = false, onReset, className =
     md: 'text-base',
   };
 
-  const colorClasses = hasError ? 'text-red-600 hover:text-red-800' : 'text-indigo-600 hover:text-indigo-800';
+  const variantClass = hasError ? 'impact-btn--danger' : 'impact-btn--ghost';
 
   return (
-    <button type="button" className={`${sizeClasses[size]} ${colorClasses} font-medium ${className}`} onClick={onReset}>
+    <button
+      type="button"
+      className={`impact-btn ${variantClass} ${sizeClasses[size]} ${className}`.trim()}
+      style={{ paddingTop: '0.2rem', paddingBottom: '0.2rem' }}
+      onClick={onReset}
+    >
       Reset
     </button>
   );

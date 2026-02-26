@@ -10,28 +10,25 @@ const FormActions = ({
   hasUnsavedChanges = true,
 }) => {
   const isSaveDisabled = hasErrors || !hasUnsavedChanges;
+  const statusMessage = hasErrors
+    ? 'Fix validation errors before applying.'
+    : !hasUnsavedChanges && showSave
+      ? 'No unsaved changes.'
+      : '';
 
   return (
-    <div className="flex justify-end space-x-2">
-      <button
-        type="button"
-        onClick={onReset}
-        className="px-3 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      >
-        {resetLabel}
-      </button>
-      {showSave && (
-        <button
-          type="button"
-          onClick={onSave}
-          disabled={isSaveDisabled}
-          className={`px-3 py-1.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-            isSaveDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
-          }`}
-        >
-          Apply
+    <div className="flex flex-wrap items-center justify-end gap-3">
+      {statusMessage && <p className="text-xs font-medium text-[var(--text-muted)]">{statusMessage}</p>}
+      <div className="flex items-center gap-2">
+        <button type="button" onClick={onReset} className="impact-btn impact-btn--secondary">
+          {resetLabel}
         </button>
-      )}
+        {showSave && (
+          <button type="button" onClick={onSave} disabled={isSaveDisabled} className="impact-btn impact-btn--primary">
+            Apply
+          </button>
+        )}
+      </div>
     </div>
   );
 };

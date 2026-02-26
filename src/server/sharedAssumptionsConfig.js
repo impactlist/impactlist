@@ -33,8 +33,9 @@ export const RESERVED_SLUGS = new Set([
 
 export const getRedisConfig = () => {
   const env = globalThis.process?.env || {};
-  const restUrl = env.SHARED_ASSUMPTIONS_REDIS_REST_URL;
-  const restToken = env.SHARED_ASSUMPTIONS_REDIS_REST_TOKEN;
+  // Prefer dedicated shared-assumptions vars, but fall back to Upstash KV integration vars.
+  const restUrl = env.SHARED_ASSUMPTIONS_REDIS_REST_URL || env.KV_REST_API_URL;
+  const restToken = env.SHARED_ASSUMPTIONS_REDIS_REST_TOKEN || env.KV_REST_API_TOKEN;
 
   if (!restUrl || !restToken) {
     return null;

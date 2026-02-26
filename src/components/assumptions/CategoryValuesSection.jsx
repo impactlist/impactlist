@@ -59,7 +59,7 @@ const CategoryValuesSection = ({
     return result;
   }, [defaultAssumptions, userAssumptions, mergedGlobalParameters, previewYear]);
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ${className}`}>
+    <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 ${className}`.trim()}>
       {Object.entries(categoriesData)
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
         .map(([key, categoryData]) => {
@@ -74,38 +74,35 @@ const CategoryValuesSection = ({
           const formattedCurrent = formatCurrency(currentValue).replace('$', '');
 
           return (
-            <SectionCard key={key} isCustom={isCustom} padding="sm">
-              <div className="flex justify-between items-start mb-2">
-                <label
-                  className="text-sm font-medium truncate pr-2"
-                  htmlFor={`category-${key}`}
-                  title={categoryData.name}
-                >
-                  <Link
-                    to={`/category/${encodeURIComponent(key)}`}
-                    className="text-indigo-600 hover:text-indigo-800 hover:underline"
+            <SectionCard key={key} isCustom={isCustom} padding="default" showStateBadge={false} className="h-full">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <label
+                    className="block truncate pr-2 text-sm font-semibold text-[var(--text-strong)]"
+                    htmlFor={`category-${key}`}
                   >
-                    {categoryData.name}
-                  </Link>
-                </label>
-                <CustomValueIndicator
-                  isCustom={isCustom}
-                  onReset={() => {
-                    if (onResetCategory) {
-                      onResetCategory(key);
-                    }
-                  }}
-                />
-              </div>
-              <CurrencyInput
-                id={`category-${key}`}
-                value={formattedCurrent} // Use calculated value directly (no form state needed for read-only)
-                onChange={() => {}}
-                className="w-full"
-                validateOnBlur={true} // Only validate on blur, not while typing
-                placeholder={formattedDefault} // Use formatted default as placeholder
-                disabled={true} // Make read-only
-                rightElement={
+                    <Link
+                      to={`/category/${encodeURIComponent(key)}`}
+                      className="assumptions-link"
+                      title={categoryData.name}
+                    >
+                      {categoryData.name}
+                    </Link>
+                  </label>
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">
+                    {isCustom ? 'Custom effect assumptions applied.' : 'Using default category assumptions.'}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <CustomValueIndicator
+                    isCustom={isCustom}
+                    onReset={() => {
+                      if (onResetCategory) {
+                        onResetCategory(key);
+                      }
+                    }}
+                  />
                   <button
                     type="button"
                     onClick={() => {
@@ -114,13 +111,35 @@ const CategoryValuesSection = ({
                       }
                       onEditCategory(key);
                     }}
-                    className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                    className="impact-btn impact-btn--secondary py-2 text-xs"
                   >
                     Edit
                   </button>
-                }
-              />
-              {isCustom && <div className="text-xs text-gray-500 mt-0.5">Default: ${formattedDefault}</div>}
+                </div>
+              </div>
+
+              <div className="mt-3">
+                <CurrencyInput
+                  id={`category-${key}`}
+                  value={formattedCurrent}
+                  onChange={() => {}}
+                  className="w-full"
+                  validateOnBlur={true}
+                  placeholder={formattedDefault}
+                  disabled={true}
+                />
+              </div>
+
+              <div className="mt-2 flex items-center justify-between gap-2">
+                {isCustom ? (
+                  <div className="impact-field__helper">Default: ${formattedDefault}</div>
+                ) : (
+                  <div className="impact-field__helper">Default baseline in view.</div>
+                )}
+                <span className="assumption-state-pill" data-state={isCustom ? 'custom' : 'default'}>
+                  {isCustom ? 'Custom' : 'Default'}
+                </span>
+              </div>
             </SectionCard>
           );
         })}

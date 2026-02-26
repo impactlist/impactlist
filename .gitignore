@@ -36,3 +36,4 @@ test-results/
 .worktrees/
 .vercel/
 .env*.local
+.vercel

@@ -16,25 +16,14 @@ const EffectEditorFooter = ({
   const isDisabled = hasErrors || disabled;
 
   return (
-    <div className="px-6 py-4 rounded-b-lg">
+    <div className="rounded-b-lg border-t border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] px-6 py-4">
       <div className="flex items-center justify-between">
-        <div className="text-sm">{hasErrors && <span className="text-red-600">{errorMessage}</span>}</div>
+        <div className="text-sm">{hasErrors && <span className="text-[var(--danger)]">{errorMessage}</span>}</div>
         <div className="flex space-x-3">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
+          <button type="button" onClick={onCancel} className="impact-btn impact-btn--secondary">
             {cancelLabel}
           </button>
-          <button
-            type="button"
-            onClick={onSave}
-            disabled={isDisabled}
-            className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-              isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
-            }`}
-          >
+          <button type="button" onClick={onSave} disabled={isDisabled} className="impact-btn impact-btn--primary">
             {saveLabel}
           </button>
         </div>

@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
  */
 const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '', size = 'default' }) => {
   const sizeClasses = {
-    sm: 'px-2 py-1 text-xs',
-    default: 'px-3 py-2 text-sm',
-    lg: 'px-4 py-3 text-base',
+    sm: 'py-1.5 text-xs',
+    default: 'py-2 text-sm',
+    lg: 'py-3 text-base',
   };
 
   const iconSizeClasses = {
@@ -18,25 +18,20 @@ const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`impact-search ${className}`.trim()}>
       <input
         type="text"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`w-full ${sizeClasses[size]} border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${value ? 'pr-16' : 'pr-10'}`}
+        className={`${sizeClasses[size]} ${value ? 'pr-16' : 'pr-10'}`}
       />
-      <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+      <div className="impact-search__actions">
         {value && (
-          <button
-            type="button"
-            onClick={() => onChange('')}
-            className="p-1 hover:bg-gray-100 rounded-full mr-1"
-            aria-label="Clear search"
-          >
+          <button type="button" onClick={() => onChange('')} className="impact-search__clear" aria-label="Clear search">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`${iconSizeClasses[size]} text-gray-400 hover:text-gray-600`}
+              className={`${iconSizeClasses[size]}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -47,7 +42,7 @@ const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '
         )}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`${iconSizeClasses[size]} text-gray-400`}
+          className={`${iconSizeClasses[size]} text-[var(--text-muted)]`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

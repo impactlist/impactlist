@@ -6,7 +6,10 @@ import React from 'react';
  */
 const SegmentedControl = ({ options, value, onChange, disabled = false, testIdPrefix = undefined }) => {
   return (
-    <div className="inline-flex rounded-md shadow-sm" role="group">
+    <div
+      className="inline-flex rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-0.5"
+      role="group"
+    >
       {options.map((option, index) => {
         const isSelected = value === option.value;
         const isFirst = index === 0;
@@ -20,14 +23,14 @@ const SegmentedControl = ({ options, value, onChange, disabled = false, testIdPr
             disabled={disabled}
             data-testid={testIdPrefix ? `${testIdPrefix}-${option.value}` : undefined}
             className={`
-              px-3 py-1 text-xs font-medium border transition-colors
-              ${isFirst ? 'rounded-l-md' : ''}
-              ${isLast ? 'rounded-r-md' : ''}
+              px-3 py-1 text-xs font-semibold border transition-colors
+              ${isFirst ? 'rounded-l-full' : ''}
+              ${isLast ? 'rounded-r-full' : ''}
               ${!isFirst ? 'border-l-0' : ''}
               ${
                 isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600 z-10'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  ? 'bg-[var(--accent)] text-white border-[var(--accent)] z-10'
+                  : 'bg-white/85 text-[var(--text-muted)] border-[var(--border-subtle)] hover:text-[var(--text-strong)]'
               }
               ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
             `}

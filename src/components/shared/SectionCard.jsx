@@ -4,29 +4,36 @@ import PropTypes from 'prop-types';
 /**
  * Shared card wrapper component with consistent styling for form sections
  */
-const SectionCard = ({ children, hasError = false, isCustom = false, className = '', padding = 'default' }) => {
-  const borderColorClass = hasError ? 'border-red-300' : isCustom ? 'border-indigo-300' : 'border-gray-200';
-
-  const bgColorClass = hasError ? 'bg-red-50' : isCustom ? 'bg-indigo-50' : '';
+const SectionCard = ({
+  children,
+  hasError = false,
+  isCustom = false,
+  className = '',
+  padding = 'default',
+  showStateBadge = true,
+}) => {
+  const state = hasError ? 'error' : isCustom ? 'custom' : 'default';
+  const stateLabel = hasError ? 'Error' : isCustom ? 'Custom' : 'Default';
 
   const paddingClasses = {
     none: '',
-    sm: 'py-1.5 px-2',
-    default: 'py-2 px-3',
-    lg: 'py-3 px-4',
+    sm: 'p-2.5',
+    default: 'p-3.5',
+    lg: 'p-4',
   };
 
   return (
-    <div
-      className={`
-        rounded border 
-        ${borderColorClass} 
-        ${bgColorClass} 
-        ${paddingClasses[padding]} 
-        ${className}
-      `}
-    >
-      {children}
+    <div className={`assumption-card ${className}`.trim()} data-state={state}>
+      <div className={paddingClasses[padding]}>
+        {showStateBadge && (
+          <div className="mb-2.5 flex justify-end">
+            <span className="assumption-state-pill" data-state={state}>
+              {stateLabel}
+            </span>
+          </div>
+        )}
+        {children}
+      </div>
     </div>
   );
 };
@@ -37,6 +44,7 @@ SectionCard.propTypes = {
   isCustom: PropTypes.bool,
   className: PropTypes.string,
   padding: PropTypes.oneOf(['none', 'sm', 'default', 'lg']),
+  showStateBadge: PropTypes.bool,
 };
 
 export default SectionCard;

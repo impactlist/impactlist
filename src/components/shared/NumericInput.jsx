@@ -77,31 +77,18 @@ const NumericInput = ({
     [onChange]
   );
 
-  const inputClasses = `
-    w-full py-1 text-sm border rounded focus:ring-1 focus:outline-none
-    ${prefix ? 'pl-6 pr-2' : 'px-2'}
-    ${
-      error
-        ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-        : isCustom
-          ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500'
-          : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-    }
-    ${disabled ? 'bg-gray-100 text-gray-500' : ''}
-  `.trim();
+  const state = error ? 'error' : isCustom ? 'custom' : 'default';
 
   return (
-    <div className={className}>
+    <div className={`impact-field ${className}`.trim()} data-state={state}>
       {label && (
-        <label htmlFor={id} className="block text-xs font-medium text-gray-700 mb-1">
+        <label htmlFor={id} className="impact-field__label">
           {label}
         </label>
       )}
-      <div className="relative">
+      <div className="impact-field__control">
         {prefix && (
-          <span
-            className={`absolute left-2 top-1/2 -translate-y-1/2 text-sm ${error ? 'text-red-500' : 'text-gray-500'}`}
-          >
+          <span className="impact-field__prefix" aria-hidden={true}>
             {prefix}
           </span>
         )}
@@ -116,11 +103,11 @@ const NumericInput = ({
           disabled={disabled}
           aria-invalid={!!error}
           aria-errormessage={error ? `${id}-error` : undefined}
-          className={inputClasses}
+          className={`impact-field__input ${prefix ? 'impact-field__input--with-prefix' : ''}`.trim()}
         />
       </div>
       {error && (
-        <p id={`${id}-error`} className="mt-1 text-xs text-red-600">
+        <p id={`${id}-error`} className="impact-field__error">
           {error}
         </p>
       )}

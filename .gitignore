@@ -34,5 +34,5 @@ test-results/
 # Local agent/worktree state
 .claude/worktrees/
 .worktrees/
-.vercel
+.vercel/
 .env*.local

@@ -1,4 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "rewrites": [
+    {
+      "source": "/((?!api/|@vite/|@react-refresh|src/|node_modules/|assets/|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ],
   "buildCommand": "npm run generate-data && vite build"
 }

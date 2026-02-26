@@ -13,8 +13,11 @@ import DonationCalculator from './pages/DonationCalculator';
 import FAQ from './pages/FAQ';
 import AssumptionsPage from './pages/AssumptionsPage';
 import { AssumptionsProvider } from './contexts/AssumptionsContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import GlobalSharedAssumptionsImport from './components/shared/GlobalSharedAssumptionsImport';
+import GlobalNotificationBanner from './components/shared/GlobalNotificationBanner';
 import { validateDataOnStartup } from './utils/startupValidation';
 
 class ErrorBoundary extends React.Component {
@@ -101,6 +104,12 @@ const AppContent = () => {
           isAssumptions={isAssumptions}
         />
         <div className="flex-grow bg-slate-50">
+          <div className="mx-auto mt-4 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="min-h-[28px] space-y-2">
+              <GlobalNotificationBanner />
+              <GlobalSharedAssumptionsImport />
+            </div>
+          </div>
           <Routes>
             <Route path="/" element={<DonorList />} />
             <Route path="/donor/:donorId" element={<DonorDetail />} />
@@ -171,11 +180,13 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <AssumptionsProvider>
-        <Router>
-          <AppContent />
-        </Router>
-      </AssumptionsProvider>
+      <NotificationProvider>
+        <AssumptionsProvider>
+          <Router>
+            <AppContent />
+          </Router>
+        </AssumptionsProvider>
+      </NotificationProvider>
     </ErrorBoundary>
   );
 };

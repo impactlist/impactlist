@@ -488,7 +488,8 @@ describe('AssumptionsPage routing integration', () => {
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
     await user.click(within(panel).getByRole('button', { name: /Show Inactive/i }));
-    await user.click(within(panel).getByRole('button', { name: 'Load Default' }));
+    const defaultRow = within(panel).getByText('Default').closest('div.rounded-md');
+    await user.click(within(defaultRow).getByRole('button', { name: 'Load' }));
 
     await waitFor(() => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(
@@ -499,8 +500,8 @@ describe('AssumptionsPage routing integration', () => {
     expect(localStorage.getItem('customEffectsData')).toBeNull();
     expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
 
-    const defaultRow = within(panel).getByText('Default').closest('div.rounded-md');
-    expect(within(defaultRow).getByText('Active')).toBeInTheDocument();
+    const activeDefaultRow = within(panel).getByText('Default').closest('div.rounded-md');
+    expect(within(activeDefaultRow).getByText('Active')).toBeInTheDocument();
   });
 
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
@@ -535,7 +536,8 @@ describe('AssumptionsPage routing integration', () => {
     expect(await screen.findByText('Imported From Friend')).toBeInTheDocument();
 
     const panel = screen.getByText('Saved Assumptions').closest('section');
-    const loadButton = within(panel).getByRole('button', { name: 'Load' });
+    const importedRow = within(panel).getByText('Imported From Friend').closest('div.rounded-md');
+    const loadButton = within(importedRow).getByRole('button', { name: 'Load' });
     await user.click(loadButton);
 
     expect(await screen.findByText('Load Saved Assumptions?')).toBeInTheDocument();

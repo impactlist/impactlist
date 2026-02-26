@@ -141,17 +141,15 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                     ) : (
                       <span className="text-sm font-semibold text-slate-900">{entry.label}</span>
                     )}
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                        isDefaultEntry
-                          ? 'bg-slate-200 text-slate-700'
-                          : isRemote
-                            ? 'bg-indigo-100 text-indigo-700'
-                            : 'bg-slate-200 text-slate-700'
-                      }`}
-                    >
-                      {isDefaultEntry ? 'Built-in' : isRemote ? 'Remote' : 'Local'}
-                    </span>
+                    {!isDefaultEntry && (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                          isRemote ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-200 text-slate-700'
+                        }`}
+                      >
+                        {isRemote ? 'Remote' : 'Local'}
+                      </span>
+                    )}
                     {isActive && (
                       <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
                         Active
@@ -170,7 +168,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                 )}
 
                 {isDefaultEntry ? (
-                  <div className="mt-2 text-xs text-slate-600">Default site assumptions (not editable).</div>
+                  <div className="mt-2 text-xs text-slate-600">Default Impact List assumptions.</div>
                 ) : (
                   <div className="mt-2 text-xs text-slate-600">
                     Updated: {formatTimestamp(entry.updatedAt)}
@@ -187,7 +185,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         onClick={() => onLoad({ id: DEFAULT_ENTRY_ID })}
                         className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
                       >
-                        Load Default
+                        Load
                       </button>
                     ) : (
                       <>

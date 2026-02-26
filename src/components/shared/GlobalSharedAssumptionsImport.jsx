@@ -67,14 +67,11 @@ const GlobalSharedAssumptionsImport = () => {
 
       const incomingFingerprint = createAssumptionsFingerprint(normalizedIncoming);
       const currentFingerprint = createAssumptionsFingerprint(getNormalizedUserAssumptionsForSharing());
-      if (incomingFingerprint && incomingFingerprint === currentFingerprint) {
-        showNotification('info', 'Shared assumptions are already applied in this browser.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(reference);
-        return true;
-      }
+      const isAlreadyApplied = Boolean(incomingFingerprint) && incomingFingerprint === currentFingerprint;
 
-      setAllUserAssumptions(normalizedIncoming);
+      if (!isAlreadyApplied) {
+        setAllUserAssumptions(normalizedIncoming);
+      }
       const upsertResult = upsertImportedSavedAssumptions({
         label: snapshot?.name || snapshot?.slug || reference,
         assumptions: normalizedIncoming,
@@ -85,18 +82,20 @@ const GlobalSharedAssumptionsImport = () => {
         setActiveSavedAssumptionsId(upsertResult.entry.id);
       }
 
+      const statusPrefix = isAlreadyApplied ? 'Shared assumptions are already applied.' : 'Shared assumptions loaded.';
+
       if (!upsertResult.ok) {
-        const failureMessage =
+        const failureSuffix =
           upsertResult.errorCode === 'over_limit'
-            ? 'Shared assumptions loaded. Saved Assumptions is full, so this import was not added.'
-            : 'Shared assumptions loaded. Could not save them to Saved Assumptions locally.';
-        showNotification('info', failureMessage);
+            ? 'Saved Assumptions is full, so this import was not added.'
+            : 'Could not save them to Saved Assumptions locally.';
+        showNotification('info', `${statusPrefix} ${failureSuffix}`);
       } else {
         const evictionMessage = buildEvictionNotificationMessage({
-          prefix: 'Shared assumptions loaded.',
+          prefix: statusPrefix,
           result: upsertResult,
         });
-        showNotification(evictionMessage ? 'info' : 'success', evictionMessage || 'Shared assumptions loaded.');
+        showNotification(evictionMessage ? 'info' : 'success', evictionMessage || statusPrefix);
       }
       setPendingSharedSnapshot(null);
       removeSharedParam(reference);

@@ -78,6 +78,29 @@ describe('savedAssumptionsStore', () => {
     expect(latest.fingerprint).toBe(createAssumptionsFingerprint(buildAssumptions(160)));
   });
 
+  it('appends a numeric suffix when imported label collides with an existing entry label', () => {
+    const local = saveNewAssumptions({
+      label: 'Shared Name',
+      assumptions: buildAssumptions(101),
+      source: 'local',
+    });
+    expect(local.ok).toBe(true);
+
+    const importResult = upsertImportedSavedAssumptions({
+      label: 'Shared Name',
+      assumptions: buildAssumptions(202),
+      reference: 'incoming-shared-name',
+    });
+
+    expect(importResult.ok).toBe(true);
+
+    const entries = getSavedAssumptions();
+    expect(entries).toHaveLength(2);
+    const importedEntry = entries.find((entry) => entry.reference === 'incoming-shared-name');
+    expect(importedEntry).toBeTruthy();
+    expect(importedEntry.label).toBe('Shared Name (2)');
+  });
+
   it('tracks and clears active saved assumptions id', () => {
     const saveResult = saveNewAssumptions({
       label: 'Current',
@@ -271,6 +294,25 @@ describe('savedAssumptionsStore', () => {
 
     const entries = getSavedAssumptions();
     expect(entries).toHaveLength(1);
+  });
+
+  it('can auto-resolve duplicate labels when requested', () => {
+    const first = saveNewAssumptions({
+      label: 'My Model',
+      assumptions: buildAssumptions(100),
+    });
+    expect(first.ok).toBe(true);
+
+    const duplicateResolved = saveNewAssumptions({
+      label: ' my model ',
+      assumptions: buildAssumptions(120),
+      resolveDuplicateLabel: true,
+    });
+    expect(duplicateResolved.ok).toBe(true);
+    expect(duplicateResolved.entry.label).toBe('my model (2)');
+
+    const entries = getSavedAssumptions();
+    expect(entries).toHaveLength(2);
   });
 
   it('rejects renaming an entry to a label already used by another entry', () => {

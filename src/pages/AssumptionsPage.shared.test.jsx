@@ -7,6 +7,7 @@ import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
+import { saveNewAssumptions } from '../utils/savedAssumptionsStore';
 import GlobalSharedAssumptionsImport from '../components/shared/GlobalSharedAssumptionsImport';
 import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
 
@@ -248,6 +249,108 @@ describe('Global shared assumptions import flow', () => {
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=recipients');
     });
+  });
+
+  it('loads shared assumptions when imported name collides and stores them with a suffixed label', async () => {
+    const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 31;
+    const seeded = saveNewAssumptions({
+      label: 'Shared Name',
+      assumptions: {
+        globalParameters: {
+          timeLimit: Number(assumptionsData.globalParameters.timeLimit) + 7,
+        },
+      },
+      source: 'local',
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded local saved assumptions entry');
+    }
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'shared-name-ref',
+        name: 'Shared Name',
+        assumptions: {
+          globalParameters: {
+            timeLimit: incomingTimeLimit,
+          },
+        },
+      }),
+    });
+
+    renderAppRoutes('/assumptions?shared=shared-name-ref');
+
+    expect(await screen.findByText('Shared assumptions loaded.')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: {
+          timeLimit: incomingTimeLimit,
+        },
+      });
+    });
+
+    const savedAssumptions = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    const importedEntry = savedAssumptions.find((entry) => entry.reference === 'shared-name-ref');
+    expect(importedEntry).toBeTruthy();
+    expect(importedEntry.label).toBe('Shared Name (2)');
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
+  });
+
+  it('still upserts and activates imported entry when shared assumptions are already applied', async () => {
+    const appliedTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 41;
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: appliedTimeLimit,
+        },
+      })
+    );
+
+    const seeded = saveNewAssumptions({
+      label: 'Shared Name',
+      assumptions: {
+        globalParameters: {
+          timeLimit: appliedTimeLimit,
+        },
+      },
+      source: 'local',
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded local saved assumptions entry');
+    }
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'already-applied-ref',
+        name: 'Shared Name',
+        assumptions: {
+          globalParameters: {
+            timeLimit: appliedTimeLimit,
+          },
+        },
+      }),
+    });
+
+    renderAppRoutes('/assumptions?shared=already-applied-ref');
+
+    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
+    });
+
+    const savedAssumptions = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    expect(savedAssumptions).toHaveLength(2);
+
+    const importedEntry = savedAssumptions.find((entry) => entry.reference === 'already-applied-ref');
+    expect(importedEntry).toBeTruthy();
+    expect(importedEntry.label).toBe('Shared Name (2)');
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
   });
 
   it('does not clear local assumptions when shared snapshot response is invalid', async () => {

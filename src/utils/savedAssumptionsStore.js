@@ -7,6 +7,7 @@ export const SAVED_ASSUMPTIONS_CHANGED_EVENT = 'saved-assumptions:changed';
 
 const MAX_SAVED_ASSUMPTIONS = 25;
 const MAX_SAVED_ASSUMPTIONS_BYTES = 250 * 1024;
+const MAX_LABEL_RESOLUTION_ATTEMPTS = 1000;
 
 const SORT_ASC = (valueA = '', valueB = '') => {
   if (valueA === valueB) {
@@ -425,6 +426,27 @@ const hasDuplicateLabel = (entries, label, { excludeId = null } = {}) => {
   });
 };
 
+const resolveUniqueLabel = (entries, label, { excludeId = null } = {}) => {
+  const baseLabel = trimLabel(label);
+  if (!baseLabel) {
+    return '';
+  }
+
+  let candidate = baseLabel;
+  let suffix = 2;
+  let attempts = 0;
+  while (hasDuplicateLabel(entries, candidate, { excludeId })) {
+    attempts += 1;
+    if (attempts >= MAX_LABEL_RESOLUTION_ATTEMPTS) {
+      return `${baseLabel} (${MAX_LABEL_RESOLUTION_ATTEMPTS + 1})`;
+    }
+    candidate = `${baseLabel} (${suffix})`;
+    suffix += 1;
+  }
+
+  return candidate;
+};
+
 const buildLocalEntry = ({ label, assumptions, nowIso }) => {
   const normalizedLabel = trimLabel(label);
   if (!normalizedLabel) {
@@ -536,11 +558,17 @@ export const createComparableAssumptionsFingerprint = (assumptions) => {
   return comparableAssumptions ? createFingerprint(comparableAssumptions) : '';
 };
 
-export const saveNewAssumptions = ({ label, assumptions, source = 'local', reference = null }) => {
+export const saveNewAssumptions = ({
+  label,
+  assumptions,
+  source = 'local',
+  reference = null,
+  resolveDuplicateLabel = false,
+}) => {
   const nowIso = createNowIso();
   const baseEntry = buildLocalEntry({ label, assumptions, nowIso });
 
-  const entry = {
+  let entry = {
     ...baseEntry,
     source: isValidSource(source) ? source : 'local',
     reference: typeof reference === 'string' && reference.trim().length > 0 ? reference.trim() : null,
@@ -549,7 +577,19 @@ export const saveNewAssumptions = ({ label, assumptions, source = 'local', refer
 
   const current = loadSavedAssumptionsUnsafe();
   if (hasDuplicateLabel(current, entry.label)) {
-    return { ok: false, errorCode: 'duplicate_label' };
+    if (!resolveDuplicateLabel) {
+      return { ok: false, errorCode: 'duplicate_label' };
+    }
+
+    const resolvedLabel = resolveUniqueLabel(current, entry.label);
+    if (!resolvedLabel) {
+      return { ok: false, errorCode: 'duplicate_label' };
+    }
+
+    entry = {
+      ...entry,
+      label: resolvedLabel,
+    };
   }
 
   const withNew = [entry, ...current];
@@ -704,12 +744,17 @@ export const upsertImportedSavedAssumptions = ({ label, assumptions, reference }
   const nowIso = createNowIso();
   const existing = current.find((entry) => entry.reference === normalizedReference);
   const incomingLabel = trimLabel(label) || normalizedReference;
+  const resolvedLabel = existing
+    ? existing.userRenamed
+      ? existing.label
+      : resolveUniqueLabel(current, incomingLabel, { excludeId: existing.id })
+    : resolveUniqueLabel(current, incomingLabel);
 
   let nextEntry;
   if (existing) {
     nextEntry = {
       ...existing,
-      label: existing.userRenamed ? existing.label : incomingLabel,
+      label: resolvedLabel,
       assumptions: normalizedAssumptions,
       fingerprint: createFingerprint(normalizedAssumptions),
       source: 'imported',
@@ -720,7 +765,7 @@ export const upsertImportedSavedAssumptions = ({ label, assumptions, reference }
   } else {
     nextEntry = {
       id: createId(),
-      label: incomingLabel,
+      label: resolvedLabel,
       source: 'imported',
       reference: normalizedReference,
       assumptions: normalizedAssumptions,

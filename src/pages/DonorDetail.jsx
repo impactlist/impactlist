@@ -54,11 +54,18 @@ const DonorDetail = () => {
     // Get full donor statistics
     const stats = calculateDonorStatsFromCombined(combinedAssumptions);
     const currentDonor = stats.find((donor) => donor.id === donorId);
-    setDonorStats(currentDonor);
 
     if (!currentDonor) {
       throw new Error(`Donor with ID "${donorId}" not found. Please check that this donor exists in the database.`);
     }
+
+    // Find the donor object
+    const donorData = getDonorById(donorId);
+
+    setDonorStats({
+      ...currentDonor,
+      about: donorData?.about || '',
+    });
 
     // Get donor donations and sort by date (most recent first)
     const donorDonationsList = getDonationsForDonor(donorId)
@@ -98,9 +105,6 @@ const DonorDetail = () => {
         };
       })
       .sort((a, b) => b.dateObj - a.dateObj);
-
-    // Find the donor object
-    const donorData = getDonorById(donorId);
 
     // Store donor content for rendering
     setDonorContent(donorData?.content);
@@ -439,6 +443,8 @@ const DonorDetail = () => {
     return <div className="p-8 text-center">Loading...</div>;
   }
 
+  const donorAboutContent = donorStats.about ? `## About\n\n${donorStats.about}` : null;
+
   return (
     <motion.div
       className="min-h-screen bg-slate-50"
@@ -465,6 +471,9 @@ const DonorDetail = () => {
           photoComponent={<DonorPhoto donorId={donorId} donorName={donorStats.name} size="large" />}
         />
 
+        {/* Donor about section */}
+        <MarkdownContent content={donorAboutContent} className="mt-8 mb-0" />
+
         {/* Donation categories visualization */}
         <EntityChartSection
           chartData={chartData}
@@ -479,6 +488,7 @@ const DonorDetail = () => {
             />
           }
           entityType="donor"
+          className="mt-8"
           containerHeight={calculateChartHeight(chartData)}
           combinedAssumptions={combinedAssumptions}
         />

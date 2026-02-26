@@ -2,6 +2,7 @@
 id: 'bill-gates'
 name: 'Bill Gates'
 netWorth: 106_300_000_000
+about: 'Bill Gates is the co-founder of Microsoft and a major global philanthropist. His giving has focused on global health, development, education, and scientific research.'
 #totalDonated: 39_500_000_000
 ---
 

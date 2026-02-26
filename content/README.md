@@ -105,6 +105,7 @@ Each donor file (e.g., `bill_gates.md`) contains donor information:
 id: 'bill-gates'
 name: 'Bill Gates'
 netWorth: 108_000_000_000
+about: 'Short one-paragraph bio shown in the About section on the donor page.'
 totalDonated: 59_000_000_000 # optional, you usually don't want to add this but instead rely on the system to add up all their donations
 ---
 ```

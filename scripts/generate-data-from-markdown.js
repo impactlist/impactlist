@@ -164,11 +164,15 @@ function loadDonors() {
     if (typeof data.netWorth !== 'number') {
       throw new Error(`Error: Donor file ${path.basename(file)} is missing required 'netWorth' number field.`);
     }
+    if (!data.about || typeof data.about !== 'string' || data.about.trim().length === 0) {
+      throw new Error(`Error: Donor file ${path.basename(file)} is missing required 'about' string field.`);
+    }
 
     // Use ID as the key
     donors[data.id] = {
       name: data.name,
       netWorth: data.netWorth,
+      about: data.about.trim(),
     };
 
     if (data.totalDonated) {

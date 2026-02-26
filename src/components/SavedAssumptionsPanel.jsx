@@ -7,19 +7,6 @@ const DEFAULT_ENTRY = Object.freeze({
   label: 'Default',
 });
 
-const formatTimestamp = (isoString) => {
-  if (!isoString) {
-    return 'Never';
-  }
-
-  const timestamp = Date.parse(isoString);
-  if (Number.isNaN(timestamp)) {
-    return 'Unknown';
-  }
-
-  return new Date(timestamp).toLocaleString();
-};
-
 const getRenameErrorMessage = (errorCode) => {
   if (errorCode === 'duplicate_label') {
     return 'You already have saved assumptions with that name. Choose a different name.';
@@ -115,7 +102,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
 
             return (
               <div key={entry.id} className="rounded-md border border-slate-200 bg-slate-50 p-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <div className="flex flex-wrap items-center gap-2">
                     {isEditing ? (
                       <div className="flex items-center gap-2">
@@ -175,21 +162,12 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         Unsaved changes
                       </span>
                     )}
+                    {isRemote && <span className="text-xs text-slate-600">(Ref: {entry.reference})</span>}
                   </div>
                 </div>
 
                 {isEditing && renameError && (
                   <p className="mt-2 rounded-md bg-red-50 px-2 py-1 text-xs text-red-700">{renameError}</p>
-                )}
-
-                {isDefaultEntry ? (
-                  <div className="mt-2 text-xs text-slate-600">Default Impact List assumptions.</div>
-                ) : (
-                  <div className="mt-2 text-xs text-slate-600">
-                    Updated: {formatTimestamp(entry.updatedAt)}
-                    {entry.lastLoadedAt && ` • Last loaded: ${formatTimestamp(entry.lastLoadedAt)}`}
-                    {entry.reference && ` • Ref: ${entry.reference}`}
-                  </div>
                 )}
 
                 {!isEditing && (

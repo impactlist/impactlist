@@ -80,6 +80,7 @@ describe('generate-data-from-markdown script', () => {
 
     expect(generated.categoriesById.health.content).toContain('Public Notes');
     expect(generated.categoriesById.health.content).not.toContain('Internal Notes');
+    expect(generated.donorsById.donor_a.about).toBe('Donor A bio.');
 
     expect(generated.donorsById).not.toHaveProperty('donor_unused');
     expect(generated.recipientsById).not.toHaveProperty('recipient_unused');

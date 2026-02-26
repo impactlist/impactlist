@@ -287,4 +287,56 @@ describe('AssumptionsContext integration', () => {
       expect(localStorage.getItem('customEffectsData')).toBeNull();
     });
   });
+
+  it('setAllUserAssumptions replaces state and persists normalized values', async () => {
+    const { getContext } = await renderWithProvider();
+
+    act(() => {
+      getContext().setAllUserAssumptions({
+        globalParameters: {
+          discountRate: globalParameters.discountRate,
+          timeLimit: globalParameters.timeLimit + 25,
+        },
+      });
+    });
+
+    await waitFor(() => {
+      expect(getContext().userAssumptions).toEqual({
+        globalParameters: {
+          timeLimit: globalParameters.timeLimit + 25,
+        },
+      });
+    });
+
+    await waitFor(() => {
+      const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
+      expect(persisted).toEqual({
+        globalParameters: {
+          timeLimit: globalParameters.timeLimit + 25,
+        },
+      });
+    });
+  });
+
+  it('getNormalizedUserAssumptionsForSharing returns normalized assumptions', async () => {
+    const { getContext } = await renderWithProvider();
+
+    act(() => {
+      getContext().setAllUserAssumptions({
+        globalParameters: {
+          discountRate: globalParameters.discountRate,
+          timeLimit: globalParameters.timeLimit + 30,
+        },
+      });
+    });
+
+    await waitFor(() => {
+      const normalized = getContext().getNormalizedUserAssumptionsForSharing();
+      expect(normalized).toEqual({
+        globalParameters: {
+          timeLimit: globalParameters.timeLimit + 30,
+        },
+      });
+    });
+  });
 });

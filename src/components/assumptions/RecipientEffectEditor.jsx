@@ -14,11 +14,8 @@ import {
   calculateEffectCostPerLife,
   getRecipientEffectsChangeState,
   haveEffectsChanged,
-  initializeRecipientFieldModes,
 } from '../../utils/effectEditorUtils';
-import { formatCurrency } from '../../utils/formatters';
 import { getEffectType, validateRecipientEffectField } from '../../utils/effectValidation';
-import { getEffectFieldNames } from '../../constants/effectFieldDefinitions';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import YearSelector from '../shared/YearSelector';
@@ -38,7 +35,6 @@ const RecipientEffectEditor = ({
   const [tempEditToEffects, setTempEditToEffects] = useState([]);
   const [errors, setErrors] = useState({});
   const [previewYear, setPreviewYear] = useState(getCurrentYear());
-  const [fieldModes, setFieldModes] = useState({});
   const { defaultAssumptions, userAssumptions } = useAssumptions();
 
   // Get default effects for this recipient category
@@ -59,17 +55,18 @@ const RecipientEffectEditor = ({
 
   const baselineEffects = useMemo(() => {
     const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
+    const userCategoryEffects = userAssumptions?.categories?.[categoryId]?.effects;
     return buildRecipientEditableEffects({
       baseCategoryEffects,
       defaultRecipientEffects,
       userRecipientEffects,
+      userCategoryEffects,
     });
   }, [baseCategoryEffects, defaultRecipientEffects, userAssumptions, recipientId, categoryId]);
 
   // Initialize temp effects from recipient's current effects
   useEffect(() => {
     setTempEditToEffects(baselineEffects);
-    setFieldModes(initializeRecipientFieldModes(baselineEffects));
   }, [baselineEffects]);
 
   // Toggle disabled state for a recipient effect
@@ -84,39 +81,21 @@ const RecipientEffectEditor = ({
     });
   };
 
-  // Handle mode change for a field
-  const handleModeChange = (effectIndex, fieldName, newMode) => {
-    const modeKey = `${effectIndex}-${fieldName}`;
-    setFieldModes((prev) => ({
-      ...prev,
-      [modeKey]: newMode,
-    }));
-  };
-
-  // Update a specific field of an effect
-  const updateEffectField = (effectIndex, fieldName, type, value) => {
+  // Update a specific field override for an effect.
+  const updateEffectField = (effectIndex, fieldName, value) => {
     setTempEditToEffects((prev) => {
       const newEffects = [...prev];
       const effect = { ...newEffects[effectIndex] };
 
-      // Initialize objects if needed
       if (!effect.overrides) effect.overrides = {};
       if (!effect.multipliers) effect.multipliers = {};
+      effect.overrides = { ...effect.overrides, [fieldName]: value };
 
-      if (type === 'override') {
-        effect.overrides = { ...effect.overrides, [fieldName]: value };
-      } else if (type === 'multiplier') {
-        effect.multipliers = { ...effect.multipliers, [fieldName]: value };
-      }
-
-      // Clean up empty values
       if (value === '' || value === null || value === undefined) {
-        if (type === 'override') {
-          delete effect.overrides[fieldName];
-        } else {
-          delete effect.multipliers[fieldName];
-        }
+        delete effect.overrides[fieldName];
       }
+      // Override-only UI: editing a field always removes multiplier mode for that field.
+      delete effect.multipliers[fieldName];
 
       newEffects[effectIndex] = effect;
       return newEffects;
@@ -126,10 +105,10 @@ const RecipientEffectEditor = ({
     const error = validateRecipientEffectField(
       fieldName,
       value,
-      type,
+      'override',
       getEffectType(tempEditToEffects[effectIndex]._baseEffect)
     );
-    const errorKey = `${effectIndex}-${fieldName}-${type}`;
+    const errorKey = `${effectIndex}-${fieldName}-override`;
 
     setErrors((prev) => {
       const newErrors = { ...prev };
@@ -137,6 +116,7 @@ const RecipientEffectEditor = ({
         newErrors[errorKey] = error;
       } else {
         delete newErrors[errorKey];
+        delete newErrors[`${effectIndex}-${fieldName}-multiplier`];
       }
       return newErrors;
     });
@@ -147,7 +127,7 @@ const RecipientEffectEditor = ({
     // Use current year if previewYear is empty or invalid
     const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
 
-    return tempEditToEffects.map((effect, effectIndex) => {
+    return tempEditToEffects.map((effect) => {
       const baseEffect = effect._baseEffect;
       if (!baseEffect) return Infinity;
 
@@ -156,60 +136,18 @@ const RecipientEffectEditor = ({
         return Infinity;
       }
 
-      // Build a clean effect to apply based on selected modes
       const effectToApply = {
         effectId: effect.effectId,
-        overrides: {},
-        multipliers: {},
+        overrides: { ...(effect.overrides || {}) },
+        multipliers: { ...(effect.multipliers || {}) },
+        disabled: effect.disabled,
       };
 
-      const fieldNames = getEffectFieldNames(baseEffect);
-      fieldNames.forEach((fieldName) => {
-        const modeKey = `${effectIndex}-${fieldName}`;
-        const selectedMode = fieldModes[modeKey] || 'override';
+      if (Object.keys(effectToApply.overrides).length === 0) delete effectToApply.overrides;
+      if (Object.keys(effectToApply.multipliers).length === 0) delete effectToApply.multipliers;
 
-        if (selectedMode === 'override') {
-          const value = effect.overrides?.[fieldName];
-          if (value !== '' && value !== null && value !== undefined) {
-            effectToApply.overrides[fieldName] = value;
-          } else {
-            // If override is empty, check for a default recipient value
-            const defaultValue = effect._defaultRecipientEffect?.overrides?.[fieldName];
-            if (defaultValue !== '' && defaultValue !== null && defaultValue !== undefined) {
-              effectToApply.overrides[fieldName] = defaultValue;
-            }
-          }
-        } else if (selectedMode === 'multiplier') {
-          const value = effect.multipliers?.[fieldName];
-          if (value !== '' && value !== null && value !== undefined) {
-            effectToApply.multipliers[fieldName] = value;
-          } else {
-            // If multiplier is empty, check for a default recipient value
-            const defaultValue = effect._defaultRecipientEffect?.multipliers?.[fieldName];
-            if (defaultValue !== '' && defaultValue !== null && defaultValue !== undefined) {
-              effectToApply.multipliers[fieldName] = defaultValue;
-            }
-          }
-        }
-      });
-
-      // Create modified effect with overrides/multipliers applied
       const modifiedEffect = applyRecipientEffectToBase(baseEffect, effectToApply, `effect ${effect.effectId}`);
       return calculateEffectCostPerLife(modifiedEffect, globalParameters, yearForCalculation);
-    });
-  }, [tempEditToEffects, globalParameters, previewYear, fieldModes]);
-
-  // Calculate base cost per life for each effect (without recipient-specific overrides)
-  const baseEffectCostPerLife = useMemo(() => {
-    // Use current year if previewYear is empty or invalid
-    const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
-
-    return tempEditToEffects.map((effect) => {
-      const baseEffect = effect._baseEffect;
-      if (!baseEffect) return Infinity;
-
-      // Calculate cost using only the base category effect
-      return calculateEffectCostPerLife(baseEffect, globalParameters, yearForCalculation);
     });
   }, [tempEditToEffects, globalParameters, previewYear]);
 
@@ -248,7 +186,7 @@ const RecipientEffectEditor = ({
       return;
     }
 
-    const { effectsToSave } = getRecipientEffectsChangeState(tempEditToEffects, fieldModes);
+    const { effectsToSave } = getRecipientEffectsChangeState(tempEditToEffects);
     onSave(effectsToSave);
   };
 
@@ -286,36 +224,17 @@ const RecipientEffectEditor = ({
           ) : null
         }
         combinedCostPerLife={combinedCostPerLife}
-        showCombinedCost={false}
+        showCombinedCost={tempEditToEffects.length > 1}
       />
 
       {/* Effects List */}
       <div className="px-3 py-2">
-        {/* Cost per life display - only show when there are multiple effects */}
-        {tempEditToEffects.length > 1 && (
-          <div className="effect-card mb-3">
-            <div className="effect-card__summary">
-              Combined cost per life:{' '}
-              <span
-                className={
-                  combinedCostPerLife === Infinity || combinedCostPerLife < 0
-                    ? 'effect-card__summary-value effect-card__summary-value--invalid'
-                    : 'effect-card__summary-value'
-                }
-              >
-                ${combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife).replace('$', '')}
-              </span>
-            </div>
-          </div>
-        )}
-
         {/* Effects */}
         <div className="space-y-3">
           {tempEditToEffects.map((effect, index) => {
             const baseEffect = effect._baseEffect;
             const effectType = getEffectType(baseEffect);
             const costPerLife = effectCostPerLife[index];
-            const baseCost = baseEffectCostPerLife[index];
 
             // Get all the different effect sources for the input components
             const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
@@ -351,12 +270,7 @@ const RecipientEffectEditor = ({
                       )}
                     </div>
                     <div className={isFullyDisabled ? 'effect-disabled' : ''}>
-                      <EffectCostDisplay
-                        cost={costPerLife}
-                        baseCost={baseCost}
-                        showInfinity={true}
-                        className="text-sm whitespace-nowrap"
-                      />
+                      <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm whitespace-nowrap" />
                     </div>
                   </div>
                   {baseEffect?.validTimeInterval && (
@@ -384,8 +298,6 @@ const RecipientEffectEditor = ({
                       overrides={effect.overrides}
                       multipliers={effect.multipliers}
                       onChange={updateEffectField}
-                      onModeChange={handleModeChange}
-                      fieldModes={fieldModes}
                       globalParameters={globalParameters}
                       isDisabled={isFullyDisabled}
                     />
@@ -399,8 +311,6 @@ const RecipientEffectEditor = ({
                       overrides={effect.overrides}
                       multipliers={effect.multipliers}
                       onChange={updateEffectField}
-                      onModeChange={handleModeChange}
-                      fieldModes={fieldModes}
                       globalParameters={globalParameters}
                       isDisabled={isFullyDisabled}
                     />

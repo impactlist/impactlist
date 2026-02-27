@@ -1,6 +1,7 @@
 import { cleanAndParseValue, getEffectType, isPartialInput } from './effectValidation';
 import { effectToCostPerLife } from './effectsCalculation';
 import { getEffectFieldNames } from '../constants/effectFieldDefinitions';
+import { getOverridePlaceholderValue } from './effectFieldHelpers';
 
 /**
  * Parse a formatted number string (with commas) to a float
@@ -190,10 +191,12 @@ export const buildRecipientEditableEffects = ({
   baseCategoryEffects = [],
   defaultRecipientEffects = [],
   userRecipientEffects = [],
+  userCategoryEffects = [],
 }) => {
   const initialEffects = baseCategoryEffects.map((effect) => {
     const defaultRecipientEffect = defaultRecipientEffects.find((item) => item.effectId === effect.effectId);
     const userEffect = userRecipientEffects?.find((item) => item.effectId === effect.effectId);
+    const userCategoryEffect = userCategoryEffects?.find((item) => item.effectId === effect.effectId);
 
     let effectOverrides = {};
     let effectMultipliers = {};
@@ -220,6 +223,30 @@ export const buildRecipientEditableEffects = ({
       }
     }
 
+    // UI is override-only; convert persisted user multipliers into effective override values.
+    if (userEffect?.multipliers) {
+      const fieldNames = getEffectFieldNames(effect);
+      fieldNames.forEach((fieldName) => {
+        const userMultiplierValue = userEffect.multipliers?.[fieldName];
+        if (!hasValue(userMultiplierValue) || hasValue(userEffect.overrides?.[fieldName])) {
+          return;
+        }
+
+        const baseValue = getOverridePlaceholderValue(fieldName, {
+          defaultCategoryEffect: effect,
+          userCategoryEffect,
+          defaultRecipientEffect,
+        });
+        const multiplierNum = parseFormattedNumber(userMultiplierValue);
+        const baseNum = parseFormattedNumber(baseValue);
+
+        if (!isNaN(multiplierNum) && !isNaN(baseNum)) {
+          effectOverrides[fieldName] = baseNum * multiplierNum;
+          delete effectMultipliers[fieldName];
+        }
+      });
+    }
+
     return {
       effectId: effect.effectId,
       overrides: effectOverrides,
@@ -232,25 +259,6 @@ export const buildRecipientEditableEffects = ({
   });
 
   return sortEffectsByActiveDate(initialEffects);
-};
-
-export const initializeRecipientFieldModes = (effects) => {
-  const modes = {};
-  effects.forEach((effect, effectIndex) => {
-    const fieldNames = getEffectFieldNames(effect._baseEffect);
-    fieldNames.forEach((fieldName) => {
-      const modeKey = `${effectIndex}-${fieldName}`;
-      if (effect.overrides && hasValue(effect.overrides[fieldName])) {
-        modes[modeKey] = 'override';
-      } else if (effect.multipliers && hasValue(effect.multipliers[fieldName])) {
-        modes[modeKey] = 'multiplier';
-      } else {
-        modes[modeKey] = 'override';
-      }
-    });
-  });
-
-  return modes;
 };
 
 const normalizeEffectValue = (value) => {
@@ -326,7 +334,7 @@ export const isMeaningfullyDifferent = (currentValue, defaultValue) => {
   return Math.abs(currentNum - defaultNum) >= 0.0001;
 };
 
-export const getRecipientEffectsChangeState = (effects, fieldModes, options = {}) => {
+export const getRecipientEffectsChangeState = (effects, options = {}) => {
   const { throwOnInvalid = true, includeUserClearings = true } = options;
 
   if (!effects || effects.length === 0) {
@@ -336,11 +344,10 @@ export const getRecipientEffectsChangeState = (effects, fieldModes, options = {}
   const effectsToSave = [];
   let hasUnsavedChanges = false;
 
-  effects.forEach((effect, effectIndex) => {
+  effects.forEach((effect) => {
     const cleanEffect = {
       effectId: effect.effectId,
       overrides: {},
-      multipliers: {},
       disabled: effect.disabled || false,
     };
 
@@ -361,22 +368,17 @@ export const getRecipientEffectsChangeState = (effects, fieldModes, options = {}
     let effectHasChanges = disabledDiffersFromDefault || needsClearing;
 
     fieldNames.forEach((fieldName) => {
-      const modeKey = `${effectIndex}-${fieldName}`;
-      const selectedMode = fieldModes?.[modeKey] || 'override';
-
-      const currentValue =
-        selectedMode === 'override' ? effect.overrides?.[fieldName] : effect.multipliers?.[fieldName];
-
-      const defaultValue =
-        selectedMode === 'override'
-          ? defaultRecipientEffect?.overrides?.[fieldName]
-          : defaultRecipientEffect?.multipliers?.[fieldName];
+      const currentValue = effect.overrides?.[fieldName];
+      const defaultValue = defaultRecipientEffect?.overrides?.[fieldName];
 
       const userHadOverride =
         userEffect?.overrides?.[fieldName] !== undefined && userEffect?.overrides?.[fieldName] !== null;
       const userHadMultiplier =
         userEffect?.multipliers?.[fieldName] !== undefined && userEffect?.multipliers?.[fieldName] !== null;
-      const userHadCustomValue = selectedMode === 'override' ? userHadOverride : userHadMultiplier;
+      const userHadCustomValue = userHadOverride;
+      const currentMultiplierValue = effect.multipliers?.[fieldName];
+      const multiplierClearedInOverrideMode =
+        includeUserClearings && userHadMultiplier && !hasValue(currentMultiplierValue);
 
       if (isMeaningfullyDifferent(currentValue, defaultValue)) {
         effectHasChanges = true;
@@ -385,17 +387,13 @@ export const getRecipientEffectsChangeState = (effects, fieldModes, options = {}
           if (isNaN(numValue)) {
             if (throwOnInvalid) {
               throw new Error(
-                `Failed to convert ${selectedMode} ${fieldName} to number in effect ${effect.effectId}. Value: "${currentValue}"`
+                `Failed to convert override ${fieldName} to number in effect ${effect.effectId}. Value: "${currentValue}"`
               );
             }
             return;
           }
 
-          if (selectedMode === 'override') {
-            cleanEffect.overrides[fieldName] = numValue;
-          } else {
-            cleanEffect.multipliers[fieldName] = numValue;
-          }
+          cleanEffect.overrides[fieldName] = numValue;
         } else if (defaultValue !== null && defaultValue !== undefined && defaultValue !== '') {
           needsClearing = true;
         }
@@ -406,15 +404,13 @@ export const getRecipientEffectsChangeState = (effects, fieldModes, options = {}
       ) {
         needsClearing = true;
         effectHasChanges = true;
+      } else if (multiplierClearedInOverrideMode) {
+        needsClearing = true;
+        effectHasChanges = true;
       }
     });
 
-    if (
-      Object.keys(cleanEffect.overrides).length > 0 ||
-      Object.keys(cleanEffect.multipliers).length > 0 ||
-      disabledDiffersFromDefault ||
-      needsClearing
-    ) {
+    if (Object.keys(cleanEffect.overrides).length > 0 || disabledDiffersFromDefault || needsClearing) {
       if (!disabledDiffersFromDefault) {
         delete cleanEffect.disabled;
       }

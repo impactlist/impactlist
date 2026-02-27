@@ -159,7 +159,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
   if (!category) return null;
 
   return (
-    <div className="assumptions-shell overflow-hidden">
+    <div className="assumptions-shell assumptions-shell--editor overflow-hidden">
       <EffectEditorHeader
         title={
           <>

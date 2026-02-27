@@ -7,7 +7,7 @@ import EffectCostDisplay from './EffectCostDisplay';
  */
 const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombinedCost = true, onClose }) => {
   return (
-    <div className="rounded-t-lg border-b border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] px-6 py-4">
+    <div className="rounded-t-lg bg-[var(--bg-surface-alt)] px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h3 className="text-xl font-semibold text-[var(--text-strong)]">{title}</h3>

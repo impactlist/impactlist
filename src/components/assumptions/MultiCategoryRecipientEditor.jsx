@@ -163,9 +163,9 @@ const CategoryEffectSection = ({
   }, [effectCostPerLife]);
 
   return (
-    <div ref={sectionRef} className="effect-card effect-card--flush mb-4 overflow-hidden">
+    <div ref={sectionRef} className="effect-card effect-card--flush effect-card--category-group mb-4 overflow-hidden">
       {/* Category header */}
-      <div className="rounded-t-lg bg-[var(--bg-surface-alt)] px-4 py-3">
+      <div className="effect-card__category-header rounded-t-lg px-4 py-3">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-[var(--text-strong)]">
             <Link to={`/category/${categoryId}`} className="assumptions-link">
@@ -191,7 +191,7 @@ const CategoryEffectSection = ({
       </div>
 
       {/* Effects list */}
-      <div className="p-3 space-y-3">
+      <div className="effect-card__category-body p-3 space-y-3">
         {tempEditToEffects.map((effect, index) => {
           const baseEffect = effect._baseEffect;
           const effectType = getEffectType(baseEffect);
@@ -374,7 +374,7 @@ const MultiCategoryRecipientEditor = ({
   }, [categories]);
 
   return (
-    <div className="assumptions-shell overflow-hidden">
+    <div className="assumptions-shell assumptions-shell--editor overflow-hidden">
       <EffectEditorHeader
         title={
           <>

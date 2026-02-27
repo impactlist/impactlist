@@ -16,7 +16,7 @@ const EffectEditorFooter = ({
   const isDisabled = hasErrors || disabled;
 
   return (
-    <div className="rounded-b-lg border-t border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] px-6 py-4">
+    <div className="rounded-b-lg bg-[var(--bg-surface-alt)] px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="text-sm">{hasErrors && <span className="text-[var(--danger)]">{errorMessage}</span>}</div>
         <div className="flex space-x-3">

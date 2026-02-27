@@ -88,6 +88,10 @@
     box-shadow: var(--shadow-2);
   }
 
+  .assumptions-shell--editor {
+    background: var(--bg-surface-alt);
+  }
+
   .assumptions-toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -819,8 +823,24 @@
     padding: 0;
   }
 
+  .effect-card--category-group {
+    background: color-mix(in srgb, var(--bg-canvas-strong) 64%, var(--bg-surface-alt) 36%);
+    border-color: color-mix(in srgb, var(--border-strong) 40%, var(--border-subtle) 60%);
+    box-shadow: 0 16px 28px -28px rgba(36, 28, 15, 0.58);
+  }
+
   .effect-card--section {
-    background: color-mix(in srgb, var(--bg-surface-alt) 84%, white 16%);
+    background: color-mix(in srgb, var(--bg-surface) 74%, var(--bg-surface-alt) 26%);
+    border-color: color-mix(in srgb, var(--border-subtle) 86%, white 14%);
+  }
+
+  .effect-card__category-header {
+    background: color-mix(in srgb, var(--bg-canvas-strong) 72%, var(--bg-surface-alt) 28%);
+    border-bottom: 1px solid color-mix(in srgb, var(--border-subtle) 86%, white 14%);
+  }
+
+  .effect-card__category-body {
+    background: transparent;
   }
 
   .effect-card__title {

@@ -1,8 +1,8 @@
 import React from 'react';
-import Tooltip from '../shared/Tooltip';
 import SectionCard from '../shared/SectionCard';
 import CustomValueIndicator from '../shared/CustomValueIndicator';
 import NumericInput from '../shared/NumericInput';
+import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import { formatNumberWithCommas } from '../../utils/formatters';
 
 const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
@@ -92,29 +92,14 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
           const showDefaultHelper = isCustom && !hasError && !param.readonly;
 
           return (
-            <SectionCard
-              key={param.id}
-              hasError={hasError}
-              isCustom={isCustom}
-              padding="default"
-              showStateBadge={false}
-            >
+            <SectionCard key={param.id} hasError={hasError} isCustom={isCustom} padding="default">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-[220px] flex-1">
                   <div className="flex items-center gap-1.5">
                     <label htmlFor={param.id} className="text-sm font-semibold text-[var(--text-strong)]">
                       {param.label}
                     </label>
-                    <Tooltip content={param.description}>
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden={true}>
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </Tooltip>
+                    <InfoTooltipIcon content={param.description} />
                   </div>
                 </div>
 

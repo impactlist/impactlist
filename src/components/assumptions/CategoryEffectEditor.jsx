@@ -7,6 +7,7 @@ import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import DisableToggleButton from '../shared/DisableToggleButton';
+import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import {
   calculateEffectCostPerLife,
   cleanEffectsForSave,
@@ -163,12 +164,10 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         title={
           <>
             Edit effects for category
-            <span className="group align-middle">
-              <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
-              <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
-                See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
-              </span>
-            </span>{' '}
+            <InfoTooltipIcon
+              className="effect-editor-help"
+              content="See the FAQ to learn how to edit these assumptions, and for a description of what effects are."
+            />{' '}
             :{' '}
             <Link to={`/category/${categoryId}`} className="assumptions-link">
               {category.name}
@@ -200,50 +199,37 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
             const costPerLife = effectCostPerLife[index];
 
             return (
-              <div
-                key={index}
-                className={`rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-3 shadow-sm transition-all duration-200 ${
-                  effect.disabled ? 'effect-disabled' : ''
-                }`}
-              >
+              <div key={index} className="effect-card effect-card--section transition-all duration-200">
                 <div className="mb-2">
                   <div className="flex flex-wrap justify-between items-start gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h4
-                        className="text-sm font-medium text-gray-900 whitespace-nowrap"
-                        style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                      >
+                      <h4 className={`effect-card__title ${effect.disabled ? 'effect-disabled' : ''}`}>
                         Effect {index + 1}: {effect.effectId}
                       </h4>
                       <DisableToggleButton
                         isDisabled={effect.disabled || false}
                         onToggle={() => toggleEffectDisabled(index)}
-                        className={effect.disabled ? 'enable-button' : ''}
-                        style={{ pointerEvents: 'auto' }}
                       />
                     </div>
-                    <div style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                    <div className={effect.disabled ? 'effect-disabled' : ''}>
                       <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm whitespace-nowrap" />
                     </div>
                   </div>
                   {effect.validTimeInterval && (
-                    <p
-                      className="text-xs text-gray-500 mt-1"
-                      style={effect.disabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                    >
+                    <p className={`effect-card__meta mt-1 ${effect.disabled ? 'effect-disabled' : ''}`}>
                       Active:{' '}
                       {effect.validTimeInterval[0] === null
                         ? `Until ${effect.validTimeInterval[1]}`
                         : `${effect.validTimeInterval[0]} - ${effect.validTimeInterval[1] || 'present'}`}
                       {(previewYear < effect.validTimeInterval[0] ||
                         (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
-                        <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
+                        <span className="effect-card__meta--inactive ml-2">(Not active in {previewYear})</span>
                       )}
                     </p>
                   )}
                 </div>
 
-                <div style={effect.disabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                <div className={effect.disabled ? 'effect-disabled-content' : ''}>
                   {effectType === 'qaly' ? (
                     <QalyEffectInputs
                       effect={effect}
@@ -265,7 +251,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                       isDisabled={effect.disabled || false}
                     />
                   ) : (
-                    <div className="text-sm text-red-600">Unknown effect type</div>
+                    <div className="text-sm text-[var(--danger)]">Unknown effect type</div>
                   )}
                 </div>
               </div>

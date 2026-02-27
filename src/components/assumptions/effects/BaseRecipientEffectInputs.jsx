@@ -3,6 +3,7 @@ import { formatNumberWithCommas, formatWithCursorHandling } from '../../../utils
 import { getOverridePlaceholderValue, getMultiplierPlaceholderValue } from '../../../utils/effectFieldHelpers';
 import TimeLimitMessage from '../../shared/TimeLimitMessage';
 import SegmentedControl from '../../shared/SegmentedControl';
+import InfoTooltipIcon from '../../shared/InfoTooltipIcon';
 
 /**
  * Base component for editing effect overrides/multipliers for recipients
@@ -199,6 +200,28 @@ const BaseRecipientEffectInputs = ({
         const error = mode === 'override' ? overrideError : mode === 'multiplier' ? multiplierError : null;
         const helperText = getHelperText(fieldName);
         const placeholder = getPlaceholder(fieldName);
+        let isCustomValue = false;
+
+        if (!error && hasValue(currentValue)) {
+          // Get the default value for comparison
+          const defaultValue =
+            mode === 'override'
+              ? defaultRecipientEffect?.overrides?.[fieldName]
+              : mode === 'multiplier'
+                ? defaultRecipientEffect?.multipliers?.[fieldName]
+                : null;
+
+          // Compare current with default (handle string/number conversion)
+          if (hasValue(defaultValue)) {
+            const currentNum = parseFloat(currentValue.toString().replace(/,/g, ''));
+            const defaultNum = parseFloat(defaultValue.toString().replace(/,/g, ''));
+            isCustomValue = !isNaN(currentNum) && !isNaN(defaultNum) && currentNum !== defaultNum;
+          } else {
+            // No default means any value is custom
+            isCustomValue = true;
+          }
+        }
+        const fieldState = error ? 'error' : isCustomValue ? 'custom' : 'default';
 
         return (
           <div
@@ -207,14 +230,9 @@ const BaseRecipientEffectInputs = ({
           >
             {/* Field label with tooltip */}
             <div className="flex items-center gap-2 min-w-0">
-              <label className="text-sm font-medium text-gray-900 whitespace-nowrap">{fieldLabel}</label>
+              <label className="text-sm font-medium text-[var(--text-strong)] whitespace-nowrap">{fieldLabel}</label>
               {fieldTooltip && (
-                <div className="group relative inline-block">
-                  <span className="text-xs text-gray-500 cursor-help">ⓘ</span>
-                  <div className="invisible group-hover:visible absolute z-50 w-64 p-2 mt-1 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
-                    {fieldTooltip}
-                  </div>
-                </div>
+                <InfoTooltipIcon content={fieldTooltip} iconClassName="h-4 w-4 text-[var(--text-muted)]" />
               )}
             </div>
 
@@ -228,59 +246,29 @@ const BaseRecipientEffectInputs = ({
             />
 
             {/* Single context-aware input with error/helper text below */}
-            <div className="space-y-1 w-auto max-xs:w-40">
-              <input
-                type="text"
-                data-testid={`recipient-effect-input-${effectIndex}-${fieldName}`}
-                value={formatNumberWithCommas(currentValue)}
-                onChange={(e) => {
-                  const inputElement = e.target;
-                  const newValue = e.target.value;
-                  const currentPosition = e.target.selectionStart;
-                  const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
-                  handleValueChange(fieldName, result.value);
-                }}
-                placeholder={placeholder}
-                disabled={isDisabled}
-                className={`w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 ${(() => {
-                  if (isDisabled) {
-                    return 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200';
-                  }
-
-                  if (error) {
-                    return 'border-red-300 focus:ring-red-500';
-                  }
-
-                  // Check if this is a custom value (different from default)
-                  let isCustomValue = false;
-                  if (hasValue(currentValue)) {
-                    // Get the default value for comparison
-                    const defaultValue =
-                      mode === 'override'
-                        ? defaultRecipientEffect?.overrides?.[fieldName]
-                        : mode === 'multiplier'
-                          ? defaultRecipientEffect?.multipliers?.[fieldName]
-                          : null;
-
-                    // Compare current with default (handle string/number conversion)
-                    if (hasValue(defaultValue)) {
-                      const currentNum = parseFloat(currentValue.toString().replace(/,/g, ''));
-                      const defaultNum = parseFloat(defaultValue.toString().replace(/,/g, ''));
-                      isCustomValue = !isNaN(currentNum) && !isNaN(defaultNum) && currentNum !== defaultNum;
-                    } else {
-                      // No default means any value is custom
-                      isCustomValue = true;
-                    }
-                  }
-
-                  return isCustomValue
-                    ? 'border-indigo-300 bg-indigo-50 focus:ring-indigo-500'
-                    : 'border-gray-300 focus:ring-indigo-500';
-                })()}`}
-              />
+            <div className="w-auto max-xs:w-40">
+              <div className="impact-field space-y-1" data-state={fieldState}>
+                <div className="impact-field__control">
+                  <input
+                    type="text"
+                    data-testid={`recipient-effect-input-${effectIndex}-${fieldName}`}
+                    value={formatNumberWithCommas(currentValue)}
+                    onChange={(e) => {
+                      const inputElement = e.target;
+                      const newValue = e.target.value;
+                      const currentPosition = e.target.selectionStart;
+                      const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
+                      handleValueChange(fieldName, result.value);
+                    }}
+                    placeholder={placeholder}
+                    disabled={isDisabled}
+                    className="impact-field__input h-8 px-2 py-1 text-sm"
+                  />
+                </div>
+              </div>
               {/* Error message and helper text */}
-              {error && <p className="text-xs text-red-600">{error}</p>}
-              {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
+              {error && <p className="impact-field__error">{error}</p>}
+              {helperText && <p className="impact-field__helper">{helperText}</p>}
               {/* Show time limit message only for windowLength field */}
               {fieldName === 'windowLength' && (
                 <TimeLimitMessage

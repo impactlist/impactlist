@@ -10,10 +10,18 @@ import { motion } from 'framer-motion';
  * @param {string} [props.to] - Optional path to navigate to. If provided, uses Link.
  * @param {string} [props.label="Back"] - The label text for the button
  * @param {string} [props.className] - Additional CSS classes for the button
+ * @param {'default' | 'accent'} [props.variant='default'] - Visual style variant
  * @param {Object} [props.motion] - Motion props for animation
  * @param {Object} [props.containerProps] - Props for the container div
  */
-const BackButton = ({ to, label = 'Back', className = '', motion: motionProps = {}, containerProps = {} }) => {
+const BackButton = ({
+  to,
+  label = 'Back',
+  className = '',
+  variant = 'default',
+  motion: motionProps = {},
+  containerProps = {},
+}) => {
   const defaultAnimation = {
     initial: { y: 10, opacity: 0 },
     animate: { y: 0, opacity: 1 },
@@ -23,7 +31,11 @@ const BackButton = ({ to, label = 'Back', className = '', motion: motionProps = 
   const animation = { ...defaultAnimation, ...motionProps };
 
   // Default styles for the button/link
-  const defaultClassName = 'flex items-center text-slate-700 hover:text-slate-900 hover:underline';
+  const variantClasses = {
+    default: 'flex items-center text-slate-700 hover:text-slate-900 hover:underline',
+    accent: 'flex items-center text-accent-strong hover:text-accent hover:underline',
+  };
+  const defaultClassName = variantClasses[variant] || variantClasses.default;
   const buttonClassName = `${defaultClassName} ${className}`;
 
   // Default container props

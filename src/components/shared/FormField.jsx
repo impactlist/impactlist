@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { formatWithCursorHandling, formatNumberWithCommas } from '../../utils/formatters';
-import Tooltip from './Tooltip';
+import InfoTooltipIcon from './InfoTooltipIcon';
 
 /**
  * Reusable form field component with consistent styling for custom values
- * Shows indigo styling when value differs from default, with default value displayed below
+ * Shows contextual styling when value differs from default, with default value displayed below
  */
 const FormField = ({
   id,
@@ -77,56 +77,29 @@ const FormField = ({
 
   const displayValue = formatDisplayValue(value);
   const placeholderValue = placeholder || formatDefaultDisplay(defaultValue);
+  const fieldState = hasError ? 'error' : isCustom ? 'custom' : 'default';
 
   return (
     <div
-      className={`py-2 px-3 rounded border ${
-        disabled
-          ? 'border-gray-200 bg-gray-50 opacity-75'
-          : hasError
-            ? 'border-red-300 bg-red-50'
-            : isCustom
-              ? 'border-indigo-300 bg-indigo-50'
-              : 'border-gray-200'
-      }`}
+      className="impact-field rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3"
+      data-state={fieldState}
     >
       {/* Label and Reset button */}
-      <div className="flex justify-between items-start mb-2">
-        <label htmlFor={id} className="text-sm font-medium text-gray-700 flex items-center gap-1">
+      <div className="mb-2 flex items-start justify-between">
+        <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-[var(--text-strong)]">
           {label}
-          {description && (
-            <Tooltip content={description}>
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </Tooltip>
-          )}
+          {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-[var(--text-muted)]" />}
         </label>
         {isCustom && !disabled && (
-          <button
-            type="button"
-            className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-            onClick={handleReset}
-          >
+          <button type="button" className="impact-btn impact-btn--ghost impact-btn--xs" onClick={handleReset}>
             Reset
           </button>
         )}
       </div>
 
       {/* Input field */}
-      <div className="relative">
-        {prefix && (
-          <span
-            className={`absolute left-2 top-1/2 -translate-y-1/2 text-sm ${hasError ? 'text-red-500' : 'text-gray-500'}`}
-          >
-            {prefix}
-          </span>
-        )}
+      <div className="impact-field__control">
+        {prefix && <span className="impact-field__prefix">{prefix}</span>}
         <input
           type="text"
           id={id}
@@ -135,30 +108,20 @@ const FormField = ({
           onChange={handleChange}
           placeholder={placeholderValue}
           disabled={disabled}
-          className={`
-            w-full py-1 text-sm border rounded focus:ring-1 focus:outline-none
-            ${prefix ? 'pl-6 pr-2' : 'px-2'}
-            ${
-              disabled
-                ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
-                : hasError
-                  ? 'border-red-300 text-red-700 bg-red-50 focus:ring-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-            }
-          `}
+          className={`impact-field__input h-8 text-sm ${prefix ? 'impact-field__input--with-prefix pl-6 pr-2' : 'px-2'}`}
         />
       </div>
 
       {/* Error message */}
       {hasError && (
-        <p className="mt-1 text-xs text-red-600" role="alert">
+        <p className="impact-field__error" role="alert">
           {error}
         </p>
       )}
 
       {/* Default value display */}
       {isCustom && !hasError && (
-        <p className="text-xs text-gray-500 mt-0.5">
+        <p className="impact-field__helper">
           Default: {prefix || ''}
           {formatDefaultDisplay(defaultValue)}
         </p>

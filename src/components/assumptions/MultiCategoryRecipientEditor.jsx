@@ -7,6 +7,7 @@ import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import DisableToggleButton from '../shared/DisableToggleButton';
+import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
 import {
   buildRecipientEditableEffects,
@@ -212,24 +213,24 @@ const CategoryEffectSection = ({
   }, [effectCostPerLife]);
 
   return (
-    <div ref={sectionRef} className="mb-4 rounded-lg border border-[var(--border-subtle)] bg-white shadow-sm">
+    <div ref={sectionRef} className="effect-card effect-card--flush mb-4 overflow-hidden">
       {/* Category header */}
       <div className="rounded-t-lg bg-[var(--bg-surface-alt)] px-4 py-3">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3 className="text-lg font-semibold text-[var(--text-strong)]">
             <Link to={`/category/${categoryId}`} className="assumptions-link">
               {category.name}
             </Link>
           </h3>
           {/* Only show combined cost when there are multiple effects */}
           {tempEditToEffects.length > 1 && (
-            <div className="text-sm">
-              <span className="text-gray-600">Combined cost per life: </span>
+            <div className="effect-card__summary">
+              <span>Combined cost per life: </span>
               <span
                 className={
                   combinedCostPerLife === Infinity || combinedCostPerLife < 0
-                    ? 'text-red-600 font-medium'
-                    : 'text-green-600 font-medium'
+                    ? 'effect-card__summary-value effect-card__summary-value--invalid'
+                    : 'effect-card__summary-value'
                 }
               >
                 {combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife)}
@@ -260,34 +261,26 @@ const CategoryEffectSection = ({
           const isFullyDisabled = isDisabledByCategory || isDisabledByRecipient;
 
           return (
-            <div
-              key={effect.effectId}
-              className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-3 shadow-sm transition-all duration-200"
-            >
+            <div key={effect.effectId} className="effect-card effect-card--section transition-all duration-200">
               <div className="mb-2">
                 <div className="flex flex-wrap justify-between items-start gap-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h4
-                      className="text-base font-medium text-gray-800 whitespace-nowrap"
-                      style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                    >
+                    <h4 className={`effect-card__title ${isFullyDisabled ? 'effect-disabled' : ''}`}>
                       Effect {index + 1}: {effect.effectId}
                     </h4>
                     {!isDisabledByCategory && (
                       <DisableToggleButton
                         isDisabled={isDisabledByRecipient}
                         onToggle={() => toggleEffectDisabled(index)}
-                        className={isDisabledByRecipient ? 'enable-button' : ''}
-                        style={{ pointerEvents: 'auto' }}
                       />
                     )}
                     {isDisabledByCategory && (
-                      <span className="text-xs text-gray-500" style={{ filter: 'grayscale(100%)', opacity: 0.6 }}>
+                      <span className={`effect-card__disabled-note ${isFullyDisabled ? 'effect-disabled' : ''}`}>
                         (Disabled in category)
                       </span>
                     )}
                   </div>
-                  <div style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+                  <div className={isFullyDisabled ? 'effect-disabled' : ''}>
                     <EffectCostDisplay
                       cost={costPerLife}
                       baseCost={baseCost}
@@ -297,23 +290,20 @@ const CategoryEffectSection = ({
                   </div>
                 </div>
                 {baseEffect?.validTimeInterval && (
-                  <p
-                    className="text-xs text-gray-500 mt-1"
-                    style={isFullyDisabled ? { filter: 'grayscale(100%)', opacity: 0.6 } : {}}
-                  >
+                  <p className={`effect-card__meta mt-1 ${isFullyDisabled ? 'effect-disabled' : ''}`}>
                     Active:{' '}
                     {baseEffect.validTimeInterval[0] === null
                       ? `Until ${baseEffect.validTimeInterval[1]}`
                       : `${baseEffect.validTimeInterval[0]} - ${baseEffect.validTimeInterval[1] || 'present'}`}
                     {(previewYear < baseEffect.validTimeInterval[0] ||
                       (baseEffect.validTimeInterval[1] && previewYear > baseEffect.validTimeInterval[1])) && (
-                      <span className="ml-2 text-orange-600">(Not active in {previewYear})</span>
+                      <span className="effect-card__meta--inactive ml-2">(Not active in {previewYear})</span>
                     )}
                   </p>
                 )}
               </div>
 
-              <div style={isFullyDisabled ? { pointerEvents: 'none', filter: 'grayscale(100%)', opacity: 0.6 } : {}}>
+              <div className={isFullyDisabled ? 'effect-disabled-content' : ''}>
                 {effectType === 'qaly' ? (
                   <RecipientQalyEffectInputs
                     effectIndex={index}
@@ -345,7 +335,7 @@ const CategoryEffectSection = ({
                     isDisabled={isFullyDisabled}
                   />
                 ) : (
-                  <div className="text-sm text-red-600">Unknown effect type</div>
+                  <div className="text-sm text-[var(--danger)]">Unknown effect type</div>
                 )}
               </div>
             </div>
@@ -449,12 +439,10 @@ const MultiCategoryRecipientEditor = ({
         title={
           <>
             Edit effects for recipient
-            <span className="group align-middle">
-              <span className="text-sm text-gray-500 cursor-help ml-1 align-top">ⓘ</span>
-              <span className="invisible group-hover:visible absolute left-6 z-50 p-2 mt-1 w-72 max-w-[calc(100%-3rem)] text-xs font-normal text-white bg-gray-800 rounded-lg shadow-lg">
-                See the FAQ to learn how to edit these assumptions, and for a description of what effects are.
-              </span>
-            </span>{' '}
+            <InfoTooltipIcon
+              className="effect-editor-help"
+              content="See the FAQ to learn how to edit these assumptions, and for a description of what effects are."
+            />{' '}
             :{' '}
             <Link to={`/recipient/${recipientId}`} className="assumptions-link">
               {recipient.name}
@@ -463,7 +451,7 @@ const MultiCategoryRecipientEditor = ({
         }
         description={
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{categories.length} categories</span>
+            <span className="text-sm text-[var(--text-muted)]">{categories.length} categories</span>
             {hasTimeIntervals && (
               <YearSelector
                 value={previewYear}

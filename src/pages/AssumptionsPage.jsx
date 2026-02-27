@@ -557,7 +557,8 @@ const AssumptionsPage = () => {
       <BackButton
         to="/"
         label="Back to top donors"
-        className="assumptions-link !text-[var(--accent-strong)] no-underline"
+        variant="accent"
+        className="no-underline"
         containerProps={{
           className: 'relative z-10 mx-auto mb-2 mt-4 flex max-w-7xl justify-start px-4 sm:px-6 lg:px-8',
         }}

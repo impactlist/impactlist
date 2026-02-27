@@ -8,9 +8,9 @@ const CustomValueIndicator = ({ isCustom, hasError = false, onReset, className =
   if (!isCustom) return null;
 
   const sizeClasses = {
-    xs: 'text-xs',
-    sm: 'text-sm',
-    md: 'text-base',
+    xs: 'impact-btn--xs',
+    sm: 'impact-btn--sm',
+    md: '',
   };
 
   const variantClass = hasError ? 'impact-btn--danger' : 'impact-btn--ghost';
@@ -19,7 +19,6 @@ const CustomValueIndicator = ({ isCustom, hasError = false, onReset, className =
     <button
       type="button"
       className={`impact-btn ${variantClass} ${sizeClasses[size]} ${className}`.trim()}
-      style={{ paddingTop: '0.2rem', paddingBottom: '0.2rem' }}
       onClick={onReset}
     >
       Reset

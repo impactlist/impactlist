@@ -74,7 +74,7 @@ const CategoryValuesSection = ({
           const formattedCurrent = formatCurrency(currentValue).replace('$', '');
 
           return (
-            <SectionCard key={key} isCustom={isCustom} padding="default" showStateBadge={false} className="h-full">
+            <SectionCard key={key} isCustom={isCustom} padding="default" className="h-full">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <label
@@ -108,7 +108,7 @@ const CategoryValuesSection = ({
                       }
                       onEditCategory(key);
                     }}
-                    className="impact-btn impact-btn--secondary py-2 text-xs"
+                    className="impact-btn impact-btn--secondary impact-btn--sm"
                   >
                     Edit
                   </button>

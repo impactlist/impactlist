@@ -137,13 +137,7 @@ const RecipientValuesSection = ({
               const categoryCount = recipientCategories.length;
 
               return (
-                <SectionCard
-                  key={recipient.name}
-                  isCustom={hasCustomValues}
-                  padding="default"
-                  showStateBadge={false}
-                  className="h-full"
-                >
+                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="default" className="h-full">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <Link
@@ -173,7 +167,7 @@ const RecipientValuesSection = ({
                     <button
                       type="button"
                       onClick={() => onEditRecipient(recipient, recipientId)}
-                      className="impact-btn impact-btn--secondary py-2 text-xs"
+                      className="impact-btn impact-btn--secondary impact-btn--sm"
                     >
                       Edit
                     </button>

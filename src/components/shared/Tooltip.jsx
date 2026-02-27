@@ -89,18 +89,7 @@ const Tooltip = ({ children, content, ariaLabel = 'More information' }) => {
       role="tooltip"
     >
       {content}
-      <div
-        className={`absolute h-2 w-2 rotate-45 border border-[#6a665f] bg-[#1f2527] ${
-          position === 'top'
-            ? '-bottom-1 left-1/2 -translate-x-1/2'
-            : position === 'bottom'
-              ? '-top-1 left-1/2 -translate-x-1/2'
-              : position === 'left'
-                ? '-right-1 top-1/2 -translate-y-1/2'
-                : '-left-1 top-1/2 -translate-y-1/2'
-        }`}
-        aria-hidden={true}
-      ></div>
+      <div className={`assumptions-tooltip__arrow assumptions-tooltip__arrow--${position}`} aria-hidden={true} />
     </div>
   );
 

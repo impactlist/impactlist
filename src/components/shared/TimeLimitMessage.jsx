@@ -10,7 +10,7 @@ const TimeLimitMessage = ({ startTime, windowLength, timeLimit }) => {
     return null;
   }
 
-  return <p className="text-xs text-gray-500 mt-1 px-3 pb-1">Time limit: {timeLimit.toLocaleString()}</p>;
+  return <p className="impact-field__helper mt-1 px-3 pb-1">Time limit: {timeLimit.toLocaleString()}</p>;
 };
 
 TimeLimitMessage.propTypes = {

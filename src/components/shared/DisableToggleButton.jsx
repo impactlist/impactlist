@@ -9,16 +9,8 @@ const DisableToggleButton = ({ isDisabled, onToggle, className = '' }) => {
   return (
     <button
       onClick={onToggle}
-      className={`
-        px-3 py-1 text-sm font-medium rounded-md transition-all duration-200 relative z-10
-        ${
-          isDisabled
-            ? 'bg-green-600 text-white hover:bg-green-700 enable-button'
-            : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-        }
-        ${className}
-      `}
-      style={isDisabled ? { filter: 'none !important', opacity: '1 !important' } : {}}
+      className={`effect-toggle relative z-10 ${className}`.trim()}
+      data-disabled={isDisabled}
       aria-label={isDisabled ? 'Enable effect' : 'Disable effect'}
     >
       {isDisabled ? 'Enable' : 'Disable'}

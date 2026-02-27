@@ -80,7 +80,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
               onClick={() => {
                 setShowInactiveEntries((current) => !current);
               }}
-              className="impact-btn impact-btn--ghost text-xs"
+              className="impact-btn impact-btn--ghost impact-btn--xs"
             >
               {inactiveToggleLabel}
             </button>
@@ -121,14 +121,14 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         <button
                           type="button"
                           onClick={commitRename}
-                          className="impact-btn impact-btn--secondary py-2 text-xs"
+                          className="impact-btn impact-btn--secondary impact-btn--sm"
                         >
                           Save
                         </button>
                         <button
                           type="button"
                           onClick={cancelRename}
-                          className="impact-btn impact-btn--secondary py-2 text-xs"
+                          className="impact-btn impact-btn--secondary impact-btn--sm"
                         >
                           Cancel
                         </button>
@@ -137,30 +137,17 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                       <span className="text-sm font-semibold text-[var(--text-strong)]">{entry.label}</span>
                     )}
                     {!isDefaultEntry && (
-                      <span
-                        className="impact-muted-pill"
-                        style={
-                          isRemote
-                            ? {
-                                background: 'color-mix(in srgb, var(--accent-soft) 65%, white 35%)',
-                                color: 'var(--accent-strong)',
-                              }
-                            : undefined
-                        }
-                      >
+                      <span className="assumption-state-pill" data-state={isRemote ? 'info' : 'default'}>
                         {isRemote ? 'Remote' : 'Local'}
                       </span>
                     )}
                     {isActive && (
-                      <span className="assumption-state-pill" data-state="custom">
+                      <span className="assumption-state-pill" data-state="info">
                         Active
                       </span>
                     )}
                     {isActive && hasUnsavedChanges && (
-                      <span
-                        className="assumption-state-pill"
-                        style={{ background: 'color-mix(in srgb, #f2dfbc 78%, white 22%)', color: 'var(--warning)' }}
-                      >
+                      <span className="assumption-state-pill" data-state="warning">
                         Unsaved changes
                       </span>
                     )}
@@ -169,7 +156,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                 </div>
 
                 {isEditing && renameError && (
-                  <p className="mt-2 rounded-md bg-[#fff1f1] px-2 py-1 text-xs text-[var(--danger)]">{renameError}</p>
+                  <p className="assumptions-inline-error mt-2 rounded-md px-2 py-1 text-xs">{renameError}</p>
                 )}
 
                 {!isEditing && (
@@ -179,7 +166,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         type="button"
                         onClick={() => onLoad({ id: DEFAULT_ENTRY_ID })}
                         disabled={isLoadDisabled}
-                        className="impact-btn impact-btn--secondary py-2 text-xs"
+                        className="impact-btn impact-btn--secondary impact-btn--sm"
                       >
                         Load
                       </button>
@@ -189,21 +176,21 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                           type="button"
                           onClick={() => onLoad(entry)}
                           disabled={isLoadDisabled}
-                          className="impact-btn impact-btn--secondary py-2 text-xs"
+                          className="impact-btn impact-btn--secondary impact-btn--sm"
                         >
                           Load
                         </button>
                         <button
                           type="button"
                           onClick={() => beginRename(entry)}
-                          className="impact-btn impact-btn--secondary py-2 text-xs"
+                          className="impact-btn impact-btn--secondary impact-btn--sm"
                         >
                           Rename
                         </button>
                         <button
                           type="button"
                           onClick={() => onDelete(entry.id)}
-                          className="impact-btn impact-btn--danger py-2 text-xs"
+                          className="impact-btn impact-btn--danger impact-btn--sm"
                         >
                           Delete
                         </button>
@@ -211,7 +198,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                           <button
                             type="button"
                             onClick={() => onCopyLink(entry)}
-                            className="impact-btn impact-btn--secondary py-2 text-xs"
+                            className="impact-btn impact-btn--secondary impact-btn--sm"
                           >
                             Copy Link
                           </button>
@@ -230,7 +217,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
               onClick={() => {
                 setShowInactiveEntries((current) => !current);
               }}
-              className="impact-btn impact-btn--ghost text-xs"
+              className="impact-btn impact-btn--ghost impact-btn--xs"
             >
               {inactiveToggleLabel}
             </button>

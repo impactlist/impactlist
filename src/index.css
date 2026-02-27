@@ -240,6 +240,15 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
+  .impact-tabs[data-locked='true'] {
+    background: color-mix(in srgb, var(--bg-surface-alt) 82%, white 18%);
+  }
+
+  .impact-tabs[data-locked='true'] .impact-tab {
+    color: color-mix(in srgb, var(--text-muted) 78%, var(--border-strong) 22%);
+    opacity: 0.78;
+  }
+
   .impact-tab {
     border: 1px solid transparent;
     border-radius: 999px;
@@ -265,6 +274,25 @@
     border-color: color-mix(in srgb, var(--custom-accent-strong) 82%, black 18%);
     background: linear-gradient(145deg, var(--custom-accent) 0%, var(--custom-accent-strong) 100%);
     box-shadow: 0 8px 16px -14px color-mix(in srgb, var(--custom-accent-strong) 82%, transparent 18%);
+  }
+
+  .impact-tabs[data-locked='true'] .impact-tab[data-active='true'] {
+    color: color-mix(in srgb, var(--text-strong) 80%, var(--text-muted) 20%);
+    border-color: color-mix(in srgb, var(--border-strong) 74%, var(--border-subtle) 26%);
+    background: color-mix(in srgb, var(--bg-canvas-strong) 58%, white 42%);
+    box-shadow: none;
+    opacity: 1;
+  }
+
+  .impact-tab:disabled {
+    cursor: not-allowed;
+  }
+
+  .assumptions-toolbar__hint {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    line-height: 1.3;
   }
 
   .assumption-card {

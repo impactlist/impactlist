@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
-const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions' }) => {
+const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions', isLocked = false }) => {
   const tabRefs = useRef([]);
 
   const handleKeyDown = (event, index) => {
@@ -34,7 +34,7 @@ const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions' })
   };
 
   return (
-    <div className="impact-tabs" role="tablist" aria-label="Assumption sections">
+    <div className="impact-tabs" role="tablist" aria-label="Assumption sections" data-locked={isLocked}>
       {tabs.map((tab, index) => (
         <button
           key={tab.id}
@@ -47,10 +47,11 @@ const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions' })
           role="tab"
           aria-selected={activeTab === tab.id}
           aria-controls={`${idBase}-panel-${tab.id}`}
-          tabIndex={activeTab === tab.id ? 0 : -1}
+          tabIndex={isLocked ? -1 : activeTab === tab.id ? 0 : -1}
           onKeyDown={(event) => handleKeyDown(event, index)}
           data-active={activeTab === tab.id}
           className="impact-tab"
+          disabled={isLocked}
         >
           {tab.label}
         </button>
@@ -69,6 +70,7 @@ TabNavigation.propTypes = {
     })
   ).isRequired,
   idBase: PropTypes.string,
+  isLocked: PropTypes.bool,
 };
 
 export default TabNavigation;

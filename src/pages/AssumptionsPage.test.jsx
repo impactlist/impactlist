@@ -129,6 +129,21 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.getByTestId('location-probe')).toHaveTextContent(`categoryId=${firstValidCategoryId}`);
   });
 
+  it('keeps tab navigation visible and locked while editing a category', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
+
+    expect(await screen.findByText(/Edit effects for category/i)).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Global' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Categories' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Recipients' })).toBeDisabled();
+
+    await user.click(screen.getByRole('tab', { name: 'Global' }));
+    expect(screen.getByTestId('location-probe').textContent).toBe(
+      `/assumptions?tab=categories&categoryId=${firstValidCategoryId}`
+    );
+  });
+
   it('opens recipient editor from deep-link even when tab query param is global', async () => {
     if (!firstValidRecipientId) {
       throw new Error('Expected at least one recipient with categories in default assumptions data');
@@ -138,6 +153,23 @@ describe('AssumptionsPage routing integration', () => {
 
     expect(await screen.findByText(/Edit effects for recipient/i)).toBeInTheDocument();
     expect(screen.getByTestId('location-probe')).toHaveTextContent(`recipientId=${firstValidRecipientId}`);
+  });
+
+  it('keeps tab navigation visible and locked while editing a recipient', async () => {
+    if (!firstValidRecipientId) {
+      throw new Error('Expected at least one recipient with categories in default assumptions data');
+    }
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${firstValidRecipientId}`);
+
+    expect(await screen.findByText(/Edit effects for recipient/i)).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Global' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Categories' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Recipients' })).toBeDisabled();
+
+    await user.click(screen.getByRole('tab', { name: 'Categories' }));
+    expect(screen.getByTestId('location-probe').textContent).toContain(`recipientId=${firstValidRecipientId}`);
   });
 
   it('updates URL tab params from tab navigation and omits tab param for global', async () => {

@@ -226,10 +226,20 @@ const AssumptionsEditor = forwardRef(
 
     return (
       <div className="flex flex-col gap-3 p-3 sm:p-4">
-        {!isEditingEffects && (
-          <div className="assumptions-toolbar">
-            <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} idBase="assumptions" />
+        <div className="assumptions-toolbar">
+          <TabNavigation
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            tabs={tabs}
+            idBase="assumptions"
+            isLocked={isEditingEffects}
+          />
 
+          {isEditingEffects ? (
+            <span className="assumptions-toolbar__hint" role="status" aria-live="polite">
+              Apply or cancel current edits to switch sections.
+            </span>
+          ) : (
             <FormActions
               onReset={
                 activeTab === 'global'
@@ -250,8 +260,8 @@ const AssumptionsEditor = forwardRef(
               hasErrors={Object.keys(globalForm.errors).length > 0}
               hasUnsavedChanges={globalForm.hasUnsavedChanges}
             />
-          </div>
-        )}
+          )}
+        </div>
 
         <div
           className={isEditingEffects ? '' : 'assumptions-tabpanel'}

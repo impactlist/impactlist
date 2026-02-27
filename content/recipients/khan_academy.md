@@ -6,8 +6,8 @@ categories:
     fraction: 1
     effects:
       - effectId: standard
-        multipliers:
-          costPerQALY: 0.05
+        overrides:
+          costPerQALY: 2000
 ---
 
 # Justification of cost per life

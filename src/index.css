@@ -258,8 +258,8 @@
     position: relative;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
-    border-left-width: 5px;
-    border-left-color: transparent;
+    border-left-width: 7px;
+    border-left-color: color-mix(in srgb, var(--border-subtle) 74%, white 26%);
     background: var(--bg-surface);
     box-shadow: var(--shadow-1);
     transition:
@@ -274,13 +274,13 @@
   }
 
   .assumption-card[data-state='default'] {
+    border-left-color: color-mix(in srgb, var(--border-subtle) 74%, white 26%);
     background: linear-gradient(160deg, #fffdf8 0%, #fff8eb 100%);
   }
 
   .assumption-card[data-state='custom'] {
-    border-left-color: var(--custom-accent);
-    border-left-width: 7px;
     border-color: color-mix(in srgb, var(--custom-accent) 54%, var(--border-subtle) 46%);
+    border-left-color: var(--custom-accent);
     background: linear-gradient(160deg, color-mix(in srgb, var(--custom-accent-soft) 74%, white 26%) 0%, #fff6e9 100%);
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--custom-accent) 24%, transparent 76%),
@@ -294,8 +294,8 @@
   }
 
   .assumption-card[data-state='error'] {
-    border-left-color: var(--danger);
     border-color: color-mix(in srgb, var(--danger) 48%, var(--border-subtle) 52%);
+    border-left-color: var(--danger);
     background: linear-gradient(160deg, #fff5f5 0%, #fff9f8 100%);
   }
 

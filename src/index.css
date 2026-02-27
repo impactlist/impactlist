@@ -260,8 +260,18 @@
 
   .assumption-card[data-state='custom'] {
     border-left-color: var(--accent);
-    border-color: color-mix(in srgb, var(--accent) 34%, var(--border-subtle) 66%);
-    background: linear-gradient(160deg, color-mix(in srgb, var(--accent-soft) 58%, white 42%) 0%, #fef8ee 100%);
+    border-left-width: 7px;
+    border-color: color-mix(in srgb, var(--accent) 54%, var(--border-subtle) 46%);
+    background: linear-gradient(160deg, color-mix(in srgb, var(--accent-soft) 74%, white 26%) 0%, #fff6e9 100%);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 24%, transparent 76%),
+      var(--shadow-1);
+  }
+
+  .assumption-card[data-state='custom']:hover {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent 70%),
+      0 14px 24px -20px rgba(11, 93, 102, 0.55);
   }
 
   .assumption-card[data-state='error'] {

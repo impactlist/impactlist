@@ -89,8 +89,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
             currentValue !== '' &&
             currentValue !== null &&
             Math.abs(Number(currentValue) - Number(defaultValue)) > 0.0000001;
-
-          const state = hasError ? 'error' : isCustom ? 'custom' : 'default';
+          const showDefaultHelper = isCustom && !hasError && !param.readonly;
 
           return (
             <SectionCard
@@ -117,9 +116,6 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                       </svg>
                     </Tooltip>
                   </div>
-                  <p className="mt-1 text-xs text-[var(--text-muted)]">
-                    {param.readonly ? 'Fixed benchmark value used for all calculations.' : 'Editable assumption.'}
-                  </p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -134,9 +130,11 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                     />
                   )}
                   {param.readonly && <span className="impact-muted-pill">Fixed</span>}
-                  <span className="assumption-state-pill" data-state={state}>
-                    {hasError ? 'Error' : isCustom ? 'Custom' : 'Default'}
-                  </span>
+                  {hasError && (
+                    <span className="assumption-state-pill" data-state="error">
+                      Error
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="mt-3">
@@ -172,8 +170,10 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   />
                 )}
               </div>
-              {isCustom && !hasError && (
-                <p className="impact-field__helper mt-2">Default: {formatDisplayValue(defaultValue, param.format)}</p>
+              {!param.readonly && (
+                <p className="impact-field__helper mt-2 min-h-[1rem]">
+                  {showDefaultHelper ? `Default: ${formatDisplayValue(defaultValue, param.format)}` : '\u00A0'}
+                </p>
               )}
             </SectionCard>
           );

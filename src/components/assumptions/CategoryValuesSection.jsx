@@ -89,9 +89,6 @@ const CategoryValuesSection = ({
                       {categoryData.name}
                     </Link>
                   </label>
-                  <p className="mt-1 text-xs text-[var(--text-muted)]">
-                    {isCustom ? 'Custom effect assumptions applied.' : 'Using default category assumptions.'}
-                  </p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -130,15 +127,8 @@ const CategoryValuesSection = ({
                 />
               </div>
 
-              <div className="mt-2 flex items-center justify-between gap-2">
-                {isCustom ? (
-                  <div className="impact-field__helper">Default: ${formattedDefault}</div>
-                ) : (
-                  <div className="impact-field__helper">Default baseline in view.</div>
-                )}
-                <span className="assumption-state-pill" data-state={isCustom ? 'custom' : 'default'}>
-                  {isCustom ? 'Custom' : 'Default'}
-                </span>
+              <div className="mt-2 min-h-[1.25rem]">
+                <div className="impact-field__helper">{isCustom ? `Default: $${formattedDefault}` : '\u00A0'}</div>
               </div>
             </SectionCard>
           );

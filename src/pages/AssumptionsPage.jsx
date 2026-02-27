@@ -572,15 +572,11 @@ const AssumptionsPage = () => {
       >
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
-              Research Dashboard
-            </p>
             <h1 className="assumptions-title text-center text-4xl font-bold text-[var(--text-strong)] sm:text-left sm:text-5xl">
               Assumptions
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-[var(--text-muted)]">
-              Configure model assumptions with a clear default-vs-custom signal before saving or sharing your launch
-              scenario.
+              Adjust the parameters used to calculate cost per life across categories and recipients.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">

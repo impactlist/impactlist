@@ -10,11 +10,7 @@ const FormActions = ({
   hasUnsavedChanges = true,
 }) => {
   const isSaveDisabled = hasErrors || !hasUnsavedChanges;
-  const statusMessage = hasErrors
-    ? 'Fix validation errors before applying.'
-    : !hasUnsavedChanges && showSave
-      ? 'No unsaved changes.'
-      : '';
+  const statusMessage = hasErrors ? 'Fix validation errors before applying.' : '';
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-3">

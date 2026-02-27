@@ -236,7 +236,9 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
             </button>
           )}
 
-          {entries.length === 0 && <p className="text-sm text-[var(--text-muted)]">No saved assumptions yet.</p>}
+          {entries.length === 0 && !isDefaultActive && (
+            <p className="text-sm text-[var(--text-muted)]">No saved assumptions yet.</p>
+          )}
         </div>
       </div>
     </section>

@@ -159,10 +159,6 @@ const RecipientValuesSection = ({
                           : 'Single-category recipient estimate.'}
                       </p>
                     </div>
-
-                    <span className="assumption-state-pill" data-state={hasCustomValues ? 'custom' : 'default'}>
-                      {hasCustomValues ? 'Custom' : 'Default'}
-                    </span>
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2">

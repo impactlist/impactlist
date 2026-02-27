@@ -232,10 +232,7 @@ const AssumptionsEditor = forwardRef(
 
             <div className="assumptions-context flex min-w-[250px] flex-1 items-center justify-center px-2 text-center sm:text-left">
               {activeTab === 'global' ? (
-                <p>
-                  Global parameters that shape all projected cost-per-life calculations across categories and
-                  recipients.
-                </p>
+                <p>Global parameters used across all cost-per-life calculations.</p>
               ) : (
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
                   <span className="font-semibold text-[var(--text-strong)]">Preview for year</span>
@@ -246,7 +243,7 @@ const AssumptionsEditor = forwardRef(
                     label=""
                     className=""
                   />
-                  <span>across {activeTab === 'categories' ? 'cause categories' : 'recipient profiles'}.</span>
+                  <span>{activeTab === 'categories' ? 'for categories.' : 'for recipients.'}</span>
                 </div>
               )}
             </div>

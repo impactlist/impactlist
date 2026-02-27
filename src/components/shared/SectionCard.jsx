@@ -13,7 +13,11 @@ const SectionCard = ({
   showStateBadge = true,
 }) => {
   const state = hasError ? 'error' : isCustom ? 'custom' : 'default';
-  const stateLabel = hasError ? 'Error' : isCustom ? 'Custom' : 'Default';
+  const stateLabels = {
+    default: 'Default',
+    custom: 'Custom',
+    error: 'Error',
+  };
 
   const paddingClasses = {
     none: '',
@@ -28,7 +32,7 @@ const SectionCard = ({
         {showStateBadge && (
           <div className="mb-2.5 flex justify-end">
             <span className="assumption-state-pill" data-state={state}>
-              {stateLabel}
+              {stateLabels[state]}
             </span>
           </div>
         )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import EffectEditorActionButtons from './EffectEditorActionButtons';
 
 /**
  * Shared footer component for effect editors with save/cancel buttons
@@ -19,14 +20,13 @@ const EffectEditorFooter = ({
     <div className="rounded-b-lg bg-[var(--bg-surface-alt)] px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="text-sm">{hasErrors && <span className="text-[var(--danger)]">{errorMessage}</span>}</div>
-        <div className="flex space-x-3">
-          <button type="button" onClick={onCancel} className="impact-btn impact-btn--secondary">
-            {cancelLabel}
-          </button>
-          <button type="button" onClick={onSave} disabled={isDisabled} className="impact-btn impact-btn--custom-accent">
-            {saveLabel}
-          </button>
-        </div>
+        <EffectEditorActionButtons
+          onCancel={onCancel}
+          onSave={onSave}
+          isSaveDisabled={isDisabled}
+          saveLabel={saveLabel}
+          cancelLabel={cancelLabel}
+        />
       </div>
     </div>
   );

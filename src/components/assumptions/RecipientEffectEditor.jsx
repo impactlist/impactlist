@@ -6,6 +6,7 @@ import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffect
 import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
+import EffectEditorActionButtons from '../shared/EffectEditorActionButtons';
 import DisableToggleButton from '../shared/DisableToggleButton';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
@@ -190,6 +191,16 @@ const RecipientEffectEditor = ({
     onSave(effectsToSave);
   };
 
+  const showHeaderActions = tempEditToEffects.length > 1;
+  const headerActions = showHeaderActions ? (
+    <EffectEditorActionButtons
+      onSave={handleSave}
+      onCancel={onCancel}
+      isSaveDisabled={hasErrors || !hasUnsavedChanges}
+      compact={true}
+    />
+  ) : null;
+
   return (
     <div className="assumptions-shell assumptions-shell--editor overflow-hidden">
       <EffectEditorHeader
@@ -223,8 +234,9 @@ const RecipientEffectEditor = ({
             </div>
           ) : null
         }
-        combinedCostPerLife={combinedCostPerLife}
-        showCombinedCost={tempEditToEffects.length > 1}
+        combinedCostPerLife={showHeaderActions ? combinedCostPerLife : undefined}
+        showCombinedCost={showHeaderActions}
+        headerActions={headerActions}
       />
 
       {/* Effects List */}

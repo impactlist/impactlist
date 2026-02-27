@@ -6,6 +6,7 @@ import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffect
 import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
+import EffectEditorActionButtons from '../shared/EffectEditorActionButtons';
 import DisableToggleButton from '../shared/DisableToggleButton';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
@@ -401,6 +402,16 @@ const MultiCategoryRecipientEditor = ({
     return totalWeightedCost / totalWeight;
   }, [categories, categoryData, recipient]);
 
+  const showHeaderActions = categories.length > 1;
+  const headerActions = showHeaderActions ? (
+    <EffectEditorActionButtons
+      onSave={handleSave}
+      onCancel={onCancel}
+      isSaveDisabled={hasErrors || !hasUnsavedChanges}
+      compact={true}
+    />
+  ) : null;
+
   return (
     <div className="assumptions-shell assumptions-shell--editor overflow-hidden">
       <EffectEditorHeader
@@ -430,8 +441,9 @@ const MultiCategoryRecipientEditor = ({
             )}
           </div>
         }
-        combinedCostPerLife={recipientCombinedCostPerLife}
-        showCombinedCost={categories.length > 1}
+        combinedCostPerLife={showHeaderActions ? recipientCombinedCostPerLife : undefined}
+        showCombinedCost={showHeaderActions}
+        headerActions={headerActions}
       />
 
       {/* Scrollable container for all category sections */}

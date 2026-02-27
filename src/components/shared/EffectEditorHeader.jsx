@@ -5,9 +5,16 @@ import EffectCostDisplay from './EffectCostDisplay';
 /**
  * Shared header component for effect editors
  */
-const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombinedCost = true, onClose }) => {
+const EffectEditorHeader = ({
+  title,
+  description,
+  combinedCostPerLife,
+  showCombinedCost = true,
+  headerActions = null,
+  onClose,
+}) => {
   const hasCombinedCost = showCombinedCost && combinedCostPerLife !== undefined;
-  const hasRightContent = hasCombinedCost || Boolean(onClose);
+  const hasRightContent = Boolean(headerActions) || Boolean(onClose);
 
   return (
     <div className="rounded-t-lg bg-[var(--bg-surface-alt)] px-6 py-4">
@@ -20,17 +27,18 @@ const EffectEditorHeader = ({ title, description, combinedCostPerLife, showCombi
             ) : (
               <div className="mt-1 text-sm text-[var(--text-muted)]">{description}</div>
             ))}
+          {hasCombinedCost && (
+            <EffectCostDisplay
+              cost={combinedCostPerLife}
+              label="Combined cost per life:"
+              showInfinity={true}
+              className="mt-1.5 whitespace-nowrap"
+            />
+          )}
         </div>
         {hasRightContent && (
           <div className="ml-4 flex shrink-0 items-start gap-3">
-            {hasCombinedCost && (
-              <EffectCostDisplay
-                cost={combinedCostPerLife}
-                label="Combined cost per life:"
-                showInfinity={true}
-                className="pt-1 text-right whitespace-nowrap"
-              />
-            )}
+            {headerActions}
             {onClose && (
               <button
                 type="button"
@@ -55,6 +63,7 @@ EffectEditorHeader.propTypes = {
   description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   combinedCostPerLife: PropTypes.number,
   showCombinedCost: PropTypes.bool,
+  headerActions: PropTypes.node,
   onClose: PropTypes.func,
 };
 

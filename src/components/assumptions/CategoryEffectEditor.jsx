@@ -6,6 +6,7 @@ import PopulationEffectInputs from './effects/PopulationEffectInputs';
 import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
+import EffectEditorActionButtons from '../shared/EffectEditorActionButtons';
 import DisableToggleButton from '../shared/DisableToggleButton';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import {
@@ -156,6 +157,16 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     }
   };
 
+  const showHeaderActions = tempEditToEffects.length > 1;
+  const headerActions = showHeaderActions ? (
+    <EffectEditorActionButtons
+      onSave={handleSave}
+      onCancel={onCancel}
+      isSaveDisabled={hasErrors || !hasUnsavedChanges}
+      compact={true}
+    />
+  ) : null;
+
   if (!category) return null;
 
   return (
@@ -187,8 +198,9 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
             </div>
           ) : null
         }
-        combinedCostPerLife={tempEditToEffects.length > 1 ? combinedCostPerLife : undefined}
-        showCombinedCost={tempEditToEffects.length > 1}
+        combinedCostPerLife={showHeaderActions ? combinedCostPerLife : undefined}
+        showCombinedCost={showHeaderActions}
+        headerActions={headerActions}
       />
 
       {/* Effects List */}

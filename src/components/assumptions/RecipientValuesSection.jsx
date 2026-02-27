@@ -30,7 +30,7 @@ const RecipientValuesSection = ({
   );
 
   // Calculate the cost per life for a recipient's category
-  const getRecipientCategoryCostPerLife = (recipientId, recipient, categoryId) => {
+  const getRecipientCategoryCostPerLife = (recipientId, recipient, categoryId, includeUserOverrides = true) => {
     const category = defaultAssumptions?.categories?.[categoryId];
 
     if (!category || !category.effects || category.effects.length === 0) {
@@ -41,7 +41,7 @@ const RecipientValuesSection = ({
     const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
 
     let effectsToApply = null;
-    if (userRecipientEffects && userRecipientEffects.length > 0) {
+    if (includeUserOverrides && userRecipientEffects && userRecipientEffects.length > 0) {
       effectsToApply = userRecipientEffects;
     } else if (defaultRecipientEffects && defaultRecipientEffects.length > 0) {
       effectsToApply = defaultRecipientEffects;
@@ -66,14 +66,14 @@ const RecipientValuesSection = ({
   };
 
   // Calculate combined/weighted cost per life across all categories for a recipient
-  const getCombinedCostPerLife = (recipientId, recipient) => {
+  const getCombinedCostPerLife = (recipientId, recipient, includeUserOverrides = true) => {
     const categories = Object.entries(recipient.categories || {});
     if (categories.length === 0) return null;
 
     // For single category, just return that category's cost
     if (categories.length === 1) {
       const [categoryId] = categories[0];
-      return getRecipientCategoryCostPerLife(recipientId, recipient, categoryId);
+      return getRecipientCategoryCostPerLife(recipientId, recipient, categoryId, includeUserOverrides);
     }
 
     // For multiple categories, calculate weighted average
@@ -82,7 +82,7 @@ const RecipientValuesSection = ({
 
     for (const [categoryId, categoryData] of categories) {
       const fraction = categoryData.fraction || 0;
-      const cost = getRecipientCategoryCostPerLife(recipientId, recipient, categoryId);
+      const cost = getRecipientCategoryCostPerLife(recipientId, recipient, categoryId, includeUserOverrides);
 
       if (cost !== null && cost !== Infinity && fraction > 0) {
         totalWeightedCost += cost * fraction;
@@ -132,8 +132,10 @@ const RecipientValuesSection = ({
               if (recipientCategories.length === 0) return null;
 
               const recipientId = getRecipientId(recipient);
-              const combinedCost = getCombinedCostPerLife(recipientId, recipient);
+              const combinedCost = getCombinedCostPerLife(recipientId, recipient, true);
+              const defaultCombinedCost = getCombinedCostPerLife(recipientId, recipient, false);
               const formattedCost = combinedCost !== null ? formatCurrency(combinedCost).replace('$', '') : '—';
+              const formattedDefaultCost = defaultCombinedCost !== null ? formatCurrency(defaultCombinedCost) : '—';
               const hasCustomValues = recipientHasAnyCustomValues(recipientId, recipient);
               const categoryCount = recipientCategories.length;
 
@@ -141,13 +143,18 @@ const RecipientValuesSection = ({
                 <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="sm" className="h-full">
                   <div className="assumption-card__top">
                     <div className="min-w-0">
-                      <Link
-                        to={`/recipient/${encodeURIComponent(recipientId)}`}
-                        className="assumptions-link block truncate text-base"
-                        title={recipient.name}
-                      >
-                        {recipient.name}
-                      </Link>
+                      <div className="assumption-card__title-wrap pr-2">
+                        <Link
+                          to={`/recipient/${encodeURIComponent(recipientId)}`}
+                          className="assumptions-link block min-w-0 truncate text-base"
+                          title={recipient.name}
+                        >
+                          {recipient.name}
+                        </Link>
+                        {hasCustomValues && (
+                          <span className="assumption-card__default-meta">(Default: {formattedDefaultCost})</span>
+                        )}
+                      </div>
                       <p className="mt-0.5 text-xs text-[var(--text-muted)]">
                         {categoryCount > 1
                           ? `${categoryCount} categories weighted into one combined estimate.`

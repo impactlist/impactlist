@@ -70,25 +70,28 @@ const CategoryValuesSection = ({
           const isCustom = categoriesWithCustomValues && categoriesWithCustomValues.has(key);
 
           // Format values for display (strip $ sign since CurrencyInput adds it)
-          const formattedDefault = formatCurrency(defaultValue).replace('$', '');
+          const formattedDefaultWithSymbol = formatCurrency(defaultValue);
+          const formattedDefault = formattedDefaultWithSymbol.replace('$', '');
           const formattedCurrent = formatCurrency(currentValue).replace('$', '');
 
           return (
             <SectionCard key={key} isCustom={isCustom} padding="sm" className="h-full">
               <div className="assumption-card__top">
                 <div className="min-w-0">
-                  <label
-                    className="block truncate pr-2 text-sm font-semibold text-[var(--text-strong)]"
-                    htmlFor={`category-${key}`}
-                  >
-                    <Link
-                      to={`/category/${encodeURIComponent(key)}`}
-                      className="assumptions-link"
-                      title={categoryData.name}
-                    >
-                      {categoryData.name}
-                    </Link>
-                  </label>
+                  <div className="assumption-card__title-wrap pr-2">
+                    <label className="block min-w-0" htmlFor={`category-${key}`}>
+                      <Link
+                        to={`/category/${encodeURIComponent(key)}`}
+                        className="assumptions-link block truncate text-sm font-semibold"
+                        title={categoryData.name}
+                      >
+                        {categoryData.name}
+                      </Link>
+                    </label>
+                    {isCustom && (
+                      <span className="assumption-card__default-meta">(Default: {formattedDefaultWithSymbol})</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="assumption-card__actions">
@@ -118,10 +121,6 @@ const CategoryValuesSection = ({
                   placeholder={formattedDefault}
                   disabled={true}
                 />
-              </div>
-
-              <div className="mt-1 min-h-[1.1rem]">
-                <div className="impact-field__helper">{isCustom ? `Default: $${formattedDefault}` : '\u00A0'}</div>
               </div>
             </SectionCard>
           );

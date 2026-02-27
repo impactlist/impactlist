@@ -20,7 +20,12 @@ const FormActions = ({
           {resetLabel}
         </button>
         {showSave && (
-          <button type="button" onClick={onSave} disabled={isSaveDisabled} className="impact-btn impact-btn--primary">
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={isSaveDisabled}
+            className="impact-btn impact-btn--custom-accent"
+          >
             Apply
           </button>
         )}

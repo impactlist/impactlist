@@ -587,7 +587,7 @@ const AssumptionsPage = () => {
               </button>
             )}
             {isUsingCustomValues && (
-              <button type="button" onClick={handleShareButtonClick} className="impact-btn impact-btn--primary">
+              <button type="button" onClick={handleShareButtonClick} className="impact-btn impact-btn--custom-accent">
                 Share Assumptions
               </button>
             )}

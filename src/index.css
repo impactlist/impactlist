@@ -15,10 +15,14 @@
     --text-strong: #1f2426;
     --text-muted: #5f645f;
     --text-on-accent: #f2fbfc;
+    --text-on-custom-accent: #f2f6ff;
 
     --accent: #0b5d66;
     --accent-strong: #094850;
     --accent-soft: #d9edf0;
+    --custom-accent: #4460b2;
+    --custom-accent-strong: #354c91;
+    --custom-accent-soft: #dbe4ff;
 
     --success: #1f6e54;
     --success-soft: #e4f4ed;
@@ -164,6 +168,17 @@
     box-shadow: 0 16px 24px -16px rgba(9, 72, 80, 0.82);
   }
 
+  .impact-btn--custom-accent {
+    color: var(--text-on-custom-accent);
+    border-color: color-mix(in srgb, var(--custom-accent-strong) 88%, black 12%);
+    background: linear-gradient(160deg, var(--custom-accent) 0%, var(--custom-accent-strong) 100%);
+    box-shadow: 0 12px 20px -14px color-mix(in srgb, var(--custom-accent-strong) 82%, transparent 18%);
+  }
+
+  .impact-btn--custom-accent:hover:not(:disabled) {
+    box-shadow: 0 16px 26px -16px color-mix(in srgb, var(--custom-accent-strong) 88%, transparent 12%);
+  }
+
   .impact-btn--secondary {
     border-color: var(--border-strong);
     color: var(--text-strong);
@@ -233,10 +248,10 @@
   }
 
   .impact-tab[data-active='true'] {
-    color: var(--text-on-accent);
-    border-color: color-mix(in srgb, var(--accent-strong) 80%, black 20%);
-    background: linear-gradient(145deg, var(--accent) 0%, var(--accent-strong) 100%);
-    box-shadow: 0 8px 16px -14px rgba(11, 93, 102, 0.9);
+    color: var(--text-on-custom-accent);
+    border-color: color-mix(in srgb, var(--custom-accent-strong) 82%, black 18%);
+    background: linear-gradient(145deg, var(--custom-accent) 0%, var(--custom-accent-strong) 100%);
+    box-shadow: 0 8px 16px -14px color-mix(in srgb, var(--custom-accent-strong) 82%, transparent 18%);
   }
 
   .assumption-card {
@@ -263,19 +278,19 @@
   }
 
   .assumption-card[data-state='custom'] {
-    border-left-color: var(--accent);
+    border-left-color: var(--custom-accent);
     border-left-width: 7px;
-    border-color: color-mix(in srgb, var(--accent) 54%, var(--border-subtle) 46%);
-    background: linear-gradient(160deg, color-mix(in srgb, var(--accent-soft) 74%, white 26%) 0%, #fff6e9 100%);
+    border-color: color-mix(in srgb, var(--custom-accent) 54%, var(--border-subtle) 46%);
+    background: linear-gradient(160deg, color-mix(in srgb, var(--custom-accent-soft) 74%, white 26%) 0%, #fff6e9 100%);
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--accent) 24%, transparent 76%),
+      0 0 0 1px color-mix(in srgb, var(--custom-accent) 24%, transparent 76%),
       var(--shadow-1);
   }
 
   .assumption-card[data-state='custom']:hover {
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent 70%),
-      0 14px 24px -20px rgba(11, 93, 102, 0.55);
+      0 0 0 1px color-mix(in srgb, var(--custom-accent) 30%, transparent 70%),
+      0 14px 24px -20px color-mix(in srgb, var(--custom-accent-strong) 58%, transparent 42%);
   }
 
   .assumption-card[data-state='error'] {
@@ -301,8 +316,8 @@
   }
 
   .assumption-state-pill[data-state='custom'] {
-    color: var(--accent-strong);
-    background: color-mix(in srgb, var(--accent-soft) 65%, white 35%);
+    color: var(--custom-accent-strong);
+    background: color-mix(in srgb, var(--custom-accent-soft) 65%, white 35%);
   }
 
   .assumption-state-pill[data-state='error'] {
@@ -411,8 +426,8 @@
   }
 
   .impact-field[data-state='custom'] .impact-field__input {
-    border-color: color-mix(in srgb, var(--accent) 38%, var(--border-subtle) 62%);
-    background: color-mix(in srgb, var(--accent-soft) 32%, white 68%);
+    border-color: color-mix(in srgb, var(--custom-accent) 38%, var(--border-subtle) 62%);
+    background: color-mix(in srgb, var(--custom-accent-soft) 36%, white 64%);
   }
 
   .impact-field[data-state='error'] .impact-field__input {
@@ -525,8 +540,8 @@
   }
 
   .assumptions-entry[data-active='true'] {
-    border-color: color-mix(in srgb, var(--accent) 38%, var(--border-subtle) 62%);
-    border-left: 4px solid var(--accent);
+    border-color: color-mix(in srgb, var(--custom-accent) 38%, var(--border-subtle) 62%);
+    border-left: 4px solid var(--custom-accent);
     padding-left: 10px;
   }
 

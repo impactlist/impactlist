@@ -23,7 +23,7 @@ const EffectEditorFooter = ({
           <button type="button" onClick={onCancel} className="impact-btn impact-btn--secondary">
             {cancelLabel}
           </button>
-          <button type="button" onClick={onSave} disabled={isDisabled} className="impact-btn impact-btn--primary">
+          <button type="button" onClick={onSave} disabled={isDisabled} className="impact-btn impact-btn--custom-accent">
             {saveLabel}
           </button>
         </div>

@@ -272,7 +272,7 @@ const AssumptionsEditor = forwardRef(
           {!isEditingEffects && (
             <div className="assumptions-panel-context">
               {activeTab === 'global' ? (
-                <span>Global parameters that affect the lives saved for each category or recipient:</span>
+                <span>Global parameters that affect the lives saved calculations:</span>
               ) : (
                 <>
                   <span>Cost to save a life in</span>

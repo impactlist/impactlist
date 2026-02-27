@@ -138,7 +138,6 @@ const RecipientValuesSection = ({
               const formattedCost = combinedCost !== null ? formatCurrency(combinedCost).replace('$', '') : '—';
               const formattedDefaultCost = defaultCombinedCost !== null ? formatCurrency(defaultCombinedCost) : '—';
               const hasCustomValues = recipientHasAnyCustomValues(recipientId, recipient);
-              const categoryCount = recipientCategories.length;
 
               return (
                 <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="sm" className="h-full">
@@ -156,11 +155,6 @@ const RecipientValuesSection = ({
                           <span className="assumption-card__default-meta">(Default: {formattedDefaultCost})</span>
                         )}
                       </div>
-                      <p className="mt-0.5 text-xs text-[var(--text-muted)]">
-                        {categoryCount > 1
-                          ? `${categoryCount} categories weighted into one combined estimate.`
-                          : 'Single-category recipient estimate.'}
-                      </p>
                     </div>
                     <div className="assumption-card__actions">
                       {hasCustomValues && onResetRecipient && (

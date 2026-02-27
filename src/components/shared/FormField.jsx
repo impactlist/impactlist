@@ -78,6 +78,7 @@ const FormField = ({
 
   const displayValue = formatDisplayValue(value);
   const placeholderValue = placeholder || formatDefaultDisplay(defaultValue);
+  const defaultLabelValue = `${prefix || ''}${formatDefaultDisplay(defaultValue)}`;
   const fieldState = hasError ? 'error' : isCustom ? 'custom' : 'default';
 
   return (
@@ -86,11 +87,16 @@ const FormField = ({
       data-state={fieldState}
     >
       {/* Label and Reset action */}
-      <div className="mb-2 flex items-start justify-between">
-        <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-[var(--text-strong)]">
-          {label}
-          {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-[var(--text-muted)]" />}
-        </label>
+      <div className="mb-2 flex items-start justify-between gap-2">
+        <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 pr-2">
+          <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-[var(--text-strong)]">
+            {label}
+            {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-[var(--text-muted)]" />}
+          </label>
+          {isCustom && !hasError && (
+            <span className="assumption-card__default-meta">(Default: {defaultLabelValue})</span>
+          )}
+        </div>
         {isCustom && !disabled && (
           <IconActionButton icon="reset" label="Reset" onClick={handleReset} className="shrink-0" />
         )}
@@ -115,14 +121,6 @@ const FormField = ({
       {hasError && (
         <p className="impact-field__error" role="alert">
           {error}
-        </p>
-      )}
-
-      {/* Default value display */}
-      {isCustom && !hasError && (
-        <p className="impact-field__helper">
-          Default: {prefix || ''}
-          {formatDefaultDisplay(defaultValue)}
         </p>
       )}
     </div>

@@ -105,7 +105,7 @@ const RecipientValuesSection = ({
 
   return (
     <div>
-      <div className="mb-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-3 shadow-[var(--shadow-1)]">
+      <div className="mb-4 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] p-3 shadow-[0_4px_12px_-6px_rgba(32,24,12,0.15)]">
         <SearchInput value={searchTerm} onChange={onSearch} placeholder="Search recipients..." />
         <div className="mt-2 text-sm italic text-[var(--text-muted)]">
           {searchTerm === ''

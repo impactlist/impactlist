@@ -109,10 +109,6 @@
   }
 
   .assumptions-tabpanel {
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    background: var(--bg-surface);
-    box-shadow: var(--shadow-1);
     padding: 16px;
   }
 

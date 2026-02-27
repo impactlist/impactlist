@@ -82,7 +82,7 @@
   }
 
   .assumptions-shell {
-    background: linear-gradient(145deg, rgba(255, 253, 248, 0.98), rgba(249, 241, 229, 0.96));
+    background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-2);
@@ -119,7 +119,7 @@
   .assumptions-info-block {
     border-radius: var(--radius-md);
     border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border-subtle) 65%);
-    background: linear-gradient(145deg, color-mix(in srgb, var(--accent-soft) 42%, white 58%), #f9f4ea);
+    background: color-mix(in srgb, var(--accent-soft) 42%, white 58%);
     color: color-mix(in srgb, var(--accent-strong) 90%, black 10%);
   }
 
@@ -182,12 +182,12 @@
   .impact-btn--secondary {
     border-color: var(--border-strong);
     color: var(--text-strong);
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 236, 222, 0.72) 100%);
+    background: color-mix(in srgb, white 92%, var(--bg-surface-alt) 8%);
   }
 
   .impact-btn--secondary:hover:not(:disabled) {
     border-color: color-mix(in srgb, var(--border-strong) 74%, var(--accent) 26%);
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(236, 226, 210, 0.9));
+    background: color-mix(in srgb, white 95%, var(--bg-surface-alt) 5%);
   }
 
   .impact-btn--ghost {
@@ -275,13 +275,13 @@
 
   .assumption-card[data-state='default'] {
     border-left-color: color-mix(in srgb, var(--border-subtle) 74%, white 26%);
-    background: linear-gradient(160deg, #fffdf8 0%, #fff8eb 100%);
+    background: #fffdf8;
   }
 
   .assumption-card[data-state='custom'] {
     border-color: color-mix(in srgb, var(--custom-accent) 54%, var(--border-subtle) 46%);
     border-left-color: var(--custom-accent);
-    background: linear-gradient(160deg, color-mix(in srgb, var(--custom-accent-soft) 74%, white 26%) 0%, #fff6e9 100%);
+    background: color-mix(in srgb, var(--custom-accent-soft) 62%, white 38%);
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--custom-accent) 24%, transparent 76%),
       var(--shadow-1);
@@ -296,7 +296,7 @@
   .assumption-card[data-state='error'] {
     border-color: color-mix(in srgb, var(--danger) 48%, var(--border-subtle) 52%);
     border-left-color: var(--danger);
-    background: linear-gradient(160deg, #fff5f5 0%, #fff9f8 100%);
+    background: color-mix(in srgb, var(--danger-soft) 52%, white 48%);
   }
 
   .assumption-state-pill {
@@ -350,7 +350,7 @@
   .assumption-state-pill[data-state='active'] {
     color: #0a6a45;
     border-color: #17a56f;
-    background: linear-gradient(145deg, #d0fbe6 0%, #b9f5da 100%);
+    background: #cdf9e3;
     box-shadow:
       0 0 0 1px color-mix(in srgb, #0ea86c 32%, transparent 68%),
       0 4px 10px -9px color-mix(in srgb, #0ea86c 65%, transparent 35%);
@@ -534,7 +534,7 @@
   .assumptions-entry {
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
-    background: linear-gradient(160deg, color-mix(in srgb, var(--bg-surface-alt) 58%, white 42%) 0%, #fffefb 100%);
+    background: color-mix(in srgb, var(--bg-surface-alt) 58%, white 42%);
     padding: 12px;
     box-shadow: var(--shadow-1);
   }
@@ -644,7 +644,7 @@
   }
 
   .effect-card--section {
-    background: linear-gradient(160deg, color-mix(in srgb, var(--bg-surface-alt) 84%, white 16%) 0%, #fffefb 100%);
+    background: color-mix(in srgb, var(--bg-surface-alt) 84%, white 16%);
   }
 
   .effect-card__title {
@@ -766,31 +766,19 @@
   .impact-notice-card[data-tone='info'] {
     color: color-mix(in srgb, var(--accent-strong) 82%, black 18%);
     border-color: color-mix(in srgb, var(--accent) 42%, var(--border-subtle) 58%);
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--accent-soft) 54%, white 46%) 0%,
-      color-mix(in srgb, var(--bg-surface) 85%, var(--accent-soft) 15%) 100%
-    );
+    background: color-mix(in srgb, var(--accent-soft) 54%, white 46%);
   }
 
   .impact-notice-card[data-tone='success'] {
     color: color-mix(in srgb, var(--success) 90%, black 10%);
     border-color: color-mix(in srgb, var(--success) 40%, var(--border-subtle) 60%);
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--success-soft) 68%, white 32%) 0%,
-      color-mix(in srgb, var(--bg-surface) 82%, var(--success-soft) 18%) 100%
-    );
+    background: color-mix(in srgb, var(--success-soft) 68%, white 32%);
   }
 
   .impact-notice-card[data-tone='error'] {
     color: color-mix(in srgb, var(--danger) 92%, black 8%);
     border-color: color-mix(in srgb, var(--danger) 44%, var(--border-subtle) 56%);
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--danger-soft) 72%, white 28%) 0%,
-      color-mix(in srgb, var(--bg-surface) 84%, var(--danger-soft) 16%) 100%
-    );
+    background: color-mix(in srgb, var(--danger-soft) 72%, white 28%);
   }
 
   .impact-notice-card__row {

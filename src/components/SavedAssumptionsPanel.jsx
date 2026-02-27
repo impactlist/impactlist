@@ -137,12 +137,12 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                       <span className="text-sm font-semibold text-[var(--text-strong)]">{entry.label}</span>
                     )}
                     {!isDefaultEntry && (
-                      <span className="assumption-state-pill" data-state={isRemote ? 'info' : 'default'}>
+                      <span className="assumption-state-pill" data-state={isRemote ? 'remote' : 'local'}>
                         {isRemote ? 'Remote' : 'Local'}
                       </span>
                     )}
                     {isActive && (
-                      <span className="assumption-state-pill" data-state="info">
+                      <span className="assumption-state-pill" data-state="active">
                         Active
                       </span>
                     )}

@@ -287,9 +287,11 @@
   .assumption-state-pill {
     border-radius: 999px;
     padding: 2px 8px;
+    border: 1px solid transparent;
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.04em;
+    line-height: 1.1;
     text-transform: uppercase;
   }
 
@@ -316,6 +318,27 @@
   .assumption-state-pill[data-state='info'] {
     color: var(--accent-strong);
     background: color-mix(in srgb, var(--accent-soft) 72%, white 28%);
+  }
+
+  .assumption-state-pill[data-state='local'] {
+    color: color-mix(in srgb, var(--text-strong) 86%, black 14%);
+    border-color: color-mix(in srgb, var(--border-strong) 68%, var(--border-subtle) 32%);
+    background: color-mix(in srgb, var(--bg-surface-alt) 92%, #efe5d5 8%);
+  }
+
+  .assumption-state-pill[data-state='remote'] {
+    color: color-mix(in srgb, var(--accent-strong) 88%, black 12%);
+    border-color: color-mix(in srgb, var(--accent) 54%, var(--border-subtle) 46%);
+    background: color-mix(in srgb, var(--accent-soft) 82%, white 18%);
+  }
+
+  .assumption-state-pill[data-state='active'] {
+    color: #0a6a45;
+    border-color: #17a56f;
+    background: linear-gradient(145deg, #d0fbe6 0%, #b9f5da 100%);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, #0ea86c 32%, transparent 68%),
+      0 4px 10px -9px color-mix(in srgb, #0ea86c 65%, transparent 35%);
   }
 
   .impact-field {

@@ -230,24 +230,6 @@ const AssumptionsEditor = forwardRef(
           <div className="assumptions-toolbar">
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} idBase="assumptions" />
 
-            <div className="assumptions-context flex min-w-[250px] flex-1 items-center justify-center px-2 text-center sm:text-left">
-              {activeTab === 'global' ? (
-                <p>Global parameters used across all cost-per-life calculations.</p>
-              ) : (
-                <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                  <span className="font-semibold text-[var(--text-strong)]">Preview for year</span>
-                  <YearSelector
-                    value={previewYear}
-                    onChange={setPreviewYear}
-                    id="assumptions-preview-year"
-                    label=""
-                    className=""
-                  />
-                  <span>{activeTab === 'categories' ? 'for categories.' : 'for recipients.'}</span>
-                </div>
-              )}
-            </div>
-
             <FormActions
               onReset={
                 activeTab === 'global'
@@ -277,6 +259,26 @@ const AssumptionsEditor = forwardRef(
           role={isEditingEffects ? undefined : 'tabpanel'}
           aria-labelledby={isEditingEffects ? undefined : `assumptions-tab-${activeTab}`}
         >
+          {!isEditingEffects && (
+            <div className="assumptions-panel-context">
+              {activeTab === 'global' ? (
+                <span>Global parameters that affect the lives saved for each category or recipient:</span>
+              ) : (
+                <>
+                  <span>Cost to save a life in</span>
+                  <YearSelector
+                    value={previewYear}
+                    onChange={setPreviewYear}
+                    id="assumptions-preview-year"
+                    label=""
+                    className="assumptions-panel-context__year-selector"
+                  />
+                  <span>{activeTab === 'categories' ? 'for each cause category:' : 'for each recipient:'}</span>
+                </>
+              )}
+            </div>
+          )}
+
           {editingCategoryId ? (
             <CategoryEffectEditor
               category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}

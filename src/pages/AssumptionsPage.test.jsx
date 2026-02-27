@@ -78,7 +78,7 @@ describe('AssumptionsPage routing integration', () => {
   it('shows categories list for an invalid category deep-link instead of opening an editor', async () => {
     renderAssumptionsRoute('/assumptions?tab=categories&categoryId=missing-category');
 
-    expect(await screen.findByText(/for categories/i)).toBeInTheDocument();
+    expect(await screen.findByText(/for each cause category/i)).toBeInTheDocument();
     expect(screen.queryByText(/Edit effects for category/i)).not.toBeInTheDocument();
   });
 

@@ -18,6 +18,24 @@ const iconDefinitions = {
     strokeLinejoin: 'round',
     paths: ['M3 2v6h6', 'M3 13a9 9 0 1 0 3-7.7L3 8'],
   },
+  delete: {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2.1,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    paths: ['M3 6h18', 'M8 6V4h8v2', 'M19 6l-1 14H6L5 6', 'M10 11v6', 'M14 11v6'],
+  },
+  'copy-link': {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2.25,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    paths: ['M10 7H7a5 5 0 1 0 0 10h3', 'M14 17h3a5 5 0 0 0 0-10h-3', 'M8 12h8'],
+  },
 };
 
 const IconActionButton = ({ icon, label, onClick, className = '', tone = 'default' }) => {
@@ -51,7 +69,7 @@ const IconActionButton = ({ icon, label, onClick, className = '', tone = 'defaul
 };
 
 IconActionButton.propTypes = {
-  icon: PropTypes.oneOf(['edit', 'reset']).isRequired,
+  icon: PropTypes.oneOf(['edit', 'reset', 'delete', 'copy-link']).isRequired,
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   className: PropTypes.string,

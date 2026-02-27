@@ -21,6 +21,7 @@ const RecipientValuesSection = ({
   defaultAssumptions,
   userAssumptions,
   onEditRecipient,
+  onResetRecipient,
   previewYear,
 }) => {
   // Merge global parameters once
@@ -162,6 +163,9 @@ const RecipientValuesSection = ({
                       </p>
                     </div>
                     <div className="assumption-card__actions">
+                      {hasCustomValues && onResetRecipient && (
+                        <IconActionButton icon="reset" label="Reset" onClick={() => onResetRecipient(recipientId)} />
+                      )}
                       <IconActionButton
                         icon="edit"
                         label="Edit"
@@ -196,6 +200,7 @@ RecipientValuesSection.propTypes = {
   defaultAssumptions: PropTypes.object.isRequired,
   userAssumptions: PropTypes.object,
   onEditRecipient: PropTypes.func.isRequired,
+  onResetRecipient: PropTypes.func,
   previewYear: PropTypes.number,
 };
 

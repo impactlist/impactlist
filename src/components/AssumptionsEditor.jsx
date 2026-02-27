@@ -332,6 +332,7 @@ const AssumptionsEditor = forwardRef(
               defaultAssumptions={defaultAssumptions}
               userAssumptions={userAssumptions}
               onEditRecipient={handleEditRecipient}
+              onResetRecipient={resetRecipientToDefaults}
               previewYear={previewYear}
             />
           )}

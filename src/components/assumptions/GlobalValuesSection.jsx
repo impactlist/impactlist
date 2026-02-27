@@ -89,21 +89,25 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
             currentValue !== '' &&
             currentValue !== null &&
             Math.abs(Number(currentValue) - Number(defaultValue)) > 0.0000001;
-          const showDefaultHelper = isCustom && !hasError && !param.readonly;
+          const showDefaultMeta = isCustom && !hasError && !param.readonly;
+          const formattedDefaultValue = formatDisplayValue(defaultValue, param.format);
 
           return (
-            <SectionCard key={param.id} hasError={hasError} isCustom={isCustom} padding="default">
-              <div className="flex flex-wrap items-start justify-between gap-3">
+            <SectionCard key={param.id} hasError={hasError} isCustom={isCustom} padding="sm">
+              <div className="assumption-card__top">
                 <div className="min-w-[220px] flex-1">
-                  <div className="flex items-center gap-1.5">
+                  <div className="assumption-card__title-wrap pr-2">
                     <label htmlFor={param.id} className="text-sm font-semibold text-[var(--text-strong)]">
                       {param.label}
                     </label>
                     <InfoTooltipIcon content={param.description} />
+                    {showDefaultMeta && (
+                      <span className="assumption-card__default-meta">(Default: {formattedDefaultValue})</span>
+                    )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="assumption-card__actions">
                   {!param.readonly && isCustom && (
                     <IconActionButton
                       icon="reset"
@@ -123,7 +127,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   )}
                 </div>
               </div>
-              <div className="mt-3">
+              <div className="mt-2">
                 {param.readonly ? (
                   <div className="impact-field">
                     <div className="impact-field__control">
@@ -156,11 +160,6 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                   />
                 )}
               </div>
-              {!param.readonly && (
-                <p className="impact-field__helper mt-2 min-h-[1rem]">
-                  {showDefaultHelper ? `Default: ${formatDisplayValue(defaultValue, param.format)}` : '\u00A0'}
-                </p>
-              )}
             </SectionCard>
           );
         })}

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formatWithCursorHandling, formatNumberWithCommas } from '../../utils/formatters';
 import InfoTooltipIcon from './InfoTooltipIcon';
+import IconActionButton from './IconActionButton';
 
 /**
  * Reusable form field component with consistent styling for custom values
@@ -84,16 +85,14 @@ const FormField = ({
       className="impact-field rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3"
       data-state={fieldState}
     >
-      {/* Label and Reset button */}
+      {/* Label and Reset action */}
       <div className="mb-2 flex items-start justify-between">
         <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-[var(--text-strong)]">
           {label}
           {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-[var(--text-muted)]" />}
         </label>
         {isCustom && !disabled && (
-          <button type="button" className="impact-btn impact-btn--ghost impact-btn--xs" onClick={handleReset}>
-            Reset
-          </button>
+          <IconActionButton icon="reset" label="Reset" onClick={handleReset} className="shrink-0" />
         )}
       </div>
 

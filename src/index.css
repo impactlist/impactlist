@@ -496,6 +496,49 @@
     min-width: 0;
   }
 
+  .impact-field__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 1.8rem;
+  }
+
+  .impact-field__header-main {
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.52rem;
+  }
+
+  .impact-field__label-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    color: var(--text-strong);
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.18;
+  }
+
+  .impact-field__default-meta {
+    font-size: 0.73rem;
+  }
+
+  .impact-field__header-action {
+    width: 1.8rem;
+    flex: 0 0 1.8rem;
+    display: inline-flex;
+    justify-content: flex-end;
+  }
+
+  .impact-field__action-spacer {
+    width: 1.8rem;
+    height: 1.8rem;
+    visibility: hidden;
+  }
+
   .impact-field__label {
     color: color-mix(in srgb, var(--text-strong) 88%, black 12%);
     font-size: 0.76rem;

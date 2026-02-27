@@ -74,24 +74,23 @@ const PopulationEffectInputs = ({
           disabled={isDisabled}
         />
 
-        <div className="flex flex-col">
-          <FormField
-            id={`effect-${effectIndex}-windowLength`}
-            label="Duration (years)"
-            description={getEffectTooltip('population', 'windowLength')}
-            value={effect.windowLength}
-            defaultValue={defaultEffect?.windowLength}
-            onChange={handleChange('windowLength')}
-            error={getError('windowLength')}
-            disabled={isDisabled}
-          />
-          <TimeLimitMessage
-            startTime={effect.startTime}
-            windowLength={effect.windowLength}
-            timeLimit={globalParameters?.timeLimit}
-          />
-        </div>
+        <FormField
+          id={`effect-${effectIndex}-windowLength`}
+          label="Duration (years)"
+          description={getEffectTooltip('population', 'windowLength')}
+          value={effect.windowLength}
+          defaultValue={defaultEffect?.windowLength}
+          onChange={handleChange('windowLength')}
+          error={getError('windowLength')}
+          disabled={isDisabled}
+        />
       </div>
+      <TimeLimitMessage
+        startTime={effect.startTime}
+        windowLength={effect.windowLength}
+        timeLimit={globalParameters?.timeLimit}
+        className="px-1 text-right"
+      />
     </div>
   );
 };

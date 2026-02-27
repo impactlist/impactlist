@@ -87,19 +87,26 @@ const FormField = ({
       data-state={fieldState}
     >
       {/* Label and Reset action */}
-      <div className="mb-2 flex items-start justify-between gap-2">
-        <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 pr-2">
-          <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-[var(--text-strong)]">
+      <div className="impact-field__header mb-2">
+        <div className="impact-field__header-main pr-2">
+          <label htmlFor={id} className="impact-field__label-inline">
             {label}
             {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-[var(--text-muted)]" />}
           </label>
           {isCustom && !hasError && (
-            <span className="assumption-card__default-meta">(Default: {defaultLabelValue})</span>
+            <span className="assumption-card__default-meta impact-field__default-meta">
+              (Default: {defaultLabelValue})
+            </span>
           )}
         </div>
-        {isCustom && !disabled && (
-          <IconActionButton icon="reset" label="Reset" onClick={handleReset} className="shrink-0" />
-        )}
+
+        <div className="impact-field__header-action">
+          {isCustom && !disabled ? (
+            <IconActionButton icon="reset" label="Reset" onClick={handleReset} className="shrink-0" />
+          ) : (
+            <span className="impact-field__action-spacer" aria-hidden="true" />
+          )}
+        </div>
       </div>
 
       {/* Input field */}

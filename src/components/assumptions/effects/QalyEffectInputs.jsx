@@ -17,31 +17,31 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
   };
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <FormField
-        id={`effect-${effectIndex}-costPerQALY`}
-        label="Cost per life-year"
-        description={getEffectTooltip('qaly', 'costPerQALY')}
-        value={effect.costPerQALY}
-        defaultValue={defaultEffect?.costPerQALY}
-        onChange={handleChange('costPerQALY')}
-        error={getError('costPerQALY')}
-        prefix="$"
-        disabled={isDisabled}
-      />
+    <div className="space-y-1">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <FormField
+          id={`effect-${effectIndex}-costPerQALY`}
+          label="Cost per life-year"
+          description={getEffectTooltip('qaly', 'costPerQALY')}
+          value={effect.costPerQALY}
+          defaultValue={defaultEffect?.costPerQALY}
+          onChange={handleChange('costPerQALY')}
+          error={getError('costPerQALY')}
+          prefix="$"
+          disabled={isDisabled}
+        />
 
-      <FormField
-        id={`effect-${effectIndex}-startTime`}
-        label="Start Time (years)"
-        description={getEffectTooltip('qaly', 'startTime')}
-        value={effect.startTime}
-        defaultValue={defaultEffect?.startTime}
-        onChange={handleChange('startTime')}
-        error={getError('startTime')}
-        disabled={isDisabled}
-      />
+        <FormField
+          id={`effect-${effectIndex}-startTime`}
+          label="Start Time (years)"
+          description={getEffectTooltip('qaly', 'startTime')}
+          value={effect.startTime}
+          defaultValue={defaultEffect?.startTime}
+          onChange={handleChange('startTime')}
+          error={getError('startTime')}
+          disabled={isDisabled}
+        />
 
-      <div className="flex flex-col">
         <FormField
           id={`effect-${effectIndex}-windowLength`}
           label="Duration (years)"
@@ -52,12 +52,13 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
           error={getError('windowLength')}
           disabled={isDisabled}
         />
-        <TimeLimitMessage
-          startTime={effect.startTime}
-          windowLength={effect.windowLength}
-          timeLimit={globalParameters?.timeLimit}
-        />
       </div>
+      <TimeLimitMessage
+        startTime={effect.startTime}
+        windowLength={effect.windowLength}
+        timeLimit={globalParameters?.timeLimit}
+        className="px-1 text-right"
+      />
     </div>
   );
 };

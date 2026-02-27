@@ -727,12 +727,21 @@
     background: color-mix(in srgb, var(--bg-surface-alt) 58%, white 42%);
     padding: 10px 12px;
     box-shadow: 0 6px 14px -16px rgba(34, 26, 12, 0.45);
+    transition:
+      border-color 160ms var(--ease-standard),
+      background-color 160ms var(--ease-standard),
+      box-shadow 180ms var(--ease-standard);
+  }
+
+  .assumptions-entry[data-active='false'] {
+    background: color-mix(in srgb, var(--bg-surface-alt) 56%, white 44%);
   }
 
   .assumptions-entry[data-active='true'] {
-    border-color: color-mix(in srgb, var(--custom-accent) 38%, var(--border-subtle) 62%);
-    border-left: 4px solid var(--custom-accent);
-    padding-left: 10px;
+    border-width: 2px;
+    border-color: #000;
+    background: color-mix(in srgb, var(--bg-surface-alt) 54%, white 46%);
+    box-shadow: 0 10px 20px -18px rgba(35, 30, 20, 0.52);
   }
 
   .assumptions-inline-error {

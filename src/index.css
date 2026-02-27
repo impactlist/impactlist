@@ -286,6 +286,81 @@
     box-shadow: 0 14px 24px -20px rgba(32, 24, 12, 0.6);
   }
 
+  .assumption-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .assumption-card__actions {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 0.35rem;
+  }
+
+  .impact-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: color-mix(in srgb, var(--text-muted) 78%, var(--text-strong) 22%);
+    transition:
+      color 140ms ease,
+      background-color 140ms ease,
+      transform 140ms ease,
+      opacity 140ms ease;
+  }
+
+  .impact-icon-btn svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .impact-icon-btn[data-icon='edit'] svg {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .impact-icon-btn[data-icon='reset'] {
+    color: color-mix(in srgb, var(--text-strong) 88%, black 12%);
+  }
+
+  .impact-icon-btn[data-icon='reset'] svg {
+    width: 1.08rem;
+    height: 1.08rem;
+  }
+
+  .impact-icon-btn:hover {
+    color: var(--custom-accent-strong);
+    background: color-mix(in srgb, var(--custom-accent-soft) 28%, transparent 72%);
+    transform: translateY(-0.5px) scale(1.02);
+  }
+
+  .impact-icon-btn[data-icon='reset']:hover {
+    color: color-mix(in srgb, var(--warning) 78%, var(--text-strong) 22%);
+  }
+
+  .impact-icon-btn[data-tone='danger'] {
+    color: color-mix(in srgb, var(--danger) 78%, var(--text-strong) 22%);
+  }
+
+  .impact-icon-btn[data-tone='danger']:hover {
+    color: var(--danger);
+    background: color-mix(in srgb, var(--danger-soft) 44%, transparent 56%);
+  }
+
+  .impact-icon-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+
   .assumption-card[data-state='default'] {
     border-left-color: color-mix(in srgb, var(--border-subtle) 74%, white 26%);
     background: #fffdf8;

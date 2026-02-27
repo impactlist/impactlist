@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CurrencyInput from '../shared/CurrencyInput';
 import SectionCard from '../shared/SectionCard';
-import CustomValueIndicator from '../shared/CustomValueIndicator';
+import IconActionButton from '../shared/IconActionButton';
 import { formatCurrency } from '../../utils/formatters';
 import { calculateCostPerLife } from '../../utils/effectsCalculation';
 import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
@@ -74,8 +74,8 @@ const CategoryValuesSection = ({
           const formattedCurrent = formatCurrency(currentValue).replace('$', '');
 
           return (
-            <SectionCard key={key} isCustom={isCustom} padding="default" className="h-full">
-              <div className="flex items-start justify-between gap-3">
+            <SectionCard key={key} isCustom={isCustom} padding="sm" className="h-full">
+              <div className="assumption-card__top">
                 <div className="min-w-0">
                   <label
                     className="block truncate pr-2 text-sm font-semibold text-[var(--text-strong)]"
@@ -91,31 +91,24 @@ const CategoryValuesSection = ({
                   </label>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <CustomValueIndicator
-                    isCustom={isCustom}
-                    onReset={() => {
-                      if (onResetCategory) {
-                        onResetCategory(key);
-                      }
-                    }}
-                  />
-                  <button
-                    type="button"
+                <div className="assumption-card__actions">
+                  {isCustom && onResetCategory && (
+                    <IconActionButton icon="reset" label="Reset" onClick={() => onResetCategory(key)} />
+                  )}
+                  <IconActionButton
+                    icon="edit"
+                    label="Edit"
                     onClick={() => {
                       if (!onEditCategory) {
                         throw new Error('onEditCategory prop is required when editing categories');
                       }
                       onEditCategory(key);
                     }}
-                    className="impact-btn impact-btn--secondary impact-btn--sm"
-                  >
-                    Edit
-                  </button>
+                  />
                 </div>
               </div>
 
-              <div className="mt-3">
+              <div className="mt-2">
                 <CurrencyInput
                   id={`category-${key}`}
                   value={formattedCurrent}
@@ -127,7 +120,7 @@ const CategoryValuesSection = ({
                 />
               </div>
 
-              <div className="mt-2 min-h-[1.25rem]">
+              <div className="mt-1 min-h-[1.1rem]">
                 <div className="impact-field__helper">{isCustom ? `Default: $${formattedDefault}` : '\u00A0'}</div>
               </div>
             </SectionCard>

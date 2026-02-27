@@ -1,8 +1,8 @@
 import React from 'react';
 import SectionCard from '../shared/SectionCard';
-import CustomValueIndicator from '../shared/CustomValueIndicator';
 import NumericInput from '../shared/NumericInput';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
+import IconActionButton from '../shared/IconActionButton';
 import { formatNumberWithCommas } from '../../utils/formatters';
 
 const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
@@ -104,11 +104,12 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {!param.readonly && (
-                    <CustomValueIndicator
-                      isCustom={isCustom}
-                      hasError={hasError}
-                      onReset={() => {
+                  {!param.readonly && isCustom && (
+                    <IconActionButton
+                      icon="reset"
+                      label="Reset"
+                      tone={hasError ? 'danger' : 'default'}
+                      onClick={() => {
                         const formattedValue = formatDisplayValue(defaultValue, param.format);
                         onChange(param.id, formattedValue);
                       }}

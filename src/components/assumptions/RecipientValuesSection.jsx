@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import SearchInput from '../shared/SearchInput';
 import CurrencyInput from '../shared/CurrencyInput';
 import SectionCard from '../shared/SectionCard';
+import IconActionButton from '../shared/IconActionButton';
 import { formatCurrency } from '../../utils/formatters';
 import { getRecipientId, getCurrentYear } from '../../utils/donationDataHelpers';
 import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
@@ -11,7 +12,7 @@ import { mergeGlobalParameters, recipientHasMeaningfulCustomValues } from '../..
 
 /**
  * Component for displaying recipient-specific cost per life values.
- * Shows a single combined cost per life with Edit button to open the multi-category editor.
+ * Shows a single combined cost per life with compact actions.
  */
 const RecipientValuesSection = ({
   filteredRecipients,
@@ -137,8 +138,8 @@ const RecipientValuesSection = ({
               const categoryCount = recipientCategories.length;
 
               return (
-                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="default" className="h-full">
-                  <div className="flex items-start justify-between gap-3">
+                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="sm" className="h-full">
+                  <div className="assumption-card__top">
                     <div className="min-w-0">
                       <Link
                         to={`/recipient/${encodeURIComponent(recipientId)}`}
@@ -147,30 +148,30 @@ const RecipientValuesSection = ({
                       >
                         {recipient.name}
                       </Link>
-                      <p className="mt-1 text-xs text-[var(--text-muted)]">
+                      <p className="mt-0.5 text-xs text-[var(--text-muted)]">
                         {categoryCount > 1
                           ? `${categoryCount} categories weighted into one combined estimate.`
                           : 'Single-category recipient estimate.'}
                       </p>
                     </div>
+                    <div className="assumption-card__actions">
+                      <IconActionButton
+                        icon="edit"
+                        label="Edit"
+                        onClick={() => onEditRecipient(recipient, recipientId)}
+                      />
+                    </div>
                   </div>
 
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                  <div className="mt-2">
                     <CurrencyInput
                       id={`recipient-${recipientId}`}
                       value={formattedCost}
                       onChange={() => {}}
-                      className="w-[185px]"
+                      className="w-full"
                       disabled={true}
                       isCustom={hasCustomValues}
                     />
-                    <button
-                      type="button"
-                      onClick={() => onEditRecipient(recipient, recipientId)}
-                      className="impact-btn impact-btn--secondary impact-btn--sm"
-                    >
-                      Edit
-                    </button>
                   </div>
                 </SectionCard>
               );

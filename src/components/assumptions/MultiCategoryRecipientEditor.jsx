@@ -74,11 +74,6 @@ const CategoryEffectSection = ({
     return haveEffectsChanged(tempEditToEffects, baselineEffects);
   }, [tempEditToEffects, baselineEffects]);
 
-  // Report changes to parent whenever effects or errors change
-  useEffect(() => {
-    onEffectsChange(categoryId, tempEditToEffects, errors, hasUnsavedChanges);
-  }, [categoryId, tempEditToEffects, errors, hasUnsavedChanges, onEffectsChange]);
-
   const toggleEffectDisabled = (effectIndex) => {
     setTempEditToEffects((prev) => {
       const newEffects = [...prev];
@@ -161,6 +156,11 @@ const CategoryEffectSection = ({
   const combinedCostPerLife = useMemo(() => {
     return calculateCombinedCostPerLife(effectCostPerLife);
   }, [effectCostPerLife]);
+
+  // Report changes to parent whenever effects or errors change
+  useEffect(() => {
+    onEffectsChange(categoryId, tempEditToEffects, errors, hasUnsavedChanges, combinedCostPerLife);
+  }, [categoryId, tempEditToEffects, errors, hasUnsavedChanges, combinedCostPerLife, onEffectsChange]);
 
   return (
     <div ref={sectionRef} className="effect-card effect-card--flush effect-card--category-group mb-4 overflow-hidden">
@@ -327,10 +327,10 @@ const MultiCategoryRecipientEditor = ({
   }, [activeCategory]);
 
   // Handle effects change from a category section
-  const handleEffectsChange = useCallback((categoryId, effects, errors, hasUnsavedChanges) => {
+  const handleEffectsChange = useCallback((categoryId, effects, errors, hasUnsavedChanges, combinedCostPerLife) => {
     setCategoryData((prev) => ({
       ...prev,
-      [categoryId]: { effects, errors, hasUnsavedChanges },
+      [categoryId]: { effects, errors, hasUnsavedChanges, combinedCostPerLife },
     }));
   }, []);
 
@@ -373,6 +373,34 @@ const MultiCategoryRecipientEditor = ({
     );
   }, [categories]);
 
+  const recipientCombinedCostPerLife = useMemo(() => {
+    if (categories.length === 0) {
+      return undefined;
+    }
+
+    let totalWeightedCost = 0;
+    let totalWeight = 0;
+
+    for (const { categoryId } of categories) {
+      const cost = categoryData[categoryId]?.combinedCostPerLife;
+      if (typeof cost !== 'number') {
+        return undefined;
+      }
+
+      const fraction = recipient?.categories?.[categoryId]?.fraction ?? 0;
+      if (cost !== Infinity && fraction > 0) {
+        totalWeightedCost += cost * fraction;
+        totalWeight += fraction;
+      }
+    }
+
+    if (totalWeight === 0) {
+      return Infinity;
+    }
+
+    return totalWeightedCost / totalWeight;
+  }, [categories, categoryData, recipient]);
+
   return (
     <div className="assumptions-shell assumptions-shell--editor overflow-hidden">
       <EffectEditorHeader
@@ -402,7 +430,8 @@ const MultiCategoryRecipientEditor = ({
             )}
           </div>
         }
-        showCombinedCost={false}
+        combinedCostPerLife={recipientCombinedCostPerLife}
+        showCombinedCost={categories.length > 1}
       />
 
       {/* Scrollable container for all category sections */}

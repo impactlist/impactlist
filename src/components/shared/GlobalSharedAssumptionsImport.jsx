@@ -186,7 +186,11 @@ const GlobalSharedAssumptionsImport = () => {
   return (
     <>
       {isLoadingSharedSnapshot && (
-        <div className="rounded-md bg-slate-100 px-4 py-3 text-sm text-slate-700">Loading shared assumptions...</div>
+        <div className="impact-notice-card" data-tone="info" role="status">
+          <div className="impact-notice-card__row">
+            <span className="impact-notice-card__text">Loading shared assumptions...</span>
+          </div>
+        </div>
       )}
 
       <SharedImportDecisionModal

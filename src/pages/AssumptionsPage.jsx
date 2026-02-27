@@ -577,7 +577,7 @@ const AssumptionsPage = () => {
               Assumptions
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-[var(--text-muted)]">
-              Adjust the parameters used to calculate cost per life across categories and recipients.
+              Adjust the parameters used to calculate lives saved.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">

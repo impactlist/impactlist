@@ -69,22 +69,7 @@
   .assumptions-page {
     position: relative;
     overflow: hidden;
-    background:
-      radial-gradient(120% 100% at 5% 0%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 62%),
-      radial-gradient(100% 80% at 100% 0%, rgba(22, 97, 108, 0.12) 0%, rgba(22, 97, 108, 0) 68%),
-      linear-gradient(180deg, var(--bg-canvas) 0%, var(--bg-canvas-strong) 100%);
-  }
-
-  .assumptions-page::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
-    background-size: 36px 36px;
-    opacity: 0.24;
+    background: var(--bg-canvas-strong);
   }
 
   .assumptions-title {
@@ -707,9 +692,112 @@
   .assumptions-link:hover {
     color: color-mix(in srgb, var(--accent-strong) 78%, black 22%);
   }
+
+  .impact-notice-overlay {
+    position: absolute;
+    inset-inline: 0;
+    top: 0.7rem;
+    z-index: 30;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    padding-inline: 0.75rem;
+  }
+
+  .impact-notice-overlay:empty {
+    display: none;
+  }
+
+  .impact-notice-overlay > .impact-notice-card {
+    width: min(100%, 44rem);
+    pointer-events: auto;
+  }
+
+  .impact-notice-card {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    background: color-mix(in srgb, var(--bg-surface) 92%, white 8%);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 14px 28px -22px rgba(33, 25, 14, 0.58);
+    padding: 0.72rem 0.9rem;
+    font-size: 0.82rem;
+  }
+
+  .impact-notice-card[data-tone='info'] {
+    color: color-mix(in srgb, var(--accent-strong) 82%, black 18%);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--border-subtle) 58%);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--accent-soft) 54%, white 46%) 0%,
+      color-mix(in srgb, var(--bg-surface) 85%, var(--accent-soft) 15%) 100%
+    );
+  }
+
+  .impact-notice-card[data-tone='success'] {
+    color: color-mix(in srgb, var(--success) 90%, black 10%);
+    border-color: color-mix(in srgb, var(--success) 40%, var(--border-subtle) 60%);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--success-soft) 68%, white 32%) 0%,
+      color-mix(in srgb, var(--bg-surface) 82%, var(--success-soft) 18%) 100%
+    );
+  }
+
+  .impact-notice-card[data-tone='error'] {
+    color: color-mix(in srgb, var(--danger) 92%, black 8%);
+    border-color: color-mix(in srgb, var(--danger) 44%, var(--border-subtle) 56%);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--danger-soft) 72%, white 28%) 0%,
+      color-mix(in srgb, var(--bg-surface) 84%, var(--danger-soft) 16%) 100%
+    );
+  }
+
+  .impact-notice-card__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .impact-notice-card__text {
+    line-height: 1.35;
+  }
+
+  .impact-notice-card__dismiss {
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent 72%);
+    background: color-mix(in srgb, white 62%, transparent 38%);
+    color: inherit;
+    padding: 0.2rem 0.58rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+    transition:
+      background-color 140ms ease,
+      border-color 140ms ease;
+  }
+
+  .impact-notice-card__dismiss:hover {
+    border-color: color-mix(in srgb, currentColor 44%, transparent 56%);
+    background: color-mix(in srgb, white 80%, transparent 20%);
+  }
+
+  .impact-notice-card__dismiss:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
 }
 
 @media (max-width: 640px) {
+  .impact-notice-overlay {
+    top: 0.5rem;
+    padding-inline: 0.5rem;
+  }
+
   .assumptions-toolbar {
     padding: 10px;
   }

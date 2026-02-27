@@ -103,13 +103,20 @@ const AppContent = () => {
           isFAQ={isFAQ}
           isAssumptions={isAssumptions}
         />
-        <div className="flex-grow bg-slate-50">
-          <div className="mx-auto mt-4 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="min-h-[28px] space-y-2">
+        <div className={`flex-grow ${isAssumptions ? 'relative' : 'bg-slate-50'}`}>
+          {isAssumptions ? (
+            <div className="impact-notice-overlay">
               <GlobalNotificationBanner />
               <GlobalSharedAssumptionsImport />
             </div>
-          </div>
+          ) : (
+            <div className="mx-auto mt-4 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="min-h-[28px] space-y-2">
+                <GlobalNotificationBanner />
+                <GlobalSharedAssumptionsImport />
+              </div>
+            </div>
+          )}
           <Routes>
             <Route path="/" element={<DonorList />} />
             <Route path="/donor/:donorId" element={<DonorDetail />} />

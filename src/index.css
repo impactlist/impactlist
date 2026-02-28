@@ -744,6 +744,14 @@
     box-shadow: 0 6px 14px -16px rgba(34, 26, 12, 0.45);
   }
 
+  .assumptions-entry[data-active='true'][data-dirty='true'] {
+    border-color: color-mix(in srgb, var(--custom-accent) 42%, var(--border-subtle) 58%);
+    background: color-mix(in srgb, var(--custom-accent-soft) 28%, var(--bg-surface) 72%);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--custom-accent) 18%, transparent 82%),
+      0 10px 18px -18px color-mix(in srgb, var(--custom-accent-strong) 46%, transparent 54%);
+  }
+
   .assumptions-inline-error {
     background: color-mix(in srgb, var(--danger-soft) 84%, white 16%);
     color: var(--danger);

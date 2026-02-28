@@ -84,7 +84,11 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
 
             return (
               <Fragment key={entry.id}>
-                <div className="assumptions-entry assumptions-entry--compact" data-active={isActive}>
+                <div
+                  className="assumptions-entry assumptions-entry--compact"
+                  data-active={isActive}
+                  data-dirty={isActive && hasUnsavedChanges}
+                >
                   <div className="saved-assumption-row__top">
                     <div className="saved-assumption-row__identity">
                       {isEditing ? (
@@ -163,11 +167,6 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                           {isActive && (
                             <span className="assumption-state-pill assumption-state-pill--compact" data-state="active">
                               Active
-                            </span>
-                          )}
-                          {isActive && hasUnsavedChanges && (
-                            <span className="assumption-state-pill assumption-state-pill--compact" data-state="warning">
-                              Unsaved changes
                             </span>
                           )}
                         </>

@@ -125,7 +125,7 @@ const RecipientValuesSection = ({
             : 'No recipients with custom values found. Search for a specific recipient.'}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {filteredRecipients
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((recipient) => {

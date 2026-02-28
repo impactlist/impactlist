@@ -74,7 +74,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {parameters.map((param) => {
           // For NumericInput, we need to pass the correct value based on format
           // For percentages: use formatted (already in percentage form, e.g., "2" for 2%)

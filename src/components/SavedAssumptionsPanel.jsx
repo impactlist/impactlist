@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import IconActionButton from './shared/IconActionButton';
 
@@ -73,21 +73,9 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
         <h2 className="assumptions-title text-2xl font-semibold text-[var(--text-strong)]">Saved Assumptions</h2>
       </div>
 
-      <div className="border-t border-[var(--border-subtle)] px-4 py-4 sm:px-5">
+      <div className="px-4 py-4 sm:px-5">
         <div className="space-y-3">
-          {shouldShowInactiveToggleAtTop && (
-            <button
-              type="button"
-              onClick={() => {
-                setShowInactiveEntries((current) => !current);
-              }}
-              className="impact-btn impact-btn--ghost impact-btn--xs"
-            >
-              {inactiveToggleLabel}
-            </button>
-          )}
-
-          {visibleEntries.map((entry) => {
+          {visibleEntries.map((entry, index) => {
             const isDefaultEntry = entry.id === DEFAULT_ENTRY_ID;
             const isActive = activeId === entry.id;
             const isEditing = !isDefaultEntry && editingId === entry.id;
@@ -95,112 +83,126 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
             const isLoadDisabled = isActive && !hasUnsavedChanges;
 
             return (
-              <div key={entry.id} className="assumptions-entry assumptions-entry--compact" data-active={isActive}>
-                <div className="saved-assumption-row__top">
-                  <div className="saved-assumption-row__identity">
-                    {isEditing ? (
-                      <div className="saved-assumption-row__edit-controls">
-                        <input
-                          type="text"
-                          value={editLabel}
-                          onChange={(event) => {
-                            setEditLabel(event.target.value);
-                            setRenameError('');
-                          }}
-                          onKeyDown={(event) => {
-                            if (event.key === 'Enter') {
-                              event.preventDefault();
-                              commitRename();
-                            } else if (event.key === 'Escape') {
-                              event.preventDefault();
-                              cancelRename();
-                            }
-                          }}
-                          className="impact-field__input h-8 rounded-md px-2 text-sm"
-                          autoFocus
-                        />
-                        <button
-                          type="button"
-                          onClick={commitRename}
-                          className="impact-btn impact-btn--secondary impact-btn--xs"
-                        >
-                          Save
-                        </button>
-                        <button
-                          type="button"
-                          onClick={cancelRename}
-                          className="impact-btn impact-btn--secondary impact-btn--xs"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <span className="saved-assumption-row__label text-sm font-semibold text-[var(--text-strong)]">
-                          {entry.label}
-                        </span>
-                        {!isDefaultEntry && (
-                          <>
-                            <IconActionButton
-                              icon="edit"
-                              label="Rename"
-                              onClick={() => beginRename(entry)}
-                              className="saved-assumption-row__inline-icon"
-                            />
-                            <IconActionButton
-                              icon="delete"
-                              label="Delete"
-                              tone="danger"
-                              onClick={() => onDelete(entry.id)}
-                              className="saved-assumption-row__inline-icon"
-                            />
-                            {entry.shareUrl && (
+              <Fragment key={entry.id}>
+                <div className="assumptions-entry assumptions-entry--compact" data-active={isActive}>
+                  <div className="saved-assumption-row__top">
+                    <div className="saved-assumption-row__identity">
+                      {isEditing ? (
+                        <div className="saved-assumption-row__edit-controls">
+                          <input
+                            type="text"
+                            value={editLabel}
+                            onChange={(event) => {
+                              setEditLabel(event.target.value);
+                              setRenameError('');
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key === 'Enter') {
+                                event.preventDefault();
+                                commitRename();
+                              } else if (event.key === 'Escape') {
+                                event.preventDefault();
+                                cancelRename();
+                              }
+                            }}
+                            className="impact-field__input h-8 rounded-md px-2 text-sm"
+                            autoFocus
+                          />
+                          <button
+                            type="button"
+                            onClick={commitRename}
+                            className="impact-btn impact-btn--secondary impact-btn--xs"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={cancelRename}
+                            className="impact-btn impact-btn--secondary impact-btn--xs"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="saved-assumption-row__label text-sm font-semibold text-[var(--text-strong)]">
+                            {entry.label}
+                          </span>
+                          {!isDefaultEntry && (
+                            <>
                               <IconActionButton
-                                icon="copy-link"
-                                label="Copy Link"
-                                onClick={() => onCopyLink(entry)}
+                                icon="edit"
+                                label="Rename"
+                                onClick={() => beginRename(entry)}
                                 className="saved-assumption-row__inline-icon"
                               />
-                            )}
-                            <span
-                              className="assumption-state-pill assumption-state-pill--compact"
-                              data-state={isRemote ? 'remote' : 'local'}
-                              title={isRemote && entry.reference ? `Remote ref: ${entry.reference}` : undefined}
-                            >
-                              {isRemote ? 'Remote' : 'Local'}
+                              <IconActionButton
+                                icon="delete"
+                                label="Delete"
+                                tone="danger"
+                                onClick={() => onDelete(entry.id)}
+                                className="saved-assumption-row__inline-icon"
+                              />
+                              {entry.shareUrl && (
+                                <IconActionButton
+                                  icon="copy-link"
+                                  label="Copy Link"
+                                  onClick={() => onCopyLink(entry)}
+                                  className="saved-assumption-row__inline-icon"
+                                />
+                              )}
+                              <span
+                                className="assumption-state-pill assumption-state-pill--compact"
+                                data-state={isRemote ? 'remote' : 'local'}
+                                title={isRemote && entry.reference ? `Remote ref: ${entry.reference}` : undefined}
+                              >
+                                {isRemote ? 'Remote' : 'Local'}
+                              </span>
+                            </>
+                          )}
+                          {isActive && (
+                            <span className="assumption-state-pill assumption-state-pill--compact" data-state="active">
+                              Active
                             </span>
-                          </>
-                        )}
-                        {isActive && (
-                          <span className="assumption-state-pill assumption-state-pill--compact" data-state="active">
-                            Active
-                          </span>
-                        )}
-                        {isActive && hasUnsavedChanges && (
-                          <span className="assumption-state-pill assumption-state-pill--compact" data-state="warning">
-                            Unsaved changes
-                          </span>
-                        )}
-                      </>
+                          )}
+                          {isActive && hasUnsavedChanges && (
+                            <span className="assumption-state-pill assumption-state-pill--compact" data-state="warning">
+                              Unsaved changes
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {!isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => onLoad(isDefaultEntry ? { id: DEFAULT_ENTRY_ID } : entry)}
+                        disabled={isLoadDisabled}
+                        className="impact-btn impact-btn--secondary impact-btn--xs"
+                      >
+                        Load
+                      </button>
                     )}
                   </div>
 
-                  {!isEditing && (
-                    <button
-                      type="button"
-                      onClick={() => onLoad(isDefaultEntry ? { id: DEFAULT_ENTRY_ID } : entry)}
-                      disabled={isLoadDisabled}
-                      className="impact-btn impact-btn--secondary impact-btn--xs"
-                    >
-                      Load
-                    </button>
+                  {isEditing && renameError && (
+                    <p className="assumptions-inline-error mt-2 rounded-md px-2 py-1 text-xs">{renameError}</p>
                   )}
                 </div>
 
-                {isEditing && renameError && (
-                  <p className="assumptions-inline-error mt-2 rounded-md px-2 py-1 text-xs">{renameError}</p>
+                {shouldShowInactiveToggleAtTop && index === 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowInactiveEntries((current) => !current);
+                    }}
+                    className="impact-btn impact-btn--ghost impact-btn--xs"
+                  >
+                    {inactiveToggleLabel}
+                  </button>
                 )}
-              </div>
+              </Fragment>
             );
           })}
 

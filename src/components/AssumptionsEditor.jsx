@@ -226,6 +226,10 @@ const AssumptionsEditor = forwardRef(
 
     return (
       <div className="flex flex-col gap-3 p-3 sm:p-4">
+        <div className="px-1 sm:px-2">
+          <h2 className="assumptions-title text-2xl font-semibold text-[var(--text-strong)]">Active Assumptions</h2>
+        </div>
+
         <div className="assumptions-toolbar">
           <TabNavigation
             activeTab={activeTab}

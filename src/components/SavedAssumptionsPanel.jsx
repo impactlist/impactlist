@@ -70,7 +70,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
   return (
     <section className="assumptions-shell mb-5 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 sm:px-5">
-        <h2 className="assumptions-title text-2xl font-semibold text-[var(--text-strong)]">Saved Assumptions</h2>
+        <h2 className="assumptions-title text-2xl font-semibold text-[var(--text-strong)]">Assumptions Library</h2>
       </div>
 
       <div className="px-4 py-4 sm:px-5">

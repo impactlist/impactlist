@@ -27,7 +27,7 @@ const SavedAssumptionsMigrationModal = ({ isOpen, onSaveCurrent, onSkip }) => {
             >
               <h2 className="text-xl font-bold text-slate-900">Save Current Assumptions?</h2>
               <p className="mt-2 text-sm text-slate-600">
-                You already have custom assumptions in this browser. Save them to your Saved Assumptions list now?
+                You already have custom assumptions in this browser. Save them to your Assumptions Library now?
               </p>
 
               <div className="mt-6 flex justify-end gap-2">

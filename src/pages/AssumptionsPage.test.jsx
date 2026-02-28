@@ -299,13 +299,13 @@ describe('AssumptionsPage routing integration', () => {
     expect(localStorage.getItem('customEffectsData')).toBeNull();
   });
 
-  it('hides Save Assumptions when there are no custom assumptions', async () => {
+  it('hides Save to Library when there are no custom assumptions', async () => {
     renderAssumptionsRoute('/assumptions');
     expect(await screen.findByText('Assumptions')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Save Assumptions' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Save to Library' })).not.toBeInTheDocument();
   });
 
-  it('saves current assumptions to Saved Assumptions and marks entry active', async () => {
+  it('saves current assumptions to Assumptions Library and marks entry active', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 
@@ -314,13 +314,13 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '175');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
-    expect(await screen.findByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
 
     const labelInput = screen.getByLabelText('Label');
     await user.clear(labelInput);
     await user.type(labelInput, 'My Local Snapshot');
-    const saveButtons = screen.getAllByRole('button', { name: 'Save Assumptions' });
+    const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
     await user.click(saveButtons[saveButtons.length - 1]);
 
     expect(await screen.findByText('My Local Snapshot')).toBeInTheDocument();
@@ -366,9 +366,9 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '205');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
-    expect(await screen.findByRole('button', { name: 'Update Current Saved Assumptions' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Update Current Saved Assumptions' }));
+    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    expect(await screen.findByRole('button', { name: 'Update Current Library Entry' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Update Current Library Entry' }));
 
     const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
     expect(savedEntries).toHaveLength(1);
@@ -411,14 +411,14 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '205');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(screen.getByRole('button', { name: 'Save Assumptions' }));
-    expect(await screen.findByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Update Current Saved Assumptions' })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Update Current Library Entry' })).not.toBeInTheDocument();
 
     const labelInput = screen.getByLabelText('Label');
     await user.clear(labelInput);
     await user.type(labelInput, 'Local Fork');
-    const saveButtons = screen.getAllByRole('button', { name: 'Save Assumptions' });
+    const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
     await user.click(saveButtons[saveButtons.length - 1]);
 
     const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
@@ -482,7 +482,7 @@ describe('AssumptionsPage routing integration', () => {
       expect(entries[0].source).toBe('local');
     });
 
-    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const panel = screen.getByText('Assumptions Library').closest('section');
     const row = within(panel).getByText('My Snapshot').closest('.assumptions-entry');
     expect(within(row).getByText('Remote')).toBeInTheDocument();
     expect(within(row).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
@@ -528,7 +528,7 @@ describe('AssumptionsPage routing integration', () => {
       expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(entries[0].id);
     });
 
-    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const panel = screen.getByText('Assumptions Library').closest('section');
     const row = within(panel).getByText('custom-slug-185').closest('.assumptions-entry');
     expect(within(row).getByText('Active')).toBeInTheDocument();
     expect(within(row).getByText('Remote')).toBeInTheDocument();
@@ -633,7 +633,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('loads default assumptions from Saved Assumptions panel and clears active saved entry', async () => {
+  it('loads default assumptions from Assumptions Library panel and clears active saved entry', async () => {
     const user = userEvent.setup();
     localStorage.setItem(
       'customEffectsData',
@@ -662,7 +662,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const panel = screen.getByText('Assumptions Library').closest('section');
     await user.click(within(panel).getByRole('button', { name: /Show Inactive/i }));
     const defaultRow = within(panel).getByText('Default').closest('.assumptions-entry');
     await user.click(within(defaultRow).getByRole('button', { name: 'Load' }));
@@ -712,12 +712,12 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(await screen.findByRole('button', { name: /Show Inactive/i }));
     expect(await screen.findByText('Imported From Friend')).toBeInTheDocument();
 
-    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const panel = screen.getByText('Assumptions Library').closest('section');
     const importedRow = within(panel).getByText('Imported From Friend').closest('.assumptions-entry');
     const loadButton = within(importedRow).getByRole('button', { name: 'Load' });
     await user.click(loadButton);
 
-    expect(await screen.findByText('Load Saved Assumptions?')).toBeInTheDocument();
+    expect(await screen.findByText('Load from Assumptions Library?')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
 
     await waitFor(() => {
@@ -761,13 +761,13 @@ describe('AssumptionsPage routing integration', () => {
 
     await user.click(screen.getByRole('button', { name: /Show Inactive/i }));
 
-    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const panel = screen.getByText('Assumptions Library').closest('section');
     const targetRow = within(panel).getByText('Target Saved').closest('.assumptions-entry');
     const loadButton = within(targetRow).getByRole('button', { name: 'Load' });
     await user.click(loadButton);
 
     await waitFor(() => {
-      expect(screen.queryByText('Load Saved Assumptions?')).not.toBeInTheDocument();
+      expect(screen.queryByText('Load from Assumptions Library?')).not.toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -800,7 +800,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    const panel = await screen.findByText('Saved Assumptions');
+    const panel = await screen.findByText('Assumptions Library');
     const section = panel.closest('section');
     const activeRow = within(section).getByText('Current Saved').closest('.assumptions-entry');
     expect(within(activeRow).getByRole('button', { name: 'Load' })).toBeDisabled();
@@ -837,7 +837,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '155');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const panel = screen.getByText('Assumptions Library').closest('section');
     const activeRow = within(panel).getByText('Current Saved').closest('.assumptions-entry');
     expect(within(activeRow).getByRole('button', { name: 'Load' })).toBeEnabled();
   });
@@ -887,7 +887,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(await screen.findByRole('button', { name: /Show Inactive/i }));
     expect(await screen.findByText('Old Label')).toBeInTheDocument();
 
-    const panel = screen.getByText('Saved Assumptions').closest('section');
+    const panel = screen.getByText('Assumptions Library').closest('section');
     await user.click(within(panel).getByRole('button', { name: 'Rename' }));
 
     const input = within(panel).getByDisplayValue('Old Label');
@@ -922,7 +922,7 @@ describe('AssumptionsPage routing integration', () => {
     });
 
     renderAssumptionsRoute('/assumptions');
-    const panel = await screen.findByText('Saved Assumptions');
+    const panel = await screen.findByText('Assumptions Library');
     const section = panel.closest('section');
     await user.click(within(section).getByRole('button', { name: /Show Inactive/i }));
     const secondRow = within(section).getByText('Second Label').closest('.assumptions-entry');
@@ -962,16 +962,16 @@ describe('AssumptionsPage routing integration', () => {
     }
 
     renderAssumptionsRoute('/assumptions');
-    await user.click(await screen.findByRole('button', { name: 'Save Assumptions' }));
+    await user.click(await screen.findByRole('button', { name: 'Save to Library' }));
 
     const labelInput = await screen.findByLabelText('Label');
     await user.clear(labelInput);
     await user.type(labelInput, ' taken name ');
 
-    const saveButtons = screen.getAllByRole('button', { name: 'Save Assumptions' });
+    const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
     await user.click(saveButtons[saveButtons.length - 1]);
 
-    expect(screen.getByRole('heading', { name: 'Save Assumptions' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
     expect(
       screen.getByText('You already have saved assumptions with that name. Choose a different name.')
     ).toBeInTheDocument();
@@ -1006,7 +1006,7 @@ describe('AssumptionsPage routing integration', () => {
     setActiveSavedAssumptionsId(seeded.entry.id);
 
     renderAssumptionsRoute('/assumptions');
-    await user.click(await screen.findByRole('button', { name: 'Save Assumptions' }));
+    await user.click(await screen.findByRole('button', { name: 'Save to Library' }));
 
     expect(screen.getByText(/You are about to save a duplicate copy of/i)).toHaveTextContent(
       'You are about to save a duplicate copy of Baseline Model.'

@@ -80,7 +80,7 @@ const SaveAssumptionsModal = ({
               exit={{ opacity: 0, y: 16 }}
             >
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-900">Save Assumptions</h2>
+                <h2 className="text-xl font-bold text-slate-900">Save to Library</h2>
                 <button
                   type="button"
                   onClick={onClose}
@@ -92,7 +92,7 @@ const SaveAssumptionsModal = ({
               </div>
 
               <p className="mb-4 text-sm text-slate-600">
-                Save the current assumptions to your local Saved Assumptions list.
+                Save the current assumptions to your local Assumptions Library.
               </p>
 
               {duplicateOfLabel && (
@@ -134,7 +134,7 @@ const SaveAssumptionsModal = ({
                     onClick={() => handleSubmit('update')}
                     className="rounded-md border border-indigo-300 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
                   >
-                    Update Current Saved Assumptions
+                    Update Current Library Entry
                   </button>
                 )}
 
@@ -143,7 +143,7 @@ const SaveAssumptionsModal = ({
                   onClick={() => handleSubmit('new')}
                   className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
                 >
-                  {canUpdateExisting ? 'Save as New' : 'Save Assumptions'}
+                  {canUpdateExisting ? 'Save as New' : 'Save to Library'}
                 </button>
               </div>
             </motion.div>

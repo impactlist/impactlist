@@ -389,13 +389,13 @@ const AssumptionsPage = () => {
           });
 
           if (!createResult.ok || !createResult.entry?.id) {
-            showNotification('error', 'Share link created, but could not save it to Saved Assumptions.');
+            showNotification('error', 'Share link created, but could not save it to the Assumptions Library.');
             return;
           }
 
           persistAsActive(createResult.entry.id);
         } else {
-          showNotification('error', 'Share link created, but could not sync it to Saved Assumptions.');
+          showNotification('error', 'Share link created, but could not sync it to the Assumptions Library.');
           return;
         }
       }
@@ -583,7 +583,7 @@ const AssumptionsPage = () => {
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
             {isUsingCustomValues && (
               <button type="button" onClick={handleSaveAssumptionsClick} className="impact-btn impact-btn--secondary">
-                Save Assumptions
+                Save to Library
               </button>
             )}
             {isUsingCustomValues && (
@@ -637,7 +637,7 @@ const AssumptionsPage = () => {
           isOpen={Boolean(pendingLoadEntry)}
           onContinue={handleContinuePendingLoad}
           onCancel={handleCancelPendingLoad}
-          title="Load Saved Assumptions?"
+          title="Load from Assumptions Library?"
           description="You already have custom assumptions in this browser. Continuing will replace them with this saved entry."
           continueLabel="Continue (Replace Mine)"
           cancelLabel="Cancel"
@@ -651,7 +651,7 @@ const AssumptionsPage = () => {
 
         <ConfirmActionModal
           isOpen={Boolean(pendingDeleteEntryId)}
-          title="Delete Saved Assumptions?"
+          title="Delete from Assumptions Library?"
           description="This saved assumptions entry will be removed from this browser."
           confirmLabel="Delete"
           cancelLabel="Cancel"

@@ -107,10 +107,7 @@ const RecipientList = () => {
       label: 'Organization',
       render: (recipient) => (
         <div className="max-w-[300px] break-words">
-          <Link
-            to={`/recipient/${encodeURIComponent(recipient.id)}`}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-          >
+          <Link to={`/recipient/${encodeURIComponent(recipient.id)}`} className="impact-link text-sm font-medium">
             {recipient.name}
           </Link>
         </div>
@@ -126,7 +123,7 @@ const RecipientList = () => {
         </div>
       ),
       render: (recipient) => (
-        <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-red-700' : 'text-slate-900'}`}>
+        <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
           {formatNumber(Math.round(recipient.totalLivesSaved))}
         </div>
       ),
@@ -142,7 +139,7 @@ const RecipientList = () => {
       ),
       render: (recipient) => {
         return (
-          <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+          <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
             {recipient.costPerLife === 0 ? '∞' : formatCurrency(recipient.costPerLife)}
           </div>
         );
@@ -151,30 +148,24 @@ const RecipientList = () => {
     {
       key: 'totalReceived',
       label: 'Total Received',
-      render: (recipient) => <div className="text-sm text-slate-900">{formatCurrency(recipient.totalReceived)}</div>,
+      render: (recipient) => <div className="text-sm text-strong">{formatCurrency(recipient.totalReceived)}</div>,
     },
     {
       key: 'primaryCategoryName',
       label: 'Focus Area',
       render: (recipient) => (
-        <div className="text-sm text-slate-900">
+        <div className="text-sm text-strong">
           {recipient.categoryNames.length === 1 ? (
-            <Link
-              to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`}
-              className="text-indigo-600 hover:text-indigo-800 hover:underline"
-            >
+            <Link to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`} className="impact-link">
               {recipient.primaryCategoryName}
             </Link>
           ) : (
             <div>
-              <Link
-                to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`}
-                className="text-indigo-600 hover:text-indigo-800 hover:underline"
-              >
+              <Link to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`} className="impact-link">
                 {recipient.primaryCategoryName}
               </Link>
               {recipient.categoryNames.length > 1 && (
-                <div className="text-xs text-gray-500 mt-1">+{recipient.categoryNames.length - 1} more</div>
+                <div className="mt-1 text-xs text-muted">+{recipient.categoryNames.length - 1} more</div>
               )}
             </div>
           )}
@@ -187,7 +178,7 @@ const RecipientList = () => {
     <>
       <BackButton to="/" label="Back to top donors" />
       <motion.div
-        className="min-h-screen bg-slate-50 flex flex-col items-center"
+        className="impact-page flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -198,7 +189,7 @@ const RecipientList = () => {
 
         {/* Recipients Table Container */}
         <motion.div
-          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
+          className="impact-page__container mb-12"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
@@ -208,7 +199,7 @@ const RecipientList = () => {
               <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
             </div>
           </div>
-          <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
+          <div className="impact-surface overflow-hidden">
             <div className="overflow-x-auto">
               <SortableTable
                 columns={recipientColumns}

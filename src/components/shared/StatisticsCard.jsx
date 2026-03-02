@@ -8,15 +8,15 @@ const StatisticsCard = ({
   label,
   value,
   subtext,
-  valueClassName = 'text-slate-900',
+  valueClassName = 'text-strong',
   className = '',
   icon = null,
   valueAction = null,
   valueTestId = undefined,
 }) => {
   return (
-    <div className={`flex flex-col items-center p-4 bg-slate-50 rounded-lg ${className}`}>
-      <span className="text-sm text-slate-600 uppercase font-semibold">{label}</span>
+    <div className={`impact-stat-card flex flex-col items-center p-4 ${className}`}>
+      <span className="text-sm font-semibold uppercase text-muted">{label}</span>
       <div className="flex items-center mt-1 space-x-2">
         {icon && <span>{icon}</span>}
         <span data-testid={valueTestId} className={`text-3xl font-bold ${valueClassName}`}>
@@ -24,7 +24,7 @@ const StatisticsCard = ({
         </span>
         {valueAction && <div className="flex-shrink-0">{valueAction}</div>}
       </div>
-      {subtext && <span className="text-xs text-slate-500 mt-1">{subtext}</span>}
+      {subtext && <span className="mt-1 text-xs text-muted">{subtext}</span>}
     </div>
   );
 };

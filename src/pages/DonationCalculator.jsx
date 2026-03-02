@@ -356,7 +356,7 @@ const DonationCalculator = () => {
     <>
       <BackButton to="/" label="Back to top donors" />
       <motion.div
-        className="min-h-screen bg-slate-50 flex flex-col items-center"
+        className="impact-page flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -370,7 +370,7 @@ const DonationCalculator = () => {
 
         {/* Main Content Container */}
         <motion.div
-          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
+          className="impact-page__container mb-12"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
@@ -388,7 +388,7 @@ const DonationCalculator = () => {
           <div className="h-10"></div>
 
           {/* Instruction text */}
-          <p className="text-lg text-slate-700 mb-6 px-2">
+          <p className="mb-6 px-2 text-lg text-muted">
             Enter your donation amounts to see your impact based on past or future donations.
           </p>
 
@@ -412,7 +412,7 @@ const DonationCalculator = () => {
             <div className="flex justify-center mb-6">
               <button
                 onClick={() => openDonationModal()}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="impact-btn impact-btn--custom-accent inline-flex items-center"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

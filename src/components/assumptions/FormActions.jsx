@@ -14,7 +14,7 @@ const FormActions = ({
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-3">
-      {statusMessage && <p className="text-xs font-medium text-[var(--text-muted)]">{statusMessage}</p>}
+      {statusMessage && <p className="text-xs font-medium text-muted">{statusMessage}</p>}
       <div className="flex items-center gap-2">
         <button type="button" onClick={onReset} className="impact-btn impact-btn--secondary">
           {resetLabel}

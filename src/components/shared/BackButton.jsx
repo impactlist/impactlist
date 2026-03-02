@@ -32,7 +32,7 @@ const BackButton = ({
 
   // Default styles for the button/link
   const variantClasses = {
-    default: 'flex items-center text-slate-700 hover:text-slate-900 hover:underline',
+    default: 'flex items-center text-muted hover:text-strong hover:underline',
     accent: 'flex items-center text-accent-strong hover:text-accent hover:underline',
   };
   const defaultClassName = variantClasses[variant] || variantClasses.default;

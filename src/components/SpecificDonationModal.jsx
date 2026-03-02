@@ -434,7 +434,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     </div>
                   )}
                 </div>
-                {errors.recipient && <p className="mt-1 text-sm text-red-600">{errors.recipient}</p>}
+                {errors.recipient && <p className="mt-1 text-sm text-danger">{errors.recipient}</p>}
                 {searchTerm && filteredRecipients.length === 0 && showDropdown && !selectedRecipient && (
                   <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
                 )}
@@ -456,7 +456,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     }`}
                   />
                   {errors.customRecipientName && (
-                    <p className="mt-1 text-sm text-red-600">{errors.customRecipientName}</p>
+                    <p className="mt-1 text-sm text-danger">{errors.customRecipientName}</p>
                   )}
                 </div>
 
@@ -478,7 +478,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         </option>
                       ))}
                   </select>
-                  {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
+                  {errors.category && <p className="mt-1 text-sm text-danger">{errors.category}</p>}
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
                       Default cost per life:{' '}
@@ -504,7 +504,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       errors.multiplier ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
-                  {errors.multiplier && <p className="mt-1 text-sm text-red-600">{errors.multiplier}</p>}
+                  {errors.multiplier && <p className="mt-1 text-sm text-danger">{errors.multiplier}</p>}
                   <p className="mt-1 text-xs text-gray-500">
                     A multiplier of 2 means the recipient is half as effective (2x cost per life)
                   </p>
@@ -552,7 +552,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 }`}
               />
             </div>
-            {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>}
+            {errors.amount && <p className="mt-1 text-sm text-danger">{errors.amount}</p>}
           </div>
 
           <div className="mb-4">
@@ -570,13 +570,13 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 errors.year ? 'border-red-300' : 'border-gray-300'
               }`}
             />
-            {errors.year && <p className="mt-1 text-sm text-red-600">{errors.year}</p>}
+            {errors.year && <p className="mt-1 text-sm text-danger">{errors.year}</p>}
           </div>
 
           {/* Lives saved preview */}
           {amount && !errors.amount && (
             <div className={`mb-4 p-3 ${livesSaved < 0 ? 'bg-red-50' : 'bg-emerald-50'} rounded-md`}>
-              <p className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+              <p className={`text-sm ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
                 Estimated lives saved:{' '}
                 <span className="font-medium">
                   {livesSaved < 0 ? '-' : ''}

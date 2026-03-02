@@ -168,7 +168,7 @@ const CategoryEffectSection = ({
       {/* Category header */}
       <div className="effect-card__category-header rounded-t-lg px-4 py-3">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-[var(--text-strong)]">
+          <h3 className="text-lg font-semibold text-strong">
             <Link to={`/category/${categoryId}`} className="assumptions-link">
               {category.name}
             </Link>
@@ -276,7 +276,7 @@ const CategoryEffectSection = ({
                     isDisabled={isFullyDisabled}
                   />
                 ) : (
-                  <div className="text-sm text-[var(--danger)]">Unknown effect type</div>
+                  <div className="text-sm text-danger">Unknown effect type</div>
                 )}
               </div>
             </div>
@@ -430,7 +430,7 @@ const MultiCategoryRecipientEditor = ({
         }
         description={
           <div className="flex items-center gap-4">
-            <span className="text-sm text-[var(--text-muted)]">{categories.length} categories</span>
+            <span className="text-sm text-muted">{categories.length} categories</span>
             {hasTimeIntervals && (
               <YearSelector
                 value={previewYear}

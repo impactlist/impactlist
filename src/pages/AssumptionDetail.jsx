@@ -14,7 +14,7 @@ const AssumptionDetail = () => {
 
   return (
     <motion.div
-      className="min-h-screen bg-slate-50"
+      className="impact-page"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -23,12 +23,12 @@ const AssumptionDetail = () => {
       <BackButton />
 
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="impact-page__container"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="text-4xl font-bold text-slate-900 mb-6 text-center">{assumption.name}</h1>
+        <h1 className="impact-page__title">{assumption.name}</h1>
 
         <MarkdownContent content={assumption.content} className="mt-8 mb-8" />
       </motion.div>

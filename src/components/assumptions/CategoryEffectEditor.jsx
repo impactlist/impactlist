@@ -263,7 +263,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
                       isDisabled={effect.disabled || false}
                     />
                   ) : (
-                    <div className="text-sm text-[var(--danger)]">Unknown effect type</div>
+                    <div className="text-sm text-danger">Unknown effect type</div>
                   )}
                 </div>
               </div>

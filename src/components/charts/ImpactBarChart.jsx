@@ -13,21 +13,25 @@ import {
 export const ImpactChartToggle = ({ chartView, onToggle, disabled }) => {
   return (
     <div className="flex items-center">
-      <div className="p-0.5 bg-slate-100 rounded-lg flex text-xs sm:text-sm shadow-inner">
+      <div className="impact-tabs text-xs sm:text-sm" role="tablist" aria-label="Chart view">
         <button
+          type="button"
           onClick={() => onToggle('donations')}
-          className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
-            chartView === 'donations' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
-          }`}
+          className="impact-tab flex items-center gap-1 px-3 py-2 font-medium"
+          data-active={chartView === 'donations'}
+          role="tab"
+          aria-selected={chartView === 'donations'}
           disabled={disabled}
         >
           <span>Donations</span>
         </button>
         <button
+          type="button"
           onClick={() => onToggle('livesSaved')}
-          className={`px-3 py-2 font-medium rounded-md transition-all duration-200 ease-in-out flex items-center gap-1 ${
-            chartView === 'livesSaved' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
-          }`}
+          className="impact-tab flex items-center gap-1 px-3 py-2 font-medium"
+          data-active={chartView === 'livesSaved'}
+          role="tab"
+          aria-selected={chartView === 'livesSaved'}
           disabled={disabled}
         >
           <span>Lives Saved</span>
@@ -154,11 +158,11 @@ const ImpactBarChart = ({
               domain={domain}
               axisLine={true}
               tick={{
-                fill: '#1e293b',
+                fill: 'var(--text-strong)',
                 fontSize: 14,
               }}
               tickLine={true}
-              stroke="#1e293b"
+              stroke="var(--border-strong)"
               // Ensure we show enough ticks for better readability
               tickCount={7}
               // Add padding to prevent labels from being cut off
@@ -171,12 +175,12 @@ const ImpactBarChart = ({
               tick={
                 renderYAxisTick || {
                   fontSize: 14,
-                  fill: '#1e293b',
+                  fill: 'var(--text-strong)',
                   dy: 0,
                 }
               }
               axisLine={true}
-              stroke="#1e293b"
+              stroke="var(--border-strong)"
               interval={0}
             />
 
@@ -192,7 +196,7 @@ const ImpactBarChart = ({
                 position: 'right',
                 formatter: labelFormatter,
                 fontSize: 12,
-                fill: '#64748b',
+                fill: 'var(--text-muted)',
               }}
               isAnimationActive={isAnimationActive}
               animationDuration={animationDuration}

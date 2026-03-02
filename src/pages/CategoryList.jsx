@@ -87,10 +87,7 @@ const CategoryList = () => {
       label: 'Category Name',
       render: (category) => (
         <div className="max-w-[300px] break-words">
-          <Link
-            to={`/category/${encodeURIComponent(category.id)}`}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-          >
+          <Link to={`/category/${encodeURIComponent(category.id)}`} className="impact-link text-sm font-medium">
             {category.name}
           </Link>
         </div>
@@ -107,7 +104,7 @@ const CategoryList = () => {
       ),
       render: (category) => {
         return (
-          <div className={`text-sm ${category.actualCostPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+          <div className={`text-sm ${category.actualCostPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
             {category.actualCostPerLife === 0 ? '∞' : formatCurrency(category.actualCostPerLife)}
           </div>
         );
@@ -123,7 +120,7 @@ const CategoryList = () => {
         </div>
       ),
       render: (category) => (
-        <div className={`text-sm ${category.totalLivesSaved < 0 ? 'text-red-700' : 'text-slate-900'}`}>
+        <div className={`text-sm ${category.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
           {formatNumber(Math.round(category.totalLivesSaved))}
         </div>
       ),
@@ -131,7 +128,7 @@ const CategoryList = () => {
     {
       key: 'totalDonated',
       label: 'Total Donated',
-      render: (category) => <div className="text-sm text-slate-900">{formatCurrency(category.totalDonated)}</div>,
+      render: (category) => <div className="text-sm text-strong">{formatCurrency(category.totalDonated)}</div>,
     },
   ];
 
@@ -139,7 +136,7 @@ const CategoryList = () => {
     <>
       <BackButton to="/" label="Back to top donors" />
       <motion.div
-        className="min-h-screen bg-slate-50 flex flex-col items-center"
+        className="impact-page flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -150,12 +147,12 @@ const CategoryList = () => {
 
         {/* Categories Table Container */}
         <motion.div
-          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
+          className="impact-page__container mb-12"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
+          <div className="impact-surface overflow-hidden">
             <div className="overflow-x-auto">
               <SortableTable
                 columns={categoryColumns}

@@ -91,7 +91,7 @@ const FormField = ({
         <div className="impact-field__header-main pr-2">
           <label htmlFor={id} className="impact-field__label-inline">
             {label}
-            {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-[var(--text-muted)]" />}
+            {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-muted" />}
           </label>
           {isCustom && !hasError && (
             <span className="assumption-card__default-meta impact-field__default-meta">

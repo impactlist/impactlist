@@ -19,9 +19,9 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       key: 'date',
       label: 'Date',
       render: (donation) => (
-        <div className="text-sm text-slate-900">
+        <div className="text-sm text-strong">
           {donation.isUnknown ? (
-            <span className="text-slate-500">Unknown</span>
+            <span className="text-muted">Unknown</span>
           ) : (
             new Date(donation.date).toLocaleDateString('en-US', {
               year: 'numeric',
@@ -37,19 +37,19 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       label: 'Amount',
       render: (donation) =>
         donation.isUnknown ? (
-          <span className="text-sm text-slate-500">{formatCurrency(donation.amount)}</span>
+          <span className="text-sm text-muted">{formatCurrency(donation.amount)}</span>
         ) : (
           <div>
             <a
               href={donation.source}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+              className="impact-link text-sm font-medium"
             >
               {formatCurrency(donation.creditedAmount || donation.amount)}
             </a>
             {donation.credit < 1 && (
-              <div className="text-xs text-gray-500 mt-1">{Math.round(donation.credit * 100)}% credit</div>
+              <div className="mt-1 text-xs text-muted">{Math.round(donation.credit * 100)}% credit</div>
             )}
           </div>
         ),
@@ -60,11 +60,11 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       render: (donation) => (
         <div>
           {donation.isUnknown ? (
-            <span className="text-sm text-slate-500">Unknown</span>
+            <span className="text-sm text-muted">Unknown</span>
           ) : (
             <Link
               to={`/recipient/${encodeURIComponent(donation.recipientId)}`}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+              className="impact-link text-sm font-medium"
             >
               {donation.recipient}
             </Link>
@@ -83,15 +83,12 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
         }
 
         return (
-          <div className="text-sm text-slate-900">
-            <Link
-              to={`/category/${encodeURIComponent(categoryId)}`}
-              className="text-indigo-600 hover:text-indigo-800 hover:underline"
-            >
+          <div className="text-sm text-strong">
+            <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link">
               {donation.categoryName}
             </Link>
             {donation.categoryCount > 1 && (
-              <span className="text-xs text-slate-500 ml-1">(+{donation.categoryCount - 1})</span>
+              <span className="ml-1 text-xs text-muted">(+{donation.categoryCount - 1})</span>
             )}
           </div>
         );
@@ -109,7 +106,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       render: (donation) => (
         <div
           className={`text-sm ${
-            donation.isUnknown ? 'text-slate-500' : donation.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'
+            donation.isUnknown ? 'text-muted' : donation.totalLivesSaved < 0 ? 'text-danger' : 'text-success'
           }`}
         >
           {formatNumber(Math.round(donation.totalLivesSaved))}
@@ -126,7 +123,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
         </div>
       ),
       render: (donation) => (
-        <div className={`text-sm ${donation.isUnknown ? 'text-slate-500' : 'text-slate-900'}`}>
+        <div className={`text-sm ${donation.isUnknown ? 'text-muted' : 'text-strong'}`}>
           {donation.totalLivesSaved === 0 ? (
             <span className="text-2xl">∞</span>
           ) : (
@@ -144,7 +141,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       key: 'date',
       label: 'Date',
       render: (donation) => (
-        <div className="text-sm text-slate-900">
+        <div className="text-sm text-strong">
           {new Date(donation.date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
@@ -162,12 +159,12 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
             href={donation.source}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+            className="impact-link text-sm font-medium"
           >
             {formatCurrency(donation.creditedAmount || donation.amount)}
           </a>
           {donation.credit < 1 && (
-            <div className="text-xs text-gray-500 mt-1">{Math.round(donation.credit * 100)}% credit</div>
+            <div className="mt-1 text-xs text-muted">{Math.round(donation.credit * 100)}% credit</div>
           )}
         </div>
       ),
@@ -177,10 +174,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       label: 'Donor',
       render: (donation) => (
         <div>
-          <Link
-            to={`/donor/${encodeURIComponent(donation.donorId)}`}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-          >
+          <Link to={`/donor/${encodeURIComponent(donation.donorId)}`} className="impact-link text-sm font-medium">
             {donation.donor}
           </Link>
         </div>
@@ -190,7 +184,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       key: 'totalLivesSaved',
       label: 'Lives Saved',
       render: (donation) => (
-        <div className={`text-sm ${donation.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+        <div className={`text-sm ${donation.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
           {formatNumber(Math.round(donation.totalLivesSaved))}
         </div>
       ),
@@ -199,7 +193,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       key: 'costPerLife',
       label: 'Cost/Life',
       render: (donation) => (
-        <div className="text-sm text-slate-900">
+        <div className="text-sm text-strong">
           {donation.totalLivesSaved === 0 ? (
             <span className="text-2xl">∞</span>
           ) : (
@@ -214,13 +208,13 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
 
   return (
     <motion.div
-      className={`bg-white rounded-xl shadow-lg mb-16 border border-slate-200 ${className}`}
+      className={`impact-surface mb-16 ${className}`}
       initial={{ y: 10, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.3, duration: 0.4 }}
     >
-      <div className="px-6 py-4 border-b border-slate-200">
-        <h2 className="text-xl font-semibold text-slate-800">Donation History</h2>
+      <div className="impact-surface__header px-6 py-4">
+        <h2 className="text-xl font-semibold text-strong">Donation History</h2>
       </div>
       <div className="overflow-x-auto">
         <SortableTable

@@ -19,7 +19,7 @@ const EffectEditorFooter = ({
   return (
     <div className="rounded-b-lg bg-[var(--bg-surface-alt)] px-6 py-4">
       <div className="flex items-center justify-between">
-        <div className="text-sm">{hasErrors && <span className="text-[var(--danger)]">{errorMessage}</span>}</div>
+        <div className="text-sm">{hasErrors && <span className="text-danger">{errorMessage}</span>}</div>
         <EffectEditorActionButtons
           onCancel={onCancel}
           onSave={onSave}

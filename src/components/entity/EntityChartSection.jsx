@@ -77,37 +77,35 @@ const EntityChartSection = ({
       const percentage = chartView === 'donations' ? entry.donationPercentage : entry.livesSavedPercentage;
 
       return (
-        <div className="bg-white p-3 shadow-md rounded-md border border-slate-200">
+        <div className="impact-surface p-3 shadow-md">
           <p className="font-semibold text-sm">{entry.name}</p>
           {chartView === 'donations' ? (
             <>
               <p className="text-sm">{formatCurrency(value)}</p>
-              <p className="text-xs text-slate-500">{`${percentage}% of known donations`}</p>
+              <p className="text-xs text-muted">{`${percentage}% of known donations`}</p>
               {entry.name !== 'Other Categories' && entry.categoryId && (
-                <div className="mt-1 pt-1 border-t border-slate-100">
-                  <p className="text-xs text-slate-600">
+                <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
+                  <p className="text-xs text-muted">
                     Cost per life:{' '}
                     {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry, getCurrentYear()))}
                   </p>
-                  <p className="text-xs text-slate-600">
-                    Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}
-                  </p>
+                  <p className="text-xs text-muted">Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}</p>
                 </div>
               )}
             </>
           ) : (
             <>
-              <p className={`text-sm ${value < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+              <p className={`text-sm ${value < 0 ? 'text-danger' : 'text-success'}`}>
                 {formatNumber(Math.round(value))} lives {value < 0 ? 'lost' : 'saved'}
               </p>
-              <p className="text-xs text-slate-500">{`${percentage}% of total impact`}</p>
+              <p className="text-xs text-muted">{`${percentage}% of total impact`}</p>
               {entry.name !== 'Other Categories' && entry.categoryId && (
-                <div className="mt-1 pt-1 border-t border-slate-100">
-                  <p className="text-xs text-slate-600">
+                <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
+                  <p className="text-xs text-muted">
                     Cost per life:{' '}
                     {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry, getCurrentYear()))}
                   </p>
-                  <p className="text-xs text-slate-600">Donation amount: {formatCurrency(entry.donationValue)}</p>
+                  <p className="text-xs text-muted">Donation amount: {formatCurrency(entry.donationValue)}</p>
                 </div>
               )}
             </>
@@ -127,7 +125,7 @@ const EntityChartSection = ({
     if (!dataEntry || !dataEntry.categoryId || dataEntry.name === 'Other Categories') {
       return (
         <g transform={`translate(${x},${y})`}>
-          <text x={-6} y={0} dy={4} textAnchor="end" fill="#1e293b" fontSize={14}>
+          <text x={-6} y={0} dy={4} textAnchor="end" fill="var(--text-strong)" fontSize={14}>
             {payload.value}
           </text>
         </g>
@@ -142,7 +140,7 @@ const EntityChartSection = ({
             y={0}
             dy={4}
             textAnchor="end"
-            fill="#4f46e5"
+            fill="var(--accent-strong)"
             fontSize={14}
             className="hover:underline hover:font-medium"
           >

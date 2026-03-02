@@ -70,7 +70,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
   return (
     <section className="assumptions-shell mb-5 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 sm:px-5">
-        <h2 className="assumptions-title text-2xl font-semibold text-[var(--text-strong)]">Assumptions Library</h2>
+        <h2 className="assumptions-title text-2xl font-semibold text-strong">Assumptions Library</h2>
       </div>
 
       <div className="px-4 py-4 sm:px-5">
@@ -129,7 +129,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                         </div>
                       ) : (
                         <>
-                          <span className="saved-assumption-row__label text-sm font-semibold text-[var(--text-strong)]">
+                          <span className="saved-assumption-row__label text-sm font-semibold text-strong">
                             {entry.label}
                           </span>
                           {!isDefaultEntry && (
@@ -217,9 +217,7 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
             </button>
           )}
 
-          {entries.length === 0 && !isDefaultActive && (
-            <p className="text-sm text-[var(--text-muted)]">No saved assumptions yet.</p>
-          )}
+          {entries.length === 0 && !isDefaultActive && <p className="text-sm text-muted">No saved assumptions yet.</p>}
         </div>
       </div>
     </section>

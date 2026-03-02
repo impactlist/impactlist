@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
  */
 const FormSection = ({ title, description, children, className = '', actions = null }) => {
   return (
-    <div className={`bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6 ${className}`}>
+    <div className={`impact-surface overflow-hidden p-6 ${className}`}>
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h3 className="text-lg font-medium text-slate-800">{title}</h3>
-          {description && <p className="text-sm text-slate-500 mt-1">{description}</p>}
+          <h3 className="text-lg font-medium text-strong">{title}</h3>
+          {description && <p className="mt-1 text-sm text-muted">{description}</p>}
         </div>
         {actions && <div className="flex space-x-2">{actions}</div>}
       </div>

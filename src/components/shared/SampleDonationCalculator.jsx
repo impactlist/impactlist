@@ -70,9 +70,9 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
   }, [donationAmount, selectedYear, costPerLife, entityId, combinedAssumptions, isCategory]);
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200">
+    <div className="impact-surface p-6 mb-8">
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
-        <h2 className="text-xl font-semibold text-slate-800">Sample donation for year</h2>
+        <h2 className="text-xl font-semibold text-strong">Sample donation for year</h2>
         <YearSelector value={selectedYear} onChange={setSelectedYear} label="" className="" />
       </div>
 
@@ -91,17 +91,17 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
 
         <div className="flex items-center">
           <div className="space-y-1 mt-3">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-muted">
               Cost per life in {selectedYear}:{' '}
-              <span className="font-semibold text-gray-900">
+              <span className="font-semibold text-strong">
                 {costPerLife === Infinity ? 'N/A' : formatCurrency(costPerLife)}
               </span>
             </div>
 
             {donationAmount && livesSaved !== 0 && (
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted">
                 Lives saved:{' '}
-                <span className={`font-semibold ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                <span className={`font-semibold ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
                   {formatLives(livesSaved)}
                 </span>
               </div>
@@ -113,8 +113,8 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
       {/* Graph - show whenever there's a valid donation amount */}
       {donationAmount && livesSaved !== 0 && visualizationData.length > 0 && (
         <div className="mt-6">
-          <div className="border-t border-gray-200 pt-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Discounted Lives Saved Over Time</h3>
+          <div className="border-t border-[var(--border-subtle)] pt-4">
+            <h3 className="mb-3 text-sm font-semibold text-strong">Discounted Lives Saved Over Time</h3>
             <LivesSavedGraph data={visualizationData} height={250} />
           </div>
         </div>

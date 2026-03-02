@@ -33,16 +33,16 @@ const ChartContainer = ({
 
   return (
     <motion.div
-      className={`bg-white rounded-xl shadow-lg mb-8 border border-slate-200 ${className}`}
+      className={`impact-surface mb-8 ${className}`}
       initial={{ y: 10, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.2, duration: 0.4 }}
     >
-      <div className="px-6 py-4 border-b border-slate-200">
+      <div className="impact-surface__header px-6 py-4">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-semibold text-slate-800">{title}</h2>
-            {description && <p className="text-sm text-slate-500 mt-1">{description}</p>}
+            <h2 className="text-xl font-semibold text-strong">{title}</h2>
+            {description && <p className="mt-1 text-sm text-muted">{description}</p>}
           </div>
 
           {/* View toggle */}

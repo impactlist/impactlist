@@ -74,12 +74,12 @@ const CategoryDetail = () => {
   }, [categoryId, combinedAssumptions]);
 
   if (!categoryInfo) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return <div className="impact-loading">Loading...</div>;
   }
 
   return (
     <motion.div
-      className="min-h-screen bg-slate-50"
+      className="impact-page"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -88,13 +88,13 @@ const CategoryDetail = () => {
       <BackButton />
 
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="impact-page__container"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
         {/* Category name */}
-        <h1 className="text-4xl font-bold text-slate-900 mb-6 text-center">{categoryInfo.name}</h1>
+        <h1 className="impact-page__title">{categoryInfo.name}</h1>
 
         {/* Category stats card */}
         <EntityStatistics
@@ -109,7 +109,7 @@ const CategoryDetail = () => {
             <button
               type="button"
               onClick={handleEditCategoryAssumptions}
-              className="inline-flex items-center px-2 py-0.5 border border-indigo-200 text-xs font-semibold text-indigo-600 rounded hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500"
+              className="impact-btn impact-btn--secondary impact-btn--xs"
             >
               Edit
             </button>

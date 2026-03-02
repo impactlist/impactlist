@@ -13,54 +13,33 @@ const ConfirmActionModal = ({
   isBusy = false,
 }) => {
   const confirmButtonClass =
-    confirmVariant === 'primary'
-      ? isBusy
-        ? 'cursor-not-allowed bg-slate-400'
-        : 'bg-indigo-600 hover:bg-indigo-700'
-      : isBusy
-        ? 'cursor-not-allowed bg-slate-400'
-        : 'bg-red-600 hover:bg-red-700';
+    confirmVariant === 'primary' ? 'impact-btn impact-btn--custom-accent' : 'impact-btn impact-btn--danger';
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 overflow-y-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+        <motion.div className="impact-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="flex min-h-screen items-center justify-center px-4 py-6">
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-40"
+              className="impact-modal__scrim"
               onClick={isBusy ? undefined : onCancel}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
             <motion.div
-              className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-xl"
+              className="impact-modal__panel"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 16 }}
             >
-              <h2 className="text-xl font-bold text-slate-900">{title}</h2>
-              <p className="mt-2 text-sm text-slate-600">{description}</p>
+              <h2 className="impact-modal__title">{title}</h2>
+              <p className="impact-modal__copy mt-2">{description}</p>
               <div className="mt-6 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={onCancel}
-                  disabled={isBusy}
-                  className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-                >
+                <button type="button" onClick={onCancel} disabled={isBusy} className="impact-btn impact-btn--secondary">
                   {cancelLabel}
                 </button>
-                <button
-                  type="button"
-                  onClick={onConfirm}
-                  disabled={isBusy}
-                  className={`rounded-md px-3 py-2 text-sm font-medium text-white ${confirmButtonClass}`}
-                >
+                <button type="button" onClick={onConfirm} disabled={isBusy} className={confirmButtonClass}>
                   {confirmLabel}
                 </button>
               </div>

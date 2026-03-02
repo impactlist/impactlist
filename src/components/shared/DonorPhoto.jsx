@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const sizeClasses = {
   small: 'w-20 h-20 rounded',
-  large: 'w-48 h-48 rounded-lg shadow-md border border-slate-200',
+  large: 'w-48 h-48 rounded-lg shadow-md border border-[var(--border-subtle)]',
 };
 
 /**

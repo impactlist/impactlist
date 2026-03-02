@@ -59,50 +59,43 @@ const SaveAssumptionsModal = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 overflow-y-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+        <motion.div className="impact-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="flex min-h-screen items-center justify-center px-4 py-6">
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-40"
+              className="impact-modal__scrim"
               onClick={onClose}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
             <motion.div
-              className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-xl"
+              className="impact-modal__panel"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 16 }}
             >
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-900">Save to Library</h2>
+                <h2 className="impact-modal__title">Save to Library</h2>
                 <button
                   type="button"
                   onClick={onClose}
                   aria-label="Close modal"
-                  className="rounded px-2 py-1 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                  className="impact-modal__close text-sm font-medium"
                 >
                   X
                 </button>
               </div>
 
-              <p className="mb-4 text-sm text-slate-600">
-                Save the current assumptions to your local Assumptions Library.
-              </p>
+              <p className="impact-modal__copy mb-4">Save the current assumptions to your local Assumptions Library.</p>
 
               {duplicateOfLabel && (
-                <p className="mb-4 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                <p className="impact-modal__warning mb-4">
                   You are about to save a duplicate copy of{' '}
                   <strong className="font-semibold">{duplicateOfLabel}</strong>.
                 </p>
               )}
 
-              <label htmlFor="save-assumptions-label" className="mb-1 block text-sm font-semibold text-slate-700">
+              <label htmlFor="save-assumptions-label" className="impact-modal__label mb-1 block">
                 Label
               </label>
               <input
@@ -114,17 +107,13 @@ const SaveAssumptionsModal = ({
                   setError('');
                 }}
                 placeholder="My Current Assumptions"
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="impact-modal__input"
               />
 
-              {error && <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+              {error && <p className="impact-modal__error">{error}</p>}
 
               <div className="mt-6 flex flex-wrap justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                >
+                <button type="button" onClick={onClose} className="impact-btn impact-btn--secondary">
                   Cancel
                 </button>
 
@@ -132,7 +121,7 @@ const SaveAssumptionsModal = ({
                   <button
                     type="button"
                     onClick={() => handleSubmit('update')}
-                    className="rounded-md border border-indigo-300 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
+                    className="impact-btn impact-btn--secondary"
                   >
                     Update Current Library Entry
                   </button>
@@ -141,7 +130,7 @@ const SaveAssumptionsModal = ({
                 <button
                   type="button"
                   onClick={() => handleSubmit('new')}
-                  className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                  className="impact-btn impact-btn--custom-accent"
                 >
                   {canUpdateExisting ? 'Save as New' : 'Save to Library'}
                 </button>

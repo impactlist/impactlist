@@ -440,14 +440,14 @@ const DonorDetail = () => {
   };
 
   if (!donorStats) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return <div className="impact-loading">Loading...</div>;
   }
 
   const donorAboutContent = donorStats.about ? `## About\n\n${donorStats.about}` : null;
 
   return (
     <motion.div
-      className="min-h-screen bg-slate-50"
+      className="impact-page"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -456,13 +456,13 @@ const DonorDetail = () => {
       <BackButton />
 
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="impact-page__container"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
         {/* Donor name */}
-        <h1 className="text-4xl font-bold text-slate-900 mb-6 text-center">{donorStats.name}</h1>
+        <h1 className="impact-page__title">{donorStats.name}</h1>
 
         {/* Donor stats card with photo */}
         <EntityStatistics
@@ -500,20 +500,15 @@ const DonorDetail = () => {
         <EntityDonationTable donations={donorDonations} entityType="donor" combinedAssumptions={combinedAssumptions} />
 
         {/* Feedback note */}
-        <p className="text-gray-600 italic mt-4 mb-8 text-center">
+        <p className="mb-8 mt-4 text-center italic text-muted">
           {DONATION_FEEDBACK_NOTE.text}{' '}
-          <a
-            href={DONATION_FEEDBACK_NOTE.formUrl}
-            className="text-blue-600 hover:text-blue-800 underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={DONATION_FEEDBACK_NOTE.formUrl} className="impact-link" target="_blank" rel="noopener noreferrer">
             {DONATION_FEEDBACK_NOTE.formLinkText}
           </a>{' '}
           {DONATION_FEEDBACK_NOTE.middleText}{' '}
           <a
             href={DONATION_FEEDBACK_NOTE.contributingUrl}
-            className="text-blue-600 hover:text-blue-800 underline"
+            className="impact-link"
             target="_blank"
             rel="noopener noreferrer"
           >

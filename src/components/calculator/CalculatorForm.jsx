@@ -26,14 +26,11 @@ const CalculatorForm = ({
   };
 
   return (
-    <div className={`bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200 p-6 ${className}`}>
+    <div className={`impact-surface p-6 ${className}`}>
       {/* Donation inputs header with reset button */}
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium text-slate-800">Donations by category</h3>
-        <button
-          onClick={onReset}
-          className="inline-flex items-center px-3 py-1.5 border border-slate-300 text-slate-700 bg-white rounded-md text-sm font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
+        <h3 className="text-lg font-medium text-strong">Donations by category</h3>
+        <button onClick={onReset} className="impact-btn impact-btn--secondary impact-btn--sm inline-flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
             <path
               fillRule="evenodd"
@@ -69,30 +66,27 @@ const CalculatorForm = ({
               className="px-4 py-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
             >
               <div className="flex justify-between items-start mb-1">
-                <label className="text-sm font-medium text-slate-800" htmlFor={`donation-${category.id}`}>
-                  <Link
-                    to={`/category/${encodeURIComponent(category.id)}`}
-                    className="text-indigo-600 hover:text-indigo-800 hover:underline"
-                  >
+                <label className="text-sm font-medium text-strong" htmlFor={`donation-${category.id}`}>
+                  <Link to={`/category/${encodeURIComponent(category.id)}`} className="impact-link">
                     {category.name}
                   </Link>
                 </label>
-                <span className="text-xs text-slate-500">{formatCurrency(costPerLife)}/life</span>
+                <span className="text-xs text-muted">{formatCurrency(costPerLife)}/life</span>
               </div>
               <div className="flex items-center mb-1">
-                <span className="text-slate-700 mr-1">$</span>
+                <span className="mr-1 text-muted">$</span>
                 <input
                   id={`donation-${category.id}`}
                   type="text"
                   inputMode="decimal"
                   value={formatDonationInput(amount)}
                   onChange={(e) => onDonationChange(category.id, e.target.value)}
-                  className="w-full py-0.5 px-2 border rounded text-sm leading-tight focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded border border-[var(--border-subtle)] px-2 py-0.5 text-sm leading-tight focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
                   placeholder="0"
                 />
               </div>
               {amount && !isNaN(Number(amount)) && (
-                <div className={`text-sm ${livesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                <div className={`text-sm ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
                   Lives saved: {formatLives(livesSaved)}
                 </div>
               )}

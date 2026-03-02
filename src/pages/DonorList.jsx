@@ -89,16 +89,13 @@ const DonorList = () => {
     {
       key: 'rank',
       label: 'Rank',
-      render: (donor) => <div className="text-sm text-slate-900">{donor.rank}</div>,
+      render: (donor) => <div className="text-sm text-strong">{donor.rank}</div>,
     },
     {
       key: 'name',
       label: 'Name',
       render: (donor) => (
-        <Link
-          to={`/donor/${encodeURIComponent(donor.id)}`}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
+        <Link to={`/donor/${encodeURIComponent(donor.id)}`} className="impact-link text-sm font-medium">
           {donor.name}
         </Link>
       ),
@@ -117,7 +114,7 @@ const DonorList = () => {
         </div>
       ),
       render: (donor) => (
-        <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+        <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
           {formatNumber(Math.round(donor.totalLivesSaved))}
         </div>
       ),
@@ -125,7 +122,7 @@ const DonorList = () => {
     {
       key: 'totalDonated',
       label: 'Donated',
-      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.totalDonated)}</div>,
+      render: (donor) => <div className="text-sm text-strong">{formatCurrency(donor.totalDonated)}</div>,
     },
     {
       key: 'costPerLife',
@@ -137,7 +134,7 @@ const DonorList = () => {
         </div>
       ),
       render: (donor) => (
-        <div className={`text-sm ${donor.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}`}>
+        <div className={`text-sm ${donor.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
           {donor.totalLivesSaved === 0 ? '∞' : formatCurrency(donor.costPerLife)}
         </div>
       ),
@@ -145,15 +142,14 @@ const DonorList = () => {
     {
       key: 'netWorth',
       label: 'Net Worth',
-      render: (donor) => <div className="text-sm text-slate-900">{formatCurrency(donor.netWorth)}</div>,
+      render: (donor) => <div className="text-sm text-strong">{formatCurrency(donor.netWorth)}</div>,
     },
   ];
 
   return (
     <>
-      <div className="h-10"></div>
       <motion.div
-        className="min-h-screen bg-slate-50 flex flex-col items-center"
+        className="impact-page flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -164,12 +160,12 @@ const DonorList = () => {
 
         {/* Donors Table Container */}
         <motion.div
-          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
+          className="impact-page__container mb-12"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-slate-200">
+          <div className="impact-surface overflow-hidden">
             <div className="overflow-x-auto">
               <SortableTable
                 columns={donorColumns}
@@ -184,17 +180,13 @@ const DonorList = () => {
 
         {/* Links to other pages */}
         <motion.div
-          className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center"
+          className="impact-page__container mb-16 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
           <div className="flex justify-center items-center">
-            <Link
-              to="/calculator"
-              className="text-indigo-600 hover:text-indigo-800 hover:underline text-base"
-              onClick={() => window.scrollTo(0, 0)}
-            >
+            <Link to="/calculator" className="impact-link text-base" onClick={() => window.scrollTo(0, 0)}>
               Calculate the lives you could save with your donations →
             </Link>
           </div>

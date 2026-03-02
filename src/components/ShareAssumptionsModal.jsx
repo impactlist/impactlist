@@ -97,33 +97,28 @@ const ShareAssumptionsModal = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 overflow-y-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+        <motion.div className="impact-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="flex min-h-screen items-center justify-center px-4 py-6">
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-40"
+              className="impact-modal__scrim"
               onClick={onClose}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
             <motion.div
-              className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-xl"
+              className="impact-modal__panel"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 16 }}
             >
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-900">{title}</h2>
+                <h2 className="impact-modal__title">{title}</h2>
                 <button
                   type="button"
                   onClick={onClose}
                   aria-label="Close modal"
-                  className="rounded px-2 py-1 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                  className="impact-modal__close text-sm font-medium"
                 >
                   X
                 </button>
@@ -131,12 +126,12 @@ const ShareAssumptionsModal = ({
 
               {!savedResult ? (
                 <>
-                  <p className="mb-4 text-sm text-slate-600">
+                  <p className="impact-modal__copy mb-4">
                     Save your current custom assumptions and create a shareable URL.
                   </p>
                   <div className="space-y-4">
                     <div>
-                      <label htmlFor="share-slug" className="mb-1 block text-sm font-semibold text-slate-700">
+                      <label htmlFor="share-slug" className="impact-modal__label mb-1 block">
                         Custom link text (optional)
                       </label>
                       <input
@@ -145,30 +140,24 @@ const ShareAssumptionsModal = ({
                         value={slug}
                         onChange={handleSlugChange}
                         placeholder="bobs-longtermist-model"
-                        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm lowercase focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="impact-modal__input lowercase"
                       />
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-xs text-muted">
                         This sets the readable part of your link (letters, numbers, and dashes). Leave blank for an
                         auto-generated link.
                       </p>
                     </div>
                   </div>
-                  {error && <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+                  {error && <p className="impact-modal__error mt-4">{error}</p>}
                   <div className="mt-6 flex justify-end space-x-2">
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                    >
+                    <button type="button" onClick={onClose} className="impact-btn impact-btn--secondary">
                       Cancel
                     </button>
                     <button
                       type="button"
                       onClick={handleSave}
                       disabled={isSaving}
-                      className={`rounded-md px-3 py-2 text-sm font-medium text-white ${
-                        isSaving ? 'cursor-not-allowed bg-slate-400' : 'bg-indigo-600 hover:bg-indigo-700'
-                      }`}
+                      className="impact-btn impact-btn--custom-accent"
                     >
                       {isSaving ? 'Saving...' : 'Create Link'}
                     </button>
@@ -176,27 +165,21 @@ const ShareAssumptionsModal = ({
                 </>
               ) : (
                 <>
-                  {!startedWithExistingLink && <p className="mb-3 text-sm text-emerald-700">Share link created.</p>}
-                  <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
-                    <p className="break-all text-sm text-slate-800">{savedResult.shareUrl}</p>
+                  {!startedWithExistingLink && <p className="mb-3 text-sm text-success">Share link created.</p>}
+                  <div className="impact-modal__well">
+                    <p className="break-all text-sm text-strong">{savedResult.shareUrl}</p>
                   </div>
-                  {error && <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-                  {copied && <p className="mt-3 text-sm text-emerald-700">Copied link to clipboard.</p>}
+                  {error && <p className="impact-modal__error">{error}</p>}
+                  {copied && <p className="impact-modal__success">Copied link to clipboard.</p>}
                   <div className="mt-6 flex justify-end space-x-2">
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                    >
+                    <button type="button" onClick={onClose} className="impact-btn impact-btn--secondary">
                       Done
                     </button>
                     <button
                       type="button"
                       onClick={handleCopyLink}
                       disabled={isCopying}
-                      className={`rounded-md px-3 py-2 text-sm font-medium text-white ${
-                        isCopying ? 'cursor-not-allowed bg-slate-400' : 'bg-indigo-600 hover:bg-indigo-700'
-                      }`}
+                      className="impact-btn impact-btn--custom-accent"
                     >
                       {isCopying ? 'Copying...' : 'Copy Link'}
                     </button>

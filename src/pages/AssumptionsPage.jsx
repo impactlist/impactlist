@@ -571,27 +571,22 @@ const AssumptionsPage = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.36, delay: 0.02 }}
       >
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="assumptions-title text-center text-4xl font-bold text-[var(--text-strong)] sm:text-left sm:text-5xl">
-              Assumptions
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm text-[var(--text-muted)]">
-              Adjust or view the parameters used to calculate lives saved.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
-            {isUsingCustomValues && (
-              <button type="button" onClick={handleSaveAssumptionsClick} className="impact-btn impact-btn--secondary">
-                Save to Library
-              </button>
-            )}
-            {isUsingCustomValues && (
-              <button type="button" onClick={handleShareButtonClick} className="impact-btn impact-btn--custom-accent">
-                Share Assumptions
-              </button>
-            )}
-          </div>
+        <div className="mb-8">
+          <h1 className="impact-page__title">Assumptions</h1>
+          <p className="impact-page__subtitle">Adjust or view the parameters used to calculate lives saved.</p>
+        </div>
+
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-2 sm:justify-end">
+          {isUsingCustomValues && (
+            <button type="button" onClick={handleSaveAssumptionsClick} className="impact-btn impact-btn--secondary">
+              Save to Library
+            </button>
+          )}
+          {isUsingCustomValues && (
+            <button type="button" onClick={handleShareButtonClick} className="impact-btn impact-btn--custom-accent">
+              Share Assumptions
+            </button>
+          )}
         </div>
 
         <SavedAssumptionsPanel

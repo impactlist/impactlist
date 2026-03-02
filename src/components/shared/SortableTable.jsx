@@ -132,7 +132,7 @@ const SortableTable = ({
     if (sortColumn !== columnKey) {
       return (
         <svg
-          className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 ml-1"
+          className="ml-1 h-4 w-4 text-muted opacity-0 group-hover:opacity-100"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -149,13 +149,13 @@ const SortableTable = ({
 
     if (sortDirection === 'asc') {
       return (
-        <svg className="h-4 w-4 text-indigo-500 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="ml-1 h-4 w-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
         </svg>
       );
     } else {
       return (
-        <svg className="h-4 w-4 text-indigo-500 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="ml-1 h-4 w-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
         </svg>
       );
@@ -163,14 +163,14 @@ const SortableTable = ({
   };
 
   return (
-    <table className="min-w-full divide-y divide-slate-200">
-      <thead className="bg-slate-100">
+    <table className="impact-table">
+      <thead>
         <tr>
           {columns.map((column) => (
             <th
               key={column.key}
               scope="col"
-              className={`${getColumnPadding(column.key)} py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer group hover:bg-slate-200 transition-colors ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
+              className={`${getColumnPadding(column.key)} group cursor-pointer py-4 text-left transition-colors ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
               onClick={() => handleSort(column.key)}
             >
               <div className="flex items-center">
@@ -178,7 +178,7 @@ const SortableTable = ({
                 {column.tooltip && (
                   <Tooltip content={column.tooltip}>
                     <svg
-                      className="w-3.5 h-3.5 text-slate-500 ml-1"
+                      className="ml-1 h-3.5 w-3.5 text-muted"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -199,12 +199,9 @@ const SortableTable = ({
           ))}
         </tr>
       </thead>
-      <tbody className="bg-white divide-y divide-slate-200">
+      <tbody>
         {rankedData.map((item, index) => (
-          <tr
-            key={`row-${index}`}
-            className={`transition-colors hover:bg-indigo-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}
-          >
+          <tr key={`row-${index}`}>
             {columns.map((column) => (
               <td
                 key={`cell-${column.key}-${index}`}

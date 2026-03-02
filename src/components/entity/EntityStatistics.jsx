@@ -38,7 +38,7 @@ const EntityStatistics = ({
     <StatisticsCard
       label="Lives Saved"
       value={formatNumber(Math.round(stats.totalLivesSaved))}
-      valueClassName={stats.totalLivesSaved < 0 ? 'text-red-600' : 'text-emerald-600'}
+      valueClassName={stats.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}
     />
   );
 
@@ -46,7 +46,7 @@ const EntityStatistics = ({
     <StatisticsCard
       label={currentYear && !isDonor ? `Cost Per Life (${currentYear})` : 'Cost Per Life'}
       value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
-      valueClassName={stats.costPerLife < 0 ? 'text-red-600' : 'text-slate-900'}
+      valueClassName={stats.costPerLife < 0 ? 'text-danger' : 'text-strong'}
       valueAction={costPerLifeAction}
       subtext={costPerLifeSubtext}
     />
@@ -79,10 +79,7 @@ const EntityStatistics = ({
       <StatisticsCard
         label="Focus Area"
         value={
-          <Link
-            to={`/category/${encodeURIComponent(stats.categoryBreakdown[0].id)}`}
-            className="text-indigo-600 hover:text-indigo-800 hover:underline"
-          >
+          <Link to={`/category/${encodeURIComponent(stats.categoryBreakdown[0].id)}`} className="impact-link">
             {stats.categoryBreakdown[0].name}
           </Link>
         }
@@ -125,7 +122,7 @@ const EntityStatistics = ({
 
   return (
     <motion.div
-      className={`bg-white rounded-xl shadow-lg p-6 mb-8 border border-slate-200 ${className}`}
+      className={`impact-surface p-6 mb-8 ${className}`}
       initial={{ y: 10, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.1, duration: 0.4 }}

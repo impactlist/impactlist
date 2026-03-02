@@ -42,7 +42,7 @@ const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '
         )}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`${iconSizeClasses[size]} text-[var(--text-muted)]`}
+          className={`${iconSizeClasses[size]} text-muted`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

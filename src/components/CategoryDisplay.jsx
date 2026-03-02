@@ -15,10 +15,7 @@ const CategoryDisplay = ({ donation, categories, combinedAssumptions }) => {
 
     return (
       <div>
-        <Link
-          to={`/category/${encodeURIComponent(categoryId)}`}
-          className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
+        <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link text-sm">
           {categoryName}
         </Link>
       </div>
@@ -29,7 +26,7 @@ const CategoryDisplay = ({ donation, categories, combinedAssumptions }) => {
   const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);
 
   if (!recipientId) {
-    return <span className="text-sm text-slate-700">Unknown</span>;
+    return <span className="text-sm text-muted">Unknown</span>;
   }
 
   // Get primary category info
@@ -37,23 +34,17 @@ const CategoryDisplay = ({ donation, categories, combinedAssumptions }) => {
 
   if (count <= 1) {
     return (
-      <Link
-        to={`/category/${encodeURIComponent(categoryId)}`}
-        className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
-      >
+      <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link text-sm">
         {categoryName}
       </Link>
     );
   } else {
     return (
       <div className="text-sm">
-        <Link
-          to={`/category/${encodeURIComponent(categoryId)}`}
-          className="text-indigo-600 hover:text-indigo-800 hover:underline"
-        >
+        <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link">
           {categoryName}
         </Link>
-        <span className="text-xs text-slate-500 ml-1">(+{count - 1})</span>
+        <span className="ml-1 text-xs text-muted">(+{count - 1})</span>
       </div>
     );
   }

@@ -18,35 +18,35 @@ const CalculatorStats = ({
 }) => {
   return (
     <motion.div
-      className={`bg-indigo-50 shadow-lg rounded-xl overflow-hidden border border-indigo-200 p-6 ${className}`}
+      className={`impact-surface impact-surface--muted p-6 ${className}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h2 className="text-xl font-bold text-indigo-800 mb-4">Your Impact Summary</h2>
+      <h2 className="mb-4 text-xl font-bold text-strong">Your Impact Summary</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
         <StatisticsCard
           label="Total Donated"
           value={formatCurrency(totalDonated)}
           valueTestId="calculator-total-donated-value"
-          className="bg-white shadow-sm"
+          className="shadow-sm"
         />
 
         <StatisticsCard
           label="Lives Saved"
           value={totalLivesSaved < 0 ? `-${formatLives(Math.abs(totalLivesSaved))}` : formatLives(totalLivesSaved)}
-          valueClassName={totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}
+          valueClassName={totalLivesSaved < 0 ? 'text-danger' : 'text-success'}
           valueTestId="calculator-lives-saved-value"
-          className="bg-white shadow-sm"
+          className="shadow-sm"
         />
 
         <StatisticsCard
           label="Average Cost Per Life"
           value={totalLivesSaved !== 0 ? formatCurrency(costPerLife) : '—'}
-          valueClassName={costPerLife < 0 ? 'text-red-700' : 'text-slate-800'}
+          valueClassName={costPerLife < 0 ? 'text-danger' : 'text-strong'}
           valueTestId="calculator-cost-per-life-value"
-          className="bg-white shadow-sm"
+          className="shadow-sm"
         />
       </div>
 

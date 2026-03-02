@@ -38,11 +38,11 @@ const CustomTooltip = ({ active, payload }) => {
   });
 
   return (
-    <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
-      <p className="text-sm font-semibold text-gray-700">Year {formatCalendarYear(data.year)}</p>
-      <p className="text-sm text-gray-600">Lives/year: {formatLives(totalLivesPerYear)}</p>
+    <div className="impact-surface rounded-lg p-3 shadow-lg">
+      <p className="text-sm font-semibold text-strong">Year {formatCalendarYear(data.year)}</p>
+      <p className="text-sm text-muted">Lives/year: {formatLives(totalLivesPerYear)}</p>
       {activeEffects.length > 0 && (
-        <div className="mt-1 text-xs text-gray-500">Active effects: {activeEffects.length}</div>
+        <div className="mt-1 text-xs text-muted">Active effects: {activeEffects.length}</div>
       )}
     </div>
   );
@@ -141,8 +141,8 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
 
   if (!filteredData || filteredData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 bg-gray-50 rounded-lg">
-        <p className="text-gray-500">No data to display</p>
+      <div className="impact-surface flex h-64 items-center justify-center rounded-lg">
+        <p className="text-muted">No data to display</p>
       </div>
     );
   }
@@ -151,7 +151,7 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
     <div className="w-full">
       <ResponsiveContainer width="100%" height={height}>
         <AreaChart data={filteredData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
           <XAxis
             dataKey="year"
             type="number"
@@ -159,10 +159,15 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
             domain={['dataMin', 'dataMax']}
             ticks={customTicks}
             tickFormatter={formatXAxisTick}
-            tick={{ fontSize: 11 }}
-            stroke="#6b7280"
+            tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+            stroke="var(--border-strong)"
           />
-          <YAxis tickFormatter={formatYAxisTick} tick={{ fontSize: 11 }} stroke="#6b7280" width={60} />
+          <YAxis
+            tickFormatter={formatYAxisTick}
+            tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+            stroke="var(--border-strong)"
+            width={60}
+          />
           <Tooltip content={<CustomTooltip />} animationDuration={200} />
 
           {/* Dynamically generate Area components for each effect */}

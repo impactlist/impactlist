@@ -40,7 +40,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
           <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
-            <h1 className="text-red-600 text-2xl font-bold mb-4">Something went wrong</h1>
+            <h1 className="text-danger text-2xl font-bold mb-4">Something went wrong</h1>
             <div className="bg-gray-100 p-3 rounded-md overflow-auto mb-4">
               <pre className="text-sm">{this.state.error && this.state.error.toString()}</pre>
             </div>
@@ -103,15 +103,15 @@ const AppContent = () => {
           isFAQ={isFAQ}
           isAssumptions={isAssumptions}
         />
-        <div className={`flex-grow ${isAssumptions ? 'relative' : 'bg-slate-50'}`}>
+        <div className={`flex-grow ${isAssumptions ? 'relative' : 'bg-[var(--bg-canvas-strong)]'}`}>
           {isAssumptions ? (
             <div className="impact-notice-overlay">
               <GlobalNotificationBanner />
               <GlobalSharedAssumptionsImport />
             </div>
           ) : (
-            <div className="mx-auto mt-4 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="min-h-[28px] space-y-2">
+            <div className="mx-auto mt-2 w-full max-w-7xl px-4 sm:mt-3 sm:px-6 lg:px-8">
+              <div className="min-h-[20px] space-y-2">
                 <GlobalNotificationBanner />
                 <GlobalSharedAssumptionsImport />
               </div>
@@ -163,7 +163,7 @@ const App = () => {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
         <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
-          <h1 className="text-red-600 text-2xl font-bold mb-4">Global Error</h1>
+          <h1 className="text-danger text-2xl font-bold mb-4">Global Error</h1>
           <div className="bg-gray-100 p-3 rounded-md overflow-auto mb-4">
             <pre className="text-sm">{error.toString()}</pre>
             {error.stack && (

@@ -101,58 +101,47 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm">
-      <div className="text-sm font-bold text-slate-800 mb-3">Your potential rank on Impact List</div>
+    <div className="impact-surface p-4 shadow-sm">
+      <div className="mb-3 text-sm font-bold text-strong">Your potential rank on Impact List</div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200">
+        <table className="impact-table">
           <thead>
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Rank</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Lives Saved
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Donated
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Cost/Life
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Net Worth
-              </th>
+              <th className="px-3 py-2 text-left">Rank</th>
+              <th className="px-3 py-2 text-left">Name</th>
+              <th className="px-3 py-2 text-left">Lives Saved</th>
+              <th className="px-3 py-2 text-left">Donated</th>
+              <th className="px-3 py-2 text-left">Cost/Life</th>
+              <th className="px-3 py-2 text-left">Net Worth</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody>
             {rows.map((row) => (
-              <tr key={row.rank} className={row.isCurrentUser ? 'bg-indigo-50' : ''}>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">{row.rank}</td>
+              <tr key={row.rank} className={row.isCurrentUser ? 'impact-mini-row--current' : ''}>
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">{row.rank}</td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
                   {row.isPlaceholder ? (
-                    <span className="text-slate-400">—</span>
+                    <span className="text-muted">—</span>
                   ) : row.isCurrentUser ? (
-                    <span className="font-medium text-indigo-600">You</span>
+                    <span className="font-medium text-[var(--accent-strong)]">You</span>
                   ) : (
-                    <Link
-                      to={`/donor/${encodeURIComponent(row.id)}`}
-                      className="text-indigo-600 hover:text-indigo-800 hover:underline"
-                    >
+                    <Link to={`/donor/${encodeURIComponent(row.id)}`} className="impact-link">
                       {row.name}
                     </Link>
                   )}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
-                  <span className={row.totalLivesSaved < 0 ? 'text-red-700' : 'text-emerald-700'}>
+                  <span className={row.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}>
                     {row.isPlaceholder ? '—' : formatNumber(Math.round(row.totalLivesSaved))}
                   </span>
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
                   {row.isPlaceholder ? '—' : formatCurrency(row.totalDonated)}
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
                   {row.isPlaceholder ? '—' : row.totalLivesSaved === 0 ? '∞' : formatCurrency(row.costPerLife)}
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-slate-900">
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
                   {row.isPlaceholder ? '—' : row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}
                 </td>
               </tr>

@@ -119,6 +119,7 @@ const CategoryValuesSection = ({
                   className="w-full"
                   validateOnBlur={true}
                   placeholder={formattedDefault}
+                  isCustom={isCustom}
                   disabled={true}
                 />
               </div>

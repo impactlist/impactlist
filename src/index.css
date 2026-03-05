@@ -20,6 +20,10 @@
     --accent: #0b5d66;
     --accent-strong: #094850;
     --accent-soft: #d9edf0;
+    /* Keep edited-state and custom-accent tokens semantically separate, even if they currently share a hue. */
+    --edited-accent: #4460b2;
+    --edited-accent-strong: #354c91;
+    --edited-accent-soft: #dbe4ff;
     --custom-accent: #4460b2;
     --custom-accent-strong: #354c91;
     --custom-accent-soft: #dbe4ff;
@@ -575,18 +579,18 @@
   }
 
   .assumption-card[data-state='custom'] {
-    border-color: color-mix(in srgb, var(--custom-accent) 54%, var(--border-subtle) 46%);
-    border-left-color: var(--custom-accent);
-    background: color-mix(in srgb, var(--custom-accent-soft) 62%, white 38%);
+    border-color: color-mix(in srgb, var(--edited-accent) 54%, var(--border-subtle) 46%);
+    border-left-color: var(--edited-accent);
+    background: color-mix(in srgb, var(--edited-accent-soft) 62%, white 38%);
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--custom-accent) 24%, transparent 76%),
+      0 0 0 1px color-mix(in srgb, var(--edited-accent) 24%, transparent 76%),
       var(--shadow-1);
   }
 
   .assumption-card[data-state='custom']:hover {
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--custom-accent) 30%, transparent 70%),
-      0 14px 24px -20px color-mix(in srgb, var(--custom-accent-strong) 58%, transparent 42%);
+      0 0 0 1px color-mix(in srgb, var(--edited-accent) 30%, transparent 70%),
+      0 14px 24px -20px color-mix(in srgb, var(--edited-accent-strong) 58%, transparent 42%);
   }
 
   .assumption-card[data-state='error'] {
@@ -612,8 +616,8 @@
   }
 
   .assumption-state-pill[data-state='custom'] {
-    color: var(--custom-accent-strong);
-    background: color-mix(in srgb, var(--custom-accent-soft) 65%, white 35%);
+    color: var(--edited-accent-strong);
+    background: color-mix(in srgb, var(--edited-accent-soft) 65%, white 35%);
   }
 
   .assumption-state-pill[data-state='error'] {
@@ -765,8 +769,8 @@
   }
 
   .impact-field[data-state='custom'] .impact-field__input {
-    border-color: color-mix(in srgb, var(--custom-accent) 38%, var(--border-subtle) 62%);
-    background: color-mix(in srgb, var(--custom-accent-soft) 36%, white 64%);
+    border-color: color-mix(in srgb, var(--edited-accent) 38%, var(--border-subtle) 62%);
+    background: color-mix(in srgb, var(--edited-accent-soft) 36%, white 64%);
   }
 
   .impact-field[data-state='error'] .impact-field__input {
@@ -894,11 +898,11 @@
   }
 
   .assumptions-entry[data-active='true'][data-dirty='true'] {
-    border-color: color-mix(in srgb, var(--custom-accent) 42%, var(--border-subtle) 58%);
-    background: color-mix(in srgb, var(--custom-accent-soft) 28%, var(--bg-surface) 72%);
+    border-color: color-mix(in srgb, var(--edited-accent) 42%, var(--border-subtle) 58%);
+    background: color-mix(in srgb, var(--edited-accent-soft) 28%, var(--bg-surface) 72%);
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--custom-accent) 18%, transparent 82%),
-      0 10px 18px -18px color-mix(in srgb, var(--custom-accent-strong) 46%, transparent 54%);
+      0 0 0 1px color-mix(in srgb, var(--edited-accent) 18%, transparent 82%),
+      0 10px 18px -18px color-mix(in srgb, var(--edited-accent-strong) 46%, transparent 54%);
   }
 
   .assumptions-inline-error {

@@ -1,5 +1,6 @@
 // Data validation utilities to prevent silent failures
 // All functions in this module should crash loudly when expected data is missing
+import { WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
 
 /**
  * Assert that a value exists and is not null/undefined
@@ -235,7 +236,6 @@ export const validateRecipient = (recipient, recipientId) => {
   });
 
   // Check fraction normalization
-  const WEIGHT_NORMALIZATION_TOLERANCE = 0.001;
   if (Math.abs(totalFraction - 1) > WEIGHT_NORMALIZATION_TOLERANCE) {
     throw new Error(`Category fractions for recipient "${recipientId}" do not sum to 1 (total: ${totalFraction})`);
   }

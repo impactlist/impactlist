@@ -1,12 +1,7 @@
 // Assumptions data helpers
 // Utilities for managing default, user, and combined assumption data structures
 import { globalParameters, categoriesById, recipientsById } from '../data/generatedData.js';
-import {
-  calculateCostPerLife,
-  applyRecipientEffectToBase,
-  effectToCostPerLife as effectToCostPerLifeWithEffects,
-  selectEffectsForYear,
-} from './effectsCalculation.js';
+import { calculateCostPerLife, applyRecipientEffectToBase, selectEffectsForYear } from './effectsCalculation.js';
 import {
   assertExists,
   assertPositiveNumber,
@@ -336,6 +331,59 @@ export const getRecipientFromCombined = (combinedAssumptions, recipientId) => {
 };
 
 /**
+ * Calculate cost per life for a specific recipient category using donation-year context.
+ * Applies recipient-specific effect modifications to all applicable base effects.
+ * @param {Object} combinedAssumptions - Combined assumptions object
+ * @param {string} recipientId - Recipient ID
+ * @param {string} categoryId - Category ID
+ * @param {number} donationYear - Year when the donation was made (required)
+ * @returns {number} Cost per life for this recipient/category pair
+ */
+export const getCostPerLifeForRecipientCategoryFromCombined = (
+  combinedAssumptions,
+  recipientId,
+  categoryId,
+  donationYear
+) => {
+  if (typeof donationYear !== 'number' || !Number.isInteger(donationYear)) {
+    throw new Error(`donationYear must be an integer for recipient ${recipientId} category ${categoryId}`);
+  }
+
+  assertExists(combinedAssumptions, 'combinedAssumptions');
+  assertExists(recipientId, 'recipientId');
+  assertExists(categoryId, 'categoryId');
+
+  const recipient = getRecipientFromCombined(combinedAssumptions, recipientId);
+  const categoryData = recipient.categories?.[categoryId];
+  if (!categoryData) {
+    throw new Error(`Category ${categoryId} not found for recipient ${recipientId}`);
+  }
+
+  const category = combinedAssumptions.categories[categoryId];
+  if (!category || !category.effects || category.effects.length === 0) {
+    throw new Error(`Category ${categoryId} has no effects defined`);
+  }
+
+  const applicableBaseEffects = selectEffectsForYear(category.effects, donationYear);
+
+  if (!categoryData.effects || categoryData.effects.length === 0) {
+    return calculateCostPerLife(applicableBaseEffects, combinedAssumptions.globalParameters, donationYear);
+  }
+
+  const modifiedEffects = applicableBaseEffects.map((baseEffect) => {
+    const recipientEffect = categoryData.effects.find((effect) => effect.effectId === baseEffect.effectId);
+    if (!recipientEffect) {
+      return baseEffect;
+    }
+
+    const context = `for recipient ${recipient.name} category ${categoryId}`;
+    return applyRecipientEffectToBase(baseEffect, recipientEffect, context);
+  });
+
+  return calculateCostPerLife(modifiedEffects, combinedAssumptions.globalParameters, donationYear);
+};
+
+/**
  * Calculate weighted cost per life for a recipient using combined assumptions
  * @param {Object} combinedAssumptions - The combined assumptions object
  * @param {string} recipientId - Recipient ID
@@ -365,45 +413,12 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
 
     totalWeight += weight;
 
-    const category = combinedAssumptions.categories[categoryId];
-    if (!category) {
-      throw new Error(`Category ${categoryId} not found in combined assumptions`);
-    }
-
-    let costPerLife;
-
-    // Check if recipient has effect modifications (overrides or multipliers)
-    if (categoryData.effects && categoryData.effects.length > 0) {
-      // Recipient has custom effects - apply them to the category's base effects
-      const baseEffects = category.effects || [];
-
-      if (baseEffects.length > 0) {
-        // Get base effects applicable for this year
-        const applicableBaseEffects = selectEffectsForYear(baseEffects, donationYear);
-
-        // Apply recipient modifications to matching base effects
-        const modifiedEffects = applicableBaseEffects.map((categoryEffect) => {
-          const recipientEffect = categoryData.effects.find((e) => e.effectId === categoryEffect.effectId);
-          if (recipientEffect) {
-            const context = `for recipient ${recipient.name} category ${categoryId}`;
-            return applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
-          }
-          return categoryEffect;
-        });
-
-        // Calculate cost per life from modified effects
-        costPerLife = calculateCostPerLife(modifiedEffects, combinedAssumptions.globalParameters, donationYear);
-      } else {
-        // No base effects to modify - this shouldn't happen in practice
-        throw new Error(`Category ${categoryId} has no base effects to apply recipient modifications to`);
-      }
-    } else {
-      // No recipient effect modifications, use base category calculation
-      if (!category.effects || category.effects.length === 0) {
-        throw new Error(`Category ${categoryId} has no effects defined`);
-      }
-      costPerLife = calculateCostPerLife(category.effects, combinedAssumptions.globalParameters, donationYear);
-    }
+    const costPerLife = getCostPerLifeForRecipientCategoryFromCombined(
+      combinedAssumptions,
+      recipientId,
+      categoryId,
+      donationYear
+    );
 
     const validCostPerLife = assertNonZeroNumber(
       costPerLife,
@@ -433,6 +448,55 @@ export const getCostPerLifeForRecipientFromCombined = (combinedAssumptions, reci
   }
 
   return spendingTotal / totalLivesSaved;
+};
+
+/**
+ * Calculate per-category amount/lives breakdown for a donation using combined assumptions.
+ * @param {Object} combinedAssumptions - Combined assumptions object
+ * @param {Object} donation - Donation record
+ * @returns {Array<{categoryId: string, amount: number, livesSaved: number, costPerLife: number, fraction: number}>}
+ */
+export const calculateCategoryBreakdownForDonationFromCombined = (combinedAssumptions, donation) => {
+  assertExists(combinedAssumptions, 'combinedAssumptions');
+  assertExists(donation, 'donation');
+  assertExists(donation.recipientId, 'donation.recipientId');
+  assertPositiveNumber(donation.amount, 'donation.amount');
+
+  const recipient = getRecipientFromCombined(combinedAssumptions, donation.recipientId);
+  const donationYear = extractYearFromDonation(donation);
+  const credit = donation.credit === undefined ? 1 : assertPositiveNumber(donation.credit, 'donation.credit');
+  const creditedAmount = donation.amount * credit;
+
+  return Object.entries(recipient.categories).map(([categoryId, categoryData]) => {
+    const fraction = assertPositiveNumber(
+      categoryData.fraction,
+      'categoryData.fraction',
+      `for category ${categoryId} in recipient ${recipient.name}`
+    );
+
+    const amount = creditedAmount * fraction;
+    const costPerLife = getCostPerLifeForRecipientCategoryFromCombined(
+      combinedAssumptions,
+      donation.recipientId,
+      categoryId,
+      donationYear
+    );
+    const validCostPerLife = assertNonZeroNumber(
+      costPerLife,
+      'costPerLife',
+      `for category ${categoryId} in recipient ${recipient.name}`
+    );
+
+    const livesSaved = validCostPerLife === Infinity ? 0 : amount / validCostPerLife;
+
+    return {
+      categoryId,
+      amount,
+      livesSaved,
+      costPerLife: validCostPerLife,
+      fraction,
+    };
+  });
 };
 
 /**
@@ -563,63 +627,6 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
     }));
 
   return filteredStats;
-};
-
-/**
- * Get actual cost per life for a specific category within a recipient using combined assumptions
- * @param {Object} combinedAssumptions - Combined assumptions object
- * @param {string} recipientId - Recipient ID
- * @param {string} categoryId - Category ID
- * @param {Object} categoryData - Category data from recipient
- * @param {number} donationYear - Year when the donation was made (required)
- * @returns {number} Cost per life for this category
- */
-export const getActualCostPerLifeForCategoryDataFromCombined = (
-  combinedAssumptions,
-  recipientId,
-  categoryId,
-  categoryData,
-  donationYear
-) => {
-  assertExists(combinedAssumptions, 'combinedAssumptions');
-  assertExists(recipientId, 'recipientId');
-  assertExists(categoryId, 'categoryId');
-  assertExists(categoryData, 'categoryData', `for category ${categoryId} in recipient ${recipientId}`);
-  assertPositiveNumber(
-    categoryData.fraction,
-    'categoryData.fraction',
-    `for category ${categoryId} in recipient ${recipientId}`
-  );
-
-  // Get the category and check for recipient-specific effect modifications
-  const category = combinedAssumptions.categories[categoryId];
-  if (!category || !category.effects || category.effects.length === 0) {
-    return getCostPerLifeFromCombined(combinedAssumptions, categoryId, donationYear);
-  }
-
-  const recipient = combinedAssumptions.recipients[recipientId];
-  if (
-    recipient &&
-    recipient.categories &&
-    recipient.categories[categoryId] &&
-    recipient.categories[categoryId].effects
-  ) {
-    const recipientCategoryData = recipient.categories[categoryId];
-    const categoryEffect = category.effects[0];
-    const recipientEffect = recipientCategoryData.effects.find((re) => re.effectId === categoryEffect.effectId);
-
-    if (recipientEffect) {
-      // Apply recipient modifications to the category effect
-      const context = `for recipient ${recipientId} category ${categoryId}`;
-      const modifiedEffect = applyRecipientEffectToBase(categoryEffect, recipientEffect, context);
-
-      // Convert the modified effect to cost per life
-      return effectToCostPerLifeWithEffects(modifiedEffect, combinedAssumptions.globalParameters, donationYear);
-    }
-  }
-
-  // No recipient modifications, use base calculation
-  return getCostPerLifeFromCombined(combinedAssumptions, categoryId, donationYear);
 };
 
 /**

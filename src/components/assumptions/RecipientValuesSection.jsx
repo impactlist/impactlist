@@ -77,22 +77,20 @@ const RecipientValuesSection = ({
       return getRecipientCategoryCostPerLife(recipientId, recipient, categoryId, includeUserOverrides);
     }
 
-    // For multiple categories, calculate weighted average
-    let totalWeightedCost = 0;
-    let totalWeight = 0;
+    // For multiple categories, combine by total lives-per-dollar (weighted harmonic composition)
+    let totalLivesPerDollar = 0;
 
     for (const [categoryId, categoryData] of categories) {
       const fraction = categoryData.fraction || 0;
       const cost = getRecipientCategoryCostPerLife(recipientId, recipient, categoryId, includeUserOverrides);
 
-      if (cost !== null && cost !== Infinity && fraction > 0) {
-        totalWeightedCost += cost * fraction;
-        totalWeight += fraction;
+      if (cost !== null && cost !== Infinity && cost !== 0 && fraction > 0) {
+        totalLivesPerDollar += fraction / cost;
       }
     }
 
-    if (totalWeight === 0) return Infinity;
-    return totalWeightedCost / totalWeight;
+    if (totalLivesPerDollar === 0) return Infinity;
+    return 1 / totalLivesPerDollar;
   };
 
   // Check if recipient has any custom values across all categories

@@ -313,6 +313,7 @@ function loadDonations() {
             recipientId: donation.recipient,
             amount: donation.amount,
             credit: creditAmount,
+            creditedAmount: donation.amount * creditAmount,
             source: donation.source,
             notes: donation.notes,
           });
@@ -327,6 +328,7 @@ function loadDonations() {
           recipientId: donation.recipient,
           amount: donation.amount,
           credit: 1.0, // Default to full credit
+          creditedAmount: donation.amount,
           source: donation.source,
           notes: donation.notes,
         });

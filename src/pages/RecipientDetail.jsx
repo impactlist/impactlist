@@ -12,7 +12,7 @@ import {
 import {
   getCostPerLifeForRecipientFromCombined,
   getCostPerLifeFromCombined,
-  getActualCostPerLifeForCategoryDataFromCombined,
+  getCostPerLifeForRecipientCategoryFromCombined,
   calculateLivesSavedForDonationFromCombined,
 } from '../utils/assumptionsDataHelpers';
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
@@ -89,7 +89,12 @@ const RecipientDetail = () => {
         const totalLivesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
 
         // Apply credit multiplier if it exists
-        const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+        const creditedAmount =
+          donation.creditedAmount !== undefined
+            ? donation.creditedAmount
+            : donation.credit !== undefined
+              ? donation.amount * donation.credit
+              : donation.amount;
 
         return {
           ...donation,
@@ -123,11 +128,10 @@ const RecipientDetail = () => {
 
         // Get category-specific cost per life
         const donationYear = extractYearFromDonation(donation);
-        const catCostPerLife = getActualCostPerLifeForCategoryDataFromCombined(
+        const catCostPerLife = getCostPerLifeForRecipientCategoryFromCombined(
           combinedAssumptions,
           recipientId,
           categoryId,
-          categoryData,
           donationYear
         );
 
@@ -184,6 +188,7 @@ const RecipientDetail = () => {
         donationValue: donationEntry.value,
         livesSavedValue: livesSavedEntry.value,
         categoryId,
+        effectiveCostPerLife: livesSavedEntry.value !== 0 ? donationEntry.value / livesSavedEntry.value : Infinity,
         donationPercentage:
           chartDonationsTotal > 0 ? ((donationEntry.value / chartDonationsTotal) * 100).toFixed(1) : '0.0',
         livesSavedPercentage:
@@ -274,6 +279,7 @@ const RecipientDetail = () => {
         donationValue: item.donationValue,
         livesSavedValue: item.livesSavedValue,
         categoryId: item.categoryId,
+        effectiveCostPerLife: item.effectiveCostPerLife,
         donationPercentage: item.donationPercentage,
         livesSavedPercentage: item.livesSavedPercentage,
         // Set current value and target based on view

@@ -3,7 +3,7 @@
  * Uses sampling approach instead of complex decomposition
  */
 
-import { selectEffectsForYear, effectToCostPerLife } from './effectsCalculation';
+import { selectEffectsForYear, effectToCostPerLife, applyRecipientEffectToBase } from './effectsCalculation';
 import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } from './assumptionsDataHelpers';
 
 /**
@@ -75,7 +75,24 @@ export const calculateLivesSavedSegments = (
       const category = combinedAssumptions.categories[categoryId];
       if (!category || !category.effects) return;
 
-      const effects = selectEffectsForYear(category.effects, donationYear);
+      const baseEffects = selectEffectsForYear(category.effects, donationYear);
+      const effects = baseEffects.map((baseEffect) => {
+        if (!categoryData.effects || categoryData.effects.length === 0) {
+          return baseEffect;
+        }
+
+        const recipientEffect = categoryData.effects.find((effect) => effect.effectId === baseEffect.effectId);
+        if (!recipientEffect) {
+          return baseEffect;
+        }
+
+        return applyRecipientEffectToBase(
+          baseEffect,
+          recipientEffect,
+          `for recipient ${entityId} category ${categoryId}`
+        );
+      });
+
       effects.forEach((effect) => {
         allEffects.push({
           ...effect,

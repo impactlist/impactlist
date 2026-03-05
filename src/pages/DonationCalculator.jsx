@@ -205,7 +205,7 @@ const DonationCalculator = () => {
     if (totalLives !== 0) {
       setCostPerLife(totalAmount / totalLives);
     } else {
-      setCostPerLife(0);
+      setCostPerLife(Infinity);
     }
 
     // Calculate rank

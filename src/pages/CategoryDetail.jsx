@@ -3,7 +3,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { getCostPerLifeFromCombined, createCombinedAssumptions } from '../utils/assumptionsDataHelpers';
+import {
+  getCostPerLifeFromCombined,
+  createCombinedAssumptions,
+  calculateCategoryBreakdownForDonationFromCombined,
+} from '../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import SampleDonationCalculator from '../components/shared/SampleDonationCalculator';
@@ -38,29 +42,14 @@ const CategoryDetail = () => {
     let totalDonated = 0;
     let totalLivesSaved = 0;
 
-    // Loop through all donations and add up amounts for this category
+    // Loop through all donations and add up amounts/lives for this category
     donations.forEach((donation) => {
-      const recipientId = donation.recipientId;
-      const recipient = combinedAssumptions.getRecipientById(recipientId);
+      const categoryBreakdown = calculateCategoryBreakdownForDonationFromCombined(combinedAssumptions, donation);
+      const targetCategory = categoryBreakdown.find((entry) => entry.categoryId === categoryId);
+      if (!targetCategory) return;
 
-      if (recipient && recipient.categories && recipient.categories[categoryId]) {
-        // This recipient donates to our category
-        const categoryData = recipient.categories[categoryId];
-        const fraction = categoryData.fraction || 0;
-
-        // Apply credit multiplier if it exists
-        const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-
-        // Calculate amount that goes to this category
-        const amountToCategory = creditedAmount * fraction;
-        totalDonated += amountToCategory;
-
-        // Calculate lives saved
-        const categorySpecificCostPerLife = costPerLife;
-        if (categorySpecificCostPerLife !== 0) {
-          totalLivesSaved += amountToCategory / categorySpecificCostPerLife;
-        }
-      }
+      totalDonated += targetCategory.amount;
+      totalLivesSaved += targetCategory.livesSaved;
     });
 
     setCategoryInfo({

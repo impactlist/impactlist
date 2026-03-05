@@ -65,6 +65,7 @@ describe('generate-data-from-markdown script', () => {
       recipient: 'Recipient One',
       amount: 1000,
       credit: 0.25,
+      creditedAmount: 250,
       date: '2021-05-03',
     });
 
@@ -75,6 +76,7 @@ describe('generate-data-from-markdown script', () => {
       recipient: 'Recipient One',
       amount: 1000,
       credit: 0.75,
+      creditedAmount: 750,
       date: '2021-05-03',
     });
 

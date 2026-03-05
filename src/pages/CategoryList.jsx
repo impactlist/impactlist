@@ -5,7 +5,7 @@ import BackButton from '../components/shared/BackButton';
 import { getDonationsForRecipient, getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeFromCombined,
-  calculateLivesSavedForDonationFromCombined,
+  calculateCategoryBreakdownForDonationFromCombined,
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
@@ -40,27 +40,13 @@ const CategoryList = () => {
 
       const recipientDonations = getDonationsForRecipient(recipientId);
 
-      // For each donation to this recipient
       recipientDonations.forEach((donation) => {
-        const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-        const livesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
+        const categoryBreakdown = calculateCategoryBreakdownForDonationFromCombined(combinedAssumptions, donation);
 
-        // If the donation has category information
-        if (donation.categoryId) {
-          categoryTotals[donation.categoryId] = (categoryTotals[donation.categoryId] || 0) + creditedAmount;
-          categoryLivesSaved[donation.categoryId] = (categoryLivesSaved[donation.categoryId] || 0) + livesSaved;
-        }
-        // If the recipient has categories, split among them according to fractions
-        else if (recipient.categories) {
-          Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
-            const fraction = categoryData.fraction || 0;
-            const amountForCategory = creditedAmount * fraction;
-            const livesSavedForCategory = livesSaved * fraction;
-
-            categoryTotals[categoryId] = (categoryTotals[categoryId] || 0) + amountForCategory;
-            categoryLivesSaved[categoryId] = (categoryLivesSaved[categoryId] || 0) + livesSavedForCategory;
-          });
-        }
+        categoryBreakdown.forEach(({ categoryId, amount, livesSaved }) => {
+          categoryTotals[categoryId] = (categoryTotals[categoryId] || 0) + amount;
+          categoryLivesSaved[categoryId] = (categoryLivesSaved[categoryId] || 0) + livesSaved;
+        });
       });
     });
 
@@ -115,8 +101,8 @@ const CategoryList = () => {
       label: 'Lives Saved',
       tooltip: (
         <div>
-          Expected lives saved from donations to this category, using the value from the cost/life column together with
-          the total amount given.
+          Expected lives saved from donations to this category, computed for each donation year and recipient/category
+          assumptions.
         </div>
       ),
       render: (category) => (

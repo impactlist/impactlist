@@ -1200,6 +1200,42 @@ describe('effectsCalculation', () => {
       expect(points[0]).toHaveProperty('testCategory-test-effect');
     });
 
+    it('applies recipient-specific effect overrides in recipient visualization', () => {
+      const testEffect = {
+        type: 'qaly',
+        costPerQALY: 1000,
+        startTime: 0,
+        windowLength: 10,
+      };
+
+      const mockCombinedAssumptions = {
+        globalParameters: { ...baseGlobalParams, timeLimit: 50, discountRate: 0 },
+        categories: {
+          testCategory: {
+            effects: [{ ...testEffect, effectId: 'test-effect' }],
+          },
+        },
+        recipients: {
+          'test-recipient': {
+            name: 'Test Recipient',
+            categories: {
+              testCategory: {
+                fraction: 1.0,
+                effects: [{ effectId: 'test-effect', overrides: { startTime: 20 } }],
+              },
+            },
+          },
+        },
+        getRecipientById: (id) => mockCombinedAssumptions.recipients[id],
+      };
+
+      const points = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockCombinedAssumptions);
+      const firstActivePoint = points.find((point) => point['testCategory-test-effect'] > 0);
+
+      expect(firstActivePoint).toBeDefined();
+      expect(firstActivePoint.year).toBeGreaterThanOrEqual(2044);
+    });
+
     it('should integrate correctly to total lives saved for category', () => {
       const testEffect = {
         type: 'qaly',

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import SortableTable from '../shared/SortableTable';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
-import { extractYearFromDonation } from '../../utils/donationDataHelpers';
+import { extractYearFromDonation, getCurrentYear } from '../../utils/donationDataHelpers';
 
 /**
  * Displays a table of donations for a donor or recipient entity.
@@ -128,7 +128,11 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
             <span className="text-2xl">∞</span>
           ) : (
             formatCurrency(
-              getEffectiveCostPerLifeFromCombined(combinedAssumptions, donation, extractYearFromDonation(donation))
+              getEffectiveCostPerLifeFromCombined(
+                combinedAssumptions,
+                donation,
+                donation.isUnknown ? getCurrentYear() : extractYearFromDonation(donation)
+              )
             )
           )}
         </div>

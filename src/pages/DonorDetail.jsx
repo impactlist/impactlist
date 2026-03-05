@@ -6,14 +6,13 @@ import {
   getPrimaryCategoryId,
   getDonorById,
   getDonationsForDonor,
-  getCurrentYear,
   extractYearFromDonation,
 } from '../utils/donationDataHelpers';
 import {
   calculateDonorStatsFromCombined,
   getCostPerLifeForRecipientFromCombined,
   getCostPerLifeFromCombined,
-  getActualCostPerLifeForCategoryDataFromCombined,
+  getCostPerLifeForRecipientCategoryFromCombined,
   calculateLivesSavedForDonationFromCombined,
 } from '../utils/assumptionsDataHelpers';
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
@@ -89,7 +88,12 @@ const DonorDetail = () => {
         const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId) || { name: 'Other' };
 
         // Apply credit multiplier if it exists
-        const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
+        const creditedAmount =
+          donation.creditedAmount !== undefined
+            ? donation.creditedAmount
+            : donation.credit !== undefined
+              ? donation.amount * donation.credit
+              : donation.amount;
 
         // Calculate lives saved
         const totalLivesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
@@ -110,7 +114,7 @@ const DonorDetail = () => {
     setDonorContent(donorData?.content);
 
     // Keep track of the sum of known donations for reference
-    const knownDonationsTotal = donorDonationsList.reduce((total, donation) => total + donation.amount, 0);
+    const knownDonationsTotal = donorDonationsList.reduce((total, donation) => total + donation.creditedAmount, 0);
 
     // If donor has totalDonated field and it's greater than the sum of known donations
     if (donorData?.totalDonated && donorData.totalDonated > knownDonationsTotal) {
@@ -163,6 +167,7 @@ const DonorDetail = () => {
     // Group donations by category, accounting for category fractions
     const categoryAmounts = {};
     const categoryLivesSaved = {};
+    const categoryBaselineLives = {};
     let chartDonationsTotal = 0;
     let chartLivesSavedTotal = 0;
 
@@ -183,11 +188,10 @@ const DonorDetail = () => {
 
         // Get the costPerLife with multiplier properly applied
         const donationYear = extractYearFromDonation(donation);
-        const costPerLife = getActualCostPerLifeForCategoryDataFromCombined(
+        const costPerLife = getCostPerLifeForRecipientCategoryFromCombined(
           combinedAssumptions,
           recipientId,
           categoryId,
-          categoryData,
           donationYear
         );
 
@@ -208,20 +212,14 @@ const DonorDetail = () => {
         }
 
         if (!categoryLivesSaved[categoryName]) {
-          // Calculate virtual multiplier from actual effects
-          const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear());
-          const virtualMultiplier = baseCostPerLife / costPerLife;
-          const hasVirtualMultiplier = Math.abs(virtualMultiplier - 1.0) > 0.01; // Show if significantly different from 1.0
-
           categoryLivesSaved[categoryName] = {
             name: categoryName,
             value: 0,
             categoryId: categoryId,
-            costPerLife: costPerLife,
-            // Store virtual multiplier info for the tooltip (calculated from actual effects)
-            hasMultiplier: hasVirtualMultiplier,
-            multiplier: hasVirtualMultiplier ? virtualMultiplier : undefined,
           };
+        }
+        if (!categoryBaselineLives[categoryName]) {
+          categoryBaselineLives[categoryName] = 0;
         }
 
         // Sum donation amounts
@@ -231,6 +229,11 @@ const DonorDetail = () => {
         // Sum lives saved
         categoryLivesSaved[categoryName].value += livesSavedForCategory;
         chartLivesSavedTotal += livesSavedForCategory;
+
+        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, donationYear);
+        if (baseCostPerLife !== 0 && baseCostPerLife !== Infinity) {
+          categoryBaselineLives[categoryName] += categoryAmount / baseCostPerLife;
+        }
       });
     });
 
@@ -250,22 +253,32 @@ const DonorDetail = () => {
         categoryId: categoryAmounts[name]?.categoryId,
       };
       const categoryId = donationEntry.categoryId || livesSavedEntry.categoryId;
+      const effectiveCostPerLife = livesSavedEntry.value !== 0 ? donationEntry.value / livesSavedEntry.value : Infinity;
+      const baselineLives = categoryBaselineLives[name] || 0;
+      const baselineCostPerLife = baselineLives !== 0 ? donationEntry.value / baselineLives : Infinity;
+      const virtualMultiplier =
+        effectiveCostPerLife !== 0 && effectiveCostPerLife !== Infinity && baselineCostPerLife !== Infinity
+          ? baselineCostPerLife / effectiveCostPerLife
+          : undefined;
+      const hasVirtualMultiplier =
+        virtualMultiplier !== undefined &&
+        Number.isFinite(virtualMultiplier) &&
+        Math.abs(virtualMultiplier - 1.0) > 0.01;
 
       return {
         name,
         donationValue: donationEntry.value,
         livesSavedValue: livesSavedEntry.value,
         categoryId,
+        effectiveCostPerLife,
         donationPercentage: ((donationEntry.value / chartDonationsTotal) * 100).toFixed(1),
         livesSavedPercentage:
           chartLivesSavedTotal !== 0
             ? ((Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal)) * 100).toFixed(1)
             : 0,
-        costPerLife:
-          livesSavedEntry.costPerLife ||
-          (categoryId ? getCostPerLifeFromCombined(combinedAssumptions, categoryId, getCurrentYear()) || 0 : 0),
-        hasMultiplier: livesSavedEntry.hasMultiplier,
-        multiplier: livesSavedEntry.multiplier,
+        costPerLife: effectiveCostPerLife,
+        hasMultiplier: hasVirtualMultiplier,
+        multiplier: hasVirtualMultiplier ? virtualMultiplier : undefined,
       };
     });
 
@@ -294,6 +307,7 @@ const DonorDetail = () => {
           name: 'Other Categories',
           donationValue: otherDonationTotal,
           livesSavedValue: otherLivesSavedTotal,
+          effectiveCostPerLife: otherLivesSavedTotal !== 0 ? otherDonationTotal / otherLivesSavedTotal : Infinity,
           donationPercentage: otherDonationPercentage,
           livesSavedPercentage: otherLivesSavedPercentage,
         });
@@ -326,6 +340,7 @@ const DonorDetail = () => {
       donationValue: item.donationValue,
       livesSavedValue: item.livesSavedValue,
       categoryId: item.categoryId,
+      effectiveCostPerLife: item.effectiveCostPerLife,
       donationPercentage: item.donationPercentage,
       livesSavedPercentage: item.livesSavedPercentage,
       costPerLife: item.costPerLife,
@@ -380,6 +395,7 @@ const DonorDetail = () => {
         donationValue: item.donationValue,
         livesSavedValue: item.livesSavedValue,
         categoryId: item.categoryId,
+        effectiveCostPerLife: item.effectiveCostPerLife,
         donationPercentage: item.donationPercentage,
         livesSavedPercentage: item.livesSavedPercentage,
         costPerLife: item.costPerLife,

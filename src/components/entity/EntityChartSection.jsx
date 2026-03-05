@@ -75,6 +75,10 @@ const EntityChartSection = ({
       const entry = data.payload;
       const value = entry.valueTarget; // Current displayed value
       const percentage = chartView === 'donations' ? entry.donationPercentage : entry.livesSavedPercentage;
+      const effectiveCostPerLife =
+        entry.effectiveCostPerLife !== undefined
+          ? entry.effectiveCostPerLife
+          : getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry, getCurrentYear());
 
       return (
         <div className="impact-surface p-3 shadow-md">
@@ -85,10 +89,7 @@ const EntityChartSection = ({
               <p className="text-xs text-muted">{`${percentage}% of known donations`}</p>
               {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
-                  <p className="text-xs text-muted">
-                    Cost per life:{' '}
-                    {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry, getCurrentYear()))}
-                  </p>
+                  <p className="text-xs text-muted">Cost per life: {formatCurrency(effectiveCostPerLife)}</p>
                   <p className="text-xs text-muted">Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}</p>
                 </div>
               )}
@@ -101,10 +102,7 @@ const EntityChartSection = ({
               <p className="text-xs text-muted">{`${percentage}% of total impact`}</p>
               {entry.name !== 'Other Categories' && entry.categoryId && (
                 <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
-                  <p className="text-xs text-muted">
-                    Cost per life:{' '}
-                    {formatCurrency(getEffectiveCostPerLifeFromCombined(combinedAssumptions, entry, getCurrentYear()))}
-                  </p>
+                  <p className="text-xs text-muted">Cost per life: {formatCurrency(effectiveCostPerLife)}</p>
                   <p className="text-xs text-muted">Donation amount: {formatCurrency(entry.donationValue)}</p>
                 </div>
               )}

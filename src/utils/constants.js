@@ -4,7 +4,7 @@
 
 // Numerical constants
 export const SIMULATION_AMOUNT = 1e9; // 1 billion - used for cost calculations
-export const WEIGHT_NORMALIZATION_TOLERANCE = 0.01;
+export const WEIGHT_NORMALIZATION_TOLERANCE = 0.001;
 export const DEFAULT_RESULTS_LIMIT = 10;
 
 // Historical population growth rate (approximate world average 1970-2024)

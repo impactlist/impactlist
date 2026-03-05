@@ -8,8 +8,9 @@ import {
   getCostPerLifeForRecipientFromCombined,
   calculateLivesSavedForDonationFromCombined,
   calculateLivesSavedForCategoryFromCombined,
+  calculateCategoryBreakdownForDonationFromCombined,
   calculateDonorStatsFromCombined,
-  getActualCostPerLifeForCategoryDataFromCombined,
+  getCostPerLifeForRecipientCategoryFromCombined,
   getEffectiveCostPerLifeFromCombined,
   isCategoryCustomized,
   isRecipientCategoryCustomized,
@@ -252,30 +253,88 @@ describe('assumptionsDataHelpers', () => {
     expect(donationLives).toBeCloseTo(2500 / categoryCost, 10);
   });
 
-  it('getActualCostPerLifeForCategoryDataFromCombined applies recipient effect modifications', () => {
+  it('getCostPerLifeForRecipientCategoryFromCombined applies recipient effect modifications', () => {
     const combined = createCombinedAssumptions(buildDefaults(), null);
     const baseCost = getCostPerLifeFromCombined(combined, 'health', 2020);
 
-    const customCategoryData = combined.recipients.recipientCustom.categories.health;
-    const modifiedCost = getActualCostPerLifeForCategoryDataFromCombined(
-      combined,
-      'recipientCustom',
-      'health',
-      customCategoryData,
-      2020
-    );
-
-    const plainCategoryData = combined.recipients.recipientA.categories.health;
-    const plainCost = getActualCostPerLifeForCategoryDataFromCombined(
-      combined,
-      'recipientA',
-      'health',
-      plainCategoryData,
-      2020
-    );
+    const modifiedCost = getCostPerLifeForRecipientCategoryFromCombined(combined, 'recipientCustom', 'health', 2020);
+    const plainCost = getCostPerLifeForRecipientCategoryFromCombined(combined, 'recipientA', 'health', 2020);
 
     expect(modifiedCost).toBeCloseTo(baseCost * 2, 10);
     expect(plainCost).toBeCloseTo(baseCost, 10);
+  });
+
+  it('getCostPerLifeForRecipientCategoryFromCombined applies recipient modifications across all effects', () => {
+    const defaults = {
+      globalParameters: buildGlobalParameters(),
+      categories: {
+        multi: {
+          name: 'Multi',
+          effects: [
+            { effectId: 'e1', costPerQALY: 100, startTime: 0, windowLength: 10 },
+            { effectId: 'e2', costPerQALY: 200, startTime: 0, windowLength: 10 },
+          ],
+        },
+      },
+      recipients: {
+        recipientMulti: {
+          name: 'Recipient Multi',
+          categories: {
+            multi: {
+              fraction: 1,
+              effects: [{ effectId: 'e2', overrides: { costPerQALY: 400 } }],
+            },
+          },
+        },
+        recipientMultiPlain: {
+          name: 'Recipient Multi Plain',
+          categories: {
+            multi: {
+              fraction: 1,
+            },
+          },
+        },
+      },
+    };
+
+    const combined = createCombinedAssumptions(defaults, null);
+    const modifiedCost = getCostPerLifeForRecipientCategoryFromCombined(combined, 'recipientMulti', 'multi', 2020);
+    const plainCost = getCostPerLifeForRecipientCategoryFromCombined(combined, 'recipientMultiPlain', 'multi', 2020);
+
+    expect(modifiedCost).toBeGreaterThan(plainCost);
+  });
+
+  it('calculateCategoryBreakdownForDonationFromCombined returns category-level amount and lives using category-specific costs', () => {
+    const defaults = {
+      globalParameters: buildGlobalParameters(),
+      categories: {
+        low: { name: 'Low', effects: [{ effectId: 'low', costPerQALY: 100, startTime: 0, windowLength: 10 }] },
+        high: { name: 'High', effects: [{ effectId: 'high', costPerQALY: 1000, startTime: 0, windowLength: 10 }] },
+      },
+      recipients: {
+        recipientSplit: {
+          name: 'Recipient Split',
+          categories: {
+            low: { fraction: 0.5 },
+            high: { fraction: 0.5 },
+          },
+        },
+      },
+    };
+
+    const combined = createCombinedAssumptions(defaults, null);
+    const donation = { recipientId: 'recipientSplit', amount: 10000, credit: 1, date: '2020-01-01' };
+
+    const breakdown = calculateCategoryBreakdownForDonationFromCombined(combined, donation);
+    const totalLives = calculateLivesSavedForDonationFromCombined(combined, donation);
+
+    expect(breakdown).toHaveLength(2);
+    expect(breakdown.reduce((sum, row) => sum + row.amount, 0)).toBeCloseTo(10000, 10);
+    expect(breakdown.reduce((sum, row) => sum + row.livesSaved, 0)).toBeCloseTo(totalLives, 10);
+
+    const lowCategory = breakdown.find((row) => row.categoryId === 'low');
+    const highCategory = breakdown.find((row) => row.categoryId === 'high');
+    expect(lowCategory.livesSaved).toBeGreaterThan(highCategory.livesSaved);
   });
 
   it('getEffectiveCostPerLifeFromCombined routes by entity type correctly', () => {

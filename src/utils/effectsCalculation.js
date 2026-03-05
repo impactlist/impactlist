@@ -26,11 +26,11 @@ const calculateDiscountToTime = (rate, time) => {
 };
 
 /**
- * Calculate the sum of discrete discount factors for a time window
- * Returns the sum of discount factors over the window (in years)
+ * Calculate the continuous discount integral for a time window
+ * Returns ∫_0^windowLength (1 + discountRate)^(-t) dt
  * @param {number} discountRate - Annual discount rate (e.g., 0.02 for 2%)
  * @param {number} windowLength - Length of time window in years
- * @returns {number} Sum of discount factors over window: Σ(1/(1+r)^t) for t=0 to windowLength-1
+ * @returns {number} Discount integral over the window
  */
 const calculateDiscountWindowSum = (discountRate, windowLength) => {
   if (Math.abs(discountRate) < 1e-10) {

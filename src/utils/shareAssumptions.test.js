@@ -62,12 +62,16 @@ describe('shareAssumptions utils', () => {
     const result = await saveSharedAssumptions({
       assumptions: { globalParameters: { timeLimit: 200 } },
       name: 'Scenario',
+      description: 'Scenario notes',
       slug: 'scenario',
     });
 
     expect(result.reference).toBe('abc123');
     expect(result.shareUrl).toContain('/?shared=abc123');
     expect(fetchSpy).toHaveBeenCalledWith('/api/shared-assumptions', expect.objectContaining({ method: 'POST' }));
+    expect(JSON.parse(fetchSpy.mock.calls[0][1].body)).toMatchObject({
+      description: 'Scenario notes',
+    });
   });
 
   it('fetchSharedAssumptions throws typed API errors', async () => {

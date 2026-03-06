@@ -65,6 +65,7 @@ describe('Global shared assumptions import flow', () => {
       ok: true,
       json: async () => ({
         id: 'abc123',
+        description: 'Imported shared description',
         assumptions: {
           globalParameters: {
             timeLimit: incomingTimeLimit,
@@ -94,12 +95,13 @@ describe('Global shared assumptions import flow', () => {
     const savedAssumptions = JSON.parse(savedAssumptionsRaw);
     expect(savedAssumptions).toHaveLength(1);
     expect(savedAssumptions[0]).toMatchObject({
+      description: 'Imported shared description',
       source: 'imported',
       reference: 'abc123',
     });
     expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
     expect(await screen.findByText('abc123')).toBeInTheDocument();
-    expect(screen.getByText('Active')).toBeInTheDocument();
+    expect(screen.getByText('abc123').closest('.assumptions-entry')).toHaveAttribute('data-active', 'true');
 
     await user.click(screen.getByRole('tab', { name: 'Global' }));
 

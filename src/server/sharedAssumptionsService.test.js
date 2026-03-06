@@ -29,12 +29,14 @@ describe('sharedAssumptionsService', () => {
     const result = await createSharedSnapshot({
       assumptions: { globalParameters: { timeLimit: 500 } },
       name: 'Scenario',
+      description: 'Shared planning scenario.',
       slug: 'scenario-a',
       clientIp: '1.2.3.4',
     });
 
     expect(result.slug).toBe('scenario-a');
     expect(result.reference).toBe('scenario-a');
+    expect(result.description).toBe('Shared planning scenario.');
     expect(result.id).toHaveLength(12);
 
     expect(runRedisCommand).toHaveBeenNthCalledWith(
@@ -112,6 +114,7 @@ describe('sharedAssumptionsService', () => {
       JSON.stringify({
         createdAt: '2026-02-13T00:00:00.000Z',
         slug: 'my-slug',
+        description: 'Imported from a teammate.',
         assumptions: { globalParameters: { timeLimit: 1000 } },
       })
     );
@@ -120,6 +123,7 @@ describe('sharedAssumptionsService', () => {
 
     expect(snapshot.id).toBe('abc123def456');
     expect(snapshot.slug).toBe('my-slug');
+    expect(snapshot.description).toBe('Imported from a teammate.');
     expect(snapshot.assumptions.globalParameters.timeLimit).toBe(1000);
   });
 

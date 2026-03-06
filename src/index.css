@@ -1327,11 +1327,29 @@
     box-shadow: var(--shadow-focus);
   }
 
+  .impact-modal__textarea {
+    min-height: 7rem;
+    resize: vertical;
+    line-height: 1.45;
+  }
+
+  .impact-modal__input[readonly] {
+    background: color-mix(in srgb, var(--bg-surface-alt) 68%, white 32%);
+    color: color-mix(in srgb, var(--text-muted) 82%, black 18%);
+  }
+
   .impact-modal__label {
     color: color-mix(in srgb, var(--text-strong) 88%, black 12%);
     font-size: 0.79rem;
     font-weight: 700;
     letter-spacing: 0.01em;
+  }
+
+  .impact-modal__char-count {
+    margin-top: 0.35rem;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    text-align: right;
   }
 
   .impact-modal__well {

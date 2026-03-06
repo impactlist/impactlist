@@ -74,6 +74,7 @@ const GlobalSharedAssumptionsImport = () => {
       }
       const upsertResult = upsertImportedSavedAssumptions({
         label: snapshot?.name || snapshot?.slug || reference,
+        description: snapshot?.description || null,
         assumptions: normalizedIncoming,
         reference,
       });
@@ -177,9 +178,8 @@ const GlobalSharedAssumptionsImport = () => {
       return;
     }
     setPendingSharedSnapshot(null);
-    showNotification('info', 'Kept your local assumptions.');
     removeSharedParam(pendingSharedSnapshot.reference);
-  }, [pendingSharedSnapshot, removeSharedParam, showNotification]);
+  }, [pendingSharedSnapshot, removeSharedParam]);
 
   const showImportDecisionModal = Boolean(pendingSharedSnapshot);
 

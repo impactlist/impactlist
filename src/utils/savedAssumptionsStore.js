@@ -154,6 +154,15 @@ export const pruneEmptyTopLevelAssumptions = (assumptions) => {
   return Object.keys(output).length > 0 ? output : null;
 };
 
+function normalizeDescription(description) {
+  if (typeof description !== 'string') {
+    return null;
+  }
+
+  const trimmed = description.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 const validateEntry = (entry) => {
   if (!isPlainObject(entry)) {
     return null;
@@ -193,6 +202,7 @@ const validateEntry = (entry) => {
   return {
     id: entry.id,
     label: entry.label.trim(),
+    description: normalizeDescription(entry.description),
     source: entry.source,
     reference: typeof entry.reference === 'string' && entry.reference.trim().length > 0 ? entry.reference.trim() : null,
     assumptions,
@@ -447,7 +457,7 @@ const resolveUniqueLabel = (entries, label, { excludeId = null } = {}) => {
   return candidate;
 };
 
-const buildLocalEntry = ({ label, assumptions, nowIso }) => {
+const buildLocalEntry = ({ label, description, assumptions, nowIso }) => {
   const normalizedLabel = trimLabel(label);
   if (!normalizedLabel) {
     throw new Error('Saved assumptions label is required.');
@@ -461,6 +471,7 @@ const buildLocalEntry = ({ label, assumptions, nowIso }) => {
   return {
     id: createId(),
     label: normalizedLabel,
+    description: normalizeDescription(description),
     source: 'local',
     reference: null,
     assumptions: cleanAssumptions,
@@ -474,6 +485,8 @@ const buildLocalEntry = ({ label, assumptions, nowIso }) => {
 
 const buildUpdatedEntry = (entry, updates, nowIso) => {
   const nextLabel = updates.label !== undefined ? trimLabel(updates.label) : entry.label;
+  const nextDescription =
+    updates.description !== undefined ? normalizeDescription(updates.description) : entry.description;
   if (!nextLabel) {
     throw new Error('Saved assumptions label is required.');
   }
@@ -491,6 +504,7 @@ const buildUpdatedEntry = (entry, updates, nowIso) => {
   return {
     ...entry,
     label: nextLabel,
+    description: nextDescription,
     assumptions: nextAssumptions,
     fingerprint: hasNewAssumptions ? createFingerprint(nextAssumptions) : entry.fingerprint,
     source: updates.source && isValidSource(updates.source) ? updates.source : entry.source,
@@ -560,13 +574,14 @@ export const createComparableAssumptionsFingerprint = (assumptions) => {
 
 export const saveNewAssumptions = ({
   label,
+  description = null,
   assumptions,
   source = 'local',
   reference = null,
   resolveDuplicateLabel = false,
 }) => {
   const nowIso = createNowIso();
-  const baseEntry = buildLocalEntry({ label, assumptions, nowIso });
+  const baseEntry = buildLocalEntry({ label, description, assumptions, nowIso });
 
   let entry = {
     ...baseEntry,
@@ -679,7 +694,7 @@ export const markSavedAssumptionsLoaded = (id) => {
   return updateSavedAssumptions(id, { markLoaded: true });
 };
 
-export const attachSavedAssumptionsShareReference = ({ reference, assumptions, preferredId = null }) => {
+export const attachSavedAssumptionsShareReference = ({ reference, description, assumptions, preferredId = null }) => {
   const normalizedReference = typeof reference === 'string' ? reference.trim() : '';
   if (!normalizedReference) {
     return { ok: false, errorCode: 'invalid_reference' };
@@ -715,6 +730,7 @@ export const attachSavedAssumptionsShareReference = ({ reference, assumptions, p
 
   const updateResult = updateSavedAssumptions(targetEntry.id, {
     reference: normalizedReference,
+    description,
     source: targetEntry.source,
   });
 
@@ -729,7 +745,7 @@ export const attachSavedAssumptionsShareReference = ({ reference, assumptions, p
   };
 };
 
-export const upsertImportedSavedAssumptions = ({ label, assumptions, reference }) => {
+export const upsertImportedSavedAssumptions = ({ label, description, assumptions, reference }) => {
   const normalizedReference = typeof reference === 'string' ? reference.trim() : '';
   if (!normalizedReference) {
     return { ok: false, errorCode: 'invalid_reference' };
@@ -744,6 +760,8 @@ export const upsertImportedSavedAssumptions = ({ label, assumptions, reference }
   const nowIso = createNowIso();
   const existing = current.find((entry) => entry.reference === normalizedReference);
   const incomingLabel = trimLabel(label) || normalizedReference;
+  const incomingDescription =
+    description !== undefined ? normalizeDescription(description) : existing?.description || null;
   const resolvedLabel = existing
     ? existing.userRenamed
       ? existing.label
@@ -755,6 +773,7 @@ export const upsertImportedSavedAssumptions = ({ label, assumptions, reference }
     nextEntry = {
       ...existing,
       label: resolvedLabel,
+      description: incomingDescription,
       assumptions: normalizedAssumptions,
       fingerprint: createFingerprint(normalizedAssumptions),
       source: 'imported',
@@ -766,6 +785,7 @@ export const upsertImportedSavedAssumptions = ({ label, assumptions, reference }
     nextEntry = {
       id: createId(),
       label: resolvedLabel,
+      description: incomingDescription,
       source: 'imported',
       reference: normalizedReference,
       assumptions: normalizedAssumptions,

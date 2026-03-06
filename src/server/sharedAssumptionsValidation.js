@@ -1,5 +1,6 @@
 import {
   MAX_ASSUMPTIONS_BYTES,
+  MAX_DESCRIPTION_LENGTH,
   MAX_NAME_LENGTH,
   MAX_REFERENCE_LENGTH,
   MIN_SLUG_LENGTH,
@@ -73,6 +74,27 @@ const validateName = (name) => {
   return normalizedName;
 };
 
+const validateDescription = (description) => {
+  if (description === null || description === undefined) {
+    return null;
+  }
+
+  const normalizedDescription = String(description).trim();
+  if (normalizedDescription.length === 0) {
+    return null;
+  }
+
+  if (normalizedDescription.length > MAX_DESCRIPTION_LENGTH) {
+    throw createSharedAssumptionsError(
+      400,
+      'invalid_description',
+      `Description must be ${MAX_DESCRIPTION_LENGTH} characters or fewer.`
+    );
+  }
+
+  return normalizedDescription;
+};
+
 const validateAssumptionsSize = (assumptions) => {
   const sizeBytes = new globalThis.TextEncoder().encode(JSON.stringify(assumptions)).length;
   if (sizeBytes > MAX_ASSUMPTIONS_BYTES) {
@@ -123,12 +145,14 @@ export const validateCreatePayload = (payload) => {
   }
 
   const name = validateName(payload.name);
+  const description = validateDescription(payload.description);
   const slug = normalizeSlug(payload.slug);
   validateSlug(slug);
 
   return {
     assumptions: normalizedAssumptions,
     name,
+    description,
     slug,
   };
 };

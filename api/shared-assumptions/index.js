@@ -9,11 +9,12 @@ const handler = async (req, res) => {
 
   try {
     const payload = await parseJsonBody(req);
-    const { assumptions, name, slug } = validateCreatePayload(payload);
+    const { assumptions, name, description, slug } = validateCreatePayload(payload);
     const clientIp = extractClientIp(req);
     const created = await createSharedSnapshot({
       assumptions,
       name,
+      description,
       slug,
       clientIp,
     });

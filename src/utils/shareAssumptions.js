@@ -83,7 +83,7 @@ export const isValidSlug = (value) => {
   return SLUG_REGEX.test(value);
 };
 
-export const saveSharedAssumptions = async ({ assumptions, name, slug }) => {
+export const saveSharedAssumptions = async ({ assumptions, name, description, slug }) => {
   const payload = await requestJson(SHARED_ASSUMPTIONS_BASE_PATH, {
     method: 'POST',
     headers: {
@@ -92,6 +92,7 @@ export const saveSharedAssumptions = async ({ assumptions, name, slug }) => {
     body: JSON.stringify({
       assumptions,
       name: name || null,
+      description: description || null,
       slug: slug || null,
     }),
   });

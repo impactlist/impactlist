@@ -91,11 +91,12 @@ const claimSlug = async (slug, snapshotId) => {
   }
 };
 
-const createSnapshotRecord = ({ assumptions, name, slug }) => ({
+const createSnapshotRecord = ({ assumptions, name, description, slug }) => ({
   schemaVersion: SHARED_ASSUMPTIONS_SCHEMA_VERSION,
   createdAt: new Date().toISOString(),
   appDataVersion: getAppDataVersion(),
   name: name || null,
+  description: description || null,
   slug: slug || null,
   assumptions,
 });
@@ -122,11 +123,11 @@ const rollbackSlugClaim = async (slug) => {
   }
 };
 
-export const createSharedSnapshot = async ({ assumptions, name, slug, clientIp }) => {
+export const createSharedSnapshot = async ({ assumptions, name, description, slug, clientIp }) => {
   await enforceRateLimit(clientIp);
 
   const snapshotId = generateSnapshotId();
-  const snapshotRecord = createSnapshotRecord({ assumptions, name, slug });
+  const snapshotRecord = createSnapshotRecord({ assumptions, name, description, slug });
 
   await claimSlug(slug, snapshotId);
 
@@ -140,6 +141,7 @@ export const createSharedSnapshot = async ({ assumptions, name, slug, clientIp }
   const reference = slug || snapshotId;
   return {
     id: snapshotId,
+    description: description || null,
     slug: slug || null,
     reference,
   };
@@ -170,6 +172,7 @@ export const getSharedSnapshot = async (reference) => {
     id: snapshotId,
     slug: parsed.slug || null,
     name: parsed.name || null,
+    description: parsed.description || null,
     createdAt: parsed.createdAt || null,
     assumptions: parsed.assumptions,
   };

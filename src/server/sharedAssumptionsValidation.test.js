@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_ASSUMPTIONS_BYTES } from './sharedAssumptionsConfig.js';
+import { MAX_ASSUMPTIONS_BYTES, MAX_DESCRIPTION_LENGTH } from './sharedAssumptionsConfig.js';
 import { serverDefaultAssumptions } from './sharedAssumptionsNormalization.js';
 import { validateCreatePayload, validateReference } from './sharedAssumptionsValidation.js';
 import { SharedAssumptionsError } from './sharedAssumptionsErrors.js';
@@ -20,10 +20,12 @@ describe('sharedAssumptionsValidation', () => {
     const result = validateCreatePayload({
       ...buildValidPayload(),
       name: '  My Scenario  ',
+      description: '  Notes about this scenario.  ',
       slug: '  My-Scenario  ',
     });
 
     expect(result.name).toBe('My Scenario');
+    expect(result.description).toBe('Notes about this scenario.');
     expect(result.slug).toBe('my-scenario');
     expect(result.assumptions.globalParameters[firstGlobalParamName]).toBe(Number(firstGlobalParamValue) + 1);
   });
@@ -80,5 +82,14 @@ describe('sharedAssumptionsValidation', () => {
       expect(error).toBeInstanceOf(SharedAssumptionsError);
       expect(error.code).toBe('assumptions_too_large');
     }
+  });
+
+  it('rejects descriptions that exceed the max length', () => {
+    expect(() =>
+      validateCreatePayload({
+        ...buildValidPayload(),
+        description: 'x'.repeat(MAX_DESCRIPTION_LENGTH + 1),
+      })
+    ).toThrowError(SharedAssumptionsError);
   });
 });

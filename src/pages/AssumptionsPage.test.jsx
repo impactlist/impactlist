@@ -320,17 +320,33 @@ describe('AssumptionsPage routing integration', () => {
     const labelInput = screen.getByLabelText('Label');
     await user.clear(labelInput);
     await user.type(labelInput, 'My Local Snapshot');
+    await user.type(
+      screen.getByLabelText('Description (optional)'),
+      'Longer time horizon with a lower discount rate for current planning.'
+    );
     const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
     await user.click(saveButtons[saveButtons.length - 1]);
 
     expect(await screen.findByText('My Local Snapshot')).toBeInTheDocument();
-    expect(screen.getByText('Active')).toBeInTheDocument();
+    const assumptionsLibrary = screen.getByText('Assumptions Library').closest('section');
+    await user.click(within(assumptionsLibrary).getByRole('button', { name: 'View description' }));
+    const descriptionModal = screen.getByRole('heading', { name: 'My Local Snapshot' }).closest('.impact-modal');
+    expect(within(descriptionModal).getByLabelText('Description:')).toHaveValue(
+      'Longer time horizon with a lower discount rate for current planning.'
+    );
+    expect(within(descriptionModal).getByRole('button', { name: 'Save Description' })).toBeInTheDocument();
+    await user.click(within(descriptionModal).getByRole('button', { name: 'Cancel' }));
+    expect(within(assumptionsLibrary).getByText('My Local Snapshot').closest('.assumptions-entry')).toHaveAttribute(
+      'data-active',
+      'true'
+    );
 
     const savedRaw = localStorage.getItem('savedAssumptions:v1');
     expect(savedRaw).toBeTruthy();
     const savedEntries = JSON.parse(savedRaw);
     expect(savedEntries).toHaveLength(1);
     expect(savedEntries[0].label).toBe('My Local Snapshot');
+    expect(savedEntries[0].description).toBe('Longer time horizon with a lower discount rate for current planning.');
   });
 
   it('updates the active saved assumptions entry in place', async () => {
@@ -346,6 +362,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const seeded = saveNewAssumptions({
       label: 'Current Working Model',
+      description: 'Original saved description.',
       assumptions: {
         globalParameters: {
           timeLimit: 150,
@@ -368,12 +385,165 @@ describe('AssumptionsPage routing integration', () => {
 
     await user.click(screen.getByRole('button', { name: 'Save to Library' }));
     expect(await screen.findByRole('button', { name: 'Update Current Library Entry' })).toBeInTheDocument();
+    const descriptionInput = screen.getByLabelText('Description (optional)');
+    expect(descriptionInput).toHaveValue('Original saved description.');
+    await user.clear(descriptionInput);
+    await user.type(descriptionInput, 'Extended horizon after reviewing sensitivity analysis.');
     await user.click(screen.getByRole('button', { name: 'Update Current Library Entry' }));
 
     const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
     expect(savedEntries).toHaveLength(1);
     expect(savedEntries[0].id).toBe(seeded.entry.id);
     expect(savedEntries[0].assumptions.globalParameters.timeLimit).toBe(205);
+    expect(savedEntries[0].description).toBe('Extended horizon after reviewing sensitivity analysis.');
+  });
+
+  it('edits a local saved assumption description from the description modal', async () => {
+    const user = userEvent.setup();
+
+    const seeded = saveNewAssumptions({
+      label: 'Described Entry',
+      description: 'Original description',
+      assumptions: {
+        globalParameters: { timeLimit: 150 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = screen.getByText('Assumptions Library').closest('section');
+    await user.click(within(panel).getByRole('button', { name: 'View description' }));
+    const descriptionInput = screen.getByLabelText('Description:');
+    expect(descriptionInput).toHaveValue('Original description');
+    await user.clear(descriptionInput);
+    await user.type(descriptionInput, 'Updated from modal');
+    await user.click(screen.getByRole('button', { name: 'Save Description' }));
+
+    const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    expect(savedEntries[0].description).toBe('Updated from modal');
+  });
+
+  it('does not close the description modal when scrim dismissal is rejected by the discard confirmation', async () => {
+    const user = userEvent.setup();
+
+    const seeded = saveNewAssumptions({
+      label: 'Dirty Description',
+      description: 'Original description',
+      assumptions: {
+        globalParameters: { timeLimit: 150 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(false);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = screen.getByText('Assumptions Library').closest('section');
+    await user.click(within(panel).getByRole('button', { name: 'View description' }));
+    const descriptionInput = screen.getByLabelText('Description:');
+    await user.clear(descriptionInput);
+    await user.type(descriptionInput, 'Changed but not saved');
+    await user.click(document.querySelector('.impact-modal__scrim'));
+
+    expect(confirmSpy).toHaveBeenCalledWith('Discard unsaved description changes?');
+    expect(screen.getByRole('heading', { name: 'Dirty Description' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Description:')).toHaveValue('Changed but not saved');
+  });
+
+  it('closes the description modal immediately when cancel is clicked', async () => {
+    const user = userEvent.setup();
+
+    const seeded = saveNewAssumptions({
+      label: 'Cancel Closes',
+      description: 'Original description',
+      assumptions: {
+        globalParameters: { timeLimit: 150 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(false);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = screen.getByText('Assumptions Library').closest('section');
+    await user.click(within(panel).getByRole('button', { name: 'View description' }));
+    const descriptionInput = screen.getByLabelText('Description:');
+    await user.clear(descriptionInput);
+    await user.type(descriptionInput, 'Changed but not saved');
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(confirmSpy).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(screen.queryByRole('heading', { name: 'Cancel Closes' })).not.toBeInTheDocument();
+    });
+  });
+
+  it('shows remote descriptions as read-only in the description modal', async () => {
+    const user = userEvent.setup();
+
+    const seeded = saveNewAssumptions({
+      label: 'Remote Description',
+      description: 'Immutable remote note',
+      assumptions: {
+        globalParameters: { timeLimit: 150 },
+        categories: {},
+        recipients: {},
+      },
+      reference: 'remote-description',
+      source: 'local',
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = screen.getByText('Assumptions Library').closest('section');
+    await user.click(within(panel).getByRole('button', { name: 'View description' }));
+    expect(screen.getByLabelText('Description:')).toHaveValue('Immutable remote note');
+    expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
+  });
+
+  it('does not show a description action for remote assumptions without a description', async () => {
+    const remoteSeed = saveNewAssumptions({
+      label: 'Remote Without Description',
+      assumptions: {
+        globalParameters: { timeLimit: 150 },
+        categories: {},
+        recipients: {},
+      },
+      reference: 'remote-without-description',
+      source: 'local',
+    });
+    if (!remoteSeed.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = screen.getByText('Assumptions Library').closest('section');
+    await userEvent.setup().click(within(panel).getByRole('button', { name: /Show Inactive/i }));
+    const row = within(panel).getByText('Remote Without Description').closest('.assumptions-entry');
+    expect(within(row).queryByRole('button', { name: /description/i })).not.toBeInTheDocument();
   });
 
   it('does not allow replacing remote saved assumptions and saves as new local instead', async () => {
@@ -448,6 +618,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const seeded = saveNewAssumptions({
       label: 'My Snapshot',
+      description: 'Local description before sharing.',
       assumptions: {
         globalParameters: { timeLimit: 175 },
         categories: {},
@@ -464,6 +635,7 @@ describe('AssumptionsPage routing integration', () => {
       ok: true,
       json: async () => ({
         id: 'share-175',
+        description: 'Remote description after editing.',
         reference: 'share-175',
       }),
     });
@@ -471,6 +643,10 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
 
     await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    const shareDescription = screen.getByLabelText('Description (optional)');
+    expect(shareDescription).toHaveValue('Local description before sharing.');
+    await user.clear(shareDescription);
+    await user.type(shareDescription, 'Remote description after editing.');
     await user.click(await screen.findByRole('button', { name: 'Create Link' }));
     expect(await screen.findByText('Share link created.')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Done' }));
@@ -479,6 +655,7 @@ describe('AssumptionsPage routing integration', () => {
       const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
       expect(entries).toHaveLength(1);
       expect(entries[0].reference).toBe('share-175');
+      expect(entries[0].description).toBe('Remote description after editing.');
       expect(entries[0].source).toBe('local');
     });
 
@@ -490,6 +667,10 @@ describe('AssumptionsPage routing integration', () => {
     expect(
       fetchMock.mock.calls.some(([url, options]) => url === '/api/shared-assumptions' && options?.method === 'POST')
     ).toBe(true);
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toMatchObject({
+      name: 'My Snapshot',
+      description: 'Remote description after editing.',
+    });
   });
 
   it('creates and activates a saved assumptions entry when sharing unsaved custom assumptions', async () => {
@@ -507,6 +688,7 @@ describe('AssumptionsPage routing integration', () => {
       ok: true,
       json: async () => ({
         id: 'share-185',
+        description: 'Unsaved assumptions shared note.',
         reference: 'custom-slug-185',
       }),
     });
@@ -514,6 +696,7 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
 
     await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    await user.type(screen.getByLabelText('Description (optional)'), 'Unsaved assumptions shared note.');
     await user.click(await screen.findByRole('button', { name: 'Create Link' }));
     expect(await screen.findByText('Share link created.')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Done' }));
@@ -524,13 +707,14 @@ describe('AssumptionsPage routing integration', () => {
       expect(entries[0].label).toBe('custom-slug-185');
       expect(entries[0].reference).toBe('custom-slug-185');
       expect(entries[0].source).toBe('local');
+      expect(entries[0].description).toBe('Unsaved assumptions shared note.');
       expect(entries[0].assumptions.globalParameters.timeLimit).toBe(185);
       expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(entries[0].id);
     });
 
     const panel = screen.getByText('Assumptions Library').closest('section');
     const row = within(panel).getByText('custom-slug-185').closest('.assumptions-entry');
-    expect(within(row).getByText('Active')).toBeInTheDocument();
+    expect(row).toHaveAttribute('data-active', 'true');
     expect(within(row).getByText('Remote')).toBeInTheDocument();
 
     expect(
@@ -606,6 +790,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const remoteSeed = saveNewAssumptions({
       label: 'Existing Remote',
+      description: 'Existing remote description',
       assumptions: {
         globalParameters: {
           timeLimit: 160,
@@ -628,8 +813,51 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
     expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
     expect(screen.getByText((text) => text.includes('?shared=existing-remote'))).toBeInTheDocument();
+    expect(screen.getByLabelText('Description')).toHaveValue('Existing remote description');
     expect(screen.getAllByRole('button', { name: 'Copy Link' }).length).toBeGreaterThan(0);
     expect(screen.queryByRole('button', { name: 'Create Link' })).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('hides the read-only description block for existing remote links without a description', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 160,
+        },
+      })
+    );
+
+    const remoteSeed = saveNewAssumptions({
+      label: 'Existing Remote Without Description',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 160,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+      reference: 'existing-remote-without-description',
+    });
+    if (!remoteSeed.ok) {
+      throw new Error('Expected seeded remote entry');
+    }
+    setActiveSavedAssumptionsId(remoteSeed.entry.id);
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+
+    renderAssumptionsRoute('/assumptions');
+
+    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
+    expect(
+      screen.getByText((text) => text.includes('?shared=existing-remote-without-description'))
+    ).toBeInTheDocument();
+    expect(screen.queryByLabelText('Description')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Description:')).not.toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -677,7 +905,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
 
     const activeDefaultRow = within(panel).getByText('Default').closest('.assumptions-entry');
-    expect(within(activeDefaultRow).getByText('Active')).toBeInTheDocument();
+    expect(activeDefaultRow).toHaveAttribute('data-active', 'true');
   });
 
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {

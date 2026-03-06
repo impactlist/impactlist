@@ -1,7 +1,10 @@
+import { MAX_ASSUMPTION_DESCRIPTION_LENGTH } from '../constants/assumptionsDescription.js';
+
 export const SHARED_SNAPSHOT_TTL_SECONDS = 60 * 60 * 24 * 365;
-export const SHARED_ASSUMPTIONS_SCHEMA_VERSION = 1;
+export const SHARED_ASSUMPTIONS_SCHEMA_VERSION = 2;
 export const MAX_ASSUMPTIONS_BYTES = 100 * 1024;
 export const MAX_NAME_LENGTH = 120;
+export const MAX_DESCRIPTION_LENGTH = MAX_ASSUMPTION_DESCRIPTION_LENGTH;
 export const MAX_REFERENCE_LENGTH = 80;
 export const MAX_SLUG_LENGTH = 40;
 export const MIN_SLUG_LENGTH = 3;

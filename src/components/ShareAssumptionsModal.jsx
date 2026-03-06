@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isValidSlug, normalizeSlugInput, saveSharedAssumptions, slugify } from '../utils/shareAssumptions';
+import { MAX_ASSUMPTION_DESCRIPTION_LENGTH } from '../constants/assumptionsDescription';
 
 const ShareAssumptionsModal = ({
   isOpen,
   onClose,
   assumptions,
+  assumptionName = null,
   onSaved,
   title = 'Share Assumptions',
+  initialDescription = '',
   initialSavedResult = null,
 }) => {
   const [slug, setSlug] = useState('');
+  const [description, setDescription] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
   const [error, setError] = useState('');
@@ -22,6 +26,7 @@ const ShareAssumptionsModal = ({
   useEffect(() => {
     if (!isOpen) {
       setSlug('');
+      setDescription('');
       setIsSaving(false);
       setIsCopying(false);
       setError('');
@@ -32,16 +37,22 @@ const ShareAssumptionsModal = ({
     }
 
     setSlug('');
+    setDescription(initialSavedResult?.description || initialDescription);
     setSavedResult(initialSavedResult);
     setStartedWithExistingLink(Boolean(initialSavedResult));
     setIsSaving(false);
     setIsCopying(false);
     setError('');
     setCopied(false);
-  }, [initialSavedResult, isOpen]);
+  }, [initialDescription, initialSavedResult, isOpen]);
 
   const handleSlugChange = (event) => {
     setSlug(normalizeSlugInput(event.target.value));
+    setError('');
+  };
+
+  const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
     setError('');
   };
 
@@ -57,12 +68,19 @@ const ShareAssumptionsModal = ({
       return;
     }
 
+    if (description.length > MAX_ASSUMPTION_DESCRIPTION_LENGTH) {
+      setError(`Description must be ${MAX_ASSUMPTION_DESCRIPTION_LENGTH} characters or fewer.`);
+      return;
+    }
+
     setIsSaving(true);
     setError('');
 
     try {
       const result = await saveSharedAssumptions({
         assumptions,
+        name: assumptionName,
+        description,
         slug: normalizedSlug || null,
       });
 
@@ -147,6 +165,25 @@ const ShareAssumptionsModal = ({
                         auto-generated link.
                       </p>
                     </div>
+                    <div>
+                      <label htmlFor="share-description" className="impact-modal__label mb-1 block">
+                        Description (optional)
+                      </label>
+                      <textarea
+                        id="share-description"
+                        value={description}
+                        onChange={handleDescriptionChange}
+                        placeholder="Add context for anyone opening this assumptions link."
+                        className="impact-modal__input impact-modal__textarea"
+                        rows={4}
+                        maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
+                      />
+                      {description.length > 0 && (
+                        <p className="impact-modal__char-count">
+                          {description.length}/{MAX_ASSUMPTION_DESCRIPTION_LENGTH} characters
+                        </p>
+                      )}
+                    </div>
                   </div>
                   {error && <p className="impact-modal__error mt-4">{error}</p>}
                   <div className="mt-6 flex justify-end space-x-2">
@@ -169,6 +206,21 @@ const ShareAssumptionsModal = ({
                   <div className="impact-modal__well">
                     <p className="break-all text-sm text-strong">{savedResult.shareUrl}</p>
                   </div>
+                  {savedResult.description && (
+                    <div className="mt-4">
+                      <label htmlFor="share-description-readonly" className="impact-modal__label mb-1 block">
+                        Description
+                      </label>
+                      <textarea
+                        id="share-description-readonly"
+                        value={savedResult.description}
+                        readOnly
+                        className="impact-modal__input impact-modal__textarea"
+                        rows={4}
+                        maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
+                      />
+                    </div>
+                  )}
                   {error && <p className="impact-modal__error">{error}</p>}
                   {copied && <p className="impact-modal__success">Copied link to clipboard.</p>}
                   <div className="mt-6 flex justify-end space-x-2">
@@ -198,19 +250,24 @@ ShareAssumptionsModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   assumptions: PropTypes.object,
+  assumptionName: PropTypes.string,
   onSaved: PropTypes.func,
   title: PropTypes.string,
+  initialDescription: PropTypes.string,
   initialSavedResult: PropTypes.shape({
     id: PropTypes.string,
     reference: PropTypes.string,
+    description: PropTypes.string,
     shareUrl: PropTypes.string,
   }),
 };
 
 ShareAssumptionsModal.defaultProps = {
   assumptions: null,
+  assumptionName: null,
   onSaved: () => {},
   title: 'Share Assumptions',
+  initialDescription: '',
   initialSavedResult: null,
 };
 

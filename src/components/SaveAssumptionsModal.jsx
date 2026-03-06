@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
+import { MAX_ASSUMPTION_DESCRIPTION_LENGTH } from '../constants/assumptionsDescription';
 
 const getSubmitErrorMessage = (errorCode) => {
   if (errorCode === 'duplicate_label') {
@@ -23,16 +24,19 @@ const SaveAssumptionsModal = ({
   onClose,
   onSubmit,
   defaultLabel = '',
+  defaultDescription = '',
   canUpdateExisting = false,
   duplicateOfLabel = null,
 }) => {
   const [label, setLabel] = useState(defaultLabel);
+  const [description, setDescription] = useState(defaultDescription);
   const [error, setError] = useState('');
 
   useEffect(() => {
     setLabel(defaultLabel);
+    setDescription(defaultDescription);
     setError('');
-  }, [defaultLabel, isOpen]);
+  }, [defaultDescription, defaultLabel, isOpen]);
 
   const validateLabel = () => {
     const trimmed = label.trim();
@@ -50,7 +54,7 @@ const SaveAssumptionsModal = ({
       return;
     }
 
-    const result = onSubmit({ label: normalizedLabel, mode });
+    const result = onSubmit({ label: normalizedLabel, description, mode });
     if (result?.ok === false) {
       setError(getSubmitErrorMessage(result.errorCode));
     }
@@ -110,6 +114,27 @@ const SaveAssumptionsModal = ({
                 className="impact-modal__input"
               />
 
+              <label htmlFor="save-assumptions-description" className="impact-modal__label mb-1 mt-4 block">
+                Description (optional)
+              </label>
+              <textarea
+                id="save-assumptions-description"
+                value={description}
+                onChange={(event) => {
+                  setDescription(event.target.value);
+                  setError('');
+                }}
+                placeholder="What changed in this version, why you saved it, or what scenario it represents."
+                className="impact-modal__input impact-modal__textarea"
+                rows={4}
+                maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
+              />
+              {description.length > 0 && (
+                <p className="impact-modal__char-count">
+                  {description.length}/{MAX_ASSUMPTION_DESCRIPTION_LENGTH} characters
+                </p>
+              )}
+
               {error && <p className="impact-modal__error">{error}</p>}
 
               <div className="mt-6 flex flex-wrap justify-end gap-2">
@@ -148,12 +173,14 @@ SaveAssumptionsModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
+  defaultDescription: PropTypes.string,
   canUpdateExisting: PropTypes.bool,
   duplicateOfLabel: PropTypes.string,
 };
 
 SaveAssumptionsModal.defaultProps = {
   defaultLabel: '',
+  defaultDescription: '',
   canUpdateExisting: false,
   duplicateOfLabel: null,
 };

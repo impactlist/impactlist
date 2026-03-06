@@ -12,7 +12,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test-setup.js',
     css: true,
-    exclude: [...configDefaults.exclude, 'e2e/**', '.claude/**'],
+    exclude: [...configDefaults.exclude, 'e2e/**', '.claude/**', '.worktrees/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -22,6 +22,7 @@ export default defineConfig({
         'src/data/generatedData.js',
         'e2e/**',
         '.claude/**',
+        '.worktrees/**',
       ],
       thresholds: {
         global: {

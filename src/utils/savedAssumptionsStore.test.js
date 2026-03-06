@@ -34,6 +34,7 @@ describe('savedAssumptionsStore', () => {
   it('saves and returns local assumptions entries', () => {
     const saveResult = saveNewAssumptions({
       label: 'My Model',
+      description: 'Baseline assumptions for 2026 giving decisions.',
       assumptions: buildAssumptions(120),
     });
 
@@ -43,6 +44,7 @@ describe('savedAssumptionsStore', () => {
     expect(entries).toHaveLength(1);
     expect(entries[0]).toMatchObject({
       label: 'My Model',
+      description: 'Baseline assumptions for 2026 giving decisions.',
       source: 'local',
       reference: null,
       shareUrl: null,
@@ -53,6 +55,7 @@ describe('savedAssumptionsStore', () => {
   it('derives share url for imported entries and keeps user rename on re-import', () => {
     const firstImport = upsertImportedSavedAssumptions({
       label: 'Incoming A',
+      description: 'Imported note',
       assumptions: buildAssumptions(100),
       reference: 'incoming-a',
     });
@@ -74,8 +77,21 @@ describe('savedAssumptionsStore', () => {
 
     const latest = getSavedAssumptions()[0];
     expect(latest.label).toBe('My Renamed Copy');
+    expect(latest.description).toBe('Imported note');
     expect(latest.reference).toBe('incoming-a');
     expect(latest.fingerprint).toBe(createAssumptionsFingerprint(buildAssumptions(160)));
+  });
+
+  it('stores imported descriptions from shared snapshots', () => {
+    const importResult = upsertImportedSavedAssumptions({
+      label: 'Incoming Description',
+      description: 'Shared snapshot description',
+      assumptions: buildAssumptions(123),
+      reference: 'incoming-description',
+    });
+
+    expect(importResult.ok).toBe(true);
+    expect(getSavedAssumptions()[0].description).toBe('Shared snapshot description');
   });
 
   it('appends a numeric suffix when imported label collides with an existing entry label', () => {

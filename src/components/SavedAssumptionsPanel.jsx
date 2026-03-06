@@ -16,7 +16,16 @@ const getRenameErrorMessage = (errorCode) => {
   return 'Could not rename saved assumptions.';
 };
 
-const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, onRename, onDelete, onCopyLink }) => {
+const SavedAssumptionsPanel = ({
+  entries,
+  activeId,
+  hasUnsavedChanges,
+  onLoad,
+  onRename,
+  onDelete,
+  onCopyLink,
+  onDescription,
+}) => {
   const [editingId, setEditingId] = useState(null);
   const [editLabel, setEditLabel] = useState('');
   const [renameError, setRenameError] = useState('');
@@ -81,6 +90,9 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
             const isEditing = !isDefaultEntry && editingId === entry.id;
             const isRemote = !isDefaultEntry && Boolean(entry.reference);
             const isLoadDisabled = isActive && !hasUnsavedChanges;
+            // Local entries can always open the description editor; remote entries only surface the action
+            // when a description already exists because remote descriptions are view-only.
+            const shouldShowDescriptionAction = !isDefaultEntry && (!isRemote || Boolean(entry.description));
 
             return (
               <Fragment key={entry.id}>
@@ -140,6 +152,14 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                                 onClick={() => beginRename(entry)}
                                 className="saved-assumption-row__inline-icon"
                               />
+                              {shouldShowDescriptionAction && (
+                                <IconActionButton
+                                  icon="description"
+                                  label={entry.description ? 'View description' : 'Add description'}
+                                  onClick={() => onDescription(entry)}
+                                  className="saved-assumption-row__inline-icon"
+                                />
+                              )}
                               <IconActionButton
                                 icon="delete"
                                 label="Delete"
@@ -164,11 +184,6 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                               </span>
                             </>
                           )}
-                          {isActive && (
-                            <span className="assumption-state-pill assumption-state-pill--compact" data-state="active">
-                              Active
-                            </span>
-                          )}
                         </>
                       )}
                     </div>
@@ -184,7 +199,6 @@ const SavedAssumptionsPanel = ({ entries, activeId, hasUnsavedChanges, onLoad, o
                       </button>
                     )}
                   </div>
-
                   {isEditing && renameError && (
                     <p className="assumptions-inline-error mt-2 rounded-md px-2 py-1 text-xs">{renameError}</p>
                   )}
@@ -229,6 +243,7 @@ SavedAssumptionsPanel.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
+      description: PropTypes.string,
       source: PropTypes.oneOf(['local', 'imported']).isRequired,
       reference: PropTypes.string,
       shareUrl: PropTypes.string,
@@ -242,6 +257,7 @@ SavedAssumptionsPanel.propTypes = {
   onRename: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onCopyLink: PropTypes.func.isRequired,
+  onDescription: PropTypes.func.isRequired,
 };
 
 SavedAssumptionsPanel.defaultProps = {

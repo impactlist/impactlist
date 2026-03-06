@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
+import AssumptionsDescriptionModal from '../components/AssumptionsDescriptionModal';
 import AssumptionsEditor from '../components/AssumptionsEditor';
 import ShareAssumptionsModal from '../components/ShareAssumptionsModal';
 import SaveAssumptionsModal from '../components/SaveAssumptionsModal';
@@ -38,12 +39,15 @@ const AssumptionsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareModalInitialResult, setShareModalInitialResult] = useState(null);
+  const [shareModalInitialDescription, setShareModalInitialDescription] = useState('');
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [saveModalDefaultLabel, setSaveModalDefaultLabel] = useState('My Current Assumptions');
+  const [saveModalDefaultDescription, setSaveModalDefaultDescription] = useState('');
   const [savedAssumptions, setSavedAssumptions] = useState([]);
   const [activeSavedAssumptionsId, setActiveSavedAssumptionsIdState] = useState(null);
   const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
   const [pendingDeleteEntryId, setPendingDeleteEntryId] = useState(null);
+  const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
   const [migrationPromptOpen, setMigrationPromptOpen] = useState(false);
   const [migrationDefaultLabel, setMigrationDefaultLabel] = useState('My Current Assumptions');
   const [migrationCheckDone, setMigrationCheckDone] = useState(false);
@@ -221,7 +225,6 @@ const AssumptionsPage = () => {
       }
 
       persistAsActive(entry.id);
-      showNotification('success', 'Loaded saved assumptions.');
     },
     [persistAsActive, setAllUserAssumptions, showNotification]
   );
@@ -231,8 +234,7 @@ const AssumptionsPage = () => {
     setActiveSavedAssumptionsId(null);
     setActiveSavedAssumptionsIdState(null);
     refreshSavedAssumptions();
-    showNotification('success', 'Loaded default assumptions.');
-  }, [refreshSavedAssumptions, setAllUserAssumptions, showNotification]);
+  }, [refreshSavedAssumptions, setAllUserAssumptions]);
 
   const handleLoadSavedAssumptions = useCallback(
     (entry) => {
@@ -303,8 +305,7 @@ const AssumptionsPage = () => {
 
   const handleCancelPendingLoad = useCallback(() => {
     setPendingLoadEntry(null);
-    showNotification('info', 'Kept your current assumptions.');
-  }, [showNotification]);
+  }, []);
 
   const handleShareButtonClick = useCallback(() => {
     const prepareResult = commitPendingEdits();
@@ -317,14 +318,17 @@ const AssumptionsPage = () => {
       setShareModalInitialResult({
         id: activeSavedAssumptionsEntry.id,
         reference: activeSavedAssumptionsEntry.reference,
+        description: activeSavedAssumptionsEntry.description,
         shareUrl: activeSavedAssumptionsEntry.shareUrl,
       });
     } else {
       setShareModalInitialResult(null);
     }
 
+    setShareModalInitialDescription(activeSavedAssumptionsEntry?.description || '');
     setShareModalOpen(true);
   }, [
+    activeSavedAssumptionsEntry?.description,
     activeSavedAssumptionsEntry?.id,
     activeSavedAssumptionsEntry?.reference,
     activeSavedAssumptionsEntry?.shareUrl,
@@ -348,8 +352,10 @@ const AssumptionsPage = () => {
     }
 
     setSaveModalDefaultLabel(activeSavedAssumptionsEntry?.label || 'My Current Assumptions');
+    setSaveModalDefaultDescription(activeSavedAssumptionsEntry?.description || '');
     setSaveModalOpen(true);
   }, [
+    activeSavedAssumptionsEntry?.description,
     activeSavedAssumptionsEntry?.label,
     commitPendingEdits,
     getNormalizedUserAssumptionsForSharing,
@@ -359,6 +365,7 @@ const AssumptionsPage = () => {
   const handleShareModalClose = useCallback(() => {
     setShareModalOpen(false);
     setShareModalInitialResult(null);
+    setShareModalInitialDescription('');
   }, []);
 
   const handleSaveModalClose = useCallback(() => {
@@ -373,6 +380,7 @@ const AssumptionsPage = () => {
       if (sharedReference && assumptionsToShare) {
         const attachResult = attachSavedAssumptionsShareReference({
           reference: sharedReference,
+          description: sharedResult?.description || null,
           assumptions: assumptionsToShare,
           preferredId: activeSavedAssumptionsEntry?.id || null,
         });
@@ -382,6 +390,7 @@ const AssumptionsPage = () => {
         } else if (!attachResult.ok && attachResult.errorCode === 'not_found') {
           const createResult = saveNewAssumptions({
             label: sharedReference,
+            description: sharedResult?.description || null,
             assumptions: assumptionsToShare,
             source: 'local',
             reference: sharedReference,
@@ -399,14 +408,12 @@ const AssumptionsPage = () => {
           return;
         }
       }
-
-      showNotification('success', 'Share link created.');
     },
     [activeSavedAssumptionsEntry?.id, getNormalizedUserAssumptionsForSharing, persistAsActive, showNotification]
   );
 
   const handleSaveAssumptionsSubmit = useCallback(
-    ({ label, mode }) => {
+    ({ label, description, mode }) => {
       const currentAssumptions = getNormalizedUserAssumptionsForSharing();
       if (!currentAssumptions) {
         return { ok: false, errorCode: 'no_custom_assumptions' };
@@ -416,12 +423,14 @@ const AssumptionsPage = () => {
         mode === 'update' && canUpdateExisting && activeSavedAssumptionsEntry && !activeSavedAssumptionsEntry.reference
           ? updateSavedAssumptions(activeSavedAssumptionsEntry.id, {
               label,
+              description,
               assumptions: currentAssumptions,
               source: activeSavedAssumptionsEntry.source,
               reference: activeSavedAssumptionsEntry.reference,
             })
           : saveNewAssumptions({
               label,
+              description,
               assumptions: currentAssumptions,
               source: 'local',
             });
@@ -446,7 +455,9 @@ const AssumptionsPage = () => {
         prefix: successMessage,
         result,
       });
-      showNotification(evictionMessage ? 'info' : 'success', evictionMessage || successMessage);
+      if (evictionMessage) {
+        showNotification('info', evictionMessage);
+      }
       return { ok: true };
     },
     [
@@ -470,7 +481,6 @@ const AssumptionsPage = () => {
       }
 
       refreshSavedAssumptions();
-      showNotification('success', 'Renamed saved assumptions.');
       return { ok: true };
     },
     [refreshSavedAssumptions, showNotification]
@@ -493,7 +503,6 @@ const AssumptionsPage = () => {
       }
 
       refreshSavedAssumptions();
-      showNotification('success', 'Deleted saved assumptions.');
     },
     [refreshSavedAssumptions, showNotification]
   );
@@ -515,6 +524,37 @@ const AssumptionsPage = () => {
     [showNotification]
   );
 
+  const handleDescriptionModalOpen = useCallback((entry) => {
+    if (!entry?.id) {
+      return;
+    }
+
+    setPendingDescriptionEntry(entry);
+  }, []);
+
+  const handleDescriptionModalClose = useCallback(() => {
+    setPendingDescriptionEntry(null);
+  }, []);
+
+  const handleSaveDescription = useCallback(
+    (description) => {
+      if (!pendingDescriptionEntry?.id || pendingDescriptionEntry.reference) {
+        setPendingDescriptionEntry(null);
+        return;
+      }
+
+      const result = updateSavedAssumptions(pendingDescriptionEntry.id, { description });
+      if (!result.ok) {
+        showNotification('error', STORAGE_ERROR_MESSAGE);
+        return;
+      }
+
+      refreshSavedAssumptions();
+      setPendingDescriptionEntry(null);
+    },
+    [pendingDescriptionEntry, refreshSavedAssumptions, showNotification]
+  );
+
   const handleMigrationSave = useCallback(() => {
     const result = completeSavedAssumptionsMigration({
       accepted: true,
@@ -529,7 +569,6 @@ const AssumptionsPage = () => {
 
     setMigrationPromptOpen(false);
     refreshSavedAssumptions();
-    showNotification('success', 'Saved your current assumptions.');
   }, [assumptionsForSharing, migrationDefaultLabel, refreshSavedAssumptions, showNotification]);
 
   const handleMigrationSkip = useCallback(() => {
@@ -597,6 +636,7 @@ const AssumptionsPage = () => {
           onRename={handleRenameSavedAssumptions}
           onDelete={handleRequestDeleteSavedAssumptions}
           onCopyLink={handleCopySavedLink}
+          onDescription={handleDescriptionModalOpen}
         />
 
         <div className="assumptions-shell overflow-hidden">
@@ -614,8 +654,10 @@ const AssumptionsPage = () => {
           isOpen={shareModalOpen}
           onClose={handleShareModalClose}
           assumptions={assumptionsForSharing}
+          assumptionName={activeSavedAssumptionsEntry?.label || null}
           onSaved={handleShareSaved}
           title="Share Assumptions"
+          initialDescription={shareModalInitialDescription}
           initialSavedResult={shareModalInitialResult}
         />
 
@@ -624,6 +666,7 @@ const AssumptionsPage = () => {
           onClose={handleSaveModalClose}
           onSubmit={handleSaveAssumptionsSubmit}
           defaultLabel={saveModalDefaultLabel}
+          defaultDescription={saveModalDefaultDescription}
           canUpdateExisting={canUpdateExisting}
           duplicateOfLabel={duplicateSavedAssumptionsLabel}
         />
@@ -655,6 +698,15 @@ const AssumptionsPage = () => {
             setPendingDeleteEntryId(null);
           }}
           onCancel={() => setPendingDeleteEntryId(null)}
+        />
+
+        <AssumptionsDescriptionModal
+          isOpen={Boolean(pendingDescriptionEntry)}
+          entryLabel={pendingDescriptionEntry?.label || ''}
+          initialDescription={pendingDescriptionEntry?.description || ''}
+          isReadOnly={Boolean(pendingDescriptionEntry?.reference)}
+          onClose={handleDescriptionModalClose}
+          onSave={handleSaveDescription}
         />
       </motion.div>
     </motion.div>

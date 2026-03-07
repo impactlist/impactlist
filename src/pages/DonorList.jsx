@@ -156,7 +156,11 @@ const DonorList = () => {
         transition={{ duration: 0.3 }}
       >
         {/* Page Header */}
-        <PageHeader title="Impact List" subtitle="Ranking donors by their positive impact on the world" />
+        <PageHeader
+          title="Impact List"
+          subtitle="Ranking donors by their positive impact on the world"
+          className="pt-8 sm:pt-10"
+        />
 
         {/* Donors Table Container */}
         <motion.div

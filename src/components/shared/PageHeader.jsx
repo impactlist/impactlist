@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
-const PageHeader = ({ title, subtitle }) => {
+const PageHeader = ({ title, subtitle, className = '' }) => {
   return (
     <motion.div
-      className="impact-page__container mb-8"
+      className={`impact-page__container mb-8 ${className}`.trim()}
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -35,6 +35,7 @@ const PageHeader = ({ title, subtitle }) => {
 PageHeader.propTypes = {
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default PageHeader;

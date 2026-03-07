@@ -1359,6 +1359,11 @@
     pointer-events: auto;
   }
 
+  .impact-notice-overlay > .impact-modal {
+    width: 100%;
+    pointer-events: auto;
+  }
+
   .impact-notice-card {
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);

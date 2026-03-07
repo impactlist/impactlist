@@ -8,7 +8,7 @@ import { NotificationProvider } from '../contexts/NotificationContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
 import { saveNewAssumptions, setActiveSavedAssumptionsId } from '../utils/savedAssumptionsStore';
 
-/* global localStorage */
+/* global localStorage, sessionStorage */
 
 const assumptionsData = createDefaultAssumptions();
 const firstValidCategoryId = Object.keys(assumptionsData.categories)[0];
@@ -61,6 +61,7 @@ const renderAssumptionsRoute = (initialEntry) => {
 describe('AssumptionsPage routing integration', () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
   });
 
   afterEach(() => {
@@ -274,14 +275,14 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     await waitFor(() => {
-      const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
+      const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
       expect(persisted.globalParameters.timeLimit).toBe(150);
     });
 
     await user.click(screen.getByRole('button', { name: 'Reset Global' }));
 
     await waitFor(() => {
-      expect(localStorage.getItem('customEffectsData')).toBeNull();
+      expect(sessionStorage.getItem('customEffectsData')).toBeNull();
     });
   });
 
@@ -296,7 +297,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     expect(await screen.findByText('Please enter a complete number')).toBeInTheDocument();
-    expect(localStorage.getItem('customEffectsData')).toBeNull();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
   });
 
   it('hides Save to Library when there are no custom assumptions', async () => {
@@ -324,12 +325,12 @@ describe('AssumptionsPage routing integration', () => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('10,000,000,000');
     });
 
-    expect(JSON.parse(localStorage.getItem('customEffectsData'))).toEqual({
+    expect(JSON.parse(sessionStorage.getItem('customEffectsData'))).toEqual({
       globalParameters: {
         timeLimit: 10000000000,
       },
     });
-    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
 
     const activeRow = within(panel).getByText('Longtermist').closest('.assumptions-entry');
     expect(activeRow).toHaveAttribute('data-active', 'true');
@@ -374,7 +375,7 @@ describe('AssumptionsPage routing integration', () => {
           timeLimit: 10000000000,
         },
       });
-      expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedEntries[0].id);
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedEntries[0].id);
     });
   });
 
@@ -445,7 +446,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('updates the active saved assumptions entry in place', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -643,7 +644,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('does not allow replacing remote saved assumptions and saves as new local instead', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -702,7 +703,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('updates matching saved assumptions entry with share reference after link creation', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -770,7 +771,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('creates and activates a saved assumptions entry when sharing unsaved custom assumptions', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -804,7 +805,7 @@ describe('AssumptionsPage routing integration', () => {
       expect(entries[0].source).toBe('local');
       expect(entries[0].description).toBe('Unsaved assumptions shared note.');
       expect(entries[0].assumptions.globalParameters.timeLimit).toBe(185);
-      expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(entries[0].id);
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(entries[0].id);
     });
 
     const panel = screen.getByText('Assumptions Library').closest('section');
@@ -819,7 +820,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('uses a unique local label when sharing unsaved assumptions and the slug label already exists', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -864,7 +865,7 @@ describe('AssumptionsPage routing integration', () => {
       expect(newEntry).toBeTruthy();
       expect(newEntry.reference).toBe('duplicate-slug');
       expect(newEntry.assumptions.globalParameters.timeLimit).toBe(186);
-      expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(newEntry.id);
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(newEntry.id);
     });
 
     expect(
@@ -874,7 +875,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('shows existing share link immediately for active remote assumptions without creating a new link', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -916,7 +917,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('hides the read-only description block for existing remote links without a description', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -958,7 +959,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('loads default assumptions from Assumptions Library panel and clears active saved entry', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -996,8 +997,8 @@ describe('AssumptionsPage routing integration', () => {
       );
     });
 
-    expect(localStorage.getItem('customEffectsData')).toBeNull();
-    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
 
     const activeDefaultRow = within(panel).getByText('Default').closest('.assumptions-entry');
     expect(activeDefaultRow).toHaveAttribute('data-active', 'true');
@@ -1005,7 +1006,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -1050,7 +1051,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('loads without replace confirmation when current assumptions match a saved entry', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -1099,7 +1100,7 @@ describe('AssumptionsPage routing integration', () => {
   });
 
   it('disables load for active saved assumptions when there are no unsaved changes', async () => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -1131,7 +1132,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('keeps load enabled for active saved assumptions when there are unsaved changes', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -1295,7 +1296,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('prevents saving assumptions with a duplicate name', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -1336,7 +1337,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('prevents saving assumptions with a curated profile name and shows a curated-specific error', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -1363,7 +1364,7 @@ describe('AssumptionsPage routing integration', () => {
 
   it('warns when saving unchanged assumptions would duplicate an existing saved entry', async () => {
     const user = userEvent.setup();
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {

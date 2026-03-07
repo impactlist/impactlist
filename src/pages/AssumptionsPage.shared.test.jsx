@@ -11,7 +11,7 @@ import { saveNewAssumptions } from '../utils/savedAssumptionsStore';
 import GlobalSharedAssumptionsImport from '../components/shared/GlobalSharedAssumptionsImport';
 import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
 
-/* global localStorage */
+/* global localStorage, sessionStorage */
 
 const assumptionsData = createDefaultAssumptions();
 
@@ -41,7 +41,7 @@ const renderAppRoutes = (initialEntry, { strictMode = false } = {}) => {
 };
 
 const getPersistedCustomEffectsData = () => {
-  const raw = localStorage.getItem('customEffectsData');
+  const raw = sessionStorage.getItem('customEffectsData');
   return raw ? JSON.parse(raw) : null;
 };
 
@@ -50,6 +50,7 @@ describe('Global shared assumptions import flow', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
   });
 
   afterEach(() => {
@@ -99,7 +100,7 @@ describe('Global shared assumptions import flow', () => {
       source: 'imported',
       reference: 'abc123',
     });
-    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
     expect(await screen.findByText('abc123')).toBeInTheDocument();
     expect(screen.getByText('abc123').closest('.assumptions-entry')).toHaveAttribute('data-active', 'true');
 
@@ -146,7 +147,7 @@ describe('Global shared assumptions import flow', () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 10;
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 30;
 
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -194,7 +195,7 @@ describe('Global shared assumptions import flow', () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 12;
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 44;
 
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -297,12 +298,12 @@ describe('Global shared assumptions import flow', () => {
     const importedEntry = savedAssumptions.find((entry) => entry.reference === 'shared-name-ref');
     expect(importedEntry).toBeTruthy();
     expect(importedEntry.label).toBe('Shared Name (2)');
-    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
   });
 
   it('still upserts and activates imported entry when shared assumptions are already applied', async () => {
     const appliedTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 41;
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -352,13 +353,13 @@ describe('Global shared assumptions import flow', () => {
     const importedEntry = savedAssumptions.find((entry) => entry.reference === 'already-applied-ref');
     expect(importedEntry).toBeTruthy();
     expect(importedEntry.label).toBe('Shared Name (2)');
-    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
   });
 
   it('does not clear local assumptions when shared snapshot response is invalid', async () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 22;
 
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
@@ -417,7 +418,7 @@ describe('Global shared assumptions import flow', () => {
     const initialTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 5;
     const unsavedTimeLimit = initialTimeLimit + 40;
 
-    localStorage.setItem(
+    sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {

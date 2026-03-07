@@ -318,6 +318,8 @@ const writeSavedAssumptionsUnsafe = (entries) => {
   globalThis.localStorage.setItem(SAVED_ASSUMPTIONS_KEY, JSON.stringify(entries));
 };
 
+const getActiveEntryStorage = () => globalThis.sessionStorage;
+
 const persistSavedAssumptions = (
   entries,
   { protectEntryIds = new Set(), allowLocalEvictionFallback = true, emitChange = true } = {}
@@ -536,27 +538,27 @@ export const getSavedAssumptionsLimits = () => ({
 });
 
 export const getActiveSavedAssumptionsId = () => {
-  const raw = globalThis.localStorage.getItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+  const raw = getActiveEntryStorage().getItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
   return raw && raw.trim().length > 0 ? raw.trim() : null;
 };
 
 export const setActiveSavedAssumptionsId = (id, { emitChange = true } = {}) => {
   if (!id) {
-    globalThis.localStorage.removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+    getActiveEntryStorage().removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
     if (emitChange) {
       emitSavedAssumptionsChanged();
     }
     return;
   }
 
-  globalThis.localStorage.setItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY, String(id));
+  getActiveEntryStorage().setItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY, String(id));
   if (emitChange) {
     emitSavedAssumptionsChanged();
   }
 };
 
 export const clearActiveSavedAssumptionsId = ({ emitChange = true } = {}) => {
-  globalThis.localStorage.removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+  getActiveEntryStorage().removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
   if (emitChange) {
     emitSavedAssumptionsChanged();
   }

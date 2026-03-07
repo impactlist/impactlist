@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { AssumptionsProvider, useAssumptions } from './AssumptionsContext';
 import { globalParameters } from '../data/generatedData';
 
-/* global localStorage, Storage */
+/* global localStorage, sessionStorage, Storage */
 
 const ContextProbe = ({ onContextChange }) => {
   const context = useAssumptions();
@@ -54,20 +54,21 @@ const findRecipientScenario = (context) => {
 describe('AssumptionsContext integration', () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('bootstraps from localStorage and normalizes default-equivalent values', async () => {
+  it('bootstraps from sessionStorage and normalizes default-equivalent values', async () => {
     const savedState = {
       globalParameters: {
         discountRate: globalParameters.discountRate,
         timeLimit: globalParameters.timeLimit + 5,
       },
     };
-    localStorage.setItem('customEffectsData', JSON.stringify(savedState));
+    sessionStorage.setItem('customEffectsData', JSON.stringify(savedState));
 
     const removeItemSpy = vi.spyOn(Storage.prototype, 'removeItem');
 
@@ -75,6 +76,9 @@ describe('AssumptionsContext integration', () => {
     const context = getContext();
 
     expect(removeItemSpy).toHaveBeenCalledWith('customCostPerLifeValues');
+    expect(removeItemSpy).toHaveBeenCalledWith('customEffectsData');
+    expect(removeItemSpy).toHaveBeenCalledWith('activeSavedAssumptionsId:v1');
+    expect(localStorage.getItem('assumptionsSessionStorageCleanup:v1')).toBe('1');
     expect(context.userAssumptions).toEqual({
       globalParameters: {
         timeLimit: globalParameters.timeLimit + 5,
@@ -82,7 +86,7 @@ describe('AssumptionsContext integration', () => {
     });
 
     await waitFor(() => {
-      const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
+      const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
       expect(persisted).toEqual({
         globalParameters: {
           timeLimit: globalParameters.timeLimit + 5,
@@ -91,7 +95,52 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('persists category updates to localStorage', async () => {
+  it('does not bootstrap working assumptions from localStorage anymore', async () => {
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: globalParameters.timeLimit + 12,
+        },
+      })
+    );
+
+    const { getContext } = await renderWithProvider();
+
+    expect(getContext().userAssumptions).toBeNull();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('clears obsolete browser-global assumptions keys from localStorage on startup', async () => {
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: globalParameters.timeLimit + 12,
+        },
+      })
+    );
+    localStorage.setItem('activeSavedAssumptionsId:v1', 'legacy-entry');
+
+    await renderWithProvider();
+
+    expect(localStorage.getItem('customEffectsData')).toBeNull();
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
+    expect(localStorage.getItem('assumptionsSessionStorageCleanup:v1')).toBe('1');
+  });
+
+  it('skips legacy cleanup once the cleanup marker is set', async () => {
+    localStorage.setItem('assumptionsSessionStorageCleanup:v1', '1');
+    localStorage.setItem('customEffectsData', '{"legacy":true}');
+    localStorage.setItem('activeSavedAssumptionsId:v1', 'legacy-entry');
+
+    await renderWithProvider();
+
+    expect(localStorage.getItem('customEffectsData')).toBe('{"legacy":true}');
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe('legacy-entry');
+  });
+
+  it('persists category updates to sessionStorage', async () => {
     const { getContext } = await renderWithProvider();
     const context = getContext();
     const firstCategoryId = Object.keys(context.defaultAssumptions.categories)[0];
@@ -107,7 +156,7 @@ describe('AssumptionsContext integration', () => {
     });
 
     await waitFor(() => {
-      const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
+      const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
       expect(persisted.categories[firstCategoryId].effects[0]).toMatchObject({
         effectId: firstEffect.effectId,
         startTime: firstEffect.startTime + 1,
@@ -239,7 +288,7 @@ describe('AssumptionsContext integration', () => {
 
     await waitFor(() => {
       expect(getContext().userAssumptions).toBeNull();
-      expect(localStorage.getItem('customEffectsData')).toBeNull();
+      expect(sessionStorage.getItem('customEffectsData')).toBeNull();
     });
   });
 
@@ -263,7 +312,7 @@ describe('AssumptionsContext integration', () => {
 
     await waitFor(() => {
       expect(getContext().userAssumptions).toBeNull();
-      expect(localStorage.getItem('customEffectsData')).toBeNull();
+      expect(sessionStorage.getItem('customEffectsData')).toBeNull();
     });
   });
 
@@ -284,7 +333,7 @@ describe('AssumptionsContext integration', () => {
 
     await waitFor(() => {
       expect(getContext().userAssumptions).toBeNull();
-      expect(localStorage.getItem('customEffectsData')).toBeNull();
+      expect(sessionStorage.getItem('customEffectsData')).toBeNull();
     });
   });
 
@@ -309,7 +358,7 @@ describe('AssumptionsContext integration', () => {
     });
 
     await waitFor(() => {
-      const persisted = JSON.parse(localStorage.getItem('customEffectsData'));
+      const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
       expect(persisted).toEqual({
         globalParameters: {
           timeLimit: globalParameters.timeLimit + 25,

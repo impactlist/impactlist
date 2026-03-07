@@ -3,10 +3,11 @@ import { createCombinedAssumptions, createDefaultAssumptions } from '../utils/as
 import * as apiHelpers from '../utils/assumptionsAPIHelpers';
 import { normalizeUserAssumptions } from '../utils/assumptionsAPIHelpers';
 
-/* global localStorage */
-
 const AssumptionsContext = createContext();
 const defaultAssumptions = createDefaultAssumptions();
+const CUSTOM_EFFECTS_DATA_KEY = 'customEffectsData';
+const LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY = 'activeSavedAssumptionsId:v1';
+const SESSION_STORAGE_CLEANUP_KEY = 'assumptionsSessionStorageCleanup:v1';
 
 const hasCustomValues = (assumptions) => {
   if (!assumptions) return false;
@@ -29,9 +30,15 @@ export const useAssumptions = () => {
 
 export const AssumptionsProvider = ({ children }) => {
   const [userAssumptions, setUserAssumptions] = useState(() => {
-    localStorage.removeItem('customCostPerLifeValues');
+    globalThis.localStorage.removeItem('customCostPerLifeValues');
 
-    const savedData = localStorage.getItem('customEffectsData');
+    if (globalThis.localStorage.getItem(SESSION_STORAGE_CLEANUP_KEY) !== '1') {
+      globalThis.localStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      globalThis.localStorage.removeItem(LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+      globalThis.localStorage.setItem(SESSION_STORAGE_CLEANUP_KEY, '1');
+    }
+
+    const savedData = globalThis.sessionStorage.getItem(CUSTOM_EFFECTS_DATA_KEY);
     if (!savedData) return null;
 
     const parsed = JSON.parse(savedData);
@@ -45,9 +52,9 @@ export const AssumptionsProvider = ({ children }) => {
 
   useEffect(() => {
     if (userAssumptions) {
-      localStorage.setItem('customEffectsData', JSON.stringify(userAssumptions));
+      globalThis.sessionStorage.setItem(CUSTOM_EFFECTS_DATA_KEY, JSON.stringify(userAssumptions));
     } else {
-      localStorage.removeItem('customEffectsData');
+      globalThis.sessionStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
     }
   }, [userAssumptions]);
 

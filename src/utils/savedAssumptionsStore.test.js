@@ -15,7 +15,7 @@ import {
   __internal,
 } from './savedAssumptionsStore';
 
-/* global localStorage, Storage */
+/* global localStorage, sessionStorage, Storage */
 
 const buildAssumptions = (timeLimit) => ({
   globalParameters: {
@@ -29,6 +29,7 @@ describe('savedAssumptionsStore', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     localStorage.clear();
+    sessionStorage.clear();
   });
 
   it('saves and returns local assumptions entries', () => {
@@ -130,6 +131,19 @@ describe('savedAssumptionsStore', () => {
     const deleteResult = deleteSavedAssumptions(saveResult.entry.id);
     expect(deleteResult.ok).toBe(true);
     expect(getActiveSavedAssumptionsId()).toBeNull();
+  });
+
+  it('stores the active saved assumptions id in sessionStorage instead of localStorage', () => {
+    const saveResult = saveNewAssumptions({
+      label: 'Session Scoped',
+      assumptions: buildAssumptions(131),
+    });
+
+    expect(saveResult.ok).toBe(true);
+    setActiveSavedAssumptionsId(saveResult.entry.id);
+
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(saveResult.entry.id);
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
   });
 
   it('marks entries loaded and updates lastLoadedAt', () => {

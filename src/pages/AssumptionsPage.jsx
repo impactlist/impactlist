@@ -12,6 +12,11 @@ import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
+import {
+  getCuratedAssumptionsEntries,
+  hasCuratedAssumptionsLabel,
+  isCuratedAssumptionsEntryId,
+} from '../utils/curatedAssumptionsProfiles';
 import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
 import {
   attachSavedAssumptionsShareReference,
@@ -36,6 +41,7 @@ const AssumptionsPage = () => {
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotificationActions();
   const shouldReduceMotion = useReducedMotion();
+  const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
   const [searchParams, setSearchParams] = useSearchParams();
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareModalInitialResult, setShareModalInitialResult] = useState(null);
@@ -58,22 +64,27 @@ const AssumptionsPage = () => {
   const initialRecipientId = searchParams.get('recipientId') || null;
   const initialActiveCategory = searchParams.get('activeCategory') || null;
   const assumptionsForSharing = getNormalizedUserAssumptionsForSharing();
+  const libraryEntries = useMemo(
+    () => [...curatedAssumptions, ...savedAssumptions],
+    [curatedAssumptions, savedAssumptions]
+  );
   const currentFingerprint = useMemo(
     () => createComparableAssumptionsFingerprint(assumptionsForSharing),
     [assumptionsForSharing]
   );
-  const activeSavedAssumptionsEntry = useMemo(
-    () => savedAssumptions.find((entry) => entry.id === activeSavedAssumptionsId) || null,
-    [activeSavedAssumptionsId, savedAssumptions]
+  const activeLibraryEntry = useMemo(
+    () => libraryEntries.find((entry) => entry.id === activeSavedAssumptionsId) || null,
+    [activeSavedAssumptionsId, libraryEntries]
   );
-  const activeSavedAssumptionsFingerprint = useMemo(
-    () => createComparableAssumptionsFingerprint(activeSavedAssumptionsEntry?.assumptions),
-    [activeSavedAssumptionsEntry?.assumptions]
+  const activeLibraryEntryFingerprint = useMemo(
+    () => createComparableAssumptionsFingerprint(activeLibraryEntry?.assumptions),
+    [activeLibraryEntry?.assumptions]
   );
-  const hasUnsavedChanges = activeSavedAssumptionsEntry
-    ? activeSavedAssumptionsFingerprint !== currentFingerprint
+  const hasUnsavedChanges = activeLibraryEntry
+    ? activeLibraryEntryFingerprint !== currentFingerprint
     : isUsingCustomValues;
-  const isActiveSavedAssumptionsRemote = Boolean(activeSavedAssumptionsEntry?.reference);
+  const isActiveSavedAssumptionsRemote = Boolean(activeLibraryEntry?.reference);
+  const isActiveCuratedEntry = activeLibraryEntry?.source === 'curated';
   const activePanelEntryId = activeSavedAssumptionsId || DEFAULT_ASSUMPTIONS_ENTRY_ID;
   const isCurrentStateRepresentedBySavedAssumptions = useMemo(() => {
     if (!isUsingCustomValues) {
@@ -84,35 +95,36 @@ const AssumptionsPage = () => {
       return false;
     }
 
-    return savedAssumptions.some(
+    return libraryEntries.some(
       (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
     );
-  }, [currentFingerprint, isUsingCustomValues, savedAssumptions]);
+  }, [currentFingerprint, isUsingCustomValues, libraryEntries]);
   const canUpdateExisting = Boolean(
-    activeSavedAssumptionsEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote
+    activeLibraryEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote && !isActiveCuratedEntry
   );
   const duplicateSavedAssumptionsLabel = useMemo(() => {
     if (!currentFingerprint) {
       return null;
     }
 
-    if (activeSavedAssumptionsEntry) {
-      const activeFingerprint = createComparableAssumptionsFingerprint(activeSavedAssumptionsEntry.assumptions);
+    if (activeLibraryEntry) {
+      const activeFingerprint = createComparableAssumptionsFingerprint(activeLibraryEntry.assumptions);
       if (activeFingerprint && activeFingerprint === currentFingerprint) {
-        return activeSavedAssumptionsEntry.label;
+        return activeLibraryEntry.label;
       }
     }
 
-    const matchingEntry = savedAssumptions.find(
+    const matchingEntry = libraryEntries.find(
       (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
     );
     return matchingEntry?.label || null;
-  }, [activeSavedAssumptionsEntry, currentFingerprint, savedAssumptions]);
+  }, [activeLibraryEntry, currentFingerprint, libraryEntries]);
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
     const activeId = getActiveSavedAssumptionsId();
-    const activeExists = activeId && entries.some((entry) => entry.id === activeId);
+    const activeExists =
+      activeId && (entries.some((entry) => entry.id === activeId) || isCuratedAssumptionsEntryId(activeId));
 
     if (activeId && !activeExists) {
       setActiveSavedAssumptionsId(null);
@@ -218,6 +230,11 @@ const AssumptionsPage = () => {
       }
 
       setAllUserAssumptions(entry.assumptions);
+      if (entry.source === 'curated') {
+        persistAsActive(entry.id);
+        return;
+      }
+
       const loadedResult = markSavedAssumptionsLoaded(entry.id);
       if (!loadedResult.ok) {
         showNotification('error', STORAGE_ERROR_MESSAGE);
@@ -259,9 +276,13 @@ const AssumptionsPage = () => {
 
       const entryFingerprint = createComparableAssumptionsFingerprint(entry.assumptions);
       if (entryFingerprint && entryFingerprint === currentFingerprint) {
-        const loadedResult = markSavedAssumptionsLoaded(entry.id);
-        if (loadedResult.ok) {
+        if (entry.source === 'curated') {
           persistAsActive(entry.id);
+        } else {
+          const loadedResult = markSavedAssumptionsLoaded(entry.id);
+          if (loadedResult.ok) {
+            persistAsActive(entry.id);
+          }
         }
         const isSameActiveEntry = activeSavedAssumptionsId === entry.id;
         showNotification(
@@ -314,24 +335,24 @@ const AssumptionsPage = () => {
       return;
     }
 
-    if (isActiveSavedAssumptionsRemote && !hasUnsavedChanges && activeSavedAssumptionsEntry?.shareUrl) {
+    if (isActiveSavedAssumptionsRemote && !hasUnsavedChanges && activeLibraryEntry?.shareUrl) {
       setShareModalInitialResult({
-        id: activeSavedAssumptionsEntry.id,
-        reference: activeSavedAssumptionsEntry.reference,
-        description: activeSavedAssumptionsEntry.description,
-        shareUrl: activeSavedAssumptionsEntry.shareUrl,
+        id: activeLibraryEntry.id,
+        reference: activeLibraryEntry.reference,
+        description: activeLibraryEntry.description,
+        shareUrl: activeLibraryEntry.shareUrl,
       });
     } else {
       setShareModalInitialResult(null);
     }
 
-    setShareModalInitialDescription(activeSavedAssumptionsEntry?.description || '');
+    setShareModalInitialDescription(activeLibraryEntry?.description || '');
     setShareModalOpen(true);
   }, [
-    activeSavedAssumptionsEntry?.description,
-    activeSavedAssumptionsEntry?.id,
-    activeSavedAssumptionsEntry?.reference,
-    activeSavedAssumptionsEntry?.shareUrl,
+    activeLibraryEntry?.description,
+    activeLibraryEntry?.id,
+    activeLibraryEntry?.reference,
+    activeLibraryEntry?.shareUrl,
     commitPendingEdits,
     hasUnsavedChanges,
     isActiveSavedAssumptionsRemote,
@@ -351,14 +372,15 @@ const AssumptionsPage = () => {
       return;
     }
 
-    setSaveModalDefaultLabel(activeSavedAssumptionsEntry?.label || '');
-    setSaveModalDefaultDescription(activeSavedAssumptionsEntry?.description || '');
+    setSaveModalDefaultLabel(isActiveCuratedEntry ? '' : activeLibraryEntry?.label || '');
+    setSaveModalDefaultDescription(isActiveCuratedEntry ? '' : activeLibraryEntry?.description || '');
     setSaveModalOpen(true);
   }, [
-    activeSavedAssumptionsEntry?.description,
-    activeSavedAssumptionsEntry?.label,
+    activeLibraryEntry?.description,
+    activeLibraryEntry?.label,
     commitPendingEdits,
     getNormalizedUserAssumptionsForSharing,
+    isActiveCuratedEntry,
     showNotification,
   ]);
 
@@ -382,7 +404,7 @@ const AssumptionsPage = () => {
           reference: sharedReference,
           description: sharedResult?.description || null,
           assumptions: assumptionsToShare,
-          preferredId: activeSavedAssumptionsEntry?.id || null,
+          preferredId: activeLibraryEntry?.source === 'curated' ? null : activeLibraryEntry?.id || null,
         });
 
         if (attachResult.ok && attachResult.entry?.id) {
@@ -409,7 +431,13 @@ const AssumptionsPage = () => {
         }
       }
     },
-    [activeSavedAssumptionsEntry?.id, getNormalizedUserAssumptionsForSharing, persistAsActive, showNotification]
+    [
+      activeLibraryEntry?.id,
+      activeLibraryEntry?.source,
+      getNormalizedUserAssumptionsForSharing,
+      persistAsActive,
+      showNotification,
+    ]
   );
 
   const handleSaveAssumptionsSubmit = useCallback(
@@ -419,14 +447,18 @@ const AssumptionsPage = () => {
         return { ok: false, errorCode: 'no_custom_assumptions' };
       }
 
+      if (hasCuratedAssumptionsLabel(label)) {
+        return { ok: false, errorCode: 'reserved_curated_label' };
+      }
+
       const result =
-        mode === 'update' && canUpdateExisting && activeSavedAssumptionsEntry && !activeSavedAssumptionsEntry.reference
-          ? updateSavedAssumptions(activeSavedAssumptionsEntry.id, {
+        mode === 'update' && canUpdateExisting && activeLibraryEntry && !activeLibraryEntry.reference
+          ? updateSavedAssumptions(activeLibraryEntry.id, {
               label,
               description,
               assumptions: currentAssumptions,
-              source: activeSavedAssumptionsEntry.source,
-              reference: activeSavedAssumptionsEntry.reference,
+              source: activeLibraryEntry.source,
+              reference: activeLibraryEntry.reference,
             })
           : saveNewAssumptions({
               label,
@@ -442,7 +474,7 @@ const AssumptionsPage = () => {
         return { ok: false, errorCode: result.errorCode || 'unknown_error' };
       }
 
-      const nextActiveId = result.entry?.id || activeSavedAssumptionsEntry?.id;
+      const nextActiveId = result.entry?.id || activeLibraryEntry?.id;
       if (nextActiveId) {
         persistAsActive(nextActiveId);
       } else {
@@ -461,7 +493,7 @@ const AssumptionsPage = () => {
       return { ok: true };
     },
     [
-      activeSavedAssumptionsEntry,
+      activeLibraryEntry,
       canUpdateExisting,
       getNormalizedUserAssumptionsForSharing,
       persistAsActive,
@@ -472,6 +504,10 @@ const AssumptionsPage = () => {
 
   const handleRenameSavedAssumptions = useCallback(
     (entryId, nextLabel) => {
+      if (hasCuratedAssumptionsLabel(nextLabel)) {
+        return { ok: false, errorCode: 'reserved_curated_label' };
+      }
+
       const result = renameSavedAssumptions(entryId, nextLabel);
       if (!result.ok) {
         if (result.errorCode !== 'duplicate_label') {
@@ -629,7 +665,7 @@ const AssumptionsPage = () => {
         </div>
 
         <SavedAssumptionsPanel
-          entries={savedAssumptions}
+          entries={libraryEntries}
           activeId={activePanelEntryId}
           hasUnsavedChanges={hasUnsavedChanges}
           onLoad={handleLoadSavedAssumptions}
@@ -654,7 +690,7 @@ const AssumptionsPage = () => {
           isOpen={shareModalOpen}
           onClose={handleShareModalClose}
           assumptions={assumptionsForSharing}
-          assumptionName={activeSavedAssumptionsEntry?.label || null}
+          assumptionName={activeLibraryEntry?.label || null}
           onSaved={handleShareSaved}
           title="Share Assumptions"
           initialDescription={shareModalInitialDescription}
@@ -703,8 +739,8 @@ const AssumptionsPage = () => {
         <AssumptionsDescriptionModal
           isOpen={Boolean(pendingDescriptionEntry)}
           entryLabel={pendingDescriptionEntry?.label || ''}
-          initialDescription={pendingDescriptionEntry?.description || ''}
-          isReadOnly={Boolean(pendingDescriptionEntry?.reference)}
+          initialDescription={pendingDescriptionEntry?.content || pendingDescriptionEntry?.description || ''}
+          isReadOnly={Boolean(pendingDescriptionEntry?.reference || pendingDescriptionEntry?.source === 'curated')}
           onClose={handleDescriptionModalClose}
           onSave={handleSaveDescription}
         />

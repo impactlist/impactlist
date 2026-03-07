@@ -18,6 +18,7 @@ const donorsDir = path.join(__dirname, '../content/donors');
 const recipientsDir = path.join(__dirname, '../content/recipients');
 const donationsDir = path.join(__dirname, '../content/donations');
 const globalParametersFile = path.join(__dirname, '../content/globalParameters.md');
+const assumptionProfilesDir = path.join(__dirname, '../content/assumptions/profiles');
 const outputFile = path.join(__dirname, '../src/data/generatedData.js');
 
 // Shared text variables for markdown substitution
@@ -55,6 +56,35 @@ function extractContentExcludingInternalNotes(content) {
     .trim();
 
   return filteredContent || null;
+}
+
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+// Curated assumption overrides only compare scalar fields plus scalar arrays, never nested objects.
+function areComparableFieldValuesEqual(valueA, valueB) {
+  if (Array.isArray(valueA) && Array.isArray(valueB)) {
+    if (valueA.length !== valueB.length) {
+      return false;
+    }
+
+    return valueA.every((item, index) => areComparableFieldValuesEqual(item, valueB[index]));
+  }
+
+  if (Array.isArray(valueA) || Array.isArray(valueB)) {
+    return false;
+  }
+
+  return valueA === valueB;
+}
+
+function buildDefaultAssumptions(globalParameters, categories, recipients) {
+  return {
+    globalParameters: JSON.parse(JSON.stringify(globalParameters)),
+    categories: JSON.parse(JSON.stringify(categories)),
+    recipients: JSON.parse(JSON.stringify(recipients)),
+  };
 }
 
 // Load all categories
@@ -381,6 +411,369 @@ function loadAssumptions() {
   return assumptions;
 }
 
+function getCategoryDefaultEffect(defaultAssumptions, categoryId, effectId) {
+  return defaultAssumptions.categories?.[categoryId]?.effects?.find((effect) => effect.effectId === effectId) || null;
+}
+
+function getRecipientDefaultEffect(defaultAssumptions, recipientId, categoryId, effectId) {
+  const recipientEffect =
+    defaultAssumptions.recipients?.[recipientId]?.categories?.[categoryId]?.effects?.find(
+      (effect) => effect.effectId === effectId
+    ) || null;
+
+  if (recipientEffect) {
+    return recipientEffect;
+  }
+
+  return getCategoryDefaultEffect(defaultAssumptions, categoryId, effectId);
+}
+
+function assertCuratedEffectArray(effects, fileName, scopeLabel) {
+  if (!Array.isArray(effects)) {
+    throw new Error(`Error: Curated assumptions profile ${fileName} ${scopeLabel} must have an 'effects' array.`);
+  }
+}
+
+function normalizeCategoryEffectField(normalizedEffect, defaultEffect, fieldName, value, fileName, scopeLabel) {
+  if (fieldName === 'disabled') {
+    const normalizedDisabled = Boolean(value);
+    const defaultDisabled = Boolean(defaultEffect.disabled);
+    if (normalizedDisabled !== defaultDisabled) {
+      normalizedEffect.disabled = normalizedDisabled;
+    }
+    return;
+  }
+
+  if (!Object.hasOwn(defaultEffect, fieldName)) {
+    throw new Error(
+      `Error: Curated assumptions profile ${fileName} ${scopeLabel} effect "${normalizedEffect.effectId}" references unknown field "${fieldName}".`
+    );
+  }
+
+  if (!areComparableFieldValuesEqual(value, defaultEffect[fieldName])) {
+    normalizedEffect[fieldName] = value;
+  }
+}
+
+function normalizeCuratedEffects(effects, { fileName, scopeLabel, getDefaultEffect, normalizeEffectFields }) {
+  assertCuratedEffectArray(effects, fileName, scopeLabel);
+
+  const normalizedEffects = [];
+
+  effects.forEach((effect, effectIndex) => {
+    if (!isPlainObject(effect)) {
+      throw new Error(
+        `Error: Curated assumptions profile ${fileName} ${scopeLabel} effect #${effectIndex + 1} must be an object.`
+      );
+    }
+
+    if (!effect.effectId || typeof effect.effectId !== 'string') {
+      throw new Error(
+        `Error: Curated assumptions profile ${fileName} ${scopeLabel} effect #${effectIndex + 1} is missing required 'effectId'.`
+      );
+    }
+
+    const defaultEffect = getDefaultEffect(effect.effectId);
+    if (!defaultEffect) {
+      throw new Error(
+        `Error: Curated assumptions profile ${fileName} references unknown effect "${effect.effectId}" in ${scopeLabel}.`
+      );
+    }
+
+    const normalizedEffect = { effectId: effect.effectId };
+    normalizeEffectFields({ effect, normalizedEffect, defaultEffect, fileName, scopeLabel });
+
+    if (Object.keys(normalizedEffect).length > 1) {
+      normalizedEffects.push(normalizedEffect);
+    }
+  });
+
+  return normalizedEffects;
+}
+
+function normalizeCuratedCategoryEffects(effects, defaultAssumptions, categoryId, fileName) {
+  const scopeLabel = `category "${categoryId}"`;
+
+  return normalizeCuratedEffects(effects, {
+    fileName,
+    scopeLabel,
+    getDefaultEffect: (effectId) => getCategoryDefaultEffect(defaultAssumptions, categoryId, effectId),
+    normalizeEffectFields: ({ effect, normalizedEffect, defaultEffect, fileName: effectFileName, scopeLabel }) => {
+      Object.entries(effect).forEach(([fieldName, value]) => {
+        if (fieldName === 'effectId' || fieldName.startsWith('_')) {
+          return;
+        }
+
+        normalizeCategoryEffectField(normalizedEffect, defaultEffect, fieldName, value, effectFileName, scopeLabel);
+      });
+    },
+  });
+}
+
+function normalizeCuratedRecipientEffects(effects, defaultAssumptions, recipientId, categoryId, fileName) {
+  const scopeLabel = `recipient "${recipientId}" category "${categoryId}"`;
+
+  return normalizeCuratedEffects(effects, {
+    fileName,
+    scopeLabel,
+    getDefaultEffect: (effectId) => getRecipientDefaultEffect(defaultAssumptions, recipientId, categoryId, effectId),
+    normalizeEffectFields: ({ effect, normalizedEffect, defaultEffect, fileName: effectFileName, scopeLabel }) => {
+      Object.entries(effect).forEach(([fieldName, value]) => {
+        if (fieldName === 'effectId' || fieldName.startsWith('_')) {
+          return;
+        }
+
+        if (fieldName === 'overrides') {
+          if (!isPlainObject(value)) {
+            throw new Error(
+              `Error: Curated assumptions profile ${effectFileName} ${scopeLabel} effect "${effect.effectId}" must use an object for 'overrides'.`
+            );
+          }
+
+          const normalizedOverrides = {};
+          Object.entries(value).forEach(([overrideFieldName, overrideValue]) => {
+            if (!Object.hasOwn(defaultEffect, overrideFieldName)) {
+              throw new Error(
+                `Error: Curated assumptions profile ${effectFileName} ${scopeLabel} effect "${effect.effectId}" override references unknown field "${overrideFieldName}".`
+              );
+            }
+
+            if (!areComparableFieldValuesEqual(overrideValue, defaultEffect[overrideFieldName])) {
+              normalizedOverrides[overrideFieldName] = overrideValue;
+            }
+          });
+
+          if (Object.keys(normalizedOverrides).length > 0) {
+            normalizedEffect.overrides = normalizedOverrides;
+          }
+          return;
+        }
+
+        if (fieldName === 'multipliers') {
+          if (!isPlainObject(value)) {
+            throw new Error(
+              `Error: Curated assumptions profile ${effectFileName} ${scopeLabel} effect "${effect.effectId}" must use an object for 'multipliers'.`
+            );
+          }
+
+          const normalizedMultipliers = {};
+          Object.entries(value).forEach(([multiplierFieldName, multiplierValue]) => {
+            if (!Object.hasOwn(defaultEffect, multiplierFieldName)) {
+              throw new Error(
+                `Error: Curated assumptions profile ${effectFileName} ${scopeLabel} effect "${effect.effectId}" multiplier references unknown field "${multiplierFieldName}".`
+              );
+            }
+
+            if (multiplierValue !== 1) {
+              normalizedMultipliers[multiplierFieldName] = multiplierValue;
+            }
+          });
+
+          if (Object.keys(normalizedMultipliers).length > 0) {
+            normalizedEffect.multipliers = normalizedMultipliers;
+          }
+          return;
+        }
+
+        if (fieldName === 'disabled') {
+          const normalizedDisabled = Boolean(value);
+          const defaultDisabled = Boolean(defaultEffect.disabled);
+          if (normalizedDisabled !== defaultDisabled) {
+            normalizedEffect.disabled = normalizedDisabled;
+          }
+          return;
+        }
+
+        throw new Error(
+          `Error: Curated assumptions profile ${effectFileName} ${scopeLabel} effect "${effect.effectId}" has unsupported field "${fieldName}".`
+        );
+      });
+    },
+  });
+}
+
+function normalizeCuratedAssumptions(assumptions, defaultAssumptions, fileName) {
+  if (!isPlainObject(assumptions)) {
+    throw new Error(`Error: Curated assumptions profile ${fileName} must define 'assumptions' as an object.`);
+  }
+
+  const normalized = {};
+  const allowedTopLevelKeys = new Set(['globalParameters', 'categories', 'recipients']);
+
+  Object.keys(assumptions).forEach((key) => {
+    if (!allowedTopLevelKeys.has(key)) {
+      throw new Error(`Error: Curated assumptions profile ${fileName} has unknown top-level assumptions key "${key}".`);
+    }
+  });
+
+  if (assumptions.globalParameters !== undefined) {
+    if (!isPlainObject(assumptions.globalParameters)) {
+      throw new Error(`Error: Curated assumptions profile ${fileName} must use an object for 'globalParameters'.`);
+    }
+
+    const normalizedGlobalParameters = {};
+    Object.entries(assumptions.globalParameters).forEach(([parameterName, value]) => {
+      if (!Object.hasOwn(defaultAssumptions.globalParameters, parameterName)) {
+        throw new Error(
+          `Error: Curated assumptions profile ${fileName} references unknown global parameter "${parameterName}".`
+        );
+      }
+
+      if (!areComparableFieldValuesEqual(value, defaultAssumptions.globalParameters[parameterName])) {
+        normalizedGlobalParameters[parameterName] = value;
+      }
+    });
+
+    if (Object.keys(normalizedGlobalParameters).length > 0) {
+      normalized.globalParameters = normalizedGlobalParameters;
+    }
+  }
+
+  if (assumptions.categories !== undefined) {
+    if (!isPlainObject(assumptions.categories)) {
+      throw new Error(`Error: Curated assumptions profile ${fileName} must use an object for 'categories'.`);
+    }
+
+    const normalizedCategories = {};
+    Object.entries(assumptions.categories).forEach(([categoryId, categoryData]) => {
+      if (!defaultAssumptions.categories[categoryId]) {
+        throw new Error(`Error: Curated assumptions profile ${fileName} references unknown category "${categoryId}".`);
+      }
+
+      if (!isPlainObject(categoryData)) {
+        throw new Error(`Error: Curated assumptions profile ${fileName} category "${categoryId}" must be an object.`);
+      }
+
+      const normalizedEffects = normalizeCuratedCategoryEffects(
+        categoryData.effects,
+        defaultAssumptions,
+        categoryId,
+        fileName
+      );
+
+      if (normalizedEffects.length > 0) {
+        normalizedCategories[categoryId] = { effects: normalizedEffects };
+      }
+    });
+
+    if (Object.keys(normalizedCategories).length > 0) {
+      normalized.categories = normalizedCategories;
+    }
+  }
+
+  if (assumptions.recipients !== undefined) {
+    if (!isPlainObject(assumptions.recipients)) {
+      throw new Error(`Error: Curated assumptions profile ${fileName} must use an object for 'recipients'.`);
+    }
+
+    const normalizedRecipients = {};
+    Object.entries(assumptions.recipients).forEach(([recipientId, recipientData]) => {
+      if (!defaultAssumptions.recipients[recipientId]) {
+        throw new Error(
+          `Error: Curated assumptions profile ${fileName} references unknown recipient "${recipientId}".`
+        );
+      }
+
+      if (!isPlainObject(recipientData) || !isPlainObject(recipientData.categories)) {
+        throw new Error(
+          `Error: Curated assumptions profile ${fileName} recipient "${recipientId}" must define a 'categories' object.`
+        );
+      }
+
+      const normalizedRecipientCategories = {};
+      Object.entries(recipientData.categories).forEach(([categoryId, categoryData]) => {
+        if (!defaultAssumptions.recipients[recipientId].categories?.[categoryId]) {
+          throw new Error(
+            `Error: Curated assumptions profile ${fileName} recipient "${recipientId}" references unknown category "${categoryId}".`
+          );
+        }
+
+        if (!isPlainObject(categoryData)) {
+          throw new Error(
+            `Error: Curated assumptions profile ${fileName} recipient "${recipientId}" category "${categoryId}" must be an object.`
+          );
+        }
+
+        const normalizedEffects = normalizeCuratedRecipientEffects(
+          categoryData.effects,
+          defaultAssumptions,
+          recipientId,
+          categoryId,
+          fileName
+        );
+
+        if (normalizedEffects.length > 0) {
+          normalizedRecipientCategories[categoryId] = { effects: normalizedEffects };
+        }
+      });
+
+      if (Object.keys(normalizedRecipientCategories).length > 0) {
+        normalizedRecipients[recipientId] = { categories: normalizedRecipientCategories };
+      }
+    });
+
+    if (Object.keys(normalizedRecipients).length > 0) {
+      normalized.recipients = normalizedRecipients;
+    }
+  }
+
+  if (Object.keys(normalized).length === 0) {
+    throw new Error(`Error: Curated assumptions profile ${fileName} has no effect after normalization.`);
+  }
+
+  return normalized;
+}
+
+function loadCuratedAssumptionProfiles(defaultAssumptions) {
+  if (!fs.existsSync(assumptionProfilesDir)) {
+    return {};
+  }
+
+  const profileFiles = glob.sync(path.join(assumptionProfilesDir, '*.md'));
+  const profiles = {};
+
+  profileFiles.forEach((file) => {
+    if (path.basename(file) === '_index.md') return;
+
+    const fileName = path.basename(file);
+    const fileContent = fs.readFileSync(file, 'utf8');
+    const { data, content } = matter(fileContent);
+
+    if (!data.id || typeof data.id !== 'string') {
+      throw new Error(`Error: Curated assumptions profile ${fileName} is missing required 'id' field.`);
+    }
+    if (!data.name || typeof data.name !== 'string') {
+      throw new Error(`Error: Curated assumptions profile ${fileName} is missing required 'name' field.`);
+    }
+    if (data.assumptions === undefined) {
+      throw new Error(`Error: Curated assumptions profile ${fileName} is missing required 'assumptions' field.`);
+    }
+    if (data.description !== undefined && typeof data.description !== 'string') {
+      throw new Error(`Error: Curated assumptions profile ${fileName} must use a string for 'description'.`);
+    }
+    if (data.sortOrder !== undefined && typeof data.sortOrder !== 'number') {
+      throw new Error(`Error: Curated assumptions profile ${fileName} must use a number for 'sortOrder'.`);
+    }
+    if (profiles[data.id]) {
+      throw new Error(`Error: Duplicate curated assumptions profile id "${data.id}".`);
+    }
+
+    const normalizedAssumptions = normalizeCuratedAssumptions(data.assumptions, defaultAssumptions, fileName);
+    const extractedContent = extractContentExcludingInternalNotes(content);
+
+    profiles[data.id] = {
+      id: data.id,
+      name: data.name,
+      description: typeof data.description === 'string' ? data.description.trim() : '',
+      sortOrder: typeof data.sortOrder === 'number' ? data.sortOrder : 0,
+      assumptions: normalizedAssumptions,
+      content: replaceVariables(extractedContent) || '',
+    };
+  });
+
+  return profiles;
+}
+
 // Load global parameters
 function loadGlobalParameters() {
   if (!fs.existsSync(globalParametersFile)) {
@@ -514,6 +907,11 @@ function generateJavaScriptFile() {
   console.log('Loading assumptions...');
   const assumptions = loadAssumptions();
 
+  console.log('Loading curated assumptions profiles...');
+  const curatedAssumptionProfiles = loadCuratedAssumptionProfiles(
+    buildDefaultAssumptions(globalParameters, categories, recipients)
+  );
+
   console.log('Validating data integrity...');
   validateDataIntegrity(categories, donors, recipients, rawDonations);
 
@@ -553,6 +951,9 @@ export const recipientsById = ${JSON.stringify(filteredRecipients, null, 2)};
 
 // Assumptions by ID
 export const assumptionsById = ${JSON.stringify(assumptions, null, 2)};
+
+// Curated assumptions profiles by ID
+export const curatedAssumptionProfilesById = ${JSON.stringify(curatedAssumptionProfiles, null, 2)};
 
 // All donations
 export const allDonations = ${JSON.stringify(donations, null, 2)};

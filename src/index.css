@@ -813,6 +813,12 @@
     background: color-mix(in srgb, var(--accent-soft) 82%, white 18%);
   }
 
+  .assumption-state-pill[data-state='curated'] {
+    color: color-mix(in srgb, #7a4b00 88%, black 12%);
+    border-color: color-mix(in srgb, #d7a13b 58%, var(--border-subtle) 42%);
+    background: color-mix(in srgb, #f3d38b 48%, white 52%);
+  }
+
   .assumption-state-pill[data-state='active'] {
     color: #0a6a45;
     border-color: #17a56f;

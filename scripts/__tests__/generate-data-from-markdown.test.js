@@ -83,6 +83,29 @@ describe('generate-data-from-markdown script', () => {
     expect(generated.categoriesById.health.content).toContain('Public Notes');
     expect(generated.categoriesById.health.content).not.toContain('Internal Notes');
     expect(generated.donorsById.donor_a.about).toBe('Donor A bio.');
+    expect(generated.curatedAssumptionProfilesById['long-horizon']).toMatchObject({
+      id: 'long-horizon',
+      name: 'Long Horizon',
+      description: 'Extends the time horizon and improves the health category.',
+      sortOrder: 5,
+      assumptions: {
+        globalParameters: {
+          timeLimit: 250,
+        },
+        categories: {
+          health: {
+            effects: [
+              {
+                effectId: 'health_effect',
+                costPerQALY: 80,
+              },
+            ],
+          },
+        },
+      },
+    });
+    expect(generated.curatedAssumptionProfilesById['long-horizon'].content).toContain('Long-horizon rationale.');
+    expect(generated.curatedAssumptionProfilesById['long-horizon'].content).not.toContain('Internal Notes');
 
     expect(generated.donorsById).not.toHaveProperty('donor_unused');
     expect(generated.recipientsById).not.toHaveProperty('recipient_unused');
@@ -106,5 +129,14 @@ describe('generate-data-from-markdown script', () => {
 
     expect(result.status).not.toBe(0);
     expect(output).toContain("Category file malformed_category.md is missing required 'id' field.");
+  });
+
+  it('fails validation when a curated assumptions profile references an unknown effect', () => {
+    const workspace = setupWorkspaceFromFixture('invalid-curated-profile');
+    const result = runGenerator(workspace);
+    const output = `${result.stdout}\n${result.stderr}`;
+
+    expect(result.status).not.toBe(0);
+    expect(output).toContain('references unknown effect "missing_effect" in category "health"');
   });
 });

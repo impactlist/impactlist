@@ -305,6 +305,79 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryByRole('button', { name: 'Save to Library' })).not.toBeInTheDocument();
   });
 
+  it('shows curated assumptions profiles in the library and loads them as read-only presets', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = (await screen.findByText('Assumptions Library')).closest('section');
+    await user.click(within(panel).getByRole('button', { name: /Show Inactive/i }));
+
+    const longtermistRow = within(panel).getByText('Longtermist').closest('.assumptions-entry');
+    expect(within(longtermistRow).getByText('Curated')).toBeInTheDocument();
+    expect(within(longtermistRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
+    expect(within(longtermistRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
+    expect(within(longtermistRow).queryByRole('button', { name: 'Copy Link' })).not.toBeInTheDocument();
+
+    await user.click(within(longtermistRow).getByRole('button', { name: 'Load' }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('10,000,000,000');
+    });
+
+    expect(JSON.parse(localStorage.getItem('customEffectsData'))).toEqual({
+      globalParameters: {
+        timeLimit: 10000000000,
+      },
+    });
+    expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
+
+    const activeRow = within(panel).getByText('Longtermist').closest('.assumptions-entry');
+    expect(activeRow).toHaveAttribute('data-active', 'true');
+
+    await user.click(within(activeRow).getByRole('button', { name: 'View description' }));
+    expect(screen.getByLabelText('Description:').value).toContain('10 billion years');
+    expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
+  });
+
+  it('treats saving from a curated profile as creating a new local copy', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const panel = (await screen.findByText('Assumptions Library')).closest('section');
+    await user.click(within(panel).getByRole('button', { name: /Show Inactive/i }));
+
+    const row = within(panel).getByText('Longtermist').closest('.assumptions-entry');
+    await user.click(within(row).getByRole('button', { name: 'Load' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Save to Library' })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Update Current Library Entry' })).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Label')).toHaveValue('');
+
+    await user.type(screen.getByLabelText('Label'), 'My Longtermist Copy');
+    const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
+    await user.click(saveButtons[saveButtons.length - 1]);
+
+    await waitFor(() => {
+      const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+      expect(savedEntries).toHaveLength(1);
+      expect(savedEntries[0]).toMatchObject({
+        label: 'My Longtermist Copy',
+        source: 'local',
+      });
+      expect(savedEntries[0].assumptions).toEqual({
+        globalParameters: {
+          timeLimit: 10000000000,
+        },
+      });
+      expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedEntries[0].id);
+    });
+  });
+
   it('saves current assumptions to Assumptions Library and marks entry active', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
@@ -1189,6 +1262,37 @@ describe('AssumptionsPage routing integration', () => {
     expect(within(secondRow).getByDisplayValue('first label')).toBeInTheDocument();
   });
 
+  it('shows inline rename error when a saved assumptions name collides with a curated profile', async () => {
+    const user = userEvent.setup();
+    const seeded = saveNewAssumptions({
+      label: 'Rename Me',
+      assumptions: {
+        globalParameters: { timeLimit: 115 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected saved entry to seed successfully');
+    }
+
+    renderAssumptionsRoute('/assumptions');
+    const panel = await screen.findByText('Assumptions Library');
+    const section = panel.closest('section');
+    await user.click(within(section).getByRole('button', { name: /Show Inactive/i }));
+    const row = within(section).getByText('Rename Me').closest('.assumptions-entry');
+
+    await user.click(within(row).getByRole('button', { name: 'Rename' }));
+    const input = within(row).getByDisplayValue('Rename Me');
+    await user.clear(input);
+    await user.type(input, 'Longtermist');
+    await user.keyboard('{Enter}');
+
+    expect(
+      within(row).getByText('That name is already used by a curated assumptions profile. Choose a different name.')
+    ).toBeInTheDocument();
+  });
+
   it('prevents saving assumptions with a duplicate name', async () => {
     const user = userEvent.setup();
     localStorage.setItem(
@@ -1228,6 +1332,33 @@ describe('AssumptionsPage routing integration', () => {
 
     const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
     expect(entries).toHaveLength(1);
+  });
+
+  it('prevents saving assumptions with a curated profile name and shows a curated-specific error', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 140,
+        },
+      })
+    );
+
+    renderAssumptionsRoute('/assumptions');
+    await user.click(await screen.findByRole('button', { name: 'Save to Library' }));
+
+    const labelInput = await screen.findByLabelText('Label');
+    await user.clear(labelInput);
+    await user.type(labelInput, 'Longtermist');
+
+    const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
+    await user.click(saveButtons[saveButtons.length - 1]);
+
+    expect(
+      screen.getByText('That name is already used by a curated assumptions profile. Choose a different name.')
+    ).toBeInTheDocument();
+    expect(localStorage.getItem('savedAssumptions:v1')).toBeNull();
   });
 
   it('warns when saving unchanged assumptions would duplicate an existing saved entry', async () => {

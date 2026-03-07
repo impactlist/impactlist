@@ -13,6 +13,10 @@ const getRenameErrorMessage = (errorCode) => {
     return 'You already have saved assumptions with that name. Choose a different name.';
   }
 
+  if (errorCode === 'reserved_curated_label') {
+    return 'That name is already used by a curated assumptions profile. Choose a different name.';
+  }
+
   return 'Could not rename saved assumptions.';
 };
 
@@ -88,11 +92,14 @@ const SavedAssumptionsPanel = ({
             const isDefaultEntry = entry.id === DEFAULT_ENTRY_ID;
             const isActive = activeId === entry.id;
             const isEditing = !isDefaultEntry && editingId === entry.id;
+            const isCurated = !isDefaultEntry && entry.source === 'curated';
             const isRemote = !isDefaultEntry && Boolean(entry.reference);
             const isLoadDisabled = isActive && !hasUnsavedChanges;
             // Local entries can always open the description editor; remote entries only surface the action
             // when a description already exists because remote descriptions are view-only.
-            const shouldShowDescriptionAction = !isDefaultEntry && (!isRemote || Boolean(entry.description));
+            const shouldShowDescriptionAction =
+              !isDefaultEntry &&
+              (isCurated ? Boolean(entry.description || entry.content) : !isRemote || Boolean(entry.description));
 
             return (
               <Fragment key={entry.id}>
@@ -146,28 +153,36 @@ const SavedAssumptionsPanel = ({
                           </span>
                           {!isDefaultEntry && (
                             <>
-                              <IconActionButton
-                                icon="edit"
-                                label="Rename"
-                                onClick={() => beginRename(entry)}
-                                className="saved-assumption-row__inline-icon"
-                              />
+                              {!isCurated && (
+                                <IconActionButton
+                                  icon="edit"
+                                  label="Rename"
+                                  onClick={() => beginRename(entry)}
+                                  className="saved-assumption-row__inline-icon"
+                                />
+                              )}
                               {shouldShowDescriptionAction && (
                                 <IconActionButton
                                   icon="description"
-                                  label={entry.description ? 'View description' : 'Add description'}
+                                  label={
+                                    isCurated || entry.description || entry.content
+                                      ? 'View description'
+                                      : 'Add description'
+                                  }
                                   onClick={() => onDescription(entry)}
                                   className="saved-assumption-row__inline-icon"
                                 />
                               )}
-                              <IconActionButton
-                                icon="delete"
-                                label="Delete"
-                                tone="danger"
-                                onClick={() => onDelete(entry.id)}
-                                className="saved-assumption-row__inline-icon"
-                              />
-                              {entry.shareUrl && (
+                              {!isCurated && (
+                                <IconActionButton
+                                  icon="delete"
+                                  label="Delete"
+                                  tone="danger"
+                                  onClick={() => onDelete(entry.id)}
+                                  className="saved-assumption-row__inline-icon"
+                                />
+                              )}
+                              {!isCurated && entry.shareUrl && (
                                 <IconActionButton
                                   icon="copy-link"
                                   label="Copy Link"
@@ -177,10 +192,10 @@ const SavedAssumptionsPanel = ({
                               )}
                               <span
                                 className="assumption-state-pill assumption-state-pill--compact"
-                                data-state={isRemote ? 'remote' : 'local'}
+                                data-state={isCurated ? 'curated' : isRemote ? 'remote' : 'local'}
                                 title={isRemote && entry.reference ? `Remote ref: ${entry.reference}` : undefined}
                               >
-                                {isRemote ? 'Remote' : 'Local'}
+                                {isCurated ? 'Curated' : isRemote ? 'Remote' : 'Local'}
                               </span>
                             </>
                           )}
@@ -244,7 +259,8 @@ SavedAssumptionsPanel.propTypes = {
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       description: PropTypes.string,
-      source: PropTypes.oneOf(['local', 'imported']).isRequired,
+      content: PropTypes.string,
+      source: PropTypes.oneOf(['local', 'imported', 'curated']).isRequired,
       reference: PropTypes.string,
       shareUrl: PropTypes.string,
       updatedAt: PropTypes.string,

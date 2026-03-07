@@ -11,6 +11,10 @@ const getSubmitErrorMessage = (errorCode) => {
     return 'You already have saved assumptions with that name. Choose a different name.';
   }
 
+  if (errorCode === 'reserved_curated_label') {
+    return 'That name is already used by a curated assumptions profile. Choose a different name.';
+  }
+
   if (errorCode === 'over_limit') {
     return 'Saved assumptions are full. Delete some saved assumptions and try again.';
   }

@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isValidSlug, normalizeSlugInput, saveSharedAssumptions, slugify } from '../utils/shareAssumptions';
-import { MAX_ASSUMPTION_DESCRIPTION_LENGTH } from '../constants/assumptionsDescription';
+import {
+  ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD,
+  MAX_ASSUMPTION_DESCRIPTION_LENGTH,
+} from '../constants/assumptionsDescription';
 
 const ShareAssumptionsModal = ({
   isOpen,
@@ -178,9 +181,9 @@ const ShareAssumptionsModal = ({
                         rows={4}
                         maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
                       />
-                      {description.length > 0 && (
+                      {description.length > ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD && (
                         <p className="impact-modal__char-count">
-                          {description.length}/{MAX_ASSUMPTION_DESCRIPTION_LENGTH} characters
+                          {MAX_ASSUMPTION_DESCRIPTION_LENGTH - description.length} characters remaining
                         </p>
                       )}
                     </div>

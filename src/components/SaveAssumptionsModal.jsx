@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MAX_ASSUMPTION_DESCRIPTION_LENGTH } from '../constants/assumptionsDescription';
+import {
+  ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD,
+  MAX_ASSUMPTION_DESCRIPTION_LENGTH,
+} from '../constants/assumptionsDescription';
 
 const getSubmitErrorMessage = (errorCode) => {
   if (errorCode === 'duplicate_label') {
@@ -38,9 +41,16 @@ const SaveAssumptionsModal = ({
     setError('');
   }, [defaultDescription, defaultLabel, isOpen]);
 
-  const validateLabel = () => {
+  const validateLabel = (mode) => {
     const trimmed = label.trim();
     if (!trimmed) {
+      if (mode === 'update') {
+        const fallbackLabel = defaultLabel.trim();
+        if (fallbackLabel) {
+          return fallbackLabel;
+        }
+      }
+
       setError('Label is required.');
       return null;
     }
@@ -49,7 +59,7 @@ const SaveAssumptionsModal = ({
   };
 
   const handleSubmit = (mode) => {
-    const normalizedLabel = validateLabel();
+    const normalizedLabel = validateLabel(mode);
     if (!normalizedLabel) {
       return;
     }
@@ -110,7 +120,6 @@ const SaveAssumptionsModal = ({
                   setLabel(event.target.value);
                   setError('');
                 }}
-                placeholder="My Current Assumptions"
                 className="impact-modal__input"
               />
 
@@ -129,9 +138,9 @@ const SaveAssumptionsModal = ({
                 rows={4}
                 maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
               />
-              {description.length > 0 && (
+              {description.length > ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD && (
                 <p className="impact-modal__char-count">
-                  {description.length}/{MAX_ASSUMPTION_DESCRIPTION_LENGTH} characters
+                  {MAX_ASSUMPTION_DESCRIPTION_LENGTH - description.length} characters remaining
                 </p>
               )}
 

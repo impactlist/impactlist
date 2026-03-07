@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MAX_ASSUMPTION_DESCRIPTION_LENGTH } from '../constants/assumptionsDescription';
+import {
+  ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD,
+  MAX_ASSUMPTION_DESCRIPTION_LENGTH,
+} from '../constants/assumptionsDescription';
 
 const AssumptionsDescriptionModal = ({
   isOpen,
@@ -77,9 +80,9 @@ const AssumptionsDescriptionModal = ({
                 maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
                 placeholder={isReadOnly ? 'No description available.' : 'Add notes about this assumptions set.'}
               />
-              {!isReadOnly && description.length > 0 && (
+              {!isReadOnly && description.length > ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD && (
                 <p className="impact-modal__char-count">
-                  {description.length}/{MAX_ASSUMPTION_DESCRIPTION_LENGTH} characters
+                  {MAX_ASSUMPTION_DESCRIPTION_LENGTH - description.length} characters remaining
                 </p>
               )}
 

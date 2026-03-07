@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -318,6 +318,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
 
     const labelInput = screen.getByLabelText('Label');
+    expect(labelInput).toHaveValue('');
     await user.clear(labelInput);
     await user.type(labelInput, 'My Local Snapshot');
     await user.type(
@@ -347,6 +348,26 @@ describe('AssumptionsPage routing integration', () => {
     expect(savedEntries).toHaveLength(1);
     expect(savedEntries[0].label).toBe('My Local Snapshot');
     expect(savedEntries[0].description).toBe('Longer time horizon with a lower discount rate for current planning.');
+  });
+
+  it('shows remaining description characters only after 2000 characters in the save modal', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '175');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
+
+    const descriptionInput = screen.getByLabelText('Description (optional)');
+    fireEvent.change(descriptionInput, { target: { value: 'a'.repeat(2000) } });
+    expect(screen.queryByText(/characters remaining/i)).not.toBeInTheDocument();
+
+    fireEvent.change(descriptionInput, { target: { value: 'a'.repeat(2001) } });
+    expect(screen.getByText('999 characters remaining')).toBeInTheDocument();
   });
 
   it('updates the active saved assumptions entry in place', async () => {
@@ -385,6 +406,7 @@ describe('AssumptionsPage routing integration', () => {
 
     await user.click(screen.getByRole('button', { name: 'Save to Library' }));
     expect(await screen.findByRole('button', { name: 'Update Current Library Entry' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Label')).toHaveValue('Current Working Model');
     const descriptionInput = screen.getByLabelText('Description (optional)');
     expect(descriptionInput).toHaveValue('Original saved description.');
     await user.clear(descriptionInput);

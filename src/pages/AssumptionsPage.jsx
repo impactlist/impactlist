@@ -351,7 +351,7 @@ const AssumptionsPage = () => {
       return;
     }
 
-    setSaveModalDefaultLabel(activeSavedAssumptionsEntry?.label || 'My Current Assumptions');
+    setSaveModalDefaultLabel(activeSavedAssumptionsEntry?.label || '');
     setSaveModalDefaultDescription(activeSavedAssumptionsEntry?.description || '');
     setSaveModalOpen(true);
   }, [

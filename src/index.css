@@ -1063,10 +1063,10 @@
   }
 
   .assumptions-entry[data-active='true'] {
-    border-width: 1px;
-    border-color: var(--border-subtle);
-    background: color-mix(in srgb, var(--bg-surface-alt) 56%, white 44%);
-    box-shadow: 0 6px 14px -16px rgba(34, 26, 12, 0.45);
+    border-color: color-mix(in srgb, var(--accent) 28%, var(--border-subtle) 72%);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent 88%),
+      0 6px 14px -16px rgba(34, 26, 12, 0.45);
   }
 
   .assumptions-entry[data-active='true'][data-dirty='true'] {

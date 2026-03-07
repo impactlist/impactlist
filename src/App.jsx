@@ -94,6 +94,10 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
+      <div className="impact-notice-overlay">
+        <GlobalNotificationBanner />
+        <GlobalSharedAssumptionsImport />
+      </div>
       <div className="flex flex-col min-h-screen">
         <Header
           isHome={isHome}
@@ -104,19 +108,6 @@ const AppContent = () => {
           isAssumptions={isAssumptions}
         />
         <div className={`flex-grow ${isAssumptions ? 'relative' : 'bg-[var(--bg-canvas-strong)]'}`}>
-          {isAssumptions ? (
-            <div className="impact-notice-overlay">
-              <GlobalNotificationBanner />
-              <GlobalSharedAssumptionsImport />
-            </div>
-          ) : (
-            <div className="mx-auto mt-2 w-full max-w-7xl px-4 sm:mt-3 sm:px-6 lg:px-8">
-              <div className="min-h-[20px] space-y-2">
-                <GlobalNotificationBanner />
-                <GlobalSharedAssumptionsImport />
-              </div>
-            </div>
-          )}
           <Routes>
             <Route path="/" element={<DonorList />} />
             <Route path="/donor/:donorId" element={<DonorDetail />} />

@@ -1,6 +1,6 @@
 ---
 id: ai-risk-skeptic
-name: 'AI Risk Skeptic'
+name: 'AI X-Risk Skeptic'
 description: 'Disables AI existential risk and removes the doom penalty from AGI Development.'
 sortOrder: 10
 assumptions:

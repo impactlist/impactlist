@@ -30,8 +30,8 @@ Use `Curated Assumptions Profiles` in planning and implementation language.
 
 Initial curated profile names:
 
-- `AI Risk Skeptic`
-- `Animal Welfarist`
+- `AI X-Risk Skeptic`
+- `Animal Welfarist + AI X-Risk Skeptic`
 - `Longtermist`
 
 Note: use the spelling `Welfarist`, not `Welfareist`.
@@ -242,7 +242,7 @@ The page should:
 
 ## Initial Curated Profiles
 
-### 1. AI Risk Skeptic
+### 1. AI X-Risk Skeptic
 
 Intent:
 
@@ -264,17 +264,27 @@ assumptions:
           disabled: true
 ```
 
-### 2. Animal Welfarist
+### 2. Animal Welfarist + AI X-Risk Skeptic
 
 Intent:
 
 - value animal welfare using human-equivalent weighting rather than the current chicken discount
+- remove value assigned to AI existential risk
+- remove the negative existential-risk component from AGI development
 
 Recommended payload:
 
 ```yaml
 assumptions:
   categories:
+    ai-risk:
+      effects:
+        - effectId: population
+          disabled: true
+    ai-capabilities:
+      effects:
+        - effectId: population-doom
+          disabled: true
     animal-welfare:
       effects:
         - effectId: standard

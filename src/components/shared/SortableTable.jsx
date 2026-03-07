@@ -85,7 +85,9 @@ const SortableTable = ({
 
       const headerCells = Array.from(tableHeadRef.current.querySelectorAll('th'));
       const nextColumnWidths = headerCells.map((cell) => Math.ceil(cell.getBoundingClientRect().width));
-      const nextTableWidth = Math.ceil(tableRef.current.getBoundingClientRect().width);
+      const nextTableWidth = Math.ceil(
+        Math.max(tableRef.current.getBoundingClientRect().width, scrollContainerRef.current.scrollWidth)
+      );
       const nextHeaderHeight = Math.ceil(tableHeadRef.current.getBoundingClientRect().height);
       const nextScrollLeft = scrollContainerRef.current.scrollLeft;
 

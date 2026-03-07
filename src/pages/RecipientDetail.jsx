@@ -389,7 +389,7 @@ const RecipientDetail = () => {
         {/* Sample donation calculator */}
         <SampleDonationCalculator recipientId={recipientId} combinedAssumptions={combinedAssumptions} />
 
-        {/* Focus Areas chart with toggle */}
+        {/* Cause Areas chart with toggle */}
         {recipientInfo.categoryBreakdown.length > 1 && (
           <EntityChartSection
             chartData={chartData}

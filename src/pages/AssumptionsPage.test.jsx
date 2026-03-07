@@ -79,8 +79,8 @@ describe('AssumptionsPage routing integration', () => {
   it('shows categories list for an invalid category deep-link instead of opening an editor', async () => {
     renderAssumptionsRoute('/assumptions?tab=categories&categoryId=missing-category');
 
-    expect(await screen.findByText(/for each cause category/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Edit effects for category/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/for each cause:/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
   });
 
   it('supports back/forward navigation between category list and category editor urls', async () => {
@@ -90,19 +90,19 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Open Category Editor' }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Edit effects for category/i)).toBeInTheDocument();
+      expect(screen.getByText(/Edit effects for cause/i)).toBeInTheDocument();
       expect(screen.getByTestId('location-probe').textContent).toContain('categoryId=');
     });
 
     await user.click(screen.getByRole('button', { name: 'Go Back' }));
     await waitFor(() => {
-      expect(screen.queryByText(/Edit effects for category/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=categories');
     });
 
     await user.click(screen.getByRole('button', { name: 'Go Forward' }));
     await waitFor(() => {
-      expect(screen.getByText(/Edit effects for category/i)).toBeInTheDocument();
+      expect(screen.getByText(/Edit effects for cause/i)).toBeInTheDocument();
       expect(screen.getByTestId('location-probe').textContent).toContain('categoryId=');
     });
   });
@@ -126,7 +126,7 @@ describe('AssumptionsPage routing integration', () => {
   it('opens valid category editor from deep-link query params', async () => {
     renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
 
-    expect(await screen.findByText(/Edit effects for category/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Edit effects for cause/i)).toBeInTheDocument();
     expect(screen.getByTestId('location-probe')).toHaveTextContent(`categoryId=${firstValidCategoryId}`);
   });
 
@@ -134,9 +134,9 @@ describe('AssumptionsPage routing integration', () => {
     const user = userEvent.setup();
     renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
 
-    expect(await screen.findByText(/Edit effects for category/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Edit effects for cause/i)).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Global' })).toBeDisabled();
-    expect(screen.getByRole('tab', { name: 'Categories' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Causes' })).toBeDisabled();
     expect(screen.getByRole('tab', { name: 'Recipients' })).toBeDisabled();
 
     await user.click(screen.getByRole('tab', { name: 'Global' }));
@@ -166,10 +166,10 @@ describe('AssumptionsPage routing integration', () => {
 
     expect(await screen.findByText(/Edit effects for recipient/i)).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Global' })).toBeDisabled();
-    expect(screen.getByRole('tab', { name: 'Categories' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Causes' })).toBeDisabled();
     expect(screen.getByRole('tab', { name: 'Recipients' })).toBeDisabled();
 
-    await user.click(screen.getByRole('tab', { name: 'Categories' }));
+    await user.click(screen.getByRole('tab', { name: 'Causes' }));
     expect(screen.getByTestId('location-probe').textContent).toContain(`recipientId=${firstValidRecipientId}`);
   });
 
@@ -177,7 +177,7 @@ describe('AssumptionsPage routing integration', () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(screen.getByRole('tab', { name: 'Categories' }));
+    await user.click(screen.getByRole('tab', { name: 'Causes' }));
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=categories');
     });
@@ -203,7 +203,7 @@ describe('AssumptionsPage routing integration', () => {
 
     await user.keyboard('{ArrowRight}');
     await waitFor(() => {
-      expect(screen.getByRole('tab', { name: 'Categories' })).toHaveAttribute('aria-selected', 'true');
+      expect(screen.getByRole('tab', { name: 'Causes' })).toHaveAttribute('aria-selected', 'true');
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=categories');
     });
 

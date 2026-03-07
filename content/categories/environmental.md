@@ -45,7 +45,7 @@ The point estimate (\$700/QALY) and range (\$20–\$30,000/QALY) reflect a heavy
 
 **Lead exposure elimination (best-in-class):**
 
-Top pollution-control charities like LEEP achieve single-digit dollars per DALY (Assumption 2). Hot-spot remediation ranges from \$400–\$3,200/DALY (Assumption 3). These represent the most cost-effective opportunities in this category.
+Top pollution-control charities like LEEP achieve single-digit dollars per DALY (Assumption 2). Hot-spot remediation ranges from \$400–\$3,200/DALY (Assumption 3). These represent the most cost-effective opportunities in this cause.
 
 **Clean air policy and enforcement:**
 

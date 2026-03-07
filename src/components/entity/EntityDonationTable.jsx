@@ -74,7 +74,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
     },
     {
       key: 'categoryName',
-      label: 'Category',
+      label: 'Cause',
       render: (donation) => {
         // Get the primary category ID if it's not already in the donation object
         const categoryId = donation.categoryId || donation.primaryCategoryId;

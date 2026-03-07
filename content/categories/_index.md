@@ -1,8 +1,8 @@
 ---
-title: 'Effectiveness Categories'
+title: 'Effectiveness Causes'
 ---
 
-This directory contains information about effectiveness categories for donations.
+This directory contains information about effectiveness causes for donations.
 
 # General notes from research
 

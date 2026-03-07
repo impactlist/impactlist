@@ -70,7 +70,7 @@ const CategoryList = () => {
   const categoryColumns = [
     {
       key: 'name',
-      label: 'Category Name',
+      label: 'Cause Name',
       render: (category) => (
         <div className="max-w-[300px] break-words">
           <Link to={`/category/${encodeURIComponent(category.id)}`} className="impact-link text-sm font-medium">
@@ -84,8 +84,8 @@ const CategoryList = () => {
       label: 'Cost/Life',
       tooltip: (
         <div>
-          Cost/Life comes from our cost-effectiveness estimates for this category. It is the estimated donation needed
-          to save the equivalent of one life in this area.
+          Cost/Life comes from our cost-effectiveness estimates for this cause. It is the estimated donation needed to
+          save the equivalent of one life in this area.
         </div>
       ),
       render: (category) => {
@@ -101,7 +101,7 @@ const CategoryList = () => {
       label: 'Lives Saved',
       tooltip: (
         <div>
-          Expected lives saved from donations to this category, computed for each donation year and recipient/category
+          Expected lives saved from donations to this cause, computed for each donation year and recipient/cause
           assumptions.
         </div>
       ),
@@ -129,7 +129,7 @@ const CategoryList = () => {
         transition={{ duration: 0.3 }}
       >
         {/* Page Header */}
-        <PageHeader title="Categories" subtitle="Focus areas for charitable donations" />
+        <PageHeader title="Causes" subtitle="Focus areas for charitable giving" />
 
         {/* Categories Table Container */}
         <motion.div

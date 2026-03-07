@@ -18,7 +18,7 @@ We arrive at the cost per life by applying a multiplier to the baseline **Improv
 
 ## Description of effect
 
-This effect captures the welfare gains from creating "Charter Cities"—new urban jurisdictions in the Global South with special governance rights. While the baseline "Improving Institutions" category focuses on legislative reform in high-income nations (e.g., zoning in the US), CCI attempts to replicate the "Singapore effect" in Low-to-Middle Income Countries (LMICs). We model this as a high-variance, high-reward arbitrage: accepting a lower probability of success in exchange for vastly higher marginal utility of income.
+This effect captures the welfare gains from creating "Charter Cities": new urban jurisdictions in the Global South with special governance rights. While the baseline "Improving Institutions" cause focuses on legislative reform in high-income nations (e.g., zoning in the US), CCI attempts to replicate the "Singapore effect" in Low-to-Middle Income Countries (LMICs). We model this as a high-variance, high-reward arbitrage: accepting a lower probability of success in exchange for vastly higher marginal utility of income.
 
 ## Point Estimates
 

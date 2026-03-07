@@ -22,7 +22,7 @@ effects:
 
 _The following analysis was done on November 16th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-This category covers philanthropic funding for AI capabilities—projects that make AI systems more capable, available, and widely deployed, without being primarily focused on safety or alignment.
+This cause covers philanthropic funding for AI capabilities: projects that make AI systems more capable, available, and widely deployed, without being primarily focused on safety or alignment.
 
 We model **three distinct effects**:
 

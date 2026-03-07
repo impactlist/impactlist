@@ -10,7 +10,7 @@ effects:
 
 # Justification of cost per life
 
-We give the 'Other' category a cost per life value similar to some of our less effective categories, but not as bad as the worst ones.
+We give the 'Other' cause a cost per life value similar to some of our less effective causes, but not as bad as the worst ones.
 
 {{CONTRIBUTION_NOTE}}
 

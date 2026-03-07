@@ -16,7 +16,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 ## Description of effect
 
-This effect captures health gains from high-income-country opportunities in two categories: (1) biomedical research that accelerates new diagnostics, drugs, and care models; and (2) direct treatment/support programs such as smoking cessation, blood-pressure control, patient navigation, cataract care, and mental health services.
+This effect captures health gains from high-income-country opportunities in two broad areas: (1) biomedical research that accelerates new diagnostics, drugs, and care models; and (2) direct treatment/support programs such as smoking cessation, blood-pressure control, patient navigation, cataract care, and mental health services.
 
 ## Point Estimates
 

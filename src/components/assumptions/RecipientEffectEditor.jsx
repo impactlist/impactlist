@@ -277,7 +277,7 @@ const RecipientEffectEditor = ({
                       )}
                       {isDisabledByCategory && (
                         <span className={`effect-card__disabled-note ${isFullyDisabled ? 'effect-disabled' : ''}`}>
-                          (Disabled in category)
+                          (Disabled in cause)
                         </span>
                       )}
                     </div>

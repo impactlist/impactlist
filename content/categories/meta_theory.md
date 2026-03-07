@@ -60,7 +60,7 @@ Theoretical work (effective altruism philosophy, longtermism, public-facing book
 
 **Combined estimate:**
 
-Treating the category as roughly half movement-building (\$15–\$40/QALY) and half theory (\$50–\$200/QALY), and taking a logarithmic average, yields a point estimate of \$25/QALY. The range (\$4–\$300) reflects variation from strong multipliers with impactful theory to scenarios where many projects have little effect.
+Treating the cause as roughly half movement-building (\$15–\$40/QALY) and half theory (\$50–\$200/QALY), and taking a logarithmic average, yields a point estimate of \$25/QALY. The range (\$4–\$300) reflects variation from strong multipliers with impactful theory to scenarios where many projects have little effect.
 
 ### Start Time
 

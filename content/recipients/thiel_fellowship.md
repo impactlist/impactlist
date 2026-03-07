@@ -18,7 +18,7 @@ We arrive at the cost per life by applying a multiplier to the baseline **Standa
 
 ## Description of effect
 
-This effect captures the welfare gains from the **Thiel Fellowship**, which pays young people \$100,000 to drop out of college and pursue entrepreneurial or scientific projects. While the baseline "Standard Education" category focuses on increasing educational attainment (e.g., university scholarships, K-12 interventions), the Thiel Fellowship acts as a "talent acceleration" mechanism. We model this as shifting from a **Normal Distribution strategy** (lifting the average student's wages) to a **Power Law strategy** (uncapping the upside of outlier talent). The primary impact comes from accelerating the creation of high-impact technology companies (e.g., Ethereum, Figma) and the cultural shift against credentialism.
+This effect captures the welfare gains from the **Thiel Fellowship**, which pays young people \$100,000 to drop out of college and pursue entrepreneurial or scientific projects. While the baseline "Standard Education" cause focuses on increasing educational attainment (e.g., university scholarships, K-12 interventions), the Thiel Fellowship acts as a "talent acceleration" mechanism. We model this as shifting from a **Normal Distribution strategy** (lifting the average student's wages) to a **Power Law strategy** (uncapping the upside of outlier talent). The primary impact comes from accelerating the creation of high-impact technology companies (e.g., Ethereum, Figma) and the cultural shift against credentialism.
 
 ## Point Estimates
 

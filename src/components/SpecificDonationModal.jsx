@@ -216,7 +216,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     // For custom recipients, validate category
     if (!isExistingRecipient) {
       if (!selectedCategory) {
-        newErrors.category = 'Please select a category';
+        newErrors.category = 'Please select a cause';
       }
 
       const cleanedMultiplier = cleanNumberInput(multiplier);
@@ -461,7 +461,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Cause</label>
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
@@ -469,7 +469,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       errors.category ? 'border-red-300' : 'border-gray-300'
                     }`}
                   >
-                    <option value="">Select a category</option>
+                    <option value="">Select a cause</option>
                     {allCategories
                       .sort((a, b) => a.name.localeCompare(b.name))
                       .map((category) => (
@@ -525,11 +525,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             )}
           </div>
 
-          {/* Display information about selected recipient or category */}
+          {/* Display information about selected recipient or cause */}
           {customRecipientName && !isExistingRecipient && selectedCategory && (
             <div className="mb-4 p-3 bg-indigo-50 rounded-md">
               <p className="text-sm text-indigo-600">
-                Category: {allCategories.find((c) => c.id === selectedCategory)?.name || ''}
+                Cause: {allCategories.find((c) => c.id === selectedCategory)?.name || ''}
               </p>
             </div>
           )}

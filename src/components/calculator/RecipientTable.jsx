@@ -87,7 +87,7 @@ const RecipientTable = ({
             },
             {
               key: 'category',
-              label: 'Category',
+              label: 'Cause',
               render: (donation) => (
                 <CategoryDisplay
                   donation={donation}

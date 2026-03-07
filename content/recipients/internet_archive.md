@@ -18,7 +18,7 @@ We arrive at the cost per life by applying a multiplier to the baseline [Science
 
 ## Description of effect
 
-This effect captures the welfare gains from the universal preservation of digital knowledge (The Wayback Machine, Open Library). While the baseline "Science and Tech" category focuses on the expensive, high-risk process of _discovering new_ information (R&D), the Internet Archive focuses on the highly efficient process of _preventing the loss_ of existing information. We model this as "Civilizational Insurance": safeguarding the epistemic foundation upon which all other science, law, and culture rely.
+This effect captures the welfare gains from the universal preservation of digital knowledge (The Wayback Machine, Open Library). While the baseline "Science and Tech" cause focuses on the expensive, high-risk process of _discovering new_ information (R&D), the Internet Archive focuses on the highly efficient process of _preventing the loss_ of existing information. We model this as "Civilizational Insurance": safeguarding the epistemic foundation upon which all other science, law, and culture rely.
 
 ## Point Estimates
 

@@ -30,7 +30,7 @@ const EntityStatistics = ({
   const costPerLifeSubtext =
     defaultCostPerLifeText ||
     (stats.categoryCostPerLife !== undefined
-      ? `Category avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
+      ? `Cause avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
       : undefined);
 
   // Shared stat card definitions (defined once, used in multiple layouts)
@@ -77,7 +77,7 @@ const EntityStatistics = ({
   const focusAreaCard =
     stats.categoryBreakdown?.length === 1 ? (
       <StatisticsCard
-        label="Focus Area"
+        label="Cause Area"
         value={
           <Link to={`/category/${encodeURIComponent(stats.categoryBreakdown[0].id)}`} className="impact-link">
             {stats.categoryBreakdown[0].name}

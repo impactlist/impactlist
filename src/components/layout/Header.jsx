@@ -80,12 +80,12 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
             >
               Calculator
             </Link>
-            {/* Categories, Recipients, FAQ - visible on md+ */}
+            {/* Causes, Recipients, FAQ - visible on md+ */}
             <Link
               to="/categories"
               className={navLinkClass({ isActive: isCategories, visibilityClass: 'hidden md:inline-block' })}
             >
-              Categories
+              Causes
             </Link>
             <Link
               to="/recipients"
@@ -155,9 +155,9 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                 >
                   Calculator
                 </Link>
-                {/* Categories, Recipients, FAQ - shown on mobile and tablet (hidden on md+ where they're in main nav) */}
+                {/* Causes, Recipients, FAQ - shown on mobile and tablet (hidden on md+ where they're in main nav) */}
                 <Link to="/categories" className={navLinkClass({ isActive: isCategories })} onClick={closeMobileMenu}>
-                  Categories
+                  Causes
                 </Link>
                 <Link to="/recipients" className={navLinkClass({ isActive: isRecipients })} onClick={closeMobileMenu}>
                   Recipients

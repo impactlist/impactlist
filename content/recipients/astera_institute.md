@@ -14,7 +14,7 @@ categories:
     fraction: 0.10
 ---
 
-# Justification of cost per life for AI Existential Risk category
+# Justification of cost per life for the AI Existential Risk cause
 
 _The following analysis was done on December 18th 2025, written by Claude Opus 4.5 Thinking and edited by Impact List staff for clarity._
 

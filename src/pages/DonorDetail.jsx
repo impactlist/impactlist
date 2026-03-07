@@ -304,7 +304,7 @@ const DonorDetail = () => {
       // Add "Other" category
       if (otherDonationTotal > 0 || otherLivesSavedTotal !== 0) {
         topCategories.push({
-          name: 'Other Categories',
+          name: 'Other Causes',
           donationValue: otherDonationTotal,
           livesSavedValue: otherLivesSavedTotal,
           effectiveCostPerLife: otherLivesSavedTotal !== 0 ? otherDonationTotal / otherLivesSavedTotal : Infinity,
@@ -326,9 +326,9 @@ const DonorDetail = () => {
 
     // Sort the raw data by donation amount (largest first) for consistent positioning
     const sortedData = [...rawChartData].sort((a, b) => {
-      // Always put "Other Categories" at the bottom
-      if (a.name === 'Other Categories') return 1;
-      if (b.name === 'Other Categories') return -1;
+      // Always put "Other Causes" at the bottom
+      if (a.name === 'Other Causes') return 1;
+      if (b.name === 'Other Causes') return -1;
       return b.donationValue - a.donationValue;
     });
 
@@ -405,9 +405,9 @@ const DonorDetail = () => {
 
       // Sort data consistently (is this needed?)
       const sortedData = [...initialData].sort((a, b) => {
-        // Always put "Other Categories" at the bottom
-        if (a.name === 'Other Categories') return 1;
-        if (b.name === 'Other Categories') return -1;
+        // Always put "Other Causes" at the bottom
+        if (a.name === 'Other Causes') return 1;
+        if (b.name === 'Other Causes') return -1;
         return b.donationValue - a.donationValue;
       });
 

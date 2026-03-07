@@ -152,7 +152,7 @@ const RecipientList = () => {
     },
     {
       key: 'primaryCategoryName',
-      label: 'Focus Area',
+      label: 'Cause Area',
       render: (recipient) => (
         <div className="text-sm text-strong">
           {recipient.categoryNames.length === 1 ? (

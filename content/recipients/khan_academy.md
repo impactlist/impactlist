@@ -18,7 +18,7 @@ We arrive at the cost per life by applying a multiplier to the baseline **Educat
 
 ## Description of effect
 
-This effect captures the welfare gains from free, globally accessible digital education. While the baseline "Education" category focuses on high-touch, high-cost interventions in rich countries (e.g., intensive student advising or anti-bullying programs costing thousands per student), Khan Academy operates as a software platform. We model this as a "volume play": while the probability of a life-changing outcome per user is lower than intensive mentoring, the cost per user is orders of magnitude lower, and the reach extends into high-impact regions (Global South).
+This effect captures the welfare gains from free, globally accessible digital education. While the baseline "Education" cause focuses on high-touch, high-cost interventions in rich countries (e.g., intensive student advising or anti-bullying programs costing thousands per student), Khan Academy operates as a software platform. We model this as a "volume play": while the probability of a life-changing outcome per user is lower than intensive mentoring, the cost per user is orders of magnitude lower, and the reach extends into high-impact regions (Global South).
 
 ## Point Estimates
 

@@ -20,11 +20,11 @@ assumptions:
 ---
 
 This assumptions set removes the default chicken discount used in the
-[Animal Welfare](/category/animal-welfare) category and also applies the same
+[Animal Welfare](/category/animal-welfare) cause and also applies the same
 AI X-risk skepticism as the AI X-Risk Skeptic assumptions set.
 
-The category writeup currently assumes chickens have about 10% of the welfare range of humans,
+The cause writeup currently assumes chickens have about 10% of the welfare range of humans,
 which makes the default `costPerQALY` about 10 times worse than a human-equal weighting would imply.
-This assumptions set turns the category into that human-equal version while also disabling
+This assumptions set turns the cause into that human-equal version while also disabling
 [AI Existential Risk](/category/ai-risk) and the `population-doom` effect in
 [AGI Development](/category/ai-capabilities).

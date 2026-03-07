@@ -174,7 +174,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
       <EffectEditorHeader
         title={
           <>
-            Edit effects for category
+            Edit effects for cause
             <InfoTooltipIcon
               className="effect-editor-help"
               content="See the FAQ to learn how to edit these assumptions, and for a description of what effects are."

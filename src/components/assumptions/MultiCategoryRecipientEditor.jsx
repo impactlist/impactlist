@@ -226,7 +226,7 @@ const CategoryEffectSection = ({
                     )}
                     {isDisabledByCategory && (
                       <span className={`effect-card__disabled-note ${isFullyDisabled ? 'effect-disabled' : ''}`}>
-                        (Disabled in category)
+                        (Disabled in cause)
                       </span>
                     )}
                   </div>
@@ -430,7 +430,7 @@ const MultiCategoryRecipientEditor = ({
         }
         description={
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted">{categories.length} categories</span>
+            <span className="text-sm text-muted">{categories.length} causes</span>
             {hasTimeIntervals && (
               <YearSelector
                 value={previewYear}

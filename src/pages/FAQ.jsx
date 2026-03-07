@@ -81,13 +81,13 @@ const FAQ = () => {
                   How do you calculate the effectiveness of different charities?
                 </h3>
                 <p className="mb-3">
-                  Initially we've mostly focused on calculating the effectiveness of different categories of donations,
-                  such as global health, poverty, animal welfare, etc. We currently have 27 categories. You can see the
-                  effectiveness estimates for each category by going{' '}
+                  Initially we've mostly focused on calculating the effectiveness of different causes, such as global
+                  health, poverty, animal welfare, etc. We currently have 27 causes. You can see the effectiveness
+                  estimates for each cause by going{' '}
                   <a href="/categories" className="impact-link">
                     here
                   </a>{' '}
-                  and then clicking on the category you're interested in. The site also supports specifying the
+                  and then clicking on the cause you're interested in. The site also supports specifying the
                   effectiveness of specific charities. We've only done that for a handful so far, but plan to add more
                   in the future.
                 </p>
@@ -118,7 +118,7 @@ const FAQ = () => {
                 </h3>
                 <p className="mb-3">
                   Our goal is to make the assumptions and the details of the calculations as transparent as possible. We
-                  encourage you to read the justifications for the effectiveness estimates for each category, and see if
+                  encourage you to read the justifications for the effectiveness estimates for each cause, and see if
                   they seem reasonable to you. If not, you have a few options:
                 </p>
                 <ol className="list-decimal list-inside space-y-2 ml-2">
@@ -223,20 +223,20 @@ const FAQ = () => {
                   <div>
                     <p className="font-semibold">Global Parameters</p>
                     <p>
-                      Assumptions about the world as a whole that affect calculations for many charitable categories.
+                      Assumptions about the world as a whole that affect calculations for many charitable causes.
                       Examples include the population growth rate and the discount rate (how much less valuable future
                       life-years are compared to present life-years).
                     </p>
                   </div>
 
                   <div>
-                    <p className="font-semibold">Categories</p>
+                    <p className="font-semibold">Causes</p>
                     <p>
-                      Each category refers to a type of charitable activity. For instance "Global Health" refers to
+                      Each cause refers to a type of charitable activity. For instance "Global Health" refers to
                       donations to charities that aim to improve the health of the global population. When you edit a
-                      category, you'll see one or more effects describing different ways organizations in that category
-                      impact the world. Most categories have only one effect, but complex categories like "AGI
-                      Development" have multiple effects (e.g., productivity gains and catastrophic risk).
+                      cause, you'll see one or more effects describing different ways organizations in that cause impact
+                      the world. Most causes have only one effect, but complex causes like "AGI Development" have
+                      multiple effects (e.g., productivity gains and catastrophic risk).
                     </p>
                   </div>
 
@@ -244,12 +244,11 @@ const FAQ = () => {
                     <p className="font-semibold">Recipients</p>
                     <p className="mb-2">
                       Each recipient is an organization/charity that receives donations. A recipient can be associated
-                      with one or more categories. When editing a recipient, you'll see effects for every category
-                      they're associated with.
+                      with one or more causes. When editing a recipient, you'll see effects for every cause they're
+                      associated with.
                     </p>
                     <p>
-                      By default, each recipient inherits the assumptions of its categories. You can customize these
-                      using:
+                      By default, each recipient inherits the assumptions of its causes. You can customize these using:
                     </p>
                     <ul className="list-disc list-inside ml-2 mt-1">
                       <li>
@@ -268,7 +267,7 @@ const FAQ = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold mb-3">What types of effect can each category or recipient have?</h3>
+                <h3 className="text-xl font-bold mb-3">What types of effect can each cause or recipient have?</h3>
                 <p className="mb-4">There are currently two types of effects: "standard" and "population".</p>
 
                 <div className="space-y-4 ml-2">

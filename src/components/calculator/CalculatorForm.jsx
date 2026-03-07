@@ -5,7 +5,7 @@ import { formatLives, formatCurrency } from '../../utils/formatters';
 import YearSelector from '../shared/YearSelector';
 
 /**
- * Form component for the donation calculator to input category-based donations.
+ * Form component for the donation calculator to input cause-based donations.
  */
 const CalculatorForm = ({
   categories,
@@ -29,7 +29,7 @@ const CalculatorForm = ({
     <div className={`impact-surface p-6 ${className}`}>
       {/* Donation inputs header with reset button */}
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium text-strong">Donations by category</h3>
+        <h3 className="text-lg font-medium text-strong">Donations by cause</h3>
         <button onClick={onReset} className="impact-btn impact-btn--secondary impact-btn--sm inline-flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
             <path

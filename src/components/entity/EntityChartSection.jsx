@@ -23,17 +23,17 @@ const EntityChartSection = ({
 }) => {
   const chartTitle =
     entityType === 'donor'
-      ? `Donation Categories by ${chartView === 'donations' ? 'Amount' : 'Lives Saved'}`
-      : `Focus Areas by ${chartView === 'donations' ? 'Donation Amount' : 'Lives Saved'}`;
+      ? `Donation Causes by ${chartView === 'donations' ? 'Amount' : 'Lives Saved'}`
+      : `Cause Areas by ${chartView === 'donations' ? 'Donation Amount' : 'Lives Saved'}`;
 
   const chartDescription =
     entityType === 'donor'
       ? chartView === 'donations'
-        ? 'Showing distribution of known donations by category'
-        : 'Showing comparative impact (lives saved) by category'
+        ? 'Showing distribution of known donations by cause'
+        : 'Showing comparative impact (lives saved) by cause'
       : chartView === 'donations'
-        ? 'Distribution of donations across focus areas'
-        : 'Distribution of impact (lives saved) across focus areas';
+        ? 'Distribution of donations across cause areas'
+        : 'Distribution of impact (lives saved) across cause areas';
 
   // Colors for the chart bars
   const COLORS = [
@@ -87,7 +87,7 @@ const EntityChartSection = ({
             <>
               <p className="text-sm">{formatCurrency(value)}</p>
               <p className="text-xs text-muted">{`${percentage}% of known donations`}</p>
-              {entry.name !== 'Other Categories' && entry.categoryId && (
+              {entry.name !== 'Other Causes' && entry.categoryId && (
                 <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
                   <p className="text-xs text-muted">Cost per life: {formatCurrency(effectiveCostPerLife)}</p>
                   <p className="text-xs text-muted">Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}</p>
@@ -100,7 +100,7 @@ const EntityChartSection = ({
                 {formatNumber(Math.round(value))} lives {value < 0 ? 'lost' : 'saved'}
               </p>
               <p className="text-xs text-muted">{`${percentage}% of total impact`}</p>
-              {entry.name !== 'Other Categories' && entry.categoryId && (
+              {entry.name !== 'Other Causes' && entry.categoryId && (
                 <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
                   <p className="text-xs text-muted">Cost per life: {formatCurrency(effectiveCostPerLife)}</p>
                   <p className="text-xs text-muted">Donation amount: {formatCurrency(entry.donationValue)}</p>
@@ -120,7 +120,7 @@ const EntityChartSection = ({
     // Find the corresponding data entry to get the categoryId
     const dataEntry = chartData.find((item) => item.name === payload.value);
 
-    if (!dataEntry || !dataEntry.categoryId || dataEntry.name === 'Other Categories') {
+    if (!dataEntry || !dataEntry.categoryId || dataEntry.name === 'Other Causes') {
       return (
         <g transform={`translate(${x},${y})`}>
           <text x={-6} y={0} dy={4} textAnchor="end" fill="var(--text-strong)" fontSize={14}>
@@ -228,9 +228,7 @@ const EntityChartSection = ({
           animationBegin={0}
           animationEasing="ease-in-out"
           showLegend={true}
-          legendFormatter={() =>
-            chartView === 'donations' ? 'Donation Amount (By Category)' : 'Lives Saved (By Category)'
-          }
+          legendFormatter={() => (chartView === 'donations' ? 'Donation Amount (By Cause)' : 'Lives Saved (By Cause)')}
           renderYAxisTick={renderYAxisTick}
         />
       </div>

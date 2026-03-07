@@ -24,7 +24,7 @@ import YearSelector from './shared/YearSelector';
 
 const tabs = [
   { id: 'global', label: 'Global' },
-  { id: 'categories', label: 'Categories' },
+  { id: 'categories', label: 'Causes' },
   { id: 'recipients', label: 'Recipients' },
 ];
 
@@ -258,7 +258,7 @@ const AssumptionsEditor = forwardRef(
                 activeTab === 'global'
                   ? 'Reset Global'
                   : activeTab === 'categories'
-                    ? 'Reset Categories'
+                    ? 'Reset Causes'
                     : 'Reset Recipients'
               }
               hasErrors={Object.keys(globalForm.errors).length > 0}
@@ -287,7 +287,7 @@ const AssumptionsEditor = forwardRef(
                     label=""
                     className="assumptions-panel-context__year-selector"
                   />
-                  <span>{activeTab === 'categories' ? 'for each cause category:' : 'for each recipient:'}</span>
+                  <span>{activeTab === 'categories' ? 'for each cause:' : 'for each recipient:'}</span>
                 </>
               )}
             </div>

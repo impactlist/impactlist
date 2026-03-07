@@ -181,7 +181,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
               <a href="/category/animal-welfare" className="assumptions-link">
                 Animal Welfare
               </a>{' '}
-              category settings, or for any specific recipient in that category.
+              cause settings, or for any specific recipient in that cause.
             </p>
           </div>
         </div>

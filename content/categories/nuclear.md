@@ -14,7 +14,7 @@ effects:
 
 _The following analysis was done on November 13th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-Unlike a "normal" cause category where we compute the cost per life by estimating cost per QALY, donations to this category aim to avert a low-probability but catastrophic event. We define an event, estimate what fraction of the global population would be affected, determine how much the event would harm each person, and estimate the cost of reducing the event's likelihood by one in a million.
+Unlike a "normal" cause where we compute the cost per life by estimating cost per QALY, donations to this cause aim to avert a low-probability but catastrophic event. We define an event, estimate what fraction of the global population would be affected, determine how much the event would harm each person, and estimate the cost of reducing the event's likelihood by one in a million.
 
 ## Description of effect
 

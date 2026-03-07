@@ -14,7 +14,7 @@ effects:
 
 _The following analysis was done on November 15th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-Unlike a "normal" cause category where we estimate cost per QALY, donations to AI existential risk charities aim to avert a low-probability but truly catastrophic event. We define such an event, estimate how many people it would affect and harm, and estimate the cost of reducing its probability by one in a million.
+Unlike a "normal" cause where we estimate cost per QALY, donations to AI existential risk charities aim to avert a low-probability but truly catastrophic event. We define such an event, estimate how many people it would affect and harm, and estimate the cost of reducing its probability by one in a million.
 
 ## Description of effect
 

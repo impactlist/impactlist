@@ -15,7 +15,7 @@ assumptions:
           disabled: true
 ---
 
-This profile models a user who does not buy the case for AI existential risk.
+This assumptions set models a user who does not buy the case for AI existential risk.
 
 It turns off [AI Existential Risk](/category/ai-risk) entirely and also disables
 the `population-doom` effect inside [AGI Development](/category/ai-capabilities),

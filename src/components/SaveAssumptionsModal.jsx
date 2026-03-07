@@ -12,7 +12,7 @@ const getSubmitErrorMessage = (errorCode) => {
   }
 
   if (errorCode === 'reserved_curated_label') {
-    return 'That name is already used by a curated assumptions profile. Choose a different name.';
+    return 'That name is already used by a curated assumptions set. Choose a different name.';
   }
 
   if (errorCode === 'over_limit') {

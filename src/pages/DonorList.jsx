@@ -165,16 +165,14 @@ const DonorList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="impact-surface overflow-hidden">
-            <div className="overflow-x-auto">
-              <SortableTable
-                columns={donorColumns}
-                data={donorStats}
-                defaultSortColumn="totalLivesSaved"
-                defaultSortDirection="desc"
-                rankKey="rank"
-              />
-            </div>
+          <div className="impact-surface impact-surface--table">
+            <SortableTable
+              columns={donorColumns}
+              data={donorStats}
+              defaultSortColumn="totalLivesSaved"
+              defaultSortDirection="desc"
+              rankKey="rank"
+            />
           </div>
         </motion.div>
 

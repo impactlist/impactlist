@@ -199,17 +199,15 @@ const RecipientList = () => {
               <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
             </div>
           </div>
-          <div className="impact-surface overflow-hidden">
-            <div className="overflow-x-auto">
-              <SortableTable
-                columns={recipientColumns}
-                data={filteredRecipients}
-                defaultSortColumn="costPerLife"
-                defaultSortDirection="asc"
-                tiebreakColumn="totalLivesSaved"
-                tiebreakDirection="desc"
-              />
-            </div>
+          <div className="impact-surface impact-surface--table">
+            <SortableTable
+              columns={recipientColumns}
+              data={filteredRecipients}
+              defaultSortColumn="costPerLife"
+              defaultSortDirection="asc"
+              tiebreakColumn="totalLivesSaved"
+              tiebreakDirection="desc"
+            />
           </div>
         </motion.div>
       </motion.div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Tooltip from './Tooltip';
 
 const SortableTable = ({
@@ -12,6 +12,129 @@ const SortableTable = ({
 }) => {
   const [sortColumn, setSortColumn] = useState(defaultSortColumn);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
+  const [isHeaderStuck, setIsHeaderStuck] = useState(false);
+  const [columnWidths, setColumnWidths] = useState([]);
+  const [tableWidth, setTableWidth] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const tableRef = useRef(null);
+  const tableHeadRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const stickyTrackRef = useRef(null);
+
+  useEffect(() => {
+    const updateStickyState = () => {
+      if (!tableRef.current || !tableHeadRef.current) {
+        return;
+      }
+
+      const tableRect = tableRef.current.getBoundingClientRect();
+      const headerHeight = tableHeadRef.current.getBoundingClientRect().height;
+      const nextIsStuck = tableRect.top <= 0 && tableRect.bottom - headerHeight > 0;
+
+      setIsHeaderStuck((currentValue) => (currentValue === nextIsStuck ? currentValue : nextIsStuck));
+    };
+
+    let animationFrameId = null;
+
+    const requestUpdate = () => {
+      if (animationFrameId !== null) {
+        return;
+      }
+
+      animationFrameId = window.requestAnimationFrame(() => {
+        animationFrameId = null;
+        updateStickyState();
+      });
+    };
+
+    updateStickyState();
+    window.addEventListener('scroll', requestUpdate, true);
+    window.addEventListener('resize', requestUpdate);
+
+    return () => {
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+
+      window.removeEventListener('scroll', requestUpdate, true);
+      window.removeEventListener('resize', requestUpdate);
+    };
+  }, [data.length]);
+
+  useEffect(() => {
+    if (!tableRef.current || !tableHeadRef.current || !scrollContainerRef.current) {
+      return;
+    }
+
+    let animationFrameId = null;
+    const syncStickyTrack = (nextScrollLeft = 0) => {
+      if (!stickyTrackRef.current) {
+        return;
+      }
+
+      stickyTrackRef.current.style.setProperty('--impact-table-scroll-offset', `${-nextScrollLeft}px`);
+    };
+
+    const areWidthsEqual = (currentWidths, nextWidths) =>
+      currentWidths.length === nextWidths.length && currentWidths.every((width, index) => width === nextWidths[index]);
+
+    const measureLayout = () => {
+      if (!tableRef.current || !tableHeadRef.current || !scrollContainerRef.current) {
+        return;
+      }
+
+      const headerCells = Array.from(tableHeadRef.current.querySelectorAll('th'));
+      const nextColumnWidths = headerCells.map((cell) => Math.ceil(cell.getBoundingClientRect().width));
+      const nextTableWidth = Math.ceil(tableRef.current.getBoundingClientRect().width);
+      const nextHeaderHeight = Math.ceil(tableHeadRef.current.getBoundingClientRect().height);
+      const nextScrollLeft = scrollContainerRef.current.scrollLeft;
+
+      setColumnWidths((currentWidths) =>
+        areWidthsEqual(currentWidths, nextColumnWidths) ? currentWidths : nextColumnWidths
+      );
+      setTableWidth((currentWidth) => (currentWidth === nextTableWidth ? currentWidth : nextTableWidth));
+      setHeaderHeight((currentHeight) => (currentHeight === nextHeaderHeight ? currentHeight : nextHeaderHeight));
+      syncStickyTrack(nextScrollLeft);
+    };
+
+    const requestMeasure = () => {
+      if (animationFrameId !== null) {
+        return;
+      }
+
+      animationFrameId = window.requestAnimationFrame(() => {
+        animationFrameId = null;
+        measureLayout();
+      });
+    };
+
+    measureLayout();
+
+    if (typeof window.ResizeObserver !== 'undefined') {
+      const resizeObserver = new window.ResizeObserver(requestMeasure);
+      resizeObserver.observe(tableRef.current);
+      resizeObserver.observe(tableHeadRef.current);
+      resizeObserver.observe(scrollContainerRef.current);
+
+      return () => {
+        if (animationFrameId !== null) {
+          window.cancelAnimationFrame(animationFrameId);
+        }
+
+        resizeObserver.disconnect();
+      };
+    }
+
+    window.addEventListener('resize', requestMeasure);
+
+    return () => {
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+
+      window.removeEventListener('resize', requestMeasure);
+    };
+  }, [columns.length, data.length]);
 
   // Helper function to get column padding class
   const getColumnPadding = (columnKey) => {
@@ -162,58 +285,143 @@ const SortableTable = ({
     }
   };
 
-  return (
-    <table className="impact-table">
-      <thead>
-        <tr>
-          {columns.map((column) => (
-            <th
-              key={column.key}
-              scope="col"
-              className={`${getColumnPadding(column.key)} group cursor-pointer py-4 text-left transition-colors ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
-              onClick={() => handleSort(column.key)}
-            >
-              <div className="flex items-center">
-                {column.label}
-                {column.tooltip && (
-                  <Tooltip content={column.tooltip}>
-                    <svg
-                      className="ml-1 h-3.5 w-3.5 text-muted"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </Tooltip>
-                )}
-                {renderSortIndicator(column.key)}
-              </div>
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rankedData.map((item, index) => (
-          <tr key={`row-${index}`}>
-            {columns.map((column) => (
-              <td
-                key={`cell-${column.key}-${index}`}
-                className={`${getColumnPadding(column.key)} py-4 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
+  const getAriaSort = (columnKey) => {
+    if (sortColumn !== columnKey) {
+      return 'none';
+    }
+
+    return sortDirection === 'asc' ? 'ascending' : 'descending';
+  };
+
+  const renderTooltipIcon = () => (
+    <svg
+      className="h-3.5 w-3.5 text-muted"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+  );
+
+  const renderTableHeader = (instanceKey, isInteractive) => (
+    <thead ref={instanceKey === 'primary' ? tableHeadRef : undefined}>
+      <tr>
+        {columns.map((column) => (
+          <th
+            key={`${instanceKey}-${column.key}`}
+            scope="col"
+            aria-sort={getAriaSort(column.key)}
+            className={`${getColumnPadding(column.key)} group py-4 text-left ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
+          >
+            <div className="impact-table__header-inner">
+              <button
+                type="button"
+                className="impact-table__sort-button"
+                disabled={!isInteractive}
+                aria-hidden={!isInteractive}
+                aria-label={`Sort by ${column.label || column.key}`}
+                onClick={() => handleSort(column.key)}
               >
-                {column.render ? column.render(item) : item[column.key]}
-              </td>
-            ))}
-          </tr>
+                <span>{column.label}</span>
+                {renderSortIndicator(column.key)}
+              </button>
+              {column.tooltip &&
+                (isInteractive ? (
+                  <Tooltip content={column.tooltip}>{renderTooltipIcon()}</Tooltip>
+                ) : (
+                  <span className="impact-table__tooltip-icon" aria-hidden="true">
+                    {renderTooltipIcon()}
+                  </span>
+                ))}
+            </div>
+          </th>
         ))}
-      </tbody>
-    </table>
+      </tr>
+    </thead>
+  );
+
+  const renderColGroup = () => {
+    if (columnWidths.length !== columns.length) {
+      return null;
+    }
+
+    return (
+      <colgroup>
+        {columnWidths.map((width, index) => (
+          <col key={`col-${columns[index].key}`} style={{ width: `${width}px`, minWidth: `${width}px` }} />
+        ))}
+      </colgroup>
+    );
+  };
+
+  const showStickyHeader =
+    isHeaderStuck && headerHeight > 0 && tableWidth > 0 && columnWidths.length === columns.length;
+  const stickyShellStyle = headerHeight > 0 ? { '--impact-table-sticky-height': `${headerHeight}px` } : undefined;
+  const stickyTrackStyle =
+    tableWidth > 0
+      ? {
+          '--impact-table-scroll-offset': '0px',
+          width: `${tableWidth}px`,
+          minWidth: `${tableWidth}px`,
+        }
+      : undefined;
+
+  return (
+    <div
+      className="impact-table-shell"
+      data-header-stuck={showStickyHeader ? 'true' : 'false'}
+      style={stickyShellStyle}
+    >
+      <div className="impact-table-sticky-rail" data-visible={showStickyHeader ? 'true' : 'false'}>
+        <div className="impact-table-sticky-viewport">
+          <div ref={stickyTrackRef} className="impact-table-sticky-track" style={stickyTrackStyle}>
+            <table className="impact-table impact-table--sticky" role="presentation" aria-hidden={!showStickyHeader}>
+              {renderColGroup()}
+              {renderTableHeader('sticky', showStickyHeader)}
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div
+        ref={scrollContainerRef}
+        className="impact-table-scroll"
+        onScroll={(event) => {
+          if (stickyTrackRef.current) {
+            stickyTrackRef.current.style.setProperty(
+              '--impact-table-scroll-offset',
+              `${-event.currentTarget.scrollLeft}px`
+            );
+          }
+        }}
+      >
+        <table ref={tableRef} className="impact-table">
+          {renderColGroup()}
+          {renderTableHeader('primary', !showStickyHeader)}
+          <tbody>
+            {rankedData.map((item, index) => (
+              <tr key={`row-${index}`}>
+                {columns.map((column) => (
+                  <td
+                    key={`cell-${column.key}-${index}`}
+                    className={`${getColumnPadding(column.key)} py-4 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
+                  >
+                    {column.render ? column.render(item) : item[column.key]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 

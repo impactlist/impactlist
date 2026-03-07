@@ -138,17 +138,15 @@ const CategoryList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <div className="impact-surface overflow-hidden">
-            <div className="overflow-x-auto">
-              <SortableTable
-                columns={categoryColumns}
-                data={categoryStats}
-                defaultSortColumn="actualCostPerLife"
-                defaultSortDirection="asc"
-                tiebreakColumn="totalLivesSaved"
-                tiebreakDirection="desc"
-              />
-            </div>
+          <div className="impact-surface impact-surface--table">
+            <SortableTable
+              columns={categoryColumns}
+              data={categoryStats}
+              defaultSortColumn="actualCostPerLife"
+              defaultSortDirection="asc"
+              tiebreakColumn="totalLivesSaved"
+              tiebreakDirection="desc"
+            />
           </div>
         </motion.div>
       </motion.div>

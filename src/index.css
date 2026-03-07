@@ -49,6 +49,10 @@
     --shadow-1: 0 8px 24px -18px rgba(35, 30, 20, 0.4);
     --shadow-2: 0 24px 44px -30px rgba(35, 30, 20, 0.48);
     --shadow-focus: 0 0 0 3px rgba(11, 93, 102, 0.26);
+    --shadow-table-sticky: 0 18px 32px -28px color-mix(in srgb, var(--text-strong) 28%, transparent 72%);
+    --shadow-table-sticky-header: 0 12px 24px -22px color-mix(in srgb, var(--text-strong) 24%, transparent 76%);
+    --table-header-highlight: color-mix(in srgb, white 70%, transparent 30%);
+    --table-header-falloff: color-mix(in srgb, var(--text-strong) 12%, transparent 88%);
 
     --effect-disabled-filter: grayscale(100%);
     --effect-disabled-opacity: 0.62;
@@ -138,6 +142,10 @@
     box-shadow: var(--shadow-2);
   }
 
+  .impact-surface--table {
+    overflow: clip;
+  }
+
   .impact-surface--muted {
     background: color-mix(in srgb, var(--bg-surface-alt) 58%, white 42%);
   }
@@ -176,21 +184,177 @@
     border-spacing: 0;
   }
 
+  .impact-table-shell {
+    position: relative;
+    --impact-table-sticky-height: 0px;
+  }
+
+  .impact-table-sticky-rail {
+    position: sticky;
+    top: 0;
+    z-index: 24;
+    height: var(--impact-table-sticky-height);
+    margin-bottom: calc(var(--impact-table-sticky-height) * -1);
+    pointer-events: none;
+  }
+
+  .impact-table-sticky-rail[data-visible='false'] {
+    visibility: hidden;
+  }
+
+  .impact-table-sticky-viewport {
+    overflow: hidden;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    pointer-events: none;
+  }
+
+  .impact-table-sticky-track {
+    transform: translateX(var(--impact-table-scroll-offset, 0px));
+    will-change: transform;
+  }
+
+  .impact-table-sticky-rail[data-visible='true'] .impact-table-sticky-viewport {
+    pointer-events: auto;
+    box-shadow: var(--shadow-table-sticky);
+  }
+
+  .impact-table-scroll {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    isolation: isolate;
+    scrollbar-gutter: stable both-edges;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
   .impact-table thead {
-    background: color-mix(in srgb, var(--bg-surface-alt) 78%, white 22%);
+    background: transparent;
   }
 
   .impact-table thead th {
+    isolation: isolate;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, white 44%, transparent 56%) 0%,
+        color-mix(in srgb, white 12%, transparent 88%) 100%
+      ),
+      color-mix(in srgb, var(--bg-surface-alt) 82%, white 18%);
+    backdrop-filter: blur(14px) saturate(145%);
     font-size: 0.71rem;
     font-weight: 700;
     letter-spacing: 0.045em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--text-muted) 86%, black 14%);
     border-bottom: 1px solid color-mix(in srgb, var(--border-subtle) 82%, white 18%);
+    box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--border-subtle) 72%, white 28%);
+    transition:
+      background 180ms var(--ease-standard),
+      box-shadow 180ms var(--ease-standard),
+      color 180ms var(--ease-standard);
+  }
+
+  .impact-table__header-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .impact-table__sort-button {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.12rem;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .impact-table__sort-button:disabled {
+    cursor: default;
+  }
+
+  .impact-table__sort-button:focus-visible {
+    outline: none;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-focus);
+  }
+
+  .impact-table__tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .impact-table thead th:hover {
-    background: color-mix(in srgb, var(--accent-soft) 32%, white 68%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, white 52%, transparent 48%) 0%,
+        color-mix(in srgb, white 14%, transparent 86%) 100%
+      ),
+      color-mix(in srgb, var(--accent-soft) 24%, var(--bg-surface-alt) 76%);
+  }
+
+  .impact-table thead th::before,
+  .impact-table thead th::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+
+  .impact-table thead th::before {
+    top: 0;
+    height: 1px;
+    background: var(--table-header-highlight);
+    opacity: 0.72;
+  }
+
+  .impact-table thead th::after {
+    bottom: -1px;
+    height: 14px;
+    background: linear-gradient(180deg, var(--table-header-falloff), transparent);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 180ms var(--ease-standard),
+      transform 180ms var(--ease-standard);
+  }
+
+  .impact-table thead th:first-child {
+    border-top-left-radius: var(--radius-lg);
+  }
+
+  .impact-table thead th:last-child {
+    border-top-right-radius: var(--radius-lg);
+  }
+
+  .impact-table-sticky-rail[data-visible='true'] .impact-table thead th {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, white 58%, transparent 42%) 0%,
+        color-mix(in srgb, white 12%, transparent 88%) 100%
+      ),
+      color-mix(in srgb, var(--bg-surface-alt) 88%, white 12%);
+    box-shadow:
+      inset 0 -1px 0 color-mix(in srgb, var(--border-subtle) 62%, white 38%),
+      var(--shadow-table-sticky-header);
+  }
+
+  .impact-table-sticky-rail[data-visible='true'] .impact-table thead th::after {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .impact-table tbody tr:nth-child(odd) {

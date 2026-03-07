@@ -1010,6 +1010,59 @@ describe('AssumptionsPage routing integration', () => {
     expect(activeDefaultRow).toHaveAttribute('data-active', 'true');
   });
 
+  it('lets users load default assumptions when a non-default entry is active but edits match the default state', async () => {
+    const user = userEvent.setup();
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 160,
+        },
+      })
+    );
+
+    const seeded = saveNewAssumptions({
+      label: 'Current Custom',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 160,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected seeded local entry');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(assumptionsData.globalParameters.timeLimit));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    const panel = screen.getByText('Assumptions Library').closest('section');
+    await user.click(within(panel).getByRole('button', { name: /Show Inactive/i }));
+
+    const customRow = within(panel).getByText('Current Custom').closest('.assumptions-entry');
+    expect(customRow).toHaveAttribute('data-active', 'true');
+    expect(customRow).toHaveAttribute('data-dirty', 'true');
+
+    const defaultRow = within(panel).getByText('Default').closest('.assumptions-entry');
+    await user.click(within(defaultRow).getByRole('button', { name: 'Load' }));
+
+    await waitFor(() => {
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
+    });
+
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+    expect(screen.queryByText('Default assumptions are already loaded.')).not.toBeInTheDocument();
+    expect(within(panel).getByText('Default').closest('.assumptions-entry')).toHaveAttribute('data-active', 'true');
+  });
+
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
     const user = userEvent.setup();
     sessionStorage.setItem(
@@ -1296,7 +1349,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.keyboard('{Enter}');
 
     expect(
-      within(row).getByText('That name is already used by a curated assumptions profile. Choose a different name.')
+      within(row).getByText('That name is already used by a curated assumptions set. Choose a different name.')
     ).toBeInTheDocument();
   });
 
@@ -1363,7 +1416,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(saveButtons[saveButtons.length - 1]);
 
     expect(
-      screen.getByText('That name is already used by a curated assumptions profile. Choose a different name.')
+      screen.getByText('That name is already used by a curated assumptions set. Choose a different name.')
     ).toBeInTheDocument();
     expect(localStorage.getItem('savedAssumptions:v1')).toBeNull();
   });

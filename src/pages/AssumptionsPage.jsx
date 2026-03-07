@@ -260,7 +260,7 @@ const AssumptionsPage = () => {
       }
 
       if (entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
-        if (!isUsingCustomValues) {
+        if (!isUsingCustomValues && !activeSavedAssumptionsId) {
           showNotification('info', 'Default assumptions are already loaded.');
           return;
         }

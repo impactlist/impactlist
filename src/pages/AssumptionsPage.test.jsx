@@ -336,7 +336,10 @@ describe('AssumptionsPage routing integration', () => {
     expect(activeRow).toHaveAttribute('data-active', 'true');
 
     await user.click(within(activeRow).getByRole('button', { name: 'View description' }));
-    expect(screen.getByLabelText('Description:').value).toContain('10 billion years');
+    const descriptionModal = screen.getByRole('heading', { name: 'Longtermist' }).closest('.impact-modal');
+    expect(within(descriptionModal).getByRole('region', { name: 'Description:' })).toHaveTextContent(
+      '10 billion years'
+    );
     expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
   });
 
@@ -615,7 +618,10 @@ describe('AssumptionsPage routing integration', () => {
 
     const panel = screen.getByText('Assumptions Library').closest('section');
     await user.click(within(panel).getByRole('button', { name: 'View description' }));
-    expect(screen.getByLabelText('Description:')).toHaveValue('Immutable remote note');
+    const descriptionModal = screen.getByRole('heading', { name: 'Remote Description' }).closest('.impact-modal');
+    expect(within(descriptionModal).getByRole('region', { name: 'Description:' })).toHaveTextContent(
+      'Immutable remote note'
+    );
     expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
   });
 

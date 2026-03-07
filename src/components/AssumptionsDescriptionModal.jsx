@@ -5,6 +5,7 @@ import {
   ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD,
   MAX_ASSUMPTION_DESCRIPTION_LENGTH,
 } from '../constants/assumptionsDescription';
+import MarkdownContent from './shared/MarkdownContent';
 
 const AssumptionsDescriptionModal = ({
   isOpen,
@@ -67,19 +68,39 @@ const AssumptionsDescriptionModal = ({
                 </button>
               </div>
 
-              <label htmlFor="assumptions-description-modal" className="impact-modal__label mb-1 block">
-                Description:
-              </label>
-              <textarea
-                id="assumptions-description-modal"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                className="impact-modal__input impact-modal__textarea"
-                rows={6}
-                readOnly={isReadOnly}
-                maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
-                placeholder={isReadOnly ? 'No description available.' : 'Add notes about this assumptions set.'}
-              />
+              {isReadOnly ? (
+                <>
+                  <p id="assumptions-description-modal-label" className="impact-modal__label mb-1 block">
+                    Description:
+                  </p>
+                  <div
+                    aria-labelledby="assumptions-description-modal-label"
+                    className="impact-modal__markdown-scroll"
+                    role="region"
+                  >
+                    <MarkdownContent
+                      content={description || 'No description available.'}
+                      className="impact-modal__markdown"
+                      delay={0}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <label htmlFor="assumptions-description-modal" className="impact-modal__label mb-1 block">
+                    Description:
+                  </label>
+                  <textarea
+                    id="assumptions-description-modal"
+                    value={description}
+                    onChange={(event) => setDescription(event.target.value)}
+                    className="impact-modal__input impact-modal__textarea"
+                    rows={6}
+                    maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
+                    placeholder="Add notes about this assumptions set."
+                  />
+                </>
+              )}
               {!isReadOnly && description.length > ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD && (
                 <p className="impact-modal__char-count">
                   {MAX_ASSUMPTION_DESCRIPTION_LENGTH - description.length} characters remaining

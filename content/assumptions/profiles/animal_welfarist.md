@@ -19,10 +19,12 @@ assumptions:
           costPerQALY: 0.8
 ---
 
-This profile removes the default chicken discount used in the `Animal Welfare` category
-and also applies the same AI X-risk skepticism as `AI X-Risk Skeptic`.
+This profile removes the default chicken discount used in the
+[Animal Welfare](/category/animal-welfare) category and also applies the same
+AI X-risk skepticism as the AI X-Risk Skeptic profile.
 
 The category writeup currently assumes chickens have about 10% of the welfare range of humans,
 which makes the default `costPerQALY` about 10 times worse than a human-equal weighting would imply.
-This profile sets the category to that human-equal version while also disabling the
-`AI Existential Risk` category and the `population-doom` effect in `AGI Development`.
+This profile sets the category to that human-equal version while also disabling
+[AI Existential Risk](/category/ai-risk) and the `population-doom` effect in
+[AGI Development](/category/ai-capabilities).

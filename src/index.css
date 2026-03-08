@@ -101,6 +101,51 @@
     background: var(--bg-surface-alt);
   }
 
+  .calculator-page .impact-page__subtitle {
+    max-width: 46rem;
+  }
+
+  .calculator-page .impact-stat-card {
+    background: color-mix(in srgb, var(--bg-surface-alt) 72%, white 28%);
+    border-color: color-mix(in srgb, var(--border-subtle) 88%, white 12%);
+  }
+
+  .calculator-cause-card {
+    background: color-mix(in srgb, var(--bg-surface-alt) 78%, white 22%);
+    border: 1px solid color-mix(in srgb, var(--border-subtle) 88%, white 12%);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-1);
+    transition:
+      border-color 160ms var(--ease-standard),
+      box-shadow 160ms var(--ease-standard),
+      transform 160ms var(--ease-standard);
+  }
+
+  .calculator-cause-card:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--accent) 26%, var(--border-subtle) 74%);
+    box-shadow: 0 14px 24px -22px rgba(35, 30, 20, 0.5);
+  }
+
+  .calculator-cause-card__input {
+    border: 1px solid color-mix(in srgb, var(--border-subtle) 84%, white 16%);
+    background: color-mix(in srgb, white 92%, var(--bg-surface-alt) 8%);
+  }
+
+  .calculator-cause-card__input:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+
+  .calculator-table-frame {
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid color-mix(in srgb, var(--border-subtle) 82%, white 18%);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--bg-surface) 86%, var(--bg-surface-alt) 14%);
+  }
+
   .impact-page {
     min-height: 100vh;
     background: var(--bg-canvas-strong);

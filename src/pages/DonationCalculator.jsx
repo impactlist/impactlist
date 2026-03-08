@@ -356,7 +356,7 @@ const DonationCalculator = () => {
     <>
       <BackButton to="/" label="Back to top donors" />
       <motion.div
-        className="impact-page flex flex-col items-center"
+        className="impact-page calculator-page flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

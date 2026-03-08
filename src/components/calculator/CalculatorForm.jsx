@@ -26,7 +26,7 @@ const CalculatorForm = ({
   };
 
   return (
-    <div className={`impact-surface p-6 ${className}`}>
+    <div className={`assumptions-shell p-6 ${className}`}>
       {/* Donation inputs header with reset button */}
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium text-strong">Donations by cause</h3>
@@ -61,10 +61,7 @@ const CalculatorForm = ({
           const costPerLife = getCostPerLifeForCategory(category.id);
 
           return (
-            <div
-              key={category.id}
-              className="px-4 py-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
-            >
+            <div key={category.id} className="calculator-cause-card px-4 py-2">
               <div className="flex justify-between items-start mb-1">
                 <label className="text-sm font-medium text-strong" htmlFor={`donation-${category.id}`}>
                   <Link to={`/category/${encodeURIComponent(category.id)}`} className="impact-link">
@@ -81,7 +78,7 @@ const CalculatorForm = ({
                   inputMode="decimal"
                   value={formatDonationInput(amount)}
                   onChange={(e) => onDonationChange(category.id, e.target.value)}
-                  className="w-full rounded border border-[var(--border-subtle)] px-2 py-0.5 text-sm leading-tight focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                  className="calculator-cause-card__input w-full rounded px-2 py-0.5 text-sm leading-tight"
                   placeholder="0"
                 />
               </div>

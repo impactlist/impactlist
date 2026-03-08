@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
@@ -12,7 +12,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const [customRecipientName, setCustomRecipientName] = useState('');
   const [amount, setAmount] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [multiplier, setMultiplier] = useState('');
+  const [customCostPerLife, setCustomCostPerLife] = useState('');
   const [donationYear, setDonationYear] = useState(getCurrentYear().toString());
   const [errors, setErrors] = useState({});
   const [isExistingRecipient, setIsExistingRecipient] = useState(true);
@@ -37,6 +37,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
   // Track highlighted item for keyboard navigation
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [hasEditedCustomCostPerLife, setHasEditedCustomCostPerLife] = useState(false);
 
   // Filtered recipients based on search
   const filteredRecipients = useMemo(() => {
@@ -48,6 +49,26 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       .sort((a, b) => a.name.localeCompare(b.name))
       .slice(0, 10); // Limit to first 10 results
   }, [searchTerm, allRecipients, showDropdown]);
+
+  const getDefaultCustomCostPerLife = useCallback(
+    (categoryId, year = null) => {
+      if (!categoryId) {
+        return '';
+      }
+
+      // `year` is passed explicitly when hydrating an existing saved donation.
+      // During normal modal interaction, we derive it from the current year field state.
+      const parsedDonationYear = parseInt(donationYear, 10);
+      const fallbackYear =
+        !donationYear || isNaN(parsedDonationYear) || parsedDonationYear < 1900 || parsedDonationYear > getCurrentYear()
+          ? getCurrentYear()
+          : parsedDonationYear;
+      const yearToUse = year ?? fallbackYear;
+
+      return String(getCostPerLifeFromCombined(combinedAssumptions, categoryId, yearToUse));
+    },
+    [combinedAssumptions, donationYear]
+  );
 
   // Initialize with editing data if provided
   useEffect(() => {
@@ -65,8 +86,21 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         setIsExistingRecipient(false);
         setCustomRecipientName(editingDonation.recipientName);
         setSelectedCategory(editingDonation.categoryId);
-        if (editingDonation.multiplier) {
-          setMultiplier(editingDonation.multiplier.toString());
+        const editingYear = editingDonation.date ? parseInt(editingDonation.date, 10) : getCurrentYear();
+        if (editingDonation.customCostPerLife !== undefined && editingDonation.customCostPerLife !== null) {
+          setCustomCostPerLife(editingDonation.customCostPerLife.toString());
+          setHasEditedCustomCostPerLife(true);
+        } else if (editingDonation.multiplier) {
+          const baseCostPerLife = getCostPerLifeFromCombined(
+            combinedAssumptions,
+            editingDonation.categoryId,
+            editingYear
+          );
+          setCustomCostPerLife(String(baseCostPerLife * editingDonation.multiplier));
+          setHasEditedCustomCostPerLife(true);
+        } else if (editingDonation.categoryId) {
+          setCustomCostPerLife(getDefaultCustomCostPerLife(editingDonation.categoryId, editingYear));
+          setHasEditedCustomCostPerLife(false);
         }
       } else {
         setIsExistingRecipient(true);
@@ -81,7 +115,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
     // Always hide dropdown when initializing
     setShowDropdown(false);
-  }, [editingDonation, isOpen, allRecipients]);
+  }, [allRecipients, combinedAssumptions, editingDonation, getDefaultCustomCostPerLife, isOpen]);
 
   // Reset highlighted index when filtered results change
   useEffect(() => {
@@ -94,13 +128,22 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     setCustomRecipientName('');
     setAmount('');
     setSelectedCategory('');
-    setMultiplier('');
+    setCustomCostPerLife('');
     setDonationYear(getCurrentYear().toString());
     setErrors({});
     setIsExistingRecipient(true);
     setShowDropdown(false);
     setHighlightedIndex(-1);
+    setHasEditedCustomCostPerLife(false);
   };
+
+  useEffect(() => {
+    if (isExistingRecipient || !selectedCategory || hasEditedCustomCostPerLife) {
+      return;
+    }
+
+    setCustomCostPerLife(getDefaultCustomCostPerLife(selectedCategory));
+  }, [getDefaultCustomCostPerLife, hasEditedCustomCostPerLife, isExistingRecipient, selectedCategory]);
 
   const handleSelectRecipient = (recipient) => {
     setSelectedRecipient(recipient);
@@ -219,15 +262,15 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         newErrors.category = 'Please select a cause';
       }
 
-      const cleanedMultiplier = cleanNumberInput(multiplier);
-
-      // Validate multiplier if provided
-      if (cleanedMultiplier) {
-        const multiplierNum = Number(cleanedMultiplier);
-        if (isNaN(multiplierNum)) {
-          newErrors.multiplier = 'Please enter a valid multiplier';
-        } else if (multiplierNum <= 0) {
-          newErrors.multiplier = 'Multiplier must be greater than zero';
+      const cleanedCustomCostPerLife = cleanNumberInput(customCostPerLife);
+      if (!cleanedCustomCostPerLife) {
+        newErrors.customCostPerLife = 'Please enter a valid cost per life';
+      } else {
+        const customCostPerLifeNum = Number(cleanedCustomCostPerLife);
+        if (isNaN(customCostPerLifeNum)) {
+          newErrors.customCostPerLife = 'Please enter a valid cost per life';
+        } else if (customCostPerLifeNum === 0) {
+          newErrors.customCostPerLife = 'Cost per life cannot be zero';
         }
       }
     }
@@ -249,12 +292,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       // Add category and effectiveness data for custom recipients
       if (!isExistingRecipient) {
         donationData.categoryId = selectedCategory;
-
-        const cleanedMultiplier = cleanNumberInput(multiplier);
-
-        if (cleanedMultiplier) {
-          donationData.multiplier = Number(cleanedMultiplier);
-        }
+        donationData.customCostPerLife = Number(cleanNumberInput(customCostPerLife));
       }
 
       onSave(donationData);
@@ -287,14 +325,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, yearToUse);
       return cleanedAmount / recipientCostPerLife;
     } else if (!isExistingRecipient && selectedCategory) {
-      let effectiveCostPerLife;
+      let effectiveCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, yearToUse);
 
-      if (multiplier && !isNaN(Number(cleanNumberInput(multiplier)))) {
-        const multiplierValue = Number(cleanNumberInput(multiplier));
-        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, yearToUse);
-        effectiveCostPerLife = baseCostPerLife * multiplierValue;
-      } else {
-        effectiveCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, yearToUse);
+      if (customCostPerLife && !isNaN(Number(cleanNumberInput(customCostPerLife)))) {
+        effectiveCostPerLife = Number(cleanNumberInput(customCostPerLife));
       }
 
       return cleanedAmount / effectiveCostPerLife;
@@ -445,8 +479,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             ) : (
               <div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Recipient Name</label>
+                  <label htmlFor="custom-recipient-name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Recipient Name
+                  </label>
                   <input
+                    id="custom-recipient-name"
                     type="text"
                     value={customRecipientName}
                     onChange={(e) => setCustomRecipientName(e.target.value)}
@@ -461,10 +498,18 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Cause</label>
+                  <label htmlFor="custom-recipient-cause" className="block text-sm font-medium text-gray-700 mb-1">
+                    Cause
+                  </label>
                   <select
+                    id="custom-recipient-cause"
                     value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    onChange={(e) => {
+                      const nextCategory = e.target.value;
+                      setSelectedCategory(nextCategory);
+                      setHasEditedCustomCostPerLife(false);
+                      setCustomCostPerLife(nextCategory ? getDefaultCustomCostPerLife(nextCategory) : '');
+                    }}
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                       errors.category ? 'border-red-300' : 'border-gray-300'
                     }`}
@@ -490,34 +535,37 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Cost per life multiplier</label>
+                  <label
+                    htmlFor="custom-recipient-cost-per-life"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Cost per life
+                  </label>
                   <input
+                    id="custom-recipient-cost-per-life"
                     type="text"
-                    inputMode="text"
-                    value={formatWithCommas(multiplier)}
+                    inputMode="decimal"
+                    value={formatWithCommas(customCostPerLife)}
                     onChange={(e) => {
                       const newValue = e.target.value;
-                      setMultiplier(newValue);
+                      setCustomCostPerLife(newValue);
+                      setHasEditedCustomCostPerLife(true);
                     }}
-                    placeholder="1.0"
+                    placeholder={
+                      selectedCategory ? formatWithCommas(getDefaultCustomCostPerLife(selectedCategory)) : '0'
+                    }
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.multiplier ? 'border-red-300' : 'border-gray-300'
+                      errors.customCostPerLife ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
-                  {errors.multiplier && <p className="mt-1 text-sm text-danger">{errors.multiplier}</p>}
+                  {errors.customCostPerLife && <p className="mt-1 text-sm text-danger">{errors.customCostPerLife}</p>}
                   <p className="mt-1 text-xs text-gray-500">
-                    A multiplier of 2 means the recipient is half as effective (2x cost per life)
+                    This starts at the selected cause&apos;s current cost per life, and you can edit it for this
+                    recipient.
                   </p>
-                  {multiplier && selectedCategory && !isNaN(Number(cleanNumberInput(multiplier))) && (
+                  {customCostPerLife && !isNaN(Number(cleanNumberInput(customCostPerLife))) && (
                     <p className="mt-1 text-xs text-gray-500">
-                      Resulting cost per life:{' '}
-                      {formatCurrency(
-                        getCostPerLifeFromCombined(
-                          combinedAssumptions,
-                          selectedCategory,
-                          getValidYearForCalculation()
-                        ) * Number(cleanNumberInput(multiplier))
-                      )}
+                      Recipient cost per life: {formatCurrency(Number(cleanNumberInput(customCostPerLife)))}
                     </p>
                   )}
                 </div>

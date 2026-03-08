@@ -50,6 +50,26 @@ const DonationCalculator = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDonation, setEditingDonation] = useState(null);
 
+  const getCustomRecipientCostPerLife = useCallback(
+    (donation, donationYear) => {
+      if (!donation?.isCustomRecipient || !donation.categoryId) {
+        return null;
+      }
+
+      if (donation.customCostPerLife !== undefined && donation.customCostPerLife !== null) {
+        return Number(donation.customCostPerLife);
+      }
+
+      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, donationYear);
+      if (donation.multiplier) {
+        return baseCostPerLife * donation.multiplier;
+      }
+
+      return baseCostPerLife;
+    },
+    [combinedAssumptions]
+  );
+
   // Calculate donor rank based on lives saved - now wrapped in useCallback
   const calculateDonorRank = useCallback(
     (lives) => {
@@ -129,21 +149,6 @@ const DonationCalculator = () => {
       throw new Error('combinedAssumptions is required but does not exist.');
     }
 
-    // Helper function to calculate cost per life for custom recipients
-    const calculateCustomRecipientCostPerLife = (donation, currentYear) => {
-      if (!donation.isCustomRecipient || !donation.categoryId) {
-        return null;
-      }
-
-      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, currentYear);
-
-      if (donation.multiplier) {
-        return baseCostPerLife * donation.multiplier;
-      }
-
-      return baseCostPerLife;
-    };
-
     let totalAmount = 0;
     let totalLives = 0;
 
@@ -176,7 +181,7 @@ const DonationCalculator = () => {
 
       if (donation.isCustomRecipient && donation.categoryId) {
         // For custom recipients, use the helper function
-        const costPerLife = calculateCustomRecipientCostPerLife(donation, donationYear);
+        const costPerLife = getCustomRecipientCostPerLife(donation, donationYear);
         livesSaved = donation.amount / costPerLife;
       } else {
         // For existing recipients, find the appropriate recipient ID
@@ -214,7 +219,15 @@ const DonationCalculator = () => {
     } else {
       setDonorRank(null);
     }
-  }, [donations, specificDonations, combinedAssumptions, categories, calculateDonorRank, categoryYear]);
+  }, [
+    donations,
+    specificDonations,
+    combinedAssumptions,
+    categories,
+    calculateDonorRank,
+    categoryYear,
+    getCustomRecipientCostPerLife,
+  ]);
 
   // Save donations to localStorage when they change
   useEffect(() => {
@@ -311,9 +324,7 @@ const DonationCalculator = () => {
   const calculateLivesSavedForSpecificDonation = (donation) => {
     const donationYear = getDonationYear(donation);
     if (donation.isCustomRecipient && donation.categoryId) {
-      // For custom recipients, calculate cost per life with multiplier
-      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, donationYear);
-      const costPerLife = donation.multiplier ? baseCostPerLife * donation.multiplier : baseCostPerLife;
+      const costPerLife = getCustomRecipientCostPerLife(donation, donationYear);
       return donation.amount / costPerLife;
     } else {
       // For existing recipients, find the recipient in our data
@@ -337,10 +348,8 @@ const DonationCalculator = () => {
   // Get cost per life for a specific donation (for display in the table)
   const getCostPerLifeForSpecificDonation = (donation) => {
     const donationYear = getDonationYear(donation);
-    // For custom recipients, calculate cost per life with multiplier
     if (donation.isCustomRecipient && donation.categoryId) {
-      const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, donation.categoryId, donationYear);
-      return donation.multiplier ? baseCostPerLife * donation.multiplier : baseCostPerLife;
+      return getCustomRecipientCostPerLife(donation, donationYear);
     } else {
       // For existing recipients, get cost per life using combined assumptions
       const recipientId = combinedAssumptions.findRecipientId(donation.recipientName);

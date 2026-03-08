@@ -361,10 +361,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   return (
     <div
       data-testid="specific-donation-modal"
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black bg-opacity-50 p-4 sm:items-center"
     >
       <motion.div
-        className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden"
+        className="my-auto max-h-[calc(100vh-2rem)] w-full max-w-lg overflow-y-auto rounded-lg bg-white shadow-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

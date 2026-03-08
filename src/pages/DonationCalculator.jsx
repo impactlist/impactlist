@@ -397,8 +397,8 @@ const DonationCalculator = () => {
           <div className="h-10"></div>
 
           {/* Instruction text */}
-          <p className="mb-6 px-2 text-lg text-muted">
-            Enter your donation amounts to see your impact based on past or future donations.
+          <p className="mb-6 px-2 text-lg font-semibold text-muted">
+            Enter your donation amounts to see your impact based on past or future donations:
           </p>
 
           {/* Specific Donations - Using the new RecipientTable component */}

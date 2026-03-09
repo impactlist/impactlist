@@ -338,18 +338,16 @@ const FAQ = () => {
             >
               <p className="mb-4">There are currently two types of effects: "standard" and "population".</p>
 
-              <div className="space-y-4 ml-2">
-                <div>
-                  <p className="font-semibold">Standard Effects</p>
-                  <p className="mb-2">
+              <div className="faq-effect-groups mt-5">
+                <section className="faq-effect-group">
+                  <p className="faq-effect-group__title">Standard Effects</p>
+                  <p className="mb-3">
                     The most intuitive type. The more money you spend, the more impact you get. For example, a charity
                     providing mosquito nets can buy more nets with more donations, creating a direct relationship
                     between funding and impact.
                   </p>
-                  <p className="mb-1">
-                    <strong>Parameters:</strong>
-                  </p>
-                  <ul className="list-disc list-inside ml-2">
+                  <p className="faq-effect-group__subheading">Parameters</p>
+                  <ul className="faq-effect-group__list list-disc list-inside ml-2">
                     <li>
                       <strong>Cost per QALY:</strong> The wellbeing produced per dollar donated (see QALY explanation
                       above)
@@ -361,19 +359,17 @@ const FAQ = () => {
                       <strong>Duration:</strong> How many years the effect lasts (benefits assumed evenly distributed)
                     </li>
                   </ul>
-                </div>
+                </section>
 
-                <div>
-                  <p className="font-semibold">Population Effects</p>
-                  <p className="mb-2">
+                <section className="faq-effect-group">
+                  <p className="faq-effect-group__title">Population Effects</p>
+                  <p className="mb-3">
                     Effects with a small probability of occurring, but that affect a large fraction of the population if
                     they do. For example, a pandemic that kills 10% of the population has a small probability of
                     happening, but would affect billions of people.
                   </p>
-                  <p className="mb-1">
-                    <strong>Parameters:</strong>
-                  </p>
-                  <ul className="list-disc list-inside ml-2">
+                  <p className="faq-effect-group__subheading">Parameters</p>
+                  <ul className="faq-effect-group__list list-disc list-inside ml-2">
                     <li>
                       <strong>Cost per microprobability:</strong> How much donations change the likelihood of an event
                       (a microprobability = 1 in 1,000,000 chance)
@@ -390,7 +386,7 @@ const FAQ = () => {
                       <strong>Start time / Duration:</strong> Same meaning as for the standard effects
                     </li>
                   </ul>
-                </div>
+                </section>
               </div>
             </FAQCard>
 

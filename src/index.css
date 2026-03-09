@@ -538,8 +538,7 @@
   .faq-card {
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--border-subtle) 80%, white 20%);
-    background:
-      linear-gradient(180deg, color-mix(in srgb, var(--bg-surface) 92%, white 8%) 0%, var(--bg-surface) 100%);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-surface) 92%, white 8%) 0%, var(--bg-surface) 100%);
     box-shadow: 0 16px 28px -26px rgba(31, 24, 14, 0.45);
   }
 
@@ -616,6 +615,38 @@
 
   .impact-faq p.font-semibold {
     color: var(--text-strong);
+  }
+
+  .faq-effect-groups {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .faq-effect-group {
+    padding: 0.95rem 1rem 1rem;
+    background: color-mix(in srgb, var(--bg-surface-alt) 52%, white 48%);
+    border: 1px solid color-mix(in srgb, var(--border-subtle) 82%, white 18%);
+    border-radius: var(--radius-md);
+  }
+
+  .faq-effect-group__title {
+    margin-bottom: 0.35rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-strong);
+  }
+
+  .faq-effect-group__subheading {
+    margin-bottom: 0.35rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+
+  .faq-effect-group__list {
+    margin-top: 0;
   }
 
   .impact-faq a {

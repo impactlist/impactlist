@@ -76,6 +76,9 @@ const openAssumptionsLibraryMenu = async (user) => {
 
 const getAssumptionsLibraryRow = (container, label) => within(container).getByText(label).closest('.assumptions-entry');
 
+const getAssumptionsLibrarySummary = () =>
+  getAssumptionsLibrarySection().querySelector('.saved-assumptions-panel__summary');
+
 describe('AssumptionsPage routing integration', () => {
   beforeEach(() => {
     localStorage.clear();
@@ -348,9 +351,9 @@ describe('AssumptionsPage routing integration', () => {
     });
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
 
-    const { menu: activeMenu } = await openAssumptionsLibraryMenu(user);
-    const activeRow = getAssumptionsLibraryRow(activeMenu, 'Longtermist');
+    const activeRow = getAssumptionsLibrarySummary();
     expect(activeRow).toHaveAttribute('data-active', 'true');
+    expect(within(activeRow).getByText('Longtermist')).toBeInTheDocument();
 
     await user.click(within(activeRow).getByRole('button', { name: 'View description' }));
     const descriptionModal = screen.getByRole('heading', { name: 'Longtermist' }).closest('.impact-modal');
@@ -421,8 +424,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(saveButtons[saveButtons.length - 1]);
 
     expect(await screen.findByText('My Local Snapshot')).toBeInTheDocument();
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const savedRow = getAssumptionsLibraryRow(menu, 'My Local Snapshot');
+    const savedRow = getAssumptionsLibrarySummary();
     await user.click(within(savedRow).getByRole('button', { name: 'View description' }));
     const descriptionModal = screen.getByRole('heading', { name: 'My Local Snapshot' }).closest('.impact-modal');
     expect(within(descriptionModal).getByLabelText('Description:')).toHaveValue(
@@ -430,8 +432,9 @@ describe('AssumptionsPage routing integration', () => {
     );
     expect(within(descriptionModal).getByRole('button', { name: 'Save Description' })).toBeInTheDocument();
     await user.click(within(descriptionModal).getByRole('button', { name: 'Cancel' }));
-    const { menu: refreshedMenu } = await openAssumptionsLibraryMenu(user);
-    expect(getAssumptionsLibraryRow(refreshedMenu, 'My Local Snapshot')).toHaveAttribute('data-active', 'true');
+    const summaryRow = getAssumptionsLibrarySummary();
+    expect(summaryRow).toHaveAttribute('data-active', 'true');
+    expect(within(summaryRow).getByText('My Local Snapshot')).toBeInTheDocument();
 
     const savedRaw = localStorage.getItem('savedAssumptions:v1');
     expect(savedRaw).toBeTruthy();
@@ -530,8 +533,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const row = getAssumptionsLibraryRow(menu, 'Described Entry');
+    const row = getAssumptionsLibrarySummary();
     await user.click(within(row).getByRole('button', { name: 'View description' }));
     const descriptionInput = screen.getByLabelText('Description:');
     expect(descriptionInput).toHaveValue('Original description');
@@ -564,8 +566,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const row = getAssumptionsLibraryRow(menu, 'Dirty Description');
+    const row = getAssumptionsLibrarySummary();
     await user.click(within(row).getByRole('button', { name: 'View description' }));
     const descriptionInput = screen.getByLabelText('Description:');
     await user.clear(descriptionInput);
@@ -598,8 +599,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const row = getAssumptionsLibraryRow(menu, 'Cancel Closes');
+    const row = getAssumptionsLibrarySummary();
     await user.click(within(row).getByRole('button', { name: 'View description' }));
     const descriptionInput = screen.getByLabelText('Description:');
     await user.clear(descriptionInput);
@@ -633,8 +633,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const row = getAssumptionsLibraryRow(menu, 'Remote Description');
+    const row = getAssumptionsLibrarySummary();
     await user.click(within(row).getByRole('button', { name: 'View description' }));
     const descriptionModal = screen.getByRole('heading', { name: 'Remote Description' }).closest('.impact-modal');
     expect(within(descriptionModal).getByRole('region', { name: 'Description:' })).toHaveTextContent(
@@ -778,8 +777,8 @@ describe('AssumptionsPage routing integration', () => {
       expect(entries[0].source).toBe('local');
     });
 
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const row = getAssumptionsLibraryRow(menu, 'My Snapshot');
+    const row = getAssumptionsLibrarySummary();
+    expect(within(row).getByText('My Snapshot')).toBeInTheDocument();
     expect(within(row).getByText('Remote')).toBeInTheDocument();
     expect(within(row).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
 
@@ -831,9 +830,9 @@ describe('AssumptionsPage routing integration', () => {
       expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(entries[0].id);
     });
 
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const row = getAssumptionsLibraryRow(menu, 'custom-slug-185');
+    const row = getAssumptionsLibrarySummary();
     expect(row).toHaveAttribute('data-active', 'true');
+    expect(within(row).getByText('custom-slug-185')).toBeInTheDocument();
     expect(within(row).getByText('Remote')).toBeInTheDocument();
 
     expect(
@@ -1022,9 +1021,9 @@ describe('AssumptionsPage routing integration', () => {
     expect(sessionStorage.getItem('customEffectsData')).toBeNull();
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
 
-    const { menu: activeMenu } = await openAssumptionsLibraryMenu(user);
-    const activeDefaultRow = getAssumptionsLibraryRow(activeMenu, 'Default');
+    const activeDefaultRow = getAssumptionsLibrarySummary();
     expect(activeDefaultRow).toHaveAttribute('data-active', 'true');
+    expect(within(activeDefaultRow).getByText('Default')).toBeInTheDocument();
   });
 
   it('lets users load default assumptions when a non-default entry is active but edits match the default state', async () => {
@@ -1061,11 +1060,11 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, String(assumptionsData.globalParameters.timeLimit));
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const customRow = getAssumptionsLibraryRow(menu, 'Current Custom');
+    const customRow = getAssumptionsLibrarySummary();
     expect(customRow).toHaveAttribute('data-active', 'true');
     expect(customRow).toHaveAttribute('data-dirty', 'true');
 
+    const { menu } = await openAssumptionsLibraryMenu(user);
     const defaultRow = getAssumptionsLibraryRow(menu, 'Default');
     await user.click(within(defaultRow).getByRole('menuitemradio'));
 
@@ -1075,8 +1074,9 @@ describe('AssumptionsPage routing integration', () => {
 
     expect(sessionStorage.getItem('customEffectsData')).toBeNull();
     expect(screen.queryByText('Default assumptions are already loaded.')).not.toBeInTheDocument();
-    const { menu: refreshedMenu } = await openAssumptionsLibraryMenu(user);
-    expect(getAssumptionsLibraryRow(refreshedMenu, 'Default')).toHaveAttribute('data-active', 'true');
+    const summaryRow = getAssumptionsLibrarySummary();
+    expect(summaryRow).toHaveAttribute('data-active', 'true');
+    expect(within(summaryRow).getByText('Default')).toBeInTheDocument();
   });
 
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
@@ -1167,7 +1167,7 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
-  it('disables load for active saved assumptions when there are no unsaved changes', async () => {
+  it('keeps the active saved assumptions entry out of the dropdown menu when there are no unsaved changes', async () => {
     sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
@@ -1192,12 +1192,14 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
+    const activeRow = getAssumptionsLibrarySummary();
+    expect(within(activeRow).getByText('Current Saved')).toBeInTheDocument();
+
     const { menu } = await openAssumptionsLibraryMenu(userEvent.setup());
-    const activeRow = getAssumptionsLibraryRow(menu, 'Current Saved');
-    expect(within(activeRow).getByRole('menuitemradio')).toBeDisabled();
+    expect(within(menu).queryByText('Current Saved')).not.toBeInTheDocument();
   });
 
-  it('keeps load enabled for active saved assumptions when there are unsaved changes', async () => {
+  it('keeps the active saved assumptions entry out of the dropdown menu when there are unsaved changes', async () => {
     const user = userEvent.setup();
     sessionStorage.setItem(
       'customEffectsData',
@@ -1228,9 +1230,12 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '155');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
+    const activeRow = getAssumptionsLibrarySummary();
+    expect(within(activeRow).getByText('Current Saved')).toBeInTheDocument();
+    expect(activeRow).toHaveAttribute('data-dirty', 'true');
+
     const { menu } = await openAssumptionsLibraryMenu(user);
-    const activeRow = getAssumptionsLibraryRow(menu, 'Current Saved');
-    expect(within(activeRow).getByRole('menuitemradio')).toBeEnabled();
+    expect(within(menu).queryByText('Current Saved')).not.toBeInTheDocument();
   });
 
   it('does not show Delete All Imported button', async () => {
@@ -1258,6 +1263,45 @@ describe('AssumptionsPage routing integration', () => {
     const { menu } = await openAssumptionsLibraryMenu(userEvent.setup());
     expect(within(menu).getByText('Imported Baseline')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Delete All Imported' })).not.toBeInTheDocument();
+  });
+
+  it('shows the active entry actions in the library summary row and allows top-row rename', async () => {
+    const user = userEvent.setup();
+    const seeded = saveNewAssumptions({
+      label: 'Summary Entry',
+      description: 'Summary description',
+      assumptions: {
+        globalParameters: { timeLimit: 115 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected saved entry to seed successfully');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 115,
+        },
+      })
+    );
+
+    renderAssumptionsRoute('/assumptions');
+
+    const section = getAssumptionsLibrarySection();
+    const summary = section.querySelector('.saved-assumptions-panel__summary');
+    expect(summary).not.toBeNull();
+    expect(within(summary).getByText('Local')).toBeInTheDocument();
+    expect(within(summary).getByRole('button', { name: 'View description' })).toBeInTheDocument();
+
+    await user.click(within(summary).getByRole('button', { name: 'Rename' }));
+
+    await waitFor(() => {
+      expect(within(getAssumptionsLibrarySummary()).getByDisplayValue('Summary Entry')).toBeInTheDocument();
+    });
   });
 
   it('renames a saved assumptions entry from the panel', async () => {

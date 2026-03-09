@@ -112,10 +112,11 @@ describe('Global shared assumptions import flow', () => {
       reference: 'abc123',
     });
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
+    const section = screen.getByText('Assumptions Library').closest('section');
+    expect(within(section).getByText('abc123')).toBeInTheDocument();
     const menu = await openAssumptionsLibraryMenu(user);
     expect(menu).not.toBeNull();
-    expect(menu).toHaveTextContent('abc123');
-    expect(within(menu).getByText('abc123').closest('.assumptions-entry')).toHaveAttribute('data-active', 'true');
+    expect(within(menu).queryByText('abc123')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('tab', { name: 'Global' }));
 

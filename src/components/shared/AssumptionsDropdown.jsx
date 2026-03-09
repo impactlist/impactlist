@@ -479,10 +479,10 @@ const AssumptionsDropdown = ({
   }
 
   return (
-    <div className={`assumptions-selector-bar ${className}`.trim()}>
-      <span id={labelId} className="assumptions-selector-bar__label">
+    <div className={`assumptions-selector-bar assumptions-selector-bar--inline ${className}`.trim()}>
+      <div id={labelId} className="assumptions-selector-bar__label">
         {inlineLabel}
-      </span>
+      </div>
       <div className="assumptions-selector-bar__control assumptions-selector-bar__control--rich">{dropdownMarkup}</div>
     </div>
   );

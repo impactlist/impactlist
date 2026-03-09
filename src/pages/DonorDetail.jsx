@@ -22,6 +22,7 @@ import EntityStatistics from '../components/entity/EntityStatistics';
 import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
+import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import { CHART_ANIMATION_DURATION, DONATION_FEEDBACK_NOTE } from '../utils/constants';
 
 const DonorDetail = () => {
@@ -479,6 +480,7 @@ const DonorDetail = () => {
       >
         {/* Donor name */}
         <h1 className="impact-page__title">{donorStats.name}</h1>
+        <AssumptionsSelector />
 
         {/* Donor stats card with photo */}
         <EntityStatistics

@@ -102,21 +102,25 @@
   }
 
   .assumptions-selector-bar {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.8rem;
     margin-bottom: 1rem;
-    padding: 0;
+  }
+
+  .assumptions-selector-bar--inline {
+    width: min(100%, 34.5rem);
+    margin-inline: auto;
+    padding: 0.15rem 0 0.35rem;
   }
 
   .assumptions-selector-bar__label {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-strong);
+    margin: 0 0 0.45rem 0.15rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
   }
 
   .assumptions-selector-bar__label-tooltip {
@@ -125,9 +129,8 @@
 
   .assumptions-selector-bar__control {
     position: relative;
-    width: 32.25rem;
-    flex: 0 1 32.25rem;
-    min-width: min(100%, 19rem);
+    width: 100%;
+    min-width: 0;
   }
 
   .saved-assumptions-panel {
@@ -146,6 +149,13 @@
 
   .saved-assumptions-panel__summary[data-editing='true'] {
     cursor: default;
+  }
+
+  .saved-assumptions-panel--inline .saved-assumptions-panel__summary {
+    padding-right: 0.7rem;
+    background: color-mix(in srgb, var(--bg-surface) 88%, white 12%);
+    border-color: color-mix(in srgb, var(--border-subtle) 76%, white 24%);
+    box-shadow: 0 10px 18px -22px rgba(32, 25, 14, 0.5);
   }
 
   .saved-assumptions-panel__chevron {
@@ -185,17 +195,16 @@
 
   @media (max-width: 640px) {
     .assumptions-selector-bar {
-      display: flex;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      padding: 0;
+      width: 100%;
     }
 
-    .assumptions-selector-bar__control {
-      width: 100%;
-      flex-basis: 100%;
-      min-width: 0;
+    .assumptions-selector-bar--inline {
+      padding: 0.1rem 0 0.3rem;
+    }
+
+    .assumptions-selector-bar__label {
+      margin-bottom: 0.4rem;
+      font-size: 0.68rem;
     }
 
     .saved-assumptions-panel__menu {
@@ -1426,6 +1435,10 @@
   .saved-assumption-row__summary-btn {
     white-space: nowrap;
     box-shadow: none;
+  }
+
+  .saved-assumptions-panel--inline .saved-assumption-row__summary-btn {
+    border-radius: var(--radius-md);
   }
 
   .saved-assumptions-panel__summary-trigger {

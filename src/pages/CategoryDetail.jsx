@@ -11,6 +11,7 @@ import {
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import EntityStatistics from '../components/entity/EntityStatistics';
 import SampleDonationCalculator from '../components/shared/SampleDonationCalculator';
+import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import { donations } from '../data/generatedData';
 import MarkdownContent from '../components/shared/MarkdownContent';
 
@@ -84,6 +85,7 @@ const CategoryDetail = () => {
       >
         {/* Category name */}
         <h1 className="impact-page__title">{categoryInfo.name}</h1>
+        <AssumptionsSelector />
 
         {/* Category stats card */}
         <EntityStatistics

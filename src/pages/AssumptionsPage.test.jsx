@@ -138,7 +138,7 @@ describe('AssumptionsPage routing integration', () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 
-    const checkbox = screen.getByRole('checkbox', { name: 'Show assumption selector on every page' });
+    const checkbox = screen.getByRole('checkbox', { name: 'Show assumption selector on all pages' });
     expect(checkbox).not.toBeChecked();
 
     await user.click(checkbox);

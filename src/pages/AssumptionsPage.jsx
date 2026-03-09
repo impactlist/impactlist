@@ -490,15 +490,18 @@ const AssumptionsPage = () => {
           onCopyLink={handleCopySavedLink}
           onDescription={handleDescriptionModalOpen}
           footer={
-            <label className="saved-assumptions-panel__preference">
-              <input
-                type="checkbox"
-                checked={showSelectorEveryPage}
-                onChange={(event) => setShowSelectorEveryPage(event.target.checked)}
-                className="saved-assumptions-panel__preference-checkbox"
-              />
-              <span>Show assumption selector on every page</span>
-            </label>
+            <div className="saved-assumptions-panel__preference">
+              <span className="saved-assumptions-panel__preference-eyebrow">Display preference</span>
+              <label className="saved-assumptions-panel__preference-row">
+                <input
+                  type="checkbox"
+                  checked={showSelectorEveryPage}
+                  onChange={(event) => setShowSelectorEveryPage(event.target.checked)}
+                  className="saved-assumptions-panel__preference-switch"
+                />
+                <span className="saved-assumptions-panel__preference-text">Show assumption selector on all pages</span>
+              </label>
+            </div>
           }
         />
 

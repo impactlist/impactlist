@@ -152,6 +152,17 @@ describe('AssumptionsSelector', () => {
     expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(savedEntry.id);
   });
 
+  it('loads an entry when clicking anywhere on its visible menu row', async () => {
+    const user = userEvent.setup();
+    render(<AssumptionsSelector />);
+
+    const menu = await openMenu(user);
+    await user.click(getMenuRow(menu, 'Longtermist'));
+
+    expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);
+    expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
+  });
+
   it('opens the description modal when the description icon is clicked', async () => {
     const user = userEvent.setup();
     render(<AssumptionsSelector />);

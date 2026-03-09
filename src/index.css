@@ -1488,6 +1488,14 @@
     min-width: 0;
   }
 
+  .saved-assumptions-panel__menu-entry {
+    cursor: pointer;
+  }
+
+  .saved-assumptions-panel__menu-entry[data-load-disabled='true'] {
+    cursor: default;
+  }
+
   .saved-assumption-row__identity {
     min-width: 0;
     display: inline-flex;

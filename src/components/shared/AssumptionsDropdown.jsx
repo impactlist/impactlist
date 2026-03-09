@@ -387,6 +387,8 @@ const AssumptionsDropdown = ({
                   className="assumptions-entry assumptions-entry--compact saved-assumptions-panel__menu-entry"
                   data-active={entryUiState.isActive}
                   data-dirty={entryUiState.isActive && hasUnsavedChanges}
+                  data-load-disabled={entryUiState.isLoadDisabled}
+                  onClick={entryUiState.isEditing || entryUiState.isLoadDisabled ? undefined : () => handleLoad(entry)}
                 >
                   <div className="saved-assumption-row__top">
                     {entryUiState.isEditing ? (
@@ -432,7 +434,10 @@ const AssumptionsDropdown = ({
                           role="menuitemradio"
                           aria-checked={entryUiState.isActive}
                           disabled={entryUiState.isLoadDisabled}
-                          onClick={() => handleLoad(entry)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleLoad(entry);
+                          }}
                           className="saved-assumption-row__load-target"
                           data-selected={entryUiState.isActive}
                         >

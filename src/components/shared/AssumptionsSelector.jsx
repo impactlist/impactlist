@@ -11,6 +11,7 @@ import {
 } from '../../utils/savedAssumptionsStore';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { useNotificationActions } from '../../contexts/NotificationContext';
+import useSaveAssumptionsModal from '../../hooks/useSaveAssumptionsModal';
 import useAssumptionsShareActions from '../../hooks/useAssumptionsShareActions';
 import {
   getAssumptionsLoadRequest,
@@ -18,6 +19,7 @@ import {
   OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL,
 } from '../../utils/assumptionsLoadHelpers';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
+import SaveAssumptionsModal from '../SaveAssumptionsModal';
 import ShareAssumptionsModal from '../ShareAssumptionsModal';
 import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import InfoTooltipIcon from './InfoTooltipIcon';
@@ -222,6 +224,17 @@ const AssumptionsSelector = ({ className = '' }) => {
     persistAsActive,
     showNotification,
   });
+  const { handleSaveAssumptionsClick, saveModalProps } = useSaveAssumptionsModal({
+    activeLibraryEntry,
+    activeLibraryEntryFingerprint,
+    currentAssumptionsFingerprint,
+    libraryEntries,
+    hasUnsavedChanges,
+    getCurrentAssumptions: getNormalizedUserAssumptionsForSharing,
+    persistAsActive,
+    refreshSavedAssumptions,
+    showNotification,
+  });
 
   const inlineLabel = (
     <>
@@ -253,10 +266,11 @@ const AssumptionsSelector = ({ className = '' }) => {
         menuAriaLabel="Assumptions options"
         allowEntryManagementActions={false}
         allowCopyLinkAction={true}
-        showCurrentSaveAction={false}
+        showCurrentSaveAction={true}
         showCurrentShareAction={shouldShowCurrentShareAction}
         showShareForLocal={true}
         onLoad={handleLoad}
+        onSaveCurrent={handleSaveAssumptionsClick}
         onShareCurrent={handleOpenShareModal}
         onCopyLink={handleCopySavedLink}
         onDescription={handleDescriptionModalOpen}
@@ -269,6 +283,7 @@ const AssumptionsSelector = ({ className = '' }) => {
         isReadOnly={true}
         onClose={handleDescriptionModalClose}
       />
+      <SaveAssumptionsModal {...saveModalProps} />
       <ShareAssumptionsModal
         isOpen={shareModalOpen}
         onClose={handleCloseShareModal}

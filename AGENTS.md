@@ -24,6 +24,7 @@
 - Components: Named arrow functions in PascalCase files, e.g. `src/components/RecipientList.jsx`.
 - Utilities: camelCase files, e.g. `src/utils/effectsCalculation.js`.
 - Hooks: `useX` naming in `src/hooks/`, e.g. `useAssumptionsForm.js`.
+- Avoid DRY violations. If logic, data shaping, configuration, UI state, handlers, markup patterns, or constants are repeated or nearly repeated across files or features, extract a shared utility, hook, component, or constant unless there is a clear reason not to.
 
 ## Commit & Pull Request Guidelines
 

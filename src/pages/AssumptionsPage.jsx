@@ -12,6 +12,7 @@ import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
+import useSaveAssumptionsModal from '../hooks/useSaveAssumptionsModal';
 import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
 import {
   getAssumptionsLoadRequest,
@@ -23,7 +24,6 @@ import {
   hasCuratedAssumptionsLabel,
   isCuratedAssumptionsEntryId,
 } from '../utils/curatedAssumptionsProfiles';
-import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
 import {
   completeSavedAssumptionsMigration,
   createComparableAssumptionsFingerprint,
@@ -33,7 +33,6 @@ import {
   markSavedAssumptionsLoaded,
   maybeRunSavedAssumptionsMigration,
   renameSavedAssumptions,
-  saveNewAssumptions,
   SAVED_ASSUMPTIONS_CHANGED_EVENT,
   setActiveSavedAssumptionsId,
   updateSavedAssumptions,
@@ -48,9 +47,6 @@ const AssumptionsPage = () => {
   const shouldReduceMotion = useReducedMotion();
   const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [saveModalOpen, setSaveModalOpen] = useState(false);
-  const [saveModalDefaultLabel, setSaveModalDefaultLabel] = useState('My Current Assumptions');
-  const [saveModalDefaultDescription, setSaveModalDefaultDescription] = useState('');
   const [savedAssumptions, setSavedAssumptions] = useState([]);
   const [activeSavedAssumptionsId, setActiveSavedAssumptionsIdState] = useState(null);
   const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
@@ -85,8 +81,6 @@ const AssumptionsPage = () => {
   const hasUnsavedChanges = activeLibraryEntry
     ? activeLibraryEntryFingerprint !== currentFingerprint
     : isUsingCustomValues;
-  const isActiveSavedAssumptionsRemote = Boolean(activeLibraryEntry?.reference);
-  const isActiveCuratedEntry = activeLibraryEntry?.source === 'curated';
   const activePanelEntryId = activeSavedAssumptionsId || DEFAULT_ASSUMPTIONS_ENTRY_ID;
   const isCurrentStateRepresentedBySavedAssumptions = useMemo(
     () =>
@@ -97,26 +91,6 @@ const AssumptionsPage = () => {
       }),
     [currentFingerprint, isUsingCustomValues, libraryEntries]
   );
-  const canUpdateExisting = Boolean(
-    activeLibraryEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote && !isActiveCuratedEntry
-  );
-  const duplicateSavedAssumptionsLabel = useMemo(() => {
-    if (!currentFingerprint) {
-      return null;
-    }
-
-    if (activeLibraryEntry) {
-      const activeFingerprint = createComparableAssumptionsFingerprint(activeLibraryEntry.assumptions);
-      if (activeFingerprint && activeFingerprint === currentFingerprint) {
-        return activeLibraryEntry.label;
-      }
-    }
-
-    const matchingEntry = libraryEntries.find(
-      (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
-    );
-    return matchingEntry?.label || null;
-  }, [activeLibraryEntry, currentFingerprint, libraryEntries]);
   // `isUsingCustomValues` becomes false when the current state matches the built-in default assumptions,
   // but users can still have unsaved edits relative to a previously loaded saved set. Keep summary-row
   // Save/Share actions visible in that case so they can preserve or share the diverged state.
@@ -356,100 +330,18 @@ const AssumptionsPage = () => {
 
     handleOpenShareModal();
   }, [commitPendingEdits, handleOpenShareModal, showNotification]);
-
-  const handleSaveAssumptionsClick = useCallback(() => {
-    const prepareResult = commitPendingEdits();
-    if (prepareResult?.ok === false) {
-      showNotification('error', prepareResult.message || 'Resolve unsaved edits before saving.');
-      return;
-    }
-
-    const currentAssumptions = getNormalizedUserAssumptionsForSharing();
-    if (!currentAssumptions) {
-      showNotification('error', 'No custom assumptions to save.');
-      return;
-    }
-
-    setSaveModalDefaultLabel(!hasUnsavedChanges && !isActiveCuratedEntry ? activeLibraryEntry?.label || '' : '');
-    setSaveModalDefaultDescription(
-      !hasUnsavedChanges && !isActiveCuratedEntry ? activeLibraryEntry?.description || '' : ''
-    );
-    setSaveModalOpen(true);
-  }, [
-    activeLibraryEntry?.description,
-    activeLibraryEntry?.label,
-    commitPendingEdits,
-    getNormalizedUserAssumptionsForSharing,
+  const { handleSaveAssumptionsClick, saveModalProps } = useSaveAssumptionsModal({
+    activeLibraryEntry,
+    activeLibraryEntryFingerprint,
+    currentAssumptionsFingerprint: currentFingerprint,
+    libraryEntries,
     hasUnsavedChanges,
-    isActiveCuratedEntry,
+    getCurrentAssumptions: getNormalizedUserAssumptionsForSharing,
+    persistAsActive,
+    refreshSavedAssumptions,
     showNotification,
-  ]);
-
-  const handleSaveModalClose = useCallback(() => {
-    setSaveModalOpen(false);
-  }, []);
-
-  const handleSaveAssumptionsSubmit = useCallback(
-    ({ label, description, mode }) => {
-      const currentAssumptions = getNormalizedUserAssumptionsForSharing();
-      if (!currentAssumptions) {
-        return { ok: false, errorCode: 'no_custom_assumptions' };
-      }
-
-      if (hasCuratedAssumptionsLabel(label)) {
-        return { ok: false, errorCode: 'reserved_curated_label' };
-      }
-
-      const result =
-        mode === 'update' && canUpdateExisting && activeLibraryEntry && !activeLibraryEntry.reference
-          ? updateSavedAssumptions(activeLibraryEntry.id, {
-              label,
-              description,
-              assumptions: currentAssumptions,
-              source: activeLibraryEntry.source,
-              reference: activeLibraryEntry.reference,
-            })
-          : saveNewAssumptions({
-              label,
-              description,
-              assumptions: currentAssumptions,
-              source: 'local',
-            });
-
-      if (!result.ok) {
-        if (result.errorCode !== 'duplicate_label' && result.errorCode !== 'over_limit') {
-          showNotification('error', STORAGE_ERROR_MESSAGE);
-        }
-        return { ok: false, errorCode: result.errorCode || 'unknown_error' };
-      }
-
-      const nextActiveId = result.entry?.id || activeLibraryEntry?.id;
-      if (nextActiveId) {
-        persistAsActive(nextActiveId);
-      } else {
-        refreshSavedAssumptions();
-      }
-      setSaveModalOpen(false);
-
-      const successMessage = mode === 'update' ? 'Updated saved assumptions.' : 'Saved assumptions.';
-      const evictionMessage = buildEvictionNotificationMessage({
-        prefix: successMessage,
-        result,
-      });
-      if (evictionMessage) {
-        showNotification('info', evictionMessage);
-      }
-      return { ok: true };
-    },
-    [
-      activeLibraryEntry,
-      canUpdateExisting,
-      getNormalizedUserAssumptionsForSharing,
-      persistAsActive,
-      refreshSavedAssumptions,
-      showNotification,
-    ]
-  );
+    beforeSave: commitPendingEdits,
+  });
 
   const handleRenameSavedAssumptions = useCallback(
     (entryId, nextLabel) => {
@@ -620,16 +512,7 @@ const AssumptionsPage = () => {
           initialSavedResult={shareModalInitialResult}
         />
 
-        <SaveAssumptionsModal
-          isOpen={saveModalOpen}
-          onClose={handleSaveModalClose}
-          onSubmit={handleSaveAssumptionsSubmit}
-          defaultLabel={saveModalDefaultLabel}
-          defaultDescription={saveModalDefaultDescription}
-          updateExistingLabel={canUpdateExisting ? activeLibraryEntry?.label || '' : ''}
-          canUpdateExisting={canUpdateExisting}
-          duplicateOfLabel={duplicateSavedAssumptionsLabel}
-        />
+        <SaveAssumptionsModal {...saveModalProps} />
 
         <SharedImportDecisionModal
           isOpen={Boolean(pendingLoadEntry)}

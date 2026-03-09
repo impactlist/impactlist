@@ -8,6 +8,7 @@ const mockMarkSavedAssumptionsLoaded = vi.fn();
 const mockSetActiveSavedAssumptionsId = vi.fn();
 const mockAttachSavedAssumptionsShareReference = vi.fn();
 const mockSaveNewAssumptions = vi.fn();
+const mockUpdateSavedAssumptions = vi.fn();
 const mockShowNotification = vi.fn();
 const mockAssumptionsState = {
   normalizedAssumptions: null,
@@ -57,6 +58,7 @@ vi.mock('../../contexts/NotificationContext', () => ({
 
 vi.mock('../../utils/curatedAssumptionsProfiles', () => ({
   getCuratedAssumptionsEntries: () => [curatedEntry],
+  hasCuratedAssumptionsLabel: () => false,
   isCuratedAssumptionsEntryId: (id) => id === curatedEntry.id,
 }));
 
@@ -69,6 +71,7 @@ vi.mock('../../utils/savedAssumptionsStore', () => ({
   SAVED_ASSUMPTIONS_CHANGED_EVENT: 'saved-assumptions:changed',
   saveNewAssumptions: (...args) => mockSaveNewAssumptions(...args),
   setActiveSavedAssumptionsId: (...args) => mockSetActiveSavedAssumptionsId(...args),
+  updateSavedAssumptions: (...args) => mockUpdateSavedAssumptions(...args),
 }));
 
 vi.mock('../ShareAssumptionsModal', () => ({
@@ -114,6 +117,7 @@ describe('AssumptionsSelector', () => {
     mockSetActiveSavedAssumptionsId.mockReset();
     mockAttachSavedAssumptionsShareReference.mockReset();
     mockSaveNewAssumptions.mockReset();
+    mockUpdateSavedAssumptions.mockReset();
     mockShowNotification.mockReset();
     mockAssumptionsState.normalizedAssumptions = null;
     mockAssumptionsState.isUsingCustomValues = false;
@@ -256,6 +260,39 @@ describe('AssumptionsSelector', () => {
 
     await user.click(within(summaryRow).getByRole('button', { name: 'Share' }));
     expect(screen.getByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
+  });
+
+  it('shows Save for custom unsaved assumptions and saves them to the library', async () => {
+    const user = userEvent.setup();
+    const customAssumptions = {
+      globalParameters: { timeLimit: 800 },
+    };
+    mockAssumptionsState.isUsingCustomValues = true;
+    mockAssumptionsState.normalizedAssumptions = customAssumptions;
+    mockSaveNewAssumptions.mockReturnValue({
+      ok: true,
+      entry: { id: 'saved-2' },
+    });
+
+    render(<AssumptionsSelector />);
+
+    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
+    expect(within(summaryRow).getByRole('button', { name: 'Save' })).toBeInTheDocument();
+
+    await user.click(within(summaryRow).getByRole('button', { name: 'Save' }));
+    expect(screen.getByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText('Label'), 'My Custom Assumptions');
+    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+
+    expect(mockSaveNewAssumptions).toHaveBeenCalledWith({
+      label: 'My Custom Assumptions',
+      description: '',
+      assumptions: customAssumptions,
+      source: 'local',
+    });
+    expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith('saved-2');
+    expect(screen.queryByRole('heading', { name: 'Save to Library' })).not.toBeInTheDocument();
   });
 
   it('prompts before overwriting custom unsaved assumptions from the selector and keeps the current state on cancel', async () => {

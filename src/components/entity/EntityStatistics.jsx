@@ -6,6 +6,46 @@ import StatisticsCard from '../shared/StatisticsCard';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
 
+const parseBirthDate = (birthDate) => {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthDate);
+  if (!match) {
+    return null;
+  }
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const normalizedDate = new Date(Date.UTC(year, month - 1, day));
+
+  if (
+    normalizedDate.getUTCFullYear() !== year ||
+    normalizedDate.getUTCMonth() !== month - 1 ||
+    normalizedDate.getUTCDate() !== day
+  ) {
+    return null;
+  }
+
+  return { year, month, day };
+};
+
+const getAgeFromBirthDate = (birthDate, today = new Date()) => {
+  const parsedBirthDate = parseBirthDate(birthDate);
+  if (!parsedBirthDate) {
+    return null;
+  }
+
+  const { year, month, day } = parsedBirthDate;
+  let age = today.getFullYear() - year;
+  const currentMonth = today.getMonth() + 1;
+  const currentDay = today.getDate();
+
+  if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+    age -= 1;
+  }
+
+  return age >= 0 ? age : null;
+};
+
 /**
  * Displays key statistics for donors or recipients with consistent styling.
  */
@@ -65,6 +105,9 @@ const EntityStatistics = ({
 
   const netWorthCard = <StatisticsCard label="Net Worth" value={formatCurrency(stats.netWorth)} />;
 
+  const age = isDonor && stats.birthDate ? getAgeFromBirthDate(stats.birthDate) : null;
+  const ageCard = age !== null ? <StatisticsCard label="Age" value={age} /> : null;
+
   // For banner layout: shows rank OR net worth (not both)
   const impactRankOrNetWorthCard = (
     <StatisticsCard
@@ -87,7 +130,7 @@ const EntityStatistics = ({
       />
     ) : null;
 
-  // Stats grid for donor with photo layout (5 stats: 3 top, 2 bottom)
+  // Stats grid for donor with photo layout (6 stats: 3 top, 3 bottom)
   const renderDonorPhotoStats = () => (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {impactRankCard}
@@ -95,6 +138,7 @@ const EntityStatistics = ({
       {costPerLifeCard}
       {totalDonatedCard}
       {netWorthCard}
+      {ageCard}
     </div>
   );
 
@@ -154,6 +198,7 @@ EntityStatistics.propTypes = {
     knownDonations: PropTypes.number,
     rank: PropTypes.number,
     netWorth: PropTypes.number,
+    birthDate: PropTypes.string,
 
     // Recipient-specific properties
     totalReceived: PropTypes.number,

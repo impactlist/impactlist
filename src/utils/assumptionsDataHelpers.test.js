@@ -357,7 +357,7 @@ describe('assumptionsDataHelpers', () => {
     const recipientCost = getCostPerLifeFromCombined(combined, 'health', 2020);
 
     vi.spyOn(donationDataHelpers, 'getAllDonors').mockReturnValue([
-      { id: 'donor-one', name: 'Donor One', netWorth: 1000000, totalDonated: 3000 },
+      { id: 'donor-one', name: 'Donor One', netWorth: 1000000, totalDonated: 3000, birthDate: '1980-02-03' },
       { id: 'donor-two', name: 'Donor Two', netWorth: 2000000 },
     ]);
     vi.spyOn(donationDataHelpers, 'getDonorId').mockImplementation((donor) => donor.id);
@@ -380,6 +380,7 @@ describe('assumptionsDataHelpers', () => {
     expect(stats).toHaveLength(1);
     expect(stats[0]).toMatchObject({
       id: 'donor-one',
+      birthDate: '1980-02-03',
       knownDonations: 1000,
       totalDonated: 3000,
       totalDonatedField: 3000,

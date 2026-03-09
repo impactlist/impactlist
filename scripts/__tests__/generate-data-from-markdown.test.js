@@ -82,7 +82,10 @@ describe('generate-data-from-markdown script', () => {
 
     expect(generated.categoriesById.health.content).toContain('Public Notes');
     expect(generated.categoriesById.health.content).not.toContain('Internal Notes');
-    expect(generated.donorsById.donor_a.about).toBe('Donor A bio.');
+    expect(generated.donorsById.donor_a).toMatchObject({
+      about: 'Donor A bio.',
+      birthDate: '1980-02-03',
+    });
     expect(generated.curatedAssumptionProfilesById['long-horizon']).toMatchObject({
       id: 'long-horizon',
       name: 'Long Horizon',
@@ -129,6 +132,15 @@ describe('generate-data-from-markdown script', () => {
 
     expect(result.status).not.toBe(0);
     expect(output).toContain("Category file malformed_category.md is missing required 'id' field.");
+  });
+
+  it('fails fast on invalid donor birth dates', () => {
+    const workspace = setupWorkspaceFromFixture('invalid-birth-date');
+    const result = runGenerator(workspace);
+    const output = `${result.stdout}\n${result.stderr}`;
+
+    expect(result.status).not.toBe(0);
+    expect(output).toContain("Donor file donor_a.md has invalid 'birthDate'");
   });
 
   it('fails validation when a curated assumptions profile references an unknown effect', () => {

@@ -607,6 +607,7 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
     return {
       name: donor.name,
       id: donorId,
+      birthDate: donor.birthDate,
       netWorth: donor.netWorth,
       totalDonated,
       knownDonations,

@@ -44,6 +44,40 @@ function formatDateString(dateString) {
   return date.toISOString().split('T')[0];
 }
 
+function getRawFrontmatterScalar(fileContent, key) {
+  const frontmatterMatch = fileContent.match(/^---\s*\n([\s\S]*?)\n---/);
+  if (!frontmatterMatch) {
+    return null;
+  }
+
+  const fieldMatch = frontmatterMatch[1].match(new RegExp(`^${key}:\\s*(.+)$`, 'm'));
+  return fieldMatch ? fieldMatch[1].trim() : null;
+}
+
+function normalizeBirthDate(rawBirthDate, filename) {
+  const normalizedBirthDate = rawBirthDate.trim().replace(/^['"]|['"]$/g, '');
+
+  const match = normalizedBirthDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    throw new Error(`Error: Donor file ${filename} has invalid 'birthDate'. Expected YYYY-MM-DD.`);
+  }
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const normalizedDate = new Date(Date.UTC(year, month - 1, day));
+
+  if (
+    normalizedDate.getUTCFullYear() !== year ||
+    normalizedDate.getUTCMonth() !== month - 1 ||
+    normalizedDate.getUTCDate() !== day
+  ) {
+    throw new Error(`Error: Donor file ${filename} has invalid 'birthDate'. Expected a real calendar date.`);
+  }
+
+  return normalizedBirthDate;
+}
+
 // Helper function to extract content excluding "Internal Notes" section
 function extractContentExcludingInternalNotes(content) {
   // Split the content into sections based on headers
@@ -204,6 +238,11 @@ function loadDonors() {
       netWorth: data.netWorth,
       about: data.about.trim(),
     };
+
+    const rawBirthDate = getRawFrontmatterScalar(fileContent, 'birthDate');
+    if (rawBirthDate !== null) {
+      donors[data.id].birthDate = normalizeBirthDate(rawBirthDate, path.basename(file));
+    }
 
     if (data.totalDonated) {
       donors[data.id].totalDonated = data.totalDonated;

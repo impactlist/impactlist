@@ -14,7 +14,7 @@ categories:
 
 _The following analysis was done on December 16th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by applying a multiplier to the baseline [Science and Tech](/cause/science-tech) cost per [QALY](https://en.wikipedia.org/wiki/Quality-adjusted_life_year). This multiplier reflects the unique leverage of the Internet Archive (IA) as a digital public utility that prevents "knowledge decay" at a fraction of the cost of generating new knowledge.
+We assign the Internet Archive a **cost per QALY of \$3,000**. The core idea is that preserving valuable knowledge can be much cheaper than creating it from scratch, which makes it look substantially better than the baseline [Science and Tech](/cause/science-tech) estimate.
 
 ## Description of effect
 
@@ -22,7 +22,7 @@ This effect captures the welfare gains from the universal preservation of digita
 
 ## Point Estimates
 
-- **Multiplier:** 0.05x (relative to baseline)
+- **Cost per QALY:** \$3,000
 
 If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
 
@@ -35,11 +35,11 @@ If you disagree with this estimate after reading this page, click 'Edit' near th
 
 ## Details
 
-### Derivation of the Multiplier (0.05x)
+### Deriving the \$3,000/QALY estimate
 
-We calculate the cost-effectiveness multiplier ($M$) by comparing the value-preservation efficiency of the Internet Archive ($Eff_{IA}$) against the value-creation efficiency of Baseline R&D ($Eff_{Base}$).
+We benchmark the Internet Archive against the baseline science-and-tech estimate of **\$60,000/QALY**. The comparison is between the value-preservation efficiency of the Internet Archive ($Eff_{IA}$) and the value-creation efficiency of baseline R&D ($Eff_{Base}$).
 
-$$M = \frac{Eff_{Base}}{Eff_{IA}}$$
+$$\text{Relative effectiveness} = \frac{Eff_{IA}}{Eff_{Base}}$$
 
 We decompose Efficiency into two components: Cost ($C$) and Value Retention ($V$).
 
@@ -57,15 +57,17 @@ New discoveries have high marginal value (new cures, new tech). Old data has low
 
 If one lab fails to invent a drug, another often will (concurrent invention). But if the Internet Archive misses a snapshot of a deleted government page, that record is likely gone forever. IA has higher counterfactual leverage. We assign a **2x** boost for this uniqueness.
 
-### 4. Final Multiplier Calculation
+### 4. Final cost-per-QALY calculation
 
 Combining the factors:
 
 $$\text{Relative Effectiveness} = \frac{V_{ratio} \times U}{C_{ratio}} = \frac{0.5 \times 2}{0.05} = 20$$
 
-This implies the Internet Archive is roughly **20x** more cost-effective than general R&D funding because it secures the entire knowledge base for a trivial cost relative to the creation of that knowledge.
+This implies the Internet Archive could be substantially more effective than general R&D funding because it secures the entire knowledge base for a trivial cost relative to the creation of that knowledge.
 
-$$M = \frac{1}{20} = 0.05$$
+Applying that comparison to the baseline:
+
+$$\text{Cost per QALY}_{IA} = \frac{\$60{,}000}{20} = \$3{,}000$$
 
 ---
 
@@ -73,4 +75,4 @@ $$M = \frac{1}{20} = 0.05$$
 
 # Internal Notes
 
-The 0.05x multiplier positions the Internet Archive as an exceptionally high-leverage "Meta-Science" intervention. If the baseline Science & Tech is \$60k/QALY, this implies IA achieves ~\$3k/QALY. This reflects the "commodity storage" thesis: that preserving the entire corpus of human knowledge is a low-cost, high-yield prerequisite for all other intellectual progress.
+The \$3,000/QALY estimate positions the Internet Archive as an exceptionally high-leverage "Meta-Science" intervention. It reflects the "commodity storage" thesis: that preserving the entire corpus of human knowledge is a low-cost, high-yield prerequisite for all other intellectual progress.

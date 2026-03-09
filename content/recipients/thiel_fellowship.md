@@ -14,7 +14,7 @@ categories:
 
 _The following analysis was done on December 19th 2025, written by Google Gemini 3 Pro Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by applying a multiplier to the baseline **Standard Education** cost per QALY. This multiplier reflects the "hits-based" nature of the Thiel Fellowship, which targets the extreme tail of human capital distribution rather than the mean.
+We assign the Thiel Fellowship a **cost per QALY of \$1,600**. The case for a low number rests on the Fellowship's "hits-based" strategy of accelerating unusually high-upside talent rather than improving average educational outcomes.
 
 ## Description of effect
 
@@ -22,7 +22,7 @@ This effect captures the welfare gains from the **Thiel Fellowship**, which pays
 
 ## Point Estimates
 
-- **Cost per QALY multiplier:** 0.04x (relative to baseline)
+- **Cost per QALY:** \$1,600
 
 If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
 
@@ -35,11 +35,11 @@ If you disagree with this estimate after reading this page, click 'Edit' near th
 
 ## Details
 
-### Derivation of the Multiplier (0.04x)
+### Deriving the \$1,600/QALY estimate
 
-We calculate the cost-effectiveness multiplier M by comparing the expected value of the Thiel Fellowship (EV_TF) against Standard Education Charities (EV_Base).
+We benchmark the Thiel Fellowship against the baseline education estimate of **\$40,000/QALY**. The key comparison is between the expected value of the Thiel Fellowship ($EV_{TF}$) and the expected value of standard education charities ($EV_{Base}$).
 
-$$M = \dfrac{EV_{Base}}{EV_{TF}}$$
+$$\text{Relative effectiveness} = \dfrac{EV_{TF}}{EV_{Base}}$$
 
 We analyze the Expected Value (EV) of a \$100,000 investment in both scenarios.
 
@@ -75,15 +75,17 @@ If we include the cultural shift (signaling to thousands of non-fellows that the
 
 $$EV_{TF} \approx \$10{,}000{,}000$$
 
-### 3. Final Multiplier Calculation
+### 3. Final cost-per-QALY calculation
 
 Comparing the adjusted Expected Values:
 
 $$\text{Relative Effectiveness} = \dfrac{EV_{TF}}{EV_{Base}} = \dfrac{\$10{,}000{,}000}{\$400{,}000} = 25$$
 
-This implies the Thiel Fellowship is roughly **25x** more cost-effective than standard education funding due to the power law of innovation.
+This implies the Thiel Fellowship could be far more effective than standard education funding due to the power law of innovation.
 
-$$M = \dfrac{1}{25} = 0.04$$
+Applying that comparison to the baseline:
+
+$$\text{Cost per QALY}_{TF} = \dfrac{\$40{,}000}{25} = \$1{,}600$$
 
 ---
 
@@ -91,4 +93,4 @@ $$M = \dfrac{1}{25} = 0.04$$
 
 # Internal Notes
 
-The multiplier is highly sensitive to the **Attribution** variable. If you believe Vitalik Buterin would have built Ethereum exactly as fast without Peter Thiel's money, the multiplier rises towards 1.0 (or >1.0 given the risk). However, if you credit the Fellowship with even a modest "tipping point" effect on the crypto or hard-tech ecosystems, the ROI dwarfs standard education interventions. The 0.04x estimate is a middle ground: it acknowledges the massive "hits" while heavily discounting for selection bias.
+The estimate is highly sensitive to the **Attribution** variable. If you believe Vitalik Buterin would have built Ethereum exactly as fast without Peter Thiel's money, the case for a very low \$ / QALY estimate weakens sharply. However, if you credit the Fellowship with even a modest "tipping point" effect on the crypto or hard-tech ecosystems, the ROI dwarfs standard education interventions. The \$1,600/QALY estimate is a middle ground: it acknowledges the massive "hits" while heavily discounting for selection bias.

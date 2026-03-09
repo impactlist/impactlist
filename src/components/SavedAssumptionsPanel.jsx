@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import IconActionButton from './shared/IconActionButton';
 import useDismissibleMenu from '../hooks/useDismissibleMenu';
+import { CURRENT_CUSTOM_ENTRY, CURRENT_CUSTOM_ENTRY_ID } from '../constants/customAssumptionsEntry';
 
 const DEFAULT_ENTRY_ID = '__default__';
 const DEFAULT_ENTRY = Object.freeze({
@@ -11,17 +12,20 @@ const DEFAULT_ENTRY = Object.freeze({
 
 const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges }) => {
   const isDefaultEntry = entry.id === DEFAULT_ENTRY_ID;
+  const isCustomEntry = entry.id === CURRENT_CUSTOM_ENTRY_ID;
   const isActive = activeId === entry.id;
-  const isEditing = !isDefaultEntry && editingId === entry.id;
-  const isCurated = !isDefaultEntry && entry.source === 'curated';
-  const isRemote = !isDefaultEntry && Boolean(entry.reference);
+  const isEditing = !isDefaultEntry && !isCustomEntry && editingId === entry.id;
+  const isCurated = !isDefaultEntry && !isCustomEntry && entry.source === 'curated';
+  const isRemote = !isDefaultEntry && !isCustomEntry && Boolean(entry.reference);
   const isLoadDisabled = isActive && !hasUnsavedChanges;
-  const shouldShowDescriptionAction =
-    !isDefaultEntry &&
-    (isCurated ? Boolean(entry.description || entry.content) : !isRemote || Boolean(entry.description));
+  const shouldShowDescriptionAction = isCustomEntry
+    ? true
+    : !isDefaultEntry &&
+      (isCurated ? Boolean(entry.description || entry.content) : !isRemote || Boolean(entry.description));
 
   return {
     isActive,
+    isCustomEntry,
     isCurated,
     isDefaultEntry,
     isEditing,
@@ -47,7 +51,10 @@ const SavedAssumptionsPanel = ({
   entries,
   activeId,
   hasUnsavedChanges,
+  showCurrentActions,
   onLoad,
+  onSaveCurrent,
+  onShareCurrent,
   onRename,
   onDelete,
   onCopyLink,
@@ -60,9 +67,16 @@ const SavedAssumptionsPanel = ({
   const [renameError, setRenameError] = useState('');
   const buttonId = useId();
   const menuId = useId();
+  const currentSelectionId = hasUnsavedChanges ? CURRENT_CUSTOM_ENTRY_ID : activeId;
 
   const activeEntry = useMemo(() => entries.find((entry) => entry.id === activeId) || null, [entries, activeId]);
-  const selectedEntry = activeId === DEFAULT_ENTRY_ID ? DEFAULT_ENTRY : activeEntry || DEFAULT_ENTRY;
+  const selectedEntry = useMemo(() => {
+    if (currentSelectionId === CURRENT_CUSTOM_ENTRY_ID) {
+      return CURRENT_CUSTOM_ENTRY;
+    }
+
+    return currentSelectionId === DEFAULT_ENTRY_ID ? DEFAULT_ENTRY : activeEntry || DEFAULT_ENTRY;
+  }, [activeEntry, currentSelectionId]);
   const visibleEntries = useMemo(
     () => [DEFAULT_ENTRY, ...entries].filter((entry) => entry.id !== selectedEntry.id),
     [entries, selectedEntry.id]
@@ -136,8 +150,8 @@ const SavedAssumptionsPanel = ({
   }, []);
 
   const selectedEntryUiState = useMemo(
-    () => getEntryUiState(selectedEntry, { activeId, editingId, hasUnsavedChanges }),
-    [activeId, editingId, hasUnsavedChanges, selectedEntry]
+    () => getEntryUiState(selectedEntry, { activeId: currentSelectionId, editingId, hasUnsavedChanges }),
+    [currentSelectionId, editingId, hasUnsavedChanges, selectedEntry]
   );
 
   const renderEntryActions = useCallback(
@@ -145,6 +159,13 @@ const SavedAssumptionsPanel = ({
       if (entryUiState.isDefaultEntry) {
         return null;
       }
+
+      const shouldShowSummarySaveAction = mode === 'summary' && entryUiState.isCustomEntry && showCurrentActions;
+      const shouldShowSummaryShareAction =
+        mode === 'summary' &&
+        (entryUiState.isCustomEntry
+          ? showCurrentActions
+          : entry.source === 'local' && !entryUiState.isCurated && !entryUiState.isRemote);
 
       const handleDescription = () => {
         onDescription(entry);
@@ -155,7 +176,25 @@ const SavedAssumptionsPanel = ({
 
       return (
         <div className={`saved-assumption-row__actions saved-assumption-row__actions--${mode}`}>
-          {!entryUiState.isCurated && (
+          {shouldShowSummarySaveAction && (
+            <button
+              type="button"
+              onClick={(event) => stopActionEvent(event, onSaveCurrent)}
+              className="impact-btn impact-btn--secondary impact-btn--xs saved-assumption-row__summary-btn"
+            >
+              Save
+            </button>
+          )}
+          {shouldShowSummaryShareAction && (
+            <button
+              type="button"
+              onClick={(event) => stopActionEvent(event, onShareCurrent)}
+              className="impact-btn impact-btn--custom-accent impact-btn--xs saved-assumption-row__summary-btn"
+            >
+              Share
+            </button>
+          )}
+          {!entryUiState.isCurated && !entryUiState.isCustomEntry && (
             <IconActionButton
               icon="edit"
               label="Rename"
@@ -177,7 +216,7 @@ const SavedAssumptionsPanel = ({
               className="saved-assumption-row__inline-icon"
             />
           )}
-          {!entryUiState.isCurated && (
+          {!entryUiState.isCurated && !entryUiState.isCustomEntry && (
             <IconActionButton
               icon="delete"
               label="Delete"
@@ -186,7 +225,7 @@ const SavedAssumptionsPanel = ({
               className="saved-assumption-row__inline-icon"
             />
           )}
-          {!entryUiState.isCurated && entry.shareUrl && (
+          {!entryUiState.isCurated && !entryUiState.isCustomEntry && entry.shareUrl && (
             <IconActionButton
               icon="copy-link"
               label="Copy Link"
@@ -197,13 +236,22 @@ const SavedAssumptionsPanel = ({
         </div>
       );
     },
-    [beginRename, onCopyLink, onDelete, onDescription, stopActionEvent]
+    [
+      beginRename,
+      onCopyLink,
+      onDelete,
+      onDescription,
+      onSaveCurrent,
+      onShareCurrent,
+      showCurrentActions,
+      stopActionEvent,
+    ]
   );
 
   return (
     <section className="assumptions-shell mb-5">
       <div className="flex items-center justify-between px-4 py-3 sm:px-5">
-        <h2 className="assumptions-title text-2xl font-semibold text-strong">Assumptions Library</h2>
+        <h2 className="assumptions-title text-2xl font-semibold text-strong">Active Assumptions</h2>
       </div>
 
       <div className="px-4 pb-4 sm:px-5 sm:pb-5">
@@ -211,7 +259,7 @@ const SavedAssumptionsPanel = ({
           <div
             className="assumptions-entry assumptions-entry--compact saved-assumptions-panel__summary"
             data-active={selectedEntryUiState.isActive}
-            data-dirty={selectedEntryUiState.isActive && hasUnsavedChanges}
+            data-dirty={selectedEntryUiState.isActive && hasUnsavedChanges && !selectedEntryUiState.isCustomEntry}
             data-editing={selectedEntryUiState.isEditing}
             onClick={selectedEntryUiState.isEditing ? undefined : toggleMenu}
           >
@@ -271,7 +319,7 @@ const SavedAssumptionsPanel = ({
                       <span className="saved-assumption-row__label text-sm font-semibold text-strong">
                         {selectedEntry.label}
                       </span>
-                      {!selectedEntryUiState.isDefaultEntry && (
+                      {!selectedEntryUiState.isDefaultEntry && !selectedEntryUiState.isCustomEntry && (
                         <span
                           className="assumption-state-pill assumption-state-pill--compact"
                           data-state={
@@ -323,7 +371,11 @@ const SavedAssumptionsPanel = ({
             >
               <div className="saved-assumptions-panel__menu-list">
                 {visibleEntries.map((entry) => {
-                  const entryUiState = getEntryUiState(entry, { activeId, editingId, hasUnsavedChanges });
+                  const entryUiState = getEntryUiState(entry, {
+                    activeId: currentSelectionId,
+                    editingId,
+                    hasUnsavedChanges,
+                  });
 
                   return (
                     <div
@@ -434,7 +486,10 @@ SavedAssumptionsPanel.propTypes = {
   ).isRequired,
   activeId: PropTypes.string,
   hasUnsavedChanges: PropTypes.bool,
+  showCurrentActions: PropTypes.bool,
   onLoad: PropTypes.func.isRequired,
+  onSaveCurrent: PropTypes.func.isRequired,
+  onShareCurrent: PropTypes.func.isRequired,
   onRename: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onCopyLink: PropTypes.func.isRequired,
@@ -444,6 +499,7 @@ SavedAssumptionsPanel.propTypes = {
 SavedAssumptionsPanel.defaultProps = {
   activeId: null,
   hasUnsavedChanges: false,
+  showCurrentActions: false,
 };
 
 export default SavedAssumptionsPanel;

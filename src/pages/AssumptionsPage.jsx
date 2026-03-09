@@ -119,6 +119,10 @@ const AssumptionsPage = () => {
     );
     return matchingEntry?.label || null;
   }, [activeLibraryEntry, currentFingerprint, libraryEntries]);
+  // `isUsingCustomValues` becomes false when the current state matches the built-in default assumptions,
+  // but users can still have unsaved edits relative to a previously loaded saved set. Keep summary-row
+  // Save/Share actions visible in that case so they can preserve or share the diverged state.
+  const shouldShowCurrentAssumptionsActions = isUsingCustomValues || hasUnsavedChanges;
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
@@ -651,24 +655,14 @@ const AssumptionsPage = () => {
           <p className="impact-page__subtitle">Adjust or view the parameters used to calculate lives saved.</p>
         </div>
 
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-2 sm:justify-end">
-          {isUsingCustomValues && (
-            <button type="button" onClick={handleSaveAssumptionsClick} className="impact-btn impact-btn--secondary">
-              Save to Library
-            </button>
-          )}
-          {isUsingCustomValues && (
-            <button type="button" onClick={handleShareButtonClick} className="impact-btn impact-btn--custom-accent">
-              Share Assumptions
-            </button>
-          )}
-        </div>
-
         <SavedAssumptionsPanel
           entries={libraryEntries}
           activeId={activePanelEntryId}
           hasUnsavedChanges={hasUnsavedChanges}
+          showCurrentActions={shouldShowCurrentAssumptionsActions}
           onLoad={handleLoadSavedAssumptions}
+          onSaveCurrent={handleSaveAssumptionsClick}
+          onShareCurrent={handleShareButtonClick}
           onRename={handleRenameSavedAssumptions}
           onDelete={handleRequestDeleteSavedAssumptions}
           onCopyLink={handleCopySavedLink}
@@ -711,9 +705,9 @@ const AssumptionsPage = () => {
           isOpen={Boolean(pendingLoadEntry)}
           onContinue={handleContinuePendingLoad}
           onCancel={handleCancelPendingLoad}
-          title="Load from Assumptions Library?"
+          title="Overwrite your unsaved assumptions?"
           description="You already have custom assumptions in this browser. Continuing will replace them with this saved entry."
-          continueLabel="Continue (Replace Mine)"
+          continueLabel="Continue (overwrite yours)"
           cancelLabel="Cancel"
         />
 
@@ -740,7 +734,11 @@ const AssumptionsPage = () => {
           isOpen={Boolean(pendingDescriptionEntry)}
           entryLabel={pendingDescriptionEntry?.label || ''}
           initialDescription={pendingDescriptionEntry?.content || pendingDescriptionEntry?.description || ''}
-          isReadOnly={Boolean(pendingDescriptionEntry?.reference || pendingDescriptionEntry?.source === 'curated')}
+          isReadOnly={Boolean(
+            pendingDescriptionEntry?.reference ||
+              pendingDescriptionEntry?.source === 'curated' ||
+              pendingDescriptionEntry?.source === 'custom'
+          )}
           onClose={handleDescriptionModalClose}
           onSave={handleSaveDescription}
         />

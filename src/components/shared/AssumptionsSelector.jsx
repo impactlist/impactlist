@@ -13,9 +13,9 @@ import { useAssumptions } from '../../contexts/AssumptionsContext';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
 import IconActionButton from './IconActionButton';
 import useDismissibleMenu from '../../hooks/useDismissibleMenu';
+import { CURRENT_CUSTOM_ENTRY, CURRENT_CUSTOM_ENTRY_ID } from '../../constants/customAssumptionsEntry';
 
 const DEFAULT_ASSUMPTIONS_SELECTOR_VALUE = '__default__';
-const CURRENT_CUSTOM_ASSUMPTIONS_SELECTOR_VALUE = '__current_custom__';
 
 const AssumptionsSelector = ({ className = '' }) => {
   const [savedAssumptions, setSavedAssumptions] = useState([]);
@@ -47,14 +47,14 @@ const AssumptionsSelector = ({ className = '' }) => {
   const isUsingCurrentCustomAssumptions =
     isUsingCustomValues && (!activeLibraryEntry || activeLibraryEntryFingerprint !== currentAssumptionsFingerprint);
   const assumptionsSelectorValue = isUsingCurrentCustomAssumptions
-    ? CURRENT_CUSTOM_ASSUMPTIONS_SELECTOR_VALUE
+    ? CURRENT_CUSTOM_ENTRY_ID
     : activeSavedAssumptionsIdState || DEFAULT_ASSUMPTIONS_SELECTOR_VALUE;
 
   const assumptionsMenuEntries = useMemo(() => {
     const entries = [{ id: DEFAULT_ASSUMPTIONS_SELECTOR_VALUE, label: 'Default' }];
 
     if (isUsingCurrentCustomAssumptions) {
-      entries.push({ id: CURRENT_CUSTOM_ASSUMPTIONS_SELECTOR_VALUE, label: 'Current custom assumptions' });
+      entries.push(CURRENT_CUSTOM_ENTRY);
     }
 
     curatedAssumptions.forEach((entry) => {
@@ -68,8 +68,12 @@ const AssumptionsSelector = ({ className = '' }) => {
     return entries;
   }, [curatedAssumptions, isUsingCurrentCustomAssumptions, savedAssumptions]);
 
-  const selectedAssumptionsLabel =
-    assumptionsMenuEntries.find((entry) => entry.id === assumptionsSelectorValue)?.label || 'Default';
+  const selectedAssumptionsEntry =
+    assumptionsMenuEntries.find((entry) => entry.id === assumptionsSelectorValue) || assumptionsMenuEntries[0];
+  const selectedAssumptionsLabel = selectedAssumptionsEntry?.label || 'Default';
+  const selectedEntryHasDescription = Boolean(
+    selectedAssumptionsEntry?.description || selectedAssumptionsEntry?.content
+  );
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
@@ -106,7 +110,7 @@ const AssumptionsSelector = ({ className = '' }) => {
         return;
       }
 
-      if (nextValue === CURRENT_CUSTOM_ASSUMPTIONS_SELECTOR_VALUE) {
+      if (nextValue === CURRENT_CUSTOM_ENTRY_ID) {
         setAssumptionsMenuOpen(false);
         return;
       }
@@ -146,7 +150,7 @@ const AssumptionsSelector = ({ className = '' }) => {
     <>
       <div className={`assumptions-selector-bar ${className}`.trim()} ref={assumptionsMenuRef}>
         <span id={labelId} className="assumptions-selector-bar__label">
-          Using assumptions:
+          Active assumptions:
         </span>
         <div className="assumptions-selector-bar__control">
           <button
@@ -160,6 +164,14 @@ const AssumptionsSelector = ({ className = '' }) => {
           >
             <span className="assumptions-selector-bar__trigger-text">{selectedAssumptionsLabel}</span>
           </button>
+          {selectedEntryHasDescription && (
+            <IconActionButton
+              icon="description"
+              label={`View description for ${selectedAssumptionsLabel}`}
+              onClick={() => handleDescriptionModalOpen(selectedAssumptionsEntry)}
+              className="assumptions-selector-bar__selected-description-btn"
+            />
+          )}
           <span className="assumptions-selector-bar__chevron" aria-hidden={true}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path

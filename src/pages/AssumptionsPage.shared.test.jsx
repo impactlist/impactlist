@@ -46,7 +46,7 @@ const getPersistedCustomEffectsData = () => {
 };
 
 const openAssumptionsLibraryMenu = async (user) => {
-  const section = screen.getByText('Assumptions Library').closest('section');
+  const section = screen.getByText('Active Assumptions').closest('section');
   const openMenu = section.querySelector('[role="menu"]');
 
   if (!openMenu) {
@@ -55,6 +55,9 @@ const openAssumptionsLibraryMenu = async (user) => {
 
   return section.querySelector('[role="menu"]');
 };
+
+const getActiveAssumptionsSummary = () =>
+  screen.getByText('Active Assumptions').closest('section').querySelector('.saved-assumptions-panel__summary');
 
 describe('Global shared assumptions import flow', () => {
   const originalFetch = globalThis.fetch;
@@ -112,7 +115,7 @@ describe('Global shared assumptions import flow', () => {
       reference: 'abc123',
     });
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
-    const section = screen.getByText('Assumptions Library').closest('section');
+    const section = screen.getByText('Active Assumptions').closest('section');
     expect(within(section).getByText('abc123')).toBeInTheDocument();
     const menu = await openAssumptionsLibraryMenu(user);
     expect(menu).not.toBeNull();
@@ -462,7 +465,7 @@ describe('Global shared assumptions import flow', () => {
     await user.clear(timeLimitInput);
     await user.type(timeLimitInput, String(unsavedTimeLimit));
 
-    await user.click(screen.getByRole('button', { name: 'Share Assumptions' }));
+    await user.click(within(getActiveAssumptionsSummary()).getByRole('button', { name: 'Share' }));
     expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Create Link' }));

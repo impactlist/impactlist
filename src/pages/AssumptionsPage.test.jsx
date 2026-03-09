@@ -58,7 +58,7 @@ const renderAssumptionsRoute = (initialEntry) => {
   );
 };
 
-const getAssumptionsLibrarySection = () => screen.getByText('Assumptions Library').closest('section');
+const getAssumptionsLibrarySection = () => screen.getByText('Active Assumptions').closest('section');
 
 const openAssumptionsLibraryMenu = async (user) => {
   const section = getAssumptionsLibrarySection();
@@ -78,6 +78,12 @@ const getAssumptionsLibraryRow = (container, label) => within(container).getByTe
 
 const getAssumptionsLibrarySummary = () =>
   getAssumptionsLibrarySection().querySelector('.saved-assumptions-panel__summary');
+
+const getActiveAssumptionsActionButton = (label) =>
+  within(getAssumptionsLibrarySummary()).getByRole('button', { name: label });
+
+const queryActiveAssumptionsActionButton = (label) =>
+  within(getAssumptionsLibrarySummary()).queryByRole('button', { name: label });
 
 describe('AssumptionsPage routing integration', () => {
   beforeEach(() => {
@@ -324,7 +330,8 @@ describe('AssumptionsPage routing integration', () => {
   it('hides Save to Library when there are no custom assumptions', async () => {
     renderAssumptionsRoute('/assumptions');
     expect(await screen.findByText('Assumptions')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Save to Library' })).not.toBeInTheDocument();
+    expect(queryActiveAssumptionsActionButton('Save')).not.toBeInTheDocument();
+    expect(queryActiveAssumptionsActionButton('Share')).not.toBeInTheDocument();
   });
 
   it('shows curated assumptions profiles in the library and loads them as read-only presets', async () => {
@@ -363,7 +370,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
   });
 
-  it('treats saving from a curated profile as creating a new local copy', async () => {
+  it('does not show Save or Share actions for an active curated assumptions set', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 
@@ -372,31 +379,8 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(within(row).getByRole('menuitemradio'));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Save to Library' })).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
-    expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Update Current Library Entry' })).not.toBeInTheDocument();
-    expect(screen.getByLabelText('Label')).toHaveValue('');
-
-    await user.type(screen.getByLabelText('Label'), 'My Longtermist Copy');
-    const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
-    await user.click(saveButtons[saveButtons.length - 1]);
-
-    await waitFor(() => {
-      const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
-      expect(savedEntries).toHaveLength(1);
-      expect(savedEntries[0]).toMatchObject({
-        label: 'My Longtermist Copy',
-        source: 'local',
-      });
-      expect(savedEntries[0].assumptions).toEqual({
-        globalParameters: {
-          timeLimit: 10000000000,
-        },
-      });
-      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedEntries[0].id);
+      expect(queryActiveAssumptionsActionButton('Save')).not.toBeInTheDocument();
+      expect(queryActiveAssumptionsActionButton('Share')).not.toBeInTheDocument();
     });
   });
 
@@ -409,7 +393,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '175');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    await user.click(getActiveAssumptionsActionButton('Save'));
     expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
 
     const labelInput = screen.getByLabelText('Label');
@@ -453,7 +437,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '175');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    await user.click(getActiveAssumptionsActionButton('Save'));
     expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
 
     const descriptionInput = screen.getByLabelText('Description (optional)');
@@ -490,6 +474,14 @@ describe('AssumptionsPage routing integration', () => {
       throw new Error('Expected seeded saved assumptions entry');
     }
     setActiveSavedAssumptionsId(seeded.entry.id);
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
 
     renderAssumptionsRoute('/assumptions');
 
@@ -498,7 +490,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '205');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    await user.click(getActiveAssumptionsActionButton('Save'));
     expect(await screen.findByRole('button', { name: 'Update Current Library Entry' })).toBeInTheDocument();
     expect(screen.getByLabelText('Label')).toHaveValue('Current Working Model');
     const descriptionInput = screen.getByLabelText('Description (optional)');
@@ -530,6 +522,14 @@ describe('AssumptionsPage routing integration', () => {
       throw new Error('Expected seeded saved assumptions entry');
     }
     setActiveSavedAssumptionsId(seeded.entry.id);
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
 
     renderAssumptionsRoute('/assumptions');
 
@@ -561,6 +561,14 @@ describe('AssumptionsPage routing integration', () => {
       throw new Error('Expected seeded saved assumptions entry');
     }
     setActiveSavedAssumptionsId(seeded.entry.id);
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
 
     const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(false);
 
@@ -594,6 +602,14 @@ describe('AssumptionsPage routing integration', () => {
       throw new Error('Expected seeded saved assumptions entry');
     }
     setActiveSavedAssumptionsId(seeded.entry.id);
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
 
     const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(false);
 
@@ -630,6 +646,14 @@ describe('AssumptionsPage routing integration', () => {
       throw new Error('Expected seeded saved assumptions entry');
     }
     setActiveSavedAssumptionsId(seeded.entry.id);
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
 
     renderAssumptionsRoute('/assumptions');
 
@@ -699,7 +723,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, '205');
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
+    await user.click(getActiveAssumptionsActionButton('Save'));
     expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Update Current Library Entry' })).not.toBeInTheDocument();
 
@@ -760,7 +784,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    await user.click(getActiveAssumptionsActionButton('Share'));
     const shareDescription = screen.getByLabelText('Description (optional)');
     expect(shareDescription).toHaveValue('Local description before sharing.');
     await user.clear(shareDescription);
@@ -813,7 +837,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    await user.click(getActiveAssumptionsActionButton('Share'));
     await user.type(screen.getByLabelText('Description (optional)'), 'Unsaved assumptions shared note.');
     await user.click(await screen.findByRole('button', { name: 'Create Link' }));
     expect(await screen.findByText('Share link created.')).toBeInTheDocument();
@@ -874,7 +898,7 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
+    await user.click(getActiveAssumptionsActionButton('Share'));
     await user.click(await screen.findByRole('button', { name: 'Create Link' }));
     expect(await screen.findByText('Share link created.')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Done' }));
@@ -895,8 +919,7 @@ describe('AssumptionsPage routing integration', () => {
     ).toBe(true);
   });
 
-  it('shows existing share link immediately for active remote assumptions without creating a new link', async () => {
-    const user = userEvent.setup();
+  it('shows Copy Link instead of Share for active assumptions that already have a share link', async () => {
     sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
@@ -928,17 +951,12 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
-    expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
-    expect(screen.getByText((text) => text.includes('?shared=existing-remote'))).toBeInTheDocument();
-    expect(screen.getByLabelText('Description')).toHaveValue('Existing remote description');
-    expect(screen.getAllByRole('button', { name: 'Copy Link' }).length).toBeGreaterThan(0);
-    expect(screen.queryByRole('button', { name: 'Create Link' })).not.toBeInTheDocument();
+    expect(queryActiveAssumptionsActionButton('Share')).not.toBeInTheDocument();
+    expect(getActiveAssumptionsActionButton('Copy Link')).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('hides the read-only description block for existing remote links without a description', async () => {
-    const user = userEvent.setup();
+  it('does not show Share for active assumptions that already have a share link and no description', async () => {
     sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
@@ -969,13 +987,8 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(await screen.findByRole('button', { name: 'Share Assumptions' }));
-    expect(await screen.findByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
-    expect(
-      screen.getByText((text) => text.includes('?shared=existing-remote-without-description'))
-    ).toBeInTheDocument();
-    expect(screen.queryByLabelText('Description')).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('Description:')).not.toBeInTheDocument();
+    expect(queryActiveAssumptionsActionButton('Share')).not.toBeInTheDocument();
+    expect(getActiveAssumptionsActionButton('Copy Link')).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -1062,7 +1075,11 @@ describe('AssumptionsPage routing integration', () => {
 
     const customRow = getAssumptionsLibrarySummary();
     expect(customRow).toHaveAttribute('data-active', 'true');
-    expect(customRow).toHaveAttribute('data-dirty', 'true');
+    expect(customRow).toHaveAttribute('data-dirty', 'false');
+    expect(within(customRow).getByText('Custom (unsaved)')).toBeInTheDocument();
+    expect(within(customRow).getByRole('button', { name: 'Save' })).toBeInTheDocument();
+    expect(within(customRow).getByRole('button', { name: 'Share' })).toBeInTheDocument();
+    expect(within(customRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
 
     const { menu } = await openAssumptionsLibraryMenu(user);
     const defaultRow = getAssumptionsLibraryRow(menu, 'Default');
@@ -1112,8 +1129,8 @@ describe('AssumptionsPage routing integration', () => {
     const importedRow = getAssumptionsLibraryRow(menu, 'Imported From Friend');
     await user.click(within(importedRow).getByRole('menuitemradio'));
 
-    expect(await screen.findByText('Load from Assumptions Library?')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
+    expect(await screen.findByText('Overwrite your unsaved assumptions?')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
 
     await waitFor(() => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('220');
@@ -1159,7 +1176,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(within(targetRow).getByRole('menuitemradio'));
 
     await waitFor(() => {
-      expect(screen.queryByText('Load from Assumptions Library?')).not.toBeInTheDocument();
+      expect(screen.queryByText('Overwrite your unsaved assumptions?')).not.toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -1231,11 +1248,34 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     const activeRow = getAssumptionsLibrarySummary();
-    expect(within(activeRow).getByText('Current Saved')).toBeInTheDocument();
-    expect(activeRow).toHaveAttribute('data-dirty', 'true');
+    expect(within(activeRow).getByText('Custom (unsaved)')).toBeInTheDocument();
+    expect(activeRow).toHaveAttribute('data-dirty', 'false');
 
     const { menu } = await openAssumptionsLibraryMenu(user);
-    expect(within(menu).queryByText('Current Saved')).not.toBeInTheDocument();
+    expect(within(menu).getByText('Current Saved')).toBeInTheDocument();
+  });
+
+  it('shows a read-only description for the custom unsaved active assumptions state', async () => {
+    const user = userEvent.setup();
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    const summaryRow = getAssumptionsLibrarySummary();
+    await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
+
+    expect(await screen.findByRole('heading', { name: 'Custom (unsaved)' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
+      'The active assumptions have been edited and no longer match a saved set of assumptions.'
+    );
+    expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
+      'If you want to reuse these exact assumptions later, click Save to save a local copy or click Share to create a link to these assumptions that you can share with others.'
+    );
+    expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
   });
 
   it('does not show Delete All Imported button', async () => {
@@ -1295,6 +1335,8 @@ describe('AssumptionsPage routing integration', () => {
     const summary = section.querySelector('.saved-assumptions-panel__summary');
     expect(summary).not.toBeNull();
     expect(within(summary).getByText('Local')).toBeInTheDocument();
+    expect(within(summary).queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
+    expect(within(summary).getByRole('button', { name: 'Share' })).toBeInTheDocument();
     expect(within(summary).getByRole('button', { name: 'View description' })).toBeInTheDocument();
 
     await user.click(within(summary).getByRole('button', { name: 'Rename' }));
@@ -1422,7 +1464,7 @@ describe('AssumptionsPage routing integration', () => {
     }
 
     renderAssumptionsRoute('/assumptions');
-    await user.click(await screen.findByRole('button', { name: 'Save to Library' }));
+    await user.click(getActiveAssumptionsActionButton('Save'));
 
     const labelInput = await screen.findByLabelText('Label');
     await user.clear(labelInput);
@@ -1452,7 +1494,7 @@ describe('AssumptionsPage routing integration', () => {
     );
 
     renderAssumptionsRoute('/assumptions');
-    await user.click(await screen.findByRole('button', { name: 'Save to Library' }));
+    await user.click(getActiveAssumptionsActionButton('Save'));
 
     const labelInput = await screen.findByLabelText('Label');
     await user.clear(labelInput);
@@ -1490,10 +1532,9 @@ describe('AssumptionsPage routing integration', () => {
     if (!seeded.ok) {
       throw new Error('Expected seeded entry');
     }
-    setActiveSavedAssumptionsId(seeded.entry.id);
 
     renderAssumptionsRoute('/assumptions');
-    await user.click(await screen.findByRole('button', { name: 'Save to Library' }));
+    await user.click(getActiveAssumptionsActionButton('Save'));
 
     expect(screen.getByText(/You are about to save a duplicate copy of/i)).toHaveTextContent(
       'You are about to save a duplicate copy of Baseline Model.'

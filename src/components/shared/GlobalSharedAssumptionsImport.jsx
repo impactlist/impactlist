@@ -33,21 +33,16 @@ const GlobalSharedAssumptionsImport = () => {
   const handledCuratedReferenceRef = useRef(null);
   const curatedEntries = useMemo(() => getCuratedAssumptionsEntries(), []);
   const currentAssumptions = getNormalizedUserAssumptionsForSharing();
-  const savedEntries = getSavedAssumptions();
-  const libraryEntries = useMemo(() => [...curatedEntries, ...savedEntries], [curatedEntries, savedEntries]);
+  const libraryEntries = [...curatedEntries, ...getSavedAssumptions()];
   const currentComparableFingerprint = useMemo(
     () => createComparableAssumptionsFingerprint(currentAssumptions),
     [currentAssumptions]
   );
-  const hasUnsavedAssumptions = useMemo(
-    () =>
-      !isCurrentAssumptionsStateRepresentedByLibrary({
-        isUsingCustomValues,
-        currentFingerprint: currentComparableFingerprint,
-        libraryEntries,
-      }),
-    [currentComparableFingerprint, isUsingCustomValues, libraryEntries]
-  );
+  const hasUnsavedAssumptions = !isCurrentAssumptionsStateRepresentedByLibrary({
+    isUsingCustomValues,
+    currentFingerprint: currentComparableFingerprint,
+    libraryEntries,
+  });
 
   const sharedReference = searchParams.get('shared');
   const curatedReference = sharedReference ? null : searchParams.get(CURATED_ASSUMPTIONS_QUERY_PARAM);

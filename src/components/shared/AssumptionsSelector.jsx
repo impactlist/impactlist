@@ -18,6 +18,8 @@ import {
   isCurrentAssumptionsStateRepresentedByLibrary,
   OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL,
 } from '../../utils/assumptionsLoadHelpers';
+import useAssumptionsSelectorPreference from '../../hooks/useAssumptionsSelectorPreference';
+import { getActiveAssumptionsLabel } from '../../utils/assumptionsSelectorDisplayPreference';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
 import SaveAssumptionsModal from '../SaveAssumptionsModal';
 import ShareAssumptionsModal from '../ShareAssumptionsModal';
@@ -25,13 +27,14 @@ import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import InfoTooltipIcon from './InfoTooltipIcon';
 import AssumptionsDropdown, { DEFAULT_ASSUMPTIONS_ENTRY_ID } from './AssumptionsDropdown';
 
-const AssumptionsSelector = ({ className = '' }) => {
+const AssumptionsSelector = ({ className = '', interactive }) => {
   const [savedAssumptions, setSavedAssumptions] = useState([]);
   const [activeSavedAssumptionsIdState, setActiveSavedAssumptionsIdState] = useState(null);
   const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
   const { getNormalizedUserAssumptionsForSharing, isUsingCustomValues, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotificationActions();
+  const [showSelectorEveryPage] = useAssumptionsSelectorPreference();
 
   const assumptionsForSharing = useMemo(
     () => getNormalizedUserAssumptionsForSharing(),
@@ -69,6 +72,18 @@ const AssumptionsSelector = ({ className = '' }) => {
   // Keep `Share` available for unsaved custom assumptions and for local saved entries that
   // do not already have a share link, even when the current values happen to equal defaults.
   const shouldShowCurrentShareAction = isUsingCustomValues || hasUnsavedChanges;
+  const currentSelectionLabel = useMemo(
+    () =>
+      getActiveAssumptionsLabel({
+        activeLibraryEntry,
+        activeSavedAssumptionsId: activeSavedAssumptionsIdState,
+        hasUnsavedChanges,
+      }),
+    [activeLibraryEntry, activeSavedAssumptionsIdState, hasUnsavedChanges]
+  );
+  // This dropdown path is controlled by the "show on every page" preference from the
+  // Assumptions page, so it remains available without forcing it on by default.
+  const shouldRenderInteractive = interactive ?? showSelectorEveryPage;
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
@@ -254,6 +269,29 @@ const AssumptionsSelector = ({ className = '' }) => {
       />
     </>
   );
+  const displayLabel = (
+    <>
+      <span className="assumptions-selector-bar__display-text">Active assumptions: {currentSelectionLabel}</span>
+      <InfoTooltipIcon
+        className="assumptions-selector-bar__label-tooltip"
+        iconClassName="h-4 w-4 text-muted"
+        content={
+          <>
+            <p>The active assumptions affect all rankings and calculations.</p>
+            <p className="mt-2">To change them or view more detail, go to the Assumptions page.</p>
+          </>
+        }
+      />
+    </>
+  );
+
+  if (!shouldRenderInteractive) {
+    return (
+      <div className={`assumptions-selector-bar assumptions-selector-bar--display ${className}`.trim()}>
+        <div className="assumptions-selector-bar__display-line">{displayLabel}</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -309,6 +347,12 @@ const AssumptionsSelector = ({ className = '' }) => {
 
 AssumptionsSelector.propTypes = {
   className: PropTypes.string,
+  interactive: PropTypes.bool,
+};
+
+AssumptionsSelector.defaultProps = {
+  className: '',
+  interactive: undefined,
 };
 
 export default AssumptionsSelector;

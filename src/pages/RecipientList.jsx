@@ -196,10 +196,12 @@ const RecipientList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <AssumptionsSelector />
-          <div className="mb-4">
-            <div className="w-full sm:max-w-md">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="order-2 w-full sm:order-1 sm:max-w-md">
               <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
+            </div>
+            <div className="order-1 w-full min-w-0 sm:order-2">
+              <AssumptionsSelector className="mb-0" />
             </div>
           </div>
           <div className="impact-surface impact-surface--table">

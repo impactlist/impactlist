@@ -134,6 +134,22 @@ describe('AssumptionsPage routing integration', () => {
     ).toBeInTheDocument();
   });
 
+  it('lets the user toggle whether the assumptions selector appears on every page', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const checkbox = screen.getByRole('checkbox', { name: 'Show assumption selector on every page' });
+    expect(checkbox).not.toBeChecked();
+
+    await user.click(checkbox);
+    expect(checkbox).toBeChecked();
+    expect(localStorage.getItem('showAssumptionsSelectorEveryPage:v1')).toBe('1');
+
+    await user.click(checkbox);
+    expect(checkbox).not.toBeChecked();
+    expect(localStorage.getItem('showAssumptionsSelectorEveryPage:v1')).toBe('0');
+  });
+
   it('supports back/forward navigation between category list and category editor urls', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions?tab=categories');

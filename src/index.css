@@ -105,9 +105,13 @@
     margin-bottom: 1rem;
   }
 
+  .assumptions-selector-bar--display {
+    width: 100%;
+  }
+
   .assumptions-selector-bar--inline {
     width: min(100%, 34.5rem);
-    margin-inline: auto;
+    margin-left: auto;
     padding: 0.15rem 0 0.35rem;
   }
 
@@ -125,6 +129,22 @@
 
   .assumptions-selector-bar__label-tooltip {
     color: var(--text-muted);
+  }
+
+  .assumptions-selector-bar__display-line {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  .assumptions-selector-bar__display-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .assumptions-selector-bar__control {
@@ -193,6 +213,28 @@
     padding-right: 0.1rem;
   }
 
+  .saved-assumptions-panel__footer {
+    margin-top: 0.85rem;
+    padding-top: 0.8rem;
+  }
+
+  .saved-assumptions-panel__preference {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .saved-assumptions-panel__preference-checkbox {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.25rem;
+    accent-color: var(--custom-accent);
+    cursor: pointer;
+  }
+
   @media (max-width: 640px) {
     .assumptions-selector-bar {
       width: 100%;
@@ -204,6 +246,10 @@
 
     .assumptions-selector-bar__label {
       margin-bottom: 0.4rem;
+      font-size: 0.68rem;
+    }
+
+    .assumptions-selector-bar__display-text {
       font-size: 0.68rem;
     }
 

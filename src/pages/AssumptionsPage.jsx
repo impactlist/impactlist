@@ -12,6 +12,7 @@ import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
+import useAssumptionsSelectorPreference from '../hooks/useAssumptionsSelectorPreference';
 import useSaveAssumptionsModal from '../hooks/useSaveAssumptionsModal';
 import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
 import {
@@ -44,6 +45,7 @@ const DEFAULT_ASSUMPTIONS_ENTRY_ID = '__default__';
 const AssumptionsPage = () => {
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotificationActions();
+  const [showSelectorEveryPage, setShowSelectorEveryPage] = useAssumptionsSelectorPreference();
   const shouldReduceMotion = useReducedMotion();
   const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -487,6 +489,17 @@ const AssumptionsPage = () => {
           onDelete={handleRequestDeleteSavedAssumptions}
           onCopyLink={handleCopySavedLink}
           onDescription={handleDescriptionModalOpen}
+          footer={
+            <label className="saved-assumptions-panel__preference">
+              <input
+                type="checkbox"
+                checked={showSelectorEveryPage}
+                onChange={(event) => setShowSelectorEveryPage(event.target.checked)}
+                className="saved-assumptions-panel__preference-checkbox"
+              />
+              <span>Show assumption selector on every page</span>
+            </label>
+          }
         />
 
         <div className="assumptions-shell overflow-hidden">

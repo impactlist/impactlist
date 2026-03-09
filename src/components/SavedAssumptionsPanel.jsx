@@ -16,6 +16,7 @@ const SavedAssumptionsPanel = ({
   onDelete,
   onCopyLink,
   onDescription,
+  footer = null,
 }) => {
   return (
     <section className="assumptions-shell mb-5">
@@ -64,6 +65,7 @@ const SavedAssumptionsPanel = ({
           onDescription={onDescription}
           menuAriaLabel="Assumptions Library entries"
         />
+        {footer && <div className="saved-assumptions-panel__footer">{footer}</div>}
       </div>
     </section>
   );
@@ -95,6 +97,7 @@ SavedAssumptionsPanel.propTypes = {
   onDelete: PropTypes.func,
   onCopyLink: PropTypes.func,
   onDescription: PropTypes.func.isRequired,
+  footer: PropTypes.node,
 };
 
 export default SavedAssumptionsPanel;

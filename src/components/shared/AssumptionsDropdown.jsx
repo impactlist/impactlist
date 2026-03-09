@@ -4,16 +4,9 @@ import PropTypes from 'prop-types';
 import IconActionButton from './IconActionButton';
 import useDismissibleMenu from '../../hooks/useDismissibleMenu';
 import { CURRENT_CUSTOM_ENTRY, CURRENT_CUSTOM_ENTRY_ID } from '../../constants/customAssumptionsEntry';
+import { DEFAULT_ASSUMPTIONS_ENTRY, DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../../constants/assumptionsLibraryEntries';
 
-export const DEFAULT_ASSUMPTIONS_ENTRY_ID = '__default__';
-
-const DEFAULT_ENTRY = Object.freeze({
-  id: DEFAULT_ASSUMPTIONS_ENTRY_ID,
-  label: 'Default',
-  description: `These assumptions reflect the best estimates of the creators of Impact List. We've provided other curated sets of assumptions that we think reflect common beliefs of different types of users.
-
-You can create and share your own assumptions on the Assumptions page.`,
-});
+export { DEFAULT_ASSUMPTIONS_ENTRY_ID };
 
 const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges }) => {
   const isDefaultEntry = entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID;
@@ -91,10 +84,12 @@ const AssumptionsDropdown = ({
       return CURRENT_CUSTOM_ENTRY;
     }
 
-    return currentSelectionId === DEFAULT_ASSUMPTIONS_ENTRY_ID ? DEFAULT_ENTRY : activeEntry || DEFAULT_ENTRY;
+    return currentSelectionId === DEFAULT_ASSUMPTIONS_ENTRY_ID
+      ? DEFAULT_ASSUMPTIONS_ENTRY
+      : activeEntry || DEFAULT_ASSUMPTIONS_ENTRY;
   }, [activeEntry, currentSelectionId]);
   const visibleEntries = useMemo(
-    () => [DEFAULT_ENTRY, ...entries].filter((entry) => entry.id !== selectedEntry.id),
+    () => [DEFAULT_ASSUMPTIONS_ENTRY, ...entries].filter((entry) => entry.id !== selectedEntry.id),
     [entries, selectedEntry.id]
   );
 

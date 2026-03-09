@@ -112,6 +112,7 @@ describe('AssumptionsSelector', () => {
   const getMenuRow = (menu, label) => within(menu).getByText(label).closest('.assumptions-entry');
 
   beforeEach(() => {
+    globalThis.localStorage.setItem('showAssumptionsSelectorEveryPage:v1', '1');
     mockSetAllUserAssumptions.mockReset();
     mockMarkSavedAssumptionsLoaded.mockReset();
     mockSetActiveSavedAssumptionsId.mockReset();
@@ -127,6 +128,7 @@ describe('AssumptionsSelector', () => {
   });
 
   afterEach(() => {
+    globalThis.localStorage.clear();
     vi.restoreAllMocks();
   });
 
@@ -134,6 +136,18 @@ describe('AssumptionsSelector', () => {
     render(<AssumptionsSelector />);
 
     expect(screen.getByRole('button', { name: /Active assumptions:/ })).toBeInTheDocument();
+  });
+
+  it('renders a display label without the dropdown when interactive is false', () => {
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+
+    render(<AssumptionsSelector interactive={false} />);
+
+    expect(document.querySelector('.assumptions-selector-bar__display-text')).toHaveTextContent(
+      'Active assumptions: My Saved Assumptions'
+    );
+    expect(screen.queryByRole('button', { name: /Active assumptions:/ })).not.toBeInTheDocument();
   });
 
   it('shows an explanatory tooltip next to the active assumptions label', async () => {

@@ -473,14 +473,7 @@
   }
 
   .impact-table thead th::after {
-    bottom: -1px;
-    height: 8px;
-    background: linear-gradient(180deg, var(--table-header-falloff), transparent);
-    opacity: 0;
-    transform: translateY(-6px);
-    transition:
-      opacity 180ms var(--ease-standard),
-      transform 180ms var(--ease-standard);
+    display: none;
   }
 
   .impact-table thead th:first-child {
@@ -500,11 +493,6 @@
       ),
       color-mix(in srgb, var(--bg-surface-alt) 88%, white 12%);
     box-shadow: inset 0 -1px 0 var(--table-header-divider-stuck);
-  }
-
-  .impact-table-sticky-rail[data-visible='true'] .impact-table thead th::after {
-    opacity: 1;
-    transform: translateY(0);
   }
 
   .impact-table tbody tr:first-child td {

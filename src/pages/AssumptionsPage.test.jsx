@@ -1277,6 +1277,20 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
   });
 
+  it('shows only the description action for the default active assumptions row', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const summaryRow = getAssumptionsLibrarySummary();
+    expect(within(summaryRow).getByText('Default')).toBeInTheDocument();
+    expect(within(summaryRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
+
+    await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
+    expect(await screen.findByRole('heading', { name: 'Default' })).toBeInTheDocument();
+  });
+
   it('does not prefill the save description when saving custom unsaved assumptions', async () => {
     const user = userEvent.setup();
     const seeded = saveNewAssumptions({

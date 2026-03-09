@@ -169,6 +169,40 @@ describe('AssumptionsSelector', () => {
     expect(mockSetAllUserAssumptions).not.toHaveBeenCalled();
   });
 
+  it('shows a description for the default assumptions entry', async () => {
+    const user = userEvent.setup();
+    render(<AssumptionsSelector />);
+
+    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
+    expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
+    await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
+
+    expect(screen.getByRole('heading', { name: 'Default' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
+      'These assumptions reflect the best estimates of the creators of Impact List.'
+    );
+    expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
+      'You can create and share your own assumptions on the Assumptions page.'
+    );
+    expect(screen.queryByRole('link', { name: 'Assumptions page' })).not.toBeInTheDocument();
+  });
+
+  it('shows only the description action for the default row inside the menu', async () => {
+    const user = userEvent.setup();
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+
+    render(<AssumptionsSelector />);
+
+    const menu = await openMenu(user);
+    const defaultRow = getMenuRow(menu, 'Default');
+
+    expect(within(defaultRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
+    expect(within(defaultRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
+    expect(within(defaultRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
+  });
+
   it('shows Custom (unsaved) when edits no longer match the active saved assumptions and exposes its description', async () => {
     const user = userEvent.setup();
     mockSavedAssumptionsState.activeId = savedEntry.id;

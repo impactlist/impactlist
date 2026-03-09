@@ -9,6 +9,9 @@ export const DEFAULT_ASSUMPTIONS_ENTRY_ID = '__default__';
 const DEFAULT_ENTRY = Object.freeze({
   id: DEFAULT_ASSUMPTIONS_ENTRY_ID,
   label: 'Default',
+  description: `These assumptions reflect the best estimates of the creators of Impact List. We've provided other curated sets of assumptions that we think reflect common beliefs of different types of users.
+
+You can create and share your own assumptions on the Assumptions page.`,
 });
 
 const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges }) => {
@@ -21,8 +24,11 @@ const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges }) => {
   const isLoadDisabled = isActive && !hasUnsavedChanges;
   const shouldShowDescriptionAction = isCustomEntry
     ? true
-    : !isDefaultEntry &&
-      (isCurated ? Boolean(entry.description || entry.content) : !isRemote || Boolean(entry.description));
+    : isDefaultEntry
+      ? Boolean(entry.description || entry.content)
+      : isCurated
+        ? Boolean(entry.description || entry.content)
+        : !isRemote || Boolean(entry.description);
 
   return {
     isActive,
@@ -165,7 +171,7 @@ const AssumptionsDropdown = ({
 
   const renderEntryActions = useCallback(
     (entry, entryUiState, mode = 'menu') => {
-      if (entryUiState.isDefaultEntry) {
+      if (entryUiState.isDefaultEntry && !entryUiState.shouldShowDescriptionAction) {
         return null;
       }
 
@@ -176,8 +182,13 @@ const AssumptionsDropdown = ({
           ? showCurrentShareAction
           : showShareForLocal && entry.source === 'local' && !entryUiState.isCurated && !entryUiState.isRemote);
 
-      const canManageEntry = allowEntryManagementActions && !entryUiState.isCurated && !entryUiState.isCustomEntry;
-      const canCopyLinkEntry = (allowEntryManagementActions || allowCopyLinkAction) && !entryUiState.isCurated;
+      const canManageEntry =
+        allowEntryManagementActions &&
+        !entryUiState.isCurated &&
+        !entryUiState.isCustomEntry &&
+        !entryUiState.isDefaultEntry;
+      const canCopyLinkEntry =
+        (allowEntryManagementActions || allowCopyLinkAction) && !entryUiState.isCurated && !entryUiState.isDefaultEntry;
 
       const handleDescription = () => {
         onDescription(entry);

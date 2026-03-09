@@ -1,13 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { useNotificationActions } from '../../contexts/NotificationContext';
 import { normalizeUserAssumptions } from '../../utils/assumptionsAPIHelpers';
 import { fetchSharedAssumptions } from '../../utils/shareAssumptions';
+import {
+  CURATED_ASSUMPTIONS_QUERY_PARAM,
+  getCuratedAssumptionsEntries,
+  getCuratedAssumptionsEntryByProfileId,
+} from '../../utils/curatedAssumptionsProfiles';
+import { isCurrentAssumptionsStateRepresentedByLibrary } from '../../utils/assumptionsLoadHelpers';
 import { buildEvictionNotificationMessage } from '../../utils/savedAssumptionsMessages';
 import {
   createAssumptionsFingerprint,
+  createComparableAssumptionsFingerprint,
+  getActiveSavedAssumptionsId,
+  getSavedAssumptions,
   setActiveSavedAssumptionsId,
   upsertImportedSavedAssumptions,
 } from '../../utils/savedAssumptionsStore';
@@ -18,28 +27,47 @@ const GlobalSharedAssumptionsImport = () => {
     useAssumptions();
   const { showNotification } = useNotificationActions();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [pendingSharedSnapshot, setPendingSharedSnapshot] = useState(null);
+  const [pendingImport, setPendingImport] = useState(null);
   const [isLoadingSharedSnapshot, setIsLoadingSharedSnapshot] = useState(false);
   const activeRequestIdRef = useRef(0);
+  const handledCuratedReferenceRef = useRef(null);
+  const curatedEntries = useMemo(() => getCuratedAssumptionsEntries(), []);
+  const currentAssumptions = getNormalizedUserAssumptionsForSharing();
+  const savedEntries = getSavedAssumptions();
+  const libraryEntries = useMemo(() => [...curatedEntries, ...savedEntries], [curatedEntries, savedEntries]);
+  const currentComparableFingerprint = useMemo(
+    () => createComparableAssumptionsFingerprint(currentAssumptions),
+    [currentAssumptions]
+  );
+  const hasUnsavedAssumptions = useMemo(
+    () =>
+      !isCurrentAssumptionsStateRepresentedByLibrary({
+        isUsingCustomValues,
+        currentFingerprint: currentComparableFingerprint,
+        libraryEntries,
+      }),
+    [currentComparableFingerprint, isUsingCustomValues, libraryEntries]
+  );
 
   const sharedReference = searchParams.get('shared');
+  const curatedReference = sharedReference ? null : searchParams.get(CURATED_ASSUMPTIONS_QUERY_PARAM);
 
-  const removeSharedParam = useCallback(
-    (referenceToRemove = null) => {
+  const removeImportParam = useCallback(
+    (paramName, referenceToRemove = null) => {
       setSearchParams(
         (currentParams) => {
           const nextParams = new globalThis.URLSearchParams(currentParams);
-          const currentShared = nextParams.get('shared');
+          const currentReference = nextParams.get(paramName);
 
-          if (!currentShared) {
+          if (!currentReference) {
             return currentParams;
           }
 
-          if (referenceToRemove && currentShared !== referenceToRemove) {
+          if (referenceToRemove && currentReference !== referenceToRemove) {
             return currentParams;
           }
 
-          nextParams.delete('shared');
+          nextParams.delete(paramName);
           return nextParams;
         },
         { replace: true }
@@ -52,22 +80,23 @@ const GlobalSharedAssumptionsImport = () => {
     (snapshot, reference) => {
       if (!isPlainObject(snapshot) || !isPlainObject(snapshot.assumptions)) {
         showNotification('error', 'Shared assumptions payload is invalid.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(reference);
+        setPendingImport(null);
+        removeImportParam('shared', reference);
         return false;
       }
 
       const normalizedIncoming = normalizeUserAssumptions(snapshot.assumptions, defaultAssumptions);
       if (!normalizedIncoming) {
         showNotification('error', 'Shared assumptions link did not contain usable custom assumptions.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(reference);
+        setPendingImport(null);
+        removeImportParam('shared', reference);
         return false;
       }
 
       const incomingFingerprint = createAssumptionsFingerprint(normalizedIncoming);
       const currentFingerprint = createAssumptionsFingerprint(getNormalizedUserAssumptionsForSharing());
       const isAlreadyApplied = Boolean(incomingFingerprint) && incomingFingerprint === currentFingerprint;
+      const previousActiveId = getActiveSavedAssumptionsId();
 
       if (!isAlreadyApplied) {
         setAllUserAssumptions(normalizedIncoming);
@@ -83,7 +112,11 @@ const GlobalSharedAssumptionsImport = () => {
         setActiveSavedAssumptionsId(upsertResult.entry.id);
       }
 
-      const statusPrefix = isAlreadyApplied ? 'Shared assumptions are already applied.' : 'Shared assumptions loaded.';
+      const isSameActiveEntry = previousActiveId && previousActiveId === upsertResult.entry?.id;
+      const statusPrefix =
+        isAlreadyApplied && isSameActiveEntry
+          ? 'Shared assumptions are already applied.'
+          : 'Shared assumptions loaded.';
 
       if (!upsertResult.ok) {
         const failureSuffix =
@@ -98,21 +131,59 @@ const GlobalSharedAssumptionsImport = () => {
         });
         showNotification(evictionMessage ? 'info' : 'success', evictionMessage || statusPrefix);
       }
-      setPendingSharedSnapshot(null);
-      removeSharedParam(reference);
+      setPendingImport(null);
+      removeImportParam('shared', reference);
       return true;
     },
     [
       defaultAssumptions,
       getNormalizedUserAssumptionsForSharing,
-      removeSharedParam,
+      removeImportParam,
       setAllUserAssumptions,
       showNotification,
     ]
   );
 
+  const applyCuratedEntry = useCallback(
+    (entry, profileId) => {
+      if (!entry?.assumptions) {
+        showNotification('error', 'Curated assumptions entry is invalid.');
+        setPendingImport(null);
+        removeImportParam(CURATED_ASSUMPTIONS_QUERY_PARAM, profileId);
+        return false;
+      }
+
+      const incomingFingerprint = createAssumptionsFingerprint(entry.assumptions);
+      const currentFingerprint = createAssumptionsFingerprint(getNormalizedUserAssumptionsForSharing());
+      const isAlreadyApplied = Boolean(incomingFingerprint) && incomingFingerprint === currentFingerprint;
+      const previousActiveId = getActiveSavedAssumptionsId();
+
+      if (!isAlreadyApplied) {
+        setAllUserAssumptions(entry.assumptions);
+      }
+
+      setActiveSavedAssumptionsId(entry.id);
+      showNotification(
+        'success',
+        isAlreadyApplied && previousActiveId === entry.id
+          ? 'Curated assumptions are already applied.'
+          : 'Curated assumptions loaded.'
+      );
+      setPendingImport(null);
+      removeImportParam(CURATED_ASSUMPTIONS_QUERY_PARAM, profileId);
+      return true;
+    },
+    [getNormalizedUserAssumptionsForSharing, removeImportParam, setAllUserAssumptions, showNotification]
+  );
+
   useEffect(() => {
-    if (!sharedReference || pendingSharedSnapshot?.reference === sharedReference) {
+    if (!curatedReference) {
+      handledCuratedReferenceRef.current = null;
+    }
+  }, [curatedReference]);
+
+  useEffect(() => {
+    if (!sharedReference || pendingImport?.kind === 'shared' || pendingImport?.reference === sharedReference) {
       return;
     }
 
@@ -131,8 +202,8 @@ const GlobalSharedAssumptionsImport = () => {
           return;
         }
 
-        if (isUsingCustomValues) {
-          setPendingSharedSnapshot({ reference: requestReference, snapshot });
+        if (hasUnsavedAssumptions) {
+          setPendingImport({ kind: 'shared', reference: requestReference, snapshot });
         } else {
           applySharedSnapshot(snapshot, requestReference);
         }
@@ -145,8 +216,8 @@ const GlobalSharedAssumptionsImport = () => {
           return;
         }
         showNotification('error', error.message || 'Could not load shared assumptions.');
-        setPendingSharedSnapshot(null);
-        removeSharedParam(requestReference);
+        setPendingImport(null);
+        removeImportParam('shared', requestReference);
       })
       .finally(() => {
         if (activeRequestIdRef.current === requestId) {
@@ -159,29 +230,70 @@ const GlobalSharedAssumptionsImport = () => {
     };
   }, [
     applySharedSnapshot,
-    isUsingCustomValues,
-    pendingSharedSnapshot?.reference,
-    removeSharedParam,
+    hasUnsavedAssumptions,
+    pendingImport?.kind,
+    pendingImport?.reference,
+    removeImportParam,
     showNotification,
     sharedReference,
   ]);
 
-  const handleContinue = useCallback(() => {
-    if (!pendingSharedSnapshot) {
+  useEffect(() => {
+    if (!curatedReference || pendingImport?.kind === 'curated' || pendingImport?.reference === curatedReference) {
       return;
     }
-    applySharedSnapshot(pendingSharedSnapshot.snapshot, pendingSharedSnapshot.reference);
-  }, [applySharedSnapshot, pendingSharedSnapshot]);
+
+    if (handledCuratedReferenceRef.current === curatedReference) {
+      return;
+    }
+
+    const curatedEntry = getCuratedAssumptionsEntryByProfileId(curatedReference);
+    if (!curatedEntry) {
+      showNotification('error', 'Could not load curated assumptions.');
+      removeImportParam(CURATED_ASSUMPTIONS_QUERY_PARAM, curatedReference);
+      return;
+    }
+
+    if (hasUnsavedAssumptions) {
+      setPendingImport({ kind: 'curated', reference: curatedReference, entry: curatedEntry });
+      return;
+    }
+
+    handledCuratedReferenceRef.current = curatedReference;
+    applyCuratedEntry(curatedEntry, curatedReference);
+  }, [
+    applyCuratedEntry,
+    curatedReference,
+    hasUnsavedAssumptions,
+    pendingImport?.kind,
+    pendingImport?.reference,
+    removeImportParam,
+    showNotification,
+  ]);
+
+  const handleContinue = useCallback(() => {
+    if (!pendingImport) {
+      return;
+    }
+
+    if (pendingImport.kind === 'curated') {
+      applyCuratedEntry(pendingImport.entry, pendingImport.reference);
+      return;
+    }
+
+    applySharedSnapshot(pendingImport.snapshot, pendingImport.reference);
+  }, [applyCuratedEntry, applySharedSnapshot, pendingImport]);
 
   const handleCancel = useCallback(() => {
-    if (!pendingSharedSnapshot) {
+    if (!pendingImport) {
       return;
     }
-    setPendingSharedSnapshot(null);
-    removeSharedParam(pendingSharedSnapshot.reference);
-  }, [pendingSharedSnapshot, removeSharedParam]);
+    const paramName = pendingImport.kind === 'curated' ? CURATED_ASSUMPTIONS_QUERY_PARAM : 'shared';
+    setPendingImport(null);
+    removeImportParam(paramName, pendingImport.reference);
+  }, [pendingImport, removeImportParam]);
 
-  const showImportDecisionModal = Boolean(pendingSharedSnapshot);
+  const showImportDecisionModal = Boolean(pendingImport);
 
   return (
     <>

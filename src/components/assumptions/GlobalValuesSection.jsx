@@ -4,6 +4,7 @@ import NumericInput from '../shared/NumericInput';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import IconActionButton from '../shared/IconActionButton';
 import { formatNumberWithCommas } from '../../utils/formatters';
+import { buildCausePath } from '../../utils/causeRoutes';
 
 const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
   // Format display value based on parameter type
@@ -178,7 +179,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
             <p className="mb-1 font-semibold">Note: Animal lives vs. human lives</p>
             <p>
               Adjust relative value assumptions inside{' '}
-              <a href="/category/animal-welfare" className="assumptions-link">
+              <a href={buildCausePath('animal-welfare')} className="assumptions-link">
                 Animal Welfare
               </a>{' '}
               cause settings, or for any specific recipient in that cause.

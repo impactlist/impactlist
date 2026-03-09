@@ -14,7 +14,7 @@ categories:
 
 _The following analysis was done on December 16th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
 
-We arrive at the cost per life by applying a multiplier to the baseline [Science and Tech](/category/science-tech) cost per [QALY](https://en.wikipedia.org/wiki/Quality-adjusted_life_year). This multiplier reflects the unique leverage of the Internet Archive (IA) as a digital public utility that prevents "knowledge decay" at a fraction of the cost of generating new knowledge.
+We arrive at the cost per life by applying a multiplier to the baseline [Science and Tech](/cause/science-tech) cost per [QALY](https://en.wikipedia.org/wiki/Quality-adjusted_life_year). This multiplier reflects the unique leverage of the Internet Archive (IA) as a digital public utility that prevents "knowledge decay" at a fraction of the cost of generating new knowledge.
 
 ## Description of effect
 

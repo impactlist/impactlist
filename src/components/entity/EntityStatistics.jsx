@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import StatisticsCard from '../shared/StatisticsCard';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
+import { buildCausePath } from '../../utils/causeRoutes';
 
 /**
  * Displays key statistics for donors or recipients with consistent styling.
@@ -79,7 +80,7 @@ const EntityStatistics = ({
       <StatisticsCard
         label="Cause Area"
         value={
-          <Link to={`/category/${encodeURIComponent(stats.categoryBreakdown[0].id)}`} className="impact-link">
+          <Link to={buildCausePath(stats.categoryBreakdown[0].id)} className="impact-link">
             {stats.categoryBreakdown[0].name}
           </Link>
         }

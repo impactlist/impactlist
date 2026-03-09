@@ -7,8 +7,8 @@ const SharedImportDecisionModal = ({
   onCancel,
   isBusy,
   title = 'Import Shared Assumptions?',
-  description = 'You already have custom assumptions in this browser. Continuing will replace them. If you want to keep a link to your current assumptions, click Cancel, then use Share Assumptions to get a link.',
-  continueLabel = 'Continue (Replace Mine)',
+  description = 'You have unsaved assumptions in this browser. Continuing will replace them. If you want to save yours first, click Cancel, go to the Assumptions page, and click Save on your unsaved assumptions.',
+  continueLabel = 'Continue (overwrite yours)',
   cancelLabel = 'Cancel',
 }) => {
   return (
@@ -41,8 +41,8 @@ SharedImportDecisionModal.defaultProps = {
   isBusy: false,
   title: 'Import Shared Assumptions?',
   description:
-    'You already have custom assumptions in this browser. Continuing will replace them. If you want to keep a link to your current assumptions, click Cancel, then use Share Assumptions to get a link.',
-  continueLabel: 'Continue (Replace Mine)',
+    'You have unsaved assumptions in this browser. Continuing will replace them. If you want to save yours first, click Cancel, go to the Assumptions page, and click Save on your unsaved assumptions.',
+  continueLabel: 'Continue (overwrite yours)',
   cancelLabel: 'Cancel',
 };
 

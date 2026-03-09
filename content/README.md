@@ -4,7 +4,7 @@ This directory contains all the data for the Impact List application in a mainta
 
 ## Directory Structure
 
-- `/categories/`: Contains one file per effectiveness category with its name and effects configuration
+- `/causes/`: Contains one file per effectiveness cause with its name and effects configuration
 - `/donors/`: Contains one file per donor with their information
 - `/recipients/`: Contains one file per recipient organization with their information and category allocations
 - `/donations/`: Contains files that list donation events, typically organized by donor name, though any donation can appear in any file

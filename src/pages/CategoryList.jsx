@@ -10,6 +10,7 @@ import {
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatNumber, formatCurrency } from '../utils/formatters';
+import { buildCausePath } from '../utils/causeRoutes';
 import PageHeader from '../components/shared/PageHeader';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 
@@ -74,7 +75,7 @@ const CategoryList = () => {
       label: 'Cause Name',
       render: (category) => (
         <div className="max-w-[300px] break-words">
-          <Link to={`/category/${encodeURIComponent(category.id)}`} className="impact-link text-sm font-medium">
+          <Link to={buildCausePath(category.id)} className="impact-link text-sm font-medium">
             {category.name}
           </Link>
         </div>

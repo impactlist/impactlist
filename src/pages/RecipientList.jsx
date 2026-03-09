@@ -15,6 +15,7 @@ import {
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatNumber, formatCurrency } from '../utils/formatters';
+import { buildCausePath } from '../utils/causeRoutes';
 import PageHeader from '../components/shared/PageHeader';
 import SearchInput from '../components/shared/SearchInput';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
@@ -157,12 +158,12 @@ const RecipientList = () => {
       render: (recipient) => (
         <div className="text-sm text-strong">
           {recipient.categoryNames.length === 1 ? (
-            <Link to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`} className="impact-link">
+            <Link to={buildCausePath(recipient.primaryCategoryId)} className="impact-link">
               {recipient.primaryCategoryName}
             </Link>
           ) : (
             <div>
-              <Link to={`/category/${encodeURIComponent(recipient.primaryCategoryId)}`} className="impact-link">
+              <Link to={buildCausePath(recipient.primaryCategoryId)} className="impact-link">
                 {recipient.primaryCategoryName}
               </Link>
               {recipient.categoryNames.length > 1 && (

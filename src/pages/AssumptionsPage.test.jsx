@@ -343,7 +343,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(within(longtermistRow).getByText('Curated')).toBeInTheDocument();
     expect(within(longtermistRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(longtermistRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
-    expect(within(longtermistRow).queryByRole('button', { name: 'Copy Link' })).not.toBeInTheDocument();
+    expect(within(longtermistRow).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
 
     await user.click(within(longtermistRow).getByRole('menuitemradio'));
 
@@ -381,6 +381,7 @@ describe('AssumptionsPage routing integration', () => {
     await waitFor(() => {
       expect(queryActiveAssumptionsActionButton('Save')).not.toBeInTheDocument();
       expect(queryActiveAssumptionsActionButton('Share')).not.toBeInTheDocument();
+      expect(getActiveAssumptionsActionButton('Copy Link')).toBeInTheDocument();
     });
   });
 

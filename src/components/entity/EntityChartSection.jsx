@@ -6,6 +6,7 @@ import ChartContainer from '../charts/ChartContainer';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { buildCausePath } from '../../utils/causeRoutes';
 
 /**
  * A reusable chart section for displaying entity impact data.
@@ -132,7 +133,7 @@ const EntityChartSection = ({
 
     return (
       <g transform={`translate(${x},${y})`}>
-        <Link to={`/category/${encodeURIComponent(dataEntry.categoryId)}`}>
+        <Link to={buildCausePath(dataEntry.categoryId)}>
           <text
             x={-6}
             y={0}

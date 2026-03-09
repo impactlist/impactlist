@@ -7,12 +7,12 @@ describe('MarkdownContent', () => {
   it('renders internal routes using app navigation links', () => {
     render(
       <MemoryRouter>
-        <MarkdownContent content='Visit [Animal Welfare](/category/animal-welfare "Animal Welfare link").' delay={0} />
+        <MarkdownContent content='Visit [Animal Welfare](/cause/animal-welfare "Animal Welfare link").' delay={0} />
       </MemoryRouter>
     );
 
     const link = screen.getByRole('link', { name: 'Animal Welfare' });
-    expect(link).toHaveAttribute('href', '/category/animal-welfare');
+    expect(link).toHaveAttribute('href', '/cause/animal-welfare');
     expect(link).not.toHaveAttribute('target');
     expect(link).toHaveAttribute('title', 'Animal Welfare link');
   });
@@ -34,10 +34,10 @@ describe('MarkdownContent', () => {
   });
 
   it('falls back to a normal anchor for internal routes outside router context', () => {
-    render(<MarkdownContent content="Visit [Animal Welfare](/category/animal-welfare)." delay={0} />);
+    render(<MarkdownContent content="Visit [Animal Welfare](/cause/animal-welfare)." delay={0} />);
 
     const link = screen.getByRole('link', { name: 'Animal Welfare' });
-    expect(link).toHaveAttribute('href', '/category/animal-welfare');
+    expect(link).toHaveAttribute('href', '/cause/animal-welfare');
     expect(link.tagName).toBe('A');
   });
 });

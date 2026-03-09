@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { formatLives, formatCurrency } from '../../utils/formatters';
+import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 
 /**
@@ -64,7 +65,7 @@ const CalculatorForm = ({
             <div key={category.id} className="calculator-cause-card px-4 py-2">
               <div className="flex justify-between items-start mb-1">
                 <label className="text-sm font-medium text-strong" htmlFor={`donation-${category.id}`}>
-                  <Link to={`/category/${encodeURIComponent(category.id)}`} className="impact-link">
+                  <Link to={buildCausePath(category.id)} className="impact-link">
                     {category.name}
                   </Link>
                 </label>

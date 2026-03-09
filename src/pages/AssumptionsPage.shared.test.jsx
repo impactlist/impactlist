@@ -160,6 +160,103 @@ describe('Global shared assumptions import flow', () => {
     });
   });
 
+  it('loads curated assumptions from a curated link and removes the query param', async () => {
+    renderAppRoutes('/assumptions?curated=longtermist');
+
+    expect(await screen.findByText('Curated assumptions loaded.')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
+    });
+
+    await waitFor(() => {
+      expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: {
+          timeLimit: 10000000000,
+        },
+      });
+    });
+
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
+    const summary = getActiveAssumptionsSummary();
+    expect(within(summary).getByText('Longtermist')).toBeInTheDocument();
+  });
+
+  it('prompts before loading curated assumptions over existing custom assumptions', async () => {
+    const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 10;
+    const user = userEvent.setup();
+
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: currentTimeLimit,
+        },
+      })
+    );
+
+    renderAppRoutes('/assumptions?curated=longtermist');
+
+    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
+
+    await waitFor(() => {
+      expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: {
+          timeLimit: 10000000000,
+        },
+      });
+    });
+
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
+  });
+
+  it('does not prompt before loading curated assumptions when the current state is already represented by a saved entry', async () => {
+    const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 10;
+
+    const savedResult = saveNewAssumptions({
+      label: 'Saved Local',
+      assumptions: {
+        globalParameters: {
+          timeLimit: currentTimeLimit,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'local',
+    });
+
+    if (!savedResult.ok) {
+      throw new Error('Expected seeded saved assumptions entry');
+    }
+
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: currentTimeLimit,
+        },
+      })
+    );
+    sessionStorage.setItem('activeSavedAssumptionsId:v1', savedResult.entry.id);
+
+    renderAppRoutes('/assumptions?curated=longtermist');
+
+    await waitFor(() => {
+      expect(screen.queryByText('Import Shared Assumptions?')).not.toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: {
+          timeLimit: 10000000000,
+        },
+      });
+    });
+
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
+  });
+
   it('keeps local assumptions when user chooses Cancel', async () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 10;
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 30;
@@ -208,7 +305,7 @@ describe('Global shared assumptions import flow', () => {
     });
   });
 
-  it('replaces local assumptions when user chooses Continue (Replace Mine)', async () => {
+  it('replaces local assumptions when user chooses Continue (overwrite yours)', async () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 12;
     const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 44;
 
@@ -237,7 +334,7 @@ describe('Global shared assumptions import flow', () => {
     renderAppRoutes('/?shared=shared456');
 
     expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
+    await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/');
@@ -357,8 +454,7 @@ describe('Global shared assumptions import flow', () => {
 
     renderAppRoutes('/assumptions?shared=already-applied-ref');
 
-    expect(await screen.findByText('Import Shared Assumptions?')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Continue (Replace Mine)' }));
+    expect(await screen.findByText('Shared assumptions loaded.')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');

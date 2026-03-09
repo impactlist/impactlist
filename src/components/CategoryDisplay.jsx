@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getPrimaryCategoryForRecipient } from '../utils/donationDataHelpers';
+import { buildCausePath } from '../utils/causeRoutes';
 
 /**
  * A reusable component for displaying category information consistently across the app.
@@ -15,7 +16,7 @@ const CategoryDisplay = ({ donation, categories, combinedAssumptions }) => {
 
     return (
       <div>
-        <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link text-sm">
+        <Link to={buildCausePath(categoryId)} className="impact-link text-sm">
           {categoryName}
         </Link>
       </div>
@@ -34,14 +35,14 @@ const CategoryDisplay = ({ donation, categories, combinedAssumptions }) => {
 
   if (count <= 1) {
     return (
-      <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link text-sm">
+      <Link to={buildCausePath(categoryId)} className="impact-link text-sm">
         {categoryName}
       </Link>
     );
   } else {
     return (
       <div className="text-sm">
-        <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link">
+        <Link to={buildCausePath(categoryId)} className="impact-link">
           {categoryName}
         </Link>
         <span className="ml-1 text-xs text-muted">(+{count - 1})</span>

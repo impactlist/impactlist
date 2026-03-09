@@ -20,6 +20,7 @@ import { getEffectType, validateEffectField, validateEffects } from '../../utils
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { mergeEffects } from '../../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 
 /**
@@ -180,7 +181,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
               content="See the FAQ to learn how to edit these assumptions, and for a description of what effects are."
             />{' '}
             :{' '}
-            <Link to={`/category/${categoryId}`} className="assumptions-link">
+            <Link to={buildCausePath(categoryId)} className="assumptions-link">
               {category.name}
             </Link>
           </>

@@ -188,7 +188,9 @@ const AssumptionsDropdown = ({
         !entryUiState.isCustomEntry &&
         !entryUiState.isDefaultEntry;
       const canCopyLinkEntry =
-        (allowEntryManagementActions || allowCopyLinkAction) && !entryUiState.isCurated && !entryUiState.isDefaultEntry;
+        (allowEntryManagementActions || allowCopyLinkAction) &&
+        !entryUiState.isDefaultEntry &&
+        !entryUiState.isCustomEntry;
 
       const handleDescription = () => {
         onDescription(entry);

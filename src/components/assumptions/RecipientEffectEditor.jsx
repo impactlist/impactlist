@@ -19,6 +19,7 @@ import {
 import { getEffectType, validateRecipientEffectField } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 
 /**
@@ -216,7 +217,7 @@ const RecipientEffectEditor = ({
               {recipient.name}
             </Link>
             {' - '}
-            <Link to={`/category/${categoryId}`} className="assumptions-link">
+            <Link to={buildCausePath(categoryId)} className="assumptions-link">
               {category.name}
             </Link>
           </>

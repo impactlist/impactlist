@@ -126,10 +126,10 @@ describe('CalculatorForm', () => {
 
     // Check that category names are links
     const healthLink = screen.getByRole('link', { name: /Global Health/i });
-    expect(healthLink).toHaveAttribute('href', '/category/health');
+    expect(healthLink).toHaveAttribute('href', '/cause/health');
 
     const climateLink = screen.getByRole('link', { name: /Climate Change/i });
-    expect(climateLink).toHaveAttribute('href', '/category/climate');
+    expect(climateLink).toHaveAttribute('href', '/cause/climate');
   });
 
   it('should apply custom className', () => {

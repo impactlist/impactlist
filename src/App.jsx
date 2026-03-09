@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import DonorList from './pages/DonorList';
 import DonorDetail from './pages/DonorDetail';
@@ -18,6 +18,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import GlobalSharedAssumptionsImport from './components/shared/GlobalSharedAssumptionsImport';
 import GlobalNotificationBanner from './components/shared/GlobalNotificationBanner';
+import { CAUSES_PATH, buildCausePath } from './utils/causeRoutes';
 import { validateDataOnStartup } from './utils/startupValidation';
 
 class ErrorBoundary extends React.Component {
@@ -81,12 +82,26 @@ const ScrollToTop = () => {
   return null;
 };
 
+const LegacyCausesListRedirect = () => {
+  const location = useLocation();
+
+  return <Navigate to={`${CAUSES_PATH}${location.search}${location.hash}`} replace={true} />;
+};
+
+const LegacyCauseDetailRedirect = () => {
+  const { categoryId } = useParams();
+  const location = useLocation();
+  const nextPath = categoryId ? buildCausePath(categoryId) : CAUSES_PATH;
+
+  return <Navigate to={`${nextPath}${location.search}${location.hash}`} replace={true} />;
+};
+
 // Content wrapper with router
 const AppContent = () => {
   const location = useLocation();
   const isHome = location.pathname === '/';
   const isRecipients = location.pathname === '/recipients';
-  const isCategories = location.pathname === '/categories';
+  const isCategories = location.pathname === CAUSES_PATH || location.pathname.startsWith('/cause/');
   const isCalculator = location.pathname === '/calculator';
   const isFAQ = location.pathname === '/faq';
   const isAssumptions = location.pathname === '/assumptions';
@@ -112,9 +127,11 @@ const AppContent = () => {
             <Route path="/" element={<DonorList />} />
             <Route path="/donor/:donorId" element={<DonorDetail />} />
             <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
-            <Route path="/category/:categoryId" element={<CategoryDetail />} />
+            <Route path="/cause/:categoryId" element={<CategoryDetail />} />
+            <Route path="/category/:categoryId" element={<LegacyCauseDetailRedirect />} />
             <Route path="/assumption/:assumptionId" element={<AssumptionDetail />} />
-            <Route path="/categories" element={<CategoryList />} />
+            <Route path={CAUSES_PATH} element={<CategoryList />} />
+            <Route path="/categories" element={<LegacyCausesListRedirect />} />
             <Route path="/recipients" element={<RecipientList />} />
             <Route path="/calculator" element={<DonationCalculator />} />
             <Route path="/faq" element={<FAQ />} />

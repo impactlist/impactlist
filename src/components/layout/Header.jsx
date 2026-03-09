@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CAUSES_PATH } from '../../utils/causeRoutes';
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -75,7 +76,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
             </Link>
             {/* Causes, Recipients, FAQ - visible on md+ */}
             <Link
-              to="/categories"
+              to={CAUSES_PATH}
               className={navLinkClass({ isActive: isCategories, visibilityClass: 'hidden md:inline-block' })}
             >
               Causes
@@ -149,7 +150,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                   Calculator
                 </Link>
                 {/* Causes, Recipients, FAQ - shown on mobile and tablet (hidden on md+ where they're in main nav) */}
-                <Link to="/categories" className={navLinkClass({ isActive: isCategories })} onClick={closeMobileMenu}>
+                <Link to={CAUSES_PATH} className={navLinkClass({ isActive: isCategories })} onClick={closeMobileMenu}>
                   Causes
                 </Link>
                 <Link to="/recipients" className={navLinkClass({ isActive: isRecipients })} onClick={closeMobileMenu}>

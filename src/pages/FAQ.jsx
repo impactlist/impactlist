@@ -1,7 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PageHeader from '../components/shared/PageHeader';
 import BackButton from '../components/shared/BackButton';
+import { CAUSES_PATH } from '../utils/causeRoutes';
 
 const FAQ = () => {
   return (
@@ -84,9 +86,9 @@ const FAQ = () => {
                   Initially we've mostly focused on calculating the effectiveness of different causes, such as global
                   health, poverty, animal welfare, etc. We currently have 27 causes. You can see the effectiveness
                   estimates for each cause by going{' '}
-                  <a href="/categories" className="impact-link">
+                  <Link to={CAUSES_PATH} className="impact-link">
                     here
-                  </a>{' '}
+                  </Link>{' '}
                   and then clicking on the cause you're interested in. The site also supports specifying the
                   effectiveness of specific charities. We've only done that for a handful so far, but plan to add more
                   in the future.

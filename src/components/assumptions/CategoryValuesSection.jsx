@@ -8,6 +8,7 @@ import { formatCurrency } from '../../utils/formatters';
 import { calculateCostPerLife } from '../../utils/effectsCalculation';
 import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { buildCausePath } from '../../utils/causeRoutes';
 
 /**
  * Component for managing cost per life values for categories.
@@ -81,7 +82,7 @@ const CategoryValuesSection = ({
                   <div className="assumption-card__title-wrap pr-2">
                     <label className="block min-w-0" htmlFor={`category-${key}`}>
                       <Link
-                        to={`/category/${encodeURIComponent(key)}`}
+                        to={buildCausePath(key)}
                         className="assumptions-link block truncate text-sm font-semibold"
                         title={categoryData.name}
                       >

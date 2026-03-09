@@ -6,6 +6,7 @@ import SortableTable from '../shared/SortableTable';
 import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { extractYearFromDonation, getCurrentYear } from '../../utils/donationDataHelpers';
+import { buildCausePath } from '../../utils/causeRoutes';
 
 /**
  * Displays a table of donations for a donor or recipient entity.
@@ -84,7 +85,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
 
         return (
           <div className="text-sm text-strong">
-            <Link to={`/category/${encodeURIComponent(categoryId)}`} className="impact-link">
+            <Link to={buildCausePath(categoryId)} className="impact-link">
               {donation.categoryName}
             </Link>
             {donation.categoryCount > 1 && (

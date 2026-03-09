@@ -387,6 +387,10 @@
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
 
+  .impact-table-scroll[data-scrollable-x='false'] {
+    overflow-x: hidden;
+  }
+
   .impact-table thead {
     background: transparent;
   }
@@ -452,7 +456,7 @@
     justify-content: center;
   }
 
-  .impact-table thead th:hover {
+  .impact-table thead th[data-sortable='true']:hover {
     background:
       linear-gradient(
         180deg,

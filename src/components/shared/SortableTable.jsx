@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Tooltip from './Tooltip';
 
+const normalizeLayoutMeasurement = (value) => Math.round(value * 100) / 100;
+
 const SortableTable = ({
   columns,
   data,
@@ -10,17 +12,20 @@ const SortableTable = ({
   tiebreakColumn,
   tiebreakDirection = 'desc',
 }) => {
+  // Ignore tiny width drift from layout measurement and browser rounding.
+  // Real mobile/tablet overflow is much larger than this.
+  const MEANINGFUL_HORIZONTAL_OVERFLOW_PX = 12;
   const [sortColumn, setSortColumn] = useState(defaultSortColumn);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
   const [isHeaderStuck, setIsHeaderStuck] = useState(false);
   const [columnWidths, setColumnWidths] = useState([]);
   const [tableWidth, setTableWidth] = useState(0);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [hasMeaningfulHorizontalOverflow, setHasMeaningfulHorizontalOverflow] = useState(false);
   const tableRef = useRef(null);
   const tableHeadRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const stickyTrackRef = useRef(null);
-  const normalizeLayoutMeasurement = (value) => Math.round(value * 100) / 100;
 
   useEffect(() => {
     const updateStickyState = () => {
@@ -88,9 +93,12 @@ const SortableTable = ({
       const nextColumnWidths = headerCells.map((cell) =>
         normalizeLayoutMeasurement(cell.getBoundingClientRect().width)
       );
-      const nextTableWidth = normalizeLayoutMeasurement(
-        Math.max(tableRef.current.getBoundingClientRect().width, scrollContainerRef.current.scrollWidth)
-      );
+      const measuredTableWidth = tableRef.current.getBoundingClientRect().width;
+      const containerWidth = scrollContainerRef.current.clientWidth;
+      const scrollableWidth = Math.max(measuredTableWidth, scrollContainerRef.current.scrollWidth);
+      const horizontalOverflowPx = scrollableWidth - containerWidth;
+      const nextHasMeaningfulHorizontalOverflow = horizontalOverflowPx > MEANINGFUL_HORIZONTAL_OVERFLOW_PX;
+      const nextTableWidth = normalizeLayoutMeasurement(scrollableWidth);
       const nextHeaderHeight = Math.ceil(tableHeadRef.current.getBoundingClientRect().height);
       const nextScrollLeft = scrollContainerRef.current.scrollLeft;
 
@@ -99,6 +107,9 @@ const SortableTable = ({
       );
       setTableWidth((currentWidth) => (currentWidth === nextTableWidth ? currentWidth : nextTableWidth));
       setHeaderHeight((currentHeight) => (currentHeight === nextHeaderHeight ? currentHeight : nextHeaderHeight));
+      setHasMeaningfulHorizontalOverflow((currentValue) =>
+        currentValue === nextHasMeaningfulHorizontalOverflow ? currentValue : nextHasMeaningfulHorizontalOverflow
+      );
       syncStickyTrack(nextScrollLeft);
     };
 
@@ -256,7 +267,11 @@ const SortableTable = ({
     : sortedData;
 
   // Render sort indicator
-  const renderSortIndicator = (columnKey) => {
+  const renderSortIndicator = (columnKey, isSortable) => {
+    if (!isSortable) {
+      return null;
+    }
+
     if (sortColumn !== columnKey) {
       return (
         <svg
@@ -290,7 +305,11 @@ const SortableTable = ({
     }
   };
 
-  const getAriaSort = (columnKey) => {
+  const getAriaSort = (columnKey, isSortable) => {
+    if (!isSortable) {
+      return undefined;
+    }
+
     if (sortColumn !== columnKey) {
       return 'none';
     }
@@ -318,36 +337,42 @@ const SortableTable = ({
   const renderTableHeader = (instanceKey, isInteractive) => (
     <thead ref={instanceKey === 'primary' ? tableHeadRef : undefined}>
       <tr>
-        {columns.map((column) => (
-          <th
-            key={`${instanceKey}-${column.key}`}
-            scope="col"
-            aria-sort={getAriaSort(column.key)}
-            className={`${getColumnPadding(column.key)} group py-4 text-left ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
-          >
-            <div className="impact-table__header-inner">
-              <button
-                type="button"
-                className="impact-table__sort-button"
-                disabled={!isInteractive}
-                aria-hidden={!isInteractive}
-                aria-label={`Sort by ${column.label || column.key}`}
-                onClick={() => handleSort(column.key)}
-              >
-                <span>{column.label}</span>
-                {renderSortIndicator(column.key)}
-              </button>
-              {column.tooltip &&
-                (isInteractive ? (
-                  <Tooltip content={column.tooltip}>{renderTooltipIcon()}</Tooltip>
-                ) : (
-                  <span className="impact-table__tooltip-icon" aria-hidden="true">
-                    {renderTooltipIcon()}
-                  </span>
-                ))}
-            </div>
-          </th>
-        ))}
+        {columns.map((column) => {
+          const isSortable = column.sortable !== false;
+          const isColumnInteractive = isInteractive && isSortable;
+
+          return (
+            <th
+              key={`${instanceKey}-${column.key}`}
+              scope="col"
+              aria-sort={getAriaSort(column.key, isSortable)}
+              data-sortable={isSortable ? 'true' : 'false'}
+              className={`${getColumnPadding(column.key)} group py-4 text-left ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
+            >
+              <div className="impact-table__header-inner">
+                <button
+                  type="button"
+                  className="impact-table__sort-button"
+                  disabled={!isColumnInteractive}
+                  aria-hidden={!isColumnInteractive}
+                  aria-label={`Sort by ${column.label || column.key}`}
+                  onClick={() => handleSort(column.key)}
+                >
+                  <span>{column.label}</span>
+                  {renderSortIndicator(column.key, isSortable)}
+                </button>
+                {column.tooltip &&
+                  (isColumnInteractive ? (
+                    <Tooltip content={column.tooltip}>{renderTooltipIcon()}</Tooltip>
+                  ) : (
+                    <span className="impact-table__tooltip-icon" aria-hidden="true">
+                      {renderTooltipIcon()}
+                    </span>
+                  ))}
+              </div>
+            </th>
+          );
+        })}
       </tr>
     </thead>
   );
@@ -360,7 +385,7 @@ const SortableTable = ({
     return (
       <colgroup>
         {columnWidths.map((width, index) => (
-          <col key={`col-${columns[index].key}`} style={{ width: `${width}px`, minWidth: `${width}px` }} />
+          <col key={`col-${columns[index].key}`} style={{ width: `${width}px` }} />
         ))}
       </colgroup>
     );
@@ -398,6 +423,7 @@ const SortableTable = ({
       <div
         ref={scrollContainerRef}
         className="impact-table-scroll"
+        data-scrollable-x={hasMeaningfulHorizontalOverflow ? 'true' : 'false'}
         onScroll={(event) => {
           if (stickyTrackRef.current) {
             stickyTrackRef.current.style.setProperty(

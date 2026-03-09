@@ -63,7 +63,7 @@ const FAQ = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold mb-3">How can I send some quick feedback about this site?</h3>
+                <h3 className="text-xl font-bold mb-3">How can I send feedback about this site?</h3>
                 <p>
                   Use{' '}
                   <a
@@ -85,11 +85,11 @@ const FAQ = () => {
                 <p className="mb-3">
                   Initially we've mostly focused on calculating the effectiveness of different causes, such as global
                   health, poverty, animal welfare, etc. We currently have 27 causes. You can see the effectiveness
-                  estimates for each cause by going{' '}
+                  estimates for each cause by going to the{' '}
                   <Link to={CAUSES_PATH} className="impact-link">
-                    here
+                    Causes
                   </Link>{' '}
-                  and then clicking on the cause you're interested in. The site also supports specifying the
+                  page and then clicking on the cause you're interested in. The site also supports specifying the
                   effectiveness of specific charities. We've only done that for a handful so far, but plan to add more
                   in the future.
                 </p>
@@ -125,9 +125,12 @@ const FAQ = () => {
                 </p>
                 <ol className="list-decimal list-inside space-y-2 ml-2">
                   <li>
-                    <strong>Edit the assumptions yourself:</strong> Use the "Edit Assumptions" button on the site
-                    header. This gives you full control over the assumptions to see how your preferred values would
-                    affect the rankings.
+                    <strong>Edit the assumptions yourself:</strong> Use the{' '}
+                    <Link to="/assumptions" className="impact-link">
+                      Assumptions
+                    </Link>{' '}
+                    page. This gives you full control over the assumptions to see how your preferred values would affect
+                    the rankings. You can save your assumptions and share them with others via a custom URL.
                   </li>
                   <li>
                     <strong>Help us improve the estimates:</strong> For quick feedback use{' '}
@@ -217,8 +220,11 @@ const FAQ = () => {
                   How do I edit the assumptions that are used to calculate the impact rankings?
                 </h3>
                 <p className="mb-4">
-                  The "Edit Assumptions" button in the header of the site allows you to adjust three types of
-                  assumptions. Each has its own tab in the editor:
+                  The{' '}
+                  <Link to="/assumptions" className="impact-link">
+                    Assumptions
+                  </Link>{' '}
+                  page allows you to adjust three types of assumptions. Each has its own tab in the editor:
                 </p>
 
                 <div className="space-y-4 ml-2">
@@ -247,19 +253,9 @@ const FAQ = () => {
                     <p className="mb-2">
                       Each recipient is an organization/charity that receives donations. A recipient can be associated
                       with one or more causes. When editing a recipient, you'll see effects for every cause they're
-                      associated with.
+                      associated with. By default, each recipient inherits the assumptions of its causes unless you
+                      override them.
                     </p>
-                    <p>
-                      By default, each recipient inherits the assumptions of its causes. You can customize these using:
-                    </p>
-                    <ul className="list-disc list-inside ml-2 mt-1">
-                      <li>
-                        <strong>Overrides:</strong> Completely replace the default value
-                      </li>
-                      <li>
-                        <strong>Multipliers:</strong> Multiply the default value by a factor
-                      </li>
-                    </ul>
                   </div>
                 </div>
 

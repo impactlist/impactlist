@@ -12,6 +12,7 @@ import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
+import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
 import {
   getCuratedAssumptionsEntries,
   hasCuratedAssumptionsLabel,
@@ -19,7 +20,6 @@ import {
 } from '../utils/curatedAssumptionsProfiles';
 import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
 import {
-  attachSavedAssumptionsShareReference,
   completeSavedAssumptionsMigration,
   createComparableAssumptionsFingerprint,
   deleteSavedAssumptions,
@@ -43,9 +43,6 @@ const AssumptionsPage = () => {
   const shouldReduceMotion = useReducedMotion();
   const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [shareModalInitialResult, setShareModalInitialResult] = useState(null);
-  const [shareModalInitialDescription, setShareModalInitialDescription] = useState('');
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [saveModalDefaultLabel, setSaveModalDefaultLabel] = useState('My Current Assumptions');
   const [saveModalDefaultDescription, setSaveModalDefaultDescription] = useState('');
@@ -225,6 +222,21 @@ const AssumptionsPage = () => {
     },
     [refreshSavedAssumptions]
   );
+  const {
+    shareModalOpen,
+    shareModalInitialResult,
+    shareModalInitialDescription,
+    handleOpenShareModal,
+    handleCloseShareModal,
+    handleShareSaved,
+    handleCopySavedLink,
+  } = useAssumptionsShareActions({
+    activeLibraryEntry,
+    assumptionsForSharing,
+    hasUnsavedChanges,
+    persistAsActive,
+    showNotification,
+  });
 
   const applySavedAssumptionsEntry = useCallback(
     (entry) => {
@@ -339,29 +351,8 @@ const AssumptionsPage = () => {
       return;
     }
 
-    if (isActiveSavedAssumptionsRemote && !hasUnsavedChanges && activeLibraryEntry?.shareUrl) {
-      setShareModalInitialResult({
-        id: activeLibraryEntry.id,
-        reference: activeLibraryEntry.reference,
-        description: activeLibraryEntry.description,
-        shareUrl: activeLibraryEntry.shareUrl,
-      });
-    } else {
-      setShareModalInitialResult(null);
-    }
-
-    setShareModalInitialDescription(activeLibraryEntry?.description || '');
-    setShareModalOpen(true);
-  }, [
-    activeLibraryEntry?.description,
-    activeLibraryEntry?.id,
-    activeLibraryEntry?.reference,
-    activeLibraryEntry?.shareUrl,
-    commitPendingEdits,
-    hasUnsavedChanges,
-    isActiveSavedAssumptionsRemote,
-    showNotification,
-  ]);
+    handleOpenShareModal();
+  }, [commitPendingEdits, handleOpenShareModal, showNotification]);
 
   const handleSaveAssumptionsClick = useCallback(() => {
     const prepareResult = commitPendingEdits();
@@ -388,61 +379,9 @@ const AssumptionsPage = () => {
     showNotification,
   ]);
 
-  const handleShareModalClose = useCallback(() => {
-    setShareModalOpen(false);
-    setShareModalInitialResult(null);
-    setShareModalInitialDescription('');
-  }, []);
-
   const handleSaveModalClose = useCallback(() => {
     setSaveModalOpen(false);
   }, []);
-
-  const handleShareSaved = useCallback(
-    (sharedResult) => {
-      const sharedReference = typeof sharedResult?.reference === 'string' ? sharedResult.reference.trim() : '';
-      const assumptionsToShare = getNormalizedUserAssumptionsForSharing();
-
-      if (sharedReference && assumptionsToShare) {
-        const attachResult = attachSavedAssumptionsShareReference({
-          reference: sharedReference,
-          description: sharedResult?.description || null,
-          assumptions: assumptionsToShare,
-          preferredId: activeLibraryEntry?.source === 'curated' ? null : activeLibraryEntry?.id || null,
-        });
-
-        if (attachResult.ok && attachResult.entry?.id) {
-          persistAsActive(attachResult.entry.id);
-        } else if (!attachResult.ok && attachResult.errorCode === 'not_found') {
-          const createResult = saveNewAssumptions({
-            label: sharedReference,
-            description: sharedResult?.description || null,
-            assumptions: assumptionsToShare,
-            source: 'local',
-            reference: sharedReference,
-            resolveDuplicateLabel: true,
-          });
-
-          if (!createResult.ok || !createResult.entry?.id) {
-            showNotification('error', 'Share link created, but could not save it to the Assumptions Library.');
-            return;
-          }
-
-          persistAsActive(createResult.entry.id);
-        } else {
-          showNotification('error', 'Share link created, but could not sync it to the Assumptions Library.');
-          return;
-        }
-      }
-    },
-    [
-      activeLibraryEntry?.id,
-      activeLibraryEntry?.source,
-      getNormalizedUserAssumptionsForSharing,
-      persistAsActive,
-      showNotification,
-    ]
-  );
 
   const handleSaveAssumptionsSubmit = useCallback(
     ({ label, description, mode }) => {
@@ -545,23 +484,6 @@ const AssumptionsPage = () => {
       refreshSavedAssumptions();
     },
     [refreshSavedAssumptions, showNotification]
-  );
-
-  const handleCopySavedLink = useCallback(
-    async (entry) => {
-      if (!entry?.shareUrl) {
-        showNotification('error', 'No share link available for this entry.');
-        return;
-      }
-
-      try {
-        await globalThis.navigator.clipboard.writeText(entry.shareUrl);
-        showNotification('success', 'Copied share link.');
-      } catch {
-        showNotification('error', 'Could not copy link automatically. Please copy it manually.');
-      }
-    },
-    [showNotification]
   );
 
   const handleDescriptionModalOpen = useCallback((entry) => {
@@ -682,7 +604,7 @@ const AssumptionsPage = () => {
 
         <ShareAssumptionsModal
           isOpen={shareModalOpen}
-          onClose={handleShareModalClose}
+          onClose={handleCloseShareModal}
           assumptions={assumptionsForSharing}
           assumptionName={activeLibraryEntry?.label || null}
           onSaved={handleShareSaved}

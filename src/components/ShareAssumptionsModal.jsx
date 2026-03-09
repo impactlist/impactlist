@@ -147,9 +147,7 @@ const ShareAssumptionsModal = ({
 
               {!savedResult ? (
                 <>
-                  <p className="impact-modal__copy mb-4">
-                    Save your current custom assumptions and create a shareable URL.
-                  </p>
+                  <p className="impact-modal__copy mb-4">Create a shareable URL to these assumptions.</p>
                   <div className="space-y-4">
                     <div>
                       <label htmlFor="share-slug" className="impact-modal__label mb-1 block">

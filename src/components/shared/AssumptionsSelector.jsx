@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { getCuratedAssumptionsEntries, isCuratedAssumptionsEntryId } from '../../utils/curatedAssumptionsProfiles';
 import {
@@ -10,70 +10,46 @@ import {
   setActiveSavedAssumptionsId,
 } from '../../utils/savedAssumptionsStore';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
+import { useNotificationActions } from '../../contexts/NotificationContext';
+import useAssumptionsShareActions from '../../hooks/useAssumptionsShareActions';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
-import IconActionButton from './IconActionButton';
-import useDismissibleMenu from '../../hooks/useDismissibleMenu';
-import { CURRENT_CUSTOM_ENTRY, CURRENT_CUSTOM_ENTRY_ID } from '../../constants/customAssumptionsEntry';
-
-const DEFAULT_ASSUMPTIONS_SELECTOR_VALUE = '__default__';
+import ShareAssumptionsModal from '../ShareAssumptionsModal';
+import AssumptionsDropdown, { DEFAULT_ASSUMPTIONS_ENTRY_ID } from './AssumptionsDropdown';
 
 const AssumptionsSelector = ({ className = '' }) => {
   const [savedAssumptions, setSavedAssumptions] = useState([]);
   const [activeSavedAssumptionsIdState, setActiveSavedAssumptionsIdState] = useState(null);
-  const [assumptionsMenuOpen, setAssumptionsMenuOpen] = useState(false);
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
-  const labelId = useId();
-  const buttonId = useId();
   const { getNormalizedUserAssumptionsForSharing, isUsingCustomValues, setAllUserAssumptions } = useAssumptions();
-  const closeAssumptionsMenu = useCallback(() => {
-    setAssumptionsMenuOpen(false);
-  }, []);
-  const assumptionsMenuRef = useDismissibleMenu(assumptionsMenuOpen, closeAssumptionsMenu);
+  const { showNotification } = useNotificationActions();
 
+  const assumptionsForSharing = useMemo(
+    () => getNormalizedUserAssumptionsForSharing(),
+    [getNormalizedUserAssumptionsForSharing]
+  );
   const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
   const libraryEntries = useMemo(
     () => [...curatedAssumptions, ...savedAssumptions],
     [curatedAssumptions, savedAssumptions]
   );
   const currentAssumptionsFingerprint = useMemo(
-    () => createComparableAssumptionsFingerprint(getNormalizedUserAssumptionsForSharing()),
-    [getNormalizedUserAssumptionsForSharing]
+    () => createComparableAssumptionsFingerprint(assumptionsForSharing),
+    [assumptionsForSharing]
   );
-  const activeLibraryEntry = libraryEntries.find((entry) => entry.id === activeSavedAssumptionsIdState) || null;
+  const activeLibraryEntry = useMemo(
+    () => libraryEntries.find((entry) => entry.id === activeSavedAssumptionsIdState) || null,
+    [activeSavedAssumptionsIdState, libraryEntries]
+  );
   const activeLibraryEntryFingerprint = useMemo(
     () => createComparableAssumptionsFingerprint(activeLibraryEntry?.assumptions),
-    [activeLibraryEntry]
+    [activeLibraryEntry?.assumptions]
   );
-  const isUsingCurrentCustomAssumptions =
-    isUsingCustomValues && (!activeLibraryEntry || activeLibraryEntryFingerprint !== currentAssumptionsFingerprint);
-  const assumptionsSelectorValue = isUsingCurrentCustomAssumptions
-    ? CURRENT_CUSTOM_ENTRY_ID
-    : activeSavedAssumptionsIdState || DEFAULT_ASSUMPTIONS_SELECTOR_VALUE;
-
-  const assumptionsMenuEntries = useMemo(() => {
-    const entries = [{ id: DEFAULT_ASSUMPTIONS_SELECTOR_VALUE, label: 'Default' }];
-
-    if (isUsingCurrentCustomAssumptions) {
-      entries.push(CURRENT_CUSTOM_ENTRY);
-    }
-
-    curatedAssumptions.forEach((entry) => {
-      entries.push(entry);
-    });
-
-    savedAssumptions.forEach((entry) => {
-      entries.push(entry);
-    });
-
-    return entries;
-  }, [curatedAssumptions, isUsingCurrentCustomAssumptions, savedAssumptions]);
-
-  const selectedAssumptionsEntry =
-    assumptionsMenuEntries.find((entry) => entry.id === assumptionsSelectorValue) || assumptionsMenuEntries[0];
-  const selectedAssumptionsLabel = selectedAssumptionsEntry?.label || 'Default';
-  const selectedEntryHasDescription = Boolean(
-    selectedAssumptionsEntry?.description || selectedAssumptionsEntry?.content
-  );
+  const hasUnsavedChanges = activeLibraryEntry
+    ? activeLibraryEntryFingerprint !== currentAssumptionsFingerprint
+    : isUsingCustomValues;
+  // Keep `Share` available for unsaved custom assumptions and for local saved entries that
+  // do not already have a share link, even when the current values happen to equal defaults.
+  const shouldShowCurrentShareAction = isUsingCustomValues || hasUnsavedChanges;
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
@@ -100,37 +76,29 @@ const AssumptionsSelector = ({ className = '' }) => {
     };
   }, [refreshSavedAssumptions]);
 
-  const handleAssumptionsSelectionChange = useCallback(
-    (nextValue) => {
-      if (nextValue === DEFAULT_ASSUMPTIONS_SELECTOR_VALUE) {
+  const handleLoad = useCallback(
+    (entry) => {
+      if (entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
         setAllUserAssumptions(null);
         setActiveSavedAssumptionsId(null);
         setActiveSavedAssumptionsIdState(null);
-        setAssumptionsMenuOpen(false);
         return;
       }
 
-      if (nextValue === CURRENT_CUSTOM_ENTRY_ID) {
-        setAssumptionsMenuOpen(false);
+      if (!entry?.assumptions) {
         return;
       }
 
-      const nextEntry = libraryEntries.find((entry) => entry.id === nextValue);
-      if (!nextEntry) {
-        return;
+      setAllUserAssumptions(entry.assumptions);
+
+      if (entry.source !== 'curated') {
+        markSavedAssumptionsLoaded(entry.id);
       }
 
-      setAllUserAssumptions(nextEntry.assumptions);
-
-      if (nextEntry.source !== 'curated') {
-        markSavedAssumptionsLoaded(nextEntry.id);
-      }
-
-      setActiveSavedAssumptionsId(nextEntry.id);
-      setActiveSavedAssumptionsIdState(nextEntry.id);
-      setAssumptionsMenuOpen(false);
+      setActiveSavedAssumptionsId(entry.id);
+      setActiveSavedAssumptionsIdState(entry.id);
     },
-    [libraryEntries, setAllUserAssumptions]
+    [setAllUserAssumptions]
   );
 
   const handleDescriptionModalOpen = useCallback((entry) => {
@@ -139,81 +107,55 @@ const AssumptionsSelector = ({ className = '' }) => {
     }
 
     setPendingDescriptionEntry(entry);
-    setAssumptionsMenuOpen(false);
   }, []);
 
   const handleDescriptionModalClose = useCallback(() => {
     setPendingDescriptionEntry(null);
   }, []);
 
+  const persistAsActive = useCallback(
+    (entryId) => {
+      setActiveSavedAssumptionsId(entryId);
+      setActiveSavedAssumptionsIdState(entryId);
+      refreshSavedAssumptions();
+    },
+    [refreshSavedAssumptions]
+  );
+  const {
+    shareModalOpen,
+    shareModalInitialResult,
+    shareModalInitialDescription,
+    handleOpenShareModal,
+    handleCloseShareModal,
+    handleShareSaved,
+    handleCopySavedLink,
+  } = useAssumptionsShareActions({
+    activeLibraryEntry,
+    assumptionsForSharing,
+    hasUnsavedChanges,
+    persistAsActive,
+    showNotification,
+  });
+
   return (
     <>
-      <div className={`assumptions-selector-bar ${className}`.trim()} ref={assumptionsMenuRef}>
-        <span id={labelId} className="assumptions-selector-bar__label">
-          Active assumptions:
-        </span>
-        <div className="assumptions-selector-bar__control">
-          <button
-            id={buttonId}
-            type="button"
-            className="assumptions-selector-bar__trigger"
-            onClick={() => setAssumptionsMenuOpen((current) => !current)}
-            aria-haspopup="menu"
-            aria-expanded={assumptionsMenuOpen}
-            aria-labelledby={`${labelId} ${buttonId}`}
-          >
-            <span className="assumptions-selector-bar__trigger-text">{selectedAssumptionsLabel}</span>
-          </button>
-          {selectedEntryHasDescription && (
-            <IconActionButton
-              icon="description"
-              label={`View description for ${selectedAssumptionsLabel}`}
-              onClick={() => handleDescriptionModalOpen(selectedAssumptionsEntry)}
-              className="assumptions-selector-bar__selected-description-btn"
-            />
-          )}
-          <span className="assumptions-selector-bar__chevron" aria-hidden={true}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fillRule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.512a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </span>
-          {assumptionsMenuOpen && (
-            <div className="assumptions-selector-bar__menu" role="menu" aria-label="Assumptions options">
-              {assumptionsMenuEntries.map((entry) => {
-                const isSelected = entry.id === assumptionsSelectorValue;
-                const canShowDescription = Boolean(entry.description || entry.content);
-
-                return (
-                  <div key={entry.id} className="assumptions-selector-bar__menu-row">
-                    <button
-                      type="button"
-                      role="menuitemradio"
-                      aria-checked={isSelected}
-                      className="assumptions-selector-bar__menu-item"
-                      data-selected={isSelected}
-                      onClick={() => handleAssumptionsSelectionChange(entry.id)}
-                    >
-                      {entry.label}
-                    </button>
-                    {canShowDescription && (
-                      <IconActionButton
-                        icon="description"
-                        label={`View description for ${entry.label}`}
-                        onClick={() => handleDescriptionModalOpen(entry)}
-                        className="assumptions-selector-bar__description-btn"
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
+      <AssumptionsDropdown
+        className={className}
+        inlineLabel="Active assumptions:"
+        entries={libraryEntries}
+        activeId={activeSavedAssumptionsIdState}
+        hasUnsavedChanges={hasUnsavedChanges}
+        menuAriaLabel="Assumptions options"
+        allowEntryManagementActions={false}
+        allowCopyLinkAction={true}
+        showCurrentSaveAction={false}
+        showCurrentShareAction={shouldShowCurrentShareAction}
+        showShareForLocal={true}
+        onLoad={handleLoad}
+        onShareCurrent={handleOpenShareModal}
+        onCopyLink={handleCopySavedLink}
+        onDescription={handleDescriptionModalOpen}
+      />
 
       <AssumptionsDescriptionModal
         isOpen={Boolean(pendingDescriptionEntry)}
@@ -221,6 +163,15 @@ const AssumptionsSelector = ({ className = '' }) => {
         initialDescription={pendingDescriptionEntry?.content || pendingDescriptionEntry?.description || ''}
         isReadOnly={true}
         onClose={handleDescriptionModalClose}
+      />
+      <ShareAssumptionsModal
+        isOpen={shareModalOpen}
+        onClose={handleCloseShareModal}
+        assumptions={assumptionsForSharing}
+        assumptionName={activeLibraryEntry?.label || null}
+        initialDescription={shareModalInitialDescription}
+        initialSavedResult={shareModalInitialResult}
+        onSaved={handleShareSaved}
       />
     </>
   );

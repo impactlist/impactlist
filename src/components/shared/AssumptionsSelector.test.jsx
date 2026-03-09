@@ -1,11 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AssumptionsSelector from './AssumptionsSelector';
 
 const mockSetAllUserAssumptions = vi.fn();
 const mockMarkSavedAssumptionsLoaded = vi.fn();
 const mockSetActiveSavedAssumptionsId = vi.fn();
+const mockAttachSavedAssumptionsShareReference = vi.fn();
+const mockSaveNewAssumptions = vi.fn();
+const mockShowNotification = vi.fn();
 const mockAssumptionsState = {
   normalizedAssumptions: null,
   isUsingCustomValues: false,
@@ -46,28 +49,81 @@ vi.mock('../../contexts/AssumptionsContext', () => ({
   }),
 }));
 
+vi.mock('../../contexts/NotificationContext', () => ({
+  useNotificationActions: () => ({
+    showNotification: (...args) => mockShowNotification(...args),
+  }),
+}));
+
 vi.mock('../../utils/curatedAssumptionsProfiles', () => ({
   getCuratedAssumptionsEntries: () => [curatedEntry],
   isCuratedAssumptionsEntryId: (id) => id === curatedEntry.id,
 }));
 
 vi.mock('../../utils/savedAssumptionsStore', () => ({
+  attachSavedAssumptionsShareReference: (...args) => mockAttachSavedAssumptionsShareReference(...args),
   createComparableAssumptionsFingerprint: (assumptions) => JSON.stringify(assumptions || null),
   getActiveSavedAssumptionsId: () => mockSavedAssumptionsState.activeId,
   getSavedAssumptions: () => [savedEntry],
   markSavedAssumptionsLoaded: (...args) => mockMarkSavedAssumptionsLoaded(...args),
   SAVED_ASSUMPTIONS_CHANGED_EVENT: 'saved-assumptions:changed',
+  saveNewAssumptions: (...args) => mockSaveNewAssumptions(...args),
   setActiveSavedAssumptionsId: (...args) => mockSetActiveSavedAssumptionsId(...args),
 }));
 
+vi.mock('../ShareAssumptionsModal', () => ({
+  default: ({ isOpen, title = 'Share Assumptions', onSaved, onClose }) => {
+    if (!isOpen) {
+      return null;
+    }
+
+    return (
+      <div>
+        <h2>{title}</h2>
+        <button
+          type="button"
+          onClick={() =>
+            onSaved({
+              reference: 'shared-selector-ref',
+              description: 'Shared selector description',
+              shareUrl: 'http://localhost:3000/?shared=shared-selector-ref',
+            })
+          }
+        >
+          Simulate Share Saved
+        </button>
+        <button type="button" onClick={onClose}>
+          Close Share Modal
+        </button>
+      </div>
+    );
+  },
+}));
+
 describe('AssumptionsSelector', () => {
+  const openMenu = async (user) => {
+    await user.click(screen.getByRole('button', { name: /Active assumptions:/ }));
+    return screen.getByRole('menu', { name: 'Assumptions options' });
+  };
+
+  const getMenuRow = (menu, label) => within(menu).getByText(label).closest('.assumptions-entry');
+
   beforeEach(() => {
     mockSetAllUserAssumptions.mockReset();
     mockMarkSavedAssumptionsLoaded.mockReset();
     mockSetActiveSavedAssumptionsId.mockReset();
+    mockAttachSavedAssumptionsShareReference.mockReset();
+    mockSaveNewAssumptions.mockReset();
+    mockShowNotification.mockReset();
     mockAssumptionsState.normalizedAssumptions = null;
     mockAssumptionsState.isUsingCustomValues = false;
     mockSavedAssumptionsState.activeId = null;
+    delete savedEntry.reference;
+    delete savedEntry.shareUrl;
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('renders the assumptions trigger', () => {
@@ -80,8 +136,8 @@ describe('AssumptionsSelector', () => {
     const user = userEvent.setup();
     render(<AssumptionsSelector />);
 
-    await user.click(screen.getByRole('button', { name: /Active assumptions:/ }));
-    await user.click(screen.getByRole('menuitemradio', { name: 'Longtermist' }));
+    const menu = await openMenu(user);
+    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('menuitemradio'));
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);
     expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
@@ -92,8 +148,8 @@ describe('AssumptionsSelector', () => {
     const user = userEvent.setup();
     render(<AssumptionsSelector />);
 
-    await user.click(screen.getByRole('button', { name: /Active assumptions:/ }));
-    await user.click(screen.getByRole('menuitemradio', { name: 'My Saved Assumptions' }));
+    const menu = await openMenu(user);
+    await user.click(within(getMenuRow(menu, 'My Saved Assumptions')).getByRole('menuitemradio'));
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(savedEntry.assumptions);
     expect(mockMarkSavedAssumptionsLoaded).toHaveBeenCalledWith(savedEntry.id);
@@ -104,8 +160,9 @@ describe('AssumptionsSelector', () => {
     const user = userEvent.setup();
     render(<AssumptionsSelector />);
 
-    await user.click(screen.getByRole('button', { name: /Active assumptions:/ }));
-    await user.click(screen.getByRole('button', { name: 'View description for Longtermist' }));
+    const menu = await openMenu(user);
+    const longtermistRow = getMenuRow(menu, 'Longtermist');
+    await user.click(within(longtermistRow).getByRole('button', { name: 'View description' }));
 
     expect(screen.getByRole('heading', { name: 'Longtermist' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent('Looks far into the future.');
@@ -123,7 +180,8 @@ describe('AssumptionsSelector', () => {
     render(<AssumptionsSelector />);
 
     expect(screen.getByRole('button', { name: /Active assumptions:/ })).toHaveTextContent('Custom (unsaved)');
-    await user.click(screen.getByRole('button', { name: 'View description for Custom (unsaved)' }));
+    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
+    await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
 
     expect(screen.getByRole('heading', { name: 'Custom (unsaved)' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
@@ -131,6 +189,80 @@ describe('AssumptionsSelector', () => {
     );
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
       'If you want to reuse these exact assumptions later, click Save to save a local copy or click Share to create a link to these assumptions that you can share with others.'
+    );
+  });
+
+  it('shows Share for an active local assumptions set and keeps rename/delete hidden', async () => {
+    const user = userEvent.setup();
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+
+    render(<AssumptionsSelector />);
+
+    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
+    expect(within(summaryRow).getByRole('button', { name: 'Share' })).toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
+
+    await user.click(within(summaryRow).getByRole('button', { name: 'Share' }));
+    expect(screen.getByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
+  });
+
+  it('shows Copy Link instead of Share when the active assumptions set already has a share link', () => {
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+    savedEntry.reference = 'saved-link';
+    savedEntry.shareUrl = 'http://localhost:3000/?shared=saved-link';
+
+    render(<AssumptionsSelector />);
+
+    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
+    expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
+    expect(within(summaryRow).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
+  });
+
+  it('syncs a newly created share link back into saved assumptions from the selector flow', async () => {
+    const user = userEvent.setup();
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+    mockAttachSavedAssumptionsShareReference.mockReturnValue({
+      ok: true,
+      entry: { id: savedEntry.id },
+    });
+
+    render(<AssumptionsSelector />);
+
+    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
+    await user.click(within(summaryRow).getByRole('button', { name: 'Share' }));
+    await user.click(screen.getByRole('button', { name: 'Simulate Share Saved' }));
+
+    expect(mockAttachSavedAssumptionsShareReference).toHaveBeenCalledWith({
+      reference: 'shared-selector-ref',
+      description: 'Shared selector description',
+      assumptions: savedEntry.assumptions,
+      preferredId: savedEntry.id,
+    });
+    expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(savedEntry.id);
+  });
+
+  it('shows an error notification when selector share sync fails unexpectedly', async () => {
+    const user = userEvent.setup();
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+    mockAttachSavedAssumptionsShareReference.mockReturnValue({
+      ok: false,
+      errorCode: 'storage_write_failed',
+    });
+
+    render(<AssumptionsSelector />);
+
+    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
+    await user.click(within(summaryRow).getByRole('button', { name: 'Share' }));
+    await user.click(screen.getByRole('button', { name: 'Simulate Share Saved' }));
+
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      'error',
+      'Share link created, but could not sync it to the Assumptions Library.'
     );
   });
 });

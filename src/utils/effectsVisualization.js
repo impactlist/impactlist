@@ -6,6 +6,55 @@
 import { selectEffectsForYear, effectToCostPerLife, applyRecipientEffectToBase } from './effectsCalculation';
 import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } from './assumptionsDataHelpers';
 
+const getEffectType = (effect) => {
+  if (effect.costPerQALY !== undefined) return 'qaly';
+  if (effect.costPerMicroprobability !== undefined) return 'population';
+  return 'unknown';
+};
+
+const titleCaseWords = (value) => {
+  return value
+    .split(/[\s_-]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+const getLegendAbbreviation = (effect) => {
+  return getEffectType(effect) === 'population' ? 'population' : 'standard';
+};
+
+const getCompactEffectName = (effect) => {
+  const tokens = (effect.effectId || 'effect').split(/[_-]+/).filter(Boolean);
+
+  if (tokens.length === 0) return 'Effect';
+  if (tokens.length === 1 && tokens[0] === 'standard') {
+    return 'Standard';
+  }
+  if (tokens.length === 1 && tokens[0] === 'population') {
+    return 'Population';
+  }
+  if ((tokens[0] === 'standard' || tokens[0] === 'population') && tokens.length > 1) {
+    return titleCaseWords(tokens.slice(1).join(' '));
+  }
+
+  return titleCaseWords(tokens.join(' '));
+};
+
+const buildVisibleLabel = (compactEffectName, abbreviation) => {
+  if (compactEffectName.toLowerCase() === abbreviation.toLowerCase()) {
+    return compactEffectName;
+  }
+
+  return `${compactEffectName} (${abbreviation})`;
+};
+
+const attachSeriesMetadata = (points, seriesMetadata, totalLivesSaved) => {
+  points.seriesMetadata = seriesMetadata;
+  points.totalLivesSaved = totalLivesSaved;
+  return points;
+};
+
 /**
  * Calculate visualization points by sampling the rate at different times
  * @param {string} entityId - Recipient ID or Category ID
@@ -53,6 +102,7 @@ export const calculateLivesSavedSegments = (
     // Category case: get effects directly from the single category
     const category = combinedAssumptions.categories[entityId];
     if (!category || !category.effects) return [];
+    const categoryName = category.name || entityId;
 
     const effects = selectEffectsForYear(category.effects, donationYear);
     effects.forEach((effect) => {
@@ -60,6 +110,9 @@ export const calculateLivesSavedSegments = (
         ...effect,
         id: `${entityId}-${effect.effectId}`, // Use category-effect combination for unique graph display ID
         weight: 1, // Categories don't have fractional weights
+        categoryId: entityId,
+        categoryName,
+        effectType: getEffectType(effect),
       });
     });
   } else {
@@ -74,6 +127,7 @@ export const calculateLivesSavedSegments = (
 
       const category = combinedAssumptions.categories[categoryId];
       if (!category || !category.effects) return;
+      const categoryName = category.name || categoryId;
 
       const baseEffects = selectEffectsForYear(category.effects, donationYear);
       const effects = baseEffects.map((baseEffect) => {
@@ -98,6 +152,9 @@ export const calculateLivesSavedSegments = (
           ...effect,
           id: `${categoryId}-${effect.effectId}`, // Use category-effect combination for unique graph display ID
           weight: categoryWeight,
+          categoryId,
+          categoryName,
+          effectType: getEffectType(effect),
         });
       });
     });
@@ -242,8 +299,9 @@ export const calculateLivesSavedSegments = (
   }
 
   // Normalize if we have a non-zero integral
+  let normalizer = 0;
   if (totalIntegral !== 0) {
-    const normalizer = totalLivesSaved / totalIntegral;
+    normalizer = totalLivesSaved / totalIntegral;
     points.forEach((point) => {
       Object.keys(point).forEach((key) => {
         if (key !== 'year') {
@@ -253,7 +311,43 @@ export const calculateLivesSavedSegments = (
     });
   }
 
-  return points;
+  const effectsPerCategory = allEffects.reduce((counts, effect) => {
+    counts[effect.categoryId] = (counts[effect.categoryId] || 0) + 1;
+    return counts;
+  }, {});
+
+  const seriesMetadata = allEffects
+    .map((effect) => {
+      const effectiveEndTime = Math.min(effect.startTime + effect.windowLength, timeLimit);
+      const totalLives = totalIntegral !== 0 ? (effectIntegrals[effect.id] || 0) * normalizer : 0;
+      const abbreviation = getLegendAbbreviation(effect);
+      const compactEffectName = getCompactEffectName(effect);
+      const label =
+        effectsPerCategory[effect.categoryId] === 1
+          ? effect.categoryName
+          : isCategory
+            ? buildVisibleLabel(compactEffectName, abbreviation)
+            : `${effect.categoryName}: ${buildVisibleLabel(compactEffectName, abbreviation)}`;
+
+      return {
+        id: effect.id,
+        effectId: effect.effectId,
+        label,
+        categoryId: effect.categoryId,
+        categoryName: effect.categoryName,
+        effectType: effect.effectType,
+        totalLives,
+        shareOfTotal: totalLivesSaved !== 0 ? Math.abs(totalLives) / Math.abs(totalLivesSaved) : 0,
+        startTime: effect.startTime,
+        windowLength: effect.windowLength,
+        startYear: donationYear + effect.startTime,
+        endYear: donationYear + effectiveEndTime,
+        weight: effect.weight,
+      };
+    })
+    .sort((a, b) => Math.abs(b.totalLives) - Math.abs(a.totalLives));
+
+  return attachSeriesMetadata(points, seriesMetadata, totalLivesSaved);
 };
 
 /**

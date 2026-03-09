@@ -1,96 +1,144 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatLargeNumber, formatCalendarYear, generateEvenlySpacedTicks } from '../../utils/effectsVisualization';
 import { formatLives } from '../../utils/formatters';
+import { getCategoryVariantColor } from '../../utils/chartColors';
 
-// Color palette for effects
-const COLOR_PALETTE = [
-  '#6366f1', // Indigo
-  '#10b981', // Emerald
-  '#f59e0b', // Amber
-  '#ec4899', // Pink
-  '#ef4444', // Red
-  '#8b5cf6', // Violet
-  '#06b6d4', // Cyan
-  '#84cc16', // Lime
-  '#f97316', // Orange
-  '#a855f7', // Purple
+const EFFECT_COLOR_PALETTE = [
+  '#2563eb',
+  '#059669',
+  '#d97706',
+  '#dc2626',
+  '#7c3aed',
+  '#0891b2',
+  '#eab308',
+  '#c2410c',
+  '#db2777',
+  '#5b3a29',
 ];
 
-/**
- * Custom tooltip to show detailed information
- */
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload || !payload[0]) return null;
+const buildFallbackLabel = (effectId) => {
+  return effectId
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+};
 
-  const data = payload[0].payload;
+const buildSeriesMetadata = (data, effectIds, colorMode) => {
+  const rawSeriesMetadata = Array.isArray(data?.seriesMetadata) ? data.seriesMetadata : [];
+  const seriesMetadataById = Object.fromEntries(rawSeriesMetadata.map((series) => [series.id, series]));
+  const variantCountsByCategory = {};
 
-  // Calculate total lives per year for this point
-  let totalLivesPerYear = 0;
-  const activeEffects = [];
+  return effectIds.map((effectId, index) => {
+    const metadata = seriesMetadataById[effectId];
+    const categoryId = metadata?.categoryId || effectId;
+    const variantIndex = variantCountsByCategory[categoryId] || 0;
+    variantCountsByCategory[categoryId] = variantIndex + 1;
 
-  Object.keys(data).forEach((key) => {
-    if (key !== 'year' && data[key] !== 0) {
-      totalLivesPerYear += data[key];
-      activeEffects.push({ id: key, value: data[key] });
-    }
+    return {
+      id: effectId,
+      label: metadata?.label || buildFallbackLabel(effectId),
+      categoryId: metadata?.categoryId || null,
+      categoryName: metadata?.categoryName || null,
+      effectType: metadata?.effectType || 'unknown',
+      totalLives: metadata?.totalLives ?? null,
+      shareOfTotal: metadata?.shareOfTotal ?? null,
+      startYear: metadata?.startYear ?? null,
+      endYear: metadata?.endYear ?? null,
+      color:
+        colorMode === 'effect'
+          ? EFFECT_COLOR_PALETTE[index % EFFECT_COLOR_PALETTE.length]
+          : getCategoryVariantColor(categoryId, variantIndex),
+    };
   });
+};
+
+const CustomTooltip = ({ active, payload, seriesMetadata, activeSeriesId }) => {
+  if (!active || !Array.isArray(payload) || payload.length === 0) return null;
+
+  const seriesById = Object.fromEntries(seriesMetadata.map((series) => [series.id, series]));
+  const pointYear = payload[0]?.payload?.year;
+  const activeEffects = payload
+    .filter((entry) => Math.abs(entry.value || 0) > 1e-9)
+    .map((entry) => ({
+      id: entry.dataKey,
+      value: entry.value,
+      color: entry.color,
+      series: seriesById[entry.dataKey],
+    }))
+    .sort((a, b) => {
+      if (activeSeriesId === a.id) return -1;
+      if (activeSeriesId === b.id) return 1;
+      return Math.abs(b.value) - Math.abs(a.value);
+    });
+
+  const highlightedEffect =
+    activeEffects.find((effect) => effect.id === activeSeriesId) ||
+    activeEffects.reduce((largestEffect, effect) => {
+      if (!largestEffect || Math.abs(effect.value) > Math.abs(largestEffect.value)) {
+        return effect;
+      }
+      return largestEffect;
+    }, null);
+  const otherEffectsCount = Math.max(activeEffects.length - 1, 0);
+  const totalLivesPerYear = activeEffects.reduce((sum, effect) => sum + effect.value, 0);
 
   return (
     <div className="impact-surface rounded-lg p-3 shadow-lg">
-      <p className="text-sm font-semibold text-strong">Year {formatCalendarYear(data.year)}</p>
-      <p className="text-sm text-muted">Lives/year: {formatLives(totalLivesPerYear)}</p>
-      {activeEffects.length > 0 && (
-        <div className="mt-1 text-xs text-muted">Active effects: {activeEffects.length}</div>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-sm font-semibold text-strong">Year {formatCalendarYear(pointYear)}</p>
+        <p className="text-sm font-semibold text-strong">{formatLives(totalLivesPerYear)} lives/year</p>
+      </div>
+
+      {highlightedEffect && (
+        <div className="mt-2 space-y-1">
+          <div className="flex items-start justify-between gap-3 text-xs">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="h-2 w-2 flex-none rounded-full" style={{ backgroundColor: highlightedEffect.color }} />
+              <p className="truncate font-medium text-strong">
+                {highlightedEffect.series?.label || highlightedEffect.id}
+              </p>
+            </div>
+            <p className="text-strong">{formatLives(highlightedEffect.value)}</p>
+          </div>
+          {otherEffectsCount > 0 && (
+            <p className="pl-4 text-xs text-muted">
+              + {otherEffectsCount} other{otherEffectsCount === 1 ? '' : 's'}
+            </p>
+          )}
+        </div>
       )}
     </div>
   );
 };
 
-/**
- * Custom X-axis tick formatter for calendar years
- */
-const formatXAxisTick = (value) => {
-  return formatCalendarYear(value);
-};
+const formatXAxisTick = (value) => formatCalendarYear(value);
 
-/**
- * Custom Y-axis tick formatter
- */
 const formatYAxisTick = (value) => {
-  // For small numbers (absolute value < 10), use 2 decimal places
-  // For larger numbers, use 1 decimal place
-  const absValue = Math.abs(value);
-  const precision = absValue < 10 ? 2 : 1;
+  const precision = Math.abs(value) < 10 ? 2 : 1;
   return formatLargeNumber(value, precision);
 };
 
-/**
- * Graph component showing lives saved over time
- */
-const LivesSavedGraph = ({ data, height = 300 }) => {
-  // Process data for graphing: filter to relevant time range, get effects, and calculate ticks
-  const { effectInfo, customTicks, filteredData } = useMemo(() => {
+const LivesSavedGraph = ({ data, height = 300, colorMode = 'category' }) => {
+  const [activeSeriesId, setActiveSeriesId] = useState(null);
+
+  const { customTicks, filteredData, seriesMetadata } = useMemo(() => {
     if (!data || data.length === 0) {
-      return { effectInfo: { effectIds: [], colorMap: {} }, customTicks: undefined, filteredData: [] };
+      return { customTicks: undefined, filteredData: [], seriesMetadata: [] };
     }
 
     const effectIds = Object.keys(data[0]).filter((key) => key !== 'year');
-
-    const colorMap = {};
-    effectIds.forEach((id, index) => {
-      colorMap[id] = COLOR_PALETTE[index % COLOR_PALETTE.length];
-    });
+    const seriesMetadata = buildSeriesMetadata(data, effectIds, colorMode);
 
     const minYear = data[0].year;
     const maxYear = data[data.length - 1].year;
 
-    // Find the index of the last point with a non-zero value
     let lastNonZeroIndex = -1;
     for (let i = data.length - 1; i >= 0; i--) {
       const point = data[i];
-      const hasNonZeroValue = effectIds.some((id) => (point[id] || 0) > 1e-9);
+      const hasNonZeroValue = effectIds.some((id) => Math.abs(point[id] || 0) > 1e-9);
       if (hasNonZeroValue) {
         lastNonZeroIndex = i;
         break;
@@ -99,45 +147,32 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
 
     let newMaxYear;
     if (lastNonZeroIndex === -1) {
-      // All points are zero, just show a small initial range
       newMaxYear = minYear + 1;
     } else if (lastNonZeroIndex === data.length - 1) {
-      // The very last point has a non-zero value, so the effect runs indefinitely.
-      // The graph should extend to the end of the data (timeLimit).
       newMaxYear = maxYear;
     } else {
-      // The effect ends. Show the drop to zero and add a buffer.
       const lastNonZeroYear = data[lastNonZeroIndex].year;
       const firstZeroYear = data[lastNonZeroIndex + 1].year;
-
       const buffer = Math.max((firstZeroYear - lastNonZeroYear) * 0.5, 1);
       newMaxYear = Math.min(maxYear, firstZeroYear + buffer);
     }
 
-    // Filter data to the new, smaller domain
-    let filteredData = data.filter((point) => point.year <= newMaxYear);
+    const filteredData = data.filter((point) => point.year <= newMaxYear);
+    const lastFilteredPoint = filteredData[filteredData.length - 1];
 
-    // Ensure the line extends to the edge of the graph
-    if (filteredData.length > 0) {
-      const lastFilteredPoint = filteredData[filteredData.length - 1];
-      if (lastFilteredPoint.year < newMaxYear) {
-        // Create a new point at the edge with the same (zero) values as the last point.
-        const edgePoint = { ...lastFilteredPoint, year: newMaxYear };
-        filteredData.push(edgePoint);
-      }
+    if (lastFilteredPoint && lastFilteredPoint.year < newMaxYear) {
+      filteredData.push({ ...lastFilteredPoint, year: newMaxYear });
     }
 
     const displayMinYear = filteredData.length > 0 ? filteredData[0].year : minYear;
     const displayMaxYear = filteredData.length > 0 ? filteredData[filteredData.length - 1].year : newMaxYear;
 
-    const ticks = generateEvenlySpacedTicks(displayMinYear, displayMaxYear);
-
     return {
-      effectInfo: { effectIds, colorMap },
-      customTicks: ticks,
+      customTicks: generateEvenlySpacedTicks(displayMinYear, displayMaxYear),
       filteredData,
+      seriesMetadata,
     };
-  }, [data]);
+  }, [colorMode, data]);
 
   if (!filteredData || filteredData.length === 0) {
     return (
@@ -150,7 +185,11 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={height}>
-        <AreaChart data={filteredData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+        <AreaChart
+          data={filteredData}
+          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+          onMouseLeave={() => setActiveSeriesId(null)}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
           <XAxis
             dataKey="year"
@@ -168,23 +207,80 @@ const LivesSavedGraph = ({ data, height = 300 }) => {
             stroke="var(--border-strong)"
             width={60}
           />
-          <Tooltip content={<CustomTooltip />} animationDuration={200} />
+          <Tooltip
+            content={<CustomTooltip seriesMetadata={seriesMetadata} activeSeriesId={activeSeriesId} />}
+            animationDuration={150}
+          />
 
-          {/* Dynamically generate Area components for each effect */}
-          {effectInfo.effectIds.map((effectId) => (
-            <Area
-              key={effectId}
-              type="monotone"
-              dataKey={effectId}
-              stackId="1"
-              stroke={effectInfo.colorMap[effectId]}
-              fill={effectInfo.colorMap[effectId]}
-              fillOpacity={0.7}
-              strokeWidth={1.5}
-            />
-          ))}
+          {seriesMetadata.map((series) => {
+            const isDimmed = activeSeriesId && activeSeriesId !== series.id;
+            const isActive = activeSeriesId === series.id;
+
+            return (
+              <Area
+                key={series.id}
+                type="monotone"
+                dataKey={series.id}
+                name={series.label}
+                stackId="1"
+                stroke={series.color}
+                fill={series.color}
+                fillOpacity={isDimmed ? 0.28 : 0.7}
+                strokeOpacity={isDimmed ? 0.35 : 1}
+                strokeWidth={isActive ? 2 : 1.5}
+                onMouseEnter={() => setActiveSeriesId(series.id)}
+                onMouseLeave={() => setActiveSeriesId(null)}
+              />
+            );
+          })}
         </AreaChart>
       </ResponsiveContainer>
+
+      {seriesMetadata.length > 1 && (
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+          {seriesMetadata.map((series) => {
+            const isActive = activeSeriesId === series.id;
+            const isDimmed = activeSeriesId && activeSeriesId !== series.id;
+
+            return (
+              <button
+                key={series.id}
+                type="button"
+                className="relative flex items-center gap-2 text-left text-sm transition-opacity duration-150"
+                style={{ opacity: isDimmed ? 0.45 : 1 }}
+                onMouseEnter={() => setActiveSeriesId(series.id)}
+                onMouseLeave={() => setActiveSeriesId(null)}
+                onFocus={() => setActiveSeriesId(series.id)}
+                onBlur={() => setActiveSeriesId(null)}
+              >
+                {activeSeriesId === series.id && (
+                  <span
+                    className="pointer-events-none absolute left-0 top-full z-10 mt-2 rounded-md border px-2 py-1 text-xs shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--bg-surface)',
+                      borderColor: 'var(--border-subtle)',
+                      color: 'var(--text-strong)',
+                      maxWidth: 'min(16rem, calc(100vw - 2rem))',
+                      whiteSpace: 'normal',
+                    }}
+                  >
+                    {series.totalLives === null ? 'N/A' : formatLives(series.totalLives)} lives
+                    {series.shareOfTotal === null ? '' : ` (${(series.shareOfTotal * 100).toFixed(1)}%)`}
+                  </span>
+                )}
+                <span
+                  className="h-2.5 w-2.5 flex-none rounded-full"
+                  style={{
+                    backgroundColor: series.color,
+                    boxShadow: isActive ? `0 0 0 3px ${series.color}22` : 'none',
+                  }}
+                />
+                <span className={isActive ? 'text-strong' : 'text-muted'}>{series.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
@@ -193,10 +289,22 @@ LivesSavedGraph.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number.isRequired,
-      // Dynamic properties for each effect ID
     })
   ).isRequired,
   height: PropTypes.number,
+  colorMode: PropTypes.oneOf(['category', 'effect']),
+};
+
+CustomTooltip.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+  seriesMetadata: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  activeSeriesId: PropTypes.string,
 };
 
 export default LivesSavedGraph;

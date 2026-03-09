@@ -7,6 +7,7 @@ import { formatNumber, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
+import { getCategoryColor } from '../../utils/chartColors';
 
 /**
  * A reusable chart section for displaying entity impact data.
@@ -35,37 +36,6 @@ const EntityChartSection = ({
       : chartView === 'donations'
         ? 'Distribution of donations across cause areas'
         : 'Distribution of impact (lives saved) across cause areas';
-
-  // Colors for the chart bars
-  const COLORS = [
-    '#4f46e5',
-    '#3b82f6',
-    '#6366f1',
-    '#8b5cf6',
-    '#a855f7',
-    '#d946ef',
-    '#818cf8',
-    '#10b981',
-    '#14b8a6',
-    '#06b6d4',
-    '#0ea5e9',
-    '#22c55e',
-    '#84cc16',
-    '#34d399',
-    '#eab308',
-    '#f59e0b',
-    '#f97316',
-    '#ef4444',
-    '#a3e635',
-    '#fbbf24',
-    '#fb923c',
-    '#ec4899',
-    '#db2777',
-    '#be185d',
-    '#9d174d',
-    '#831843',
-    '#3f3f46',
-  ];
 
   // Custom tooltip function for chart
   const CustomTooltip = ({ active, payload }) => {
@@ -169,10 +139,11 @@ const EntityChartSection = ({
           data={chartData}
           dataKey="valueTarget"
           nameKey="name"
-          colors={COLORS.map((color, index) => {
-            // Use red for negative values in lives saved view
-            const entry = chartData[index];
-            return chartView === 'livesSaved' && entry && entry.value < 0 ? '#ef4444' : color;
+          colors={chartData.map((entry) => {
+            if (chartView === 'livesSaved' && entry && entry.value < 0) {
+              return '#ef4444';
+            }
+            return getCategoryColor(entry.categoryId || entry.id || entry.name);
           })}
           tooltipContent={<CustomTooltip />}
           formatXAxisTick={(value) => {

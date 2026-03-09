@@ -115,7 +115,7 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
         <div className="mt-6">
           <div className="border-t border-[var(--border-subtle)] pt-4">
             <h3 className="mb-3 text-sm font-semibold text-strong">Discounted Lives Saved Over Time</h3>
-            <LivesSavedGraph data={visualizationData} height={250} />
+            <LivesSavedGraph data={visualizationData} height={250} colorMode={isCategory ? 'effect' : 'category'} />
           </div>
         </div>
       )}

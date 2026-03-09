@@ -1236,6 +1236,65 @@ describe('effectsCalculation', () => {
       expect(firstActivePoint.year).toBeGreaterThanOrEqual(2044);
     });
 
+    it('attaches readable series metadata for recipient visualization', () => {
+      const mockCombinedAssumptions = {
+        globalParameters: { ...baseGlobalParams, timeLimit: 50, discountRate: 0 },
+        categories: {
+          health: {
+            name: 'Global Health',
+            effects: [{ effectId: 'standard', costPerQALY: 1000, startTime: 0, windowLength: 10 }],
+          },
+          safety: {
+            name: 'AI Safety',
+            effects: [
+              {
+                effectId: 'population-doom',
+                costPerMicroprobability: 100,
+                populationFractionAffected: 0.1,
+                qalyImprovementPerYear: 1,
+                startTime: 5,
+                windowLength: 20,
+              },
+            ],
+          },
+        },
+        recipients: {
+          'test-recipient': {
+            name: 'Test Recipient',
+            categories: {
+              health: { fraction: 0.5 },
+              safety: { fraction: 0.5 },
+            },
+          },
+        },
+        getRecipientById: (id) => mockCombinedAssumptions.recipients[id],
+      };
+
+      const points = calculateLivesSavedSegments('test-recipient', 50000, 2024, mockCombinedAssumptions);
+
+      expect(Array.isArray(points.seriesMetadata)).toBe(true);
+      expect(points.seriesMetadata).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: 'health-standard',
+            label: 'Global Health',
+            categoryName: 'Global Health',
+            startYear: 2024,
+            endYear: 2034,
+            shareOfTotal: expect.any(Number),
+          }),
+          expect.objectContaining({
+            id: 'safety-population-doom',
+            label: 'AI Safety',
+            categoryName: 'AI Safety',
+            startYear: 2029,
+            endYear: 2049,
+            effectType: 'population',
+          }),
+        ])
+      );
+    });
+
     it('should integrate correctly to total lives saved for category', () => {
       const testEffect = {
         type: 'qaly',
@@ -1276,6 +1335,86 @@ describe('effectsCalculation', () => {
       const expectedLives = donationAmount / expectedCostPerLife;
 
       expect(totalIntegrated).toBeCloseTo(expectedLives, 1);
+    });
+
+    it('uses category-specific labels in category visualization metadata', () => {
+      const mockCombinedAssumptions = {
+        globalParameters: baseGlobalParams,
+        categories: {
+          'test-category': {
+            name: 'Test Category',
+            effects: [
+              {
+                effectId: 'population-doom',
+                costPerMicroprobability: 100,
+                populationFractionAffected: 0.1,
+                qalyImprovementPerYear: 1,
+                startTime: 15,
+                windowLength: 25,
+              },
+            ],
+          },
+        },
+      };
+
+      const points = calculateLivesSavedSegments('test-category', 50000, 2024, mockCombinedAssumptions, {
+        isCategory: true,
+      });
+
+      expect(points.seriesMetadata).toEqual([
+        expect.objectContaining({
+          id: 'test-category-population-doom',
+          label: 'Test Category',
+          categoryName: 'Test Category',
+          startYear: 2039,
+          endYear: 2064,
+          effectType: 'population',
+        }),
+      ]);
+    });
+
+    it('uses standard rather than direct in multi-effect category labels', () => {
+      const mockCombinedAssumptions = {
+        globalParameters: baseGlobalParams,
+        categories: {
+          'test-category': {
+            name: 'Test Category',
+            effects: [
+              {
+                effectId: 'standard',
+                costPerQALY: 1000,
+                startTime: 0,
+                windowLength: 10,
+              },
+              {
+                effectId: 'population-doom',
+                costPerMicroprobability: 100,
+                populationFractionAffected: 0.1,
+                qalyImprovementPerYear: 1,
+                startTime: 15,
+                windowLength: 25,
+              },
+            ],
+          },
+        },
+      };
+
+      const points = calculateLivesSavedSegments('test-category', 50000, 2024, mockCombinedAssumptions, {
+        isCategory: true,
+      });
+
+      expect(points.seriesMetadata).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: 'test-category-standard',
+            label: 'Standard',
+          }),
+          expect.objectContaining({
+            id: 'test-category-population-doom',
+            label: 'Doom (population)',
+          }),
+        ])
+      );
     });
   });
 

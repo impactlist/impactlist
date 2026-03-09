@@ -11,6 +11,7 @@ import { getCurrentYear } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import SpecificDonationModal from '../components/SpecificDonationModal';
 import PageHeader from '../components/shared/PageHeader';
+import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 
 // Import new components
 import CalculatorStats from '../components/calculator/CalculatorStats';
@@ -384,6 +385,7 @@ const DonationCalculator = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
+          <AssumptionsSelector />
           {/* Impact Summary */}
           <CalculatorStats
             totalDonated={totalDonated}

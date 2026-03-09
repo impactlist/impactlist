@@ -11,6 +11,7 @@ import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
+import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 
 const CategoryList = () => {
   const [categoryStats, setCategoryStats] = useState([]);
@@ -138,6 +139,7 @@ const CategoryList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
+          <AssumptionsSelector />
           <div className="impact-surface impact-surface--table">
             <SortableTable
               columns={categoryColumns}

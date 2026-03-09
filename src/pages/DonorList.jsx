@@ -17,6 +17,7 @@ import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
+import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 
 const DonorList = () => {
   const [donorStats, setDonorStats] = useState([]);
@@ -169,6 +170,8 @@ const DonorList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
+          <AssumptionsSelector />
+
           <div className="impact-surface impact-surface--table">
             <SortableTable
               columns={donorColumns}

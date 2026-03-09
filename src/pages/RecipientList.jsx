@@ -17,6 +17,7 @@ import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatNumber, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import SearchInput from '../components/shared/SearchInput';
+import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 
 const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);
@@ -194,6 +195,7 @@ const RecipientList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
+          <AssumptionsSelector />
           <div className="mb-4">
             <div className="w-full sm:max-w-md">
               <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />

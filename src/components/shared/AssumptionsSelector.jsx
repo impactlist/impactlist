@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { getCuratedAssumptionsEntries, isCuratedAssumptionsEntryId } from '../../utils/curatedAssumptionsProfiles';
 import {
@@ -12,6 +12,7 @@ import {
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
 import IconActionButton from './IconActionButton';
+import useDismissibleMenu from '../../hooks/useDismissibleMenu';
 
 const DEFAULT_ASSUMPTIONS_SELECTOR_VALUE = '__default__';
 const CURRENT_CUSTOM_ASSUMPTIONS_SELECTOR_VALUE = '__current_custom__';
@@ -21,10 +22,13 @@ const AssumptionsSelector = ({ className = '' }) => {
   const [activeSavedAssumptionsIdState, setActiveSavedAssumptionsIdState] = useState(null);
   const [assumptionsMenuOpen, setAssumptionsMenuOpen] = useState(false);
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
-  const assumptionsMenuRef = useRef(null);
   const labelId = useId();
   const buttonId = useId();
   const { getNormalizedUserAssumptionsForSharing, isUsingCustomValues, setAllUserAssumptions } = useAssumptions();
+  const closeAssumptionsMenu = useCallback(() => {
+    setAssumptionsMenuOpen(false);
+  }, []);
+  const assumptionsMenuRef = useDismissibleMenu(assumptionsMenuOpen, closeAssumptionsMenu);
 
   const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
   const libraryEntries = useMemo(
@@ -91,33 +95,6 @@ const AssumptionsSelector = ({ className = '' }) => {
       globalThis.removeEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
     };
   }, [refreshSavedAssumptions]);
-
-  useEffect(() => {
-    if (!assumptionsMenuOpen) {
-      return undefined;
-    }
-
-    const handlePointerDown = (event) => {
-      if (assumptionsMenuRef.current?.contains(event.target)) {
-        return;
-      }
-
-      setAssumptionsMenuOpen(false);
-    };
-
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        setAssumptionsMenuOpen(false);
-      }
-    };
-
-    globalThis.addEventListener('pointerdown', handlePointerDown);
-    globalThis.addEventListener('keydown', handleEscape);
-    return () => {
-      globalThis.removeEventListener('pointerdown', handlePointerDown);
-      globalThis.removeEventListener('keydown', handleEscape);
-    };
-  }, [assumptionsMenuOpen]);
 
   const handleAssumptionsSelectionChange = useCallback(
     (nextValue) => {

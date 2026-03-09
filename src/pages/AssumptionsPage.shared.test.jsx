@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -43,6 +43,17 @@ const renderAppRoutes = (initialEntry, { strictMode = false } = {}) => {
 const getPersistedCustomEffectsData = () => {
   const raw = sessionStorage.getItem('customEffectsData');
   return raw ? JSON.parse(raw) : null;
+};
+
+const openAssumptionsLibraryMenu = async (user) => {
+  const section = screen.getByText('Assumptions Library').closest('section');
+  const openMenu = section.querySelector('[role="menu"]');
+
+  if (!openMenu) {
+    await user.click(screen.getByRole('button', { name: /Select assumptions set/i }));
+  }
+
+  return section.querySelector('[role="menu"]');
 };
 
 describe('Global shared assumptions import flow', () => {
@@ -101,8 +112,10 @@ describe('Global shared assumptions import flow', () => {
       reference: 'abc123',
     });
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
-    expect(await screen.findByText('abc123')).toBeInTheDocument();
-    expect(screen.getByText('abc123').closest('.assumptions-entry')).toHaveAttribute('data-active', 'true');
+    const menu = await openAssumptionsLibraryMenu(user);
+    expect(menu).not.toBeNull();
+    expect(menu).toHaveTextContent('abc123');
+    expect(within(menu).getByText('abc123').closest('.assumptions-entry')).toHaveAttribute('data-active', 'true');
 
     await user.click(screen.getByRole('tab', { name: 'Global' }));
 

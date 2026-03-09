@@ -492,10 +492,9 @@ describe('AssumptionsPage routing integration', () => {
 
     await user.click(getActiveAssumptionsActionButton('Save'));
     expect(await screen.findByRole('button', { name: 'Update Current Library Entry' })).toBeInTheDocument();
-    expect(screen.getByLabelText('Label')).toHaveValue('Current Working Model');
+    expect(screen.getByLabelText('Label')).toHaveValue('');
     const descriptionInput = screen.getByLabelText('Description (optional)');
-    expect(descriptionInput).toHaveValue('Original saved description.');
-    await user.clear(descriptionInput);
+    expect(descriptionInput).toHaveValue('');
     await user.type(descriptionInput, 'Extended horizon after reviewing sensitivity analysis.');
     await user.click(screen.getByRole('button', { name: 'Update Current Library Entry' }));
 
@@ -1276,6 +1275,38 @@ describe('AssumptionsPage routing integration', () => {
       'If you want to reuse these exact assumptions later, click Save to save a local copy or click Share to create a link to these assumptions that you can share with others.'
     );
     expect(screen.queryByRole('button', { name: 'Save Description' })).not.toBeInTheDocument();
+  });
+
+  it('does not prefill the save description when saving custom unsaved assumptions', async () => {
+    const user = userEvent.setup();
+    const seeded = saveNewAssumptions({
+      label: 'Baseline Entry',
+      description: 'Existing saved description',
+      assumptions: {
+        globalParameters: { timeLimit: 115 },
+        categories: {},
+        recipients: {},
+      },
+    });
+    if (!seeded.ok) {
+      throw new Error('Expected saved entry to seed successfully');
+    }
+    setActiveSavedAssumptionsId(seeded.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    const summaryRow = getAssumptionsLibrarySummary();
+    expect(within(summaryRow).getByText('Custom (unsaved)')).toBeInTheDocument();
+
+    await user.click(within(summaryRow).getByRole('button', { name: 'Save' }));
+
+    expect(await screen.findByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Description (optional)')).toHaveValue('');
   });
 
   it('does not show Delete All Imported button', async () => {

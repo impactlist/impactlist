@@ -80,6 +80,32 @@ describe('useAssumptionsShareActions', () => {
     expect(mockSaveNewAssumptions).not.toHaveBeenCalled();
   });
 
+  it('does not prefill the description when sharing custom unsaved assumptions', () => {
+    const { result } = buildHook({
+      hasUnsavedChanges: true,
+    });
+
+    act(() => {
+      result.current.handleOpenShareModal();
+    });
+
+    expect(result.current.shareModalOpen).toBe(true);
+    expect(result.current.shareModalInitialDescription).toBe('');
+    expect(result.current.shareModalInitialSlug).toBe('');
+    expect(result.current.shareModalInitialResult).toBeNull();
+  });
+
+  it('prefills the description and slug when reopening an unchanged local saved assumptions entry', () => {
+    const { result } = buildHook();
+
+    act(() => {
+      result.current.handleOpenShareModal();
+    });
+
+    expect(result.current.shareModalInitialDescription).toBe('Saved assumption description');
+    expect(result.current.shareModalInitialSlug).toBe('saved-assumptions');
+  });
+
   it('creates a new saved assumptions entry when no matching entry can be found', () => {
     mockAttachSavedAssumptionsShareReference.mockReturnValue({
       ok: false,

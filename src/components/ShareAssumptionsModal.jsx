@@ -15,6 +15,7 @@ const ShareAssumptionsModal = ({
   onSaved,
   title = 'Share Assumptions',
   initialDescription = '',
+  initialSlug = '',
   initialSavedResult = null,
 }) => {
   const [slug, setSlug] = useState('');
@@ -39,7 +40,7 @@ const ShareAssumptionsModal = ({
       return;
     }
 
-    setSlug('');
+    setSlug(initialSavedResult ? '' : initialSlug);
     setDescription(initialSavedResult?.description || initialDescription);
     setSavedResult(initialSavedResult);
     setStartedWithExistingLink(Boolean(initialSavedResult));
@@ -47,7 +48,7 @@ const ShareAssumptionsModal = ({
     setIsCopying(false);
     setError('');
     setCopied(false);
-  }, [initialDescription, initialSavedResult, isOpen]);
+  }, [initialDescription, initialSavedResult, initialSlug, isOpen]);
 
   const handleSlugChange = (event) => {
     setSlug(normalizeSlugInput(event.target.value));
@@ -255,6 +256,7 @@ ShareAssumptionsModal.propTypes = {
   onSaved: PropTypes.func,
   title: PropTypes.string,
   initialDescription: PropTypes.string,
+  initialSlug: PropTypes.string,
   initialSavedResult: PropTypes.shape({
     id: PropTypes.string,
     reference: PropTypes.string,
@@ -269,6 +271,7 @@ ShareAssumptionsModal.defaultProps = {
   onSaved: () => {},
   title: 'Share Assumptions',
   initialDescription: '',
+  initialSlug: '',
   initialSavedResult: null,
 };
 

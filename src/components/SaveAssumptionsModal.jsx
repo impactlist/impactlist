@@ -32,6 +32,7 @@ const SaveAssumptionsModal = ({
   onSubmit,
   defaultLabel = '',
   defaultDescription = '',
+  updateExistingLabel = '',
   canUpdateExisting = false,
   duplicateOfLabel = null,
 }) => {
@@ -49,7 +50,7 @@ const SaveAssumptionsModal = ({
     const trimmed = label.trim();
     if (!trimmed) {
       if (mode === 'update') {
-        const fallbackLabel = defaultLabel.trim();
+        const fallbackLabel = updateExistingLabel.trim();
         if (fallbackLabel) {
           return fallbackLabel;
         }
@@ -187,6 +188,7 @@ SaveAssumptionsModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
   defaultDescription: PropTypes.string,
+  updateExistingLabel: PropTypes.string,
   canUpdateExisting: PropTypes.bool,
   duplicateOfLabel: PropTypes.string,
 };
@@ -194,6 +196,7 @@ SaveAssumptionsModal.propTypes = {
 SaveAssumptionsModal.defaultProps = {
   defaultLabel: '',
   defaultDescription: '',
+  updateExistingLabel: '',
   canUpdateExisting: false,
   duplicateOfLabel: null,
 };

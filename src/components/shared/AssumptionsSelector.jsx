@@ -209,6 +209,7 @@ const AssumptionsSelector = ({ className = '' }) => {
     shareModalOpen,
     shareModalInitialResult,
     shareModalInitialDescription,
+    shareModalInitialSlug,
     handleOpenShareModal,
     handleCloseShareModal,
     handleShareSaved,
@@ -254,6 +255,7 @@ const AssumptionsSelector = ({ className = '' }) => {
         assumptions={assumptionsForSharing}
         assumptionName={activeLibraryEntry?.label || null}
         initialDescription={shareModalInitialDescription}
+        initialSlug={shareModalInitialSlug}
         initialSavedResult={shareModalInitialResult}
         onSaved={handleShareSaved}
       />

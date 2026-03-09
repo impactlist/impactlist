@@ -227,6 +227,7 @@ const AssumptionsPage = () => {
     shareModalOpen,
     shareModalInitialResult,
     shareModalInitialDescription,
+    shareModalInitialSlug,
     handleOpenShareModal,
     handleCloseShareModal,
     handleShareSaved,
@@ -369,14 +370,17 @@ const AssumptionsPage = () => {
       return;
     }
 
-    setSaveModalDefaultLabel(isActiveCuratedEntry ? '' : activeLibraryEntry?.label || '');
-    setSaveModalDefaultDescription(isActiveCuratedEntry ? '' : activeLibraryEntry?.description || '');
+    setSaveModalDefaultLabel(!hasUnsavedChanges && !isActiveCuratedEntry ? activeLibraryEntry?.label || '' : '');
+    setSaveModalDefaultDescription(
+      !hasUnsavedChanges && !isActiveCuratedEntry ? activeLibraryEntry?.description || '' : ''
+    );
     setSaveModalOpen(true);
   }, [
     activeLibraryEntry?.description,
     activeLibraryEntry?.label,
     commitPendingEdits,
     getNormalizedUserAssumptionsForSharing,
+    hasUnsavedChanges,
     isActiveCuratedEntry,
     showNotification,
   ]);
@@ -612,6 +616,7 @@ const AssumptionsPage = () => {
           onSaved={handleShareSaved}
           title="Share Assumptions"
           initialDescription={shareModalInitialDescription}
+          initialSlug={shareModalInitialSlug}
           initialSavedResult={shareModalInitialResult}
         />
 
@@ -621,6 +626,7 @@ const AssumptionsPage = () => {
           onSubmit={handleSaveAssumptionsSubmit}
           defaultLabel={saveModalDefaultLabel}
           defaultDescription={saveModalDefaultDescription}
+          updateExistingLabel={canUpdateExisting ? activeLibraryEntry?.label || '' : ''}
           canUpdateExisting={canUpdateExisting}
           duplicateOfLabel={duplicateSavedAssumptionsLabel}
         />
@@ -661,7 +667,8 @@ const AssumptionsPage = () => {
           isReadOnly={Boolean(
             pendingDescriptionEntry?.reference ||
               pendingDescriptionEntry?.source === 'curated' ||
-              pendingDescriptionEntry?.source === 'custom'
+              pendingDescriptionEntry?.source === 'custom' ||
+              pendingDescriptionEntry?.id === DEFAULT_ASSUMPTIONS_ENTRY_ID
           )}
           onClose={handleDescriptionModalClose}
           onSave={handleSaveDescription}

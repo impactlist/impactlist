@@ -110,9 +110,9 @@
   }
 
   .assumptions-selector-bar--inline {
-    width: min(100%, 34.5rem);
+    width: min(100%, 27.5rem);
     margin-left: auto;
-    padding: 0.15rem 0 0.35rem;
+    padding: 0.15rem 0 0;
   }
 
   .assumptions-selector-bar__label {

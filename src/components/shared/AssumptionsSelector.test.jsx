@@ -6,9 +6,6 @@ import AssumptionsSelector from './AssumptionsSelector';
 const mockSetAllUserAssumptions = vi.fn();
 const mockMarkSavedAssumptionsLoaded = vi.fn();
 const mockSetActiveSavedAssumptionsId = vi.fn();
-const mockAttachSavedAssumptionsShareReference = vi.fn();
-const mockSaveNewAssumptions = vi.fn();
-const mockUpdateSavedAssumptions = vi.fn();
 const mockShowNotification = vi.fn();
 const mockAssumptionsState = {
   normalizedAssumptions: null,
@@ -63,44 +60,12 @@ vi.mock('../../utils/curatedAssumptionsProfiles', () => ({
 }));
 
 vi.mock('../../utils/savedAssumptionsStore', () => ({
-  attachSavedAssumptionsShareReference: (...args) => mockAttachSavedAssumptionsShareReference(...args),
   createComparableAssumptionsFingerprint: (assumptions) => JSON.stringify(assumptions || null),
   getActiveSavedAssumptionsId: () => mockSavedAssumptionsState.activeId,
   getSavedAssumptions: () => [savedEntry],
   markSavedAssumptionsLoaded: (...args) => mockMarkSavedAssumptionsLoaded(...args),
   SAVED_ASSUMPTIONS_CHANGED_EVENT: 'saved-assumptions:changed',
-  saveNewAssumptions: (...args) => mockSaveNewAssumptions(...args),
   setActiveSavedAssumptionsId: (...args) => mockSetActiveSavedAssumptionsId(...args),
-  updateSavedAssumptions: (...args) => mockUpdateSavedAssumptions(...args),
-}));
-
-vi.mock('../ShareAssumptionsModal', () => ({
-  default: ({ isOpen, title = 'Share Assumptions', onSaved, onClose }) => {
-    if (!isOpen) {
-      return null;
-    }
-
-    return (
-      <div>
-        <h2>{title}</h2>
-        <button
-          type="button"
-          onClick={() =>
-            onSaved({
-              reference: 'shared-selector-ref',
-              description: 'Shared selector description',
-              shareUrl: 'http://localhost:3000/?shared=shared-selector-ref',
-            })
-          }
-        >
-          Simulate Share Saved
-        </button>
-        <button type="button" onClick={onClose}>
-          Close Share Modal
-        </button>
-      </div>
-    );
-  },
 }));
 
 describe('AssumptionsSelector', () => {
@@ -116,9 +81,6 @@ describe('AssumptionsSelector', () => {
     mockSetAllUserAssumptions.mockReset();
     mockMarkSavedAssumptionsLoaded.mockReset();
     mockSetActiveSavedAssumptionsId.mockReset();
-    mockAttachSavedAssumptionsShareReference.mockReset();
-    mockSaveNewAssumptions.mockReset();
-    mockUpdateSavedAssumptions.mockReset();
     mockShowNotification.mockReset();
     mockAssumptionsState.normalizedAssumptions = null;
     mockAssumptionsState.isUsingCustomValues = false;
@@ -260,53 +222,17 @@ describe('AssumptionsSelector', () => {
     );
   });
 
-  it('shows Share for an active local assumptions set and keeps rename/delete hidden', async () => {
-    const user = userEvent.setup();
+  it('keeps save/share/rename/delete hidden in the simplified selector summary', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
 
     render(<AssumptionsSelector />);
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
-    expect(within(summaryRow).getByRole('button', { name: 'Share' })).toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
-
-    await user.click(within(summaryRow).getByRole('button', { name: 'Share' }));
-    expect(screen.getByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
-  });
-
-  it('shows Save for custom unsaved assumptions and saves them to the library', async () => {
-    const user = userEvent.setup();
-    const customAssumptions = {
-      globalParameters: { timeLimit: 800 },
-    };
-    mockAssumptionsState.isUsingCustomValues = true;
-    mockAssumptionsState.normalizedAssumptions = customAssumptions;
-    mockSaveNewAssumptions.mockReturnValue({
-      ok: true,
-      entry: { id: 'saved-2' },
-    });
-
-    render(<AssumptionsSelector />);
-
-    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
-    expect(within(summaryRow).getByRole('button', { name: 'Save' })).toBeInTheDocument();
-
-    await user.click(within(summaryRow).getByRole('button', { name: 'Save' }));
-    expect(screen.getByRole('heading', { name: 'Save to Library' })).toBeInTheDocument();
-
-    await user.type(screen.getByLabelText('Label'), 'My Custom Assumptions');
-    await user.click(screen.getByRole('button', { name: 'Save to Library' }));
-
-    expect(mockSaveNewAssumptions).toHaveBeenCalledWith({
-      label: 'My Custom Assumptions',
-      description: '',
-      assumptions: customAssumptions,
-      source: 'local',
-    });
-    expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith('saved-2');
-    expect(screen.queryByRole('heading', { name: 'Save to Library' })).not.toBeInTheDocument();
   });
 
   it('prompts before overwriting custom unsaved assumptions from the selector and keeps the current state on cancel', async () => {
@@ -348,7 +274,7 @@ describe('AssumptionsSelector', () => {
     expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
   });
 
-  it('shows Copy Link instead of Share when the active assumptions set already has a share link', () => {
+  it('keeps copy link hidden in the simplified selector summary', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
     savedEntry.reference = 'saved-link';
@@ -358,51 +284,6 @@ describe('AssumptionsSelector', () => {
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
-    expect(within(summaryRow).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
-  });
-
-  it('syncs a newly created share link back into saved assumptions from the selector flow', async () => {
-    const user = userEvent.setup();
-    mockSavedAssumptionsState.activeId = savedEntry.id;
-    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
-    mockAttachSavedAssumptionsShareReference.mockReturnValue({
-      ok: true,
-      entry: { id: savedEntry.id },
-    });
-
-    render(<AssumptionsSelector />);
-
-    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
-    await user.click(within(summaryRow).getByRole('button', { name: 'Share' }));
-    await user.click(screen.getByRole('button', { name: 'Simulate Share Saved' }));
-
-    expect(mockAttachSavedAssumptionsShareReference).toHaveBeenCalledWith({
-      reference: 'shared-selector-ref',
-      description: 'Shared selector description',
-      assumptions: savedEntry.assumptions,
-      preferredId: savedEntry.id,
-    });
-    expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(savedEntry.id);
-  });
-
-  it('shows an error notification when selector share sync fails unexpectedly', async () => {
-    const user = userEvent.setup();
-    mockSavedAssumptionsState.activeId = savedEntry.id;
-    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
-    mockAttachSavedAssumptionsShareReference.mockReturnValue({
-      ok: false,
-      errorCode: 'storage_write_failed',
-    });
-
-    render(<AssumptionsSelector />);
-
-    const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
-    await user.click(within(summaryRow).getByRole('button', { name: 'Share' }));
-    await user.click(screen.getByRole('button', { name: 'Simulate Share Saved' }));
-
-    expect(mockShowNotification).toHaveBeenCalledWith(
-      'error',
-      'Share link created, but could not sync it to the Assumptions Library.'
-    );
+    expect(within(summaryRow).queryByRole('button', { name: 'Copy Link' })).not.toBeInTheDocument();
   });
 });

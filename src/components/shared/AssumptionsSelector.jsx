@@ -11,8 +11,6 @@ import {
 } from '../../utils/savedAssumptionsStore';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { useNotificationActions } from '../../contexts/NotificationContext';
-import useSaveAssumptionsModal from '../../hooks/useSaveAssumptionsModal';
-import useAssumptionsShareActions from '../../hooks/useAssumptionsShareActions';
 import {
   getAssumptionsLoadRequest,
   isCurrentAssumptionsStateRepresentedByLibrary,
@@ -21,8 +19,6 @@ import {
 import useAssumptionsSelectorPreference from '../../hooks/useAssumptionsSelectorPreference';
 import { getActiveAssumptionsLabel } from '../../utils/assumptionsSelectorDisplayPreference';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
-import SaveAssumptionsModal from '../SaveAssumptionsModal';
-import ShareAssumptionsModal from '../ShareAssumptionsModal';
 import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import InfoTooltipIcon from './InfoTooltipIcon';
 import AssumptionsDropdown, { DEFAULT_ASSUMPTIONS_ENTRY_ID } from './AssumptionsDropdown';
@@ -69,9 +65,6 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
       }),
     [currentAssumptionsFingerprint, isUsingCustomValues, libraryEntries]
   );
-  // Keep `Share` available for unsaved custom assumptions and for local saved entries that
-  // do not already have a share link, even when the current values happen to equal defaults.
-  const shouldShowCurrentShareAction = isUsingCustomValues || hasUnsavedChanges;
   const currentSelectionLabel = useMemo(
     () =>
       getActiveAssumptionsLabel({
@@ -215,42 +208,6 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
     setPendingDescriptionEntry(null);
   }, []);
 
-  const persistAsActive = useCallback(
-    (entryId) => {
-      setActiveSavedAssumptionsId(entryId);
-      setActiveSavedAssumptionsIdState(entryId);
-      refreshSavedAssumptions();
-    },
-    [refreshSavedAssumptions]
-  );
-  const {
-    shareModalOpen,
-    shareModalInitialResult,
-    shareModalInitialDescription,
-    shareModalInitialSlug,
-    handleOpenShareModal,
-    handleCloseShareModal,
-    handleShareSaved,
-    handleCopySavedLink,
-  } = useAssumptionsShareActions({
-    activeLibraryEntry,
-    assumptionsForSharing,
-    hasUnsavedChanges,
-    persistAsActive,
-    showNotification,
-  });
-  const { handleSaveAssumptionsClick, saveModalProps } = useSaveAssumptionsModal({
-    activeLibraryEntry,
-    activeLibraryEntryFingerprint,
-    currentAssumptionsFingerprint,
-    libraryEntries,
-    hasUnsavedChanges,
-    getCurrentAssumptions: getNormalizedUserAssumptionsForSharing,
-    persistAsActive,
-    refreshSavedAssumptions,
-    showNotification,
-  });
-
   const inlineLabel = (
     <>
       <span>Active assumptions:</span>
@@ -303,14 +260,11 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
         hasUnsavedChanges={hasUnsavedChanges}
         menuAriaLabel="Assumptions options"
         allowEntryManagementActions={false}
-        allowCopyLinkAction={true}
-        showCurrentSaveAction={true}
-        showCurrentShareAction={shouldShowCurrentShareAction}
-        showShareForLocal={true}
+        allowCopyLinkAction={false}
+        showCurrentSaveAction={false}
+        showCurrentShareAction={false}
+        showShareForLocal={false}
         onLoad={handleLoad}
-        onSaveCurrent={handleSaveAssumptionsClick}
-        onShareCurrent={handleOpenShareModal}
-        onCopyLink={handleCopySavedLink}
         onDescription={handleDescriptionModalOpen}
       />
 
@@ -320,17 +274,6 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
         initialDescription={pendingDescriptionEntry?.content || pendingDescriptionEntry?.description || ''}
         isReadOnly={true}
         onClose={handleDescriptionModalClose}
-      />
-      <SaveAssumptionsModal {...saveModalProps} />
-      <ShareAssumptionsModal
-        isOpen={shareModalOpen}
-        onClose={handleCloseShareModal}
-        assumptions={assumptionsForSharing}
-        assumptionName={activeLibraryEntry?.label || null}
-        initialDescription={shareModalInitialDescription}
-        initialSlug={shareModalInitialSlug}
-        initialSavedResult={shareModalInitialResult}
-        onSaved={handleShareSaved}
       />
       <SharedImportDecisionModal
         isOpen={Boolean(pendingLoadEntry)}

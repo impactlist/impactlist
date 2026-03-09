@@ -12,13 +12,20 @@ import {
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { useNotificationActions } from '../../contexts/NotificationContext';
 import useAssumptionsShareActions from '../../hooks/useAssumptionsShareActions';
+import {
+  getAssumptionsLoadRequest,
+  isCurrentAssumptionsStateRepresentedByLibrary,
+  OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL,
+} from '../../utils/assumptionsLoadHelpers';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
 import ShareAssumptionsModal from '../ShareAssumptionsModal';
+import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import AssumptionsDropdown, { DEFAULT_ASSUMPTIONS_ENTRY_ID } from './AssumptionsDropdown';
 
 const AssumptionsSelector = ({ className = '' }) => {
   const [savedAssumptions, setSavedAssumptions] = useState([]);
   const [activeSavedAssumptionsIdState, setActiveSavedAssumptionsIdState] = useState(null);
+  const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
   const { getNormalizedUserAssumptionsForSharing, isUsingCustomValues, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotificationActions();
@@ -47,6 +54,15 @@ const AssumptionsSelector = ({ className = '' }) => {
   const hasUnsavedChanges = activeLibraryEntry
     ? activeLibraryEntryFingerprint !== currentAssumptionsFingerprint
     : isUsingCustomValues;
+  const isCurrentStateRepresentedBySavedAssumptions = useMemo(
+    () =>
+      isCurrentAssumptionsStateRepresentedByLibrary({
+        isUsingCustomValues,
+        currentFingerprint: currentAssumptionsFingerprint,
+        libraryEntries,
+      }),
+    [currentAssumptionsFingerprint, isUsingCustomValues, libraryEntries]
+  );
   // Keep `Share` available for unsaved custom assumptions and for local saved entries that
   // do not already have a share link, even when the current values happen to equal defaults.
   const shouldShowCurrentShareAction = isUsingCustomValues || hasUnsavedChanges;
@@ -76,15 +92,14 @@ const AssumptionsSelector = ({ className = '' }) => {
     };
   }, [refreshSavedAssumptions]);
 
-  const handleLoad = useCallback(
-    (entry) => {
-      if (entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
-        setAllUserAssumptions(null);
-        setActiveSavedAssumptionsId(null);
-        setActiveSavedAssumptionsIdState(null);
-        return;
-      }
+  const applyDefaultAssumptions = useCallback(() => {
+    setAllUserAssumptions(null);
+    setActiveSavedAssumptionsId(null);
+    setActiveSavedAssumptionsIdState(null);
+  }, [setAllUserAssumptions]);
 
+  const applySavedAssumptionsEntry = useCallback(
+    (entry) => {
       if (!entry?.assumptions) {
         return;
       }
@@ -100,6 +115,75 @@ const AssumptionsSelector = ({ className = '' }) => {
     },
     [setAllUserAssumptions]
   );
+
+  const handleLoad = useCallback(
+    (entry) => {
+      const loadRequest = getAssumptionsLoadRequest({
+        entry,
+        activeId: activeSavedAssumptionsIdState,
+        currentFingerprint: currentAssumptionsFingerprint,
+        isUsingCustomValues,
+        isCurrentStateRepresentedBySavedAssumptions,
+        defaultEntryId: DEFAULT_ASSUMPTIONS_ENTRY_ID,
+      });
+
+      if (loadRequest.type === 'already-default') {
+        showNotification('info', 'Default assumptions are already loaded.');
+        return;
+      }
+
+      if (loadRequest.type === 'confirm') {
+        setPendingLoadEntry(entry);
+        return;
+      }
+
+      if (loadRequest.type === 'apply-default') {
+        applyDefaultAssumptions();
+        return;
+      }
+
+      if (loadRequest.type === 'activate-matching-entry') {
+        if (entry.source !== 'curated') {
+          markSavedAssumptionsLoaded(entry.id);
+        }
+        setActiveSavedAssumptionsId(entry.id);
+        setActiveSavedAssumptionsIdState(entry.id);
+        return;
+      }
+
+      if (loadRequest.type === 'apply-entry') {
+        applySavedAssumptionsEntry(entry);
+      }
+    },
+    [
+      activeSavedAssumptionsIdState,
+      applyDefaultAssumptions,
+      applySavedAssumptionsEntry,
+      currentAssumptionsFingerprint,
+      isCurrentStateRepresentedBySavedAssumptions,
+      isUsingCustomValues,
+      showNotification,
+    ]
+  );
+
+  const handleContinuePendingLoad = useCallback(() => {
+    if (!pendingLoadEntry) {
+      return;
+    }
+
+    if (pendingLoadEntry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
+      applyDefaultAssumptions();
+      setPendingLoadEntry(null);
+      return;
+    }
+
+    applySavedAssumptionsEntry(pendingLoadEntry);
+    setPendingLoadEntry(null);
+  }, [applyDefaultAssumptions, applySavedAssumptionsEntry, pendingLoadEntry]);
+
+  const handleCancelPendingLoad = useCallback(() => {
+    setPendingLoadEntry(null);
+  }, []);
 
   const handleDescriptionModalOpen = useCallback((entry) => {
     if (!entry?.id || (!entry.description && !entry.content)) {
@@ -172,6 +256,15 @@ const AssumptionsSelector = ({ className = '' }) => {
         initialDescription={shareModalInitialDescription}
         initialSavedResult={shareModalInitialResult}
         onSaved={handleShareSaved}
+      />
+      <SharedImportDecisionModal
+        isOpen={Boolean(pendingLoadEntry)}
+        title={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.title}
+        description={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.description}
+        continueLabel={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.continueLabel}
+        cancelLabel={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.cancelLabel}
+        onContinue={handleContinuePendingLoad}
+        onCancel={handleCancelPendingLoad}
       />
     </>
   );

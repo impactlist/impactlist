@@ -208,6 +208,45 @@ describe('AssumptionsSelector', () => {
     expect(screen.getByRole('heading', { name: 'Share Assumptions' })).toBeInTheDocument();
   });
 
+  it('prompts before overwriting custom unsaved assumptions from the selector and keeps the current state on cancel', async () => {
+    const user = userEvent.setup();
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
+    mockAssumptionsState.normalizedAssumptions = {
+      globalParameters: { timeLimit: 800 },
+    };
+
+    render(<AssumptionsSelector />);
+
+    const menu = await openMenu(user);
+    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('menuitemradio'));
+
+    expect(screen.getByRole('heading', { name: 'Overwrite your unsaved assumptions?' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.queryByRole('heading', { name: 'Overwrite your unsaved assumptions?' })).not.toBeInTheDocument();
+    expect(mockSetAllUserAssumptions).not.toHaveBeenCalled();
+    expect(mockSetActiveSavedAssumptionsId).not.toHaveBeenCalled();
+  });
+
+  it('prompts before overwriting custom unsaved assumptions from the selector and applies the new entry on continue', async () => {
+    const user = userEvent.setup();
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
+    mockAssumptionsState.normalizedAssumptions = {
+      globalParameters: { timeLimit: 800 },
+    };
+
+    render(<AssumptionsSelector />);
+
+    const menu = await openMenu(user);
+    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('menuitemradio'));
+    await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
+
+    expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);
+    expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
+  });
+
   it('shows Copy Link instead of Share when the active assumptions set already has a share link', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;

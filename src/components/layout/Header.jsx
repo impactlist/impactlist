@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAssumptions } from '../../contexts/AssumptionsContext';
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -10,7 +9,7 @@ const NAV_LINK_BASE = 'px-3 py-2 rounded-md text-sm font-medium transition-color
 const NAV_LINK_TONE = 'text-slate-200 hover:bg-slate-700 hover:text-white';
 const NAV_LINK_ACTIVE = 'bg-slate-700 text-white';
 
-const AssumptionsNavLabel = ({ showCustomIndicator }) => (
+const AssumptionsNavLabel = () => (
   <>
     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
       <path
@@ -20,17 +19,11 @@ const AssumptionsNavLabel = ({ showCustomIndicator }) => (
       />
     </svg>
     Assumptions
-    {showCustomIndicator && <span className="ml-1 h-2 w-2 rounded-full bg-yellow-400" title="Using custom values" />}
   </>
 );
 
-AssumptionsNavLabel.propTypes = {
-  showCustomIndicator: PropTypes.bool.isRequired,
-};
-
 const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAssumptions }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isUsingCustomValues } = useAssumptions();
 
   const navLinkClass = ({ isActive = false, visibilityClass = '', layoutClass = '' } = {}) =>
     joinClasses(visibilityClass, layoutClass, NAV_LINK_BASE, NAV_LINK_TONE, isActive ? NAV_LINK_ACTIVE : '');
@@ -71,7 +64,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                 layoutClass: 'items-center',
               })}
             >
-              <AssumptionsNavLabel showCustomIndicator={isUsingCustomValues} />
+              <AssumptionsNavLabel />
             </Link>
             {/* Calculator - visible on sm+ */}
             <Link
@@ -145,7 +138,7 @@ const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAss
                   })}
                   onClick={closeMobileMenu}
                 >
-                  <AssumptionsNavLabel showCustomIndicator={isUsingCustomValues} />
+                  <AssumptionsNavLabel />
                 </Link>
                 {/* Calculator - shown only on mobile (hidden on sm+ where it's in main nav) */}
                 <Link

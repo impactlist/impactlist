@@ -14,6 +14,11 @@ import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
 import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
 import {
+  getAssumptionsLoadRequest,
+  isCurrentAssumptionsStateRepresentedByLibrary,
+  OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL,
+} from '../utils/assumptionsLoadHelpers';
+import {
   getCuratedAssumptionsEntries,
   hasCuratedAssumptionsLabel,
   isCuratedAssumptionsEntryId,
@@ -83,19 +88,15 @@ const AssumptionsPage = () => {
   const isActiveSavedAssumptionsRemote = Boolean(activeLibraryEntry?.reference);
   const isActiveCuratedEntry = activeLibraryEntry?.source === 'curated';
   const activePanelEntryId = activeSavedAssumptionsId || DEFAULT_ASSUMPTIONS_ENTRY_ID;
-  const isCurrentStateRepresentedBySavedAssumptions = useMemo(() => {
-    if (!isUsingCustomValues) {
-      return true;
-    }
-
-    if (!currentFingerprint) {
-      return false;
-    }
-
-    return libraryEntries.some(
-      (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
-    );
-  }, [currentFingerprint, isUsingCustomValues, libraryEntries]);
+  const isCurrentStateRepresentedBySavedAssumptions = useMemo(
+    () =>
+      isCurrentAssumptionsStateRepresentedByLibrary({
+        isUsingCustomValues,
+        currentFingerprint,
+        libraryEntries,
+      }),
+    [currentFingerprint, isUsingCustomValues, libraryEntries]
+  );
   const canUpdateExisting = Boolean(
     activeLibraryEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote && !isActiveCuratedEntry
   );
@@ -271,27 +272,21 @@ const AssumptionsPage = () => {
 
   const handleLoadSavedAssumptions = useCallback(
     (entry) => {
-      if (!entry) {
+      const loadRequest = getAssumptionsLoadRequest({
+        entry,
+        activeId: activeSavedAssumptionsId,
+        currentFingerprint,
+        isUsingCustomValues,
+        isCurrentStateRepresentedBySavedAssumptions,
+        defaultEntryId: DEFAULT_ASSUMPTIONS_ENTRY_ID,
+      });
+
+      if (loadRequest.type === 'already-default') {
+        showNotification('info', 'Default assumptions are already loaded.');
         return;
       }
 
-      if (entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
-        if (!isUsingCustomValues && !activeSavedAssumptionsId) {
-          showNotification('info', 'Default assumptions are already loaded.');
-          return;
-        }
-
-        if (!isCurrentStateRepresentedBySavedAssumptions) {
-          setPendingLoadEntry(entry);
-          return;
-        }
-
-        applyDefaultAssumptions();
-        return;
-      }
-
-      const entryFingerprint = createComparableAssumptionsFingerprint(entry.assumptions);
-      if (entryFingerprint && entryFingerprint === currentFingerprint) {
+      if (loadRequest.type === 'activate-matching-entry') {
         if (entry.source === 'curated') {
           persistAsActive(entry.id);
         } else {
@@ -308,12 +303,19 @@ const AssumptionsPage = () => {
         return;
       }
 
-      if (isUsingCustomValues && !isCurrentStateRepresentedBySavedAssumptions) {
+      if (loadRequest.type === 'confirm') {
         setPendingLoadEntry(entry);
         return;
       }
 
-      applySavedAssumptionsEntry(entry);
+      if (loadRequest.type === 'apply-default') {
+        applyDefaultAssumptions();
+        return;
+      }
+
+      if (loadRequest.type === 'apply-entry') {
+        applySavedAssumptionsEntry(entry);
+      }
     },
     [
       activeSavedAssumptionsId,
@@ -627,10 +629,10 @@ const AssumptionsPage = () => {
           isOpen={Boolean(pendingLoadEntry)}
           onContinue={handleContinuePendingLoad}
           onCancel={handleCancelPendingLoad}
-          title="Overwrite your unsaved assumptions?"
-          description="You already have custom assumptions in this browser. Continuing will replace them with this saved entry."
-          continueLabel="Continue (overwrite yours)"
-          cancelLabel="Cancel"
+          title={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.title}
+          description={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.description}
+          continueLabel={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.continueLabel}
+          cancelLabel={OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL.cancelLabel}
         />
 
         <SavedAssumptionsMigrationModal

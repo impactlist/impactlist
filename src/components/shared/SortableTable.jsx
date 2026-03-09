@@ -20,6 +20,7 @@ const SortableTable = ({
   const tableHeadRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const stickyTrackRef = useRef(null);
+  const normalizeLayoutMeasurement = (value) => Math.round(value * 100) / 100;
 
   useEffect(() => {
     const updateStickyState = () => {
@@ -84,8 +85,10 @@ const SortableTable = ({
       }
 
       const headerCells = Array.from(tableHeadRef.current.querySelectorAll('th'));
-      const nextColumnWidths = headerCells.map((cell) => Math.ceil(cell.getBoundingClientRect().width));
-      const nextTableWidth = Math.ceil(
+      const nextColumnWidths = headerCells.map((cell) =>
+        normalizeLayoutMeasurement(cell.getBoundingClientRect().width)
+      );
+      const nextTableWidth = normalizeLayoutMeasurement(
         Math.max(tableRef.current.getBoundingClientRect().width, scrollContainerRef.current.scrollWidth)
       );
       const nextHeaderHeight = Math.ceil(tableHeadRef.current.getBoundingClientRect().height);

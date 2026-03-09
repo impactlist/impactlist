@@ -103,6 +103,7 @@
 
   .assumptions-selector-bar {
     display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.8rem;
     margin-bottom: 1rem;
@@ -125,6 +126,8 @@
   .assumptions-selector-bar__control {
     position: relative;
     width: 32.25rem;
+    flex: 0 1 32.25rem;
+    min-width: min(100%, 19rem);
   }
 
   .saved-assumptions-panel {
@@ -184,12 +187,15 @@
     .assumptions-selector-bar {
       display: flex;
       align-items: flex-start;
+      flex-wrap: wrap;
       gap: 0.6rem;
       padding: 0;
     }
 
     .assumptions-selector-bar__control {
-      width: min(32.25rem, calc(100vw - 7.5rem));
+      width: 100%;
+      flex-basis: 100%;
+      min-width: 0;
     }
 
     .saved-assumptions-panel__menu {

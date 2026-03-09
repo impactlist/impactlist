@@ -110,6 +110,30 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
   });
 
+  it('shows an explanatory tooltip next to the active assumptions heading', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const activeAssumptionsSection = getAssumptionsLibrarySection();
+    await user.hover(within(activeAssumptionsSection).getByRole('button', { name: 'More information' }));
+
+    expect(
+      await screen.findByText(
+        'Choose an assumptions set to see how different assumptions affect the rankings and calculations across the site.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Curated assumptions are built-in sets provided by Impact List. Local assumptions are saved only in this browser. Remote assumptions are shared links that were imported from somewhere else.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Non-local assumptions already have a link you can use to share them. If you want a link for a local assumptions set, select it and click Share.'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('supports back/forward navigation between category list and category editor urls', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions?tab=categories');
@@ -251,8 +275,9 @@ describe('AssumptionsPage routing integration', () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 
-    const tooltipTriggers = await screen.findAllByRole('button', { name: 'More information' });
-    await user.click(tooltipTriggers[0]);
+    const discountRateLabel = await screen.findByText('Discount Rate (%)');
+    const discountRateCard = discountRateLabel.closest('.assumption-card__title-wrap');
+    await user.click(within(discountRateCard).getByRole('button', { name: 'More information' }));
 
     expect(await screen.findByRole('tooltip')).toBeInTheDocument();
     expect(screen.getByRole('tooltip')).toHaveTextContent(/annual discount rate/i);

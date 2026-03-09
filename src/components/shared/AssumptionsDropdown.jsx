@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import IconActionButton from './IconActionButton';
 import useDismissibleMenu from '../../hooks/useDismissibleMenu';
@@ -501,7 +502,7 @@ AssumptionsDropdown.propTypes = {
   ).isRequired,
   activeId: PropTypes.string,
   hasUnsavedChanges: PropTypes.bool,
-  inlineLabel: PropTypes.string,
+  inlineLabel: PropTypes.node,
   className: PropTypes.string,
   menuAriaLabel: PropTypes.string,
   showCurrentSaveAction: PropTypes.bool,

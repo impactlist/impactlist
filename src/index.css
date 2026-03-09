@@ -110,9 +110,16 @@
   }
 
   .assumptions-selector-bar__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-strong);
+  }
+
+  .assumptions-selector-bar__label-tooltip {
+    color: var(--text-muted);
   }
 
   .assumptions-selector-bar__control {

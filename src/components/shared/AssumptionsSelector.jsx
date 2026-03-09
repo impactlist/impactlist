@@ -20,6 +20,7 @@ import {
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
 import ShareAssumptionsModal from '../ShareAssumptionsModal';
 import SharedImportDecisionModal from '../SharedImportDecisionModal';
+import InfoTooltipIcon from './InfoTooltipIcon';
 import AssumptionsDropdown, { DEFAULT_ASSUMPTIONS_ENTRY_ID } from './AssumptionsDropdown';
 
 const AssumptionsSelector = ({ className = '' }) => {
@@ -222,11 +223,30 @@ const AssumptionsSelector = ({ className = '' }) => {
     showNotification,
   });
 
+  const inlineLabel = (
+    <>
+      <span>Active assumptions:</span>
+      <InfoTooltipIcon
+        className="assumptions-selector-bar__label-tooltip"
+        iconClassName="h-4 w-4 text-muted"
+        content={
+          <>
+            <p>Change the active assumptions to see how it affects the rankings.</p>
+            <p className="mt-2">
+              If you want to view the details of the existing assumptions or specify/save/share your own assumptions, go
+              to the Assumptions page.
+            </p>
+          </>
+        }
+      />
+    </>
+  );
+
   return (
     <>
       <AssumptionsDropdown
         className={className}
-        inlineLabel="Active assumptions:"
+        inlineLabel={inlineLabel}
         entries={libraryEntries}
         activeId={activeSavedAssumptionsIdState}
         hasUnsavedChanges={hasUnsavedChanges}

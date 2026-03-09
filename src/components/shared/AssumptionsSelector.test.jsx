@@ -132,6 +132,22 @@ describe('AssumptionsSelector', () => {
     expect(screen.getByRole('button', { name: /Active assumptions:/ })).toBeInTheDocument();
   });
 
+  it('shows an explanatory tooltip next to the active assumptions label', async () => {
+    const user = userEvent.setup();
+    render(<AssumptionsSelector />);
+
+    await user.hover(screen.getByRole('button', { name: 'More information' }));
+
+    expect(
+      await screen.findByText('Change the active assumptions to see how it affects the rankings.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'If you want to view the details of the existing assumptions or specify/save/share your own assumptions, go to the Assumptions page.'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('applies curated assumptions when selected', async () => {
     const user = userEvent.setup();
     render(<AssumptionsSelector />);

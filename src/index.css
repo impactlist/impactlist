@@ -171,6 +171,10 @@
     cursor: default;
   }
 
+  .saved-assumptions-panel:not(.saved-assumptions-panel--inline) .saved-assumptions-panel__summary {
+    border-color: color-mix(in srgb, var(--border-strong) 34%, var(--border-subtle) 66%);
+  }
+
   .saved-assumptions-panel--inline .saved-assumptions-panel__summary {
     padding-right: 0.7rem;
     background: color-mix(in srgb, var(--bg-surface) 88%, white 12%);
@@ -1456,19 +1460,9 @@
     background: color-mix(in srgb, var(--bg-surface-alt) 56%, white 44%);
   }
 
-  .assumptions-entry[data-active='true'] {
-    border-color: color-mix(in srgb, var(--accent) 28%, var(--border-subtle) 72%);
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent 88%),
-      0 6px 14px -16px rgba(34, 26, 12, 0.45);
-  }
-
   .assumptions-entry[data-active='true'][data-dirty='true'] {
-    border-color: color-mix(in srgb, var(--edited-accent) 42%, var(--border-subtle) 58%);
+    border-color: var(--border-subtle);
     background: color-mix(in srgb, var(--edited-accent-soft) 28%, var(--bg-surface) 72%);
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--edited-accent) 18%, transparent 82%),
-      0 10px 18px -18px color-mix(in srgb, var(--edited-accent-strong) 46%, transparent 54%);
   }
 
   .assumptions-inline-error {

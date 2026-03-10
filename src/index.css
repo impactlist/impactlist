@@ -27,6 +27,10 @@
     --custom-accent: #4460b2;
     --custom-accent-strong: #354c91;
     --custom-accent-soft: #dbe4ff;
+    --tab-active-text: #fffaf2;
+    --tab-active-border: #6f523b;
+    --tab-active-bg: #7c5b43;
+    --tab-active-shadow: rgba(111, 82, 59, 0.28);
 
     --success: #1f6e54;
     --success-soft: #e4f4ed;
@@ -823,6 +827,71 @@
     box-shadow: var(--shadow-1);
   }
 
+  .assumptions-toolbar__nav {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .assumptions-toolbar__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    margin-left: auto;
+  }
+
+  .assumptions-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.7rem;
+  }
+
+  .assumptions-form-actions__status {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .assumptions-form-actions__buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .assumptions-form-actions__reset {
+    border: 0;
+    padding: 0.2rem 0;
+    border-radius: 0;
+    color: color-mix(in srgb, var(--accent-strong) 72%, var(--text-strong) 28%);
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  .assumptions-form-actions__reset:hover:not(:disabled) {
+    color: var(--accent-strong);
+    background: transparent;
+  }
+
+  .assumptions-form-actions__reset:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+
+  .assumptions-form-actions__apply {
+    border-radius: var(--radius-md);
+    padding: 0.7rem 1.05rem;
+    min-width: 6rem;
+    justify-content: center;
+  }
+
   .assumptions-panel-context {
     display: inline-flex;
     align-self: flex-start;
@@ -991,10 +1060,10 @@
   }
 
   .impact-tab[data-active='true'] {
-    color: var(--text-on-custom-accent);
-    border-color: color-mix(in srgb, var(--custom-accent-strong) 82%, black 18%);
-    background: linear-gradient(145deg, var(--custom-accent) 0%, var(--custom-accent-strong) 100%);
-    box-shadow: 0 8px 16px -14px color-mix(in srgb, var(--custom-accent-strong) 82%, transparent 18%);
+    color: var(--tab-active-text);
+    border-color: color-mix(in srgb, var(--tab-active-border) 84%, black 16%);
+    background: var(--tab-active-bg);
+    box-shadow: 0 8px 16px -14px var(--tab-active-shadow);
   }
 
   .impact-tabs[data-locked='true'] .impact-tab[data-active='true'] {
@@ -2037,7 +2106,28 @@
   }
 
   .assumptions-toolbar {
+    align-items: stretch;
+    gap: 0.85rem;
     padding: 10px;
+  }
+
+  .assumptions-toolbar__nav,
+  .assumptions-toolbar__actions {
+    width: 100%;
+  }
+
+  .assumptions-toolbar__actions {
+    justify-content: flex-end;
+    padding-top: 0.15rem;
+  }
+
+  .assumptions-form-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .assumptions-form-actions__buttons {
+    justify-content: flex-end;
   }
 
   .assumptions-panel-context {

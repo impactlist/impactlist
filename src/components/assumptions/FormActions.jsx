@@ -13,10 +13,10 @@ const FormActions = ({
   const statusMessage = hasErrors ? 'Fix validation errors before applying.' : '';
 
   return (
-    <div className="flex flex-wrap items-center justify-end gap-3">
-      {statusMessage && <p className="text-xs font-medium text-muted">{statusMessage}</p>}
-      <div className="flex items-center gap-2">
-        <button type="button" onClick={onReset} className="impact-btn impact-btn--secondary">
+    <div className="assumptions-form-actions">
+      {statusMessage && <p className="assumptions-form-actions__status">{statusMessage}</p>}
+      <div className="assumptions-form-actions__buttons">
+        <button type="button" onClick={onReset} className="assumptions-form-actions__reset">
           {resetLabel}
         </button>
         {showSave && (
@@ -24,7 +24,7 @@ const FormActions = ({
             type="button"
             onClick={onSave}
             disabled={isSaveDisabled}
-            className="impact-btn impact-btn--custom-accent"
+            className="impact-btn impact-btn--custom-accent assumptions-form-actions__apply"
           >
             Apply
           </button>

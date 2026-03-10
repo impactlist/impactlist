@@ -231,40 +231,44 @@ const AssumptionsEditor = forwardRef(
         </div>
 
         <div className="assumptions-toolbar">
-          <TabNavigation
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            tabs={tabs}
-            idBase="assumptions"
-            isLocked={isEditingEffects}
-          />
-
-          {isEditingEffects ? (
-            <span className="assumptions-toolbar__hint" role="status" aria-live="polite">
-              Apply or cancel current edits to switch sections.
-            </span>
-          ) : (
-            <FormActions
-              onReset={
-                activeTab === 'global'
-                  ? handleGlobalReset
-                  : activeTab === 'categories'
-                    ? handleCategoryReset
-                    : handleResetRecipients
-              }
-              onSave={handleSaveGlobal}
-              showSave={activeTab === 'global'}
-              resetLabel={
-                activeTab === 'global'
-                  ? 'Reset Global'
-                  : activeTab === 'categories'
-                    ? 'Reset Causes'
-                    : 'Reset Recipients'
-              }
-              hasErrors={Object.keys(globalForm.errors).length > 0}
-              hasUnsavedChanges={globalForm.hasUnsavedChanges}
+          <div className="assumptions-toolbar__nav">
+            <TabNavigation
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              tabs={tabs}
+              idBase="assumptions"
+              isLocked={isEditingEffects}
             />
-          )}
+          </div>
+
+          <div className="assumptions-toolbar__actions">
+            {isEditingEffects ? (
+              <span className="assumptions-toolbar__hint" role="status" aria-live="polite">
+                Apply or cancel current edits to switch sections.
+              </span>
+            ) : (
+              <FormActions
+                onReset={
+                  activeTab === 'global'
+                    ? handleGlobalReset
+                    : activeTab === 'categories'
+                      ? handleCategoryReset
+                      : handleResetRecipients
+                }
+                onSave={handleSaveGlobal}
+                showSave={activeTab === 'global'}
+                resetLabel={
+                  activeTab === 'global'
+                    ? 'Reset Global'
+                    : activeTab === 'categories'
+                      ? 'Reset Causes'
+                      : 'Reset Recipients'
+                }
+                hasErrors={Object.keys(globalForm.errors).length > 0}
+                hasUnsavedChanges={globalForm.hasUnsavedChanges}
+              />
+            )}
+          </div>
         </div>
 
         <div

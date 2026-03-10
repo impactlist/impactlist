@@ -19,14 +19,16 @@ export const useAssumptionsShareActions = ({
   const [shareModalInitialResult, setShareModalInitialResult] = useState(null);
   const [shareModalInitialDescription, setShareModalInitialDescription] = useState('');
   const [shareModalInitialSlug, setShareModalInitialSlug] = useState('');
+  const isActiveSavedAssumptionsRemote = Boolean(activeLibraryEntry?.reference);
+  const shouldForkEditedRemoteAssumptions = Boolean(isActiveSavedAssumptionsRemote && hasUnsavedChanges);
+  const shareAssumptionName = shouldForkEditedRemoteAssumptions ? null : activeLibraryEntry?.label || null;
 
   const handleOpenShareModal = useCallback(() => {
-    const isActiveSavedAssumptionsRemote = Boolean(activeLibraryEntry?.reference);
     const shouldPrefillDescription = !hasUnsavedChanges;
     const shouldPrefillSlug =
-      !hasUnsavedChanges && activeLibraryEntry?.source === 'local' && !isActiveSavedAssumptionsRemote;
+      !hasUnsavedChanges && activeLibraryEntry?.source === 'local' && !activeLibraryEntry?.reference;
 
-    if (isActiveSavedAssumptionsRemote && !hasUnsavedChanges && activeLibraryEntry?.shareUrl) {
+    if (activeLibraryEntry?.reference && !hasUnsavedChanges && activeLibraryEntry?.shareUrl) {
       setShareModalInitialResult({
         id: activeLibraryEntry.id,
         reference: activeLibraryEntry.reference,
@@ -46,8 +48,8 @@ export const useAssumptionsShareActions = ({
     activeLibraryEntry?.label,
     activeLibraryEntry?.reference,
     activeLibraryEntry?.shareUrl,
-    hasUnsavedChanges,
     activeLibraryEntry?.source,
+    hasUnsavedChanges,
   ]);
 
   const handleCloseShareModal = useCallback(() => {
@@ -57,17 +59,45 @@ export const useAssumptionsShareActions = ({
     setShareModalInitialSlug('');
   }, []);
 
+  const createAndActivateSharedEntry = useCallback(
+    (sharedReference, description) => {
+      const createResult = saveNewAssumptions({
+        label: sharedReference,
+        description,
+        assumptions: assumptionsForSharing,
+        source: 'local',
+        reference: sharedReference,
+        resolveDuplicateLabel: true,
+      });
+
+      if (createResult.ok && createResult.entry?.id) {
+        persistAsActive(createResult.entry.id);
+        return true;
+      }
+
+      showNotification('error', SHARE_LIBRARY_SAVE_ERROR);
+      return false;
+    },
+    [assumptionsForSharing, persistAsActive, showNotification]
+  );
+
   const handleShareSaved = useCallback(
     (sharedResult) => {
       const sharedReference = typeof sharedResult?.reference === 'string' ? sharedResult.reference.trim() : '';
+      const sharedDescription = sharedResult?.description || null;
 
       if (!sharedReference || !assumptionsForSharing) {
         return;
       }
 
+      if (shouldForkEditedRemoteAssumptions) {
+        createAndActivateSharedEntry(sharedReference, sharedDescription);
+        return;
+      }
+
       const attachResult = attachSavedAssumptionsShareReference({
         reference: sharedReference,
-        description: sharedResult?.description || null,
+        description: sharedDescription,
         assumptions: assumptionsForSharing,
         preferredId: activeLibraryEntry?.source === 'curated' ? null : activeLibraryEntry?.id || null,
       });
@@ -78,27 +108,21 @@ export const useAssumptionsShareActions = ({
       }
 
       if (attachResult.errorCode === 'not_found') {
-        const createResult = saveNewAssumptions({
-          label: sharedReference,
-          description: sharedResult?.description || null,
-          assumptions: assumptionsForSharing,
-          source: 'local',
-          reference: sharedReference,
-          resolveDuplicateLabel: true,
-        });
-
-        if (createResult.ok && createResult.entry?.id) {
-          persistAsActive(createResult.entry.id);
-          return;
-        }
-
-        showNotification('error', SHARE_LIBRARY_SAVE_ERROR);
+        createAndActivateSharedEntry(sharedReference, sharedDescription);
         return;
       }
 
       showNotification('error', SHARE_LIBRARY_SYNC_ERROR);
     },
-    [activeLibraryEntry?.id, activeLibraryEntry?.source, assumptionsForSharing, persistAsActive, showNotification]
+    [
+      activeLibraryEntry?.id,
+      activeLibraryEntry?.source,
+      assumptionsForSharing,
+      createAndActivateSharedEntry,
+      persistAsActive,
+      shouldForkEditedRemoteAssumptions,
+      showNotification,
+    ]
   );
 
   const handleCopySavedLink = useCallback(
@@ -123,6 +147,7 @@ export const useAssumptionsShareActions = ({
     shareModalInitialResult,
     shareModalInitialDescription,
     shareModalInitialSlug,
+    shareAssumptionName,
     handleOpenShareModal,
     handleCloseShareModal,
     handleShareSaved,

@@ -415,6 +415,55 @@ describe('Global shared assumptions import flow', () => {
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
   });
 
+  it('uses snapshot slug as the imported label when the snapshot has no name', async () => {
+    const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 33;
+    const existingImported = saveNewAssumptions({
+      label: 'Imported From Friend',
+      assumptions: {
+        globalParameters: {
+          timeLimit: Number(assumptionsData.globalParameters.timeLimit) + 9,
+        },
+      },
+      source: 'imported',
+      reference: 'friend-model',
+    });
+    if (!existingImported.ok) {
+      throw new Error('Expected seeded imported saved assumptions entry');
+    }
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'friend-model-fork',
+        slug: 'friend-model-fork',
+        assumptions: {
+          globalParameters: {
+            timeLimit: incomingTimeLimit,
+          },
+        },
+      }),
+    });
+
+    renderAppRoutes('/assumptions?shared=friend-model-fork');
+
+    expect(await screen.findByText('Shared assumptions loaded.')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: {
+          timeLimit: incomingTimeLimit,
+        },
+      });
+    });
+
+    const savedAssumptions = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+    const importedEntry = savedAssumptions.find((entry) => entry.reference === 'friend-model-fork');
+    expect(importedEntry).toBeTruthy();
+    expect(importedEntry.label).toBe('friend-model-fork');
+    expect(importedEntry.label).not.toBe('Imported From Friend');
+    expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(importedEntry.id);
+  });
+
   it('still upserts and activates imported entry when shared assumptions are already applied', async () => {
     const appliedTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 41;
     sessionStorage.setItem(

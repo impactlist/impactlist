@@ -919,6 +919,79 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
+  it('shares edited imported assumptions as a new local fork without reusing the imported name', async () => {
+    const user = userEvent.setup();
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: 150,
+        },
+      })
+    );
+
+    const importedSeed = saveNewAssumptions({
+      label: 'Imported From Friend',
+      assumptions: {
+        globalParameters: {
+          timeLimit: 150,
+        },
+        categories: {},
+        recipients: {},
+      },
+      source: 'imported',
+      reference: 'friend-model',
+    });
+    if (!importedSeed.ok) {
+      throw new Error('Expected seeded imported entry');
+    }
+    setActiveSavedAssumptionsId(importedSeed.entry.id);
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'share-205',
+        reference: 'friend-model-fork',
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '205');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    await user.click(getActiveAssumptionsActionButton('Share'));
+    await user.click(await screen.findByRole('button', { name: 'Create Link' }));
+    expect(await screen.findByText('Share link created.')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Done' }));
+
+    await waitFor(() => {
+      const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+      expect(entries).toHaveLength(2);
+
+      const originalImported = entries.find((entry) => entry.id === importedSeed.entry.id);
+      expect(originalImported).toMatchObject({
+        label: 'Imported From Friend',
+        source: 'imported',
+        reference: 'friend-model',
+      });
+      expect(originalImported.assumptions.globalParameters.timeLimit).toBe(150);
+
+      const sharedFork = entries.find((entry) => entry.reference === 'friend-model-fork');
+      expect(sharedFork).toBeTruthy();
+      expect(sharedFork).toMatchObject({
+        label: 'friend-model-fork',
+        source: 'local',
+      });
+      expect(sharedFork.assumptions.globalParameters.timeLimit).toBe(205);
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(sharedFork.id);
+    });
+
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).name).toBeNull();
+  });
+
   it('creates and activates a saved assumptions entry when sharing unsaved custom assumptions', async () => {
     const user = userEvent.setup();
     sessionStorage.setItem(

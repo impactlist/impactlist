@@ -204,6 +204,7 @@ const AssumptionsPage = () => {
     shareModalInitialResult,
     shareModalInitialDescription,
     shareModalInitialSlug,
+    shareAssumptionName,
     handleOpenShareModal,
     handleCloseShareModal,
     handleShareSaved,
@@ -520,7 +521,7 @@ const AssumptionsPage = () => {
           isOpen={shareModalOpen}
           onClose={handleCloseShareModal}
           assumptions={assumptionsForSharing}
-          assumptionName={activeLibraryEntry?.label || null}
+          assumptionName={shareAssumptionName}
           onSaved={handleShareSaved}
           title="Share Assumptions"
           initialDescription={shareModalInitialDescription}

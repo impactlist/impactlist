@@ -98,7 +98,7 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
               <div className="assumption-card__top">
                 <div className="min-w-[220px] flex-1">
                   <div className="assumption-card__title-wrap pr-2">
-                    <label htmlFor={param.id} className="text-sm font-semibold text-strong">
+                    <label htmlFor={param.id} className="assumption-card__title-text">
                       {param.label}
                     </label>
                     <InfoTooltipIcon content={param.description} />

@@ -83,7 +83,7 @@ const CategoryValuesSection = ({
                     <label className="block min-w-0" htmlFor={`category-${key}`}>
                       <Link
                         to={buildCausePath(key)}
-                        className="assumptions-link block truncate text-sm font-semibold"
+                        className="assumptions-link assumption-card__title-link block truncate"
                         title={categoryData.name}
                       >
                         {categoryData.name}
@@ -121,7 +121,8 @@ const CategoryValuesSection = ({
                   validateOnBlur={true}
                   placeholder={formattedDefault}
                   isCustom={isCustom}
-                  disabled={true}
+                  displayOnly={true}
+                  ariaLabel={categoryData.name}
                 />
               </div>
             </SectionCard>

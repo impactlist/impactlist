@@ -95,7 +95,7 @@ const RecipientValuesSection = ({
                       <div className="assumption-card__title-wrap pr-2">
                         <Link
                           to={`/recipient/${encodeURIComponent(recipientId)}`}
-                          className="assumptions-link block min-w-0 truncate text-base"
+                          className="assumptions-link assumption-card__title-link block min-w-0 truncate"
                           title={recipient.name}
                         >
                           {recipient.name}
@@ -123,8 +123,9 @@ const RecipientValuesSection = ({
                       value={formattedCost}
                       onChange={() => {}}
                       className="w-full"
-                      disabled={true}
                       isCustom={hasCustomValues}
+                      displayOnly={true}
+                      ariaLabel={recipient.name}
                     />
                   </div>
                 </SectionCard>

@@ -18,6 +18,8 @@ const CurrencyInput = ({
   validateOnBlur = false, // If true, only validates when input loses focus
   isCustom = false, // If true, highlights field to show custom value
   rightElement = null, // Optional element to render on the right side inside the input
+  displayOnly = false, // If true, render a read-only display surface instead of a disabled input
+  ariaLabel,
 }) => {
   const [localValue, setLocalValue] = useState('');
   const [cursorPosition, setCursorPosition] = useState(null);
@@ -104,7 +106,7 @@ const CurrencyInput = ({
   const state = error ? 'error' : isCustom ? 'custom' : 'default';
 
   return (
-    <div className={`impact-field ${className}`.trim()} data-state={state}>
+    <div className={`impact-field ${className}`.trim()} data-state={state} data-display={displayOnly || undefined}>
       {label && (
         <label htmlFor={id} className="impact-field__label">
           {label}
@@ -118,22 +120,37 @@ const CurrencyInput = ({
         >
           $
         </span>
-        <input
-          ref={inputRef}
-          id={id}
-          type="text"
-          inputMode="text"
-          value={localValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          placeholder={placeholder}
-          disabled={disabled}
-          aria-invalid={!!error}
-          aria-errormessage={error ? `${id}-error` : undefined}
-          className={`impact-field__input impact-field__input--with-prefix ${
-            rightElement ? 'impact-field__input--with-right' : ''
-          }`.trim()}
-        />
+        {displayOnly ? (
+          <input
+            id={id}
+            aria-label={ariaLabel || label}
+            type="text"
+            inputMode="text"
+            value={localValue}
+            placeholder={placeholder}
+            readOnly={true}
+            tabIndex={-1}
+            onMouseDown={(event) => event.preventDefault()}
+            className="impact-field__input impact-field__input--with-prefix impact-field__input--display"
+          />
+        ) : (
+          <input
+            ref={inputRef}
+            id={id}
+            type="text"
+            inputMode="text"
+            value={localValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            disabled={disabled}
+            aria-invalid={!!error}
+            aria-errormessage={error ? `${id}-error` : undefined}
+            className={`impact-field__input impact-field__input--with-prefix ${
+              rightElement ? 'impact-field__input--with-right' : ''
+            }`.trim()}
+          />
+        )}
         {rightElement && <div className="absolute right-2 top-1/2 z-10 -translate-y-1/2">{rightElement}</div>}
       </div>
       {error && (
@@ -157,6 +174,8 @@ CurrencyInput.propTypes = {
   validateOnBlur: PropTypes.bool,
   isCustom: PropTypes.bool,
   rightElement: PropTypes.node,
+  displayOnly: PropTypes.bool,
+  ariaLabel: PropTypes.string,
 };
 
 export default React.memo(CurrencyInput);

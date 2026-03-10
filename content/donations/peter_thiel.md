@@ -165,4 +165,12 @@ donations:
       peter-thiel: 1.0
     source: 'https://www.cnbc.com/2023/06/28/peter-thiel-nonprofit-apparently-donated-to-left-leaning-group.html'
     notes: 'Second-largest 2021 grant per CNBC review of 990. Unusual as NVF typically associated with left-leaning causes. May have been earmarked for non-partisan grantee or possible filing error per OpenSecrets analyst.'
+
+  - date: 2025-05-22
+    recipient: thiel-fellowship
+    amount: 3_000_000
+    credit:
+      peter-thiel: 1.0
+    source: 'https://www.businesswire.com/news/home/20250522267532/en/Thiel-Foundation-Announces-2025-Class-of-Thiel-Fellows/'
+    notes: '2025 class included 15 fellows at $200K each over two years.'
 ---

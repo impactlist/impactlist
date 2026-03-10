@@ -2,8 +2,12 @@
 id: kceoc-community-action-partnership
 name: 'KCEOC Community Action Partnership'
 categories:
+  - id: local-community
+    fraction: 0.6
+  - id: education
+    fraction: 0.2
   - id: housing
-    fraction: 1
+    fraction: 0.2
 ---
 
 # Justification of cost per life

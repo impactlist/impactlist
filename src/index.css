@@ -27,6 +27,12 @@
     --custom-accent: #4460b2;
     --custom-accent-strong: #354c91;
     --custom-accent-soft: #dbe4ff;
+    --interactive-accent: color-mix(in srgb, var(--custom-accent) 68%, white 32%);
+    --interactive-accent-strong: color-mix(in srgb, var(--custom-accent-strong) 78%, white 22%);
+    --interactive-accent-soft: color-mix(in srgb, var(--custom-accent-soft) 42%, white 58%);
+    --info-accent: #d4b77a;
+    --info-accent-soft: #f4e7b2;
+    --info-accent-strong: #775a22;
     --tab-active-text: #fffaf2;
     --tab-active-border: #6f523b;
     --tab-active-bg: #7c5b43;
@@ -372,7 +378,7 @@
 
   .calculator-cause-card:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--accent) 26%, var(--border-subtle) 74%);
+    border-color: color-mix(in srgb, var(--interactive-accent) 26%, var(--border-subtle) 74%);
     box-shadow: 0 14px 24px -22px rgba(35, 30, 20, 0.5);
   }
 
@@ -458,7 +464,7 @@
   }
 
   .impact-link:hover {
-    color: var(--accent);
+    color: var(--interactive-accent);
   }
 
   .impact-loading {
@@ -599,7 +605,7 @@
         color-mix(in srgb, white 52%, transparent 48%) 0%,
         color-mix(in srgb, white 14%, transparent 86%) 100%
       ),
-      color-mix(in srgb, var(--accent-soft) 24%, var(--bg-surface-alt) 76%);
+      color-mix(in srgb, var(--interactive-accent-soft) 24%, var(--bg-surface-alt) 76%);
   }
 
   .impact-table thead th::before,
@@ -658,7 +664,7 @@
   }
 
   .impact-table tbody tr:hover {
-    background: color-mix(in srgb, var(--accent-soft) 30%, white 70%);
+    background: color-mix(in srgb, var(--interactive-accent-soft) 30%, white 70%);
   }
 
   .impact-table td {
@@ -692,12 +698,12 @@
   }
 
   .faq-card__toggle:hover {
-    background: color-mix(in srgb, var(--accent-soft) 24%, white 76%);
+    background: color-mix(in srgb, var(--interactive-accent-soft) 24%, white 76%);
   }
 
   .faq-card__toggle:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 42%, white 58%);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--interactive-accent) 42%, white 58%);
   }
 
   .faq-card__question {
@@ -718,7 +724,7 @@
 
   .faq-card[data-open='true'] .faq-card__icon {
     transform: rotate(180deg);
-    color: var(--accent-strong);
+    color: var(--interactive-accent-strong);
   }
 
   .faq-card__icon svg {
@@ -792,7 +798,7 @@
   }
 
   .impact-faq a:hover {
-    color: var(--accent);
+    color: var(--interactive-accent);
   }
 
   @media (max-width: 640px) {
@@ -865,7 +871,7 @@
     border: 0;
     padding: 0.2rem 0;
     border-radius: 0;
-    color: color-mix(in srgb, var(--accent-strong) 72%, var(--text-strong) 28%);
+    color: color-mix(in srgb, var(--interactive-accent-strong) 72%, var(--text-strong) 28%);
     background: transparent;
     font-size: 0.85rem;
     font-weight: 600;
@@ -876,7 +882,7 @@
   }
 
   .assumptions-form-actions__reset:hover:not(:disabled) {
-    color: var(--accent-strong);
+    color: var(--interactive-accent-strong);
     background: transparent;
   }
 
@@ -921,9 +927,9 @@
 
   .assumptions-info-block {
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border-subtle) 65%);
-    background: color-mix(in srgb, var(--accent-soft) 42%, white 58%);
-    color: color-mix(in srgb, var(--accent-strong) 90%, black 10%);
+    border: 1px solid color-mix(in srgb, var(--info-accent) 34%, var(--border-subtle) 66%);
+    background: color-mix(in srgb, var(--info-accent-soft) 26%, white 74%);
+    color: color-mix(in srgb, var(--info-accent-strong) 85%, black 15%);
   }
 
   .assumptions-empty-state {
@@ -989,13 +995,13 @@
   }
 
   .impact-btn--secondary:hover:not(:disabled) {
-    border-color: color-mix(in srgb, var(--border-strong) 74%, var(--accent) 26%);
+    border-color: color-mix(in srgb, var(--border-strong) 74%, var(--interactive-accent) 26%);
     background: color-mix(in srgb, white 95%, var(--bg-surface-alt) 5%);
   }
 
   .impact-btn--ghost {
     border-color: transparent;
-    color: color-mix(in srgb, var(--accent-strong) 72%, var(--text-strong) 28%);
+    color: color-mix(in srgb, var(--interactive-accent-strong) 72%, var(--text-strong) 28%);
     background: transparent;
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -1003,7 +1009,7 @@
   }
 
   .impact-btn--ghost:hover:not(:disabled) {
-    color: var(--accent-strong);
+    color: var(--interactive-accent-strong);
   }
 
   .impact-btn--danger {
@@ -1555,6 +1561,11 @@
     cursor: pointer;
   }
 
+  .saved-assumptions-panel__menu-entry:hover:not([data-load-disabled='true']) {
+    border-color: color-mix(in srgb, var(--interactive-accent) 24%, var(--border-subtle) 76%);
+    background: color-mix(in srgb, var(--interactive-accent-soft) 26%, white 74%);
+  }
+
   .saved-assumptions-panel__menu-entry[data-load-disabled='true'] {
     cursor: default;
   }
@@ -1670,8 +1681,8 @@
 
   .assumptions-tooltip-trigger:hover,
   .assumptions-tooltip-trigger[data-open='true'] {
-    color: var(--accent-strong);
-    background: color-mix(in srgb, var(--accent-soft) 58%, white 42%);
+    color: var(--interactive-accent-strong);
+    background: color-mix(in srgb, var(--interactive-accent-soft) 58%, white 42%);
   }
 
   .assumptions-tooltip-trigger:focus-visible {
@@ -1844,14 +1855,14 @@
   }
 
   .assumptions-link {
-    color: var(--accent-strong);
+    color: var(--interactive-accent-strong);
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 600;
   }
 
   .assumptions-link:hover {
-    color: color-mix(in srgb, var(--accent-strong) 78%, black 22%);
+    color: color-mix(in srgb, var(--interactive-accent-strong) 78%, black 22%);
   }
 
   .impact-notice-overlay {

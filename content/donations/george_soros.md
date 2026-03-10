@@ -146,4 +146,11 @@ donations:
     credit:
       george-soros: 1.0
     source: 'https://archive.is/aaDQ0'
+
+  - date: 2020-01-23
+    recipient: open-society-university-network
+    amount: 1_000_000_000
+    credit:
+      george-soros: 1.0
+    source: 'https://www.opensocietyfoundations.org/newsroom/george-soros-launches-global-network-to-transform-higher-education'
 ---

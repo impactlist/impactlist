@@ -140,6 +140,14 @@ donations:
     credit:
       bill-gates: 1.0
     source: 'https://www.reuters.com/world/bill-gates-donates-20-bln-his-foundation-2022-07-13/#:~:text=July%2013%20%28Reuters%29%20,to%20boost%20its%20annual%20distributions'
+
+  - date: 2024-10-01
+    recipient: pivotal-philanthropies-foundation
+    amount: 7_900_000_000
+    credit:
+      bill-gates: 1.0
+    source: 'https://www.forbes.com/sites/mattdurot/2025/09/16/bill-gates-might-drop-in-the-forbes-400-rankings-after-donating-50-billion-but-his-giving-goes-back-decades/'
+    notes: 'Forbes reported that Pivotal Philanthropies Foundation received a public stock grant worth $7.9B from Gates in October 2024. Exact day not specified; normalized to October 1, 2024.'
 ---
 
 Bill Gates and Melinda Gates were married between January 1, 1994, and August 2, 2021, so Melinda gets half credit for donations made by the couple during that time.

@@ -125,4 +125,28 @@ donations:
     credit:
       jeff-bezos: 1.0
     source: 'https://people.com/eva-longoria-receives-usd50m-award-from-jeff-bezos-lauren-sanchez-to-spend-on-philanthropy-8609792'
+
+  - date: 2025-12-01
+    recipient: friendship-place
+    amount: 2_500_000
+    credit:
+      jeff-bezos: 1.0
+    source: 'https://friendshipplace.org/day1-families-fund-friendship-place/'
+    notes: 'Day 1 Families Fund Leadership Award announced by Jeff Bezos and Lauren Sanchez.'
+
+  - date: 2025-12-01
+    recipient: kceoc-community-action-partnership
+    amount: 5_000_000
+    credit:
+      jeff-bezos: 1.0
+    source: 'https://www.kceoc.org/kceoc-awarded-5-million-by-the-bezos-day-1-families-fund/'
+    notes: 'Day 1 Families Fund Leadership Award announced by Jeff Bezos and Lauren Sanchez.'
+
+  - date: 2025-12-01
+    recipient: united-way-of-greater-milwaukee-waukesha-county
+    amount: 5_000_000
+    credit:
+      jeff-bezos: 1.0
+    source: 'https://unitedwaygmwc.org/blog/bezos-day-1-families-fund-awards-5-million-grant-to-united-way-of-greater-milwaukee-waukesha-county/'
+    notes: 'Day 1 Families Fund Leadership Award announced by Jeff Bezos and Lauren Sanchez.'
 ---

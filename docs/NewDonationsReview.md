@@ -280,6 +280,48 @@ No new donations found after this date.
 
 ---
 
+## Anne Wojcicki
+
+**Latest credit in files:** 2013-11-20 (0.5 credit on Sergey Brin's donations to Brin Wojcicki Foundation and Michael J. Fox Foundation, in sergey_brin.md)
+
+Anne Wojcicki does not have her own donation file. She appears in `sergey_brin.md` with 0.5 credit on joint donations made during their marriage (divorced 2015). The Brin Wojcicki Foundation dissolved in 2019 following the divorce.
+
+### Status:
+
+Since the divorce, Wojcicki has her own independent philanthropy:
+- **Anne Wojcicki Foundation** — $503M in assets (2023), gave $24.75M in grants in 2023 and $23.6M in 2022
+- **Giving Pledge** — Signed in 2022, committing to give away most of her wealth
+- Notable 2022 grants include: $5M to New Venture Fund (Project Daybreak), $1M to Barack Obama Foundation, $750K to Planned Parenthood, $100K to Giffords Law Center
+
+**Key gap:** Wojcicki has been making ~$24M/year in foundation grants since at least 2022, but none of this activity is tracked in the donation files. The gap from 2013 to present is over a decade of independent giving.
+
+**Action needed:**
+- Decide whether Anne Wojcicki should get her own donation file or continue as credit-only
+- If tracked: Check ProPublica 990 filings for the Anne Wojcicki Foundation (EIN 47-1835703) at https://projects.propublica.org/nonprofits/organizations/471835703 for year-by-year grant totals and major recipients
+- Key question: should her foundation's grants to other organizations be tracked (similar to how Thiel Foundation grants are tracked for Peter Thiel), or only personal donations *to* the foundation?
+
+---
+
+## Cari Tuna
+
+**Latest credit in files:** 2023-06-30 (0.5 credit on Dustin Moskovitz's $1.91B donation to good-ventures, in dustin_moskovitz.md)
+
+Cari Tuna does not have her own donation file. She appears in `dustin_moskovitz.md` with 0.5 credit on all Good Ventures donations.
+
+### Status:
+
+Cari Tuna's philanthropic giving flows entirely through **Good Ventures** (which she co-founded and chairs) and **Coefficient Giving** (formerly Open Philanthropy, which she also chairs). She does not appear to have significant separate personal giving vehicles.
+
+- The couple has donated more than $4B total, including $600M+ in 2025
+- Coefficient Giving directed $100M+ from non-Good Ventures donors in 2024, doubling that in 2025
+- Tuna was named to TIME100 Philanthropy 2025 alongside Moskovitz
+
+**Her data is fully tied to Dustin Moskovitz's entries.** Any new Good Ventures contributions found for Moskovitz (see Dustin Moskovitz section above) would automatically include Cari Tuna's 0.5 credit.
+
+**Action needed:** Same as Dustin Moskovitz — check ProPublica for FY2024 Good Ventures 990 filing to get the next annual contribution amount. No separate action needed for Cari Tuna beyond that.
+
+---
+
 ## Donors with no new donations found:
 
 - **Elon Musk** (latest: 2024-12-20) - Nothing new found

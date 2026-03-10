@@ -23,6 +23,14 @@ donations:
       melinda-gates: 1.0 # Through her organization Pivotal Ventures
     source: 'https://people.com/melinda-french-gates-teases-new-philanthropy-project-8752266'
     notes: "Announced as part of a $1 million match by Melinda French Gates's organization Pivotal Ventures for Giving Tuesday, supporting two organizations. This portion is for the Rosalynn Carter Institute for Caregivers."
+
+  - date: 2025-11-12
+    recipient: various-organizations-advancing-womens-health
+    amount: 250_000_000
+    credit:
+      melinda-gates: 1.0
+    source: 'https://apnews.com/article/melinda-french-gates-action-for-womens-health-250-million-0faee852342d671ff584e842f6a3d84d'
+    notes: "Action for Women's Health grants to more than 80 organizations working on women's health. The AP report described this as a $250 million award pool launched by Melinda French Gates."
 ---
 
 Bill Gates and Melinda Gates were married between January 1, 1994, and August 2, 2021, so Melinda gets half credit for donations made by the couple during that time.

@@ -14,6 +14,7 @@ const FormField = ({
   description,
   value,
   defaultValue,
+  referenceLabel = 'Default',
   onChange,
   error,
   placeholder,
@@ -95,7 +96,7 @@ const FormField = ({
           </label>
           {isCustom && !hasError && (
             <span className="assumption-card__default-meta impact-field__default-meta">
-              (Default: {defaultLabelValue})
+              ({referenceLabel}: {defaultLabelValue})
             </span>
           )}
         </div>
@@ -140,6 +141,7 @@ FormField.propTypes = {
   description: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  referenceLabel: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   error: PropTypes.string,
   placeholder: PropTypes.string,

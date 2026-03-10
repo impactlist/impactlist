@@ -90,7 +90,7 @@ const CategoryValuesSection = ({
                       </Link>
                     </label>
                     {isCustom && (
-                      <span className="assumption-card__default-meta">(Default: {formattedDefaultWithSymbol})</span>
+                      <span className="assumption-card__default-meta">(Baseline: {formattedDefaultWithSymbol})</span>
                     )}
                   </div>
                 </div>

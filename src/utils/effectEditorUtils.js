@@ -194,6 +194,10 @@ export const buildRecipientEditableEffects = ({
   userCategoryEffects = [],
 }) => {
   const initialEffects = baseCategoryEffects.map((effect) => {
+    const effectiveBaseEffect = {
+      ...effect,
+      ...(userCategoryEffects?.find((item) => item.effectId === effect.effectId) || {}),
+    };
     const defaultRecipientEffect = defaultRecipientEffects.find((item) => item.effectId === effect.effectId);
     const userEffect = userRecipientEffects?.find((item) => item.effectId === effect.effectId);
     const userCategoryEffect = userCategoryEffects?.find((item) => item.effectId === effect.effectId);
@@ -252,7 +256,7 @@ export const buildRecipientEditableEffects = ({
       overrides: effectOverrides,
       multipliers: effectMultipliers,
       disabled: userEffect?.disabled || defaultRecipientEffect?.disabled || false,
-      _baseEffect: effect,
+      _baseEffect: effectiveBaseEffect,
       _defaultRecipientEffect: defaultRecipientEffect,
       _userEffect: userEffect,
     };

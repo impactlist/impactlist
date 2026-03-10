@@ -5,7 +5,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
-import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
+import {
+  createCombinedAssumptions,
+  createDefaultAssumptions,
+  getCostPerLifeForRecipientFromCombined,
+} from '../utils/assumptionsDataHelpers';
+import { formatCurrency } from '../utils/formatters';
+import { getCurrentYear } from '../utils/donationDataHelpers';
 import { saveNewAssumptions, setActiveSavedAssumptionsId } from '../utils/savedAssumptionsStore';
 
 /* global localStorage, sessionStorage */
@@ -366,6 +372,63 @@ describe('AssumptionsPage routing integration', () => {
 
     expect(await screen.findByText('Please enter a complete number')).toBeInTheDocument();
     expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('applies cause-level edits to recipient summary cards on the Recipients tab', async () => {
+    const user = userEvent.setup();
+
+    const [categoryId, category] = Object.entries(assumptionsData.categories).find(
+      ([, entry]) => Array.isArray(entry.effects) && entry.effects.length > 0
+    );
+    if (!categoryId || !category) {
+      throw new Error('Expected at least one category with effects in default assumptions data');
+    }
+
+    const [recipientId, recipient] = Object.entries(assumptionsData.recipients).find(([, entry]) =>
+      Object.hasOwn(entry.categories || {}, categoryId)
+    );
+    if (!recipientId || !recipient) {
+      throw new Error(`Expected at least one recipient linked to category ${categoryId}`);
+    }
+
+    const firstEffect = category.effects[0];
+    const fieldLabel = firstEffect.costPerQALY !== undefined ? 'Cost per life-year' : 'Cost per microprobability';
+    const originalValue = firstEffect.costPerQALY ?? firstEffect.costPerMicroprobability;
+    const updatedValue = originalValue / 2;
+
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${categoryId}`);
+
+    const editor = await screen.findByText(/Edit effects for cause/i);
+    const editorRoot = editor.closest('.assumptions-shell');
+    expect(editorRoot).not.toBeNull();
+
+    const costField = within(editorRoot).getByRole('textbox', { name: fieldLabel });
+    await user.clear(costField);
+    await user.type(costField, String(updatedValue));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    let persisted;
+    await waitFor(() => {
+      persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+      expect(persisted.categories?.[categoryId]?.effects?.[0]?.effectId).toBe(firstEffect.effectId);
+    });
+
+    await user.click(screen.getByRole('tab', { name: 'Recipients' }));
+
+    const searchInput = await screen.findByPlaceholderText('Search recipients...');
+    await user.type(searchInput, recipient.name);
+
+    const recipientCard = await screen.findByText(recipient.name);
+    const cardRoot = recipientCard.closest('[data-state]');
+    expect(cardRoot).not.toBeNull();
+
+    const expectedCost = getCostPerLifeForRecipientFromCombined(
+      createCombinedAssumptions(assumptionsData, persisted),
+      recipientId,
+      getCurrentYear()
+    );
+
+    expect(within(cardRoot).getByDisplayValue(formatCurrency(expectedCost).replace('$', ''))).toBeInTheDocument();
   });
 
   it('hides Save to Library when there are no custom assumptions', async () => {

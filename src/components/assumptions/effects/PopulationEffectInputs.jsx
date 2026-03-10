@@ -15,6 +15,7 @@ const PopulationEffectInputs = ({
   onChange,
   globalParameters,
   isDisabled,
+  referenceLabel = 'Baseline',
 }) => {
   const handleChange = (fieldName) => (value) => {
     onChange(effectIndex, fieldName, value);
@@ -33,6 +34,7 @@ const PopulationEffectInputs = ({
           description={getEffectTooltip('population', 'costPerMicroprobability')}
           value={effect.costPerMicroprobability}
           defaultValue={defaultEffect?.costPerMicroprobability}
+          referenceLabel={referenceLabel}
           onChange={handleChange('costPerMicroprobability')}
           error={getError('costPerMicroprobability')}
           prefix="$"
@@ -45,6 +47,7 @@ const PopulationEffectInputs = ({
           description={getEffectTooltip('population', 'populationFractionAffected')}
           value={effect.populationFractionAffected}
           defaultValue={defaultEffect?.populationFractionAffected}
+          referenceLabel={referenceLabel}
           onChange={handleChange('populationFractionAffected')}
           error={getError('populationFractionAffected')}
           disabled={isDisabled}
@@ -58,6 +61,7 @@ const PopulationEffectInputs = ({
           description={getEffectTooltip('population', 'qalyImprovementPerYear')}
           value={effect.qalyImprovementPerYear}
           defaultValue={defaultEffect?.qalyImprovementPerYear}
+          referenceLabel={referenceLabel}
           onChange={handleChange('qalyImprovementPerYear')}
           error={getError('qalyImprovementPerYear')}
           disabled={isDisabled}
@@ -69,6 +73,7 @@ const PopulationEffectInputs = ({
           description={getEffectTooltip('population', 'startTime')}
           value={effect.startTime}
           defaultValue={defaultEffect?.startTime}
+          referenceLabel={referenceLabel}
           onChange={handleChange('startTime')}
           error={getError('startTime')}
           disabled={isDisabled}
@@ -80,6 +85,7 @@ const PopulationEffectInputs = ({
           description={getEffectTooltip('population', 'windowLength')}
           value={effect.windowLength}
           defaultValue={defaultEffect?.windowLength}
+          referenceLabel={referenceLabel}
           onChange={handleChange('windowLength')}
           error={getError('windowLength')}
           disabled={isDisabled}
@@ -115,6 +121,7 @@ PopulationEffectInputs.propTypes = {
   onChange: PropTypes.func.isRequired,
   globalParameters: PropTypes.object,
   isDisabled: PropTypes.bool,
+  referenceLabel: PropTypes.string,
 };
 
 export default PopulationEffectInputs;

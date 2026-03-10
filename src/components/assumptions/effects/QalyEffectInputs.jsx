@@ -7,7 +7,16 @@ import { getEffectTooltip } from '../../../constants/effectTooltips';
 /**
  * Input fields for QALY-based effects
  */
-const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange, globalParameters, isDisabled }) => {
+const QalyEffectInputs = ({
+  effect,
+  effectIndex,
+  defaultEffect,
+  errors,
+  onChange,
+  globalParameters,
+  isDisabled,
+  referenceLabel = 'Baseline',
+}) => {
   const handleChange = (fieldName) => (value) => {
     onChange(effectIndex, fieldName, value);
   };
@@ -25,6 +34,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
           description={getEffectTooltip('qaly', 'costPerQALY')}
           value={effect.costPerQALY}
           defaultValue={defaultEffect?.costPerQALY}
+          referenceLabel={referenceLabel}
           onChange={handleChange('costPerQALY')}
           error={getError('costPerQALY')}
           prefix="$"
@@ -37,6 +47,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
           description={getEffectTooltip('qaly', 'startTime')}
           value={effect.startTime}
           defaultValue={defaultEffect?.startTime}
+          referenceLabel={referenceLabel}
           onChange={handleChange('startTime')}
           error={getError('startTime')}
           disabled={isDisabled}
@@ -48,6 +59,7 @@ const QalyEffectInputs = ({ effect, effectIndex, defaultEffect, errors, onChange
           description={getEffectTooltip('qaly', 'windowLength')}
           value={effect.windowLength}
           defaultValue={defaultEffect?.windowLength}
+          referenceLabel={referenceLabel}
           onChange={handleChange('windowLength')}
           error={getError('windowLength')}
           disabled={isDisabled}
@@ -79,6 +91,7 @@ QalyEffectInputs.propTypes = {
   onChange: PropTypes.func.isRequired,
   globalParameters: PropTypes.object,
   isDisabled: PropTypes.bool,
+  referenceLabel: PropTypes.string,
 };
 
 export default QalyEffectInputs;

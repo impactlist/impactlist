@@ -7,8 +7,8 @@ import SectionCard from '../shared/SectionCard';
 import IconActionButton from '../shared/IconActionButton';
 import { formatCurrency } from '../../utils/formatters';
 import { getRecipientId, getCurrentYear } from '../../utils/donationDataHelpers';
-import { calculateCostPerLife, applyRecipientEffectToBase } from '../../utils/effectsCalculation';
-import { mergeGlobalParameters, recipientHasMeaningfulCustomValues } from '../../utils/assumptionsEditorHelpers';
+import { createCombinedAssumptions, getCostPerLifeForRecipientFromCombined } from '../../utils/assumptionsDataHelpers';
+import { recipientHasMeaningfulCustomValues } from '../../utils/assumptionsEditorHelpers';
 
 /**
  * Component for displaying recipient-specific cost per life values.
@@ -24,73 +24,24 @@ const RecipientValuesSection = ({
   onResetRecipient,
   previewYear,
 }) => {
-  // Merge global parameters once
-  const mergedGlobalParameters = useMemo(
-    () => mergeGlobalParameters(defaultAssumptions?.globalParameters, userAssumptions?.globalParameters),
-    [defaultAssumptions?.globalParameters, userAssumptions]
+  const currentCombinedAssumptions = useMemo(
+    () => createCombinedAssumptions(defaultAssumptions, userAssumptions),
+    [defaultAssumptions, userAssumptions]
   );
 
-  // Calculate the cost per life for a recipient's category
-  const getRecipientCategoryCostPerLife = (recipientId, recipient, categoryId, includeUserOverrides = true) => {
-    const category = defaultAssumptions?.categories?.[categoryId];
-
-    if (!category || !category.effects || category.effects.length === 0) {
-      return null;
-    }
-
-    const defaultRecipientEffects = defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-
-    let effectsToApply = null;
-    if (includeUserOverrides && userRecipientEffects && userRecipientEffects.length > 0) {
-      effectsToApply = userRecipientEffects;
-    } else if (defaultRecipientEffects && defaultRecipientEffects.length > 0) {
-      effectsToApply = defaultRecipientEffects;
-    }
-
-    if (!effectsToApply) {
-      return calculateCostPerLife(category.effects, mergedGlobalParameters, previewYear || getCurrentYear());
-    }
-
-    const modifiedEffects = category.effects.map((baseEffect) => {
-      const recipientEffect = effectsToApply.find((e) => e.effectId === baseEffect.effectId);
-      if (
-        recipientEffect &&
-        (recipientEffect.overrides || recipientEffect.multipliers || recipientEffect.disabled !== undefined)
-      ) {
-        return applyRecipientEffectToBase(baseEffect, recipientEffect, `recipient ${recipient.name}`);
-      }
-      return baseEffect;
-    });
-
-    return calculateCostPerLife(modifiedEffects, mergedGlobalParameters, previewYear || getCurrentYear());
-  };
+  const baselineCombinedAssumptions = useMemo(
+    () =>
+      createCombinedAssumptions(defaultAssumptions, {
+        globalParameters: userAssumptions?.globalParameters,
+        categories: userAssumptions?.categories,
+      }),
+    [defaultAssumptions, userAssumptions]
+  );
 
   // Calculate combined/weighted cost per life across all categories for a recipient
   const getCombinedCostPerLife = (recipientId, recipient, includeUserOverrides = true) => {
-    const categories = Object.entries(recipient.categories || {});
-    if (categories.length === 0) return null;
-
-    // For single category, just return that category's cost
-    if (categories.length === 1) {
-      const [categoryId] = categories[0];
-      return getRecipientCategoryCostPerLife(recipientId, recipient, categoryId, includeUserOverrides);
-    }
-
-    // For multiple categories, combine by total lives-per-dollar (weighted harmonic composition)
-    let totalLivesPerDollar = 0;
-
-    for (const [categoryId, categoryData] of categories) {
-      const fraction = categoryData.fraction || 0;
-      const cost = getRecipientCategoryCostPerLife(recipientId, recipient, categoryId, includeUserOverrides);
-
-      if (cost !== null && cost !== Infinity && cost !== 0 && fraction > 0) {
-        totalLivesPerDollar += fraction / cost;
-      }
-    }
-
-    if (totalLivesPerDollar === 0) return Infinity;
-    return 1 / totalLivesPerDollar;
+    const assumptionsToUse = includeUserOverrides ? currentCombinedAssumptions : baselineCombinedAssumptions;
+    return getCostPerLifeForRecipientFromCombined(assumptionsToUse, recipientId, previewYear || getCurrentYear());
   };
 
   // Check if recipient has any custom values across all categories
@@ -150,7 +101,7 @@ const RecipientValuesSection = ({
                           {recipient.name}
                         </Link>
                         {hasCustomValues && (
-                          <span className="assumption-card__default-meta">(Default: {formattedDefaultCost})</span>
+                          <span className="assumption-card__default-meta">(Baseline: {formattedDefaultCost})</span>
                         )}
                       </div>
                     </div>

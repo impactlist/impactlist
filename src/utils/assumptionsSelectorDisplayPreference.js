@@ -3,8 +3,15 @@ import { DEFAULT_ASSUMPTIONS_ENTRY, DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../cons
 
 export const SHOW_ASSUMPTIONS_SELECTOR_EVERY_PAGE_KEY = 'showAssumptionsSelectorEveryPage:v1';
 export const ASSUMPTIONS_SELECTOR_PREFERENCE_CHANGED_EVENT = 'assumptions-selector-preference:changed';
+// Temporary UI simplification: keep the lightweight selector enabled sitewide,
+// but hide the Assumptions-page preference control until we decide to bring it back.
+export const ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED = false;
 
 export const getShowAssumptionsSelectorEveryPage = () => {
+  if (!ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED) {
+    return true;
+  }
+
   return globalThis.localStorage?.getItem(SHOW_ASSUMPTIONS_SELECTOR_EVERY_PAGE_KEY) === '1';
 };
 

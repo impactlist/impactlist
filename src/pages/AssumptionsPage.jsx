@@ -15,6 +15,7 @@ import { useNotificationActions } from '../contexts/NotificationContext';
 import useAssumptionsSelectorPreference from '../hooks/useAssumptionsSelectorPreference';
 import useSaveAssumptionsModal from '../hooks/useSaveAssumptionsModal';
 import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
+import { ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED } from '../utils/assumptionsSelectorDisplayPreference';
 import {
   getAssumptionsLoadRequest,
   isCurrentAssumptionsStateRepresentedByLibrary,
@@ -491,18 +492,22 @@ const AssumptionsPage = () => {
           onCopyLink={handleCopySavedLink}
           onDescription={handleDescriptionModalOpen}
           footer={
-            <div className="saved-assumptions-panel__preference">
-              <span className="saved-assumptions-panel__preference-eyebrow">Display preference</span>
-              <label className="saved-assumptions-panel__preference-row">
-                <input
-                  type="checkbox"
-                  checked={showSelectorEveryPage}
-                  onChange={(event) => setShowSelectorEveryPage(event.target.checked)}
-                  className="saved-assumptions-panel__preference-switch"
-                />
-                <span className="saved-assumptions-panel__preference-text">Show assumption selector on all pages</span>
-              </label>
-            </div>
+            ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED ? (
+              <div className="saved-assumptions-panel__preference">
+                <span className="saved-assumptions-panel__preference-eyebrow">Display preference</span>
+                <label className="saved-assumptions-panel__preference-row">
+                  <input
+                    type="checkbox"
+                    checked={showSelectorEveryPage}
+                    onChange={(event) => setShowSelectorEveryPage(event.target.checked)}
+                    className="saved-assumptions-panel__preference-switch"
+                  />
+                  <span className="saved-assumptions-panel__preference-text">
+                    Show assumption selector on all pages
+                  </span>
+                </label>
+              </div>
+            ) : null
           }
         />
 

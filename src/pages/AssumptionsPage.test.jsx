@@ -140,7 +140,14 @@ describe('AssumptionsPage routing integration', () => {
     ).toBeInTheDocument();
   });
 
-  it('lets the user toggle whether the assumptions selector appears on every page', async () => {
+  it('hides the sitewide assumptions selector preference while keeping the selector enabled', async () => {
+    renderAssumptionsRoute('/assumptions');
+
+    expect(screen.queryByRole('checkbox', { name: 'Show assumption selector on all pages' })).not.toBeInTheDocument();
+  });
+
+  it.skip('lets the user toggle whether the assumptions selector appears on every page', async () => {
+    // Re-enable when ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED is restored.
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 

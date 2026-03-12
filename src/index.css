@@ -27,16 +27,20 @@
     --custom-accent: #4460b2;
     --custom-accent-strong: #354c91;
     --custom-accent-soft: #dbe4ff;
+    --link-accent: #3c67d6;
+    --link-accent-strong: #244db3;
+    --link-accent-external: #193d95;
+    --link-accent-external-hover: #133176;
     --interactive-accent: color-mix(in srgb, var(--custom-accent) 68%, white 32%);
     --interactive-accent-strong: color-mix(in srgb, var(--custom-accent-strong) 78%, white 22%);
     --interactive-accent-soft: color-mix(in srgb, var(--custom-accent-soft) 42%, white 58%);
     --info-accent: #d4b77a;
     --info-accent-soft: #f4e7b2;
     --info-accent-strong: #775a22;
-    --tab-active-text: #fffaf2;
-    --tab-active-border: #6f523b;
-    --tab-active-bg: #7c5b43;
-    --tab-active-shadow: rgba(111, 82, 59, 0.28);
+    --tab-active-text: var(--text-on-custom-accent);
+    --tab-active-border: var(--custom-accent-strong);
+    --tab-active-bg: var(--custom-accent);
+    --tab-active-shadow: color-mix(in srgb, var(--custom-accent-strong) 32%, transparent 68%);
 
     --success: #1f6e54;
     --success-soft: #e4f4ed;
@@ -457,14 +461,22 @@
   }
 
   .impact-link {
-    color: var(--accent-strong);
+    color: var(--link-accent-strong);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 140ms var(--ease-standard);
   }
 
   .impact-link:hover {
-    color: var(--interactive-accent);
+    color: color-mix(in srgb, var(--link-accent) 82%, var(--link-accent-strong) 18%);
+  }
+
+  a.impact-link[target='_blank'] {
+    color: var(--link-accent-external);
+  }
+
+  a.impact-link[target='_blank']:hover {
+    color: var(--link-accent-external-hover);
   }
 
   .impact-loading {
@@ -792,13 +804,13 @@
   }
 
   .impact-faq a {
-    color: var(--accent-strong);
+    color: var(--link-accent-strong);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
   .impact-faq a:hover {
-    color: var(--interactive-accent);
+    color: color-mix(in srgb, var(--link-accent) 82%, var(--link-accent-strong) 18%);
   }
 
   @media (max-width: 640px) {
@@ -1892,14 +1904,14 @@
   }
 
   .assumptions-link {
-    color: var(--custom-accent-strong);
+    color: var(--link-accent-strong);
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 600;
   }
 
   .assumptions-link:hover {
-    color: color-mix(in srgb, var(--custom-accent-strong) 78%, black 22%);
+    color: color-mix(in srgb, var(--link-accent) 74%, var(--link-accent-strong) 26%);
   }
 
   .impact-notice-overlay {

@@ -29,8 +29,8 @@ const CalculatorForm = ({
   return (
     <div className={`assumptions-shell p-6 ${className}`}>
       {/* Donation inputs header with reset button */}
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium text-strong">Add Donations by Cause Area</h3>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-xl font-bold text-strong">Add Donations by Cause Area</h2>
         <button onClick={onReset} className="impact-btn impact-btn--secondary impact-btn--sm inline-flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
             <path

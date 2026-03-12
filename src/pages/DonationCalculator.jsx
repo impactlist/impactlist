@@ -398,51 +398,7 @@ const DonationCalculator = () => {
           {/* Smaller Spacer */}
           <div className="h-10"></div>
 
-          {/* Instruction text */}
-          <p className="mb-6 px-2 text-lg font-semibold text-muted">
-            Enter your donation amounts to see your impact based on past or future donations:
-          </p>
-
-          {/* Specific Donations - Using the new RecipientTable component */}
-          {specificDonations.length > 0 && (
-            <RecipientTable
-              donations={specificDonations}
-              categories={categories}
-              combinedAssumptions={combinedAssumptions}
-              onAddClick={() => openDonationModal()}
-              onEditClick={(donation) => openDonationModal(donation)}
-              onDeleteClick={handleDeleteSpecificDonation}
-              calculateLivesSaved={calculateLivesSavedForSpecificDonation}
-              getCostPerLife={getCostPerLifeForSpecificDonation}
-              className="mb-6"
-            />
-          )}
-
-          {/* Add Specific Donation button - Only show if no donations yet */}
-          {specificDonations.length === 0 && (
-            <div className="flex justify-center mb-6">
-              <button
-                onClick={() => openDonationModal()}
-                className="impact-btn impact-btn--custom-accent inline-flex items-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Add Specific Donation
-              </button>
-            </div>
-          )}
-
-          {/* Category Donations - Using the new CalculatorForm component */}
+          {/* Category donations */}
           <CalculatorForm
             categories={categories}
             donations={donations}
@@ -456,6 +412,18 @@ const DonationCalculator = () => {
             }}
             categoryYear={categoryYear}
             onYearChange={setCategoryYear}
+          />
+
+          <RecipientTable
+            donations={specificDonations}
+            categories={categories}
+            combinedAssumptions={combinedAssumptions}
+            onAddClick={() => openDonationModal()}
+            onEditClick={(donation) => openDonationModal(donation)}
+            onDeleteClick={handleDeleteSpecificDonation}
+            calculateLivesSaved={calculateLivesSavedForSpecificDonation}
+            getCostPerLife={getCostPerLifeForSpecificDonation}
+            className="mt-8"
           />
         </motion.div>
 

@@ -104,6 +104,14 @@
     letter-spacing: -0.012em;
   }
 
+  .assumptions-title__meta {
+    font-family: var(--font-ui);
+    font-size: 0.9em;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0;
+  }
+
   .assumptions-shell {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);

@@ -15,7 +15,10 @@ import { useNotificationActions } from '../contexts/NotificationContext';
 import useAssumptionsSelectorPreference from '../hooks/useAssumptionsSelectorPreference';
 import useSaveAssumptionsModal from '../hooks/useSaveAssumptionsModal';
 import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
-import { ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED } from '../utils/assumptionsSelectorDisplayPreference';
+import {
+  ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED,
+  getActiveAssumptionsLabel,
+} from '../utils/assumptionsSelectorDisplayPreference';
 import {
   getAssumptionsLoadRequest,
   isCurrentAssumptionsStateRepresentedByLibrary,
@@ -98,6 +101,15 @@ const AssumptionsPage = () => {
   // but users can still have unsaved edits relative to a previously loaded saved set. Keep summary-row
   // Save/Share actions visible in that case so they can preserve or share the diverged state.
   const shouldShowCurrentAssumptionsActions = isUsingCustomValues || hasUnsavedChanges;
+  const activeAssumptionsLabel = useMemo(
+    () =>
+      getActiveAssumptionsLabel({
+        activeLibraryEntry,
+        activeSavedAssumptionsId,
+        hasUnsavedChanges,
+      }),
+    [activeLibraryEntry, activeSavedAssumptionsId, hasUnsavedChanges]
+  );
 
   const refreshSavedAssumptions = useCallback(() => {
     const entries = getSavedAssumptions();
@@ -518,6 +530,7 @@ const AssumptionsPage = () => {
             initialCategoryId={initialCategoryId}
             initialRecipientId={initialRecipientId}
             initialActiveCategory={initialActiveCategory}
+            activeAssumptionsLabel={activeAssumptionsLabel}
             onParamsChange={handleParamsChange}
           />
         </div>

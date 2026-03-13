@@ -35,6 +35,7 @@ const AssumptionsEditor = forwardRef(
       initialCategoryId = null,
       initialRecipientId = null,
       initialActiveCategory = null,
+      activeAssumptionsLabel = '',
       onParamsChange = () => {},
     },
     ref
@@ -227,7 +228,12 @@ const AssumptionsEditor = forwardRef(
     return (
       <div className="flex flex-col gap-3 p-3 sm:p-4">
         <div className="px-1 sm:px-2">
-          <h2 className="assumptions-title text-2xl font-semibold text-strong">Edit/View Assumptions</h2>
+          <h2 className="assumptions-title text-2xl font-semibold text-strong">
+            <span>Edit/View Assumptions</span>
+            {activeAssumptionsLabel && (
+              <span className="assumptions-title__meta ml-2 align-baseline">: {activeAssumptionsLabel}</span>
+            )}
+          </h2>
         </div>
 
         <div className="assumptions-toolbar">
@@ -365,6 +371,7 @@ AssumptionsEditor.propTypes = {
   initialCategoryId: PropTypes.string,
   initialRecipientId: PropTypes.string,
   initialActiveCategory: PropTypes.string,
+  activeAssumptionsLabel: PropTypes.string,
   onParamsChange: PropTypes.func,
 };
 

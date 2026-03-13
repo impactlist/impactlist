@@ -49,14 +49,7 @@ const getAgeFromBirthDate = (birthDate, today = new Date()) => {
 /**
  * Displays key statistics for donors or recipients with consistent styling.
  */
-const EntityStatistics = ({
-  stats,
-  entityType,
-  className = '',
-  currentYear = null,
-  costPerLifeAction = null,
-  photoComponent = null,
-}) => {
+const EntityStatistics = ({ stats, entityType, className = '', costPerLifeAction = null, photoComponent = null }) => {
   const isDonor = entityType === 'donor';
   const hasPhoto = photoComponent !== null;
 
@@ -67,11 +60,18 @@ const EntityStatistics = ({
   const defaultCostPerLifeText = showDefaultCostPerLife
     ? `Default: ${stats.defaultCostPerLife === 0 ? '∞' : formatCurrency(stats.defaultCostPerLife)}`
     : undefined;
+  const formattedCostPerLife = stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife);
+  const formattedCategoryCostPerLife =
+    stats.categoryCostPerLife === undefined
+      ? undefined
+      : stats.categoryCostPerLife === 0
+        ? '∞'
+        : formatCurrency(stats.categoryCostPerLife);
 
   const costPerLifeSubtext =
     defaultCostPerLifeText ||
-    (stats.categoryCostPerLife !== undefined
-      ? `Cause avg: ${stats.categoryCostPerLife === 0 ? '∞' : formatCurrency(stats.categoryCostPerLife)}`
+    (formattedCategoryCostPerLife !== undefined && formattedCategoryCostPerLife !== formattedCostPerLife
+      ? `Cause avg: ${formattedCategoryCostPerLife}`
       : undefined);
 
   // Shared stat card definitions (defined once, used in multiple layouts)
@@ -85,8 +85,8 @@ const EntityStatistics = ({
 
   const costPerLifeCard = (
     <StatisticsCard
-      label={currentYear && !isDonor ? `Cost Per Life (${currentYear})` : 'Cost Per Life'}
-      value={stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife)}
+      label="Cost Per Life"
+      value={formattedCostPerLife}
       valueClassName={stats.costPerLife < 0 ? 'text-danger' : 'text-strong'}
       valueAction={costPerLifeAction}
       subtext={costPerLifeSubtext}
@@ -206,7 +206,6 @@ EntityStatistics.propTypes = {
   }).isRequired,
   entityType: PropTypes.oneOf(['donor', 'recipient']).isRequired,
   className: PropTypes.string,
-  currentYear: PropTypes.number,
   costPerLifeAction: PropTypes.node,
   photoComponent: PropTypes.node,
 };

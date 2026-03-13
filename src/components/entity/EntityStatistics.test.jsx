@@ -66,4 +66,60 @@ describe('EntityStatistics', () => {
 
     expect(screen.queryByText('Age')).not.toBeInTheDocument();
   });
+
+  it('renders recipient cost per life without the year and hides matching cause average', () => {
+    render(
+      <MemoryRouter>
+        <EntityStatistics
+          entityType="recipient"
+          stats={{
+            totalLivesSaved: 80,
+            costPerLife: 796,
+            categoryCostPerLife: 796,
+            totalReceived: 5000000,
+          }}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Cost Per Life')).toBeInTheDocument();
+    expect(screen.queryByText('Cost Per Life (2026)')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Cause avg:/)).not.toBeInTheDocument();
+  });
+
+  it('renders cause average when it differs from the displayed recipient cost per life', () => {
+    render(
+      <MemoryRouter>
+        <EntityStatistics
+          entityType="recipient"
+          stats={{
+            totalLivesSaved: 80,
+            costPerLife: 796,
+            categoryCostPerLife: 1200,
+            totalReceived: 5000000,
+          }}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Cause avg: $1,200')).toBeInTheDocument();
+  });
+
+  it('hides cause average when it formats to the same displayed value as recipient cost per life', () => {
+    render(
+      <MemoryRouter>
+        <EntityStatistics
+          entityType="recipient"
+          stats={{
+            totalLivesSaved: 80,
+            costPerLife: 796.4,
+            categoryCostPerLife: 796.49,
+            totalReceived: 5000000,
+          }}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByText(/Cause avg:/)).not.toBeInTheDocument();
+  });
 });

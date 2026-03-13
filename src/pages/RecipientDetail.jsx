@@ -376,7 +376,6 @@ const RecipientDetail = () => {
             categoryBreakdown: recipientInfo.categoryBreakdown,
           }}
           entityType="recipient"
-          currentYear={getCurrentYear()}
           costPerLifeAction={
             <button
               type="button"

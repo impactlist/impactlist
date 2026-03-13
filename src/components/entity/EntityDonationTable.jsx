@@ -221,14 +221,12 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       <div className="impact-surface__header px-6 py-4">
         <h2 className="text-xl font-semibold text-strong">Donation History</h2>
       </div>
-      <div className="overflow-x-auto">
-        <SortableTable
-          columns={isDonor ? donorColumns : recipientColumns}
-          data={donations}
-          defaultSortColumn="date"
-          defaultSortDirection="desc"
-        />
-      </div>
+      <SortableTable
+        columns={isDonor ? donorColumns : recipientColumns}
+        data={donations}
+        defaultSortColumn="date"
+        defaultSortDirection="desc"
+      />
     </motion.div>
   );
 };

@@ -230,9 +230,7 @@ const AssumptionsEditor = forwardRef(
         <div className="px-1 sm:px-2">
           <h2 className="assumptions-title text-2xl font-semibold text-strong">
             <span>Edit/View Assumptions</span>
-            {activeAssumptionsLabel && (
-              <span className="assumptions-title__meta ml-2 align-baseline">: {activeAssumptionsLabel}</span>
-            )}
+            {activeAssumptionsLabel && <span className="assumptions-title__meta ml-2">: {activeAssumptionsLabel}</span>}
           </h2>
         </div>
 

@@ -85,8 +85,6 @@ We use **0.1** as a rounded, conservative estimate that:
 - Acknowledges some indirect safety value from Byrnes' neuroscience-informed approach
 - Accounts for uncertainty in internal budget allocations
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

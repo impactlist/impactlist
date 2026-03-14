@@ -87,8 +87,6 @@ Applying that comparison to the baseline:
 
 $$\text{Cost per QALY}_{TF} = \dfrac{\$40{,}000}{25} = \$1{,}600$$
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

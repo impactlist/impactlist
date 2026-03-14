@@ -173,8 +173,6 @@ These numbers are order-of-magnitude guesses, not precise forecasts. Major uncer
 
 6. **Non-human welfare.** If misaligned AI destroys most animal life, welfare losses for non-human animals could be enormous. On the flip side, aligned AI might vastly reduce wild-animal suffering or improve farmed animal lives. Our framework here is human-centric.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

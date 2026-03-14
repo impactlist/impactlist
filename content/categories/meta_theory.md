@@ -70,8 +70,6 @@ The 5-year start time reflects that movement-building takes 1–3 years to conve
 
 The 25-year duration reflects that donation habits and career changes persist for decades (Assumption 7). The GWWC pledge is framed as a lifetime commitment, and career changes typically shift impact for 20–30 remaining working years.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

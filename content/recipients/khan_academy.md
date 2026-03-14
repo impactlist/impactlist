@@ -71,8 +71,6 @@ However, this stylized model likely understates the upside from global reach, re
 
 $$\text{Cost per QALY}_{KA} \approx \$2{,}000$$
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

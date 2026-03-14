@@ -96,8 +96,6 @@ The 30-year duration balances:
 - Long-term loss of life expectancy for those who die
 - Slow institutional and environmental recovery
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

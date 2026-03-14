@@ -38,7 +38,7 @@
     "recharts": "^2.15.2",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
-    "vercel": "^50.27.1"
+    "vercel": "^50.32.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

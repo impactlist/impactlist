@@ -68,8 +68,6 @@ The 5-year start time reflects the typical delay from research funding to widesp
 
 The 25-year duration reflects the persistence of research-enabled benefits over product cycles and follow-on improvements (Assumption 9). Diffusion literature shows long tails of impact from innovations in areas like imaging, semiconductors, and digital platforms.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

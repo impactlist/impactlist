@@ -22,6 +22,4 @@ If you'd like to contribute, read about how you can do so [here](https://github.
 
 {{RECIPIENT_DEFAULT_JUSTIFICATION}}
 
----
-
 {{CONTRIBUTION_NOTE}}

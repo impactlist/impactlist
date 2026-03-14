@@ -71,8 +71,6 @@ The 0-year start time reflects that impact typically comes from time-sensitive a
 
 The 10-year duration reflects the typical persistence of conflict prevention benefits. Civil conflicts often last approximately 5 years (Assumption 6), and successful prevention or early de-escalation averts harms across that period plus potential downstream effects.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

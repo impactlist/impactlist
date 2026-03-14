@@ -63,8 +63,6 @@ The one-year start time reflects the typical delay between donation and program 
 
 The 15-year duration represents the estimated period over which economic benefits persist (Assumption 7). Long-term follow-ups of both cash transfers and graduation programs show sustained effects on assets, consumption, and income for at least 7–12 years, with some studies finding effects persisting even longer. We use 15 years as a reasonable upper bound while acknowledging that effects gradually decay over time.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

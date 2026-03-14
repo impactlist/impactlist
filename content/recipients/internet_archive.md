@@ -69,8 +69,6 @@ Applying that comparison to the baseline:
 
 $$\text{Cost per QALY}_{IA} = \frac{\$60{,}000}{20} = \$3{,}000$$
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

@@ -70,8 +70,6 @@ The 5-year start time reflects the delay between funding and realized health ben
 
 The 40-year duration reflects that health improvements from successful treatments and research-enabled innovations persist across decades of patient lifespans.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

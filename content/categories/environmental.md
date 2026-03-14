@@ -71,8 +71,6 @@ The 1-year start time reflects the typical delay between funding environmental a
 
 The 40-year duration reflects that pollution reduction and lead elimination produce health benefits persisting across decades of avoided exposure and reduced disease burden.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

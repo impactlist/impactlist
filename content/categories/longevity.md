@@ -64,8 +64,6 @@ The 8-year start time reflects the delay from philanthropic funding through tria
 
 The 40-year duration reflects that once a geroprotective is validated and adopted, benefits accrue across the remaining lifespans of treated individuals, potentially spanning decades.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

@@ -75,8 +75,6 @@ The 20-year duration reflects evidence that institutionally embedded decision-ma
 
 However, programs without institutional embedding typically decay within 2–10 years due to leadership transitions, funding cuts, or methodological obsolescence. The 20-year estimate reflects an expected value across scenarios where some programs achieve lasting institutionalization while others fail to take root.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

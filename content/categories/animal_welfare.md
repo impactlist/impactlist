@@ -87,8 +87,6 @@ The 1-year start time reflects the delay between corporate policy wins and reali
 
 The 15-year duration reflects the persistence of welfare improvements once firms convert to cage-free systems or lock in husbandry changes (Assumption 7). Structural shifts like cage-free barns are more durable than minor reforms.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

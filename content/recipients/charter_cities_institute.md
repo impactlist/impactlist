@@ -72,8 +72,6 @@ $$\text{Cost per QALY}_{CCI} = \frac{\$4{,}000}{12.5} \approx \$320$$
 
 We round this **up** to **\$400/QALY** to account for higher execution friction and "unknown unknowns" in frontier markets.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

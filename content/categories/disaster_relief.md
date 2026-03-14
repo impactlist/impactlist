@@ -67,8 +67,6 @@ The 0-year start time reflects that disaster response delivers immediate benefit
 
 The 20-year duration reflects the remaining healthy life-years for survivors whose deaths are averted, primarily working-age adults.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

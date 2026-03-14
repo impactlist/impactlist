@@ -70,8 +70,6 @@ The 3-year start time reflects a blend of immediate and delayed benefits (Assump
 
 The 40-year duration reflects the persistence of health and longevity effects associated with additional education across adult life (Assumption 9). School climate/mental-health gains can also have long-run sequelae.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

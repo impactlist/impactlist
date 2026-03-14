@@ -87,8 +87,6 @@ The 1-year start time reflects that benefits from religious participation begin 
 
 The 10-year duration reflects the period over which marginal charitable support has measurable impact on attendance patterns. While benefits of sustained religious participation persist for decades in longitudinal studies, the marginal impact of a given charitable contribution diminishes as habits become self-sustaining or as individuals' circumstances change.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

@@ -71,8 +71,6 @@ The 2-year start time reflects that VAWG prevention and anti-slavery programs ty
 
 The 25-year duration reflects the long-term benefits of preventing violence, freeing individuals from bondage, and improving justice systems—effects that persist across victims' remaining lifespans and can compound through community-level change.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

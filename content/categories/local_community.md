@@ -58,8 +58,6 @@ The 1-year start time reflects that community health programs typically deliver 
 
 The 15-year duration reflects that health gains from smoking cessation, overdose prevention, violence intervention, and fall prevention persist over participants' remaining lifespans, with some interventions producing benefits for decades.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

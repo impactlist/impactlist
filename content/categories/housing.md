@@ -61,8 +61,6 @@ The 1-year start time reflects the delay between program enrollment and realized
 
 The 3-year duration reflects that most housing program evaluations measure outcomes over 2–3 year horizons, capturing the initial period of housing stability and health improvement.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

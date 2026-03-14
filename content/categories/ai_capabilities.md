@@ -243,8 +243,6 @@ Example time limits:
 
 These examples assume constant population for simplicity. The actual calculation uses global parameters that define the future population curve, so scaling may not be exactly linear.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

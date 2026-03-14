@@ -76,8 +76,6 @@ The 7-year start time reflects the delay between policy wins and realized emissi
 
 The 80-year duration reflects that avoided CO₂ today reduces temperature-related health harms across the remainder of the century (Assumption 7). Major climate-mortality studies quantify impacts on a 2020–2100 horizon.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

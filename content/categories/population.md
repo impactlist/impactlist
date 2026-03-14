@@ -68,8 +68,6 @@ The 2-year start time reflects the delay between policy implementation or IVF fu
 
 The 80-year duration reflects that benefits accrue across the new person's entire lifespan, which is approximately 80 years in high-income countries.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

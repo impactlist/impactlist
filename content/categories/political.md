@@ -79,8 +79,6 @@ The 1-year start time reflects that donations typically precede elections by mon
 
 The 4-year duration reflects that election-dependent policy changes (appropriations, regulatory priorities) run with the term and can persist into the next cycle, but may be reversed (Assumption 9).
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

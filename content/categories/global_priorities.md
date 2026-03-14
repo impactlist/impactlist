@@ -78,8 +78,6 @@ The 5-year start time reflects the research-to-impact cycle (Assumption 6): 1–
 
 The 25-year duration reflects that foundation cause-area commitments can persist for decades once established (Assumption 7). Major EA cause prioritization shifts (AI safety, pandemics, animal welfare) have shown enduring influence over 10–15+ years.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

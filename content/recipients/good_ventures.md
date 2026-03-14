@@ -42,6 +42,4 @@ We're approximating the 30 million donation by 0.6% of their total spending, sin
 
 {{RECIPIENT_DEFAULT_JUSTIFICATION}}
 
----
-
 {{CONTRIBUTION_NOTE}}

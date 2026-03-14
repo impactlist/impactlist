@@ -73,8 +73,6 @@ The 2-year duration reflects the period over which program effects persist (Assu
 
 Heritage benefits are modeled through engagement activities—museum visits, guided heritage programs—rather than preservation for its own sake (Assumption 7). The DCMS Culture & Heritage Capital program explicitly values these engagement-led health and wellbeing gains using QALYs and WELLBYs.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

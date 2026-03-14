@@ -51,8 +51,6 @@ The one-year start time reflects the typical delay between donation and program 
 
 The 60-year duration matches the estimated remaining life expectancy for beneficiaries (Assumption 1), over which health benefits accrue (Assumption 6).
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

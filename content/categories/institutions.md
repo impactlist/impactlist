@@ -72,8 +72,6 @@ The 5-year start time reflects the delay between philanthropic investment and re
 
 The 40-year duration reflects that successful institutional reforms (zoning changes, governance structures) tend to persist for decades, with benefits compounding as housing stock and economic activity adjust.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

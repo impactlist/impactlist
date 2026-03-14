@@ -100,8 +100,6 @@ The 10-year duration reflects that:
 - For deaths, long-term losses are folded into an "equivalent" intense 10-year impact
 - For survivors, worst effects (health, economic, institutional) concentrate in first 5–20 years
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

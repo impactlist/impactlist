@@ -80,8 +80,6 @@ The 1-year start time reflects that advocacy and policy changes typically begin 
 
 The 10-year duration reflects that benefits from policy and practice changes persist for several years but may be reversed or eroded, and effects of training-based interventions fade relatively quickly.
 
----
-
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes

@@ -109,7 +109,7 @@ const EntityChartSection = ({
             y={0}
             dy={4}
             textAnchor="end"
-            fill="var(--accent-strong)"
+            fill="var(--link-accent-strong)"
             fontSize={14}
             className="hover:underline hover:font-medium"
           >

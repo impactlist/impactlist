@@ -96,7 +96,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       },
     },
     {
-      key: 'livesSaved',
+      key: 'totalLivesSaved',
       label: 'Lives Saved',
       tooltip: (
         <div>
@@ -224,7 +224,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       <SortableTable
         columns={isDonor ? donorColumns : recipientColumns}
         data={donations}
-        defaultSortColumn="date"
+        defaultSortColumn="totalLivesSaved"
         defaultSortDirection="desc"
       />
     </motion.div>

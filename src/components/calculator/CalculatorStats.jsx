@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import StatisticsCard from '../shared/StatisticsCard';
 import MiniImpactList from '../MiniImpactList';
 import { formatCurrency, formatLives } from '../../utils/formatters';
-
 /**
  * Displays impact summary statistics for the donation calculator.
  */

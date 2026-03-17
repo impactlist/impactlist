@@ -1446,6 +1446,10 @@
     caret-color: transparent;
   }
 
+  .impact-field__input--display-rendered {
+    color: transparent;
+  }
+
   .impact-field__input--display::placeholder {
     color: color-mix(in srgb, var(--text-muted) 76%, white 24%);
   }
@@ -1457,6 +1461,21 @@
 
   .impact-field[data-display='true'] .impact-field__prefix {
     color: color-mix(in srgb, var(--text-muted) 92%, var(--text-strong) 8%);
+  }
+
+  .impact-field__display-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    pointer-events: none;
+    padding: 0.45rem 0.72rem;
+    white-space: nowrap;
+  }
+
+  .impact-field__display-overlay--with-prefix {
+    padding-left: 1.48rem;
   }
 
   .impact-field__input:disabled {
@@ -2230,4 +2249,53 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+.formatted-scientific-value {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.formatted-scientific-value__mantissa {
+  font-weight: inherit;
+}
+
+.formatted-scientific-value__power {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.formatted-scientific-value--card .formatted-scientific-value__power {
+  font-weight: 560;
+  letter-spacing: -0.035em;
+}
+
+.formatted-scientific-value--card .formatted-scientific-value__exponent {
+  font-size: 0.68em;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  margin-left: 0.02em;
+  top: -0.38em;
+}
+
+.formatted-scientific-value--compact .formatted-scientific-value__power {
+  font-weight: 450;
+  opacity: 0.72;
+}
+
+.formatted-scientific-value--compact .formatted-scientific-value__exponent {
+  opacity: 0.88;
+}
+
+.formatted-scientific-value__exponent {
+  display: inline-block;
+  vertical-align: baseline;
+  font-size: 0.76em;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.015em;
+  line-height: 0.92;
+  margin-left: -0.06em;
+  position: relative;
+  top: -0.34em;
 }

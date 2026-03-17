@@ -19,6 +19,7 @@ import { buildCausePath } from '../utils/causeRoutes';
 import PageHeader from '../components/shared/PageHeader';
 import SearchInput from '../components/shared/SearchInput';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import FormattedScientificValue from '../components/shared/FormattedScientificValue';
 
 const RecipientList = () => {
   const [recipientStats, setRecipientStats] = useState([]);
@@ -126,7 +127,7 @@ const RecipientList = () => {
       ),
       render: (recipient) => (
         <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
-          {formatRoundedLives(recipient.totalLivesSaved)}
+          <FormattedScientificValue value={formatRoundedLives(recipient.totalLivesSaved)} variant="compact" />
         </div>
       ),
     },
@@ -142,7 +143,11 @@ const RecipientList = () => {
       render: (recipient) => {
         return (
           <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-            {recipient.costPerLife === 0 ? '∞' : formatCurrency(recipient.costPerLife)}
+            {recipient.costPerLife === 0 ? (
+              '∞'
+            ) : (
+              <FormattedScientificValue value={formatCurrency(recipient.costPerLife)} variant="compact" />
+            )}
           </div>
         );
       },

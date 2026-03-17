@@ -4,6 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { formatLargeNumber, formatCalendarYear, generateEvenlySpacedTicks } from '../../utils/effectsVisualization';
 import { formatLives } from '../../utils/formatters';
 import { getCategoryVariantColor } from '../../utils/chartColors';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 const EFFECT_COLOR_PALETTE = [
   '#2563eb',
@@ -89,7 +90,9 @@ const CustomTooltip = ({ active, payload, seriesMetadata, activeSeriesId }) => {
     <div className="impact-surface rounded-lg p-3 shadow-lg">
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm font-semibold text-strong">Year {formatCalendarYear(pointYear)}</p>
-        <p className="text-sm font-semibold text-strong">{formatLives(totalLivesPerYear)} lives/year</p>
+        <p className="text-sm font-semibold text-strong">
+          <FormattedScientificValue value={formatLives(totalLivesPerYear)} /> lives/year
+        </p>
       </div>
 
       {highlightedEffect && (
@@ -101,7 +104,9 @@ const CustomTooltip = ({ active, payload, seriesMetadata, activeSeriesId }) => {
                 {highlightedEffect.series?.label || highlightedEffect.id}
               </p>
             </div>
-            <p className="text-strong">{formatLives(highlightedEffect.value)}</p>
+            <p className="text-strong">
+              <FormattedScientificValue value={formatLives(highlightedEffect.value)} />
+            </p>
           </div>
           {otherEffectsCount > 0 && (
             <p className="pl-4 text-xs text-muted">
@@ -264,7 +269,12 @@ const LivesSavedGraph = ({ data, height = 300, colorMode = 'category' }) => {
                       whiteSpace: 'normal',
                     }}
                   >
-                    {series.totalLives === null ? 'N/A' : formatLives(series.totalLives)} lives
+                    {series.totalLives === null ? (
+                      'N/A'
+                    ) : (
+                      <FormattedScientificValue value={formatLives(series.totalLives)} />
+                    )}{' '}
+                    lives
                     {series.shareOfTotal === null ? '' : ` (${(series.shareOfTotal * 100).toFixed(1)}%)`}
                   </span>
                 )}

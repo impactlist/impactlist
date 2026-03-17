@@ -102,7 +102,7 @@ describe('EntityStatistics', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Cause avg: $1,200')).toBeInTheDocument();
+    expect(screen.getByText((_, element) => element?.textContent === 'Cause avg: $1,200')).toBeInTheDocument();
   });
 
   it('hides cause average when it formats to the same displayed value as recipient cost per life', () => {
@@ -137,6 +137,6 @@ describe('EntityStatistics', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('1.00e21')).toBeInTheDocument();
+    expect(screen.getByLabelText('1.00 × 10²¹')).toBeInTheDocument();
   });
 });

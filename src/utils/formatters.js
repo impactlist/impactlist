@@ -14,11 +14,33 @@ import {
 
 // Number of significant figures to display for large numbers with suffixes (B, T, M)
 const LARGE_NUMBER_SIG_FIGS = 3;
+const SUPERSCRIPT_CHARACTERS = {
+  '-': '⁻',
+  0: '⁰',
+  1: '¹',
+  2: '²',
+  3: '³',
+  4: '⁴',
+  5: '⁵',
+  6: '⁶',
+  7: '⁷',
+  8: '⁸',
+  9: '⁹',
+};
 
 const countDigits = (value) => value.replace(/[^\d]/g, '').length;
 
-const formatScientificNotation = (num, sigFigs = LARGE_NUMBER_SIG_FIGS) =>
-  num.toExponential(sigFigs - 1).replace('e+', 'e');
+const toSuperscript = (value) =>
+  value
+    .split('')
+    .map((character) => SUPERSCRIPT_CHARACTERS[character] || character)
+    .join('');
+
+const formatScientificNotation = (num, sigFigs = LARGE_NUMBER_SIG_FIGS) => {
+  const [mantissa, exponent] = num.toExponential(sigFigs - 1).split('e');
+  const normalizedExponent = String(Number(exponent));
+  return `${mantissa} × 10${toSuperscript(normalizedExponent)}`;
+};
 
 const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null } = {}) => {
   if (absValue >= TRILLION) {
@@ -383,7 +405,7 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     // Trillions - use configured significant figures
     const value = absAmount / TRILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `$${valueStr} T`;
+    formattedValue = countDigits(valueStr) > 9 ? `$${formatScientificNotation(absAmount)}` : `$${valueStr} T`;
   } else if (absAmount >= BILLION) {
     // Billions - use configured significant figures
     const value = absAmount / BILLION;
@@ -402,8 +424,7 @@ export const formatCurrency = (amount, effectivenessRate = null) => {
     formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;
   } else if (absAmount < SMALL_NUMBER_THRESHOLD) {
     // For extremely small values, use scientific notation to avoid showing $0
-    // Format as $1.23e-4 for better readability
-    formattedValue = `$${absAmount.toExponential(2)}`;
+    formattedValue = `$${formatScientificNotation(absAmount)}`;
   } else {
     const significantDigits = 2;
     const multiplier = Math.pow(10, significantDigits - Math.floor(Math.log10(absAmount)) - 1);

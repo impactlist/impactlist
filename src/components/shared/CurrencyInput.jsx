@@ -20,6 +20,7 @@ const CurrencyInput = ({
   rightElement = null, // Optional element to render on the right side inside the input
   displayOnly = false, // If true, render a read-only display surface instead of a disabled input
   ariaLabel,
+  displayValue = null,
 }) => {
   const [localValue, setLocalValue] = useState('');
   const [cursorPosition, setCursorPosition] = useState(null);
@@ -104,6 +105,7 @@ const CurrencyInput = ({
   }, [localValue, onChange, validateOnBlur]);
 
   const state = error ? 'error' : isCustom ? 'custom' : 'default';
+  const hasDisplayOverlay = displayOnly && displayValue && localValue;
 
   return (
     <div className={`impact-field ${className}`.trim()} data-state={state} data-display={displayOnly || undefined}>
@@ -121,18 +123,27 @@ const CurrencyInput = ({
           $
         </span>
         {displayOnly ? (
-          <input
-            id={id}
-            aria-label={ariaLabel || label}
-            type="text"
-            inputMode="text"
-            value={localValue}
-            placeholder={placeholder}
-            readOnly={true}
-            tabIndex={-1}
-            onMouseDown={(event) => event.preventDefault()}
-            className="impact-field__input impact-field__input--with-prefix impact-field__input--display"
-          />
+          <>
+            <input
+              id={id}
+              aria-label={ariaLabel || label}
+              type="text"
+              inputMode="text"
+              value={localValue}
+              placeholder={placeholder}
+              readOnly={true}
+              tabIndex={-1}
+              onMouseDown={(event) => event.preventDefault()}
+              className={`impact-field__input impact-field__input--with-prefix impact-field__input--display ${
+                hasDisplayOverlay ? 'impact-field__input--display-rendered' : ''
+              }`.trim()}
+            />
+            {hasDisplayOverlay && (
+              <div className="impact-field__display-overlay impact-field__display-overlay--with-prefix">
+                {displayValue}
+              </div>
+            )}
+          </>
         ) : (
           <input
             ref={inputRef}
@@ -176,6 +187,7 @@ CurrencyInput.propTypes = {
   rightElement: PropTypes.node,
   displayOnly: PropTypes.bool,
   ariaLabel: PropTypes.string,
+  displayValue: PropTypes.node,
 };
 
 export default React.memo(CurrencyInput);

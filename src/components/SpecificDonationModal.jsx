@@ -4,6 +4,7 @@ import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
 import { formatLives, formatCurrency } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
+import FormattedScientificValue from './shared/FormattedScientificValue';
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
   const { combinedAssumptions } = useAssumptions();
@@ -473,7 +474,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
                 )}
                 {selectedRecipient && recipientCostPerLife && (
-                  <p className="mt-1 text-xs text-gray-500">Cost per life: {formatCurrency(recipientCostPerLife)}</p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Cost per life:{' '}
+                    <FormattedScientificValue value={formatCurrency(recipientCostPerLife)} variant="compact" />
+                  </p>
                 )}
               </div>
             ) : (
@@ -527,9 +531,16 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   {selectedCategory && (
                     <p className="mt-1 text-xs text-gray-500">
                       Default cost per life:{' '}
-                      {formatCurrency(
-                        getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, getValidYearForCalculation())
-                      )}
+                      <FormattedScientificValue
+                        value={formatCurrency(
+                          getCostPerLifeFromCombined(
+                            combinedAssumptions,
+                            selectedCategory,
+                            getValidYearForCalculation()
+                          )
+                        )}
+                        variant="compact"
+                      />
                     </p>
                   )}
                 </div>
@@ -565,7 +576,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   </p>
                   {customCostPerLife && !isNaN(Number(cleanNumberInput(customCostPerLife))) && (
                     <p className="mt-1 text-xs text-gray-500">
-                      Recipient cost per life: {formatCurrency(Number(cleanNumberInput(customCostPerLife)))}
+                      Recipient cost per life:{' '}
+                      <FormattedScientificValue
+                        value={formatCurrency(Number(cleanNumberInput(customCostPerLife)))}
+                        variant="compact"
+                      />
                     </p>
                   )}
                 </div>
@@ -628,7 +643,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                 Estimated lives saved:{' '}
                 <span className="font-medium">
                   {livesSaved < 0 ? '-' : ''}
-                  {formatLives(Math.abs(livesSaved))}
+                  <FormattedScientificValue value={formatLives(Math.abs(livesSaved))} />
                 </span>
               </p>
             </div>

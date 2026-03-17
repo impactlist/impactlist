@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatRoundedLives, formatCurrency } from '../utils/formatters';
+import FormattedScientificValue from './shared/FormattedScientificValue';
 
 const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife, neighboringDonors }) => {
   // Create the three rows to display
@@ -132,14 +133,24 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
                   <span className={row.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}>
-                    {row.isPlaceholder ? '—' : formatRoundedLives(row.totalLivesSaved)}
+                    {row.isPlaceholder ? (
+                      '—'
+                    ) : (
+                      <FormattedScientificValue value={formatRoundedLives(row.totalLivesSaved)} variant="compact" />
+                    )}
                   </span>
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
                   {row.isPlaceholder ? '—' : formatCurrency(row.totalDonated)}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
-                  {row.isPlaceholder ? '—' : row.totalLivesSaved === 0 ? '∞' : formatCurrency(row.costPerLife)}
+                  {row.isPlaceholder ? (
+                    '—'
+                  ) : row.totalLivesSaved === 0 ? (
+                    '∞'
+                  ) : (
+                    <FormattedScientificValue value={formatCurrency(row.costPerLife)} variant="compact" />
+                  )}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
                   {row.isPlaceholder ? '—' : row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}

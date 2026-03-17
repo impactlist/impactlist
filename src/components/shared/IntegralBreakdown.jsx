@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { formatLargeNumber } from '../../utils/effectsVisualization';
+import { formatLives } from '../../utils/formatters';
+import { parseScientificNotationDisplay } from '../../utils/scientificNotation';
+import FormattedScientificValue from './FormattedScientificValue';
 
 // Color scheme matching the graph
 const SEGMENT_COLORS = {
@@ -43,6 +45,9 @@ const IntegralBreakdown = ({ breakdown }) => {
 
   // Filter out segments with no lives saved
   const activeSegments = segments.filter((s) => s.lives > 0);
+  const usesScientificNotation =
+    Boolean(parseScientificNotationDisplay(formatLives(breakdown.total))) ||
+    activeSegments.some((segment) => Boolean(parseScientificNotationDisplay(formatLives(segment.lives))));
 
   if (activeSegments.length === 0) {
     return null;
@@ -56,7 +61,9 @@ const IntegralBreakdown = ({ breakdown }) => {
       <div className="mb-3 border-b border-[var(--border-subtle)] pb-3">
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium text-strong">Total Lives Saved</span>
-          <span className="text-sm font-bold text-strong">{formatLargeNumber(breakdown.total, 3)}</span>
+          <span className="text-sm font-bold text-strong">
+            <FormattedScientificValue value={formatLives(breakdown.total)} variant="compact" />
+          </span>
         </div>
       </div>
 
@@ -69,7 +76,9 @@ const IntegralBreakdown = ({ breakdown }) => {
               <span className="text-xs text-muted">{segment.label}</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-xs font-medium text-strong">{formatLargeNumber(segment.lives, 2)}</span>
+              <span className="text-xs font-medium text-strong">
+                <FormattedScientificValue value={formatLives(segment.lives)} variant="compact" />
+              </span>
               <span className="min-w-[3rem] text-right text-xs text-muted">({segment.percentage.toFixed(1)}%)</span>
             </div>
           </div>
@@ -94,7 +103,7 @@ const IntegralBreakdown = ({ breakdown }) => {
       </div>
 
       {/* Help text for extreme values */}
-      {breakdown.total > 1e12 && (
+      {usesScientificNotation && (
         <p className="mt-3 text-xs italic text-muted">Note: Values shown in scientific notation due to large scale</p>
       )}
     </div>

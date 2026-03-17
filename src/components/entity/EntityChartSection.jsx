@@ -8,6 +8,8 @@ import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsData
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import { getCategoryColor } from '../../utils/chartColors';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
+import FormattedScientificSvgText from '../shared/FormattedScientificSvgText';
 
 /**
  * A reusable chart section for displaying entity impact data.
@@ -60,20 +62,28 @@ const EntityChartSection = ({
               <p className="text-xs text-muted">{`${percentage}% of known donations`}</p>
               {entry.name !== 'Other Causes' && entry.categoryId && (
                 <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
-                  <p className="text-xs text-muted">Cost per life: {formatCurrency(effectiveCostPerLife)}</p>
-                  <p className="text-xs text-muted">Lives saved: {formatRoundedLives(entry.livesSavedValue)}</p>
+                  <p className="text-xs text-muted">
+                    Cost per life:{' '}
+                    <FormattedScientificValue value={formatCurrency(effectiveCostPerLife)} variant="compact" />
+                  </p>
+                  <p className="text-xs text-muted">
+                    Lives saved: <FormattedScientificValue value={formatRoundedLives(entry.livesSavedValue)} />
+                  </p>
                 </div>
               )}
             </>
           ) : (
             <>
               <p className={`text-sm ${value < 0 ? 'text-danger' : 'text-success'}`}>
-                {formatRoundedLives(value)} lives {value < 0 ? 'lost' : 'saved'}
+                <FormattedScientificValue value={formatRoundedLives(value)} /> lives {value < 0 ? 'lost' : 'saved'}
               </p>
               <p className="text-xs text-muted">{`${percentage}% of total impact`}</p>
               {entry.name !== 'Other Causes' && entry.categoryId && (
                 <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
-                  <p className="text-xs text-muted">Cost per life: {formatCurrency(effectiveCostPerLife)}</p>
+                  <p className="text-xs text-muted">
+                    Cost per life:{' '}
+                    <FormattedScientificValue value={formatCurrency(effectiveCostPerLife)} variant="compact" />
+                  </p>
                   <p className="text-xs text-muted">Donation amount: {formatCurrency(entry.donationValue)}</p>
                 </div>
               )}
@@ -124,6 +134,40 @@ const EntityChartSection = ({
     return null;
   }
 
+  const renderLivesSavedXAxisTick = ({ x, y, payload, textAnchor = 'middle' }) => (
+    <g transform={`translate(${x},${y})`}>
+      <FormattedScientificSvgText
+        value={formatRoundedLives(payload.value)}
+        x={0}
+        y={0}
+        fill="var(--text-strong)"
+        fontSize={14}
+        textAnchor={textAnchor}
+        dominantBaseline="hanging"
+      />
+    </g>
+  );
+
+  const renderLivesSavedBarLabel = ({ x, y, width, height, value, payload }) => {
+    if (value === undefined || payload?.livesSavedPercentage === undefined) {
+      return null;
+    }
+
+    return (
+      <FormattedScientificSvgText
+        value={formatRoundedLives(payload.livesSavedValue)}
+        suffix={` (${payload.livesSavedPercentage}%)`}
+        x={value < 0 ? x - 8 : x + width + 8}
+        y={y + height / 2}
+        fill="var(--text-muted)"
+        fontSize={12}
+        fontWeight={400}
+        textAnchor={value < 0 ? 'end' : 'start'}
+        dominantBaseline="middle"
+      />
+    );
+  };
+
   return (
     <ChartContainer
       title={chartTitle}
@@ -162,6 +206,7 @@ const EntityChartSection = ({
               return formatRoundedLives(value);
             }
           }}
+          renderXAxisTick={chartView === 'livesSaved' ? renderLivesSavedXAxisTick : null}
           xAxisDomain={(() => {
             // If we're in lives saved view or transitioning to it, and there are negative values
             const hasNegativeValues = chartData.some((item) => item.valueTarget < 0);
@@ -192,6 +237,7 @@ const EntityChartSection = ({
               ? `${formatCurrency(entry.donationValue)} (${percentage}%)`
               : `${formatRoundedLives(entry.livesSavedValue)} (${percentage}%)`;
           }}
+          renderBarLabel={chartView === 'livesSaved' ? renderLivesSavedBarLabel : null}
           barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
           heightCalculator={(dataLength) => Math.max(containerHeight, dataLength * 55)}
           isAnimationActive={true}

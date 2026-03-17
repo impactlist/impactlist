@@ -61,6 +61,8 @@ const ImpactBarChart = ({
   showLegend = false,
   legendFormatter = () => 'Value',
   renderYAxisTick = null,
+  renderXAxisTick = null,
+  renderBarLabel = null,
 }) => {
   const [containerWidth, setContainerWidth] = useState(800);
   const chartContainerRef = useRef(null);
@@ -154,13 +156,15 @@ const ImpactBarChart = ({
           >
             <XAxis
               type="number"
-              tickFormatter={formatXAxisTick}
+              tickFormatter={renderXAxisTick ? undefined : formatXAxisTick}
               domain={domain}
               axisLine={true}
-              tick={{
-                fill: 'var(--text-strong)',
-                fontSize: 14,
-              }}
+              tick={
+                renderXAxisTick || {
+                  fill: 'var(--text-strong)',
+                  fontSize: 14,
+                }
+              }
               tickLine={true}
               stroke="var(--border-strong)"
               // Ensure we show enough ticks for better readability
@@ -192,12 +196,14 @@ const ImpactBarChart = ({
               dataKey={dataKey}
               name="Value"
               radius={[0, 4, 4, 0]}
-              label={{
-                position: 'right',
-                formatter: labelFormatter,
-                fontSize: 12,
-                fill: 'var(--text-muted)',
-              }}
+              label={
+                renderBarLabel || {
+                  position: 'right',
+                  formatter: labelFormatter,
+                  fontSize: 12,
+                  fill: 'var(--text-muted)',
+                }
+              }
               isAnimationActive={isAnimationActive}
               animationDuration={animationDuration}
               animationBegin={animationBegin}

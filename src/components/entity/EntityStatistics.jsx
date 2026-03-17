@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import StatisticsCard from '../shared/StatisticsCard';
 import { formatRoundedLives, formatCurrency } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 const parseBirthDate = (birthDate) => {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthDate);
@@ -52,14 +53,18 @@ const getAgeFromBirthDate = (birthDate, today = new Date()) => {
 const EntityStatistics = ({ stats, entityType, className = '', costPerLifeAction = null, photoComponent = null }) => {
   const isDonor = entityType === 'donor';
   const hasPhoto = photoComponent !== null;
+  const renderMetricSubtext = (label, value) => (
+    <>
+      {label} <FormattedScientificValue value={value} variant="compact" />
+    </>
+  );
 
   // Determine if we need to show the default cost per life
   const showDefaultCostPerLife =
     stats.defaultCostPerLife !== undefined && stats.costPerLife !== stats.defaultCostPerLife;
 
-  const defaultCostPerLifeText = showDefaultCostPerLife
-    ? `Default: ${stats.defaultCostPerLife === 0 ? '∞' : formatCurrency(stats.defaultCostPerLife)}`
-    : undefined;
+  const defaultCostPerLifeValue =
+    showDefaultCostPerLife && stats.defaultCostPerLife !== 0 ? formatCurrency(stats.defaultCostPerLife) : undefined;
   const formattedCostPerLife = stats.costPerLife === 0 ? '∞' : formatCurrency(stats.costPerLife);
   const formattedCategoryCostPerLife =
     stats.categoryCostPerLife === undefined
@@ -69,9 +74,13 @@ const EntityStatistics = ({ stats, entityType, className = '', costPerLifeAction
         : formatCurrency(stats.categoryCostPerLife);
 
   const costPerLifeSubtext =
-    defaultCostPerLifeText ||
+    (showDefaultCostPerLife
+      ? stats.defaultCostPerLife === 0
+        ? 'Default: ∞'
+        : renderMetricSubtext('Default:', defaultCostPerLifeValue)
+      : undefined) ||
     (formattedCategoryCostPerLife !== undefined && formattedCategoryCostPerLife !== formattedCostPerLife
-      ? `Cause avg: ${formattedCategoryCostPerLife}`
+      ? renderMetricSubtext('Cause avg:', formattedCategoryCostPerLife)
       : undefined);
 
   // Shared stat card definitions (defined once, used in multiple layouts)

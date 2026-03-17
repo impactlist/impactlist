@@ -7,6 +7,7 @@ import { formatRoundedLives, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { extractYearFromDonation, getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Displays a table of donations for a donor or recipient entity.
@@ -110,7 +111,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
             donation.isUnknown ? 'text-muted' : donation.totalLivesSaved < 0 ? 'text-danger' : 'text-success'
           }`}
         >
-          {formatRoundedLives(donation.totalLivesSaved)}
+          <FormattedScientificValue value={formatRoundedLives(donation.totalLivesSaved)} variant="compact" />
         </div>
       ),
     },
@@ -128,13 +129,16 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
           {donation.totalLivesSaved === 0 ? (
             <span className="text-2xl">∞</span>
           ) : (
-            formatCurrency(
-              getEffectiveCostPerLifeFromCombined(
-                combinedAssumptions,
-                donation,
-                donation.isUnknown ? getCurrentYear() : extractYearFromDonation(donation)
-              )
-            )
+            <FormattedScientificValue
+              value={formatCurrency(
+                getEffectiveCostPerLifeFromCombined(
+                  combinedAssumptions,
+                  donation,
+                  donation.isUnknown ? getCurrentYear() : extractYearFromDonation(donation)
+                )
+              )}
+              variant="compact"
+            />
           )}
         </div>
       ),
@@ -190,7 +194,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       label: 'Lives Saved',
       render: (donation) => (
         <div className={`text-sm ${donation.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-          {formatRoundedLives(donation.totalLivesSaved)}
+          <FormattedScientificValue value={formatRoundedLives(donation.totalLivesSaved)} variant="compact" />
         </div>
       ),
     },
@@ -202,9 +206,12 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
           {donation.totalLivesSaved === 0 ? (
             <span className="text-2xl">∞</span>
           ) : (
-            formatCurrency(
-              getEffectiveCostPerLifeFromCombined(combinedAssumptions, donation, extractYearFromDonation(donation))
-            )
+            <FormattedScientificValue
+              value={formatCurrency(
+                getEffectiveCostPerLifeFromCombined(combinedAssumptions, donation, extractYearFromDonation(donation))
+              )}
+              variant="compact"
+            />
           )}
         </div>
       ),

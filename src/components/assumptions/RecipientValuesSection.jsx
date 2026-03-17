@@ -9,6 +9,7 @@ import { formatCurrency } from '../../utils/formatters';
 import { getRecipientId, getCurrentYear } from '../../utils/donationDataHelpers';
 import { createCombinedAssumptions, getCostPerLifeForRecipientFromCombined } from '../../utils/assumptionsDataHelpers';
 import { recipientHasMeaningfulCustomValues } from '../../utils/assumptionsEditorHelpers';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Component for displaying recipient-specific cost per life values.
@@ -101,7 +102,9 @@ const RecipientValuesSection = ({
                           {recipient.name}
                         </Link>
                         {hasCustomValues && (
-                          <span className="assumption-card__default-meta">(Baseline: {formattedDefaultCost})</span>
+                          <span className="assumption-card__default-meta">
+                            (Baseline: <FormattedScientificValue value={formattedDefaultCost} variant="compact" />)
+                          </span>
                         )}
                       </div>
                     </div>
@@ -126,6 +129,7 @@ const RecipientValuesSection = ({
                       isCustom={hasCustomValues}
                       displayOnly={true}
                       ariaLabel={recipient.name}
+                      displayValue={<FormattedScientificValue value={formattedCost} />}
                     />
                   </div>
                 </SectionCard>

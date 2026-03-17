@@ -18,6 +18,7 @@ import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import FormattedScientificValue from '../components/shared/FormattedScientificValue';
 
 const DonorList = () => {
   const [donorStats, setDonorStats] = useState([]);
@@ -117,7 +118,7 @@ const DonorList = () => {
       ),
       render: (donor) => (
         <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-          {formatRoundedLives(donor.totalLivesSaved)}
+          <FormattedScientificValue value={formatRoundedLives(donor.totalLivesSaved)} variant="compact" />
         </div>
       ),
     },
@@ -137,7 +138,11 @@ const DonorList = () => {
       ),
       render: (donor) => (
         <div className={`text-sm ${donor.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-          {donor.totalLivesSaved === 0 ? '∞' : formatCurrency(donor.costPerLife)}
+          {donor.totalLivesSaved === 0 ? (
+            '∞'
+          ) : (
+            <FormattedScientificValue value={formatCurrency(donor.costPerLife)} variant="compact" />
+          )}
         </div>
       ),
     },

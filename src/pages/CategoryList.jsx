@@ -13,6 +13,7 @@ import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import { buildCausePath } from '../utils/causeRoutes';
 import PageHeader from '../components/shared/PageHeader';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import FormattedScientificValue from '../components/shared/FormattedScientificValue';
 
 const CategoryList = () => {
   const [categoryStats, setCategoryStats] = useState([]);
@@ -93,7 +94,11 @@ const CategoryList = () => {
       render: (category) => {
         return (
           <div className={`text-sm ${category.actualCostPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-            {category.actualCostPerLife === 0 ? '∞' : formatCurrency(category.actualCostPerLife)}
+            {category.actualCostPerLife === 0 ? (
+              '∞'
+            ) : (
+              <FormattedScientificValue value={formatCurrency(category.actualCostPerLife)} variant="compact" />
+            )}
           </div>
         );
       },
@@ -109,7 +114,7 @@ const CategoryList = () => {
       ),
       render: (category) => (
         <div className={`text-sm ${category.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
-          {formatRoundedLives(category.totalLivesSaved)}
+          <FormattedScientificValue value={formatRoundedLives(category.totalLivesSaved)} variant="compact" />
         </div>
       ),
     },

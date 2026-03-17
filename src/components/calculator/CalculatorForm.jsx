@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { formatLives, formatCurrency } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Form component for the donation calculator to input cause-based donations.
@@ -69,7 +70,10 @@ const CalculatorForm = ({
                     {category.name}
                   </Link>
                 </label>
-                <span className="text-xs text-muted">{formatCurrency(costPerLife)}/life</span>
+                <span className="text-xs text-muted">
+                  <FormattedScientificValue value={formatCurrency(costPerLife)} variant="compact" />
+                  /life
+                </span>
               </div>
               <div className="flex items-center mb-1">
                 <span className="mr-1 text-muted">$</span>
@@ -85,7 +89,7 @@ const CalculatorForm = ({
               </div>
               {amount && !isNaN(Number(amount)) && (
                 <div className={`text-sm ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-                  Lives saved: {formatLives(livesSaved)}
+                  Lives saved: <FormattedScientificValue value={formatLives(livesSaved)} />
                 </div>
               )}
             </div>

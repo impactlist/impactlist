@@ -54,8 +54,8 @@ describe('formatNumber', () => {
   });
 
   it('should switch to scientific notation for extremely large numbers', () => {
-    expect(formatNumber(1e21)).toBe('1.00e21');
-    expect(formatNumber(-1e21)).toBe('-1.00e21');
+    expect(formatNumber(1e21)).toBe('1.00 × 10²¹');
+    expect(formatNumber(-1e21)).toBe('-1.00 × 10²¹');
   });
 
   it('should handle negative numbers', () => {
@@ -179,8 +179,8 @@ describe('formatLives', () => {
   });
 
   it('should switch to scientific notation for extremely large lives displays', () => {
-    expect(formatLives(1e21)).toBe('1.00e21');
-    expect(formatLives(-1e21)).toBe('-1.00e21');
+    expect(formatLives(1e21)).toBe('1.00 × 10²¹');
+    expect(formatLives(-1e21)).toBe('-1.00 × 10²¹');
   });
 });
 
@@ -191,7 +191,7 @@ describe('formatRoundedLives', () => {
   });
 
   it('should switch rounded large values to scientific notation once the compact display would overflow', () => {
-    expect(formatRoundedLives(1e21)).toBe('1.00e21');
+    expect(formatRoundedLives(1e21)).toBe('1.00 × 10²¹');
   });
 });
 
@@ -207,6 +207,11 @@ describe('formatCurrency', () => {
 
   it('should return ∞ when effectiveness rate is 0', () => {
     expect(formatCurrency(1000, 0)).toBe('∞');
+  });
+
+  it('should switch extremely large currency values to scientific notation', () => {
+    expect(formatCurrency(1e21)).toBe('$1.00 × 10²¹');
+    expect(formatCurrency(-1e21)).toBe('-$1.00 × 10²¹');
   });
 
   it('should format small amounts < $10', () => {
@@ -249,7 +254,7 @@ describe('formatCurrency', () => {
   });
 
   it('should use scientific notation for extremely small amounts', () => {
-    expect(formatCurrency(0.00001)).toBe('$1.00e-5');
-    expect(formatCurrency(0.000001)).toBe('$1.00e-6');
+    expect(formatCurrency(0.00001)).toBe('$1.00 × 10⁻⁵');
+    expect(formatCurrency(0.000001)).toBe('$1.00 × 10⁻⁶');
   });
 });

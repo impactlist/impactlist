@@ -22,6 +22,7 @@ import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * A single category's effect section within the multi-category editor.
@@ -185,7 +186,11 @@ const CategoryEffectSection = ({
                     : 'effect-card__summary-value'
                 }
               >
-                {combinedCostPerLife === Infinity ? '∞' : formatCurrency(combinedCostPerLife)}
+                {combinedCostPerLife === Infinity ? (
+                  '∞'
+                ) : (
+                  <FormattedScientificValue value={formatCurrency(combinedCostPerLife)} variant="compact" />
+                )}
               </span>
             </div>
           )}

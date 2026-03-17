@@ -9,6 +9,7 @@ import { calculateCostPerLife } from '../../utils/effectsCalculation';
 import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Component for managing cost per life values for categories.
@@ -90,7 +91,9 @@ const CategoryValuesSection = ({
                       </Link>
                     </label>
                     {isCustom && (
-                      <span className="assumption-card__default-meta">(Baseline: {formattedDefaultWithSymbol})</span>
+                      <span className="assumption-card__default-meta">
+                        (Baseline: <FormattedScientificValue value={formattedDefaultWithSymbol} variant="compact" />)
+                      </span>
                     )}
                   </div>
                 </div>
@@ -123,6 +126,7 @@ const CategoryValuesSection = ({
                   isCustom={isCustom}
                   displayOnly={true}
                   ariaLabel={categoryData.name}
+                  displayValue={<FormattedScientificValue value={formattedCurrent} />}
                 />
               </div>
             </SectionCard>

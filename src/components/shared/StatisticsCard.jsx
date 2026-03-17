@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FormattedScientificValue from './FormattedScientificValue';
 
 /**
  * A reusable card component for displaying statistics with consistent styling.
@@ -20,7 +21,11 @@ const StatisticsCard = ({
       <div className="flex items-center mt-1 space-x-2">
         {icon && <span>{icon}</span>}
         <span data-testid={valueTestId} className={`text-3xl font-bold ${valueClassName}`}>
-          {value}
+          {typeof value === 'string' || typeof value === 'number' ? (
+            <FormattedScientificValue value={value} variant="card" />
+          ) : (
+            value
+          )}
         </span>
         {valueAction && <div className="flex-shrink-0">{valueAction}</div>}
       </div>
@@ -32,7 +37,7 @@ const StatisticsCard = ({
 StatisticsCard.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.node]).isRequired,
-  subtext: PropTypes.string,
+  subtext: PropTypes.node,
   valueClassName: PropTypes.string,
   className: PropTypes.string,
   icon: PropTypes.node,

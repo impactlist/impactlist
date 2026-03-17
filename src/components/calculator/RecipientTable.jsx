@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import SortableTable from '../shared/SortableTable';
 import CategoryDisplay from '../CategoryDisplay';
 import { formatCurrency, formatLives } from '../../utils/formatters';
+import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Table component to display specific recipient donations with sorting and actions.
@@ -102,7 +103,7 @@ const RecipientTable = ({
                   return (
                     <div className={`text-sm font-medium ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
                       {livesSaved < 0 ? '-' : ''}
-                      {formatLives(Math.abs(livesSaved))}
+                      <FormattedScientificValue value={formatLives(Math.abs(livesSaved))} />
                     </div>
                   );
                 },
@@ -112,7 +113,11 @@ const RecipientTable = ({
                 label: 'Cost Per Life',
                 render: (donation) => {
                   const costPerLife = getCostPerLife(donation);
-                  return <div className="text-sm font-medium text-strong">{formatCurrency(costPerLife)}</div>;
+                  return (
+                    <div className="text-sm font-medium text-strong">
+                      <FormattedScientificValue value={formatCurrency(costPerLife)} variant="compact" />
+                    </div>
+                  );
                 },
               },
               {

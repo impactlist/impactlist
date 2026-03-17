@@ -7,6 +7,7 @@ import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } fr
 import { formatCurrency, formatLives } from '../../utils/formatters';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { calculateLivesSavedSegments } from '../../utils/effectsVisualization';
+import FormattedScientificValue from './FormattedScientificValue';
 
 const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions }) => {
   const currentYear = getCurrentYear();
@@ -94,7 +95,11 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
             <div className="text-sm text-muted">
               Cost per life in {selectedYear}:{' '}
               <span className="font-semibold text-strong">
-                {costPerLife === Infinity ? 'N/A' : formatCurrency(costPerLife)}
+                {costPerLife === Infinity ? (
+                  'N/A'
+                ) : (
+                  <FormattedScientificValue value={formatCurrency(costPerLife)} variant="compact" />
+                )}
               </span>
             </div>
 
@@ -102,7 +107,7 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
               <div className="text-sm text-muted">
                 Lives saved:{' '}
                 <span className={`font-semibold ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-                  {formatLives(livesSaved)}
+                  <FormattedScientificValue value={formatLives(livesSaved)} />
                 </span>
               </div>
             )}

@@ -285,7 +285,7 @@ const AssumptionsDropdown = ({
         data-editing={selectedEntryUiState.isEditing}
         onClick={selectedEntryUiState.isEditing ? undefined : toggleMenu}
       >
-        <div className="saved-assumption-row__top">
+        <div className="saved-assumption-row__top saved-assumption-row__top--summary">
           {selectedEntryUiState.isEditing ? (
             <div className="saved-assumption-row__edit-controls">
               <input
@@ -390,7 +390,7 @@ const AssumptionsDropdown = ({
                   data-load-disabled={entryUiState.isLoadDisabled}
                   onClick={entryUiState.isEditing || entryUiState.isLoadDisabled ? undefined : () => handleLoad(entry)}
                 >
-                  <div className="saved-assumption-row__top">
+                  <div className="saved-assumption-row__top saved-assumption-row__top--menu">
                     {entryUiState.isEditing ? (
                       <div className="saved-assumption-row__edit-controls">
                         <input

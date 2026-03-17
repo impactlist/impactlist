@@ -1633,6 +1633,18 @@
     min-width: 0;
   }
 
+  .saved-assumption-row__top--menu .saved-assumption-row__load-target {
+    flex: 0 1 auto;
+  }
+
+  .saved-assumption-row__top--summary .saved-assumptions-panel__summary-trigger {
+    flex: 0 1 auto;
+  }
+
+  .saved-assumption-row__top--summary .saved-assumptions-panel__chevron {
+    margin-left: auto;
+  }
+
   .saved-assumptions-panel__menu-entry {
     cursor: pointer;
   }

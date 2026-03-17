@@ -9,7 +9,7 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { formatNumber, formatCurrency } from '../utils/formatters';
+import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import { buildCausePath } from '../utils/causeRoutes';
 import PageHeader from '../components/shared/PageHeader';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
@@ -109,7 +109,7 @@ const CategoryList = () => {
       ),
       render: (category) => (
         <div className={`text-sm ${category.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
-          {formatNumber(Math.round(category.totalLivesSaved))}
+          {formatRoundedLives(category.totalLivesSaved)}
         </div>
       ),
     },

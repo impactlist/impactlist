@@ -122,4 +122,21 @@ describe('EntityStatistics', () => {
 
     expect(screen.queryByText(/Cause avg:/)).not.toBeInTheDocument();
   });
+
+  it('renders extremely large lives-saved totals in scientific notation', () => {
+    render(
+      <MemoryRouter>
+        <EntityStatistics
+          entityType="recipient"
+          stats={{
+            totalLivesSaved: 1e21,
+            costPerLife: 796,
+            totalReceived: 5000000,
+          }}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('1.00e21')).toBeInTheDocument();
+  });
 });

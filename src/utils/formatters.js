@@ -15,6 +15,32 @@ import {
 // Number of significant figures to display for large numbers with suffixes (B, T, M)
 const LARGE_NUMBER_SIG_FIGS = 3;
 
+const countDigits = (value) => value.replace(/[^\d]/g, '').length;
+
+const formatScientificNotation = (num, sigFigs = LARGE_NUMBER_SIG_FIGS) =>
+  num.toExponential(sigFigs - 1).replace('e+', 'e');
+
+const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null } = {}) => {
+  if (absValue >= TRILLION) {
+    const value = absValue / TRILLION;
+    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
+
+    if (scientificNotationDigitLimit !== null && countDigits(valueStr) > scientificNotationDigitLimit) {
+      return formatScientificNotation(absValue);
+    }
+
+    return `${valueStr} T`;
+  } else if (absValue >= BILLION) {
+    const value = absValue / BILLION;
+    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
+    return `${valueStr} B`;
+  } else if (absValue >= HUNDRED) {
+    return Math.round(absValue).toLocaleString('en-US');
+  }
+
+  return absValue.toString();
+};
+
 /**
  * Add one digit after the decimal if the number is < 100 and is a non-integer, otherwise round to integer.
  * @param {number} num - A non-negative number to format
@@ -88,26 +114,7 @@ export const formatWithSignificantFigures = (num, sigFigs) => {
 export const formatNumber = (num) => {
   const absNum = Math.abs(num);
   const isNegative = num < 0;
-  let formattedValue;
-
-  // Handle extremely large numbers with B/T suffixes
-  if (absNum >= TRILLION) {
-    // Trillions - use configured significant figures
-    const value = absNum / TRILLION;
-    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `${valueStr} T`;
-  } else if (absNum >= BILLION) {
-    // Billions - use configured significant figures
-    const value = absNum / BILLION;
-    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `${valueStr} B`;
-  } else if (absNum >= HUNDRED) {
-    // For regular numbers, use standard comma formatting
-    formattedValue = Math.round(absNum).toLocaleString('en-US');
-  } else {
-    // Using toLocaleString would round to 0 for very small numbers, so we use toString instead
-    formattedValue = absNum.toString();
-  }
+  const formattedValue = formatCompactMagnitude(absNum, { scientificNotationDigitLimit: 9 });
 
   return isNegative ? `-${formattedValue}` : formattedValue;
 };
@@ -313,10 +320,8 @@ export const formatLives = (lives) => {
   const isNegative = lives < 0;
 
   if (Number.isInteger(absLives)) {
-    // If it's a whole number, just format with commas
     return formatNumber(lives);
   } else if (absLives >= HUNDRED_LIVES) {
-    // For large fractional numbers, round to nearest whole number
     return formatNumber(Math.round(lives));
   } else if (absLives >= TEN_LIVES) {
     // For medium numbers, show 1 decimal place
@@ -341,6 +346,14 @@ export const formatLives = (lives) => {
     return isNegative ? `-${absLives.toPrecision(3)}` : absLives.toPrecision(3);
   }
 };
+
+/**
+ * Format lives saved as a rounded whole-number total, while preserving scientific notation
+ * for extremely large values.
+ * @param {number} lives - The number of lives saved
+ * @returns {string} - Formatted rounded lives saved
+ */
+export const formatRoundedLives = (lives) => formatLives(Math.round(lives));
 
 /**
  * Format currency values with appropriate formatting based on magnitude

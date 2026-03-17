@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatNumber, formatCurrency } from '../utils/formatters';
+import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 
 const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife, neighboringDonors }) => {
   // Create the three rows to display
@@ -132,7 +132,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
                   <span className={row.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}>
-                    {row.isPlaceholder ? '—' : formatNumber(Math.round(row.totalLivesSaved))}
+                    {row.isPlaceholder ? '—' : formatRoundedLives(row.totalLivesSaved)}
                   </span>
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">

@@ -3,6 +3,7 @@ import {
   formatNumber,
   formatNumberWithCommas,
   formatLives,
+  formatRoundedLives,
   formatCurrency,
   formatNumberWithNoMoreThanOneDecimal,
   calculateCursorPosition,
@@ -50,6 +51,11 @@ describe('formatNumber', () => {
     expect(formatNumber(1000000000000)).toBe('1.00 T');
     expect(formatNumber(1500000000000)).toBe('1.50 T');
     expect(formatNumber(12345000000000)).toBe('12.3 T');
+  });
+
+  it('should switch to scientific notation for extremely large numbers', () => {
+    expect(formatNumber(1e21)).toBe('1.00e21');
+    expect(formatNumber(-1e21)).toBe('-1.00e21');
   });
 
   it('should handle negative numbers', () => {
@@ -170,6 +176,22 @@ describe('formatLives', () => {
     expect(formatLives(-100)).toBe('-100');
     expect(formatLives(-10.5)).toBe('-10.5');
     expect(formatLives(-1.5)).toBe('-1.50');
+  });
+
+  it('should switch to scientific notation for extremely large lives displays', () => {
+    expect(formatLives(1e21)).toBe('1.00e21');
+    expect(formatLives(-1e21)).toBe('-1.00e21');
+  });
+});
+
+describe('formatRoundedLives', () => {
+  it('should preserve rounded whole-number lives formatting for normal values', () => {
+    expect(formatRoundedLives(12.5)).toBe('13');
+    expect(formatRoundedLives(1000000.4)).toBe('1,000,000');
+  });
+
+  it('should switch rounded large values to scientific notation once the compact display would overflow', () => {
+    expect(formatRoundedLives(1e21)).toBe('1.00e21');
   });
 });
 

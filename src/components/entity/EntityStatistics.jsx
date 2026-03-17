@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import StatisticsCard from '../shared/StatisticsCard';
-import { formatNumber, formatCurrency } from '../../utils/formatters';
+import { formatRoundedLives, formatCurrency } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
 
 const parseBirthDate = (birthDate) => {
@@ -78,7 +78,7 @@ const EntityStatistics = ({ stats, entityType, className = '', costPerLifeAction
   const livesSavedCard = (
     <StatisticsCard
       label="Lives Saved"
-      value={formatNumber(Math.round(stats.totalLivesSaved))}
+      value={formatRoundedLives(stats.totalLivesSaved)}
       valueClassName={stats.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}
     />
   );

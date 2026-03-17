@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ImpactBarChart from '../charts/ImpactBarChart';
 import ChartContainer from '../charts/ChartContainer';
-import { formatNumber, formatCurrency } from '../../utils/formatters';
+import { formatRoundedLives, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
@@ -61,14 +61,14 @@ const EntityChartSection = ({
               {entry.name !== 'Other Causes' && entry.categoryId && (
                 <div className="mt-1 border-t border-[var(--border-subtle)] pt-1">
                   <p className="text-xs text-muted">Cost per life: {formatCurrency(effectiveCostPerLife)}</p>
-                  <p className="text-xs text-muted">Lives saved: {formatNumber(Math.round(entry.livesSavedValue))}</p>
+                  <p className="text-xs text-muted">Lives saved: {formatRoundedLives(entry.livesSavedValue)}</p>
                 </div>
               )}
             </>
           ) : (
             <>
               <p className={`text-sm ${value < 0 ? 'text-danger' : 'text-success'}`}>
-                {formatNumber(Math.round(value))} lives {value < 0 ? 'lost' : 'saved'}
+                {formatRoundedLives(value)} lives {value < 0 ? 'lost' : 'saved'}
               </p>
               <p className="text-xs text-muted">{`${percentage}% of total impact`}</p>
               {entry.name !== 'Other Causes' && entry.categoryId && (
@@ -159,8 +159,7 @@ const EntityChartSection = ({
             if (chartView === 'donations') {
               return formatCurrency(value);
             } else {
-              // Use formatNumber for lives saved values
-              return formatNumber(Math.round(value));
+              return formatRoundedLives(value);
             }
           }}
           xAxisDomain={(() => {
@@ -191,7 +190,7 @@ const EntityChartSection = ({
 
             return chartView === 'donations'
               ? `${formatCurrency(entry.donationValue)} (${percentage}%)`
-              : `${formatNumber(Math.round(entry.livesSavedValue))} (${percentage}%)`;
+              : `${formatRoundedLives(entry.livesSavedValue)} (${percentage}%)`;
           }}
           barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
           heightCalculator={(dataLength) => Math.max(containerHeight, dataLength * 55)}

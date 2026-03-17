@@ -14,7 +14,7 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { formatNumber, formatCurrency } from '../utils/formatters';
+import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import { buildCausePath } from '../utils/causeRoutes';
 import PageHeader from '../components/shared/PageHeader';
 import SearchInput from '../components/shared/SearchInput';
@@ -126,7 +126,7 @@ const RecipientList = () => {
       ),
       render: (recipient) => (
         <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
-          {formatNumber(Math.round(recipient.totalLivesSaved))}
+          {formatRoundedLives(recipient.totalLivesSaved)}
         </div>
       ),
     },

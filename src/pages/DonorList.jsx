@@ -14,7 +14,7 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { formatNumber, formatCurrency } from '../utils/formatters';
+import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
@@ -117,7 +117,7 @@ const DonorList = () => {
       ),
       render: (donor) => (
         <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-          {formatNumber(Math.round(donor.totalLivesSaved))}
+          {formatRoundedLives(donor.totalLivesSaved)}
         </div>
       ),
     },

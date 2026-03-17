@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SortableTable from '../shared/SortableTable';
-import { formatNumber, formatCurrency } from '../../utils/formatters';
+import { formatRoundedLives, formatCurrency } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { extractYearFromDonation, getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
@@ -110,7 +110,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
             donation.isUnknown ? 'text-muted' : donation.totalLivesSaved < 0 ? 'text-danger' : 'text-success'
           }`}
         >
-          {formatNumber(Math.round(donation.totalLivesSaved))}
+          {formatRoundedLives(donation.totalLivesSaved)}
         </div>
       ),
     },
@@ -190,7 +190,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
       label: 'Lives Saved',
       render: (donation) => (
         <div className={`text-sm ${donation.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-          {formatNumber(Math.round(donation.totalLivesSaved))}
+          {formatRoundedLives(donation.totalLivesSaved)}
         </div>
       ),
     },

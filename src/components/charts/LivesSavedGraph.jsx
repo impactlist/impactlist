@@ -56,7 +56,31 @@ const buildSeriesMetadata = (data, effectIds, colorMode) => {
   });
 };
 
-const CustomTooltip = ({ active, payload, seriesMetadata, activeSeriesId }) => {
+const getSeriesIds = (data) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return [];
+  }
+
+  const rawSeriesMetadata = Array.isArray(data?.seriesMetadata) ? data.seriesMetadata : [];
+
+  if (rawSeriesMetadata.length > 0) {
+    return rawSeriesMetadata.map((series) => series.id).filter(Boolean);
+  }
+
+  return Object.keys(data[0]).filter((key) => key !== 'year');
+};
+
+const CustomTooltip = ({
+  active,
+  payload,
+  seriesMetadata,
+  activeSeriesId,
+  tooltipValueTransform,
+  tooltipValueFormatter,
+  tooltipUnitLabel,
+  tooltipDetailsRenderer,
+  tooltipShowSummaryValue,
+}) => {
   if (!active || !Array.isArray(payload) || payload.length === 0) return null;
 
   const seriesById = Object.fromEntries(seriesMetadata.map((series) => [series.id, series]));
@@ -85,17 +109,34 @@ const CustomTooltip = ({ active, payload, seriesMetadata, activeSeriesId }) => {
     }, null);
   const otherEffectsCount = Math.max(activeEffects.length - 1, 0);
   const totalLivesPerYear = activeEffects.reduce((sum, effect) => sum + effect.value, 0);
+  const isSingleSeriesGraph = seriesMetadata.length <= 1;
+  const transformedTotalValue = tooltipValueTransform(totalLivesPerYear);
+  const pointPayload = payload[0]?.payload || null;
+  const formattedTotalValue = tooltipValueFormatter(transformedTotalValue);
+  const tooltipDetails = tooltipDetailsRenderer({
+    pointPayload,
+    totalValue: transformedTotalValue,
+    formattedTotalValue,
+    unitLabel: tooltipUnitLabel,
+  });
 
   return (
     <div className="impact-surface rounded-lg p-3 shadow-lg">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-semibold text-strong">Year {formatCalendarYear(pointYear)}</p>
-        <p className="text-sm font-semibold text-strong">
-          <FormattedScientificValue value={formatLives(totalLivesPerYear)} /> lives/year
-        </p>
+        <p className="text-sm text-strong">Year: {formatCalendarYear(pointYear)}</p>
+        {tooltipShowSummaryValue && (
+          <p className="text-sm text-strong">
+            <span className="font-semibold">
+              <FormattedScientificValue value={formattedTotalValue} />
+            </span>{' '}
+            {tooltipUnitLabel}
+          </p>
+        )}
       </div>
 
-      {highlightedEffect && (
+      {tooltipDetails && <div className="mt-2 text-xs text-muted">{tooltipDetails}</div>}
+
+      {highlightedEffect && !isSingleSeriesGraph && (
         <div className="mt-2 space-y-1">
           <div className="flex items-start justify-between gap-3 text-xs">
             <div className="flex min-w-0 items-center gap-2">
@@ -126,7 +167,19 @@ const formatYAxisTick = (value) => {
   return formatLargeNumber(value, precision);
 };
 
-const LivesSavedGraph = ({ data, height = 300, colorMode = 'category' }) => {
+const LivesSavedGraph = ({
+  data,
+  seriesMetadataOverride = null,
+  height = 300,
+  colorMode = 'category',
+  tooltipValueTransform = (value) => value,
+  tooltipValueFormatter = formatLives,
+  tooltipUnitLabel = 'lives/year',
+  tooltipDetailsRenderer = () => null,
+  yAxisLabel = '',
+  xAxisLabel = '',
+  tooltipShowSummaryValue = true,
+}) => {
   const [activeSeriesId, setActiveSeriesId] = useState(null);
 
   const { customTicks, filteredData, seriesMetadata } = useMemo(() => {
@@ -134,8 +187,13 @@ const LivesSavedGraph = ({ data, height = 300, colorMode = 'category' }) => {
       return { customTicks: undefined, filteredData: [], seriesMetadata: [] };
     }
 
-    const effectIds = Object.keys(data[0]).filter((key) => key !== 'year');
-    const seriesMetadata = buildSeriesMetadata(data, effectIds, colorMode);
+    const hasSeriesMetadataOverride = Array.isArray(seriesMetadataOverride) && seriesMetadataOverride.length > 0;
+    const effectIds = hasSeriesMetadataOverride
+      ? seriesMetadataOverride.map((series) => series.id).filter(Boolean)
+      : getSeriesIds(data);
+    const seriesMetadata = hasSeriesMetadataOverride
+      ? buildSeriesMetadata({ seriesMetadata: seriesMetadataOverride }, effectIds, colorMode)
+      : buildSeriesMetadata(data, effectIds, colorMode);
 
     const minYear = data[0].year;
     const maxYear = data[data.length - 1].year;
@@ -177,7 +235,7 @@ const LivesSavedGraph = ({ data, height = 300, colorMode = 'category' }) => {
       filteredData,
       seriesMetadata,
     };
-  }, [colorMode, data]);
+  }, [colorMode, data, seriesMetadataOverride]);
 
   if (!filteredData || filteredData.length === 0) {
     return (
@@ -187,58 +245,96 @@ const LivesSavedGraph = ({ data, height = 300, colorMode = 'category' }) => {
     );
   }
 
+  const chartMarkup = (
+    <AreaChart
+      data={filteredData}
+      margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+      onMouseLeave={() => setActiveSeriesId(null)}
+      width={960}
+      height={height}
+    >
+      <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+      <XAxis
+        dataKey="year"
+        type="number"
+        scale="linear"
+        domain={['dataMin', 'dataMax']}
+        ticks={customTicks}
+        tickFormatter={formatXAxisTick}
+        tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+        stroke="var(--border-strong)"
+        label={
+          xAxisLabel
+            ? {
+                value: xAxisLabel,
+                position: 'insideBottom',
+                offset: -2,
+                fill: 'var(--text-muted)',
+                fontSize: 11,
+              }
+            : undefined
+        }
+      />
+      <YAxis
+        tickFormatter={formatYAxisTick}
+        tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+        stroke="var(--border-strong)"
+        width={60}
+        label={
+          yAxisLabel
+            ? {
+                value: yAxisLabel,
+                angle: -90,
+                position: 'insideLeft',
+                offset: 2,
+                style: { textAnchor: 'middle', fill: 'var(--text-muted)', fontSize: 11 },
+              }
+            : undefined
+        }
+      />
+      <Tooltip
+        content={
+          <CustomTooltip
+            seriesMetadata={seriesMetadata}
+            activeSeriesId={activeSeriesId}
+            tooltipValueTransform={tooltipValueTransform}
+            tooltipValueFormatter={tooltipValueFormatter}
+            tooltipUnitLabel={tooltipUnitLabel}
+            tooltipDetailsRenderer={tooltipDetailsRenderer}
+            tooltipShowSummaryValue={tooltipShowSummaryValue}
+          />
+        }
+        animationDuration={150}
+      />
+
+      {seriesMetadata.map((series) => {
+        const isDimmed = activeSeriesId && activeSeriesId !== series.id;
+        const isActive = activeSeriesId === series.id;
+
+        return (
+          <Area
+            key={series.id}
+            type="monotone"
+            dataKey={series.id}
+            name={series.label}
+            stackId="1"
+            stroke={series.color}
+            fill={series.color}
+            fillOpacity={isDimmed ? 0.28 : 0.7}
+            strokeOpacity={isDimmed ? 0.35 : 1}
+            strokeWidth={isActive ? 2 : 1.5}
+            onMouseEnter={() => setActiveSeriesId(series.id)}
+            onMouseLeave={() => setActiveSeriesId(null)}
+          />
+        );
+      })}
+    </AreaChart>
+  );
+
   return (
     <div className="w-full">
       <ResponsiveContainer width="100%" height={height}>
-        <AreaChart
-          data={filteredData}
-          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
-          onMouseLeave={() => setActiveSeriesId(null)}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
-          <XAxis
-            dataKey="year"
-            type="number"
-            scale="linear"
-            domain={['dataMin', 'dataMax']}
-            ticks={customTicks}
-            tickFormatter={formatXAxisTick}
-            tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
-            stroke="var(--border-strong)"
-          />
-          <YAxis
-            tickFormatter={formatYAxisTick}
-            tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
-            stroke="var(--border-strong)"
-            width={60}
-          />
-          <Tooltip
-            content={<CustomTooltip seriesMetadata={seriesMetadata} activeSeriesId={activeSeriesId} />}
-            animationDuration={150}
-          />
-
-          {seriesMetadata.map((series) => {
-            const isDimmed = activeSeriesId && activeSeriesId !== series.id;
-            const isActive = activeSeriesId === series.id;
-
-            return (
-              <Area
-                key={series.id}
-                type="monotone"
-                dataKey={series.id}
-                name={series.label}
-                stackId="1"
-                stroke={series.color}
-                fill={series.color}
-                fillOpacity={isDimmed ? 0.28 : 0.7}
-                strokeOpacity={isDimmed ? 0.35 : 1}
-                strokeWidth={isActive ? 2 : 1.5}
-                onMouseEnter={() => setActiveSeriesId(series.id)}
-                onMouseLeave={() => setActiveSeriesId(null)}
-              />
-            );
-          })}
-        </AreaChart>
+        {chartMarkup}
       </ResponsiveContainer>
 
       {seriesMetadata.length > 1 && (
@@ -301,8 +397,20 @@ LivesSavedGraph.propTypes = {
       year: PropTypes.number.isRequired,
     })
   ).isRequired,
+  seriesMetadataOverride: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    })
+  ),
   height: PropTypes.number,
   colorMode: PropTypes.oneOf(['category', 'effect']),
+  tooltipValueTransform: PropTypes.func,
+  tooltipValueFormatter: PropTypes.func,
+  tooltipUnitLabel: PropTypes.string,
+  tooltipDetailsRenderer: PropTypes.func,
+  yAxisLabel: PropTypes.string,
+  xAxisLabel: PropTypes.string,
+  tooltipShowSummaryValue: PropTypes.bool,
 };
 
 CustomTooltip.propTypes = {
@@ -315,6 +423,11 @@ CustomTooltip.propTypes = {
     })
   ).isRequired,
   activeSeriesId: PropTypes.string,
+  tooltipValueTransform: PropTypes.func.isRequired,
+  tooltipValueFormatter: PropTypes.func.isRequired,
+  tooltipUnitLabel: PropTypes.string.isRequired,
+  tooltipDetailsRenderer: PropTypes.func.isRequired,
+  tooltipShowSummaryValue: PropTypes.bool.isRequired,
 };
 
 export default LivesSavedGraph;

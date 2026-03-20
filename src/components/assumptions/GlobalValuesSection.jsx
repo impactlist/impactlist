@@ -5,8 +5,9 @@ import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import IconActionButton from '../shared/IconActionButton';
 import { formatNumberWithCommas } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
+import GlobalFutureValueGraph from './GlobalFutureValueGraph';
 
-const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onChange }) => {
+const GlobalValuesSection = ({ globalParameters, defaultGlobalParameters, formValues, errors, onChange }) => {
   // Format display value based on parameter type
   const formatDisplayValue = (value, format) => {
     if (value === null || value === undefined || value === '') {
@@ -187,6 +188,12 @@ const GlobalValuesSection = ({ defaultGlobalParameters, formValues, errors, onCh
           </div>
         </div>
       </div>
+
+      <GlobalFutureValueGraph
+        globalParameters={globalParameters}
+        defaultGlobalParameters={defaultGlobalParameters}
+        formValues={formValues}
+      />
     </>
   );
 };

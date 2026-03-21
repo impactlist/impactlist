@@ -26,11 +26,9 @@ const GlobalFutureValueGraph = ({ globalParameters, defaultGlobalParameters, for
     <div className="impact-surface mt-6 p-5">
       <div className="mb-4">
         <h3 className="text-base font-semibold text-strong">Value of the Future</h3>
-        <p className="mt-1 text-sm text-muted">
-          Discounted value of future lives considered under the current global parameters.
-        </p>
+        <p className="mt-1 text-sm text-muted">Discounted value of future lives given the current global parameters.</p>
         <p className="mt-2 text-sm text-muted">
-          Total value considered:{' '}
+          Total value:{' '}
           <span className="font-semibold text-strong">
             <FormattedScientificValue value={formatLives(totalFutureLives)} variant="compact" />
           </span>{' '}

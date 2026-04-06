@@ -34,10 +34,10 @@ This estimate excludes global-health programs in poorer countries, pandemic-risk
 ## Assumptions
 
 1. Strong direct health programs in high-income countries often land around \$4,000-\$20,000 per QALY, with especially strong examples around \$4,000-\$7,000/QALY. Recent anchors include team-based hypertension care with nonphysician titration at about \$4,400/QALY, 12-week varenicline monotherapy for smoking cessation at about \$4,579/QALY, and Diabetes Prevention Program-style lifestyle interventions with a median ICER of about \$6,212/QALY. ([Bryant et al. 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10987007/), [JAMA Network Open 2024](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2817927), [Zhou et al. 2020](https://pubmed.ncbi.nlm.nih.gov/33534726/))
-2. Not all direct-service opportunities are that cheap; reasonable high-income-country anchors also extend into the teens or low tens of thousands per QALY. Examples include long-term collaborative care for depression at about GBP13,069-GBP16,123 per QALY and cataract surgery at about \$38,288/QALY even in a relatively low-expected-benefit subgroup. ([Bower et al. 2018](https://pubmed.ncbi.nlm.nih.gov/29761751/), [Salisbury et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27855101/), [Busbee et al. 2006](https://pubmed.ncbi.nlm.nih.gov/17063129/))
-3. Public-health interventions assessed by NICE are often very cost-effective: across 380 cost-utility estimates from 2005-2018, the median ICER was GBP1,986 per QALY, 21% were cost-saving, and 75% were cost-effective at GBP20,000/QALY. Strong philanthropic opportunities should usually do several times worse than this median because donors do not control the whole health system; a 4x-5x haircut would imply roughly GBP8,000-GBP10,000/QALY, or about \$10,000-\$13,000/QALY. ([Owen & Fischer 2019](https://pubmed.ncbi.nlm.nih.gov/30885422/))
+2. Not all direct-service opportunities are that cheap; reasonable high-income-country anchors also extend into the teens or low tens of thousands per QALY. Examples include long-term collaborative care for depression at about £13,069-£16,123 per QALY and cataract surgery at about \$38,288/QALY even in a relatively low-expected-benefit subgroup. ([Bower et al. 2018](https://pubmed.ncbi.nlm.nih.gov/29761751/), [Salisbury et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27855101/), [Busbee et al. 2006](https://pubmed.ncbi.nlm.nih.gov/17063129/))
+3. Public-health interventions assessed by NICE are often very cost-effective: across 380 cost-utility estimates from 2005-2018, the median ICER was £1,986 per QALY, 21% were cost-saving, and 75% were cost-effective at £20,000/QALY. Strong philanthropic opportunities should usually do several times worse than this median because donors do not control the whole health system; a 4x-5x haircut would imply roughly £8,000-£10,000/QALY, or about \$10,000-\$13,000/QALY. ([Owen & Fischer 2019](https://pubmed.ncbi.nlm.nih.gov/30885422/))
 4. Historical public/charitable biomedical research in the UK produced health-gain returns in the range of roughly 7%-10% per year, with typical lags of about 15-17 years between spending and health impact. ([Grant & Buxton 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC6144334/), [UKRI / RAND / HERG 2008](https://www.ukri.org/wp-content/uploads/2022/02/MRC-030222-medical-research-whats-it-worth.pdf))
-5. Cancer research gives a useful concrete research anchor: UK public and charitable cancer research spending of about GBP15 billion was associated with 5.9 million QALYs from prioritized interventions, with 17% of those gains attributed to UK research and a 15-year lag. That implies a crude attributable research cost of roughly GBP15,000 per QALY before counting broader economic spillovers. ([Glover et al. 2014](https://pubmed.ncbi.nlm.nih.gov/24930803/))
+5. Cancer research gives a useful concrete research anchor: UK public and charitable cancer research spending of about £15 billion was associated with 5.9 million QALYs from prioritized interventions, with 17% of those gains attributed to UK research and a 15-year lag. That implies a crude attributable research cost of roughly £15,000 per QALY before counting broader economic spillovers. ([Glover et al. 2014](https://pubmed.ncbi.nlm.nih.gov/24930803/))
 6. A reasonable central model for this category is to split marginal dollars roughly 50/50 between research / translation and direct programs. A 40/60 or 60/40 split is also plausible. This is a judgment call rather than a directly observed statistic, so the details section treats it as an explicit sensitivity lever rather than a precise statistic.
 7. Direct-program benefits usually start in about 1-2 years, while research benefits start much later, around 15-17 years.
 8. Once a program or research breakthrough works, health benefits often persist for decades through beneficiaries' remaining lifetimes and through repeated use across future cohorts, so a 40-year duration is a reasonable central modeling choice.
@@ -87,12 +87,12 @@ The main concrete anchors are:
 - hypertension team-based care: about **\$4,400/QALY**
 - standard varenicline smoking cessation: about **\$4,579/QALY**
 - DPP-style diabetes prevention: median about **\$6,212/QALY**
-- depression collaborative care: roughly **GBP13,000-GBP16,000/QALY**
+- depression collaborative care: roughly **£13,000-£16,000/QALY**
 - cataract surgery: sometimes much better than this, but around **\$38,000/QALY** even in a pessimistic low-benefit subgroup
 
 Taken literally, these studies suggest that unusually strong direct programs can land anywhere from the low thousands to the upper tens of thousands per QALY, with several credible examples below \$7,000 but plenty of room for weaker fit, lower additionality, or harder-to-reach populations.
 
-Owen & Fischer provide the broadest cross-check. Their median NICE public-health ICER is **GBP1,986/QALY**. Philanthropic marginal dollars should usually do several times worse than that benchmark because donors rarely control full uptake, patient selection, or system-wide implementation. A **4x-5x** haircut implies roughly **GBP8,000-GBP10,000/QALY**, or about **\$10,000-\$13,000/QALY**.
+Owen & Fischer provide the broadest cross-check. Their median NICE public-health ICER is **£1,986/QALY**. Philanthropic marginal dollars should usually do several times worse than that benchmark because donors rarely control full uptake, patient selection, or system-wide implementation. A **4x-5x** haircut implies roughly **£8,000-£10,000/QALY**, or about **\$10,000-\$13,000/QALY**.
 
 Putting those two views together, **\$10,000/QALY** is a reasonable central estimate for strong direct health philanthropy in rich countries: above the best exemplars, below the middling or pessimistic cases, and close to the NICE-based cross-check after a substantial marginality discount.
 
@@ -100,7 +100,7 @@ Putting those two views together, **\$10,000/QALY** is a reasonable central esti
 
 The most useful concrete anchor is the UK cancer-research returns paper. Very crudely:
 
-- total public / charitable cancer research spend: about **GBP15 billion**
+- total public / charitable cancer research spend: about **£15 billion**
 - total QALYs from prioritized interventions: about **5.9 million**
 - attribution to UK research: **17%**
 
@@ -110,10 +110,10 @@ $$
 5.9 \text{ million} \times 0.17 \approx 1.0 \text{ million}
 $$
 
-And the crude research cost per attributable QALY is:
+And the crude research cost per attributable QALY is about **£15,000/QALY**:
 
 $$
-\dfrac{\text{GBP}15 \text{ billion}}{1.0 \text{ million QALYs}} \approx \text{GBP}15{,}000/\text{QALY}
+\dfrac{15 \text{ billion}}{1.0 \text{ million QALYs}} \approx 15{,}000
 $$
 
 That is approximately **\$19,000-\$20,000/QALY**. We then move somewhat upward to **\$25,000/QALY** for the category-level research bucket because:

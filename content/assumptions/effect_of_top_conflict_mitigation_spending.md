@@ -83,12 +83,12 @@ This is also the most opinion-dependent part of the derivation. A skeptic could 
 
 The category is trying to model donations to unusually strong mediation / diplomacy / conflict-analysis organizations. Two useful anchors are:
 
-- HD reported **50 million CHF** in contribution income in 2023 and more than **70 peacemaking projects**. ([HD Annual Report 2023](https://hdcentre.org/wp-content/uploads/2024/07/Annual-report-2023_English-Final_Web.pdf))
+- HD reported **50 million Swiss francs (about \$62.5 million)** in contribution income in 2023 and more than **70 peacemaking projects**. ([HD Annual Report 2023](https://hdcentre.org/wp-content/uploads/2024/07/Annual-report-2023_English-Final_Web.pdf))
 - ICG reported **\$23.5 million** in revenue in 2024. ([ProPublica 2024](https://projects.propublica.org/nonprofits/organizations/525170039))
 
-Taken together, that implies combined annual budgets on the order of **\$70–80 million** for a pair of organizations that look close to the intended target of this category.
+Taken together, that implies combined annual budgets on the order of **\$80–90 million** for a pair of organizations that look close to the intended target of this category.
 
-That does **not** mean the whole philanthropic peacebuilding space is only \$70–80 million. It means that the especially strong and clearly relevant slice of the space plausibly lives in roughly that budget neighborhood.
+That does **not** mean the whole philanthropic peacebuilding space is only \$80–90 million. It means that the especially strong and clearly relevant slice of the space plausibly lives in roughly that budget neighborhood.
 
 ---
 
@@ -98,7 +98,7 @@ Putting the previous sections together:
 
 - System-wide effect: about **1.84 conflict-years/year**
 - Top-tier philanthropy share: about **2–8%**
-- Budget denominator: about **\$70–80 million/year**
+- Budget denominator: about **\$80–90 million/year**
 
 So the implied effect attributable to top-tier philanthropy is:
 

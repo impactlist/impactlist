@@ -39,10 +39,10 @@ This does not cover broad housing-supply reform, zoning reform, or generic affor
 
 1. In the VA Supportive Services for Veteran Families study, temporary financial assistance / rapid rehousing / homelessness prevention cost about **\$22,676/QALY overall**, with **\$19,114/QALY** for rapid rehousing and **\$29,751/QALY** for prevention over a 2-year horizon. That study also found about **90 extra days in stable housing** over 2 years, but it treated stable housing as utility **1.0**, which likely makes its QALY estimate somewhat optimistic. ([JAMA Network Open 2024](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2825636))
 2. A recent model of stable housing for homeless adults with opioid use disorder found cost-effectiveness around **\$26,800-\$28,500/QALY** in its main scenarios and **\$27,300/QALY** in a conservative scenario. ([JAMA Network Open 2025](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2835706))
-3. In the Canadian At Home / Chez Soi trial, Housing First with assertive community treatment cost about **Can\$41.73 per additional day of stable housing**. A related JAMA Network Open analysis of Housing First with intensive case management estimated about **Can\$56.08 per additional day of stable housing**. Both papers report these figures directly, and both use **2016 Canadian dollars**. These are useful because they let us convert observed housing gains into QALYs without assuming that housed participants jump all the way to perfect health. ([Psychiatric Services 2020](https://pubmed.ncbi.nlm.nih.gov/32838679/), [JAMA Network Open 2019](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2748596))
+3. In the Canadian At Home / Chez Soi trial, Housing First with assertive community treatment cost about **\$31 per additional day of stable housing**, while a related JAMA Network Open analysis of Housing First with intensive case management estimated about **\$41 per additional day of stable housing**. These are approximate USD conversions of figures reported in **2016 Canadian dollars**, and they are useful because they let us convert observed housing gains into QALYs without assuming that housed participants jump all the way to perfect health. ([Psychiatric Services 2020](https://pubmed.ncbi.nlm.nih.gov/32838679/), [JAMA Network Open 2019](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2748596))
 4. Rajan and Tsai estimated the average utility value associated with homelessness at **0.434** using a standard-gamble survey of **6,607** middle- and low-income US adults. This is a survey average, not a clinical estimate for one specific homeless subgroup. ([Medical Care 2021](https://pubmed.ncbi.nlm.nih.gov/34629422/))
 5. A reasonable utility for a stably housed but still high-needs recipient is roughly **0.75-0.85**, not **1.0**. That is above the OUD model's housed-state utilities around **0.668-0.721**, because this category is broader than active OUD alone, but well below perfect health because these clients still have heavy medical, psychiatric, and substance-use burdens. ([JAMA Network Open 2025](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2835706))
-6. Hospital discharge / step-down services for homeless patients appear to span a wide cost-effectiveness range. An older randomized Pathway trial reported about **GBP26,000/QALY**, while a later NIHR evaluation of three service configurations found approximately **GBP4,743/QALY**, **GBP14,515/QALY**, and **GBP55,602/QALY**. ([Pathway RCT](https://pmc.ncbi.nlm.nih.gov/articles/PMC5922699/), [NIHR / NCBI Bookshelf](https://www.ncbi.nlm.nih.gov/books/NBK574250/))
+6. Hospital discharge / step-down services for homeless patients appear to span a wide cost-effectiveness range. An older randomized Pathway trial reported about **£26,000/QALY**, while a later NIHR evaluation of three service configurations found approximately **£4,743/QALY**, **£14,515/QALY**, and **£55,602/QALY**. ([Pathway RCT](https://pmc.ncbi.nlm.nih.gov/articles/PMC5922699/), [NIHR / NCBI Bookshelf](https://www.ncbi.nlm.nih.gov/books/NBK574250/))
 7. Housing services for homeless or unstably housed people with HIV were estimated at about **\$62,493/QALY**, which is a useful upper-end anchor for intensive, medically specific housing support. ([AIDS and Behavior 2013](https://pubmed.ncbi.nlm.nih.gov/22588529/))
 8. The Community Guide's systematic review of Housing First found large improvements in housing stability and homelessness outcomes and modest quality-of-life gains, and concluded that economic benefits likely exceed costs. But it also noted evidence gaps around direct cost-effectiveness and long-run health effects. ([Community Guide](https://www.thecommunityguide.org/findings/social-determinants-health-housing-first-programs.html))
 9. Housing interventions should not be modeled as automatically producing large mortality gains across all populations. In a 2025 secondary analysis of the 5-city Canadian Housing First trial among homeless adults with mental illness, the adjusted hazard ratio for mortality was **0.83** with a **95% CI of 0.43-1.22**, so the mortality effect was not clearly established. ([JAMA Network Open 2025](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2839942))
@@ -65,7 +65,7 @@ The best direct CUA evidence is not all over the place. Most of it lands in the 
 
 - SSVF temporary financial assistance / rapid rehousing / prevention: about **\$19,000-\$30,000/QALY** (Assumption 1)
 - stable housing for homeless adults with OUD: about **\$27,000/QALY** (Assumption 2)
-- hospital discharge / step-down services: from the **low tens of thousands of pounds per QALY** up to about **GBP55,600/QALY** depending on service design (Assumption 6)
+- hospital discharge / step-down services: from the **low tens of thousands of pounds per QALY** up to about **£55,600/QALY** depending on service design (Assumption 6)
 - HIV-specific housing support: about **\$62,500/QALY** (Assumption 7)
 
 So the direct literature suggests that strong housing interventions are usually well below common high-income-country payer thresholds like \$100,000/QALY, but still mostly in the mid- or high-tens-of-thousands-per-QALY range.
@@ -91,10 +91,10 @@ $$
 \text{Cost per QALY} \approx \frac{\text{cost per extra day housed}}{(u_h-u_u)/365}
 $$
 
-Applying that to the Canadian trials, and using approximately **US\$0.74 per Can\$1** for rough comparability:
+Applying that to the Canadian trials, using approximate USD conversions:
 
-- **ACT:** Can\$41.73/day -> roughly **Can\$36,600-Can\$48,200/QALY**, or about **US\$27,000-US\$36,000/QALY**
-- **ICM:** Can\$56.08/day -> roughly **Can\$49,200-Can\$64,800/QALY**, or about **US\$36,000-US\$48,000/QALY**
+- **ACT:** about **\$31/day**, implying roughly **\$27,000-\$36,000/QALY**
+- **ICM:** about **\$41/day**, implying roughly **\$36,000-\$48,000/QALY**
 
 This is an important cross-check. It suggests that once we stop equating "housed" with "perfect health," the broader Housing First / supportive-housing literature is better described as **mid-tens-of-thousands per QALY**.
 

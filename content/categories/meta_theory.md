@@ -68,8 +68,8 @@ Using the central assumptions above:
 - $w_c = 0.6$
 - $M_d = 8$
 - $M_c = 4$
-- $B_d = \$100/\text{QALY}$
-- $B_c = \$300/\text{QALY}$
+- $B_d$ = \$100 per QALY
+- $B_c$ = \$300 per QALY
 
 So:
 
@@ -109,14 +109,12 @@ That is why this channel uses a lower central multiplier (**4x**) and a much wor
 
 **Sensitivity**
 
-The table below holds the **40% / 60%** channel split fixed and varies the two channel-specific estimates:
+Holding the **40% / 60%** channel split fixed:
 
-| Direct channel | Career/worldview channel | Implied cost per QALY |
-| --- | --- | --- |
-| 12x on \$80/QALY | 8x on \$150/QALY | \$11 |
-| 12x on \$80/QALY | 1x on \$1,000/QALY | \$16 |
-| 5x on \$150/QALY | 8x on \$150/QALY | \$23 |
-| 5x on \$150/QALY | 1x on \$1,000/QALY | \$65 |
+- **Optimistic direct, optimistic career/worldview:** 12x on \$80/QALY and 8x on \$150/QALY -> **\$11/QALY**
+- **Optimistic direct, pessimistic career/worldview:** 12x on \$80/QALY and 1x on \$1,000/QALY -> **\$16/QALY**
+- **Pessimistic direct, optimistic career/worldview:** 5x on \$150/QALY and 8x on \$150/QALY -> **\$23/QALY**
+- **Pessimistic direct, pessimistic career/worldview:** 5x on \$150/QALY and 1x on \$1,000/QALY -> **\$65/QALY**
 
 Those four corners show that the estimate is more sensitive to the direct money-moving channel than to the career/worldview channel, because the former has both better evidence and much stronger per-dollar leverage.
 

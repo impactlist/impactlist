@@ -61,10 +61,10 @@ Where:
 
 Using the central assumptions:
 
-- $C = \$50{,}000{,}000$
-- $\delta = 0.1\% = 0.001$
-- $N = 10{,}000{,}000$
-- $q = 0.5$
+- $C$ = \$50,000,000
+- $\delta$ = 0.1% = 0.001
+- $N$ = 10,000,000
+- $q$ = 0.5
 
 So:
 
@@ -73,7 +73,7 @@ $$
 $$
 
 $$
-\text{Cost per QALY} = \dfrac{\$50{,}000{,}000}{5{,}000} = \$10{,}000
+\text{Cost per QALY} = \dfrac{50{,}000{,}000}{5{,}000} = 10{,}000
 $$
 
 So the point estimate is **\$10,000/QALY**.
@@ -122,30 +122,30 @@ The stated range is a practical sensitivity range, not a full uncertainty interv
 
 **Optimistic case**
 
-- $C = \$25$ million
-- $\delta = 0.12\%$
-- $N = 15$ million
-- $q = 0.8$
+- $C$ = \$25 million
+- $\delta$ = 0.12%
+- $N$ = 15 million
+- $q$ = 0.8
 
 This gives:
 
 $$
-\dfrac{\$25{,}000{,}000}{0.0012 \times 15{,}000{,}000 \times 0.8} \approx \$1{,}700/\text{QALY}
+\dfrac{25{,}000{,}000}{0.0012 \times 15{,}000{,}000 \times 0.8} \approx 1{,}700
 $$
 
 Rounded, that is about **\$2,000/QALY**.
 
 **Pessimistic case**
 
-- $C = \$75$ million
-- $\delta = 0.05\%$
-- $N = 5$ million
-- $q = 0.25$
+- $C$ = \$75 million
+- $\delta$ = 0.05%
+- $N$ = 5 million
+- $q$ = 0.25
 
 This gives:
 
 $$
-\dfrac{\$75{,}000{,}000}{0.0005 \times 5{,}000{,}000 \times 0.25} = \$120{,}000/\text{QALY}
+\dfrac{75{,}000{,}000}{0.0005 \times 5{,}000{,}000 \times 0.25} = 120{,}000
 $$
 
 So the practical range is **\$2,000-\$100,000/QALY**.

@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from **strong local-community philanthropy in wealthy countries**: local organizations that improve life in a particular city, county, or metro area through a mix of basic-needs support, targeted community health and safety services, caregiver and family support, and other neighborhood-level programs.
 
-This category is necessarily broader and messier than categories such as `housing`, `health / medicine`, or `social justice`. Many local-community recipients are mixed-service institutions such as food banks, community action agencies, community foundations, caregiver organizations, or generalist community nonprofits. So the right model is not "the single best local health intervention"; it is a **portfolio average across the kinds of good local programs that generalist local charities actually fund**.
+This category is necessarily broader and messier than categories such as [Homelessness and Housing](/category/housing), [Health / Medicine](/category/health-medicine), or [Social Justice](/category/social-justice). Many local-community recipients are mixed-service institutions such as food banks, community action agencies, community foundations, caregiver organizations, or generalist community nonprofits. So the right model is not "the single best local health intervention"; it is a **portfolio average across the kinds of good local programs that generalist local charities actually fund**.
 
 ## Point Estimates
 
@@ -44,32 +44,32 @@ This category is necessarily broader and messier than categories such as `housin
 
 The cleanest model for this category is a three-bucket portfolio:
 
-$$
-\text{Cost per QALY} = \dfrac{1}{\frac{w_h}{c_h} + \frac{w_b}{c_b} + \frac{w_c}{c_c}}
+$$  
+\text{Cost per QALY} = \dfrac{1}{\frac{h}{H} + \frac{b}{B} + \frac{s}{S}}
 $$
 
 Where:
 
-- $w_h$ = share of dollars going to targeted local health and safety services
-- $c_h$ = cost per QALY for that bucket
-- $w_b$ = share of dollars going to basic-needs and nutrition support
-- $c_b$ = cost per QALY for that bucket
-- $w_c$ = share of dollars going to broader community-support programs
-- $c_c$ = cost per QALY for that bucket
+- $h$ = share of dollars going to targeted local health and safety services
+- $H$ = cost per QALY for that bucket
+- $b$ = share of dollars going to basic-needs and nutrition support
+- $B$ = cost per QALY for that bucket
+- $s$ = share of dollars going to broader community-support programs
+- $S$ = cost per QALY for that bucket
 
 Using the central assumptions:
 
-- $w_h = 0.20$
-- $c_h = \$12{,}000$
-- $w_b = 0.40$
-- $c_b = \$30{,}000$
-- $w_c = 0.40$
-- $c_c = \$120{,}000$
+- $h$ = 0.20
+- $H$ = \$12,000
+- $b$ = 0.40
+- $B$ = \$30,000
+- $s$ = 0.40
+- $S$ = \$120,000
 
 So:
 
 $$
-\text{QALYs per dollar} = \frac{0.20}{12000} + \frac{0.40}{30000} + \frac{0.40}{120000}
+\text{QALYs per dollar} = \frac{0.20}{12{,}000} + \frac{0.40}{30{,}000} + \frac{0.40}{120{,}000}
 $$
 
 $$
@@ -101,7 +101,7 @@ The best food-as-medicine evidence is extremely encouraging. But many local-comm
 
 #### Why the broader community-support bucket is \$120,000/QALY
 
-This is the main reason the category is not close to `health / medicine`. The published exemplars are mostly better than **\$120,000/QALY**, but they come from relatively focused programs. The actual recipient universe here also includes community centers, civic institutions, caregiver organizations, municipalities, and other mixed-purpose local institutions. Those are likely to have weaker targeting, smaller effects per participant, and more spending on coordination and convening than the better trials. So a category-level number somewhat above the weaker cited exemplars is warranted, but **\$120,000/QALY** is more defensible than a much harsher haircut.
+This is the main reason the category is not close to [Health / Medicine](/category/health-medicine). The published exemplars are mostly better than **\$120,000/QALY**, but they come from relatively focused programs. The actual recipient universe here also includes community centers, civic institutions, caregiver organizations, municipalities, and other mixed-purpose local institutions. Those are likely to have weaker targeting, smaller effects per participant, and more spending on coordination and convening than the better trials. So a category-level number somewhat above the weaker cited exemplars is warranted, but **\$120,000/QALY** is more defensible than a much harsher haircut.
 
 #### Sensitivity to the portfolio mix
 
@@ -174,8 +174,8 @@ This estimate is **not** a good model of:
 
 - generic local prestige philanthropy
 - low-additionality community foundations that mainly regrant to ordinary local causes
-- pure housing charities, which should usually be modeled under `housing`
-- pure health charities, which should usually be modeled under `health / medicine`
+- pure housing charities, which should usually be modeled under [Homelessness and Housing](/category/housing)
+- pure health charities, which should usually be modeled under [Health / Medicine](/category/health-medicine)
 - arts, religious, or political organizations, which belong in their own categories
 
 ## Key Uncertainties
@@ -188,7 +188,7 @@ This estimate is **not** a good model of:
 
 4. **What QALYs miss.** Local-community programs often improve dignity, belonging, stress, trust, and stability in ways that are real but not always well measured in health-utility metrics. That means the category may be understated in some cases, especially for community-support work.
 
-5. **Overlap with other categories.** Some recipients tagged here probably deserve stronger recipient-level overrides or cleaner allocation to `housing`, `health / medicine`, or `social justice`.
+5. **Overlap with other categories.** Some recipients tagged here probably deserve stronger recipient-level overrides or cleaner allocation to [Homelessness and Housing](/category/housing), [Health / Medicine](/category/health-medicine), or [Social Justice](/category/social-justice).
 
 {{CONTRIBUTION_NOTE}}
 

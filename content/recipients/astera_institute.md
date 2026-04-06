@@ -28,7 +28,7 @@ This effect captures the discount applied to donations intended for AI x-risk re
 
 - **Cost per QALY multiplier:** 0.1x (relative to baseline AI safety organization)
 
-If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

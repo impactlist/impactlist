@@ -24,7 +24,7 @@ This effect captures health gains from translational geroscience that aims to sl
 - **Start time:** 8 years
 - **Duration:** 40 years
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

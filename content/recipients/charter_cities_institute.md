@@ -24,7 +24,7 @@ This effect captures the welfare gains from creating "Charter Cities": new urban
 
 - **Cost per QALY:** \$400
 
-If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

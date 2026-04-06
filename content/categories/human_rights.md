@@ -24,7 +24,7 @@ This effect captures welfare gains from charities that protect people from sever
 - **Start time:** 2 years
 - **Duration:** 25 years
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

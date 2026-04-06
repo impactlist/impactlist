@@ -24,7 +24,7 @@ This effect captures health gains from homelessness and housing programs in weal
 - **Start time:** 1 year
 - **Duration:** 3 years
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

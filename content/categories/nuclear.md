@@ -28,7 +28,7 @@ This effect captures welfare gains from reducing the probability of an all-out n
 - **Start time:** 25 years
 - **Duration:** 30 years
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

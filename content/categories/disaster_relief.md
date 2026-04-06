@@ -24,7 +24,7 @@ This effect captures health benefits from high-visibility rapid disaster respons
 - **Start time:** 0 years
 - **Duration:** 20 years
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

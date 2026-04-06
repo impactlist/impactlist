@@ -51,7 +51,7 @@ This effect captures non-transformative gains from AI as a general-purpose techn
 - **Start time:** 3 years
 - **Duration:** 20 years
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ### Assumptions
 
@@ -127,7 +127,7 @@ Importantly, this is **not** the probability that advanced AI is merely "on bala
 - **Start time:** 15 years
 - **Duration:** 5 years
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ### Assumptions
 
@@ -212,7 +212,7 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 - **Start time:** 15 years
 - **Duration:** Defined by the global time limit parameter (default is 100 years)
 
-If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ### Assumptions
 

@@ -24,7 +24,7 @@ This effect captures the welfare gains from free, globally accessible digital ed
 
 - **Cost per QALY:** \$2,000
 
-If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.
+*If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 

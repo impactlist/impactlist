@@ -144,7 +144,7 @@ Those effects are better handled elsewhere, especially under Meta and Theory.
 
 1. **Attribution.** Large donors usually have multiple inputs, not just one research organization. It is hard to know how much credit GPR really deserves for a major shift.
 2. **Marginal versus average impact.** Public case studies may overrepresent unusually successful work, and much of the public evidence comes from a few organizations and one very large donor relationship. The next dollar could do less than the historical average.
-3. **How crowded the field has become.** GPR was extraordinarily neglected a decade ago. It is still small, but the best opportunities may now be less neglected than older discussions assumed.
+3. **How crowded the field has become.** GPR was extraordinarily neglected a decade ago. It is still small, but the best opportunities may now be less neglected than many people still intuitively expect.
 4. **How much spread remains among influenceable dollars.** If the relevant donors are already near the frontier, GPR adds less. If they still have big blind spots, it adds much more.
 5. **The omitted channels.** Excluding talent allocation, policy influence, animal welfare, and existential-risk effects probably makes this estimate conservative, but also means the headline number is incomplete.
 

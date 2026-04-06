@@ -117,29 +117,29 @@ conflict-years averted per year across the relevant top-tier philanthropic portf
 Dividing by annual budgets gives:
 
 $$
-\frac{0.037}{80} \approx 0.00046
+\frac{0.037}{90} \approx 0.00041
 $$
 
 to
 
 $$
-\frac{0.147}{70} \approx 0.00210
+\frac{0.147}{80} \approx 0.00184
 $$
 
 conflict-years averted per **\$1 million**.
 
 In percentage terms, that is about:
 
-- **0.046%** at the lower end
-- **0.21%** at the upper end
+- **0.04%** at the lower end
+- **0.18%** at the upper end
 
 A natural central BOTEC is:
 
 $$
-\frac{1.84 \times 0.05}{75} \approx 0.00123
+\frac{1.84 \times 0.05}{85} \approx 0.00108
 $$
 
-which is about **0.12%** per **\$1 million**.
+which is about **0.11%** per **\$1 million**.
 
 That is why the category uses **0.1%** as the point estimate. It is slightly below this direct midpoint.
 

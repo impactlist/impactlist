@@ -36,9 +36,9 @@ This effect captures welfare gains from **acute humanitarian response** after di
 6. Cash-based humanitarian aid is often more administratively efficient than in-kind aid, but rigorous evidence on health outcomes remains limited and mixed. ([Doocy & Tappis 2017](https://journals.sagepub.com/doi/full/10.4073/csr.2017.17), [van Daalen et al. 2022](https://gh.bmj.com/content/7/1/e007902))
 7. WASH interventions are central in humanitarian crises, but the evidence base remains limited; diarrheal disease is the most studied outcome and cholera outbreaks dominate much of the crisis-specific literature. ([Alareqi et al. 2024](https://publish.kne-publishing.com/index.php/ijph/article/view/14918))
 8. The cited humanitarian CEAs mostly report **DALYs** rather than **QALYs**. For this level of precision, we treat them as roughly comparable because the emergency interventions used as anchors are dominated by deaths averted and short-lived morbidity, not by long-lived quality-of-life states.
-9. Marginal donations to disaster relief are usually less cost-effective than the best intervention-level CEAs suggest, because emergency response is highly time-sensitive and capacity-constrained. WHO emphasizes flexible, upfront funding so life-saving activities can begin within 24-72 hours, while disaster donations are concentrated in a small minority of media-covered disasters and are weak for other disasters or for disasters arriving soon after a major event. ([WHO 2026](https://cdn.who.int/media/docs/default-source/documents/emergencies/2026-appeals/who-health-emergency-appeal-snapshot-2026.pdf), [Jayaraman et al. 2023](https://academic.oup.com/oep/article/75/4/902/7236851))
-10. A plausible **optimistic** charity-level portfolio bound is roughly \$800/QALY, not a few hundred dollars, because a general disaster-relief charity will only put part of its budget into the very best emergency-health niches and must also absorb logistics, coordination, and targeting losses.
-11. A plausible **pessimistic** charity-level portfolio bound is roughly \$20,000/QALY for a broad acute-response portfolio with substantial spending on less directly mortality-reducing assistance and on hard-to-avoid response frictions.
+9. Marginal donations to disaster relief are usually less cost-effective than the best intervention-level CEAs suggest, because emergency response is highly time-sensitive and capacity-constrained. WHO emphasizes flexible, upfront funding so life-saving activities can begin within 24-72 hours, while disaster donations are concentrated in a small minority of media-covered disasters and are weaker for less salient crises or for crises that follow closely on the heels of another major event that has already captured attention and funding. ([WHO 2026](https://cdn.who.int/media/docs/default-source/documents/emergencies/2026-appeals/who-health-emergency-appeal-snapshot-2026.pdf), [Jayaraman et al. 2023](https://academic.oup.com/oep/article/75/4/902/7236851))
+10. A plausible **optimistic** charity-level portfolio bound is roughly \$800/QALY, not a few hundred dollars, because a general disaster-relief charity will only put part of its budget into the very best emergency-health niches and must also absorb logistics, coordination, and targeting losses (see Details section for justification).
+11. A plausible **pessimistic** charity-level portfolio bound is roughly \$20,000/QALY for a broad acute-response portfolio with substantial spending on less directly mortality-reducing assistance and on hard-to-avoid response frictions (see Details section for justification).
 
 ## Details
 
@@ -79,10 +79,10 @@ So the portfolio-anchor method gives **\$4,000/QALY**.
 
 As a rough check, suppose a strong general disaster-relief charity looks like this:
 
-- **10%** of spending in very strong emergency health/nutrition niches at **\$800/QALY**
-- **25%** in reasonably targeted WASH, primary care, and outbreak-control work at **\$3,000/QALY**
-- **40%** in cash, shelter, and broad basic-needs support at **\$10,000/QALY**
-- **25%** in logistics, coordination, and lower-leverage response at **\$25,000/QALY**
+- **Roughly 10%** of spending in very strong emergency health/nutrition niches at **\$800/QALY**
+- **Roughly 25%** in reasonably targeted WASH, primary care, and outbreak-control work at **\$3,000/QALY**
+- **Roughly 40%** in cash, shelter, and broad basic-needs support at **\$10,000/QALY**
+- **Roughly 25%** in logistics, coordination, and lower-leverage response at **\$25,000/QALY**
 
 Then overall portfolio cost-effectiveness is:
 
@@ -90,7 +90,7 @@ $$
 \text{Cost per QALY} = \frac{1}{0.10/800 + 0.25/3{,}000 + 0.40/10{,}000 + 0.25/25{,}000} \approx \$3{,}900
 $$
 
-This cross-check is only illustrative; the spending shares are not measured budget shares from a single organization. But it lands very close to the **\$4,000/QALY** anchor estimate, which is reassuring.
+This is the weighted harmonic mean: we convert each component to QALYs per dollar, add them, and then invert, because cost-per-QALY ratios do not average linearly. This cross-check is only illustrative; the spending shares are not measured budget shares from a single organization. But it lands very close to the **\$4,000/QALY** anchor estimate, which is reassuring.
 
 This should be read as an estimate for donations to **strong general disaster-relief charities**, not for the very best disease-specific emergency-health opportunity and not for the average dollar spent across the whole humanitarian system.
 

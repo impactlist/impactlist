@@ -4,65 +4,95 @@ name: 'Global Development / Poverty'
 effects:
   - effectId: standard
     startTime: 1
-    windowLength: 15
-    costPerQALY: 250
+    windowLength: 10
+    costPerQALY: 230
 ---
 
 # Justification of cost per life
 
-_The following analysis was done on November 12th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
 ## Description of effect
 
-This effect captures improvements in quality of life from economic interventions targeting people in extreme poverty. Unlike Global Health interventions that primarily avert deaths, these programs increase consumption, assets, income, and psychological wellbeing through cash transfers, livelihood programs, and developmental interventions. Benefits persist for years and can help households escape poverty traps.
+This effect captures welfare gains from donations to unusually effective charities that help people in extreme poverty become materially better off, especially through large unconditional cash transfers and related "big push" livelihood interventions. The main benefits are higher consumption, greater asset ownership, better food security, improved psychological wellbeing, and in some cases lower child mortality. We mostly leave interventions whose main value comes from preventing disease or death to the Global Health category, and we do not try to model broad economy-wide growth effects here.
 
 ## Point Estimates
 
-- **Cost per QALY:** \$250 (\$100–\$600)
+- **Cost per QALY:** \$230 (\$120–\$600)
 - **Start time:** 1 year
-- **Duration:** 15 years
+- **Duration:** 10 years
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 
-1. The leading evidence-backed poverty interventions are unconditional cash transfers (GiveDirectly), graduation/livelihood programs (BRAC model), and deworming programs with long-term income effects. ([GiveWell](https://www.givewell.org/charities/top-charities), [J-PAL](https://www.povertyactionlab.org/evidence-effect/graduation-approach))
-2. GiveDirectly's cash transfer program is approximately 30–40% as cost-effective as GiveWell's top health charities. ([GiveWell](https://blog.givewell.org/2024/11/12/re-evaluating-the-impact-of-unconditional-cash-transfers/))
-3. GiveWell's moral weights assign 1 unit of value to doubling consumption for one person for one year, and 134 units to averting the death of a 5-year-old child (approximately 60 remaining life-years). ([GiveWell Moral Weights](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights))
-4. Cash transfers of approximately \$1,000 cost donors approximately \$1,200 per household after overhead, with 85–90% of donations reaching recipients. ([GiveDirectly](https://www.givedirectly.org/financials/))
-5. Graduation programs cost \$300–\$2,000 per household and produce benefit-cost ratios of approximately 1.2 in rigorous evaluations. ([Banerjee et al. 2015](https://www.science.org/doi/10.1126/science.1260799), [BRAC UPGI](https://bracultrapoorgraduation.medium.com/understanding-the-costs-of-graduation-investing-in-long-term-gains-b5f3b9ad1dfd))
-6. Deworming costs \$0.30–\$1.00 per child treated and may produce long-term income gains of approximately 10–15%, though evidence is based primarily on one study. ([GiveWell Deworming](https://www.givewell.org/international/technical/programs/deworming))
-7. Consumption and asset gains from these interventions persist for 10–15 years, with effects diminishing over time. ([Haushofer & Shapiro 2018](https://www.povertyactionlab.org/sites/default/files/research-paper/The-long-term-impact-of-conditional-cash-tranfer_Kenya_Haushofer_Shapiro_January2018.pdf), [Bandiera et al. 2017](https://bracinternational.org/ultra-poor-graduation/))
-8. The conversion from consumption-doubling units to QALY-equivalents is approximately 0.45 QALYs per unit, derived from GiveWell's moral weights (60 life-years / 134 units).
+1. For directly donatable poverty programs today, the cleanest anchor is GiveDirectly's flagship Africa poverty-relief program: roughly \$1,000 one-off transfers to households living around or below the World Bank extreme-poverty line in Kenya, Malawi, Mozambique, Rwanda, and Uganda. ([GiveDirectly](https://www.givedirectly.org/programs/), [GiveWell GiveDirectly report](https://www.givewell.org/international/technical/programs/givedirectly-cash-for-poverty-relief-program-november-2024-version))
+2. GiveWell's November 2025 benchmark is approximately 0.003 units of value per dollar, where 1 unit is defined as doubling one person's consumption for one year at the \$2.15/day 2017 PPP poverty line. GiveWell explicitly says this newer benchmark remains similar in value to its previous "cash" benchmark, preserving comparability, and now describes GiveDirectly's flagship program as roughly 3-4x the new benchmark. ([GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models), [GiveWell GiveDirectly report](https://www.givewell.org/international/technical/programs/givedirectly-cash-for-poverty-relief-program-november-2024-version))
+3. GiveWell's current moral weights assign 1 unit to doubling consumption for one person for one year and 134 units to averting the death of a five-year-old child. ([GiveWell moral weights](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights))
+4. Treating the value of averting the death of a five-year-old child as roughly 60 remaining life-years implies about 0.45 QALYs per GiveWell consumption unit. This is an approximate conversion from GiveWell's moral weights into this site's QALY framework, not an independent empirical estimate. ([GiveWell moral weights](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights), [World Bank](https://data.worldbank.org/indicator/SP.DYN.LE00.IN?locations=ZG))
+5. The main quantified benefits of top cash-transfer programs are recipient consumption gains and positive spillovers to nearby non-recipients; mortality and morbidity effects are real but are probably secondary contributors to the headline poverty estimate. ([GiveWell GiveDirectly report](https://www.givewell.org/international/technical/programs/givedirectly-cash-for-poverty-relief-program-november-2024-version), [Egger et al. 2022](https://doi.org/10.3982/ECTA17945), [Walker et al. 2025](https://www.nber.org/papers/w34152))
+6. The best evidence suggests gains are front-loaded but persist for years: GiveWell currently models roughly 10 years of fading consumption gains, while a 2025 Bayesian meta-analysis still finds strong positive average effects on consumption, income, food security, assets, and psychological wellbeing across unconditional-cash studies. ([GiveWell GiveDirectly report](https://www.givewell.org/international/technical/programs/givedirectly-cash-for-poverty-relief-program-november-2024-version), [Crosta et al. 2025](https://www.nber.org/papers/w32779))
+7. Graduation / ultra-poor "big push" programs provide evidence that one-off asset-heavy interventions can sometimes sustain gains for 10+ years, but they are costlier and more implementation-sensitive than plain cash, so they are best treated here as supportive upside evidence rather than the main marginal-donation anchor. ([J-PAL Graduation](https://www.povertyactionlab.org/evidence-effect/graduation-approach?lang=en), [Banerjee, Duflo, and Sharma 2021](https://www.aeaweb.org/articles?id=10.1257/aeri.20200667&page=549), [Balboni et al. 2022](https://academic.oup.com/qje/article/137/2/785/6455333))
+8. The World Bank updated the international extreme-poverty line from \$2.15/day in 2017 PPP to \$3.00/day in 2021 PPP in June 2025. GiveWell's benchmark still uses the older PPP vintage for continuity, while GiveDirectly's public materials now describe targeting around \$3/day. ([World Bank 2025](https://blogs.worldbank.org/en/opendata/the-world-bank-s-new-global-poverty-lines-in-2021-prices), [GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models), [GiveDirectly](https://www.givedirectly.org/programs/))
 
 ## Details
 
 ### Cost per QALY
 
-The point estimate (\$250/QALY) and range (\$100–\$600/QALY) represent a portfolio of the most effective economic interventions for poverty reduction. This estimate is derived by combining cost-effectiveness data from multiple intervention types and converting consumption/income gains to QALY-equivalents using GiveWell's moral weights framework (Assumptions 3 and 8).
+The cleanest way to estimate this category is to start from GiveWell's latest cash-transfer benchmark rather than from an ad hoc mix of programs. GiveWell's November 2025 benchmark is about **0.003 units of value per dollar** (Assumption 2), and its 2024 reevaluation puts GiveDirectly's flagship poverty-relief program at roughly **3-4x** that benchmark. Taking the midpoint, **3.25x**, gives:
 
-**Cash transfers (GiveDirectly):** GiveWell's November 2024 re-evaluation found GiveDirectly's program produces approximately 3–4 units of value per \$1,200 transfer when including direct consumption gains, spillover effects to non-recipients, and asset accumulation (Assumption 2). Using our conversion factor (Assumption 8):
+$$
+\text{Units per } \$1 \approx 0.003 \times 3.25 = 0.00975
+$$
 
-$$\dfrac{\$1,200}{3.5 \text{ units} \times 0.45 \text{ QALYs/unit}} \approx \$760/\text{QALY (single year)}$$
+Using Assumption 4 to convert those units into QALYs:
 
-However, research shows consumption and asset gains persist 10–15 years with gradual decay (Assumption 7). Three-year follow-ups in Kenya found recipients maintained 40–60% of asset gains, and long-term studies in Uganda found income effects persisting 12+ years. Accounting for sustained but decaying benefits over 15 years yields approximately \$200–\$400/QALY.
+$$
+\text{QALYs per } \$1 \approx 0.00975 \times \frac{60}{134} \approx 0.0044
+$$
 
-**Graduation programs:** The BRAC model and similar programs cost \$300–\$2,000 per household (Assumption 5) and have been shown effective across six countries in rigorous RCTs. [Banerjee et al. (2015)](https://www.science.org/doi/10.1126/science.1260799) found benefit-cost ratios exceeding 1.0 in five of six sites, with benefits persisting 7–10 years after program completion. These programs produce sustained increases in consumption (9%), earnings (37%), savings (9x), and assets (2x). The higher upfront cost is offset by larger and more durable effects, yielding estimated cost-effectiveness of \$150–\$400/QALY.
+$$
+\text{Cost per QALY} \approx \frac{1}{0.0044} \approx \$230
+$$
 
-**Deworming:** Mass drug administration costs \$0.30–\$1.00 per child (Assumption 6), making it extremely cheap per person reached. GiveWell's recommendation is based primarily on one long-term study finding 10–15% income gains persisting into adulthood. However, GiveWell applies substantial discounts (~87%) for replicability uncertainty, as the evidence base is thin. When accounting for these discounts, deworming may be comparable in cost-effectiveness to cash transfers, though with higher variance.
+So the point estimate is **\$230/QALY**.
 
-The wide range (\$100–\$600/QALY) reflects: uncertainty in converting consumption gains to QALYs, variation across programs and contexts, differing philosophical views on valuing consumption versus health gains, and substantial uncertainty in long-term effect persistence.
+We use this method for three reasons.
+
+First, it is directly anchored to the best public charity-specific cost-effectiveness work available for poverty-focused giving. GiveWell's 2024 reevaluation explicitly incorporates transfer size, targeting, overhead, recipient consumption gains, spillovers to non-recipients, mortality effects, morbidity effects, and negative adjustments such as fraud or psychological spillovers. It is therefore already much closer to an all-things-considered estimate than a back-of-the-envelope cash-transfer calculation.
+
+Second, it handles recent evidence better. In particular, [Walker et al. 2025](https://www.nber.org/papers/w34152) is a genuine positive update for cash transfers: in a very large Kenya experiment, one-time \$1,000 transfers led to **48% fewer infant deaths** and **45% fewer under-five deaths**. That makes the mortality channel more credible than when GiveWell was relying only on preliminary results. But the paper also finds that these mortality gains are highly timing-sensitive, concentrated near birth, and partly distinct from the main consumption channel. So this is a reason to move somewhat upward on cash transfers, not a reason to reclassify generic poverty giving as primarily a mortality intervention.
+
+Third, it avoids overstating the case for graduation programs. The graduation literature is impressive. [Banerjee, Duflo, and Sharma 2021](https://www.aeaweb.org/articles?id=10.1257/aeri.20200667&page=549) find positive effects on consumption, food security, income, and health still present **10 years** later in India, and [Balboni et al. 2022](https://academic.oup.com/qje/article/137/2/785/6455333) provide unusually strong evidence for genuine poverty traps in Bangladesh. But those programs are more complex, harder to scale well, and more sensitive to local implementation quality than plain cash. For a generic category estimate aimed at strong marginal donations, GiveDirectly-style transfers are the safer central anchor, while graduation evidence supports the view that durable gains are possible.
+
+The range **(\$120-\$600/QALY)** is best read as a practical sensitivity range, not a full confidence interval. The biggest levers are:
+
+- how many multiples of GiveWell's benchmark the best marginal poverty program really achieves
+- how much QALY-equivalent value we should assign to one GiveWell consumption unit
+
+That second lever is not a purely empirical parameter. It inherits GiveWell's moral judgment about how valuable a consumption-doubling year is relative to averting the death of a young child. Someone who puts more or less value on consumption relative to life-saving would get a different conversion than **60/134 ≈ 0.45**, and therefore a different headline estimate.
+
+For a pessimistic case, using roughly **1.5x benchmark** and **0.4 QALYs per unit** gives about **\$560/QALY**. For an optimistic case, using roughly **5x benchmark** and **0.55 QALYs per unit** gives about **\$120/QALY**. That is the basis for the stated range.
+
+We intentionally do **not** use deworming as a core anchor for this page. Deworming may have long-run income effects, but its main identity is still a health intervention, and counting it here would blur the line between this category and Global Health.
 
 ### Start Time
 
-The one-year start time reflects the typical delay between donation and program implementation. Cash transfers via mobile money platforms can be delivered within months, while graduation programs require 18–24 months of active intervention before benefits fully materialize.
+GiveDirectly says its poverty-relief transfers are typically sent about a month after enrollment, so some benefits begin very quickly. We still use **1 year** as a conservative round number because this category is not only "cash arrives in someone's phone account," but the broader effect on living standards from donation through targeting, enrollment, delivery, and realized household spending. Graduation-style programs also take longer to ramp up, so one year is a reasonable portfolio average.
 
 ### Duration
 
-The 15-year duration represents the estimated period over which economic benefits persist (Assumption 7). Long-term follow-ups of both cash transfers and graduation programs show sustained effects on assets, consumption, and income for at least 7–12 years, with some studies finding effects persisting even longer. We use 15 years as a reasonable upper bound while acknowledging that effects gradually decay over time.
+A **10-year** duration fits the current evidence better than a **15-year** one for a category whose central anchor is GiveDirectly-style cash transfers. GiveWell's current model assumes roughly **10 years** of fading consumption gains, with a large initial spike and then gradual decay (Assumption 6).
+
+The graduation literature is one reason not to go much shorter than 10 years, because some "big push" interventions really do seem to create durable changes in assets, occupation, and income. But because this site's model spreads benefits evenly across the duration window, and because cash-transfer benefits are front-loaded rather than flat, **10 years** is a better approximation than **15 years** of the actual timing of benefits.
 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+- GiveWell's 3-4x figure maps to roughly \$200-\$250/QALY once converted into this site's QALY framework, which is why the point estimate is still in that neighborhood.
+- The main substantive updates in this revision are structural: cash transfers are now the explicit central anchor, graduation is treated as an upside cross-check, deworming is removed as a core input, and duration is shortened from 15 to 10 years.
+- If future editors want to move this estimate a lot, the most important levers are: (1) GiveWell's benchmark-relative estimate for the best marginal poverty programs, and (2) the conversion from GiveWell consumption units into QALYs.
+- Keep an eye on future GiveWell updates prompted by the 2025-2026 mortality paper and by GiveDirectly's new maternal-health / district-scale pilots. Those could move the estimate meaningfully, but probably not by an order of magnitude unless the marginal program design changes substantially.

@@ -10,7 +10,7 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
@@ -28,11 +28,11 @@ This effect captures human-health benefits from donations to the best current **
 
 ## Assumptions
 
-1. For the purpose of this page, one DALY averted is treated as roughly one QALY gained.
+1. For the purpose of this page, one DALY averted is treated as roughly one QALY gained, since both metrics are trying to capture healthy life-years and the source estimates here are not precise enough to justify a finer conversion.
 2. Lead exposure caused more than 1.5 million deaths and more than 33 million DALYs globally in 2021, and only 48% of countries had legally binding controls on lead paint as of January 2024. ([WHO 2024](https://www.who.int/news-room/fact-sheets/detail/lead-poisoning-and-health))
 3. LEEP's 2024 multi-country model estimates \$4.49 per DALY-equivalent averted across 13 paint programs, but only 145,000 of the 900,000 modeled DALY-equivalents represent LEEP's counterfactual share of direct health DALYs, with total modeled costs around \$4 million. That implies roughly \$28 per health DALY averted. ([LEEP 2024](https://leadelimination.org/how-cost-effective-are-leeps-paint-programs/))
-4. LEEP says its model is mostly predictive, includes costs but not the potential impact of some non-paint work, and does not account for the counterfactual impact of alternative uses of funding. We therefore apply roughly a 5x skepticism/generalization penalty when using LEEP as a cause-area anchor, implying about \$140 per QALY for best-in-class lead-focused environmental-health work. ([LEEP 2024](https://leadelimination.org/how-cost-effective-are-leeps-paint-programs/))
-5. Remediating severe lead-contaminated sites in LMICs has been estimated at roughly \$392-\$3,238 per DALY averted. ([Ericson et al. 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC7007121/))
+4. LEEP says its model is mostly predictive, includes costs but not the potential impact of some non-paint work, and does not account for the counterfactual impact of alternative uses of funding. We therefore apply roughly a 5x skepticism/generalization penalty when using LEEP as a cause-area anchor, implying a point estimate of about \$140 per QALY for the cause area as a whole after accounting for category breadth and model uncertainty. See the Details section for the reasoning behind this penalty. ([LEEP 2024](https://leadelimination.org/how-cost-effective-are-leeps-paint-programs/))
+5. In a case study of one severely contaminated site in the Dominican Republic, remediating lead-contaminated soil was estimated at roughly \$392-\$3,238 per DALY averted. ([Ericson et al. 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC7007121/))
 6. Ambient air pollution kills roughly 5.7 million people globally each year, and the World Bank argues that halving high exposure by 2040 is feasible and affordable. ([World Bank 2023](https://www.worldbank.org/en/publication/accelerating-access-to-clean-air-for-a-livable-planet))
 7. Clean-air philanthropy remains highly neglected: outdoor air quality received less than 0.1% of philanthropic foundation funding from 2015 to 2022. ([Clean Air Fund 2024](https://www.cleanairfund.org/resource/philanthropic-funding/))
 8. Parks, trails, and related greenspace infrastructure have much thinner human-health cost-effectiveness evidence: a recent systematic review found only one cost-effectiveness study, at about \$23,254 per DALY averted, and concluded the evidence base was insufficient to determine overall cost-effectiveness. ([Jacob et al. 2024](https://pmc.ncbi.nlm.nih.gov/articles/PMC11102847/))
@@ -43,13 +43,15 @@ This effect captures human-health benefits from donations to the best current **
 
 The cleanest quantitative anchor in this cause area is **lead elimination**. But LEEP's headline **\$4.49 per DALY-equivalent** is not a QALY estimate in our sense: it combines direct health gains with monetized lifetime-income gains converted into "DALY-equivalents." LEEP's own writeup says that only 145,000 of 900,000 DALY-equivalents are direct health DALYs, while 756,000 are income equivalents (Assumption 3). So for a human-health category page, we should use the **health-only** portion instead of the headline number.
 
+As a modeling convention, this page treats **DALYs averted** and **QALYs gained** as roughly interchangeable. That is not because the metrics are identical in theory, but because both are healthy-life-year measures and the uncertainty in the intervention evidence is much larger than the difference between the two metrics for our purposes.
+
 Using LEEP's reported total modeled cost and health DALYs:
 
 $$
 \text{Health-only cost per DALY} = \dfrac{\$4{,}000{,}000}{145{,}000} \approx \$27.6
 $$
 
-So the best current lead-paint-elimination opportunities appear to be on the order of **\$30 per QALY** on a health-only basis.
+So the best current lead-paint-elimination opportunities appear to be roughly **\$28 per QALY** on a health-only basis.
 
 That is extremely strong, but it would still be too optimistic to use directly for the whole cause area. LEEP itself emphasizes that the model is **mostly predictive**, narrow to its 13 paint programs, and does not account for the counterfactual impact of alternative uses of funding (Assumption 4). More broadly, this category is wider than lead paint alone: some environmental-health opportunities are weaker than lead-source elimination, and some environmental charities generate value mainly outside the human-health metric used here.
 
@@ -74,13 +76,11 @@ Why does lead still dominate the estimate even after this penalty? Because lead 
 
 We do **not** center the estimate on clean air even though the burden is enormous, because the published chain from **donor dollar -> pollutant reduction -> QALYs** is much thinner there than for lead. The clean-air field does, however, look highly neglected (Assumption 7), and the World Bank argues that large exposure reductions are feasible and affordable (Assumption 6), so strong clean-air philanthropy could plausibly be very cost-effective as well.
 
-Toxic-site remediation is a useful middle anchor. Pure Earth / GeoHealth estimate a range of roughly **\$392-\$3,238 per DALY** for remediating a severe LMIC lead hotspot (Assumption 5). That is much worse than the most optimistic lead-source-elimination models, but still very good by ordinary public-health standards.
-
 The thin upper tail of the cause area consists of environmental projects where direct human-health benefits are more diffuse or secondary, such as parks, trails, and some greenspace work. Those may still be socially worthwhile, but when measured narrowly in direct human-health DALYs the evidence is thinner and usually much weaker (Assumption 8).
 
 **Range:**
 
-- **Optimistic:** about **\$60/QALY**, corresponding to a very strong lead-source-elimination opportunity but still allowing for some model error rather than taking LEEP's raw health-only estimate at face value.
+- **Optimistic:** about **\$60/QALY**, corresponding to a very strong lead-source-elimination opportunity where most of the central-case skepticism penalties do not apply, but some model error and external-validity discount still remain.
 - **Pessimistic:** about **\$30,000/QALY**, corresponding to environmental projects where direct human-health benefits are diffuse, secondary, or poorly measured.
 
 So the practical sensitivity range is **\$60-\$30,000/QALY**.
@@ -93,7 +93,7 @@ The 2-year start time reflects the lag between funding and realized benefits. Le
 
 ### Duration
 
-The 40-year duration reflects the long-lived nature of successful pollution-control wins. Lead paint bans, cleaner manufacturing standards, contaminated-site remediation, and cleaner-air governance can reduce exposures for many future birth cohorts, not just the people reached in the first year or two after implementation.
+The 40-year duration reflects the long-lived nature of successful pollution-control wins. Lead paint bans, cleaner manufacturing standards, contaminated-site remediation, and cleaner-air governance can reduce exposures for many future birth cohorts, not just the people reached in the first year or two after implementation. As rough anchors for persistence, the U.S. banned consumer lead-based paint in **1978** and completed the phaseout of leaded gasoline in **1996**, and those changes have remained in force for decades. ([EPA on lead paint](https://www.epa.gov/lead/protect-your-family-sources-lead), [EPA on leaded gasoline](https://www.epa.gov/archive/epa/aboutepa/epa-takes-final-step-phaseout-leaded-gasoline.html))
 
 ## What Kinds of Charities Are We Modeling?
 
@@ -117,4 +117,5 @@ The 40-year duration reflects the long-lived nature of successful pollution-cont
 - Do not use LEEP's \$4.49 as a QALY figure without explaining that 84% of the modeled impact is income-equivalent rather than direct health DALYs.
 - The core arithmetic from LEEP's public page is \$4M / 145k health DALYs = about \$27.6 per health DALY.
 - The geometric midpoint of the remediation range is about \$1,130/DALY and serves as a useful sanity check against both the raw LEEP figure and the \$140 point estimate.
+- As of April 6th 2026, GiveWell's public top-charity pages do not list LEEP, though GiveWell has funded related lead-exposure work through Pure Earth and Founders Pledge publicly recommends LEEP. The 5x penalty on LEEP's health-only figure is partly intended to account for the gap between LEEP's self-reported model and external evaluation. ([GiveWell Top Charities](https://www.givewell.org/charities/top-charities), [GiveWell Pure Earth grant](https://www.givewell.org/research/incubation-grants/Pure-Earth-lead-exposure-July-2021), [Founders Pledge on LEEP](https://www.founderspledge.com/research/lead-exposure-elimination-project-leep))
 - If the repo later creates a separate biodiversity/conservation category, this page could become more cleanly "environmental health / pollution."

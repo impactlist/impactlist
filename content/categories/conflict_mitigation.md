@@ -22,7 +22,7 @@ This estimate is mainly about preventing or shortening **serious civil-conflict 
 
 ## Point Estimates
 
-- **Cost per QALY:** \$1,000 (\$70–\$13,000)
+- **Cost per QALY:** \$1,000 (\$80–\$13,000)
 - **Start time:** 0 years
 - **Duration:** 10 years
 
@@ -30,8 +30,8 @@ This estimate is mainly about preventing or shortening **serious civil-conflict 
 
 ## Assumptions
 
-1. The direct health burden of conflict and terrorism is on the order of **10 million DALYs per year** globally, and the total health burden is plausibly closer to **30–40 million QALYs per year** once indirect deaths, displacement, healthcare disruption, food insecurity, and mental illness are included. As a rough sanity check, **123.2 million** forcibly displaced people losing only **0.03–0.05 QALYs each** would already imply roughly **4–6 million QALYs**, and conflict-related mental illness is common in affected populations. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/), [UNHCR Global Trends 2024](https://www.unhcr.org/global-trends-report-2024), [The Lancet 2019](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736%2819%2930934-1/fulltext))
-2. The world is currently experiencing an unusually high level of organized violence: **2024 had 61 active state-based conflicts across 36 countries**, the highest number since 1946. Mapping the **30–40 million** total annual conflict burden onto roughly **30–60 serious conflict settings** implies about **0.5–1.5 million QALYs lost per representative conflict-year**. We use **1 million QALYs** as the central value. ([PRIO / UCDP 2025](https://www.prio.org/publications/14453))
+1. The direct health burden of conflict and terrorism is on the order of **10 million DALYs per year** globally, and the total health burden is plausibly closer to **30–40 million QALYs per year** once indirect deaths, displacement, healthcare disruption, food insecurity, and mental illness are included. As an illustrative sanity check, **123.2 million** forcibly displaced people losing only **0.03–0.05 QALYs each** would already imply roughly **3.7–6.2 million QALYs**. That decrement is deliberately modest for a heterogeneous population and is below GBD disability weights for moderate anxiety or moderate depression. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/), [UNHCR Global Trends 2024](https://www.unhcr.org/global-trends-report-2024), [The Lancet 2019](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736%2819%2930934-1/fulltext), [WHO methods and data sources for DALYs 2000-2019](https://www.who.int/docs/default-source/gho-documents/global-health-estimates/ghe2019_daly-methods.pdf?sfvrsn=31b250097))
+2. The world is currently experiencing an unusually high level of organized violence: **2024 had 61 active state-based conflicts across 36 countries**, the highest number since 1946. Mapping the **30–40 million** total annual conflict burden onto roughly **30–60 serious conflict settings** implies about **0.5–1.3 million QALYs lost per representative conflict-year**. We use **1 million QALYs** as the central value. ([PRIO / UCDP 2025](https://www.prio.org/publications/14453))
 3. Top mediation and conflict-analysis organizations operate with budgets in the **tens of millions**. HD reported **50 million CHF** in contribution income in 2023 and **70+ peacemaking projects**; ICG reported **\$23.5 million** in revenue in 2024. This suggests average project-year costs below **\$1 million**, but marginal dollars may fund somewhat worse opportunities than the average project. HD also says it is expanding fundraising and welcomes more flexible funding, which is at least weak evidence of room for more funding. We therefore use **\$1 million** as a conservative central cost for one additional high-quality engagement-year, with a plausible range of **\$0.3–2 million**. ([HD Annual Report 2023](https://hdcentre.org/wp-content/uploads/2024/07/Annual-report-2023_English-Final_Web.pdf), [ProPublica 2024](https://projects.propublica.org/nonprofits/organizations/525170039))
 4. **\$1 million** of additional top-tier conflict-mitigation spending plausibly has about a **0.1%** chance of averting one representative serious conflict-year, with a practical range of **0.03–0.3%**. This is derived by starting from Clayton and Dorussen's estimate of **123 additional conflict-years** without conflict management between 1946 and 2013, then allocating only a small share of that system-level effect to top-tier philanthropy and dividing by the budgets of organizations like HD and ICG. ([See detailed justification](/assumption/effect-of-top-conflict-mitigation-spending))
 
@@ -54,8 +54,8 @@ Where:
 Using the central assumptions:
 
 - $C$ = \$1,000,000
-- $p = 0.001$
-- $B = 1{,}000{,}000$ QALYs
+- $p$ = 0.001
+- $B$ = 1,000,000 QALYs
 
 So:
 
@@ -69,7 +69,7 @@ $$
 
 So the point estimate is **\$1,000/QALY**.
 
-The rough burden multiplier in Assumption 1 deserves some explanation. Direct conflict DALYs are about **10 million**. If the **123.2 million** forcibly displaced lose only **0.03–0.05 QALYs** each, that already adds about **3.7–6.2 million QALYs**. Conflict-related mental illness among conflict-affected populations plausibly adds several million more, and excess mortality from disrupted healthcare, malnutrition, and disease can bridge the rest. So **30–40 million QALYs per year** is rough, but not an arbitrary multiplier.
+The rough burden multiplier in Assumption 1 deserves some explanation. Direct conflict DALYs are about **10 million**. If the **123.2 million** forcibly displaced lose only **0.03–0.05 QALYs** each, that already adds about **3.7–6.2 million QALYs**. That is just an illustrative check, not a claim that there is a precise published "displacement disability weight" in that range. We use it only to show that a very small average decrement across a huge displaced population already moves the total burden materially, and it is below GBD disability weights for moderate anxiety or moderate depression. Conflict-related mental illness among conflict-affected populations plausibly adds several million more, and excess mortality from disrupted healthcare, malnutrition, and disease can bridge the rest. So **30–40 million QALYs per year** is rough, but not an arbitrary multiplier.
 
 Assumption 2 is also intentionally approximate. Conflict burden is extremely heterogeneous: a few wars account for a large share of total suffering, while many of the **61** active conflicts are much smaller. So the **1 million QALY** figure is best read as a representative serious conflict-year for the sort of cases that top mediation organizations are trying to influence, not as a literal equal-weight average across all conflicts.
 
@@ -101,10 +101,10 @@ So **\$1,000/QALY** is not an especially aggressive read of the existing cause-p
 
 A practical sensitivity range is:
 
-- **Optimistic:** \$300k cost, 0.3% success probability, and 1.5M QALYs at stake -> about **\$70/QALY**
+- **Optimistic:** \$300k cost, 0.3% success probability, and 1.3M QALYs at stake -> about **\$80/QALY**
 - **Pessimistic:** \$2M cost, 0.03% success probability, and 0.5M QALYs at stake -> about **\$13,000/QALY**
 
-So the direct sensitivity range is **\$70–\$13,000/QALY**.
+So the direct sensitivity range is **\$80–\$13,000/QALY**.
 
 This should be read as a practical sensitivity range, not a full uncertainty interval. The true uncertainty is probably even wider.
 

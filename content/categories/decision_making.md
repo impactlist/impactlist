@@ -37,7 +37,7 @@ This is a hits-based and highly upstream category. The strongest evidence is tha
 5. A strong charity in this space can often operate on low-single-digit millions of dollars per year. Collective Intelligence Project reported about \$1.9 million of 2024 revenue, so a **total philanthropic investment of \$5 million over roughly 3–5 years** is a reasonable anchor for one serious organization or a comparable philanthropic push. ([ProPublica](https://projects.propublica.org/nonprofits/organizations/920327339))
 6. **Limited-impact scenario:** 50% probability. The work improves some discussion, prioritization, or smaller decisions, creating about \$10 million of total welfare-equivalent value over its lifetime. With a 10-year duration, this is about \$1 million per year, roughly what one would get from improving about \$1 billion of annual decisions by 0.1%.
 7. **Moderate-impact scenario:** 40% probability. The work materially shapes some medium-to-large decisions or one semi-durable process, creating about \$100 million of total welfare-equivalent value. With a 10-year duration, this is about \$10 million per year, roughly what one would get from improving about \$10 billion of annual decisions by 0.1% or about \$1 billion by 1%.
-8. **Major-win scenario:** 10% probability. The work helps create or redirect a genuinely important institutional process or policy trajectory, creating about \$800 million of total welfare-equivalent value. With a 10-year duration, this is about \$80 million per year, roughly what one would get from improving about \$80 billion of annual decisions by 0.1% or about \$8 billion by 1%.
+8. **Major-win scenario:** 10% probability. The work helps create or redirect a genuinely important institutional process or policy trajectory, creating about \$800 million of total welfare-equivalent value. With a 10-year duration, this is about \$80 million per year, roughly what one would get from improving about \$80 billion of annual decisions by 0.1% or about \$8 billion by 1%. Taken together, the 50% / 40% / 10% split reflects a prior that most serious upstream efforts create some but limited value, a substantial minority gain real traction with an institution or decision process, and a smaller minority achieve a genuine durable win. The 10% major-win probability should be read as "rare but material," not as either the median case or a one-in-a-thousand moonshot.
 9. A money-metric value of a QALY in high-income policy settings is approximately \$100,000, near the lower end of ICER's current \$100,000–\$150,000 benchmark range. ([ICER 2023 Value Assessment Framework](https://icer.org/wp-content/uploads/2023/10/ICER_2023_2026_VAF_For-Publication_110425.pdf))
 10. It takes roughly 2 years for these capabilities to mature and enter real decision cycles.
 11. Benefits persist for around 10 years on average: many individual outputs fade faster, but embedded decision routines can last much longer. E.O. 12866 has structured U.S. regulatory review since 1993, the What Works Network has operated since 2013, and Good Judgment's forecasting infrastructure traces to the IARPA tournament launched in 2011. ([GW Regulatory Studies Center](https://regulatorystudies.columbian.gwu.edu/looking-back-30-years-executive-order-12866-0), [GOV.UK](https://www.gov.uk/government/publications/the-what-works-network-strategy), [Good Judgment](https://goodjudgment.com/about/))
@@ -60,6 +60,8 @@ Where:
 - $p_L, p_M, p_H$ = probabilities of the limited-impact, moderate-impact, and major-win scenarios
 - $V_L, V_M, V_H$ = total welfare-equivalent value created in each scenario
 - $v$ = money-metric value per QALY
+
+By **welfare-equivalent value**, we mean the total improvement in outcomes, whether health, economic, or otherwise, expressed in dollar terms so it can be converted into QALYs using the \$100,000-per-QALY assumption.
 
 Using the central assumptions above:
 
@@ -97,6 +99,8 @@ Using the 10-year duration assumption, the three scenario values correspond to a
 
 These are large numbers, but still small relative to mature public evidence institutions. The **major-win** case is only about **0.13%** of GAO's FY 2025 annual financial benefits, and tiny relative to the more than **£250 billion** public-spending footprint covered by the What Works Network. So the major-win case is not saying that a small charity becomes GAO. It is saying that a rare breakout success captures a very small fraction of the value that mature evidence institutions can influence.
 
+The current split is explicitly hits-based: the **major-win** scenario contributes \$80 million of the \$125 million expected welfare value, or about **64%** of the total. That is part of why this category looks strong, and also why the estimate is quite sensitive to whether 10% is the right probability for that tier.
+
 ### Range
 
 The practical sensitivity range is wide because this category is very uncertainty-heavy.
@@ -114,7 +118,7 @@ The 2-year start time reflects the fact that these interventions can matter fast
 
 ### Duration
 
-The 10-year duration is an expected-value compromise. Some outputs decay quickly. But embedded decision routines can persist for much longer: E.O. 12866 has structured U.S. regulatory review since 1993, the What Works Network since 2013, and Good Judgment's forecasting infrastructure since the IARPA tournament launched in 2011. A 10-year window therefore treats this category as more durable than one-off reports, but much less durable than the strongest long-lived institutions. ([GW Regulatory Studies Center](https://regulatorystudies.columbian.gwu.edu/looking-back-30-years-executive-order-12866-0), [GOV.UK](https://www.gov.uk/government/publications/the-what-works-network-strategy), [Good Judgment](https://goodjudgment.com/about/))
+Assumption 11 gives the main durability anchors. We use 10 years rather than something like 15-30 years because most charities in this category are not themselves GAO, the What Works Network, or the regulatory-review framework created by E.O. 12866. Many outputs are closer to reports, tools, and advisory relationships that may decay within 2-5 years. The reason not to use a very short duration is that some of those efforts do become semi-embedded routines or lasting relationships. So 10 years is an expected-value compromise between a common short-lived case and a rarer but important long-lived case.
 
 ## What Kinds of Charities Are We Modeling?
 

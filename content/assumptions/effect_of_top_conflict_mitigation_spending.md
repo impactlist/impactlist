@@ -25,7 +25,7 @@ A reasonable summary is:
 
 That is, an additional **\$1 million** to a top-tier mediation / diplomacy / conflict-analysis organization plausibly has about a **0.1%** chance of averting one representative serious conflict-year, with a practical range of about **0.03–0.3%**.
 
-This is the single most uncertain input in the category estimate.
+This is the single most uncertain input in the category estimate, and reasonable people could easily land somewhat below or above the range used here.
 
 ---
 
@@ -48,6 +48,8 @@ This figure is useful, but it is not yet the number we want:
 - it is based on observational evidence, so selection effects remain possible
 
 Still, it gives us a concrete starting point.
+
+One important caveat is that this is a **historical average over 1946-2013**, not a clean estimate of marginal effectiveness in the mid-2020s. Conflict patterns, international institutions, and the mediation ecosystem have all changed. That historical average could therefore overstate or understate current effectiveness.
 
 ---
 
@@ -72,6 +74,8 @@ A reasonable compromise is:
 - **Central view:** about **5%**
 
 This is still a fairly conservative allocation. It says that the organizations we are modeling are important, but remain only a small part of the total conflict-management ecosystem.
+
+This is also the most opinion-dependent part of the derivation. A skeptic could argue for something more like **0.5–2%** if governments and the UN are doing almost all of the causal work. A more optimistic reader could argue for something more like **10–15%** if top mediation NGOs are much more leveraged per dollar than the rest of the system. The **2–8%** range is therefore best understood as a judgment call, not a tightly evidenced interval.
 
 ---
 
@@ -139,6 +143,8 @@ which is about **0.12%** per **\$1 million**.
 
 That is why the category uses **0.1%** as the point estimate. It is slightly below this direct midpoint.
 
+This arithmetic also implicitly assumes that the conflicts these organizations engage with are of roughly **representative serious-conflict-year** size. That is a simplification. If top mediation organizations disproportionately work on very high-burden conflicts, the estimate could be conservative. If they often work on lower-burden or earlier-stage conflicts, it could be optimistic.
+
 ---
 
 ## 5. Why widen the practical range to 0.03–0.3%?
@@ -156,7 +162,7 @@ So **0.03–0.3%** is best read as a practical working range rather than a stati
 
 ## 6. Cross-check against Open Philanthropy's HD BOTEC
 
-Coefficient / Open Philanthropy gives a useful independent cross-check. Their BOTEC notes that HD's annual budget was about **\$42 million** across **23 conflict zones**, or about **\$2 million per country-year**, and argues that a marginal HD mediation-year would only need about a **0.52%** chance of ending a war one year sooner to clear a very high philanthropic-return bar. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/))
+Coefficient Giving / Open Philanthropy gives a useful independent cross-check. Their BOTEC notes that HD's annual budget was about **\$42 million** across **23 conflict zones**, or about **\$2 million per country-year**, and argues that a marginal HD mediation-year would only need about a **0.52%** chance of ending a war one year sooner to clear a very high philanthropic-return bar. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/))
 
 Our category estimate is more conservative than that BOTEC in two ways:
 

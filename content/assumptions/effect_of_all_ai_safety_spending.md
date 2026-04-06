@@ -3,7 +3,7 @@ id: effect-of-all-ai-safety-spending
 name: 'Effect of all previous AI safety spending'
 ---
 
-_The following analysis was done on April 6th 2026 by Codex (GPT-5) and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
 
 ## How much has existing AI safety spending reduced AI extinction risk?
 
@@ -87,7 +87,7 @@ Two particularly relevant pieces are:
 - [Laura Duffy 2023, "Is x-risk the most cost-effective if we count only the next few generations?"](https://rethinkpriorities.org/research-area/is-x-risk-the-most-cost-effective-if-we-count-only-the-next-few-generations/)
 - [Rethink Priorities 2024, "Exploring Key Cases with the Portfolio Builder"](https://rethinkpriorities.org/research-area/key-cases-with-the-portfolio-builder/)
 
-Across these analyses, the rough **plausible region** for generic x-risk interventions is about:
+Across these analyses, a rough **derived range** for generic x-risk interventions is about:
 
 - **0.2–7 bp per \$1B**, corresponding to  
   **0.002–0.07 percentage points per \$1B**

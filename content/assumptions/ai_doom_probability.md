@@ -3,7 +3,7 @@ id: ai-doom-probability
 name: 'Probability of AI-caused extinction'
 ---
 
-_The following analysis was done on April 6th 2026 by Codex (GPT-5) and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
 
 ## What is the probability of AI-caused human extinction this century?
 
@@ -175,7 +175,7 @@ Other researchers assign significantly higher probabilities, often above 15%, to
 
 **Speed of capability gains**
 
-Recent AI progress has repeatedly surprised even optimistic observers. In Grace et al., the aggregate median forecast for HLMI moved from 2060 in the 2023 wave to 2047 in the 2024 wave.
+Recent AI progress has repeatedly surprised even optimistic observers. In Grace et al., the aggregate median forecast for HLMI moved from 2060 in the 2022 survey to 2047 in the 2023 survey.
 
 **Competitive dynamics**
 

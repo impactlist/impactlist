@@ -12,7 +12,7 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by Codex (GPT-5) and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
 
 Unlike a typical cause area, donations to AI existential-risk charities are best modeled as slightly reducing the probability of a catastrophe rather than directly buying QALYs. We therefore estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of AI-caused human extinction.
 
@@ -22,7 +22,7 @@ This effect captures welfare gains from reducing the probability that misaligned
 
 ## Point Estimates
 
-- **Cost per microprobability:** \$1 million (\$200,000–\$20 million)
+- **Cost per microprobability:** \$1 million (\$200,000–\$16 million)
 - **Population fraction affected:** 1.0 (by definition, everyone dies)
 - **QALY improvement per affected person per year:** 0.9 (0.75–1.0)
 - **Start time:** 15 years (~2041)
@@ -38,14 +38,14 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 4. Average human life-years are worth roughly 0.85–0.9 QALYs, so 0.9 is a reasonable all-things-considered central value. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 5. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Open Philanthropy](https://www.openphilanthropy.org/focus/potential-risks-advanced-ai/))
 6. Roughly \$1 billion of historical AI safety spending has probably reduced extinction risk by about 0.1 percentage points, with a plausible positive range around 0.01–0.5 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending))
-7. A frontier AI safety researcher costs roughly \$0.5–0.8 million per year fully loaded, implying roughly \$8–15 million for a 15–20 year career. ([OpenAI careers](https://openai.com/careers/research-scientist), [Anthropic careers](https://www.anthropic.com/careers))
+7. A frontier AI safety researcher costs roughly \$0.5–0.8 million per year fully loaded, implying roughly \$8–16 million for a 15–20 year career. ([OpenAI careers](https://openai.com/careers/research-scientist), [Anthropic careers](https://www.anthropic.com/careers))
 8. A strong additional AI safety career plausibly averts 1–50 microdooms, with a rough central estimate around 10. ([Jurkovic 2023](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety))
 
 ## Details
 
 ### Cost per Microprobability
 
-The point estimate (\$1 million per microprobability) and range (\$200,000–\$20 million) are derived from two approaches.
+The point estimate (\$1 million per microprobability) and range (\$200,000–\$16 million) are derived from two approaches.
 
 **Approach 1 — Field-level estimate**
 
@@ -70,13 +70,13 @@ $$
 $$
 
 Best case: \$8M cost and 50 microdooms -> **\$160,000** per microprobability  
-Worst case: \$20M cost and 1 microdoom -> **\$20 million** per microprobability
+Worst case: \$16M cost and 1 microdoom -> **\$16 million** per microprobability
 
 **Combined**
 
 Both approaches land close to **\$1 million per microprobability**, which is why we use that as the point estimate. Given the uncertainty, one significant digit is appropriate.
 
-The stated range (**\$200,000–\$20 million**) takes the widest bounds across both approaches rather than the range from either single approach alone.
+The stated range (**\$200,000–\$16 million**) takes the widest bounds across both approaches rather than the range from either single approach alone.
 
 The field-level estimate is based on the historical average effect of AI safety spending to date, while this page is meant to model forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar, but that is at least partly offset by diminishing returns and by the field becoming larger and more crowded, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
 
@@ -115,6 +115,8 @@ With world population of ~10 billion (Assumption 3) and 0.9 QALYs per person per
 - Cost per QALY: \$1M / 9B ≈ **\$0.00011/QALY**
 
 These examples assume constant population for simplicity. The actual calculation uses global parameters that define the future population curve, so scaling may not be exactly linear.
+
+These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is not unique to this page; it is a general feature of existential-risk expected-value models when you combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. It also means the result is highly sensitive to a few contestable assumptions, especially the baseline extinction probability, the effectiveness of marginal safety work, and the chosen time limit. Readers who think the implied \$1.1/QALY at the default 100-year horizon is too optimistic should treat those inputs as the main levers to revisit.
 
 ### Start Time
 

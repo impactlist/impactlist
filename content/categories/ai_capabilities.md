@@ -15,12 +15,12 @@ effects:
     windowLength: 1_000_000_000_000
     costPerMicroprobability: 208_000_000
     populationFractionAffected: 1.0
-    qalyImprovementPerYear: -1.0
+    qalyImprovementPerYear: -0.9
 ---
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by Codex (GPT-5) and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
 
 This cause covers philanthropic funding that makes frontier or near-frontier AI systems more capable, more widely available, or more widely deployed, without being primarily focused on safety or alignment. It includes entities like frontier labs, university AI labs, open-model efforts, and other projects whose main effect is to accelerate capabilities rather than reduce risk.
 
@@ -103,6 +103,8 @@ So we use **\$104,000/QALY** as the point estimate.
 
 That number should not be read as fully netting out every ordinary downside. Some measured economic gains show up as rents, convenience, or producer surplus rather than clean welfare gains, and AI also creates ordinary downsides we do not separately model here (job displacement, misinformation, surveillance, concentration of power). Those considerations are reasons to think the ordinary upside may be somewhat overstated, but we do not adjust the point estimate upward or downward without quantifying the adjustment.
 
+It is also worth noting that the \$100,000/QALY conversion benchmark is mainly a rich-country benchmark. To the extent that AI capability gains substantially improve the lives of lower-income populations, the true cost per QALY would be somewhat lower than this estimate suggests.
+
 #### Start Time
 
 We use a 3-year start time because AI deployment is already happening, but philanthropic funding still usually needs time to turn into tools, products, model releases, adoption, and diffusion.
@@ -184,6 +186,8 @@ Two points are worth emphasizing:
 
 Because this timing model multiplies several uncertain terms, different plausible parameter bundles can land in the same order of magnitude. Readers should not over-interpret the exact point estimate.
 
+As with the doom effect below, this timing model assumes that small marginal capability pushes translate roughly linearly into timeline acceleration. That assumption is obviously imperfect: real progress may involve thresholds, bottlenecks, and nonlinear race dynamics. We use linearity here as the cleanest tractable baseline.
+
 #### Start Time
 
 We use a 15-year start time because the point of this effect is not today's copilots or narrow models. It is earlier arrival of genuinely transformative systems, which still seems more likely to matter in the 2030s or 2040s than in the next few years.
@@ -198,13 +202,13 @@ We use a 5-year duration because this effect is about the window between "AI arr
 
 This effect captures the harm from AI capability work slightly increasing the probability of AI-caused human extinction.
 
-Note: The QALY improvement per year is **-1.0** (negative), indicating this is a harmful effect.
+Note: The QALY improvement per year is **-0.9** (negative), indicating this is a harmful effect.
 
 ### Point Estimates
 
 - **Cost per microprobability (increase):** \$208 million (\$30 million–\$2 billion)
 - **Population fraction affected:** 1.0
-- **QALY improvement per affected person per year:** -1.0
+- **QALY improvement per affected person per year:** -0.9
 - **Start time:** 15 years
 - **Duration:** Defined by the global time limit parameter (default is 100 years)
 
@@ -216,7 +220,7 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 2. Total cumulative frontier or near-frontier AI spending before transformative AI is roughly **\$5 trillion**. ([See detailed justification](/assumption/cumulative-frontier-ai-spending-before-transformative-ai))
 3. A marginal philanthropic dollar in this cause is best modeled as about **30 cents of frontier-equivalent capability acceleration**. ([See detailed justification](/assumption/frontier-equivalent-share-of-ai-capabilities-philanthropy))
 4. As a first-pass model, small marginal accelerations of frontier capability progress increase extinction risk roughly in proportion to how much they speed up the race. This linearity assumption is obviously imperfect, but it is the cleanest tractable baseline.
-5. World population is projected to peak at about **10.3 billion** in the 2080s. ([UN 2024](https://population.un.org/wpp/publications/files/wpp2024_summary_of_results.pdf))
+5. World population is projected to peak at about **10.3 billion** in the 2080s. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
 6. Average human quality of life is roughly **0.9 QALYs per year**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 
 ### Details
@@ -256,7 +260,7 @@ The point estimate is 1.0 because extinction kills everyone.
 
 #### QALY Improvement per Affected Person per Year
 
-The value is **-1.0** because this effect is harm, not benefit.
+The value is **-0.9** because this effect is harm, not benefit, and because the symmetric positive AI-risk category uses 0.9 QALYs per human life-year rather than 1.0.
 
 With the default 100-year time limit, a world population of roughly 10 billion, and an average welfare level of about 0.9 QALYs/year:
 
@@ -283,7 +287,7 @@ The duration is controlled by the global time limit parameter. Extinction has es
 
 ## Worked Example at Default Settings
 
-At the default 100-year time horizon, the central estimates imply the following rough magnitudes per **\$1 million donated**:
+At the default 100-year time horizon and default 0% discount rate, the central estimates imply the following rough magnitudes per **\$1 million donated**:
 
 - **standard-mundane:** about **9.6 QALYs gained** (\$1,000,000 / \$104,000)
 - **standard-utopia:** about **58.8 QALYs gained** (\$1,000,000 / \$17,000)
@@ -322,7 +326,7 @@ These numbers are rough order-of-magnitude judgments. The biggest uncertainties 
 
 1. **How frontier-direct the marginal recipient is.** A dollar to a frontier lab, an open-model effort, and a public-interest AI institute do not have the same effect.
 2. **How much capability acceleration markets would already have bought.** This is the central reason the ordinary-benefit estimate is weaker than it first appears.
-3. **Whether transformative-AI acceleration is mostly good or mostly bad.** The upside and downside terms both depend heavily on worldview assumptions.
+3. **Whether transformative-AI acceleration is mostly good or mostly bad.** The upside and downside terms both depend heavily on worldview assumptions, and the upside and downside terms are partly correlated rather than fully independent.
 4. **Whether marginal risk scales linearly.** Real systems may have thresholds, bottlenecks, or race dynamics that make the doom effect either much smaller or much larger than this simple model.
 5. **Bad but non-extinction outcomes.** We do not separately model scenarios like authoritarian lock-in, severe inequality, AI-enabled bioweapons, or large nonhuman-animal effects. On balance, omitting these probably makes the category look somewhat too positive.
 

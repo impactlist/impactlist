@@ -10,7 +10,7 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was updated on April 6th 2026, written by GPT-5 and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing; check the global assumptions for this and other relevant parameters).
 
@@ -20,7 +20,7 @@ This effect captures welfare gains from donations to the best current animal-wel
 
 ## Point Estimates
 
-- **Cost per QALY:** \$2.3 (\$0.5–\$52)
+- **Cost per QALY:** \$2.3 (\$0.50–\$52)
 - **Start time:** 1 year
 - **Duration:** 15 years
 
@@ -33,9 +33,9 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 3. THL's own 2025 retrospective on its corporate cage-free campaigns found roughly 2 hens spared cages per dollar over 2015-2024. This lower benchmark likely reflects some combination of counterfactual deflection, attribution uncertainty, mixed spending across campaign stages, and the fact that later dollars go after harder targets. ([THL EA Forum Post](https://forum.effectivealtruism.org/posts/Fbx9hf2e6MaLfoNwD/cost-effectiveness-of-thl-s-corporate-cage-free-campaigns))
 4. Welfare Footprint Institute's laying-hen analysis models the laying phase as lasting 40 to 60 weeks. Because the cage-to-aviary comparison applies to the laying phase, we use the midpoint, 50 weeks (0.96 years), as the central duration of direct hen welfare improvement. ([Welfare Footprint Institute](https://welfarefootprint.org/laying-hens/))
 5. Rethink Priorities' sentience-adjusted median welfare range for chickens is 0.332 of a human's, and RP's later farmed-animal allocation tool uses 0.46 as a practical chicken default when sentience is handled separately. We use 0.33 as the central value and 0.1-0.46 as a practical sensitivity range. ([RP Welfare Range Estimates](https://rethinkpriorities.org/research-area/welfare-range-estimates/), [RP Farmed Animal Recipients Tool](https://rethinkpriorities.org/research-area/distributing-resources-across-farmed-animal-recipients/))
-6. Following Fischer's and RP's standard bridge from animal-welfare changes to DALY/QALY-equivalents, moving from conventional cages to aviaries improves hen welfare by roughly 25% of the negative portion of a chicken's welfare range. Under the 0.332 central chicken welfare range, that implies roughly 0.0415 human-equivalent QALYs per hen-year:
+6. Following Fischer's and RP's standard bridge from animal-welfare changes to DALY/QALY-equivalents, moving from conventional cages to aviaries improves hen welfare by roughly 25% of the negative portion of a chicken's welfare range. Under the 0.332 central chicken welfare range, that implies roughly 0.0415 human-equivalent QALYs per hen-year. The `0.5` term assumes the welfare range is roughly symmetric around a neutral point, so the negative portion makes up half the total range:
 
-$$0.332 \text{ (chicken welfare range)} \times 0.5 \text{ (negative share of range)} \times 0.25 \text{ (improvement from cage to aviary)} \approx 0.0415$$
+$$0.332 \text{ (chicken welfare range)} \times 0.5 \text{ (negative share of range)} \times 0.25 \text{ (improvement from cage to aviary)} = 0.0415$$
 
 Under the 0.1-0.46 sensitivity range, it implies roughly 0.0125-0.0575 QALYs per hen-year. ([Fischer 2023](https://www.law.georgetown.edu/public-policy-journal/wp-content/uploads/sites/23/2024/02/Bob-Fischer.pdf), [RP Welfare Range Estimates](https://rethinkpriorities.org/research-area/welfare-range-estimates/))
 7. Welfare Footprint Institute's laying-hen work supports Assumption 6: compared with conventional cages, aviaries avert at least 275 hours of disabling pain, 2,313 hours of hurtful pain, and 4,645 hours of annoying pain per hen, while explicitly leaving out several likely benefits. [Our World in Data](https://ourworldindata.org/do-better-cages-or-cage-free-environments-really-improve-the-lives-of-hens) gives a clear overview of the same evidence. ([Welfare Footprint Institute](https://welfarefootprint.org/laying-hens/))
@@ -50,7 +50,7 @@ Under the 0.1-0.46 sensitivity range, it implies roughly 0.0125-0.0575 QALYs per
 
 ### Cost per QALY
 
-The point estimate uses a hen-QALY model because this is the cleanest current evidence chain from donor dollar to human-equivalent QALYs. The lower bound uses a pessimistic version of that same hen model. The upper bound uses ACE's shrimp SAD model with the rough cross-walk from Assumption 11, because current best opportunities for the cause span both chicken and shrimp work.
+The point estimate uses a hen-QALY model because this is the cleanest current evidence chain from donor dollar to human-equivalent QALYs. The pessimistic end uses a pessimistic version of that same hen model. The optimistic end uses ACE's shrimp SAD model with the rough cross-walk from Assumption 11, because current best opportunities for the cause span both chicken and shrimp work.
 
 ### Central calculation
 

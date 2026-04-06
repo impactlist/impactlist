@@ -11,4 +11,4 @@ assumptions:
 This assumptions set keeps the default assumptions structure but evaluates effects over the next
 10 billion years instead of the default 100-year horizon.
 
-It is meant for users who want the calculations to put very heavy weight on the far future.
+We use a discount rate of zero, meaning the future is seen as equally valuable as the present.

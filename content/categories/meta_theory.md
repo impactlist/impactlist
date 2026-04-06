@@ -10,17 +10,26 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on November 16th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by the our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
+We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
 ## Description of effect
 
-This effect captures welfare gains from organizations that multiply the impact of other cause areas: effective altruism movement building, effective giving organizations (80,000 Hours, Giving What We Can, The Life You Can Save), and normative/conceptual work on effective altruism and longtermism. This excludes technical Global Priorities Research (treated separately). Impact comes from redirecting money and talent toward more effective opportunities.
+This effect captures welfare gains from organizations that multiply the impact of other cause areas by improving how people **give, think, and work**. Representative examples include effective-giving organizations and evaluators (such as GiveWell, Giving What We Can, and The Life You Can Save), career and talent-shaping organizations (such as 80,000 Hours), and broader public-intellectual or worldview work that changes how resources and attention are allocated.
+
+The cleanest measurable pathway is indirect: a dollar to Meta and Theory causes later dollars or careers to be directed toward better opportunities. We therefore model this category using two channels:
+
+1. **Direct money-moving and evaluator work**
+2. **Career, movement-building, and worldview work**
+
+That structure is more transparent than treating the entire category as one undifferentiated multiplier. It also helps keep pure theory work from dominating the point estimate unless there is unusually strong evidence that it changed downstream donations, careers, or institutions.
+
+This category excludes more technical **Global Priorities Research**, which is treated separately.
 
 ## Point Estimates
 
-- **Cost per QALY:** \$25 (\$4–\$300)
+- **Cost per QALY:** \$25 (\$10-\$150)
 - **Start time:** 5 years
 - **Duration:** 25 years
 
@@ -28,48 +37,135 @@ This effect captures welfare gains from organizations that multiply the impact o
 
 ## Assumptions
 
-1. 80,000 Hours achieves at least a 15× donation multiplier from career changes alone, with marginal cost per impact-adjusted plan change under £250–500. ([EA Forum 2016](https://forum.effectivealtruism.org/posts/WKkF36bJsH8FmYZkw/why-donate-to-80-000-hours))
-2. Giving What We Can achieves approximately 12.2× donation multiplier (5th–95th percentile: 0.8–19.1×). ([Sempere 2023](https://forum.nunosempere.com/posts/5Lytcvj7GCSysBtSD/my-impact-assessment-of-giving-what-we-can))
-3. The Life You Can Save moved \$23M on a \$1.3M budget in 2021 (gross 18.5×, adjusted ~16×). ([EA Infrastructure Fund 2023](https://www.lesswrong.com/posts/bBnxGAc4NT9aRdEtL/ea-infrastructure-fund-june-2023-grant-recommendations))
-4. Top Meta & Theory organizations achieve an effective donation multiplier of approximately 8–10× after adjusting for counterfactuals, charity mix, and attrition (range 3–20×).
-5. GiveWell top charities achieve approximately \$120/QALY. ([Our World in Data](https://ourworldindata.org/cost-effectiveness), [GiveWell](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness))
-6. Theoretical work (books, essays, talks) has more uncertain returns but feeds into donation and career multipliers by shaping values.
-7. Once someone adopts a donation habit (e.g., GWWC pledge), they often maintain it for decades. ([GWWC pledge](https://www.givingwhatwecan.org/pledge))
+1. In the **direct money-moving and evaluator channel**, a strong organization plausibly creates about an **8x donation-equivalent multiplier**, with a rough practical range of **5x-12x**. The closest public anchors are Giving What We Can's **6x** 2023-2024 giving multiplier and The Life You Can Save's **10:1** three-year leverage ratio. GiveWell's roughly **\$397 million** directed in 2024 on around **\$21 million** in operating expenses, plus another **\$45 million** it believes its research influenced, is best read as a looser operational-leverage cross-check rather than the same kind of multiplier, because it measures dollars directed relative to operating cost rather than counterfactual small-donor giving caused. ([Giving What We Can impact](https://www.givingwhatwecan.org/impact), [Giving What We Can 2023-2024 evaluation](https://www.givingwhatwecan.org/impact/2023-2024-impact-evaluation), [The Life You Can Save 2024 Annual Report](https://www.thelifeyoucansave.org/2024-annual-report/), [GiveWell Metrics 2024](https://files.givewell.org/files/metrics/GiveWell_Metrics_Report_2024.pdf))
+2. In the **career, movement-building, and worldview channel**, a strong organization plausibly creates about a **4x donation-equivalent multiplier**, with a rough practical range of **1x-8x**. 80,000 Hours says an average plan change is worth **hundreds of thousands of dollars** of value over a lifetime, had tracked **604** plan changes by end-2022 while estimating the true total closer to **2,000**, and in 2024 had over **1,400** one-on-one calls plus **165** headhunts. Older Open Philanthropy discussion of impact-adjusted plan changes points in the same direction, but the evidence is noisy and attribution is hard, so we use a much more conservative central number than the raw historical success stories might suggest. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/), [Open Philanthropy 2017 grant writeup](https://www.openphilanthropy.org/grants/80000-hours-general-support/))
+3. A reasonable central portfolio split for this category is **40% direct money-moving/evaluator work** and **60% career, movement-building, and worldview work**. This is not meant as a literal budget breakdown of all organizations in the ecosystem. It is an all-things-considered modeling split for the kind of marginal donation opportunities this category is trying to represent. ([See detailed justification](/assumption/meta-theory-channel-model))
+4. In the **direct money-moving and evaluator channel**, the downstream opportunities influenced are worth about **\$100/QALY** on average, with a rough practical range of **\$80-\$150/QALY**. This is close to the site's own Global Health estimate of **\$90/QALY**, but slightly less optimistic because not all influenced giving goes to the very best GiveWell-style opportunities. ([Global Health](/category/global-health), [GiveWell cost-effectiveness](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness), [How we work, #1: Cost-effectiveness is generally the most important factor in our recommendations](https://blog.givewell.org/2023/10/27/how-we-work-1-cost-effectiveness/))
+5. In the **career, movement-building, and worldview channel**, the downstream opportunities influenced are worth about **\$300/QALY** on average, with a rough practical range of **\$150-\$1,000/QALY**. This is much worse than the direct money-moving channel because this bucket is broader, less tightly optimized, and more likely to steer talent and attention toward institution building, longtermist work, or mixed portfolios that are harder to translate into near-term human-welfare QALYs. ([See detailed justification](/assumption/meta-theory-channel-model), [Global Health](/category/global-health))
+6. Donation, career, and worldview shifts usually take a few years to produce substantial downstream welfare effects. A **5-year** start time is a reasonable portfolio average.
+7. Once someone changes how they donate, which problems they work on, or which institutions they build, the resulting effects often persist for decades. A **25-year** duration is a reasonable central estimate.
 
 ## Details
 
 ### Cost per QALY
 
-The point estimate (\$25/QALY) and range (\$4–\$300/QALY) reflect Meta & Theory's role as a multiplier on high-impact donations and careers.
+The cleanest model for this category is:
 
-**Calculation 1 — Movement building and effective giving:**
+$$
+\text{QALYs per } \$1 = w_d \times \frac{M_d}{B_d} + w_c \times \frac{M_c}{B_c}
+$$
 
-With a 10× donation multiplier (Assumption 4) onto charities at \$120/QALY (Assumption 5):
+Where:
 
-$$\text{QALYs per Meta } \$1 = \dfrac{10}{120} \approx 0.083$$
-$$\text{Cost per QALY} \approx \$12$$
+- $w_d$ = share of the modeled opportunity set in the direct money-moving/evaluator channel
+- $w_c$ = share in the career/movement/worldview channel
+- $M_d, M_c$ = donation-equivalent multipliers in the two channels
+- $B_d, B_c$ = downstream cost per QALY in the two channels
 
-With a more conservative 5× multiplier:
-$$\text{Cost per QALY} \approx \$24$$
+Using the central assumptions above:
 
-This suggests donation-moving work alone achieves approximately \$10–\$50/QALY before counting career change impact.
+- $w_d = 0.4$
+- $w_c = 0.6$
+- $M_d = 8$
+- $M_c = 4$
+- $B_d = \$100/\text{QALY}$
+- $B_c = \$300/\text{QALY}$
 
-**Calculation 2 — Theory and worldview change:**
+So:
 
-Theoretical work (effective altruism philosophy, longtermism, public-facing books) has more uncertain returns but is a crucial upstream driver of the donation and career multipliers. We estimate \$50–\$200/QALY on average, with occasional high-impact hits.
+$$
+\text{QALYs per } \$1 = 0.4 \times \frac{8}{100} + 0.6 \times \frac{4}{300}
+$$
 
-**Combined estimate:**
+$$
+= 0.032 + 0.008 = 0.04
+$$
 
-Treating the cause as roughly half movement-building (\$15–\$40/QALY) and half theory (\$50–\$200/QALY), and taking a logarithmic average, yields a point estimate of \$25/QALY. The range (\$4–\$300) reflects variation from strong multipliers with impactful theory to scenarios where many projects have little effect.
+$$
+\text{Cost per QALY} = \frac{1}{0.04} = \$25
+$$
+
+So the point estimate is **\$25/QALY**.
+
+This model is more legible than using one blended multiplier and one blended downstream benchmark, because it makes the main empirical judgment calls explicit.
+
+**Channel 1: direct money-moving and evaluator work**
+
+This is the strongest empirical anchor in the whole category.
+
+- Giving What We Can reports a **6x** average giving multiplier for 2023-2024 and says the average 10% pledger ultimately donates about **\$100,000**, of which about **\$15,000** is counterfactual high-impact giving attributable to GWWC and partners.
+- The Life You Can Save reports a **10:1** three-year leverage ratio for 2022-2024 and says this is conservative because some influenced giving is not tracked.
+- GiveWell's published metrics show extremely high operational leverage, but those figures are not directly comparable to GWWC's multiplier, because GiveWell's numbers include large funders and measure dollars directed or influenced rather than small-donor giving newly caused.
+
+That is why the direct channel uses **8x** rather than simply reading off GiveWell's operating-leverage ratio.
+
+**Channel 2: career, movement-building, and worldview work**
+
+This channel is harder to measure cleanly, but likely matters significantly.
+
+80,000 Hours provides the best public evidence here. Its materials point to large value per plan change and substantial current pipeline activity. But this evidence is noisier than the direct money-moving evidence, and translating it into human-welfare QALYs is harder because many career or worldview changes steer people toward broad institution building, longtermist work, or mixed portfolios rather than directly into GiveWell-style global health.
+
+That is why this channel uses a lower central multiplier (**4x**) and a much worse downstream benchmark (**\$300/QALY**) than the direct money-moving channel.
+
+**Sensitivity**
+
+The table below holds the **40% / 60%** channel split fixed and varies the two channel-specific estimates:
+
+| Direct channel | Career/worldview channel | Implied cost per QALY |
+| --- | --- | --- |
+| 12x on \$80/QALY | 8x on \$150/QALY | \$11 |
+| 12x on \$80/QALY | 1x on \$1,000/QALY | \$16 |
+| 5x on \$150/QALY | 8x on \$150/QALY | \$23 |
+| 5x on \$150/QALY | 1x on \$1,000/QALY | \$65 |
+
+Those four corners show that the estimate is more sensitive to the direct money-moving channel than to the career/worldview channel, because the former has both better evidence and much stronger per-dollar leverage.
+
+The headline range is wider than this simple table: **\$10-\$150/QALY**. The main reason is that the table holds the channel split fixed, while in reality the mix can vary substantially across plausible marginal opportunities. A more theory-heavy or movement-building-heavy portfolio can be meaningfully worse than the central case, while an unusually evaluator-heavy portfolio can be somewhat better.
 
 ### Start Time
 
-The 5-year start time reflects that movement-building takes 1–3 years to convert someone into a substantial donor or prompt a career change, with those behaviors then ramping up as incomes grow.
+The **5-year** start time reflects a blend of faster and slower pathways.
+
+Some effective-giving organizations can move money almost immediately, but the largest effects often come from habits and relationships that build over a few years. Career changes are slower still: someone may first encounter the ideas, spend time exploring them, retrain or build career capital, and only later enter a substantially more impactful role. Worldview and theory effects can take even longer.
+
+Because this category includes all three pathways, **5 years** is a reasonable portfolio average.
 
 ### Duration
 
-The 25-year duration reflects that donation habits and career changes persist for decades (Assumption 7). The GWWC pledge is framed as a lifetime commitment, and career changes typically shift impact for 20–30 remaining working years.
+The **25-year** duration reflects that many of the downstream changes in this category are persistent.
+
+A donor who changes their giving philosophy may give more effectively for decades. A career change can alter how someone spends the next 20-30 working years. An institution or fund that is created because of meta work can continue influencing later decisions long after the original intervention.
+
+We do not use a longer duration than 25 years because some effects decay: donors lapse, careers drift, ideas get outdated, and institutions lose focus. So **25 years** is a compromise between short-lived outreach wins and rarer worldview changes that last much longer.
+
+## What Kinds of Charities Are We Modeling?
+
+These estimates assume marginal donations go to **high-quality, high-leverage meta organizations** that do things such as:
+
+- help donors find and fund more effective opportunities
+- produce high-quality evaluator or grantmaking research for impact-focused donors
+- help talented people enter more impactful careers
+- spread ideas or frameworks that later change how money and talent are allocated
+
+We are **not** mainly modeling:
+
+- generic networking or community events with weak evidence of downstream leverage
+- theory or philosophy work with no plausible pathway to changing real decisions
+- ordinary nonprofit support services that do not substantially improve allocation
+- technical global-priorities research, which is treated under Global Priorities Research
+
+## Key Uncertainties
+
+1. **The channel mix.** The direct money-moving share is one of the most important inputs. A more evaluator-heavy opportunity set would look better; a more worldview-heavy one would look worse.
+2. **How much to credit career and worldview work.** This remains the hardest part of the estimate. Public evidence exists, but it is weaker and less directly comparable than money-moving evidence.
+3. **How broad the downstream cause mix is.** If career and worldview work mainly pushes resources toward very cost-effective human-welfare opportunities, the estimate is too pessimistic. If it mostly pushes resources toward mixed or hard-to-translate priorities, it is too optimistic.
+4. **Marginal versus average impact.** Public success metrics usually describe historical averages or standout case studies, not the next dollar.
+5. **Double counting risk.** Meta work often creates value by sending resources into other cause areas that also have their own pages on this site. That is conceptually fine, but it means readers should interpret category comparisons with care.
 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+- This version fixes the transparency problem in the earlier blended model by making the channel weights and downstream benchmarks explicit.
+- The most important future levers are: direct-channel multiplier, career/worldview multiplier, channel mix, and the downstream `$/QALY` benchmark for the broader career/worldview bucket.
+- If future editors want to change this estimate substantially, they should probably update the dedicated assumption page rather than trying to tweak a sentence or two in the category page.

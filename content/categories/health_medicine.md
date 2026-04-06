@@ -61,19 +61,19 @@ Where:
 
 Using the central assumptions:
 
-- $w_d = 0.5$
-- $c_d = \$10{,}000$
-- $w_r = 0.5$
-- $c_r = \$25{,}000$
+- $w_d$ = 0.5
+- $c_d$ = \$10,000
+- $w_r$ = 0.5
+- $c_r$ = \$25,000
 
 So:
 
 $$
-\text{QALYs per } \$1 = \frac{0.5}{10000} + \frac{0.5}{25000} = 0.00007
+\text{QALYs per dollar} = \frac{0.5}{10000} + \frac{0.5}{25000} = 0.00007
 $$
 
 $$
-\text{Cost per QALY} \approx \dfrac{1}{0.00007} \approx \$14{,}300
+\text{Cost per QALY} \approx \dfrac{1}{0.00007} \approx 14{,}300
 $$
 
 Rounded, that gives a point estimate of **\$15,000/QALY**.
@@ -126,14 +126,14 @@ That is approximately **\$19,000-\$20,000/QALY**. We then move somewhat upward t
 
 The direct/research split is one of the most judgment-sensitive assumptions, so it should be shown explicitly rather than treated as precise. Holding the direct bucket at **\$10,000/QALY** and the research bucket at **\$25,000/QALY**:
 
-- **60% direct / 40% research:** $\dfrac{1}{0.6/10000 + 0.4/25000} \approx \$13{,}200/\text{QALY}$
-- **50% direct / 50% research:** $\dfrac{1}{0.5/10000 + 0.5/25000} \approx \$14{,}300/\text{QALY}$
-- **40% direct / 60% research:** $\dfrac{1}{0.4/10000 + 0.6/25000} = \$15{,}625/\text{QALY}$
+- **60% direct / 40% research:** 1 / (0.6 / 10,000 + 0.4 / 25,000) ≈ **\$13,200/QALY**
+- **50% direct / 50% research:** 1 / (0.5 / 10,000 + 0.5 / 25,000) ≈ **\$14,300/QALY**
+- **40% direct / 60% research:** 1 / (0.4 / 10,000 + 0.6 / 25,000) = **\$15,625/QALY**
 
 And with a somewhat less optimistic direct bucket of **\$12,000/QALY** plus a **50/50** mix:
 
 $$
-\dfrac{1}{0.5/12000 + 0.5/25000} \approx \$16{,}200/\text{QALY}
+\dfrac{1}{0.5/12000 + 0.5/25000} \approx 16{,}200
 $$
 
 So the main takeaway is not that the mix is unimportant; it is that across a reasonable band, the category still lands in the mid-teens of thousands per QALY rather than near the upper end of rich-country payer-style thresholds.
@@ -151,7 +151,7 @@ The stated range is a practical sensitivity range, not a full confidence interva
 This gives:
 
 $$
-\dfrac{1}{0.6/4500 + 0.4/12000} = \$6{,}000/\text{QALY}
+\dfrac{1}{0.6/4500 + 0.4/12000} = 6{,}000
 $$
 
 **Pessimistic case**
@@ -163,7 +163,7 @@ $$
 This gives:
 
 $$
-\dfrac{1}{0.2/20000 + 0.8/80000} = \$50{,}000/\text{QALY}
+\dfrac{1}{0.2/20000 + 0.8/80000} = 50{,}000
 $$
 
 So the practical range is **\$6,000-\$50,000/QALY**.

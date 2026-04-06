@@ -56,19 +56,19 @@ Where:
 
 Using the central assumptions above:
 
-- $C = \$2{,}000{,}000$
-- $I = \$200{,}000{,}000$
-- $G = 25\% = 0.25$
-- $B = \$500/\text{QALY}$
+- $C$ = \$2,000,000
+- $I$ = \$200,000,000
+- $G$ = 25% = 0.25
+- $B$ = \$500/QALY
 
 So:
 
 $$
-\text{Extra QALYs} = \dfrac{\$200{,}000{,}000 \times 0.25}{\$500} = 100{,}000 \text{ QALYs}
+\text{Extra QALYs} = \dfrac{200{,}000{,}000 \times 0.25}{500} = 100{,}000
 $$
 
 $$
-\text{Cost per QALY} = \dfrac{\$2{,}000{,}000}{100{,}000} = \$20
+\text{Cost per QALY} = \dfrac{2{,}000{,}000}{100{,}000} = 20
 $$
 
 So the point estimate is **\$20/QALY**.

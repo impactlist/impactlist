@@ -29,20 +29,20 @@ This effect captures welfare gains from donations to exceptionally cost-effectiv
 ## Assumptions
 
 1. GiveWell's current benchmark is still approximately **0.003 units of value per dollar**. ([GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models))
-2. As of November 2025, GiveWell's funding bar is **8x benchmark**. That is the cleanest public anchor for what a current marginal top-charity opportunity has to clear. ([GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models))
+2. GiveWell's current public funding bar is **8x benchmark**. GiveWell's cost-effectiveness page still presents **8x** as the current bar, while noting that the threshold was last updated in **November 2025**. That is the cleanest public anchor for what a current marginal top-charity opportunity has to clear. ([GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models))
 3. Averting the death of a young child is worth roughly **127-134 GiveWell units**; using **130** as a rounded central figure is reasonable for under-five child-survival interventions. ([GiveWell moral weights](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/moral-weights))
 4. A child death averted through these programs is worth roughly **50-60 QALYs**, with **55** as a reasonable central estimate. Sub-Saharan African life expectancy at birth is about **62 years**, and WHO reports **56 healthy life-years** for the African region. Because these programs mostly avert deaths very early in life, 55 QALYs is a reasonable all-things-considered midpoint. ([World Bank](https://data.worldbank.org/indicator/SP.DYN.LE00.IN?locations=ZG), [WHO Africa](https://www.afro.who.int/news/healthy-life-expectancy-africa-rises-almost-ten-years))
-5. GiveWell's current donor-facing top global-health charities are Malaria Consortium (seasonal malaria chemoprevention), Against Malaria Foundation (bed nets), Helen Keller Intl (vitamin A supplementation), and New Incentives (vaccination incentives). GiveWell says the funding it directed to these programs in 2022-2024 averaged roughly **\$3,500-\$5,500 per life saved** depending on the charity. ([GiveWell top charities](https://www.givewell.org/Our-Top-Charities))
+5. GiveWell's current donor-facing top global-health charities are Malaria Consortium (seasonal malaria chemoprevention), Against Malaria Foundation (bed nets), Helen Keller Intl (vitamin A supplementation), and New Incentives (vaccination incentives). GiveWell says the funding it directed to these programs in 2022-2024 averaged roughly **\$3,500-\$5,500 per life saved** depending on the charity. ([GiveWell top charities](https://www.givewell.org/charities/top-charities))
 6. Recent representative grant-specific CEAs span roughly **11x-25x benchmark**: AMF's June 2024 DRC grant was about **11x**, Malaria Consortium's June 2025 Chad expansion about **16x**, Helen Keller Intl's December 2024 VAS grant about **25x**, and New Incentives' December 2024 public CEA about **20x** overall. ([AMF DRC grant](https://www.givewell.org/research/grants/AMF-LLIN-DRC-June-2024), [Malaria Consortium Chad grant](https://www.givewell.org/research/grants/Malaria-Consortium-SMC-Expansion-in-Chad-June-2025), [Helen Keller Intl VAS grant](https://www.givewell.org/research/grants/Helen-Keller-Intl-Vitamin-A-Supplementation-December-2024), [New Incentives public CEA](https://docs.google.com/spreadsheets/d/1mTKQuZRyVMie-K_KUppeCq7eBbXX15Of3jV7uo3z-PM/edit?gid=1266854728))
 7. Mortality reduction is the dominant benefit in these programs, but not the only one. GiveWell's models also include morbidity, treatment-cost, and later-life income effects, so converting cost per life saved into QALYs is a slightly conservative simplification.
-8. Donations to GiveWell's Top Charities Fund are committed within **six months**, but many grants fund the next campaign or delivery year, so **1 year** is a reasonable portfolio-average start time. ([GiveWell top charities](https://www.givewell.org/Our-Top-Charities), [AMF DRC grant](https://www.givewell.org/research/grants/AMF-LLIN-DRC-June-2024), [Malaria Consortium Chad grant](https://www.givewell.org/research/grants/Malaria-Consortium-SMC-Expansion-in-Chad-June-2025))
+8. Donations to GiveWell's Top Charities Fund are committed within **six months**, but many grants fund the next campaign or delivery year, so **1 year** is a reasonable portfolio-average start time. ([GiveWell Top Charities Fund](https://www.givewell.org/top-charities-fund), [AMF DRC grant](https://www.givewell.org/research/grants/AMF-LLIN-DRC-June-2024), [Malaria Consortium Chad grant](https://www.givewell.org/research/grants/Malaria-Consortium-SMC-Expansion-in-Chad-June-2025))
 9. Benefits from deaths averted accrue over roughly the remaining lifetime of beneficiaries. Using **60 years** as the modeling window is reasonable for this under-five child-survival portfolio. ([World Bank](https://data.worldbank.org/indicator/SP.DYN.LE00.IN?locations=ZG))
 
 ## Details
 
 ### Cost per QALY
 
-The current file should not just repeat "GiveWell says top charities are good." It should answer two distinct questions:
+The cleanest way to estimate this category is to answer two distinct questions:
 
 1. **What does a current marginal GiveWell-style global-health dollar probably buy?**
 2. **Does that answer match the historical top-charity record we can see publicly?**
@@ -51,7 +51,7 @@ Those two anchors point to slightly different numbers, and averaging them is the
 
 **Approach 1 — current marginal funding-bar estimate**
 
-GiveWell's public benchmark is about **0.003 units of value per dollar** (Assumption 1), and its funding bar is currently **8x** that benchmark (Assumption 2). So a bar-clearing marginal opportunity produces:
+GiveWell's public benchmark is about **0.003 units of value per dollar** (Assumption 1), and its current public funding bar is **8x** that benchmark (Assumption 2). So a bar-clearing marginal opportunity produces:
 
 $$
 \text{Units per } \$ \approx 8 \times 0.003 = 0.024
@@ -150,7 +150,7 @@ Those causes can still be very valuable, but they are usually less tightly evide
 
 ## Key Uncertainties
 
-1. **How close the next marginal donor dollar really is to GiveWell's current 8x bar.** If the best current unfunded opportunities are materially better than the bar, the estimate is too pessimistic. If a donor funds weaker programs than GiveWell's current top set, it is too optimistic.
+1. **How close the next marginal donor dollar really is to GiveWell's current public 8x bar.** If the best current unfunded opportunities are materially better than the bar, the estimate is too pessimistic. If a donor funds weaker programs than GiveWell's current top set, it is too optimistic.
 2. **How many QALYs a child death averted should count for.** The 55-QALY central estimate is reasonable, but different views about lifetime health, age-weighting, or life quality can move the number.
 3. **How much non-mortality value to count.** Reduced illness, lower caregiver treatment costs, and higher later-life income are real benefits in GiveWell's models, but they do not map perfectly into a health QALY framework.
 4. **How quickly the opportunity set changes.** Malaria burden, vaccine coverage, vitamin A deficiency prevalence, and the global funding landscape can all move the marginal estimate over time.

@@ -33,18 +33,13 @@ If you disagree with these estimates after reading this page, click 'Edit' near 
 3. THL's own 2025 retrospective on its corporate cage-free campaigns found roughly 2 hens spared cages per dollar over 2015-2024. This lower benchmark likely reflects some combination of counterfactual deflection, attribution uncertainty, mixed spending across campaign stages, and the fact that later dollars go after harder targets. ([THL EA Forum Post](https://forum.effectivealtruism.org/posts/Fbx9hf2e6MaLfoNwD/cost-effectiveness-of-thl-s-corporate-cage-free-campaigns))
 4. Welfare Footprint Institute's laying-hen analysis models the laying phase as lasting 40 to 60 weeks. Because the cage-to-aviary comparison applies to the laying phase, we use the midpoint, 50 weeks (0.96 years), as the central duration of direct hen welfare improvement. ([Welfare Footprint Institute](https://welfarefootprint.org/laying-hens/))
 5. Rethink Priorities' sentience-adjusted median welfare range for chickens is 0.332 of a human's, and RP's later farmed-animal allocation tool uses 0.46 as a practical chicken default when sentience is handled separately. We use 0.33 as the central value and 0.1-0.46 as a practical sensitivity range. ([RP Welfare Range Estimates](https://rethinkpriorities.org/research-area/welfare-range-estimates/), [RP Farmed Animal Recipients Tool](https://rethinkpriorities.org/research-area/distributing-resources-across-farmed-animal-recipients/))
-6. Following Fischer's and RP's standard bridge from animal-welfare changes to DALY/QALY-equivalents, moving from conventional cages to aviaries improves hen welfare by roughly 25% of the negative portion of a chicken's welfare range. Under the 0.332 central chicken welfare range, that implies roughly 0.0415 human-equivalent QALYs per hen-year. The `0.5` term assumes the welfare range is roughly symmetric around a neutral point, so the negative portion makes up half the total range:
-
-$$0.332 \text{ (chicken welfare range)} \times 0.5 \text{ (negative share of range)} \times 0.25 \text{ (improvement from cage to aviary)} = 0.0415$$
-
-Under the 0.1-0.46 sensitivity range, it implies roughly 0.0125-0.0575 QALYs per hen-year. ([Fischer 2023](https://www.law.georgetown.edu/public-policy-journal/wp-content/uploads/sites/23/2024/02/Bob-Fischer.pdf), [RP Welfare Range Estimates](https://rethinkpriorities.org/research-area/welfare-range-estimates/))
-7. Welfare Footprint Institute's laying-hen work supports Assumption 6: compared with conventional cages, aviaries avert at least 275 hours of disabling pain, 2,313 hours of hurtful pain, and 4,645 hours of annoying pain per hen, while explicitly leaving out several likely benefits. [Our World in Data](https://ourworldindata.org/do-better-cages-or-cage-free-environments-really-improve-the-lives-of-hens) gives a clear overview of the same evidence. ([Welfare Footprint Institute](https://welfarefootprint.org/laying-hens/))
-8. Corporate commitments are not merely symbolic. Rethink Priorities' 2023 cross-country analysis found that one additional cage-free commitment increases the cage-free share of hen housing by 0.035 percentage points on average. ([RP Corporate Social Responsibility Paper](https://rethinkpriorities.org/research-area/corporate-social-responsibility/))
-9. Broiler reforms likely add substantial value on top of the hen-based baseline. Welfare Footprint Institute finds that BCC/slower-growing reforms avert at least 33 hours of disabling pain and 79 hours of hurtful pain per broiler, and likely understate the total gains because several harms are omitted. ([Welfare Footprint Institute](https://welfarefootprint.org/broilers/))
-10. ACE's 2025 review estimates that Shrimp Welfare Project's humane slaughter program averts about 48 SADs per dollar and its India water-quality program averts about 729 SADs per dollar. These are morally weighted welfare-time estimates rather than QALY estimates, so we use them only in the optimistic edge of the range rather than in the point estimate. ([ACE Shrimp Welfare Project Review](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
-11. ACE defines one SAD as one day of disabling pain for one human, after adjustments for pain intensity, sentience probability, and welfare range. We therefore use a rough cross-walk of 365 SADs = 1 suffering-equivalent human year, while noting that this is not a literal QALY conversion: disabling pain does not necessarily imply a full QALY-day lost, and SADs capture suffering averted rather than total welfare change. ([ACE Evaluation Criteria](https://animalcharityevaluators.org/charity-reviews/evaluating-charities/2024-evaluation-criteria/))
-12. Benefits begin about one year after donation because firms need time to change sourcing, facilities, and compliance systems. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/))
-13. Reforms persist for around 15 years. Older RP corporate-campaign models used 4-36 years as the plausible range for mean years of impact, and more recent fulfillment data suggest that many commitments do in fact stick once implemented. ([Rethink Priorities 2019](https://rethinkpriorities.org/research-area/corporate-campaigns-affect-9-to-120-years-of-chicken-life-per-dollar-spent/), [THL 2025 Fulfillment Report](https://thehumaneleague.org/article/2025-cage-free-fulfillment-report))
+6. Moving a laying hen from conventional cages to aviaries creates about 0.0415 human-equivalent QALYs per hen-year, with a practical range of about 0.0125-0.0575. This is derived by combining RP's chicken welfare range with a symmetry assumption around neutral welfare and a 25%-of-negative-range estimate for the cage-to-aviary improvement. ([See detailed justification](/assumption/hen-cage-free-qaly-conversion))
+7. Corporate commitments are not merely symbolic. Rethink Priorities' 2023 cross-country analysis found that one additional cage-free commitment increases the cage-free share of hen housing by 0.035 percentage points on average. ([RP Corporate Social Responsibility Paper](https://rethinkpriorities.org/research-area/corporate-social-responsibility/))
+8. Broiler reforms likely add substantial value on top of the hen-based baseline. Welfare Footprint Institute finds that BCC/slower-growing reforms avert at least 33 hours of disabling pain and 79 hours of hurtful pain per broiler, and likely understate the total gains because several harms are omitted. ([Welfare Footprint Institute](https://welfarefootprint.org/broilers/))
+9. ACE's 2025 review estimates that Shrimp Welfare Project's humane slaughter program averts about 48 SADs per dollar and its India water-quality program averts about 729 SADs per dollar. These are morally weighted welfare-time estimates rather than QALY estimates, so we use them only in the optimistic edge of the range rather than in the point estimate. ([ACE Shrimp Welfare Project Review](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
+10. ACE defines one SAD as one day of disabling pain for one human, after adjustments for pain intensity, sentience probability, and welfare range. We therefore use a rough cross-walk of 365 SADs = 1 suffering-equivalent human year, while noting that this is not a literal QALY conversion: disabling pain does not necessarily imply a full QALY-day lost, and SADs capture suffering averted rather than total welfare change. ([ACE Evaluation Criteria](https://animalcharityevaluators.org/charity-reviews/evaluating-charities/2024-evaluation-criteria/))
+11. Benefits begin about one year after donation because firms need time to change sourcing, facilities, and compliance systems. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/))
+12. Reforms persist for around 15 years. Older RP corporate-campaign models used 4-36 years as the plausible range for mean years of impact, and more recent fulfillment data suggest that many commitments do in fact stick once implemented. ([Rethink Priorities 2019](https://rethinkpriorities.org/research-area/corporate-campaigns-affect-9-to-120-years-of-chicken-life-per-dollar-spent/), [THL 2025 Fulfillment Report](https://thehumaneleague.org/article/2025-cage-free-fulfillment-report))
 
 ## Details
 
@@ -54,7 +49,7 @@ The point estimate uses a hen-QALY model because this is the cleanest current ev
 
 ### Central calculation
 
-Using the current ACE benchmark of 11 hens helped per dollar (Assumption 2), 50 weeks of improved laying-life conditions per hen (Assumption 4), and 0.0415 QALYs per hen-year (Assumptions 5-7):
+Using the current ACE benchmark of 11 hens helped per dollar (Assumption 2), 50 weeks of improved laying-life conditions per hen (Assumption 4), and 0.0415 QALYs per hen-year (Assumption 6):
 
 $$\text{QALYs per } \$1 = 11 \times \dfrac{50}{52} \times 0.0415 \approx 0.44$$
 $$\text{Cost per QALY} = \dfrac{\$1}{0.44} \approx \$2.28$$
@@ -63,11 +58,9 @@ This yields a central estimate of about \$2.3 per QALY.
 
 Here, the 11 hens-per-dollar figure is treated as the total marginal impact of a donation, not as an annual rate that recurs throughout the 15-year window. In the model, `windowLength` determines how benefits are distributed through time for discounting and truncation, not how many times the core effect repeats.
 
-### Why 25% of the negative welfare range is reasonable
+### Hen-to-QALY conversion
 
-The 25% figure is a bridge assumption used to translate welfare science into QALY-equivalents. Fischer's DALY-conversion framework and RP's welfare-range work provide the conversion structure. Welfare Footprint Institute's later laying-hen analysis provides the empirical support: aviaries avert thousands of hours of pain per hen relative to conventional cages, and the estimate excludes several likely benefits (Assumption 7).
-
-This assumption is an important source of uncertainty. Holding the other central inputs fixed, moving the bridge assumption from 15% to 35% would shift the central estimate from about \$3.8/QALY to about \$1.6/QALY.
+Assumption 6 is the most model-dependent part of this estimate, so it has its own page. In brief, it combines RP's chicken welfare range with a symmetry assumption around neutral welfare and a 25%-of-negative-range estimate for moving from conventional cages to aviaries. ([See detailed justification](/assumption/hen-cage-free-qaly-conversion))
 
 ### Why we do not use the older 9-120 chicken-years/\$ model for the point estimate
 
@@ -108,11 +101,11 @@ This optimistic case uses ACE's own current shrimp estimate and an explicit SAD-
 
 ### Start Time
 
-The 1-year start time reflects the lag between donations and realized animal outcomes as companies change sourcing, infrastructure, and reporting/compliance systems (Assumption 12).
+The 1-year start time reflects the lag between donations and realized animal outcomes as companies change sourcing, infrastructure, and reporting/compliance systems (Assumption 11).
 
 ### Duration
 
-The 15-year duration reflects the fact that implemented reforms affect multiple flock cycles and often persist for many years once supply chains change. It also sits comfortably inside RP's older 4-36 year range for years of impact and near the middle of the plausible durability range (Assumption 13).
+The 15-year duration reflects the fact that implemented reforms affect multiple flock cycles and often persist for many years once supply chains change. It also sits comfortably inside RP's older 4-36 year range for years of impact and near the middle of the plausible durability range (Assumption 12).
 
 {{CONTRIBUTION_NOTE}}
 

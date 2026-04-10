@@ -12,6 +12,9 @@ description: |
 
 We want these estimates to be the best all-things-considered attempt at estimating effectiveness of cause areas and recipients in the world. Do extremely deep research, reason very hard and very carefully, and try to procude the clearest and most well-justified estimates that you possibly can.
 
+These estimates are based on the premise that we can in theory convert any benefit to some equivalent amount of QALYs. Similar to how any commodity has a conversion into money. There is SOME amount of QALYs that someone would be indifferent to recieving vs. some benefit under consideration.
+Therefore we should not give caveats about how QALYs are a "narrow" metric, and we shouldn't feel compelled to focus on easily measurable health effects of interventions just because QALY is our unit of measurement. We want to captupe the main significant effects of interventions no matter what form they take, and express them in terms of QALYs even if this involves approximation and uncertainty.
+
 ## Core Principles
 
 When working on effectiveness estimations, always:

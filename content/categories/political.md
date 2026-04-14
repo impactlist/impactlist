@@ -70,28 +70,28 @@ Where:
 
 Using the central assumptions:
 
-- $C = \$10{,}000{,}000$
-- $p = 0.01$
-- $g = 0.05$
-- $B = \$1{,}500{,}000{,}000$
-- $e = \$1{,}500/\text{QALY}$
+- $C$ = \$10,000,000
+- $p$ = 0.01
+- $g$ = 0.05
+- $B$ = \$1,500,000,000
+- $e$ = \$1,500/QALY
 
 So:
 
 $$
-\frac{B}{e} = \frac{1{,}500{,}000{,}000}{1{,}500} = 1{,}000{,}000 \text{ QALYs}
+\dfrac{B}{e} = \dfrac{1{,}500{,}000{,}000}{1{,}500} = 1{,}000{,}000 \text{ QALYs}
 $$
 
 $$
-g \times \frac{B}{e} = 0.05 \times 1{,}000{,}000 = 50{,}000 \text{ QALYs}
+g \times \dfrac{B}{e} = 0.05 \times 1{,}000{,}000 = 50{,}000 \text{ QALYs}
 $$
 
 $$
-p \times g \times \frac{B}{e} = 0.01 \times 50{,}000 = 500 \text{ QALYs}
+p \times g \times \dfrac{B}{e} = 0.01 \times 50{,}000 = 500 \text{ QALYs}
 $$
 
 $$
-\text{Cost per QALY} = \frac{10{,}000{,}000}{500} = \$20{,}000
+\text{Cost per QALY} = \dfrac{10{,}000{,}000}{500} = 20{,}000
 $$
 
 So the point estimate is **\$20,000/QALY**.

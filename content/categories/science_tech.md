@@ -59,10 +59,10 @@ Where:
 
 Using the central assumptions:
 
-- $v = \$100{,}000$
-- $r = 0.25$
-- $a = 0.25$
-- $d = 25$
+- $v$ = \$100,000
+- $r$ = 0.25
+- $a$ = 0.25
+- $d$ = 25
 
 So the expected welfare-equivalent dollars created per donated dollar are:
 
@@ -107,9 +107,9 @@ The stated range is a practical sensitivity range, not a full confidence interva
 
 **Optimistic case**
 
-- $r = 0.40$
-- $a = 0.40$
-- $d = 30$
+- $r$ = 0.40
+- $a$ = 0.40
+- $d$ = 30
 
 This gives:
 
@@ -121,9 +121,9 @@ Rounded, that is about **\$20,000/QALY**.
 
 **Pessimistic case**
 
-- $r = 0.15$
-- $a = 0.10$
-- $d = 25$
+- $r$ = 0.15
+- $a$ = 0.10
+- $d$ = 25
 
 This gives:
 

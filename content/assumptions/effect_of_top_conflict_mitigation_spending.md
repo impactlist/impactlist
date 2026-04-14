@@ -3,7 +3,7 @@ id: effect-of-top-conflict-mitigation-spending
 name: 'Effect of top conflict-mitigation spending'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 14th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
 
 ## How much conflict does top-tier conflict-mitigation spending avert?
 
@@ -73,7 +73,7 @@ A reasonable compromise is:
 - **Upper bound:** top-tier philanthropy gets about **8%** of the system-wide effect
 - **Central view:** about **5%**
 
-This is still a fairly conservative allocation. It says that the organizations we are modeling are important, but remain only a small part of the total conflict-management ecosystem.
+This still leaves top-tier philanthropy as only a small part of the total conflict-management ecosystem, even while allowing that especially strong mediation organizations may be more leveraged per dollar than the average peacebuilding spender.
 
 This is also the most opinion-dependent part of the derivation. A skeptic could argue for something more like **0.5–2%** if governments and the UN are doing almost all of the causal work. A more optimistic reader could argue for something more like **10–15%** if top mediation NGOs are much more leveraged per dollar than the rest of the system. The **2–8%** range is therefore best understood as a judgment call, not a tightly evidenced interval.
 
@@ -141,15 +141,15 @@ $$
 
 which is about **0.11%** per **\$1 million**.
 
-That is why the category uses **0.1%** as the point estimate. It is slightly below this direct midpoint.
+That is why the category uses **0.1%** as the point estimate. It is a rounded best guess from this BOTEC's central neighborhood.
 
-This arithmetic also implicitly assumes that the conflicts these organizations engage with are of roughly **representative serious-conflict-year** size. That is a simplification. If top mediation organizations disproportionately work on very high-burden conflicts, the estimate could be conservative. If they often work on lower-burden or earlier-stage conflicts, it could be optimistic.
+This arithmetic also implicitly assumes that the conflicts these organizations engage with are of roughly **representative serious-conflict-year** size. That is a simplification. If top mediation organizations disproportionately work on very high-burden conflicts, the estimate could understate their effect. If they often work on lower-burden or earlier-stage conflicts, it could overstate it.
 
 ---
 
 ## 5. Why widen the practical range to 0.03–0.3%?
 
-The direct BOTEC above gives something like **0.05–0.2%**. We widen that slightly to **0.03–0.3%** because there are several uncertainties that the simple arithmetic does not capture well:
+The direct BOTEC above gives something like **0.04–0.18%**. We widen that slightly to **0.03–0.3%** because there are several uncertainties that the simple arithmetic does not capture well:
 
 - the NGO share of system-level effect could be below **2%** if governments and regional actors do more of the real causal work
 - or above **8%** if top mediation NGOs are much more leveraged per dollar than average peacekeeping or state spending
@@ -164,12 +164,9 @@ So **0.03–0.3%** is best read as a practical working range rather than a stati
 
 Coefficient Giving / Open Philanthropy gives a useful independent cross-check. Their BOTEC notes that HD's annual budget was about **\$42 million** across **23 conflict zones**, or about **\$2 million per country-year**, and argues that a marginal HD mediation-year would only need about a **0.52%** chance of ending a war one year sooner to clear a very high philanthropic-return bar. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/))
 
-Our category estimate is more conservative than that BOTEC in two ways:
+That **0.52%** figure is a break-even threshold in a different BOTEC, not an estimate of the true marginal probability. So it should not be compared one-for-one with the **0.1%** point estimate here.
 
-- it uses **0.1%**, not **0.52%**
-- it values outcomes mainly through **health-weighted QALY losses**, not a broader welfare measure that also includes most income losses
-
-So the central **0.1%** assumption does not look aggressive relative to existing cause-prioritization work.
+The main basis for the central tractability estimate on this page is the direct arithmetic above: **1.84** system-level conflict-years avoided per year, a **2–8%** top-tier philanthropic share, and **\$80–90 million** of relevant budgets imply about **0.04–0.18%** per **\$1 million**, which supports a rounded best guess of **0.1%**.
 
 ---
 
@@ -185,7 +182,7 @@ This could make the estimate too optimistic if:
 
 On the other hand, HD's annual report explicitly says it is **expanding the scope of fundraising** and welcomes more **flexible funding** to remain agile and respond to new conflicts. That is weak but real evidence that room for more funding is not zero. ([HD Annual Report 2023](https://hdcentre.org/wp-content/uploads/2024/07/Annual-report-2023_English-Final_Web.pdf))
 
-Overall, these considerations argue for using a **conservative central estimate** rather than the raw midpoint of the optimistic case.
+Overall, these considerations support using a round central estimate of about **0.1%** rather than treating the upper end of the BOTEC range as typical.
 
 ---
 

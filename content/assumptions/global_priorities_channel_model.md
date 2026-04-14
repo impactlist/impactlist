@@ -72,7 +72,7 @@ The site's own category estimates already suggest that serious opportunities spa
 - [Global Development](/category/global-development): about **\$210/QALY**
 - [Climate Change](/category/climate-change): about **\$590/QALY**
 - [Human Rights](/category/human-rights): about **\$600/QALY**
-- [Conflict Mitigation](/category/conflict-mitigation): about **\$1,000/QALY**
+- [Conflict Mitigation](/category/conflict-mitigation): about **\$333/QALY**
 - [Institutions](/category/institutions): about **\$3,000/QALY**
 
 Coefficient Giving's public bar is even stronger: it says its current minimum grantmaking bar is roughly equivalent to **one healthy life-year per \$50** spent. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/))

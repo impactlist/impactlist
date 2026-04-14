@@ -3,7 +3,7 @@ id: meta-theory-channel-model
 name: 'Meta and Theory channel model'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 14th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
 
 ## How should Meta and Theory be modeled?
 
@@ -15,7 +15,7 @@ The category page for Meta and Theory uses a two-channel model:
 The point of this page is to justify three judgment calls that are too important to leave implicit:
 
 - the **40% / 60%** channel split
-- the decision to use **\$100/QALY** for the direct channel and **\$300/QALY** for the broader channel
+- the decision to use **\$100/QALY** for the direct channel and **\$150/QALY** for the broader channel
 - the decision to treat GiveWell's operating-leverage numbers as only a loose cross-check rather than the same kind of multiplier as GWWC or The Life You Can Save
 
 ## 1. Why split the category into two channels?
@@ -24,7 +24,7 @@ The public evidence is not all of one kind.
 
 Some organizations in this space mainly **move money directly** or help donors choose better charities. That is the cleanest and easiest channel to quantify. Giving What We Can, The Life You Can Save, and GiveWell all publish some version of money moved, donations caused, or dollars directed.
 
-Other organizations in this space mainly **change careers, institutions, worldviews, or research agendas**. Their impact is probably real, but it is harder to measure with direct donation metrics. 80,000 Hours is the clearest example, but parts of the category also include public-intellectual work, community infrastructure, and other interventions where the pathway from output to later QALYs is much longer and noisier.
+Other organizations in this space mainly **change careers, institutions, worldviews, or research agendas**. Their impact is probably real, but it is harder to measure with direct donation metrics. 80,000 Hours is the clearest example, but parts of the category also include public-intellectual work, community infrastructure, and other interventions where the pathway from output to later welfare gains is much longer and noisier.
 
 Trying to force all of that into one multiplier hides too much structure. A two-channel model is a useful compromise between realism and simplicity.
 
@@ -61,27 +61,31 @@ The direct channel here is only slightly worse: **\$100/QALY**. That small downg
 
 So the direct channel should stay close to the site's top global-health estimate, but not automatically equal it.
 
-## 4. Why is the broader channel benchmark \$300/QALY?
+## 4. Why is the broader channel benchmark \$150/QALY?
 
-The broader career/worldview channel should be materially worse than the direct money-moving channel for the purposes of this site.
+The broader career/worldview channel should not simply be assigned the same benchmark as the direct money-moving channel, but the reason is downstream portfolio mix, not that its effects are outside the metric.
 
-That is not because careers or worldview work are unimportant. It is because the category page is trying to translate everything back into **human-welfare QALYs**, and this broader channel often points to downstream effects that are harder to map into that unit:
+The right question is what kinds of downstream opportunities this channel tends to steer people toward, expressed in all-things-considered QALY-equivalent terms. Those downstream targets are broad:
 
 - institution building
 - mixed cause portfolios
-- longtermist work
+- longtermist and catastrophic-risk work
 - talent pipelines whose eventual destination is uncertain
-- theory or worldview shifts that improve judgment without immediately causing donations to top global-health charities
+- theory or worldview shifts that improve judgment and later allocation
 
-If we used something close to **\$90-\$100/QALY** for this broader channel too, we would be implicitly assuming that most of its downstream value looks almost as direct and as legible as GiveWell-style money moved. That seems too optimistic.
+Under the site's current cause estimates, that opportunity set spans a very wide range: [Animal Welfare](/category/animal-welfare) is about **\$2.3/QALY**, [Global Priorities Research](/category/global-priorities) about **\$5/QALY**, [Global Health](/category/global-health) about **\$90/QALY**, [Global Development](/category/global-development) about **\$210/QALY**, [Conflict Mitigation](/category/conflict-mitigation) about **\$333/QALY**, and [Improving Institutions](/category/institutions) about **\$3,000/QALY**. The broader meta channel plausibly sends people toward a mix across this spread, and 80,000 Hours' current public materials suggest a particularly strong focus on AGI-related careers and catastrophic-risk reduction rather than only near-term global health. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/))
 
-If we used something like **\$500-\$1,000/QALY** centrally, we would probably be going too far the other way, because some of this channel really does push substantial money and talent toward very strong opportunities.
+Some of that downstream mix likely points into [AI Existential Risk](/category/ai-risk), [Pandemics](/category/pandemics), and [Nuclear](/category/nuclear). Those pages do not currently use ordinary **\$/QALY** estimates, so they cannot simply be inserted into the weighted-average list above. The broader-channel benchmark therefore has to treat catastrophic-risk destinations as part of one all-things-considered QALY-equivalent portfolio rather than as directly observed on-site **\$/QALY** numbers.
 
-So **\$300/QALY** is a compromise:
+If we used something close to **\$90-\$100/QALY** for this broader channel too, we would be implicitly assuming that its downstream opportunity mix is nearly as targeted as direct evaluator or money-moving work. That seems too optimistic.
 
-- clearly worse than direct effective-giving
-- still much better than ordinary untargeted philanthropy
-- consistent with the idea that many downstream wins are real but only partially legible in near-term human-welfare terms
+If we used something like **\$300-\$1,000/QALY** centrally, we would be implicitly treating the broader channel as though its main downstream destinations were much weaker than top global health simply because they are broader, more strategic, or longer-run. That is not the right adjustment either.
+
+So **\$150/QALY** is a compromise:
+
+- at a slightly higher **\$/QALY** than the direct channel's **\$100/QALY** benchmark, because the downstream portfolio is more heterogeneous and includes both very strong and much weaker destinations
+- below ordinary mixed-portfolio philanthropy, because many downstream wins still point toward very strong cause areas
+- consistent with a world where some value runs through catastrophic-risk destinations that the site does not yet express in ordinary **\$/QALY** terms
 
 ## 5. Why not treat GiveWell's ratio as the same kind of multiplier as GWWC's 6x?
 
@@ -105,30 +109,30 @@ Using the central assumptions from the category page:
 - direct share: **40%**
 - broader share: **60%**
 - direct channel: **8x** on **\$100/QALY**
-- broader channel: **4x** on **\$300/QALY**
+- broader channel: **4x** on **\$150/QALY**
 
 Then:
 
 $$
-\text{QALYs per } \$1 = 0.4 \times \frac{8}{100} + 0.6 \times \frac{4}{300}
+\text{QALYs per } \$1 = 0.4 \times \frac{8}{100} + 0.6 \times \frac{4}{150}
 $$
 
 $$
-= 0.032 + 0.008 = 0.04
+= 0.032 + 0.016 = 0.048
 $$
 
 $$
-\text{Cost per QALY} = \frac{1}{0.04} = \$25
+\text{Cost per QALY} = \frac{1}{0.048} \approx \$20.8
 $$
 
-So the channel model implies **\$25/QALY**.
+So the channel model implies about **\$21/QALY**.
 
 ## 7. Main uncertainty
 
 The biggest uncertainty is not the arithmetic. It is whether the broader career/worldview channel should be:
 
 - given more or less weight than **60%**
-- treated as closer to **\$200/QALY** or closer to **\$500/QALY**
+- treated as closer to **\$50/QALY** or closer to **\$500/QALY**
 - assigned a multiplier much above or below **4x**
 
 Those are the judgments most likely to move the category estimate materially.

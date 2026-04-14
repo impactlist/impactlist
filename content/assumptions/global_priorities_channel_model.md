@@ -67,7 +67,7 @@ This benchmark is not meant to represent ordinary untargeted philanthropy. It is
 The site's own category estimates already suggest that serious opportunities span a very wide range:
 
 - [Animal Welfare](/category/animal-welfare): about **\$2.3/QALY**
-- [Meta and Theory](/category/meta-theory): about **\$25/QALY**
+- [Meta and Theory](/category/meta-theory): about **\$21/QALY**
 - [Global Health](/category/global-health): about **\$90/QALY**
 - [Global Development](/category/global-development): about **\$210/QALY**
 - [Climate Change](/category/climate-change): about **\$590/QALY**

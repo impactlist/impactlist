@@ -5,12 +5,12 @@ effects:
   - effectId: standard
     startTime: 2
     windowLength: 20
-    costPerQALY: 600
+    costPerQALY: 310
 ---
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 14th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
 
 We arrive at the cost per life by estimating the cost per
 [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying
@@ -22,12 +22,14 @@ assumptions for this and other relevant parameters).
 This effect captures welfare gains from donations to unusually effective, relatively non-ideological human-rights
 charities that reduce severe rights violations with direct welfare consequences: especially preventing violence
 against women and girls (VAWG), reducing bonded labour and trafficking, and related community-level protection and
-empowerment work. It does **not** try to model the average human-rights NGO, nor broad expressive advocacy or
-litigation with very unclear welfare effects per dollar.
+empowerment work. The model is meant to be **all-things-considered**: it includes safety, mental health, autonomy,
+dignity, social functioning, and freedom from exploitation after converting those effects into **QALY-equivalent**
+terms. It does **not** try to model the average human-rights NGO, nor use broad expressive advocacy or litigation to
+anchor the headline estimate when the public evidence is still too thin.
 
 ## Point Estimates
 
-- **Cost per QALY:** \$600 (\$100–\$5,000)
+- **Cost per QALY:** \$310 (\$100–\$4,000)
 - **Start time:** 2 years
 - **Duration:** 20 years
 
@@ -41,30 +43,27 @@ this page and enter your own values.*
    averted**, while the broad cross-intervention range ran from **\$222** to **\$17,548**; for the particularly strong
    Ghana community intervention, the paper also reports about **\$52 per DALY for women only** and **\$360 per DALY**
    when both women and men are included. ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827))
-2. Those VAWG DALY figures likely understate full welfare gains, because the analysis used a **1-year horizon**,
-   counted only a **subset of health consequences**, and assumed **no mortality impact** or post-intervention effects.
-   ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827))
-3. For category-level marginal giving, it is appropriate to mark up the best trial-based VAWG results by several-fold
-   for external-validity, scaling, and publication-bias risk rather than using them literally.
+2. Those measured VAWG DALYs likely understate full welfare gains. A reasonable central conversion is that **1 DALY
+   averted** in this literature corresponds to about **2.5 QALY-equivalent welfare gains** in total, with a practical
+   range of about **1–4**, once omitted mortality risk, post-intervention persistence, safety, autonomy, dignity, and
+   broader psychosocial harms are included. ([See detailed justification](/assumption/human-rights-welfare-conversion))
+3. For category-level marginal giving, a reasonable central external-validity markup on the strongest VAWG trial
+   results is about **3x**, with a practical range of **1.5x–5x**, to account for transportability, scaling, and
+   publication-bias risk.
 4. Community-based anti-bonded-labour programs in Freedom Fund's India hotspots appear promising but are supported by
    weaker evidence than the VAWG literature. A Freedom Fund evidence paper summarising external evaluations reports
    roughly **125,000 fewer individuals in bonded labour** across target villages after about **\$15.8 million** in
-   spending across two India hotspots, while a Freedom Fund Tamil Nadu prevalence report based on participatory
-   statistics reports bonded-labour prevalence falling from **56.1% to 11.1%** in intervention communities.
-   ([Freedom Fund 2024 evidence paper](https://www.freedomfund.org/app/uploads/2024/03/Freedom-Fund-Evidence-in-Practice-Paper-Unlocking-what-works.pdf))
-5. Labour exploitation typically lasts years, not weeks. One temporal study of modern-slavery cases estimated mean
-   duration of **adult labour exploitation** at about **775 days**, or roughly **2.1 years**. ([Lightowlers et al. 2024](https://journals.sagepub.com/doi/10.1177/17488958221094988))
-6. Trafficking and modern-slavery survivors experience substantial physical and psychological harm. Reviews find high
-   prevalence of depression, anxiety, PTSD, CPTSD, and physical symptoms; one CPTSD review reports about **41%**
-   prevalence among survivors, and an Indian study reports mean **EQ-5D utility of 0.731** among people with
-   depression. ([Ottisova et al. 2016](https://pmc.ncbi.nlm.nih.gov/articles/PMC7137602/), [Evans et al. 2022](https://www.elsevier.es/en-revista-european-journal-psychiatry-431-avance-resumen-prevalence-complex-post-traumatic-stress-disorder-S0213616322000076), [Pathak et al. 2025](https://pmc.ncbi.nlm.nih.gov/articles/PMC12331007/))
-7. Taking the duration and health-burden evidence together, a rough portfolio assumption of **0.2–0.4 QALYs lost per
-   year** while in bonded labour is reasonable. The idea is that exploitation plausibly lowers average health-related
-   utility from something near **1.0** to roughly **0.6–0.8** once depression, PTSD, anxiety, pain, and restricted
-   agency are combined, while also recognizing that the cited Indian EQ-5D paper is about general depression patients
-   rather than bonded-labour victims specifically. So this should be read as a judgment call informed by the
-   literature, not a directly measured estimate. Combining that with roughly **2–4 years** of exploitation avoided per
-   person implies about **0.4–1.6 QALYs** gained per person freed.
+   spending across two India hotspots, implying roughly **\$126** per fewer person in bondage. ([Freedom Fund 2024 evidence paper](https://www.freedomfund.org/app/uploads/2024/03/Freedom-Fund-Evidence-in-Practice-Paper-Unlocking-what-works.pdf))
+5. A typical person avoiding bonded labour or similar labour trafficking plausibly gains about **1.0 QALY-equivalent**
+   in total, with a practical range of about **0.4–2.0**. This combines health-related quality-of-life loss,
+   exploitation duration, fear, shame, worthlessness, restricted agency, and impaired daily functioning into one
+   all-things-considered welfare estimate. ([See detailed justification](/assumption/human-rights-welfare-conversion))
+6. For category-level marginal giving, the Freedom Fund-style anti-slavery evidence should be discounted by about
+   **4x**, with a practical range of **2x–8x**, for attribution, substitution, durability, and multi-component-program
+   uncertainty.
+7. A reasonable central portfolio split for this category is about **70% VAWG prevention** and **30% anti-slavery /
+   anti-trafficking work**. This is a modeling judgment about the strongest current direct-welfare human-rights
+   opportunities rather than a literal budget breakdown of the whole field.
 
 ## Details
 
@@ -75,8 +74,9 @@ The cleanest way to estimate this category is to anchor on the two parts of the 
 1. **Well-evaluated VAWG prevention**
 2. **Promising community-based anti-bonded-labour work**
 
-This is intentionally narrower than "all human rights philanthropy." Much broader legal and advocacy work may still be
-important, but the public evidence base is not strong enough to let it drive the point estimate.
+This anchor is narrower than "all human rights philanthropy" because the public evidence is strongest here. Much
+broader legal and advocacy work may still be extremely important, but the public evidence base is not yet strong
+enough to let it drive the point estimate.
 
 **Approach 1 — VAWG prevention**
 
@@ -85,23 +85,23 @@ interventions in that paper are community- or school-based prevention programs i
 with the strongest general headline figure at about **\$222 per DALY averted** and one especially strong Ghana estimate
 at **\$52 per DALY for women only**.
 
-For a category page, it would be too optimistic to simply copy the best trial result into the headline number. A donor
-today is not buying the average dollar inside a tightly studied RCT. To adjust for transportability, scaling, and
-publication-bias risk, we multiply the stronger VAWG figures by roughly **2-4x**.
+Ferrari et al. explicitly notes that the DALY analysis uses a **1-year horizon**, includes only a **subset of health
+consequences**, assumes **no mortality impact**, and separately reports broader social and economic effects in impact
+inventories. So the measured DALYs should not be treated as the full welfare effect. The dedicated assumption page
+uses a central conversion of about **2.5 QALY-equivalent welfare gains per measured DALY averted** once those omitted
+harms are brought back into the model. ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827), [See detailed justification](/assumption/human-rights-welfare-conversion))
+
+For a category page, simply copying the best trial result into the headline number would probably overstate the likely
+value of a marginal donor dollar. A donor today is not buying the average dollar inside a tightly studied RCT. To
+adjust for transportability, scaling, and publication-bias risk, we multiply the stronger VAWG figures by about **3x**.
 
 Using the strongest broadly stated research-setting result:
 
 $$
-\$222 \times 2 \approx \$444
+\$222 \times \frac{3}{2.5} \approx \$266
 $$
 
-So a reasonable category-level central figure for top-tier VAWG prevention is about **\$450-\$500 per QALY**.
-
-This is already conservative in one important way: we are treating **1 DALY as roughly 1 QALY** here rather than
-adding an extra multiplier for autonomy, safety, dignity, social functioning, or longer-run downstream effects. Those
-extra harms are real, but the public evidence is not strong enough to convert them cleanly into a further QALY uplift
-without risking false precision or double counting. Since Ferrari et al. already excludes some downstream gains, a 1:1
-conversion is best interpreted as a conservative simplification rather than as a claim that non-health harms are zero.
+So a reasonable category-level central figure for top-tier VAWG prevention is about **\$266/QALY-equivalent**.
 
 As an external validity check, this is directionally consistent with the broader VAWG evidence base. For example,
 SASA!, a well-known community mobilisation intervention in Kampala, reduced continuation and onset of multiple forms of
@@ -120,63 +120,51 @@ $$
 
 per fewer person in bondage.
 
-To turn that into QALYs, we need a rough welfare-loss estimate per victim. Using Assumptions 5-7:
-
-- **Central annual loss:** 0.3 QALYs
-- **Central duration avoided:** 2.1 years
-
-The 0.3 figure is a judgment call, not a direct measurement: it roughly corresponds to exploitation reducing average
-utility from about **1.0** to about **0.7**, which is directionally consistent with the severe-mental-health evidence
-above and with the Indian EQ-5D depression anchor, while still being conservative about harms that are hard to
-quantify.
-
-So:
+To turn that into QALY-equivalents, we use the dedicated welfare-conversion assumption page. The central estimate is
+about **1.0 QALY-equivalent per person** avoiding bonded labour. In rough terms, that corresponds to a little over
+**2 years** of exploitation avoided at about **0.5 QALY-equivalents of annual welfare loss**, combining mental-health
+and physical harm with fear, shame, restricted agency, and impaired daily functioning. In QALY-equivalent terms:
 
 $$
-0.3 \times 2.1 = 0.63 \text{ QALYs per person}
+\frac{\$126}{1.0} = \$126 \text{ per QALY-equivalent}
 $$
 
-and:
+That raw figure likely overstates category-level marginal impact because the India hotspot evidence is not randomised,
+the interventions are multi-component, and the prevalence decline may overstate durable marginal impact due to
+substitution, secular change, or imperfect attribution. Applying a central penalty of about **4x** gives:
 
 $$
-\frac{\$126}{0.63} \approx \$200 \text{ per QALY}
+\$126 \times 4 = \$504
 $$
 
-That figure is too optimistic to use directly because the India hotspot evidence is not randomised, the interventions
-are multi-component, and the prevalence decline may overstate durable marginal impact due to substitution, secular
-change, or imperfect attribution. Applying a large penalty of about **4x** gives:
-
-$$
-\$200 \times 4 = \$800
-$$
-
-So **\$800/QALY** is a reasonable all-things-considered central figure for promising anti-bonded-labour work.
+So **about \$500/QALY-equivalent** is a reasonable all-things-considered central figure for promising anti-bonded-labour
+work.
 
 **Combined**
 
-Modeling the category as roughly **70% VAWG prevention** at **\$500/QALY** and **30% anti-slavery work** at
-**\$800/QALY** gives:
+Modeling the category as roughly **70% VAWG prevention** at **\$266/QALY** and **30% anti-slavery work** at
+**\$504/QALY** gives:
 
 $$
-\text{QALYs per } \$1 = \frac{0.7}{500} + \frac{0.3}{800} = 0.001775
+\text{QALYs per } \$1 = \frac{0.7}{266} + \frac{0.3}{504} \approx 0.00322
 $$
 
 $$
-\text{Cost per QALY} \approx \frac{1}{0.001775} \approx \$563
+\text{Cost per QALY} \approx \frac{1}{0.00322} \approx \$310
 $$
 
-Rounded to one significant digit, that gives a point estimate of **\$600/QALY**.
+That gives a point estimate of about **\$310/QALY**.
 
 **Range**
 
-The low end is around **\$100/QALY** if a donor accesses unusually strong VAWG opportunities close to the best
-published results and anti-slavery work near the high end of the India hotspot interpretation.
+The low end is around **\$100/QALY** if a donor accesses unusually strong VAWG opportunities near the best published
+results and anti-slavery work near the optimistic end of the hotspot interpretation.
 
-The high end is around **\$5,000/QALY** if the donor funds weaker implementations, if anti-slavery effects are much
-less durable or less attributable than they first appear, or if the portfolio leans toward broader justice and legal
-work whose welfare effects are real but much harder to quantify.
+The high end is around **\$4,000/QALY** if the donor funds weaker implementations, if anti-slavery effects are much
+less durable or less attributable than they first appear, or if the portfolio leans toward weaker direct-welfare
+rights work than the category is trying to model.
 
-So **\$100-\$5,000/QALY** is best read as a practical sensitivity range, not a formal confidence interval.
+So **\$100-\$4,000/QALY** is best read as a practical sensitivity range, not a formal confidence interval.
 
 ### Start Time
 
@@ -210,11 +198,12 @@ They are **not** estimates for:
 
 - The average general-purpose human-rights NGO
 - Broad culture-war or expressive advocacy projects
-- High-level litigation or legal reform work with very unclear counterfactual effects per dollar
+- High-level litigation or legal reform work whose public causal evidence is still too thin to anchor the headline
+  estimate
 - Generic criminal-justice reform philanthropy in rich countries
 
-Those efforts may still matter morally and politically. They are just much harder to price in QALYs with any real
-confidence.
+Those efforts may still matter a great deal. They are just not the best-evidenced anchors for the category's current
+point estimate.
 
 ## Key Uncertainties
 
@@ -222,20 +211,20 @@ confidence.
    very best trial results may not be fully reproducible everywhere.
 2. **How strong the anti-slavery hotspot evidence really is.** The reported prevalence reductions are impressive, but
    attribution, substitution, and persistence remain major uncertainties.
-3. **How much extra welfare lies outside measured DALYs.** VAWG and bonded labour both involve autonomy, fear,
-   humiliation, and reduced agency, much of which is only partially captured in health metrics.
+3. **How large the broader-welfare uplift should be.** VAWG and bonded labour both involve autonomy, fear,
+   humiliation, and reduced agency, and the hard question is how much additional QALY-equivalent value those effects
+   add on top of measured health consequences.
 4. **What the best marginal opportunities look like today.** This page is trying to model the strongest current
    donation opportunities, not the field average.
 5. **How much to count broader legal and institutional work.** Some justice reforms could be extremely valuable, but
-   the evidence is currently too thin for them to anchor the headline number.
+   the evidence is currently too thin for them to anchor the headline number yet.
 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
 
-- The biggest modeling choice here is to let **VAWG prevention** anchor the estimate and treat **anti-slavery work** as
-  a secondary corroborating stream rather than pretending all of "human rights and justice" is equally measurable.
-- The best candidate for a dedicated future assumption page is the **QALY loss from bonded labour / trafficking**. That
-  is the shakiest quantitative bridge in the current file.
+- The biggest modeling choices are now: the **VAWG welfare uplift**, the **bonded-labour QALY-equivalent loss**, and
+  the **70/30 portfolio split**.
 - If stronger public evidence appears on high-leverage legal empowerment or criminal-justice reform per dollar, this
-  page may eventually justify a broader scope. Right now that would mostly add false precision.
+  page may eventually justify a broader scope. Right now the direct-welfare rights interventions still provide the
+  clearest anchor.

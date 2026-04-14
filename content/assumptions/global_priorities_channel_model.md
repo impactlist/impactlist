@@ -71,7 +71,7 @@ The site's own category estimates already suggest that serious opportunities spa
 - [Global Health](/category/global-health): about **\$90/QALY**
 - [Global Development](/category/global-development): about **\$210/QALY**
 - [Climate Change](/category/climate-change): about **\$590/QALY**
-- [Human Rights](/category/human-rights): about **\$600/QALY**
+- [Human Rights](/category/human-rights): about **\$310/QALY**
 - [Conflict Mitigation](/category/conflict-mitigation): about **\$333/QALY**
 - [Institutions](/category/institutions): about **\$3,000/QALY**
 

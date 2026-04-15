@@ -130,9 +130,7 @@ So **1 year** is a reasonable round portfolio-average start time: slower than as
 
 We use a **60-year** duration because these programs mainly avert deaths among children under 5, so the benefits last for roughly the rest of those children's lives.
 
-This is not the same thing as saying each death averted equals exactly **60 QALYs**. The duration field measures **how long** the benefit lasts, while the QALY estimate also adjusts for the fact that not every year is lived in perfect health. That is why the point estimate uses **55 QALYs per death averted** in the cost-effectiveness calculation but still keeps the duration at **60 years**.
-
-Using 60 years is also not aggressive. Sub-Saharan African life expectancy at birth is already about **62 years**, and conditional life expectancy after surviving early childhood is higher than life expectancy at birth. So a 60-year modeling window is a reasonable round approximation for an under-five child-survival portfolio.
+The duration field measures **how long** the benefit lasts, while the cost-effectiveness calculation separately uses **55 QALYs per death averted** to account for less-than-perfect health. A 60-year window is therefore a reasonable round approximation for an under-five child-survival portfolio.
 
 ## What Kinds of Charities Are We Modeling?
 

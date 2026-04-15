@@ -199,9 +199,7 @@ The **1-year** start time reflects the lag from donation to election to governin
 
 ### Duration
 
-The **4-year** duration reflects one governing term. Some policy gains clearly last longer than that, while others are reversed faster. We use 4 years because it fits the central story of election-dependent appropriations and regulatory priorities without assuming that every political win becomes permanently locked in.
-
-This is a deliberately term-level duration. A good ballot initiative or a durable statutory reform can matter for much longer than 4 years, but pushing the duration much higher would bundle in persistence assumptions that the rest of the model does not explicitly estimate.
+The **4-year** duration reflects one governing term. Some policy gains last longer and others are reversed faster, but a term-length window fits election-dependent appropriations and regulatory priorities without baking in large persistence assumptions.
 
 ## What Kinds of Charities Are We Modeling?
 

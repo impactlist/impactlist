@@ -131,13 +131,6 @@ So 15 years is a compromise between very short timelines and much slower views.
 
 The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Because extinction eliminates all future generations within the chosen horizon, the value of this cause area is extremely sensitive to how much weight you place on future people.
 
-Example time limits:
-
-- **40 years** counts roughly the remaining lives of people alive today
-- **100 years** (default) includes the next few generations
-- **1,000 years** includes many descendant generations
-- **Up to 1 trillion years** for users who want a fully longtermist view
-
 ## What Kinds of Charities Are We Modeling?
 
 These estimates assume marginal donations go to **high-leverage, explicitly existential-risk-focused AI safety charities**, not generic AI ethics or capabilities work. Representative activities include:

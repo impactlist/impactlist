@@ -20,6 +20,12 @@ Unlike a typical cause area, donations to AI existential-risk charities are best
 
 This effect captures welfare gains from reducing the probability that misaligned AGI or ASI causes **literal human extinction**. Many AI risk discussions also include similarly permanent catastrophes such as irreversible disempowerment or totalitarian lock-in. We do **not** model those here; the goal is to keep the event definition clean and tightly connected to the population-level effect we are modeling.
 
+## What Kinds of Charities Are We Modeling?
+
+These estimates are for **high-leverage, explicitly existential-risk-focused AI safety charities**: technical alignment and control work, governance and standards work aimed at reducing catastrophic risk, and field-building that increases strong safety talent or institutional capacity.
+
+They are **not** estimates for generic AI ethics, ordinary responsible-AI work focused mainly on bias or privacy, or projects that mainly make frontier systems more capable.
+
 ## Point Estimates
 
 - **Cost per microprobability:** \$1 million (\$200,000–\$16 million)
@@ -130,32 +136,6 @@ So 15 years is a compromise between very short timelines and much slower views.
 ### Duration
 
 The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Because extinction eliminates all future generations within the chosen horizon, the value of this cause area is extremely sensitive to how much weight you place on future people.
-
-## What Kinds of Charities Are We Modeling?
-
-These estimates assume marginal donations go to **high-leverage, explicitly existential-risk-focused AI safety charities**, not generic AI ethics or capabilities work. Representative activities include:
-
-**Technical alignment and control work**
-
-- Detecting deceptive or misaligned behavior in frontier models
-- Improving interpretability and auditing tools
-- Building better dangerous-capability evaluations and red-teaming methods
-- Research on scalable oversight, control, and monitoring
-
-**Governance and policy**
-
-- Frontier-model standards, eval requirements, and deployment thresholds
-- Government AI safety institutes, incident reporting, and compute governance
-- International coordination that reduces racing pressure
-- Corporate governance and lab policy work
-
-**Field-building and capacity building**
-
-- Training strong technical and governance talent
-- Fellowships, bootcamps, mentoring, and career transition programs
-- Building institutions that can absorb more excellent safety talent over time
-
-We are **not** modeling generic "AI for good" work, ordinary responsible-AI work focused only on bias/privacy, or projects that mainly make frontier systems more capable.
 
 ## Key Uncertainties
 

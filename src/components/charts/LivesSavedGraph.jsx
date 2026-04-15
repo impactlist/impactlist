@@ -83,16 +83,16 @@ const CustomTooltip = ({
 }) => {
   if (!active || !Array.isArray(payload) || payload.length === 0) return null;
 
-  const seriesById = Object.fromEntries(seriesMetadata.map((series) => [series.id, series]));
-  const pointYear = payload[0]?.payload?.year;
-  const activeEffects = payload
-    .filter((entry) => Math.abs(entry.value || 0) > 1e-9)
-    .map((entry) => ({
-      id: entry.dataKey,
-      value: entry.value,
-      color: entry.color,
-      series: seriesById[entry.dataKey],
+  const pointPayload = payload[0]?.payload?.__realPoint || payload[0]?.payload || null;
+  const pointYear = pointPayload?.year;
+  const activeEffects = seriesMetadata
+    .map((series) => ({
+      id: series.id,
+      value: pointPayload?.[series.id] || 0,
+      color: series.color,
+      series,
     }))
+    .filter((entry) => Math.abs(entry.value) > NONZERO_EPSILON)
     .sort((a, b) => {
       if (activeSeriesId === a.id) return -1;
       if (activeSeriesId === b.id) return 1;
@@ -108,10 +108,9 @@ const CustomTooltip = ({
       return largestEffect;
     }, null);
   const otherEffectsCount = Math.max(activeEffects.length - 1, 0);
-  const totalLivesPerYear = activeEffects.reduce((sum, effect) => sum + effect.value, 0);
+  const totalLivesPerYear = seriesMetadata.reduce((sum, series) => sum + (pointPayload?.[series.id] || 0), 0);
   const isSingleSeriesGraph = seriesMetadata.length <= 1;
   const transformedTotalValue = tooltipValueTransform(totalLivesPerYear);
-  const pointPayload = payload[0]?.payload || null;
   const formattedTotalValue = tooltipValueFormatter(transformedTotalValue);
   const tooltipDetails = tooltipDetailsRenderer({
     pointPayload,
@@ -167,6 +166,56 @@ const formatYAxisTick = (value) => {
   return formatLargeNumber(value, precision);
 };
 
+const NONZERO_EPSILON = 1e-9;
+
+const hasNonZeroSeriesValue = (point, effectIds) => {
+  return effectIds.some((id) => Math.abs(point[id] || 0) > NONZERO_EPSILON);
+};
+
+const addBoundaryTransitionPoints = (points, effectIds) => {
+  if (!Array.isArray(points) || points.length < 2) {
+    return points;
+  }
+
+  // Boundaries are defined by the stack as a whole, not by individual series.
+  let hasBoundaryTransition = false;
+  for (let index = 1; index < points.length; index += 1) {
+    const previousHasNonZeroValue = hasNonZeroSeriesValue(points[index - 1], effectIds);
+    const currentHasNonZeroValue = hasNonZeroSeriesValue(points[index], effectIds);
+
+    if (previousHasNonZeroValue !== currentHasNonZeroValue) {
+      hasBoundaryTransition = true;
+      break;
+    }
+  }
+
+  if (!hasBoundaryTransition) {
+    return points;
+  }
+
+  const adjustedPoints = [points[0]];
+
+  for (let index = 1; index < points.length; index += 1) {
+    const previousPoint = points[index - 1];
+    const currentPoint = points[index];
+    const previousHasNonZeroValue = hasNonZeroSeriesValue(previousPoint, effectIds);
+    const currentHasNonZeroValue = hasNonZeroSeriesValue(currentPoint, effectIds);
+
+    if (previousHasNonZeroValue !== currentHasNonZeroValue) {
+      adjustedPoints.push({
+        ...previousPoint,
+        year: currentPoint.year,
+        __boundaryClone: true,
+        __realPoint: currentPoint,
+      });
+    }
+
+    adjustedPoints.push(currentPoint);
+  }
+
+  return adjustedPoints;
+};
+
 const LivesSavedGraph = ({
   data,
   seriesMetadataOverride = null,
@@ -201,7 +250,7 @@ const LivesSavedGraph = ({
     let lastNonZeroIndex = -1;
     for (let i = data.length - 1; i >= 0; i--) {
       const point = data[i];
-      const hasNonZeroValue = effectIds.some((id) => Math.abs(point[id] || 0) > 1e-9);
+      const hasNonZeroValue = effectIds.some((id) => Math.abs(point[id] || 0) > NONZERO_EPSILON);
       if (hasNonZeroValue) {
         lastNonZeroIndex = i;
         break;
@@ -227,12 +276,13 @@ const LivesSavedGraph = ({
       filteredData.push({ ...lastFilteredPoint, year: newMaxYear });
     }
 
-    const displayMinYear = filteredData.length > 0 ? filteredData[0].year : minYear;
-    const displayMaxYear = filteredData.length > 0 ? filteredData[filteredData.length - 1].year : newMaxYear;
+    const displayData = addBoundaryTransitionPoints(filteredData, effectIds);
+    const displayMinYear = displayData.length > 0 ? displayData[0].year : minYear;
+    const displayMaxYear = displayData.length > 0 ? displayData[displayData.length - 1].year : newMaxYear;
 
     return {
       customTicks: generateEvenlySpacedTicks(displayMinYear, displayMaxYear),
-      filteredData,
+      filteredData: displayData,
       seriesMetadata,
     };
   }, [colorMode, data, seriesMetadataOverride]);
@@ -314,7 +364,7 @@ const LivesSavedGraph = ({
         return (
           <Area
             key={series.id}
-            type="monotone"
+            type="linear"
             dataKey={series.id}
             name={series.label}
             stackId="1"

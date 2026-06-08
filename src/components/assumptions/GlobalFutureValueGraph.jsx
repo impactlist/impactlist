@@ -25,10 +25,14 @@ const GlobalFutureValueGraph = ({ globalParameters, defaultGlobalParameters, for
   return (
     <div className="impact-surface mt-6 p-5">
       <div className="mb-4">
-        <h3 className="text-base font-semibold text-strong">Value of the Future</h3>
-        <p className="mt-1 text-sm text-muted">Discounted value of future lives given the current global parameters.</p>
+        <h3 className="text-base font-semibold text-strong">Total weighted lives in the present and future</h3>
+        <p className="mt-1 text-sm text-muted">
+          This graph shows how much value the model assigns to lives in each year. It starts with projected global
+          population, applies the population limit, then adjusts the value of later years using the discount rate. The
+          total is the area under the curve, converted from life-years into "life equivalents" using Years Per Life.
+        </p>
         <p className="mt-2 text-sm text-muted">
-          Total value:{' '}
+          Total weighted lives:{' '}
           <span className="font-semibold text-strong">
             <FormattedScientificValue value={formatLives(totalFutureLives)} variant="compact" />
           </span>{' '}
@@ -45,12 +49,12 @@ const GlobalFutureValueGraph = ({ globalParameters, defaultGlobalParameters, for
         tooltipUnitLabel="discounted life-years"
         tooltipShowSummaryValue={false}
         xAxisLabel="Year"
-        yAxisLabel="Discounted life-years"
+        yAxisLabel="Weighted life-years per year"
         tooltipDetailsRenderer={({ pointPayload, formattedTotalValue }) =>
           pointPayload?.population ? (
             <div className="space-y-1">
               <p>
-                Discounted life-years:{' '}
+                Weighted life-years:{' '}
                 <span className="font-medium text-strong">
                   <FormattedScientificValue value={formattedTotalValue} variant="compact" />
                 </span>

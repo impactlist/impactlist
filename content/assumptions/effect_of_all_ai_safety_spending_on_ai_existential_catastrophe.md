@@ -15,13 +15,13 @@ Here "AI-caused existential catastrophe" includes:
 - irreversible human disempowerment
 - stable totalitarian lock-in or other global outcomes that permanently and drastically curtail humanity's future
 
-**Summary:** A reasonable best guess is that roughly \$1 billion of AI safety spending has reduced this broader catastrophe risk by about **0.13 percentage points**, with a plausible positive range of **0.013–0.65 percentage points**.
+**Summary:** A reasonable best guess is that roughly \$1 billion of AI safety spending has reduced this broader catastrophe risk by about **0.14 percentage points**, with a plausible positive range of **0.014–0.70 percentage points**.
 
 That corresponds to about:
 
-- **13 basis points per \$1 billion**
-- **\$76.9 million per basis point**
-- **\$769,000 per microprobability**
+- **14 basis points per \$1 billion**
+- **\$71.4 million per basis point**
+- **\$714,000 per microprobability**
 
 ---
 
@@ -60,11 +60,27 @@ Recent work makes these channels more concrete:
 
 Those papers do not prove that historical AI safety funding has already bought large amounts of lock-in prevention. But they do strengthen the case that governance, preparedness, and institutional work can reduce broader existential-catastrophe pathways, not just literal extinction.
 
-The key point is that the uplift should probably be **less than proportional** to the increase in event size. The broader event on the category page is about `1.5x` larger than the extinction-only event (`12%` versus `8%`), but it would be too strong to assume that historical safety work hits the extra non-extinction mass just as effectively as it hits extinction:
+The key point is that the uplift should probably be **less than proportional** to the increase in event size, but not much smaller than proportional. The broader event on the category page is about `1.5x` larger than the extinction-only event (`12%` versus `8%`). The extra risk mass is not mostly generic bad AI governance; it is mainly irreversible loss of human control, with AI-enabled political lock-in as a smaller but important component. Much of the historical AI safety portfolio is relevant to those pathways.
 
-- technical alignment, control, and interpretability work likely bear more directly on takeover-style extinction than on every lock-in pathway
-- governance, preparedness, standards, and institutional work likely bear more directly on lock-in and gradual-disempowerment pathways
-- the historical portfolio contained both kinds of work, so some uplift is warranted, but not necessarily the full `1.5x`
+We use a simple relative-relevance model. The percentages below are informed judgments, not empirical measurements; the model is meant to make the structure of the argument transparent and locate the multiplier in the right region, not to pin down a precise value. The exact split is uncertain, but a reasonable decomposition of the extra `4 percentage points` is:
+
+- about **3 percentage points** from irreversible AI disempowerment or loss of human control
+- about **1 percentage point** from stable AI-enabled totalitarian lock-in or comparable permanent political closure
+
+Relative to extinction-prevention impact:
+
+- Technical alignment, control, interpretability, and evals seem about **80%** as relevant to irreversible disempowerment as to extinction, but only about **30%** as relevant to political lock-in. Across the `3:1` split above, that gives `0.675` relative relevance to the extra non-extinction event mass.
+- Governance, preparedness, standards, institutions, and field-building seem about **90%** as relevant to irreversible disempowerment and about **80%** as relevant to political lock-in. Across the same split, that gives `0.875` relative relevance.
+
+If roughly **60%** of historical impact came through technical channels and **40%** through governance/institutional channels, the average relevance to the extra non-extinction mass is:
+
+- `0.6 x 0.675 + 0.4 x 0.875 = 0.755`
+
+So the uplift over the extinction-only estimate is:
+
+- `1 + (4 / 8) x 0.755 = 1.3775`
+
+Rounded, this supports an uplift of about **1.4x** over the extinction-only spending-effect estimate. The sensitivity table below is therefore important: nearby multipliers remain live, even though `1.4x` is the best single estimate.
 
 ---
 
@@ -72,10 +88,10 @@ The key point is that the uplift should probably be **less than proportional** t
 
 The broader probability estimate used on the category page is about **12%**, compared with an extinction-only anchor of about **8%**. That is about a **1.5x** increase in the size of the modeled event.
 
-But as noted above, a full `1.5x` tractability uplift would be too aggressive unless we thought the historical portfolio was equally effective against extinction and non-extinction catastrophe channels. A better central judgment is a **partial-overlap uplift** of about **1.3x**:
+As argued above, a full `1.5x` tractability uplift would be too high unless we thought the historical portfolio was equally effective against extinction and non-extinction catastrophe channels. The relative-relevance model gives a **partial-overlap uplift** of about **1.4x**:
 
 - extinction-only anchor: about **0.1 percentage points**
-- broader existential-catastrophe estimate: about **0.13 percentage points**
+- broader existential-catastrophe estimate: about **0.14 percentage points**
 
 That is directionally supported by three facts:
 
@@ -83,14 +99,24 @@ That is directionally supported by three facts:
 - many of the same interventions act on both extinction and non-extinction catastrophe channels
 - the overlap is real but incomplete, so the uplift should be material without simply matching the full `1.5x` event-size increase
 
-So **0.13 percentage points** is a reasonable best guess.
+So **0.14 percentage points** is a reasonable best guess.
 
-### Plausible positive range: 0.013–0.65 percentage points
+### Sensitivity to the uplift
+
+The exact multiplier is still a judgment call. Nearby values move the estimate as follows:
+
+- `1.2x`: `0.12` percentage points -> about **\$833,000 per microprobability**
+- `1.4x`: `0.14` percentage points -> about **\$714,000 per microprobability**
+- `1.5x`: `0.15` percentage points -> about **\$667,000 per microprobability**
+
+This sensitivity is meaningful, but it does not change the order of magnitude.
+
+### Plausible positive range: 0.014–0.70 percentage points
 
 We keep a wide positive range:
 
-- **0.013 percentage points** corresponds to a pessimistic-but-still-positive view where the field helped a bit, but far less than advocates hoped.
-- **0.65 percentage points** corresponds to a strong view where the best historical spending had unusually high leverage on frontier-lab norms, preparedness, and governance.
+- **0.014 percentage points** corresponds to a pessimistic-but-still-positive view where the field helped a bit, but far less than advocates hoped.
+- **0.70 percentage points** corresponds to a strong view where the best historical spending had unusually high leverage on frontier-lab norms, preparedness, and governance.
 
 This range is deliberately wide because the evidence is indirect. There is no clean experiment telling us what the world would look like without AI safety spending. The estimate is a synthesis of historical spending totals, x-risk cost-effectiveness bars, and judgment about how much technical and governance work has mattered in practice.
 
@@ -100,21 +126,21 @@ This range is deliberately wide because the evidence is indirect. There is no cl
 
 At the central estimate:
 
-- `0.13 percentage points = 0.0013 probability`
-- `0.0013 / 10^-6 = 1,300 microprobabilities`
-- `\$1B / 1,300 ≈ \$769,000 per microprobability`
+- `0.14 percentage points = 0.0014 probability`
+- `0.0014 / 10^-6 = 1,400 microprobabilities`
+- `\$1B / 1,400 ≈ \$714,000 per microprobability`
 
 At the lower end of the range:
 
-- `0.013 percentage points = 130 microprobabilities`
-- `\$1B / 130 ≈ \$7.7 million per microprobability`
+- `0.014 percentage points = 140 microprobabilities`
+- `\$1B / 140 ≈ \$7.1 million per microprobability`
 
 At the upper end of the range:
 
-- `0.65 percentage points = 6,500 microprobabilities`
-- `\$1B / 6,500 ≈ \$154,000 per microprobability`
+- `0.70 percentage points = 7,000 microprobabilities`
+- `\$1B / 7,000 ≈ \$143,000 per microprobability`
 
-So the best single estimate is roughly **\$769,000 per microprobability**, with a wide positive range from about **\$154,000** to about **\$7.7 million** on the field-level approach alone.
+So the best single estimate is roughly **\$714,000 per microprobability**, with a wide positive range from about **\$143,000** to about **\$7.1 million** on the field-level approach alone.
 
 ---
 
@@ -137,9 +163,9 @@ Several caveats matter:
 
 The best single estimate is:
 
-- **Risk reduction from roughly \$1B of AI safety spending:** about **0.13 percentage points**
-- **Plausible positive range:** about **0.013–0.65 percentage points**
+- **Risk reduction from roughly \$1B of AI safety spending:** about **0.14 percentage points**
+- **Plausible positive range:** about **0.014–0.70 percentage points**
 
-In cost-effectiveness terms, that implies about **\$769,000 per microprobability** of reducing AI-caused existential catastrophe risk.
+In cost-effectiveness terms, that implies about **\$714,000 per microprobability** of reducing AI-caused existential catastrophe risk.
 
 {{CONTRIBUTION_NOTE}}

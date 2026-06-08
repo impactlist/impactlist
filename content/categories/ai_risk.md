@@ -5,7 +5,7 @@ effects:
   - effectId: population
     startTime: 15
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 770_000
+    costPerMicroprobability: 714_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: 0.75
 ---
@@ -30,7 +30,7 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 
 ## Point Estimates
 
-- **Cost per microprobability:** \$770,000 (\$123,000–\$8 million)
+- **Cost per microprobability:** \$714,000 (\$114,000–\$8 million)
 - **Population fraction affected:** 1.0 (the modeled event is global by construction)
 - **QALY improvement per affected person per year:** 0.75 (0.5–0.9)
 - **Start time:** 15 years (~2041)
@@ -45,25 +45,25 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 3. World population at the relevant horizon is roughly 10–10.5 billion. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
 4. Conditional on such a catastrophe occurring, the average welfare shortfall is roughly 0.75 QALY-equivalents per affected person per year, with a plausible range of 0.5–0.9. ([See detailed justification](/assumption/ai-existential-catastrophe-severity))
 5. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Open Philanthropy](https://www.openphilanthropy.org/focus/potential-risks-advanced-ai/))
-6. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.13 percentage points, with a plausible positive range around 0.013–0.65 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
+6. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.14 percentage points, with a plausible positive range around 0.014–0.70 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
 7. A frontier AI safety researcher costs roughly \$0.5–0.8 million per year fully loaded, implying roughly \$8–16 million for a 15–20 year career. ([OpenAI careers](https://openai.com/careers/research-scientist), [Anthropic careers](https://www.anthropic.com/careers))
-8. A strong additional AI safety career plausibly averts about 2–65 microcatastrophes, with a rough central estimate around 13. This is an inference from extinction-focused career estimates plus partial overlap with non-extinction catastrophe channels such as irreversible disempowerment and lock-in. ([Jurkovic 2023](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety))
+8. A strong additional AI safety career plausibly averts about 2–70 microcatastrophes, with a rough central estimate around 14. This is an inference from extinction-focused career estimates plus partial overlap with non-extinction catastrophe channels such as irreversible disempowerment and lock-in. ([Jurkovic 2023](https://www.lesswrong.com/posts/mTtxJKN3Ew8CAEHGr/microdooms-averted-by-working-on-ai-safety))
 
 ## Details
 
 ### Cost per Microprobability
 
-The point estimate (\$770,000 per microprobability) and range (\$123,000–\$8 million) are derived from two approaches.
+The point estimate (\$714,000 per microprobability) and range (\$114,000–\$8 million) are derived from two approaches.
 
 **Approach 1 — Field-level estimate**
 
-The most direct anchor is the estimate of what historical AI safety spending has already achieved. Per Assumptions 5 and 6, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.13 percentage points**:
+The most direct anchor is the estimate of what historical AI safety spending has already achieved. Per Assumptions 5 and 6, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.14 percentage points**:
 
-- Microprobabilities averted: `0.0013 / 10^-6 = 1,300`
-- Cost per microprobability: `\$1B / 1,300 ≈ \$769,000`
+- Microprobabilities averted: `0.0014 / 10^-6 = 1,400`
+- Cost per microprobability: `\$1B / 1,400 ≈ \$714,000`
 
-Pessimistic case: `0.013` percentage points -> about **\$7.7 million** per microprobability  
-Optimistic case: `0.65` percentage points -> about **\$154,000** per microprobability
+Pessimistic case: `0.014` percentage points -> about **\$7.1 million** per microprobability  
+Optimistic case: `0.70` percentage points -> about **\$143,000** per microprobability
 
 This estimate is already meant to be net of positive and negative effects, because the underlying assumption page explicitly tries to account for both. It also includes more than just extinction-prevention channels: the same technical, governance, and institutional work can bear on irreversible disempowerment and lock-in as well, though probably not quite as strongly as they bear on literal extinction.
 
@@ -71,18 +71,18 @@ This estimate is already meant to be net of positive and negative effects, becau
 
 Jurkovic (2023) frames career impact in extinction-focused "microdoom" terms. Once the modeled event also includes irreversible disempowerment and stable lock-in, it is reasonable to scale those extinction-focused anchors upward somewhat rather than leaving them unchanged, because governance, evals, control work, and institution-building can reduce non-extinction catastrophe channels too. But the uplift should be smaller than a full proportional scaling, because some of the extra non-extinction risk mass is less directly targeted by the historical technical portfolio.
 
-Using a central estimate of **13 microcatastrophes per career** and a typical career cost of roughly **\$10 million** (Assumptions 7 and 8):
+Using a central estimate of **14 microcatastrophes per career** and a typical career cost of roughly **\$10 million** (Assumptions 7 and 8):
 
-- Cost per microprobability: `\$10,000,000 / 13 ≈ \$769,000`
+- Cost per microprobability: `\$10,000,000 / 14 ≈ \$714,000`
 
-Best case: `\$8M / 65 ≈ \$123,000` per microprobability  
+Best case: `\$8M / 70 ≈ \$114,000` per microprobability  
 Worst case: `\$16M / 2 = \$8 million` per microprobability
 
 **Combined**
 
-Both approaches land near **\$770,000 per microprobability**, which is why we use that as the point estimate.
+Both approaches land near **\$714,000 per microprobability**, which is why we use that as the point estimate.
 
-The stated range (**\$123,000–\$8 million**) takes the widest bounds across both approaches rather than the range from either single approach alone.
+The stated range (**\$114,000–\$8 million**) takes the widest bounds across both approaches rather than the range from either single approach alone.
 
 The field-level estimate is based on the historical average effect of AI safety spending to date, while this page is meant to model forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar, but that is at least partly offset by diminishing returns and by the field becoming larger and more crowded, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
 
@@ -108,19 +108,19 @@ With world population of about 10 billion (Assumption 3) and 0.75 QALY-equivalen
 
 - Total QALYs lost: `10B x 0.75 x 40 = 300 billion QALYs`
 - QALYs saved per microprobability: `300B x 10^-6 = 300,000`
-- Cost per QALY: `\$770,000 / 300,000 ≈ \$2.6/QALY`
+- Cost per QALY: `\$714,000 / 300,000 ≈ \$2.4/QALY`
 
 **Example 2 — Time limit = 100 years**
 
 - Total QALYs lost: `10B x 0.75 x 100 = 750 billion QALYs`
 - QALYs saved per microprobability: `750B x 10^-6 = 750,000`
-- Cost per QALY: `\$770,000 / 750,000 ≈ \$1.0/QALY`
+- Cost per QALY: `\$714,000 / 750,000 ≈ \$1.0/QALY`
 
 **Example 3 — Time limit = 1,000 years**
 
 - Total QALYs lost: `10B x 0.75 x 1,000 = 7.5 trillion QALYs`
 - QALYs saved per microprobability: `7.5T x 10^-6 = 7.5 million`
-- Cost per QALY: `\$770,000 / 7.5M ≈ \$0.10/QALY`
+- Cost per QALY: `\$714,000 / 7.5M ≈ \$0.10/QALY`
 
 These examples assume constant population for simplicity. The actual calculation uses global parameters that define the future population curve, so scaling may not be exactly linear.
 

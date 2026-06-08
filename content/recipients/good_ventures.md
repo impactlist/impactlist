@@ -30,9 +30,11 @@ categories:
 
 # Notes
 
-Open Philanthropy (renamed in 2025 to Coefficient Giving) [gave 30 million to OpenAI](https://www.openphilanthropy.org/grants/openai-general-support/) in
+Coefficient Giving directs a substantial amount of Good Ventures' grantmaking; it says it has helped Good Ventures give over $4 billion historically. ([Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
+
+Coefficient Giving (then Open Philanthropy) [gave 30 million to OpenAI](https://www.openphilanthropy.org/grants/openai-general-support/) in
 March 2017, believing it was an AI safety donation.
-However we categorize this as an AI capabilities donation.
+However we categorize this as an AGI development donation.
 
 # Internal Notes
 

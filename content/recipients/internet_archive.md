@@ -12,7 +12,7 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 16th 2025, written by GPT 5 Thinking and edited by Impact List staff for clarity._
+_The following analysis was done on December 16th 2025, written by GPT-5 Thinking and edited by Impact List staff for clarity._
 
 We assign the Internet Archive a **cost per QALY of \$3,000**. The core idea is that preserving valuable knowledge can be much cheaper than creating it from scratch, which makes it look substantially better than the baseline [Science and Tech](/cause/science-tech) estimate.
 
@@ -24,7 +24,7 @@ This effect captures the welfare gains from the universal preservation of digita
 
 - **Cost per QALY:** \$3,000
 
-*If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
+_If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values._
 
 ## Assumptions
 

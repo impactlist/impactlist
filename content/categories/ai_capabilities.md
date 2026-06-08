@@ -281,6 +281,8 @@ We use a 15-year start time for the same reason as in Effect 2: the relevant ris
 
 #### Duration
 
+The very large `windowLength` in the YAML frontmatter is just a ceiling so the calculator can accommodate long horizons; in practice the effect is clamped by the user's chosen global time-limit parameter.
+
 The duration is controlled by the global time limit parameter. Extinction has especially large long-run consequences, so users with longtermist views will see much larger harms than users who count only currently alive people or the next few generations.
 
 ---

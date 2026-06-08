@@ -30,7 +30,7 @@ categories:
 
 # Notes
 
-OpenPhil [gave 30 million to OpenAI](https://www.openphilanthropy.org/grants/openai-general-support/) in
+Open Philanthropy (renamed in 2025 to Coefficient Giving) [gave 30 million to OpenAI](https://www.openphilanthropy.org/grants/openai-general-support/) in
 March 2017, believing it was an AI safety donation.
 However we categorize this as an AI capabilities donation.
 

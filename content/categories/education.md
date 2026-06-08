@@ -107,7 +107,7 @@ $$
 \approx \$24{,}000\text{–}\$27{,}000
 $$
 
-That is already somewhat conservative, because the ACE authors explicitly do **not** include
+That calculation is not a full all-things-considered welfare accounting: the ACE authors explicitly do **not** include
 several plausibly real current-generation benefits such as health, longevity, and reduced crime,
 and also exclude child-generation benefits from the headline current-generation calculation.
 

@@ -132,7 +132,7 @@ We are **not** modeling partisan campaign spending, generic journalism, pure for
 
 4. **How durable reforms are in practice.** Administrative improvements can be undone or neglected; legal reforms can be reversed; but some changes become embedded for a long time.
 
-5. **How to convert institutional gains into QALY-like welfare.** Some benefits are clearly health-related, others mostly save time or money, and others improve trust, competence, or optionality in ways that are valuable but hard to quantify cleanly.
+5. **How well the money-to-QALY bridge captures institutional gains.** The model converts health, income, time savings, administrative burden, trust, competence, and optionality into welfare-equivalent dollars first, then into QALYs. The main uncertainty is whether the scenario values price those benefits well enough.
 
 6. **Category heterogeneity.** "Improving institutions" may ultimately be too broad a bucket. If the site adds more recipients here, it may become worth splitting the category into narrower clusters.
 

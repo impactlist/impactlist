@@ -74,7 +74,7 @@ At the same time, this estimate is meant to describe current marginal giving to 
 
 ### Broilers and shrimp
 
-Broiler reforms and shrimp programs matter because the best current animal-welfare opportunities are not hens-only. WFI finds that BCC/slower-growing reforms avert large amounts of intense pain per bird, and ACE estimates THL's BCC accountability work helps about 46 broilers per dollar. ACE also estimates that Shrimp Welfare Project's humane slaughter and India water-quality programs avert about 48 and 729 SADs per dollar, respectively. These do not plug cleanly into the hen-QALY formula, but they do imply that a hens-only model does not capture the full uncertainty range for the cause as a whole.
+Broiler reforms and shrimp programs matter because the best current animal-welfare opportunities are not hens-only. WFI finds that BCC/slower-growing reforms avert large amounts of intense pain per bird, and ACE estimates THL's BCC accountability work helps about 46 broilers per dollar. ACE also estimates that Shrimp Welfare Project's humane slaughter and India water-quality programs avert about 48 and 729 SADs per dollar, respectively. Those interventions need species-specific welfare bridges rather than the hen-QALY formula used for the point estimate, but they do imply that a hens-only model does not capture the full uncertainty range for the cause as a whole.
 
 ### Why the range
 

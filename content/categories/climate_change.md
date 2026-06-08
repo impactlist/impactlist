@@ -86,7 +86,7 @@ The 5-year start time reflects the lag between a donation and observable emissio
 
 The 80-year duration reflects a compromise between the mortality literature and the site's modeling horizon. The main climate-mortality studies used here focus on harms through 2100, while this estimate is being made in 2026 with a 5-year start time and the site caps modeled effects at 100 years. So an 80-year duration roughly corresponds to benefits accruing from about 2031 to 2111: somewhat beyond 2100, but still within the site's overall modeling horizon.
 
-This is conservative in the narrow time-horizon sense: CO₂ persists in the atmosphere for centuries, and some climate impacts continue beyond 2100. We use 80 years anyway because the underlying mortality literature and the site's modeling horizon both mostly stop there. ([IPCC AR6 WG1 Technical Summary](https://www.ipcc.ch/report/ar6/wg1/chapter/technical-summary/))
+This duration leaves out some longer-run effects: CO₂ persists in the atmosphere for centuries, and some climate impacts continue beyond 2100. We use 80 years because the underlying mortality literature and the site's modeling horizon both mostly stop there. ([IPCC AR6 WG1 Technical Summary](https://www.ipcc.ch/report/ar6/wg1/chapter/technical-summary/))
 
 {{CONTRIBUTION_NOTE}}
 

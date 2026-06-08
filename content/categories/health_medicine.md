@@ -201,7 +201,7 @@ This estimate is **not** a good model of generic hospital fundraising, prestige 
 3. **How well historical research returns extrapolate to today's marginal donations.** The UK returns literature is one of the best evidence bases available, but it is still backward-looking and partly based on major historical wins.
 4. **Additionality in rich-country systems.** Some direct programs and research grants unlock value that governments or insurers would not otherwise fund; others mainly substitute for spending that would have happened anyway.
 5. **How much of the recipient universe is actually "strong philanthropy" rather than generic healthcare fundraising.** This page intentionally models the stronger end of the category. Some specific recipients currently tagged to this category are probably worse than the category default.
-6. **QALY measurement itself.** Mental-health gains, reproductive-health gains, diagnostic gains, and caregiver spillovers are all hard to convert into a single scalar measure, so some interventions may be understated or overstated.
+6. **How well the model captures heterogeneous health and spillover gains.** Mental-health gains, reproductive-health gains, diagnostic gains, and caregiver spillovers can all be expressed in QALY-equivalent terms, but the conversion is noisy enough that some interventions may be understated or overstated.
 
 {{CONTRIBUTION_NOTE}}
 

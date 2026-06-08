@@ -145,7 +145,7 @@ We use a **2-year** duration because that is where the direct evidence base is s
 - the main Canadian Housing First trials followed people for about **24 months**
 - some discharge-service evaluations focus on about **1 year**
 
-Some specific interventions may have longer tails than 2 years, and the OUD model uses a lifetime horizon. But category-level estimates should be anchored to directly observed persistence, not to the most optimistic extrapolation. The Community Guide also notes that long-run health effects remain under-studied, which argues for keeping the default duration fairly conservative.
+Some specific interventions may have longer tails than 2 years, and the OUD model uses a lifetime horizon. But category-level estimates should be anchored to directly observed persistence, not to the most optimistic extrapolation. The Community Guide also notes that long-run health effects remain under-studied, which supports a 2-year default duration.
 
 ## What Kinds of Charities Are We Modeling?
 

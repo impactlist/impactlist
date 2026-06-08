@@ -256,7 +256,7 @@ Reasons not to go **much lower** by default:
 - there are multiple concrete historical examples of philanthropic organizations helping to catalyze much larger institutional or governmental actions
 - ONN and Founders Pledge both point toward tractable policy levers rather than total helplessness
 
-So the central **0.025 percentage-point** estimate is best read as a conservative but not ultra-skeptical middle ground.
+So the central **0.025 percentage-point** estimate is best read as a middle ground between the very low and very high tractability views.
 
 ---
 

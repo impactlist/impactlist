@@ -110,7 +110,7 @@ So the direct sensitivity range is **\$20–\$6,700/QALY**.
 
 This should be read as a practical sensitivity range, not a full uncertainty interval. The true uncertainty is probably even wider.
 
-The pessimistic end is already quite demanding. It combines high cost, low tractability, and a burden model that strips out the broader-welfare uplift and falls back to the health-only component.
+The pessimistic end is already quite demanding. It combines high cost, low tractability, and a low-end burden model close to the direct health component rather than the central all-things-considered burden.
 
 ### Start Time
 

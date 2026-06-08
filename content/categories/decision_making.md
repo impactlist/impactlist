@@ -83,7 +83,7 @@ So the point estimate is **\$4,000/QALY**.
 
 ### Why this model
 
-The old temptation in this cause area is to jump directly from "forecasting improves Brier scores a lot" to "welfare improves a lot." That bridge is too weak. The evidence base is strong on the first step and much weaker on the second.
+A common mistake in this cause area is to jump directly from "forecasting improves Brier scores a lot" to "welfare improves a lot." That bridge is too weak. The evidence base is strong on the first step and much weaker on the second.
 
 A scenario model fits the actual structure of the evidence better: many efforts in this area probably improve conversations more than decisions, some matter because they are paired with a decision framework or live policy process, and a minority may land very large institutional wins. Petkovic et al. and Clark et al. support the view that better evidence products alone are often not enough, while the CNAS case study and anticipatory-action literature show that forecast-linked action can sometimes matter a great deal.
 
@@ -136,7 +136,7 @@ We are **not** modeling generic journalism, generic civic engagement, or direct 
 2. **How fat-tailed the distribution is.** A few rare wins may dominate the category's expected value.
 3. **How much weight to place on analogies to mature institutions like GAO or the What Works Network.** They show the scale of the stakes, but they are not clean charity analogues.
 4. **How well current recipients fit one category.** Rootclaim, Collective Intelligence Project, and Modeling Cooperation are not doing the same thing, so any category-wide estimate is coarse.
-5. **How much of the value is QALY-like rather than purely financial, strategic, or epistemic.**
+5. **How well the money-to-QALY bridge captures strategic and epistemic value.** The model converts financial, strategic, and epistemic improvements into welfare-equivalent dollars first, then into QALYs; the uncertainty is bridge quality, not whether those benefits can count.
 
 {{CONTRIBUTION_NOTE}}
 

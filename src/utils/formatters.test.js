@@ -68,6 +68,18 @@ describe('formatNumber', () => {
     expect(formatNumber(0.001)).toBe('0.001');
     expect(formatNumber(0.123)).toBe('0.123');
   });
+
+  it('should round fractional numbers to compact significant figures', () => {
+    expect(formatNumber(0.027060865948531982)).toBe('0.0271');
+    expect(formatNumber(1.2345)).toBe('1.23');
+    expect(formatNumber(12.345)).toBe('12.3');
+    expect(formatNumber(99.99)).toBe('100');
+  });
+
+  it('should use compact scientific notation for extremely small nonzero numbers', () => {
+    expect(formatNumber(2.5898189324107058e-8)).toBe('2.59 × 10⁻⁸');
+    expect(formatNumber(-2.5898189324107058e-8)).toBe('-2.59 × 10⁻⁸');
+  });
 });
 
 describe('formatNumberWithCommas', () => {

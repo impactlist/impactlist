@@ -43,6 +43,10 @@ const formatScientificNotation = (num, sigFigs = LARGE_NUMBER_SIG_FIGS) => {
 };
 
 const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null } = {}) => {
+  if (absValue > 0 && absValue < SMALL_NUMBER_THRESHOLD) {
+    return formatScientificNotation(absValue);
+  }
+
   if (absValue >= TRILLION) {
     const value = absValue / TRILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
@@ -60,7 +64,11 @@ const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null 
     return Math.round(absValue).toLocaleString('en-US');
   }
 
-  return absValue.toString();
+  if (Number.isInteger(absValue)) {
+    return absValue.toString();
+  }
+
+  return Number(formatWithSignificantFigures(absValue, LARGE_NUMBER_SIG_FIGS)).toString();
 };
 
 /**

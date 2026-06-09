@@ -354,7 +354,7 @@ const AssumptionsDropdown = ({
                 </span>
               </button>
               {renderEntryActions(selectedEntry, selectedEntryUiState, 'summary')}
-              <span className="saved-assumptions-panel__chevron" aria-hidden={true}>
+              <span className="saved-assumptions-panel__chevron" data-open={menuOpen} aria-hidden={true}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fillRule="evenodd"

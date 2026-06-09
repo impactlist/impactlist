@@ -96,4 +96,12 @@ donations:
       dustin-moskovitz: 0.5
       cari-tuna: 0.5
     source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
+
+  - date: 2024-06-30
+    recipient: good-ventures
+    amount: 801_237_903
+    credit:
+      dustin-moskovitz: 0.5
+      cari-tuna: 0.5
+    source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 ---

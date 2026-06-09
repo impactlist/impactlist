@@ -32,6 +32,7 @@ playwright-report/
 test-results/
 
 # Local agent/worktree state
+.claude/scheduled_tasks.lock
 .claude/worktrees/
 .worktrees/
 .vercel/

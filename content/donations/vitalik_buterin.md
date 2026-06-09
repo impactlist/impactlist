@@ -154,13 +154,6 @@ donations:
       vitalik-buterin: 1.0
     source: 'https://www.biospace.com/article/releases/polybio-research-foundation-receives-15m-for-extended-long-covid-research-and-clinical-trials/'
 
-  - date: 2023-12-31
-    recipient: tornado-cash-devs-legal-fund
-    amount: 170_000
-    credit:
-      vitalik-buterin: 1.0
-    source: 'https://cointelegraph.com/news/vitalik-buterin-donates-tornado-cash-developers-alexey-pertsev-roman-storm'
-
   - date: 2024-08-14
     recipient: ea-animal-welfare-fund
     amount: 532_398
@@ -174,6 +167,22 @@ donations:
     credit:
       vitalik-buterin: 1.0
     source: 'https://cointelegraph.com/news/vitalik-buterin-donates-100-eth-roman-storm-defense-fund'
+
+  - date: 2024-10-29
+    recipient: ukraine-humanitarian-nonprofits
+    amount: 1_045_880
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://incrypted.com/en/vitalik-buterin-donated-more-1-million-four-ukrainian-charitable-organizations/'
+    notes: '400 ETH split evenly across four Ukrainian nonprofits: United Humanitarian Front, Crystal Hearts, Polymath-Kids, and Wings of Justice'
+
+  - date: 2024-10-31
+    recipient: varro-life-sciences
+    amount: 20_000_000
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://www.businesswire.com/news/home/20241031135380/en/Varro-Receives-%2420-Million-from-Vitalik-Buterin-to-Support-Development-of-Cutting-Edge-Pathogen-Biosensor-Technology'
+    notes: '$20M in USDC via his Kanro fund for open-source pathogen biosensor technology'
 
   - date: 2024-11-26
     recipient: coin-center
@@ -189,6 +198,14 @@ donations:
       vitalik-buterin: 1.0
     source: 'https://beincrypto.com/vitalik-buterin-meme-coins-charity/'
 
+  - date: 2024-12-31
+    recipient: tornado-cash-devs-legal-fund
+    amount: 170_000
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://cryptoslate.com/vitalik-buterin-helps-tornado-cash-developer-roman-storm-with-170k-new-year-donation/'
+    notes: '50 ETH New Year donation to Roman Storm''s legal defense fund.'
+
   - date: 2025-01-06
     recipient: kanro
     amount: 984_000
@@ -202,4 +219,44 @@ donations:
     credit:
       vitalik-buterin: 1.0
     source: 'https://thecryptobasic.com/2025/04/01/ethereum-founder-donates-274-eth-to-swiss-project-zuitzerland/'
+
+  - date: 2025-10-10
+    recipient: methuselah-foundation
+    amount: 1_090_000
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://blockchain.news/flashnews/vitalik-buterin-transfers-6-29m-strk-to-methuselah-foundation'
+    notes: '6.29M STRK transferred to Methuselah Foundation, valued at approximately $1.09M.'
+
+  - date: 2025-11-26
+    recipient: session-messenger
+    amount: 382_500
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://coinness.com/fil/news/1144186'
+    notes: '128 ETH (half of a 256 ETH / ~$765K gift split evenly with SimpleX Chat), sent via Railgun'
+
+  - date: 2025-11-26
+    recipient: simplex-chat
+    amount: 382_500
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://coinness.com/fil/news/1144186'
+    notes: '128 ETH (half of a 256 ETH / ~$765K gift split evenly with Session), sent via Railgun'
+
+  - date: 2026-02-02
+    recipient: kanro
+    amount: 500_000
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://coindcx.com/blog/crypto-news-global/vitalik-buterin-sells-eth-donates-500k-usdc-to-kanro-charity/'
+    notes: '211.84 ETH swapped for 500,000 USDC and transferred to Kanro.'
+
+  - date: 2026-05-12
+    recipient: ea-animal-welfare-fund
+    amount: 150_000
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://coinness.com/en/news/1157010'
+    notes: '64 ETH, reported as worth approximately $150K.'
 ---

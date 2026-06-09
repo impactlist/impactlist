@@ -79,10 +79,10 @@ donations:
 
   - date: 2021-05-12
     recipient: future-of-life-institute
-    amount: 665_080_000
+    amount: 500_000_000
     credit:
       vitalik-buterin: 1.0
-    source: 'https://www.politico.com/news/2024/03/25/a-665m-crypto-war-chest-roils-ai-safety-fight-00148621'
+    source: 'https://www.thecoinrepublic.com/2026/03/14/vitalik-buterin-explains-500m-shib-gift-pushes-back-on-ai-regulation-campaigns/'
 
   - date: 2022-04-04
     recipient: aid-for-ukraine

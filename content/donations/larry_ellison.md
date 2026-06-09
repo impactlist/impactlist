@@ -48,6 +48,14 @@ donations:
     source: 'https://www.philanthropy.com/news/no-24-lawrence-j-ellison/'
     notes: '“No. 24: Lawrence J. Ellison” in the Philanthropy 50 (2010) reports that Ellison gave $45.1 million in 2010 to his Ellison Medical Foundation for biomedical research on aging, stem cells, and age-related diseases. Date set to the first day of the gift year for normalization.'
 
+  - date: 2011-01-01
+    recipient: ellison-medical-foundation
+    amount: 50_197_550
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received (Larry Ellison Foundation, EIN 94-3269827 — the renamed Ellison Medical Foundation under the same EIN), FY2011. Mapped to ellison-medical-foundation per same-EIN continuity. Date normalized to year start.'
+
   - date: 2012-01-01
     recipient: ellison-medical-foundation
     amount: 45_600_000
@@ -55,6 +63,14 @@ donations:
       larry-ellison: 1.0
     source: 'https://www.philanthropy.com/article/no-29-lawrence-ellison/index'
     notes: 'A Philanthropy 50 profile (“No. 29: Lawrence Ellison”) notes that Ellison, age 68, gave slightly more than $45.6 million to his Ellison Medical Foundation to support biomedical research. The profile covers a single year of giving (around 2012); the exact transaction date is not specified, so the date is normalized to 2012-01-01 and the amount is rounded to $45.6 million.'
+
+  - date: 2013-01-01
+    recipient: ellison-medical-foundation
+    amount: 72_200_000
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received (Larry Ellison Foundation, same EIN as ellison-medical-foundation), FY2013. Date normalized to year start.'
 
   - date: 2014-11-06
     recipient: friends-of-the-israel-defense-forces
@@ -72,6 +88,14 @@ donations:
     source: 'https://www.mercurynews.com/2015/01/16/saratoga-cutting-edge-wildlife-facility-in-the-works-courtesy-of-oracles-larry-ellison/'
     notes: 'Personal donation to help build the Peninsula Humane Society headquarters in Burlingame, CA. Date approximated to early 2015 (when first publicly reported as "previously gave"); exact date unknown. Ellison later partnered with PHS through his foundation to build a $50M wildlife conservation center, but that was a foundation grant, not a personal donation.'
 
+  - date: 2015-01-01
+    recipient: ellison-medical-foundation
+    amount: 49_500_000
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received (Larry Ellison Foundation, same EIN as ellison-medical-foundation), FY2015. Date normalized to year start.'
+
   - date: 2016-05-11
     recipient: university-of-southern-california-medicine
     amount: 200_000_000
@@ -87,6 +111,54 @@ donations:
       larry-ellison: 1.0
     source: 'https://www.timesofisrael.com/record-53-8-million-raised-for-idf-soldiers-at-beverly-hills-gala/'
     notes: 'Largest single gift in FIDF history at the time. Announced at Beverly Hills gala that raised a record $53.8 million total. Donation supported construction of well-being facilities on a new training campus for IDF coed infantry units. Ellison stated: "Since Israels founding, we have called on the brave men and women of the IDF to defend our home."'
+
+  - date: 2018-01-01
+    recipient: ellison-medical-foundation
+    amount: 48_800_000
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received (Larry Ellison Foundation, same EIN as ellison-medical-foundation), FY2018. Date normalized to year start.'
+
+  - date: 2019-01-01
+    recipient: ellison-medical-foundation
+    amount: 48_177_810
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received, FY2019.'
+
+  - date: 2020-01-01
+    recipient: ellison-medical-foundation
+    amount: 17_544_000
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received, FY2020.'
+
+  - date: 2021-01-01
+    recipient: ellison-medical-foundation
+    amount: 40_901_000
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received, FY2021.'
+
+  - date: 2022-01-01
+    recipient: ellison-medical-foundation
+    amount: 67_097_156
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received, FY2022.'
+
+  - date: 2023-01-01
+    recipient: ellison-medical-foundation
+    amount: 178_874_000
+    credit:
+      larry-ellison: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/943269827'
+    notes: 'Form 990-PF contributions received, FY2023; corroborated by foundation assets rising to ~$192M at end-2023. Largest single-year contribution.'
 
   - date: 2025-09-04
     recipient: ellison-institute-of-technology

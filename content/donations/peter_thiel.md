@@ -166,6 +166,14 @@ donations:
     source: 'https://www.cnbc.com/2023/06/28/peter-thiel-nonprofit-apparently-donated-to-left-leaning-group.html'
     notes: 'Second-largest 2021 grant per CNBC review of 990. Unusual as NVF typically associated with left-leaning causes. May have been earmarked for non-partisan grantee or possible filing error per OpenSecrets analyst.'
 
+  - date: 2024-12-31
+    recipient: leo-strauss-foundation
+    amount: 100_000
+    credit:
+      peter-thiel: 1.0
+    source: 'https://www.insidephilanthropy.com/find-a-grant/grants-t/thiel-foundation'
+    notes: 'FY2024 Thiel Foundation grant to the Leo Strauss Foundation (a 501(c)(3) political-philosophy/humanities org, EIN 86-2767035), per the file convention of treating Thiel Foundation grants as pass-through Thiel donations. Date approximate (FY2024 990, filed 2025-11-17). MEDIUM confidence.'
+
   - date: 2025-05-22
     recipient: thiel-fellowship
     amount: 3_000_000
@@ -173,4 +181,12 @@ donations:
       peter-thiel: 1.0
     source: 'https://www.businesswire.com/news/home/20250522267532/en/Thiel-Foundation-Announces-2025-Class-of-Thiel-Fellows/'
     notes: '2025 class included 15 fellows at $200K each over two years.'
+
+  - date: 2026-04-20
+    recipient: thiel-fellowship
+    amount: 3_000_000
+    credit:
+      peter-thiel: 1.0
+    source: 'https://www.businesswire.com/news/home/20260420984007/en/Thiel-Foundation-Announces-2026-Class-of-Thiel-Fellows'
+    notes: '2026 class: 12 fellows at $250K each over two years. Same convention as the 2025 entry (full two-year award booked on the announcement date).'
 ---

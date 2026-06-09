@@ -811,4 +811,28 @@ donations:
     credit:
       jaan-tallinn: 1.0
     source: 'https://survivalandflourishing.fund/initiative-committee'
+
+  - date: 2024-12-01
+    recipient: survival-and-flourishing-fund
+    amount: 19_010_000
+    credit:
+      jaan-tallinn: 1.0
+    source: 'https://survivalandflourishing.fund/2024/recommendations'
+    notes: 'SFF-2024 S-Process round; Jaan Tallinn was the sole funder. ~$19.01M across 80 recommended organizations (verified table sums to ~$19,009,500). Recorded as a single donation to the Survival and Flourishing Fund rather than itemized per recipient. Date is an H2-2024 placeholder (SFF publishes no exact date). Separate channel from the SFF Initiative Committee grants already in this file (no overlap).'
+
+  - date: 2024-12-01
+    recipient: survival-and-flourishing-fund
+    amount: 2_699_000
+    credit:
+      jaan-tallinn: 1.0
+    source: 'https://survivalandflourishing.fund/2024/flexhegs-recommendations'
+    notes: 'SFF-2024 flexHEGs round (flexible Hardware-Enabled Governance grants). Only Jaan Tallinn''s funded portion is counted (~$2,699,000: Amodo Design $1,094,000; Earendil $682,000 + $547,000; TamperSec $376,000); the FLI ($1M) and Blake Borgeson ($0.4M) co-funded columns are excluded.'
+
+  - date: 2025-09-30
+    recipient: survival-and-flourishing-fund
+    amount: 34_330_000
+    credit:
+      jaan-tallinn: 1.0
+    source: 'https://survivalandflourishing.fund/2025/recommendations'
+    notes: 'SFF-2025 S-Process round; Jaan Tallinn sole funder. ~$34.33M across 88 recommended organizations (verified table sums to ~$34,334,950; ~$34.92M including prior speculation grants). Recorded as a single donation to the Survival and Flourishing Fund rather than itemized per recipient. Date is a placeholder (recommendations announced ~end of September 2025).'
 ---

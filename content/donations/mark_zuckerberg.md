@@ -91,10 +91,11 @@ donations:
       mark-zuckerberg: 1.0
     source: 'https://www.philanthropy.com/package/newsrelease-phil50-2024donors-030425'
 
-  - date: 2025-04-24
-    recipient: chan-zuckerberg-initiative
-    amount: 3_915_000_000
-    credit:
-      mark-zuckerberg: 1.0
-    source: 'https://gist.github.com/elliotolds/9e6773b7b357f8ff30d3396b431c258e#file-mark_zuckerberg_donations-md'
+  # KNOWN GAP (intentional): CZI self-reports "over $6.98B in grants committed" since 2015
+  # (https://chanzuckerberg.com/), while the itemized CZI entries above total ~$3.05B.
+  # A former $3,915,000,000 catch-up entry (dated 2025-04-24) was removed in June 2026: it was a
+  # derived residual (~$6.98B minus the itemized entries) produced by the May-2025 data pipeline
+  # and dated by its source gist's generation date, not a verifiable discrete transfer. The ~$3.9B
+  # difference is real giving in aggregate but is deliberately untracked until it can be itemized
+  # from primary sources (CZI Foundation 990s / SEC Form 4s). Do not re-add without re-derivation.
 ---

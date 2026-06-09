@@ -1,0 +1,13 @@
+---
+id: rockefeller-philanthropy-advisors
+name: 'Rockefeller Philanthropy Advisors'
+categories:
+  - id: other
+    fraction: 1
+---
+
+# Justification of cost per life
+
+{{RECIPIENT_DEFAULT_JUSTIFICATION}}
+
+{{CONTRIBUTION_NOTE}}

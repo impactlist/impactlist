@@ -147,12 +147,13 @@ donations:
       elon-musk: 1.0
     source: 'https://www.insidehighered.com/news/2023/03/22/elon-musk-gave-10m-ut-austin-population-research'
 
-  - date: 2023-12-01
+  - date: 2024-12-30
     recipient: unknown
     amount: 108_200_000
     credit:
       elon-musk: 1.0
     source: 'https://www.reuters.com/business/musk-donated-108-million-tesla-shares-unnamed-charities-filing-shows-2025-01-02'
+    notes: 'Re-dated from 2023-12-01 to 2024-12-30: the Reuters Jan 2, 2025 filing describes a Dec 30, 2024 gift of 268,000 Tesla shares to unnamed charities.'
 
   - date: 2024-12-20
     recipient: the-foundation-musk
@@ -160,4 +161,12 @@ donations:
     credit:
       elon-musk: 1.0
     source: 'https://www.cheddar.com/media/big-business-this-week-rage-over-rate-cuts/'
+
+  - date: 2025-12-30
+    recipient: unknown
+    amount: 96_000_000
+    credit:
+      elon-musk: 1.0
+    source: 'https://finance.yahoo.com/news/elon-musk-donated-over-210-104556017.html'
+    notes: '210,699 Tesla shares transferred Dec 30, 2025 (SEC Form 4, year-end tax planning) to undisclosed charities via the Elon Musk Revocable Trust; ~$96M at the $454.24 TSLA close. Recipient undisclosed (uses the file''s existing "unknown" convention).'
 ---

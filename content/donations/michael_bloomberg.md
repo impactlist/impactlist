@@ -27,4 +27,12 @@ donations:
     credit:
       michael-bloomberg: 1.0
     source: 'https://gist.github.com/elliotolds/5eb6c5c59c7d0e3dd5b37ef62e4003cd#file-michael_bloomberg_donations-md'
+
+  - date: 2025-12-31
+    recipient: bloomberg-philanthropies
+    amount: 4_300_000_000
+    credit:
+      michael-bloomberg: 1.0
+    source: 'https://www.philanthropy.com/news/michael-bloomberg-biggest-donor-of-2025-tops-philanthropy-50-list-for-third-year-in-a-row/'
+    notes: 'Bloomberg Philanthropies 2025 calendar-year giving increment (raises lifetime to ~$25.4B), per the Chronicle of Philanthropy Philanthropy 50. Recorded as a 2025 increment ON TOP OF the $21B lifetime-through-2024 lump above (not a replacement). Blends personal/foundation/corporate giving, consistent with the existing lump entry.'
 ---

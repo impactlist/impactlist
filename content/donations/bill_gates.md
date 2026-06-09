@@ -148,6 +148,31 @@ donations:
       bill-gates: 1.0
     source: 'https://www.forbes.com/sites/mattdurot/2025/09/16/bill-gates-might-drop-in-the-forbes-400-rankings-after-donating-50-billion-but-his-giving-goes-back-decades/'
     notes: 'Forbes reported that Pivotal Philanthropies Foundation received a public stock grant worth $7.9B from Gates in October 2024. Exact day not specified; normalized to October 1, 2024.'
+
+  - date: 2025-12-31
+    recipient: gates-foundation
+    amount: 3_700_000_000
+    credit:
+      bill-gates: 1.0
+    source: 'https://www.gatesfoundation.org/about/foundation-fact-sheet'
+    notes: 'Bill Gates'' calendar-year-2025 personal contribution to the Gates Foundation endowment. Derived from the foundation fact sheet ($63.9B total giving through 2025 vs $60.2B through 2024 = $3.7B) and corroborated by the Chronicle of Philanthropy Philanthropy 50 ($3.7B). Exact intra-2025 transfer date undisclosed; normalized to year-end. Credit bill-gates 1.0 (post-2021 divorce).'
+
+  - date: 2024-12-31
+    recipient: pivotal-philanthropies-foundation
+    amount: 2_946_686_946
+    credit:
+      bill-gates: 1.0
+    source: 'https://www.inc.com/leila-sheridan/melinda-gates-just-received-another-2-billion-from-her-ex-heres-what-new-filings-reveal/91294023'
+    notes: 'FY2024 tax filings (reported Jan 2026) show Bill Gates contributed $982,228,982 each to three additional Pivotal-affiliated foundations (Pivotal Philanthropies Pathways, Opportunity, and Momentum) = $2,946,686,946. This is IN ADDITION TO the $7.9B to the main Pivotal Philanthropies Foundation (the 2024-10-01 entry); together >$10.8B in 2024, part of a $12.5B divorce-settlement commitment. Mapped to the existing pivotal-philanthropies-foundation recipient (distinct event from the $7.9B). Date normalized to FY2024 year-end.'
+
+  - date: 2004-09-14
+    recipient: carnegie-mellon-university
+    amount: 20_000_000
+    credit:
+      bill-gates: 0.5
+      melinda-gates: 0.5
+    source: 'https://www.cmu.edu/cmnews/extra/040914_gates.html'
+    notes: 'Gift for the building that became the Gates Center for Computer Science (announced 2004-09-14; dedicated 2009). CMU states the gift was from the Bill & Melinda Gates Foundation; included on the same basis as the file''s other foundation-routed university gifts, with marriage-window 0.5/0.5 credit.'
 ---
 
 Bill Gates and Melinda Gates were married between January 1, 1994, and August 2, 2021, so Melinda gets half credit for donations made by the couple during that time.

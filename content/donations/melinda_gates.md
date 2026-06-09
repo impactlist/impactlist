@@ -31,6 +31,14 @@ donations:
       melinda-gates: 1.0
     source: 'https://apnews.com/article/melinda-french-gates-action-for-womens-health-250-million-0faee852342d671ff584e842f6a3d84d'
     notes: "Action for Women's Health grants to more than 80 organizations working on women's health. The AP report described this as a $250 million award pool launched by Melinda French Gates."
+
+  - date: 2025-09-10
+    recipient: wellcome-leap
+    amount: 50_000_000
+    credit:
+      melinda-gates: 1.0
+    source: 'https://wellcomeleap.org/pivotal_partnership_news/'
+    notes: 'Pivotal''s $50M half of a $100M Wellcome Leap women''s-health research partnership (each side contributed $50M). Pivotal-channeled gift, credited to Melinda per the file convention. The separate $215M (2026) and $150M (2024) women''s commitments are pledges and are not recorded.'
 ---
 
 Bill Gates and Melinda Gates were married between January 1, 1994, and August 2, 2021, so Melinda gets half credit for donations made by the couple during that time.

@@ -96,12 +96,13 @@ donations:
       sergey-brin: 1.0
     source: 'https://www.forbes.com/sites/kerryadolan/2022/12/09/exclusive-google-cofounder-sergey-brin-has-quietly-donated-more-than-1-billion-toward-this-one-specific-disease/'
 
-  - date: 2024-05-21
+  - date: 2025-05-21
     recipient: catalyst4
     amount: 544_000_000
     credit:
       sergey-brin: 1.0
     source: 'https://www.bloomberg.com/news/articles/2025-05-24/brin-s-mystery-700-million-stock-gift-went-to-philanthropies'
+    notes: 'Re-dated from 2024-05-21 to 2025-05-21: Bloomberg/Yahoo date this Catalyst4 portion of the ~$700M gift to May 2025, alongside the same-dated Sergey Brin Family Foundation and Michael J. Fox Foundation portions.'
 
   - date: 2025-05-21
     recipient: sergey-brin-family-foundation
@@ -116,4 +117,26 @@ donations:
     credit:
       sergey-brin: 1.0
     source: 'https://www.bloomberg.com/news/articles/2025-05-24/brin-s-mystery-700-million-stock-gift-went-to-philanthropies'
+
+  - date: 2025-11-26
+    recipient: catalyst4
+    amount: 1_000_000_000
+    credit:
+      sergey-brin: 1.0
+    source: 'https://fortune.com/2025/11/30/sergey-brin-gift-1-billion-alphabet-stock-ai-rally-michael-j-fox/'
+    notes: 'Part of a ~$1.1B Alphabet stock gift (3,557,300 shares; SEC Form 4 transaction date 2025-11-26) split across Catalyst4, the Sergey Brin Family Foundation, and the Michael J. Fox Foundation; per-recipient split from the Brin family office. Distinct from the May 2025 ~$700M gift.'
+
+  - date: 2025-11-26
+    recipient: sergey-brin-family-foundation
+    amount: 90_000_000
+    credit:
+      sergey-brin: 1.0
+    source: 'https://fortune.com/2025/11/30/sergey-brin-gift-1-billion-alphabet-stock-ai-rally-michael-j-fox/'
+
+  - date: 2025-11-26
+    recipient: michael-j-fox-foundation-for-parkinsons-research
+    amount: 45_000_000
+    credit:
+      sergey-brin: 1.0
+    source: 'https://fortune.com/2025/11/30/sergey-brin-gift-1-billion-alphabet-stock-ai-rally-michael-j-fox/'
 ---

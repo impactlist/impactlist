@@ -189,4 +189,110 @@ donations:
     credit:
       larry-page: 1.0
     source: 'https://www.grantmakers.io/profiles/v0/201922957-carl-victor-page-memorial-foundation/'
+
+  - date: 2024-12-31
+    recipient: climate-breakthrough
+    amount: 10_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+    notes: 'FY2024 direct grant from the Carl Victor Page Memorial Foundation, following the file convention of tracking the foundation''s grants out. All 15 FY2024 direct-grant rows below were verified against the raw IRS Form 990-PF e-file (object 202513189349105506, filed Nov 15, 2025), Part XV: 17 grants totaling $285,312,880, of which $236,262,880 (two National Philanthropic Trust DAF transfers) is excluded per the FY2023 convention, leaving $49,050,000 in direct grants — all itemized below. Largest direct grant.'
+
+  - date: 2024-12-31
+    recipient: food-for-education
+    amount: 8_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: rockefeller-philanthropy-advisors
+    amount: 6_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: windward-fund
+    amount: 6_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: world-resources-institute
+    amount: 4_750_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: global-fishing-watch
+    amount: 3_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: stichting-european-climate-foundation
+    amount: 2_150_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: great-barrier-reef-foundation
+    amount: 2_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: every-cure
+    amount: 2_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: avina-americas
+    amount: 1_500_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: clean-slate-initiative
+    amount: 1_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: inkomoko
+    amount: 1_000_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: university-of-california-berkeley-foundation-science
+    amount: 750_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: upstream-usa
+    amount: 500_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
+
+  - date: 2024-12-31
+    recipient: think-of-us
+    amount: 400_000
+    credit:
+      larry-page: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
 ---

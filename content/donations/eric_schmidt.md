@@ -207,4 +207,27 @@ donations:
       the California and Midwest newsrooms. NPR describes this as a grant “from
       Eric and Wendy Schmidt” and notes it follows their earlier $4.7M gift in
       2020.
----
+
+  - date: 2022-12-31
+    recipient: eric-and-wendy-schmidt-fund-for-strategic-innovation
+    amount: 23_294_434
+    credit:
+      eric-schmidt: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/463460261'
+    notes: 'Form 990-PF Part I line 1 (contributions/gifts/grants received) into the Schmidts'' own private foundation, FYE Dec 2022 — money personally transferred in. Same entry type as the existing 2014 and 2021 contributions to this recipient. Date set to fiscal-year-end; exact transfer date not public.'
+
+  - date: 2023-12-31
+    recipient: eric-and-wendy-schmidt-fund-for-strategic-innovation
+    amount: 233_657_535
+    credit:
+      eric-schmidt: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/463460261'
+    notes: 'Form 990-PF contributions received, FYE Dec 2023. Corroborated by ProPublica and Cause IQ.'
+
+  - date: 2024-12-31
+    recipient: eric-and-wendy-schmidt-fund-for-strategic-innovation
+    amount: 255_301_007
+    credit:
+      eric-schmidt: 1.0
+    source: 'https://projects.propublica.org/nonprofits/organizations/463460261'
+    notes: 'Form 990-PF contributions received, FYE Dec 2024 (62.8% of $406.8M total revenue). Note: Schmidt Sciences LLC is a subsidiary under this same EIN (46-3460261), so its grant payouts are already captured within these contributions-in figures.'

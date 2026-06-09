@@ -111,4 +111,12 @@ donations:
       reid-hoffman: 1.0
     source: 'https://www.einpresswire.com/article/768223761/lever-for-change-and-reid-hoffman-announce-10-million-challenge-to-increase-trust-in-u-s-institutions'
     notes: 'Trust in American Institutions Challenge - $10M open call managed by Lever for Change.'
+
+  - date: 2024-04-28
+    recipient: lever-for-change
+    amount: 5_000_000
+    credit:
+      reid-hoffman: 1.0
+    source: 'https://leverforchange.org/article/newsletter-article/why-billionaires-like-mackenzie-scott-and-reid-hoffman-are-partnering-with-this-nonprofit-trying-to-shake-up-philanthropy/'
+    notes: 'Separate $5M gift to Lever for Change operations via Hoffman''s donor-advised fund (distinct from the $10M Trust in American Institutions Challenge prize money above). Date approximate (on or before the 2024-04-28 Forbes report). MEDIUM confidence.'
 ---

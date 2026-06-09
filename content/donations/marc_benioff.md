@@ -189,4 +189,12 @@ donations:
     credit:
       marc-benioff: 1.0
     source: 'https://www.washingtonpost.com/technology/2025/11/16/marc-benioff-controversy-san-francisco/'
+
+  - date: 2025-12-31
+    recipient: various-charities-benioff-2025
+    amount: 37_000_000
+    credit:
+      marc-benioff: 1.0
+    source: 'https://www.salesforce.com/news/stories/marc-lynne-benioff-philanthropy-2026/'
+    notes: 'Marc and Lynne Benioff "gave more than $37 million in 2025" to charities including the American Cancer Society, DonorsChoose, and the Jane Goodall Legacy Foundation (plus possible unnamed others — the source says "including"), per the Salesforce newsroom (corroborated by the Chronicle of Philanthropy Philanthropy 50, where the Benioffs ranked 21st). Personal giving (not Salesforce corporate), confirmed as given ("gave"), and distinct from the 2025 UCSF ($100M) and SFPD ($1M) gifts already in this file. No per-organization breakdown is published, so rather than asserting per-org amounts, the recipient''s categories split the gift evenly across the three named orgs'' cause areas (health-medicine / education / environmental). Date normalized to calendar-year-end 2025; amount is the stated floor ("more than $37M"). Credited to marc-benioff per file convention (the gift is jointly Marc & Lynne).'
 ---

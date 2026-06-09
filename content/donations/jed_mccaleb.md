@@ -220,9 +220,9 @@ donations:
   # Navigation Fund endowment gift (downstream grants by Navigation are intentionally excluded)
   - date: 2023-10-31
     recipient: navigation-fund
-    amount: 1_000_000_000
+    amount: 1_309_000_000
     credit:
       jed-mccaleb: 1.0
-    source: 'https://techcrunch.com/2023/10/31/new-nonprofit-backed-by-crypto-billionaire-scores-ai-chips-worth-500m/'
-    notes: 'TechCrunch reports McCaleb donated to the Navigation Fund endowment. Navigation also states: "Our founding endowment was gifted to us by Jed McCaleb." https://www.navigation.org/about. Inside Philanthropy later described the fund as having a $1.3B endowment (not necessarily identical to a single transfer): https://www.insidephilanthropy.com/home/meet-a-new-billion-dollar-fund-from-a-billionaire-crypto-science-power-couple'
+    source: 'https://projects.propublica.org/nonprofits/organizations/921117448'
+    notes: 'Founding endowment gifted by Jed McCaleb. Amount updated from the $1B TechCrunch estimate to $1,309,000,000 per the Navigation Charitable Fund FY2023 Form 990 (contributions received; EIN 92-1117448), consistent with Inside Philanthropy''s "~$1.3B endowment." Navigation states: "Our founding endowment was gifted to us by Jed McCaleb." (https://www.navigation.org/about)'
 ---

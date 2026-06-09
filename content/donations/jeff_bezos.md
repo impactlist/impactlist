@@ -149,4 +149,36 @@ donations:
       jeff-bezos: 1.0
     source: 'https://unitedwaygmwc.org/blog/bezos-day-1-families-fund-awards-5-million-grant-to-united-way-of-greater-milwaukee-waukesha-county/'
     notes: 'Day 1 Families Fund Leadership Award announced by Jeff Bezos and Lauren Sanchez.'
+
+  - date: 2025-12-17
+    recipient: david-flink-bezos-courage-civility-award
+    amount: 5_000_000
+    credit:
+      jeff-bezos: 1.0
+    source: 'https://thendalliance.org/david-flink-recognized-with-bezos-courage-civility-award-from-jeff-bezos-and-lauren-sanchez-bezos/'
+    notes: '2025 Bezos Courage & Civility Award (David Flink, founder of the Neurodiversity Alliance). 4 of 5 honorees named; each award is $5M.'
+
+  - date: 2025-12-17
+    recipient: kara-ball-bezos-courage-civility-award
+    amount: 5_000_000
+    credit:
+      jeff-bezos: 1.0
+    source: 'https://www.understood.org/en/press-releases/kara-ball-courage-and-civility-award'
+    notes: '2025 Bezos Courage & Civility Award (Kara Ball, Understood.org).'
+
+  - date: 2025-12-17
+    recipient: richard-rusczyk-bezos-courage-civility-award
+    amount: 5_000_000
+    credit:
+      jeff-bezos: 1.0
+    source: 'https://kfor.com/business/press-releases/ein-presswire/874935560/richard-rusczyk-recognized-with-bezos-courage-civility-award-by-jeff-bezos-and-lauren-sanchez-bezos/'
+    notes: '2025 Bezos Courage & Civility Award (Richard Rusczyk, MATHCOUNTS).'
+
+  - date: 2025-12-17
+    recipient: ilana-walder-biesanz-bezos-courage-civility-award
+    amount: 5_000_000
+    credit:
+      jeff-bezos: 1.0
+    source: 'https://www.businesswire.com/news/home/20251217472999/en/National-Math-Stars-Ilana-Walder-Biesanz-Recognized-with-Bezos-Courage-Civility-Award'
+    notes: '2025 Bezos Courage & Civility Award (Ilana Walder-Biesanz, National Math Stars). A 5th unnamed honoree (~$5M) is not yet recorded.'
 ---

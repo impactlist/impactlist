@@ -1259,6 +1259,9 @@ export const globalParameters = ${JSON.stringify(globalParameters, null, 2)};
   fs.writeFileSync(outputFile, jsContent);
   console.log(`Data file generated at ${outputFile}`);
 
+  console.log('Writing sitemap.xml and robots.txt...');
+  writeSeoFiles(filteredDonors, filteredRecipients, filteredCategories, assumptions);
+
   // Provide some stats
   console.log('');
   console.log('=== STATS ===');
@@ -1266,6 +1269,50 @@ export const globalParameters = ${JSON.stringify(globalParameters, null, 2)};
   console.log(`Donors: ${Object.keys(filteredDonors).length} (of ${Object.keys(donors).length} total)`);
   console.log(`Recipients: ${Object.keys(filteredRecipients).length} (of ${Object.keys(recipients).length} total)`);
   console.log(`Donations: ${donations.length}`);
+}
+
+// Absolute origin for sitemap/robots URLs. Vercel provides the production
+// URL automatically during builds; SITE_ORIGIN overrides it (e.g. for a
+// custom domain — see .env.example); local builds fall back to the preview
+// origin. Both files are gitignored build output, so no guessed domain is
+// ever committed.
+function resolveSiteOrigin() {
+  if (process.env.SITE_ORIGIN) {
+    return process.env.SITE_ORIGIN.replace(/\/+$/, '');
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  return 'http://localhost:4173';
+}
+
+// Emit sitemap.xml and robots.txt into public/ so Vite copies them into the
+// deploy. URLs mirror the app's routes (and its encodeURIComponent hrefs).
+// No <lastmod>: it's optional, and stamping build time would break the
+// pipeline's deterministic-output guarantee.
+function writeSeoFiles(filteredDonors, filteredRecipients, filteredCategories, assumptions) {
+  const origin = resolveSiteOrigin();
+  const paths = [
+    '/',
+    '/causes',
+    '/recipients',
+    '/calculator',
+    '/faq',
+    '/assumptions',
+    ...Object.keys(filteredDonors).map((id) => `/donor/${encodeURIComponent(id)}`),
+    ...Object.keys(filteredRecipients).map((id) => `/recipient/${encodeURIComponent(id)}`),
+    ...Object.keys(filteredCategories).map((id) => `/cause/${encodeURIComponent(id)}`),
+    ...Object.keys(assumptions).map((id) => `/assumption/${encodeURIComponent(id)}`),
+  ];
+
+  const urlEntries = paths.map((urlPath) => `  <url><loc>${origin}${urlPath}</loc></url>`).join('\n');
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries}\n</urlset>\n`;
+  const robots = `User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`;
+
+  const publicDir = path.join(__dirname, '../public');
+  fs.mkdirSync(publicDir, { recursive: true });
+  fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemap);
+  fs.writeFileSync(path.join(publicDir, 'robots.txt'), robots);
 }
 
 // Filter out entities that are not used

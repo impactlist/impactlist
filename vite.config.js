@@ -5,6 +5,21 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/ and https://vitest.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // The generated dataset (~1MB) changes only with content edits.
+          // Isolating it pairs with the immutable /assets cache headers in
+          // vercel.json: code deploys no longer re-download the data, and
+          // content updates no longer re-download the app.
+          if (id.includes('src/data/generatedData')) {
+            return 'generated-data';
+          }
+        },
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',

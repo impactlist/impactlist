@@ -43,3 +43,7 @@ test-results/
 
 # Generator test temp workspaces
 .tmp-generate-data-*/
+
+# Generated SEO files (emitted by npm run generate-data)
+public/sitemap.xml
+public/robots.txt

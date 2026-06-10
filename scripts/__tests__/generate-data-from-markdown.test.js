@@ -42,12 +42,13 @@ const setupWorkspaceFromFixture = (fixtureName) => {
   return tempDir;
 };
 
-const runGenerator = (workspaceDir) => {
+const runGenerator = (workspaceDir, extraEnv = {}) => {
   const scriptPath = path.join(workspaceDir, 'scripts', 'generate-data-from-markdown.mjs');
   return spawnSync(process.execPath, [scriptPath], {
     cwd: workspaceDir,
     encoding: 'utf8',
     timeout: 10000,
+    env: { ...process.env, ...extraEnv },
   });
 };
 
@@ -495,5 +496,22 @@ describe('pipeline strictness', () => {
     );
 
     runGeneratorExpectingError(workspace, "must use a boolean for 'disabled'");
+  });
+
+  it('emits sitemap.xml and robots.txt with entity URLs from the configured origin', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+
+    // Trailing slash exercises the origin normalization.
+    const result = runGenerator(workspace, { SITE_ORIGIN: 'https://example.org/' });
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const sitemap = fs.readFileSync(path.join(workspace, 'public', 'sitemap.xml'), 'utf8');
+    expect(sitemap).toContain('<loc>https://example.org/</loc>');
+    expect(sitemap).toContain('<loc>https://example.org/donor/donor_a</loc>');
+    expect(sitemap).toContain('<loc>https://example.org/recipient/recipient_one</loc>');
+    expect(sitemap).toContain('<loc>https://example.org/cause/health</loc>');
+
+    const robots = fs.readFileSync(path.join(workspace, 'public', 'robots.txt'), 'utf8');
+    expect(robots).toContain('Sitemap: https://example.org/sitemap.xml');
   });
 });

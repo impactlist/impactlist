@@ -152,3 +152,165 @@ describe('generate-data-from-markdown script', () => {
     expect(output).toContain('references unknown effect "missing_effect" in category "health"');
   });
 });
+
+describe('donation validation', () => {
+  const writeDonationsFile = (workspaceDir, fileName, contents) => {
+    fs.writeFileSync(path.join(workspaceDir, 'content', 'donations', fileName), contents);
+  };
+
+  const runGeneratorExpectingError = (workspaceDir, expectedMessage) => {
+    const result = runGenerator(workspaceDir);
+    const output = `${result.stdout}\n${result.stderr}`;
+
+    expect(result.status, output).not.toBe(0);
+    expect(output).toContain(expectedMessage);
+    return output;
+  };
+
+  const validDonation = `---
+donations:
+  - recipient: recipient_one
+    amount: 500
+    date: 2022-01-01
+    credit:
+      donor_a: 1.0
+---
+`;
+
+  it('fails when the same donation appears in two files', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'second_file.md', validDonation);
+
+    const output = runGeneratorExpectingError(workspace, 'is an exact duplicate of a donation in');
+    expect(output).toContain('donor_a.md');
+    expect(output).toContain('second_file.md');
+  });
+
+  it('fails when the same event is recorded in two files with different credit', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'donor_b.md', validDonation.replace('donor_a: 1.0', 'donor_b: 1.0'));
+
+    const output = runGeneratorExpectingError(workspace, 'on recipient, date, and amount but with different credit');
+    expect(output).toContain('donor_a.md');
+    expect(output).toContain('donor_b.md');
+    expect(output).toContain("merge them into a single entry (in one file) whose 'credit' map covers all donors");
+  });
+
+  it('allows same-looking donations from different donors when disambiguated with distinct notes', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(
+      workspace,
+      'donor_a.md',
+      validDonation.replace('donor_a: 1.0', "donor_a: 1.0\n    notes: 'Donor A gift reported by the recipient.'")
+    );
+    writeDonationsFile(
+      workspace,
+      'donor_b.md',
+      validDonation.replace(
+        'donor_a: 1.0',
+        "donor_b: 1.0\n    notes: 'Separate donor B gift of the same size on the same day.'"
+      )
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    expect(generated.allDonations).toHaveLength(2);
+  });
+
+  it('allows identical donations that are disambiguated with distinct notes', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(
+      workspace,
+      'donor_a.md',
+      `---
+donations:
+  - recipient: recipient_one
+    amount: 500
+    date: 2022-01-01
+    credit:
+      donor_a: 1.0
+    notes: 'First of two identical grants in the source table.'
+
+  - recipient: recipient_one
+    amount: 500
+    date: 2022-01-01
+    credit:
+      donor_a: 1.0
+    notes: 'Second of two identical grants in the source table.'
+---
+`
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    expect(generated.allDonations).toHaveLength(2);
+  });
+
+  it('fails on a rolled-over calendar date that YAML would silently accept', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'donor_a.md', validDonation.replace('date: 2022-01-01', 'date: 2022-02-30'));
+
+    runGeneratorExpectingError(workspace, 'Expected a real calendar date.');
+  });
+
+  it('fails on a date that is not written as YYYY-MM-DD', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'donor_a.md', validDonation.replace('date: 2022-01-01', 'date: "May 3, 2021 UTC"'));
+
+    runGeneratorExpectingError(workspace, 'Expected YYYY-MM-DD.');
+  });
+
+  it('fails on a date outside the plausible year range', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'donor_a.md', validDonation.replace('date: 2022-01-01', 'date: 2205-01-01'));
+
+    runGeneratorExpectingError(workspace, 'outside the plausible range 1900-2100');
+  });
+
+  it('fails on a non-numeric amount', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'donor_a.md', validDonation.replace('amount: 500', "amount: '500'"));
+
+    runGeneratorExpectingError(workspace, "must have a positive numeric 'amount'");
+  });
+
+  it('fails when credit values do not sum to 1', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(
+      workspace,
+      'donor_a.md',
+      validDonation.replace('donor_a: 1.0', 'donor_a: 0.5\n      donor_b: 0.6')
+    );
+
+    runGeneratorExpectingError(workspace, 'instead of 1. Credit must describe how 100% of the donation');
+  });
+
+  it('fails on an empty credit object instead of silently dropping the donation', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'donor_a.md', validDonation.replace('credit:\n      donor_a: 1.0', 'credit: {}'));
+
+    runGeneratorExpectingError(workspace, "must have a non-empty 'credit' object");
+  });
+
+  it('fails when a donations file has no donations array', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(workspace, 'donor_a.md', '---\ndonation:\n  - recipient: recipient_one\n---\n');
+
+    runGeneratorExpectingError(workspace, "must contain a 'donations' array");
+  });
+
+  it('fails on unknown donation fields', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeDonationsFile(
+      workspace,
+      'donor_a.md',
+      validDonation.replace('credit:', "sorce: 'https://example.com'\n    credit:")
+    );
+
+    runGeneratorExpectingError(workspace, "has unknown field 'sorce'");
+  });
+});

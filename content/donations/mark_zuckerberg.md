@@ -1,12 +1,5 @@
 ---
 donations:
-  - date: 2006-11-01
-    recipient: californians-for-clean-alternative-energy
-    amount: 1_000_000
-    credit:
-      larry-page: 1.0
-    source: 'https://www.influencewatch.org/person/larry-page/'
-
   - date: 2010-09-24
     recipient: newark-public-schools
     amount: 100_000_000

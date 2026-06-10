@@ -211,7 +211,7 @@ donations:
 We also support joint donations from multiple people. For instance:
 
 ```yaml
-# In larry_page.md and mark_zuckerberg.md
+# In larry_page.md (a joint donation lives in exactly ONE file — see below)
 ---
 donations:
   - date: 2014-11-10
@@ -225,16 +225,21 @@ donations:
 ---
 ```
 
-A donationfrom anyone can technically appear in any donor file.
-For maintainability, always put a donation from person X in person X's file.
-There's a special donation file for multiple donors called multiple_donors.md.
+Rules for donation entries (the data generation script enforces all of these and fails the build on violations):
+
+- **Every donation event must be recorded exactly once across all files.** The `credit` map — not the file the donation lives in — determines who gets credit, so never copy a donation into a second donor's file. The build fails on exact duplicates (same recipient, date, amount, credit, and notes), and also when two entries match on recipient, date, and amount but disagree on credit — that usually means the same event was recorded once per donor and must be merged into a single entry whose `credit` map covers all donors. If two genuinely separate donations happen to look identical, give each a distinct `notes` field explaining the difference.
+- For maintainability, put a donation from person X in person X's file. Put joint donations in the file of whichever donor is most associated with the gift (or in `multiple_donors.md`, the parking lot for joint donations that haven't been attributed yet) — but only in one place.
+- `date` must be written as `YYYY-MM-DD` and be a real calendar date.
+- `amount` must be a positive number.
+- `credit` is required and its values must sum to 1 (how 100% of the donation is attributed across donors).
+- The only allowed fields are `date`, `recipient`, `amount`, `credit`, `source`, and `notes`.
 
 ## Data Generation
 
 After updating these files, run the data generation script to create the JavaScript data file:
 
 ```bash
-node scripts/generate-data.js
+npm run generate-data
 ```
 
-This will create/update `src/data/generatedData.js` with the compiled data from all markdown files. The script handles deduplication of donation events that appear in multiple files.
+This will create/update `src/data/generatedData.js` with the compiled data from all markdown files.

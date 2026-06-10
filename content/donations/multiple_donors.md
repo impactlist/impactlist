@@ -1,4 +1,6 @@
 ---
+donations: []
+# Parking lot for joint donations we haven't finished attributing yet.
 #donations:
 #  - date: 2021-05-28
 #    recipient: anthropic

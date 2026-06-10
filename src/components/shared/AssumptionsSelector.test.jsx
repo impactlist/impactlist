@@ -187,7 +187,10 @@ describe('AssumptionsSelector', () => {
 
     expect(screen.getByRole('heading', { name: 'Default' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
-      'These assumptions reflect the best estimates of the creators of Impact List.'
+      'These assumptions reflect a blend of the best estimates of the creators of Impact List, and the best estimates given by frontier LLMs from Anthropic, OpenAI, and Google (prompted by Impact List staff).'
+    );
+    expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
+      "We've also provided other curated sets of assumptions that we think reflect common beliefs of different types of users."
     );
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
       'You can create and share your own assumptions on the Assumptions page.'

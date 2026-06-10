@@ -231,3 +231,4 @@ donations:
       eric-schmidt: 1.0
     source: 'https://projects.propublica.org/nonprofits/organizations/463460261'
     notes: 'Form 990-PF contributions received, FYE Dec 2024 (62.8% of $406.8M total revenue). Note: Schmidt Sciences LLC is a subsidiary under this same EIN (46-3460261), so its grant payouts are already captured within these contributions-in figures.'
+---

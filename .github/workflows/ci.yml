@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate data from markdown
+        run: npm run generate-data
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit and integration tests (gated on coverage thresholds)
+        run: npm run test:coverage
+
+      - name: Build
+        run: npm run build

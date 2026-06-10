@@ -755,6 +755,7 @@ donations:
     credit:
       jaan-tallinn: 1.0
     source: 'https://survivalandflourishing.fund/initiative-committee'
+    notes: 'First of two separate $100,000 grants via the Jacob Lagerros initiative for flexHEG prototyping; the SFF initiative-committee page lists both as identical 2024 rows.'
 
   - date: 2024-01-01
     recipient: center-for-ai-safety
@@ -811,6 +812,7 @@ donations:
     credit:
       jaan-tallinn: 1.0
     source: 'https://survivalandflourishing.fund/initiative-committee'
+    notes: 'Second of two separate $100,000 grants via the Jacob Lagerros initiative for flexHEG prototyping; the SFF initiative-committee page lists both as identical 2024 rows.'
 
   - date: 2024-12-01
     recipient: survival-and-flourishing-fund

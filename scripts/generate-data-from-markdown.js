@@ -38,12 +38,6 @@ function replaceVariables(content) {
   return result;
 }
 
-// Helper function to format date as YYYY-MM-DD
-function formatDateString(dateString) {
-  const date = new Date(dateString);
-  return date.toISOString().split('T')[0];
-}
-
 function getRawFrontmatterScalar(fileContent, key) {
   const frontmatterMatch = fileContent.match(/^---\s*\n([\s\S]*?)\n---/);
   if (!frontmatterMatch) {
@@ -54,12 +48,19 @@ function getRawFrontmatterScalar(fileContent, key) {
   return fieldMatch ? fieldMatch[1].trim() : null;
 }
 
-function normalizeBirthDate(rawBirthDate, filename) {
-  const normalizedBirthDate = rawBirthDate.trim().replace(/^['"]|['"]$/g, '');
+// Validate a date written as YYYY-MM-DD and confirm it's a real calendar date.
+// Content dates must always be validated from the raw frontmatter text, never
+// from parsed YAML values: YAML silently rolls invalid dates over
+// (2021-02-30 becomes 2021-03-02) and parses non-ISO formats in the build
+// machine's local timezone.
+function normalizeStrictDateString(rawValue, errorPrefix) {
+  const normalized = String(rawValue)
+    .trim()
+    .replace(/^['"]|['"]$/g, '');
 
-  const match = normalizedBirthDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) {
-    throw new Error(`Error: Donor file ${filename} has invalid 'birthDate'. Expected YYYY-MM-DD.`);
+    throw new Error(`${errorPrefix} Expected YYYY-MM-DD.`);
   }
 
   const year = Number(match[1]);
@@ -72,10 +73,33 @@ function normalizeBirthDate(rawBirthDate, filename) {
     normalizedDate.getUTCMonth() !== month - 1 ||
     normalizedDate.getUTCDate() !== day
   ) {
-    throw new Error(`Error: Donor file ${filename} has invalid 'birthDate'. Expected a real calendar date.`);
+    throw new Error(`${errorPrefix} Expected a real calendar date.`);
   }
 
-  return normalizedBirthDate;
+  return normalized;
+}
+
+function normalizeBirthDate(rawBirthDate, filename) {
+  return normalizeStrictDateString(rawBirthDate, `Error: Donor file ${filename} has invalid 'birthDate'.`);
+}
+
+// Pull the raw text of every (uncommented) `date:` line out of a donations
+// file's frontmatter, in document order. See normalizeStrictDateString for why
+// we can't use the YAML-parsed date values.
+function extractRawDonationDates(fileContent, fileName) {
+  // Like gray-matter, accept frontmatter terminated by either a closing
+  // delimiter or the end of the file.
+  const frontmatterMatch = fileContent.match(/^---\s*\n([\s\S]*?)(?:\n---|$)/);
+  if (!frontmatterMatch) {
+    throw new Error(`Error: Donations file ${fileName} has no frontmatter block.`);
+  }
+
+  return frontmatterMatch[1]
+    .split('\n')
+    .filter((line) => !/^\s*#/.test(line))
+    .map((line) => line.match(/^\s*(?:-\s+)?date:\s*(.+?)\s*$/))
+    .filter(Boolean)
+    .map((match) => match[1]);
 }
 
 // Helper function to extract content excluding "Internal Notes" section
@@ -340,68 +364,171 @@ function loadRecipients() {
   return recipients;
 }
 
+const DONATION_FIELDS = new Set(['date', 'recipient', 'amount', 'credit', 'source', 'notes']);
+const CREDIT_SUM_TOLERANCE = 0.001;
+const DONATION_YEAR_MIN = 1900;
+const DONATION_YEAR_MAX = 2100;
+
+// Identities of a donation event, used to reject duplicates (the same event
+// recorded twice double-counts the donor and/or the recipient):
+// - exactKey catches byte-for-byte re-records (credit included).
+// - eventKey additionally catches the same event attributed to different
+//   donors in different files (e.g. two research passes each crediting "their"
+//   donor with 1.0) by excluding credit.
+// 'notes' is part of both identities so genuinely separate-but-identical
+// donations can be disambiguated with distinct notes. 'source' is part of
+// neither: the same event cited from two sources is still the same event.
+function buildDonationKeys(donation, date) {
+  const creditKey = Object.entries(donation.credit)
+    .map(([donorId, creditAmount]) => `${donorId}:${creditAmount}`)
+    .sort()
+    .join(',');
+  const eventIdentity = [donation.recipient, date, donation.amount, donation.notes ?? null];
+  return {
+    exactKey: JSON.stringify([...eventIdentity, creditKey]),
+    eventKey: JSON.stringify(eventIdentity),
+  };
+}
+
+function validateDonationFields(donation, context) {
+  Object.keys(donation).forEach((key) => {
+    if (!DONATION_FIELDS.has(key)) {
+      throw new Error(`${context} has unknown field '${key}'. Allowed fields: ${[...DONATION_FIELDS].join(', ')}.`);
+    }
+  });
+
+  if (typeof donation.recipient !== 'string' || donation.recipient.trim() === '') {
+    throw new Error(`${context} is missing a valid 'recipient'. Got: ${JSON.stringify(donation.recipient)}`);
+  }
+}
+
+function validateDonationAmountAndCredit(donation, context) {
+  if (typeof donation.amount !== 'number' || !Number.isFinite(donation.amount) || donation.amount <= 0) {
+    throw new Error(`${context} must have a positive numeric 'amount'. Got: ${JSON.stringify(donation.amount)}`);
+  }
+
+  if (!isPlainObject(donation.credit) || Object.keys(donation.credit).length === 0) {
+    throw new Error(
+      `${context} must have a non-empty 'credit' object mapping donor IDs to credit fractions. ` +
+        `Got: ${JSON.stringify(donation.credit)}`
+    );
+  }
+
+  let creditSum = 0;
+  Object.entries(donation.credit).forEach(([donorId, creditAmount]) => {
+    if (typeof creditAmount !== 'number' || !Number.isFinite(creditAmount) || creditAmount <= 0 || creditAmount > 1) {
+      throw new Error(
+        `${context} has invalid credit for donor "${donorId}". ` +
+          `Credit must be a number in (0, 1]. Got: ${JSON.stringify(creditAmount)}`
+      );
+    }
+    creditSum += creditAmount;
+  });
+
+  if (Math.abs(creditSum - 1) > CREDIT_SUM_TOLERANCE) {
+    throw new Error(
+      `${context} has credit values that sum to ${creditSum} instead of 1. ` +
+        `Credit must describe how 100% of the donation is attributed across donors.`
+    );
+  }
+
+  ['source', 'notes'].forEach((field) => {
+    if (donation[field] !== undefined && (typeof donation[field] !== 'string' || donation[field].trim() === '')) {
+      throw new Error(`${context} has invalid '${field}'. Got: ${JSON.stringify(donation[field])}`);
+    }
+  });
+}
+
 // Load all donations
 function loadDonations() {
   const donationFiles = glob.sync(path.join(donationsDir, '*.md'));
   const donations = [];
+  // Map each donation's identities (see buildDonationKeys) to the file that
+  // first declared them, so duplicates fail the build instead of silently
+  // inflating totals.
+  const seenDonations = new Map();
+  const seenDonationEvents = new Map();
 
   donationFiles.forEach((file) => {
     if (path.basename(file) === '_index.md') return;
 
+    const fileName = path.basename(file);
     const fileContent = fs.readFileSync(file, 'utf8');
     const { data } = matter(fileContent);
 
-    if (!data.donations || !Array.isArray(data.donations) || data.donations.length === 0) {
-      console.warn(
-        `Warning: File ${file} has no valid donations array (missing, empty, or not an array). This file will be skipped.`
+    if (!Array.isArray(data.donations)) {
+      throw new Error(
+        `Error: Donations file ${fileName} must contain a 'donations' array in its frontmatter. ` +
+          `Use 'donations: []' if the file intentionally has no donations yet.`
       );
-      return;
     }
 
-    data.donations.forEach((donation) => {
-      if (!donation.recipient || !donation.amount || !donation.date) {
+    const rawDates = extractRawDonationDates(fileContent, fileName);
+    if (rawDates.length !== data.donations.length) {
+      throw new Error(
+        `Error: Donations file ${fileName} has ${rawDates.length} uncommented 'date:' lines but ` +
+          `${data.donations.length} donations. Every donation must have exactly one 'date:' line and no other ` +
+          `frontmatter key may be named 'date'.`
+      );
+    }
+
+    data.donations.forEach((donation, index) => {
+      validateDonationFields(donation, `Error: Donation #${index + 1} in ${fileName}`);
+
+      const date = normalizeStrictDateString(
+        rawDates[index],
+        `Error: Donation #${index + 1} in ${fileName} (recipient: ${donation.recipient}) has invalid date ` +
+          `"${rawDates[index]}".`
+      );
+      const context = `Error: Donation #${index + 1} in ${fileName} (recipient: ${donation.recipient}, date: ${date})`;
+
+      const year = Number(date.slice(0, 4));
+      if (year < DONATION_YEAR_MIN || year > DONATION_YEAR_MAX) {
         throw new Error(
-          `Error: Donation in ${file} is missing required fields:\n` +
-            `  recipient: ${donation.recipient || 'MISSING'}\n` +
-            `  amount: ${donation.amount || 'MISSING'}\n` +
-            `  date: ${donation.date || 'MISSING'}\n` +
-            `Full donation object: ${JSON.stringify(donation, null, 2)}`
+          `${context} has a year outside the plausible range ${DONATION_YEAR_MIN}-${DONATION_YEAR_MAX}. ` +
+            `Fix the date or widen the bounds in this script.`
         );
       }
 
-      // Format the date as YYYY-MM-DD
-      const formattedDate = formatDateString(donation.date);
+      validateDonationAmountAndCredit(donation, context);
 
-      // Handle both old format (just a donor string) and new format (credit object)
-      if (donation.credit) {
-        // New format with credit object
-        Object.entries(donation.credit).forEach(([donorId, creditAmount]) => {
-          donations.push({
-            date: formattedDate,
-            donorId,
-            recipientId: donation.recipient,
-            amount: donation.amount,
-            credit: creditAmount,
-            creditedAmount: donation.amount * creditAmount,
-            source: donation.source,
-            notes: donation.notes,
-          });
-        });
-      } else {
-        // Derive donor ID from filename for backwards compatibility
-        const donorId = path.basename(file, '.md');
+      const { exactKey, eventKey } = buildDonationKeys(donation, date);
+      const exactDuplicateFile = seenDonations.get(exactKey);
+      if (exactDuplicateFile) {
+        throw new Error(
+          `${context} is an exact duplicate of a donation in ${exactDuplicateFile}. Every donation event must be ` +
+            `recorded exactly once across all files; use the 'credit' map to attribute joint donations. ` +
+            `If these are genuinely separate donations, give each a distinct 'notes' field explaining the difference.`
+        );
+      }
 
+      const sameEventFile = seenDonationEvents.get(eventKey);
+      if (sameEventFile) {
+        throw new Error(
+          `${context} matches a donation in ${sameEventFile} on recipient, date, and amount but with different ` +
+            `credit — this usually means the same donation event was recorded once per donor. If so, merge them ` +
+            `into a single entry (in one file) whose 'credit' map covers all donors. If these are genuinely ` +
+            `separate donations, give each a distinct 'notes' field explaining the difference.`
+        );
+      }
+
+      seenDonations.set(exactKey, fileName);
+      seenDonationEvents.set(eventKey, fileName);
+
+      Object.entries(donation.credit).forEach(([donorId, creditAmount]) => {
         donations.push({
-          date: formattedDate,
+          date,
           donorId,
           recipientId: donation.recipient,
           amount: donation.amount,
-          credit: 1.0, // Default to full credit
-          creditedAmount: donation.amount,
+          credit: creditAmount,
+          creditedAmount: donation.amount * creditAmount,
           source: donation.source,
           notes: donation.notes,
+          // Build-time-only context for error messages; stripped before output.
+          sourceFile: fileName,
         });
-      }
+      });
     });
   });
 
@@ -859,6 +986,8 @@ function addReadableFields(categories, donors, recipients, donations) {
   // Add readable fields to each donation
   return donations.map((donation) => {
     const enhanced = { ...donation };
+    // sourceFile is build-time-only context for error messages.
+    delete enhanced.sourceFile;
     enhanced.donor = donorNameMap[donation.donorId] || donation.donorId;
     enhanced.recipient = recipientNameMap[donation.recipientId] || donation.recipientId;
 
@@ -878,15 +1007,17 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
   const errors = [];
 
   // Check all donations reference valid donors and recipients
-  donations.forEach((donation, index) => {
+  donations.forEach((donation) => {
+    const label = `Error: Donation in ${donation.sourceFile} (recipient "${donation.recipientId}", date ${donation.date}, amount ${donation.amount})`;
+
     // Check donor exists
     if (!donors[donation.donorId]) {
-      errors.push(`Error: Donation #${index + 1} references non-existent donor ID "${donation.donorId}"`);
+      errors.push(`${label} references non-existent donor ID "${donation.donorId}"`);
     }
 
     // Check recipient exists
     if (!recipients[donation.recipientId]) {
-      errors.push(`Error: Donation #${index + 1} references non-existent recipient ID "${donation.recipientId}"`);
+      errors.push(`${label} references non-existent recipient ID "${donation.recipientId}"`);
     }
   });
 

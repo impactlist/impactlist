@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
@@ -23,163 +23,161 @@ import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import FormattedScientificValue from '../components/shared/FormattedScientificValue';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
-const RecipientList = () => {
-  useDocumentTitle('Recipients');
-  const [recipientStats, setRecipientStats] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const { combinedAssumptions } = useAssumptions();
+const buildRecipientStats = (combinedAssumptions) => {
+  const currentYear = getCurrentYear();
+  return combinedAssumptions.getAllRecipients().map((recipient) => {
+    // Use the recipient ID directly (now included in the object)
+    const recipientId = recipient.id;
 
-  useEffect(() => {
-    if (!combinedAssumptions) {
-      throw new Error('combinedAssumptions is required but does not exist.');
+    const recipientDonations = getDonationsForRecipient(recipientId);
+    const totalReceived = recipientDonations.reduce((sum, d) => sum + getCreditedAmount(d), 0);
+    const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, currentYear);
+
+    // Get the primary category and all categories for display
+    const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
+
+    if (!primaryCategoryId) {
+      throw new Error(
+        `No primary category found for recipient ${recipient.name}. Please check that this recipient has categories defined.`
+      );
     }
 
-    // Calculate recipient statistics
-    const currentYear = getCurrentYear();
-    const recipientStats = combinedAssumptions.getAllRecipients().map((recipient) => {
-      // Use the recipient ID directly (now included in the object)
-      const recipientId = recipient.id;
+    const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId);
 
-      const recipientDonations = getDonationsForRecipient(recipientId);
-      const totalReceived = recipientDonations.reduce((sum, d) => sum + getCreditedAmount(d), 0);
-      const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, currentYear);
-
-      // Get the primary category and all categories for display
-      const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
-
-      if (!primaryCategoryId) {
-        throw new Error(
-          `No primary category found for recipient ${recipient.name}. Please check that this recipient has categories defined.`
-        );
-      }
-
-      const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId);
-
-      if (!primaryCategory) {
-        throw new Error(
-          `Invalid primary category ID: ${primaryCategoryId} for recipient ${recipient.name}. This category does not exist.`
-        );
-      }
-
-      const categoryBreakdown = getCategoryBreakdown(combinedAssumptions, recipientId);
-
-      // Get category names from breakdown
-      const categoryNames = categoryBreakdown.map((category) => {
-        const categoryObj = combinedAssumptions.getCategoryById(category.categoryId);
-
-        if (!categoryObj) {
-          throw new Error(
-            `Invalid category ID: ${category.categoryId} for recipient ${recipient.name}. This category does not exist.`
-          );
-        }
-
-        return categoryObj.name;
-      });
-
-      // Calculate total lives saved
-      const totalLivesSaved = recipientDonations.reduce(
-        (sum, donation) => sum + calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation),
-        0
+    if (!primaryCategory) {
+      throw new Error(
+        `Invalid primary category ID: ${primaryCategoryId} for recipient ${recipient.name}. This category does not exist.`
       );
+    }
 
-      return {
-        id: recipientId,
-        name: recipient.name,
-        primaryCategoryId: primaryCategoryId,
-        primaryCategoryName: primaryCategory.name,
-        categoryNames,
-        totalReceived,
-        costPerLife,
-        totalLivesSaved,
-      };
+    const categoryBreakdown = getCategoryBreakdown(combinedAssumptions, recipientId);
+
+    // Get category names from breakdown
+    const categoryNames = categoryBreakdown.map((category) => {
+      const categoryObj = combinedAssumptions.getCategoryById(category.categoryId);
+
+      if (!categoryObj) {
+        throw new Error(
+          `Invalid category ID: ${category.categoryId} for recipient ${recipient.name}. This category does not exist.`
+        );
+      }
+
+      return categoryObj.name;
     });
 
-    // Let SortableTable handle the sorting with the special logic
-    setRecipientStats(recipientStats);
-  }, [combinedAssumptions]);
+    // Calculate total lives saved
+    const totalLivesSaved = recipientDonations.reduce(
+      (sum, donation) => sum + calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation),
+      0
+    );
 
-  // Filter recipients based on search term
-  const filteredRecipients = searchTerm
-    ? recipientStats.filter((recipient) => recipient.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    : recipientStats;
+    return {
+      id: recipientId,
+      name: recipient.name,
+      primaryCategoryId: primaryCategoryId,
+      primaryCategoryName: primaryCategory.name,
+      categoryNames,
+      totalReceived,
+      costPerLife,
+      totalLivesSaved,
+    };
+  });
+};
 
-  // Recipient table columns configuration
-  const recipientColumns = [
-    {
-      key: 'name',
-      label: 'Organization',
-      render: (recipient) => (
-        <div className="max-w-[300px] break-words">
-          <Link to={`/recipient/${encodeURIComponent(recipient.id)}`} className="impact-link text-sm font-medium">
-            {recipient.name}
+// Recipient table columns configuration (static — no component state involved)
+const recipientColumns = [
+  {
+    key: 'name',
+    label: 'Organization',
+    render: (recipient) => (
+      <div className="max-w-[300px] break-words">
+        <Link to={`/recipient/${encodeURIComponent(recipient.id)}`} className="impact-link text-sm font-medium">
+          {recipient.name}
+        </Link>
+      </div>
+    ),
+  },
+  {
+    key: 'totalLivesSaved',
+    label: 'Lives Saved',
+    tooltip: (
+      <div>
+        Expected lives saved from donations to this organization, using our effectiveness estimates from the cost/life
+        column together with the total amount given.
+      </div>
+    ),
+    render: (recipient) => (
+      <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
+        <FormattedScientificValue value={formatRoundedLives(recipient.totalLivesSaved)} variant="compact" />
+      </div>
+    ),
+  },
+  {
+    key: 'costPerLife',
+    label: 'Cost/Life',
+    tooltip: (
+      <div>
+        Cost/Life comes from our cost-effectiveness estimates for this organization. It is the estimated amount one
+        would need to donate to this organization to save the equivalent of one life.
+      </div>
+    ),
+    render: (recipient) => {
+      return (
+        <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
+          {recipient.costPerLife === 0 ? (
+            '∞'
+          ) : (
+            <FormattedScientificValue value={formatCurrency(recipient.costPerLife)} variant="compact" />
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    key: 'totalReceived',
+    label: 'Total Received',
+    render: (recipient) => <div className="text-sm text-strong">{formatCurrency(recipient.totalReceived)}</div>,
+  },
+  {
+    key: 'primaryCategoryName',
+    label: 'Cause Area',
+    render: (recipient) => (
+      <div className="text-sm text-strong">
+        {recipient.categoryNames.length === 1 ? (
+          <Link to={buildCausePath(recipient.primaryCategoryId)} className="impact-link">
+            {recipient.primaryCategoryName}
           </Link>
-        </div>
-      ),
-    },
-    {
-      key: 'totalLivesSaved',
-      label: 'Lives Saved',
-      tooltip: (
-        <div>
-          Expected lives saved from donations to this organization, using our effectiveness estimates from the cost/life
-          column together with the total amount given.
-        </div>
-      ),
-      render: (recipient) => (
-        <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
-          <FormattedScientificValue value={formatRoundedLives(recipient.totalLivesSaved)} variant="compact" />
-        </div>
-      ),
-    },
-    {
-      key: 'costPerLife',
-      label: 'Cost/Life',
-      tooltip: (
-        <div>
-          Cost/Life comes from our cost-effectiveness estimates for this organization. It is the estimated amount one
-          would need to donate to this organization to save the equivalent of one life.
-        </div>
-      ),
-      render: (recipient) => {
-        return (
-          <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-            {recipient.costPerLife === 0 ? (
-              '∞'
-            ) : (
-              <FormattedScientificValue value={formatCurrency(recipient.costPerLife)} variant="compact" />
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      key: 'totalReceived',
-      label: 'Total Received',
-      render: (recipient) => <div className="text-sm text-strong">{formatCurrency(recipient.totalReceived)}</div>,
-    },
-    {
-      key: 'primaryCategoryName',
-      label: 'Cause Area',
-      render: (recipient) => (
-        <div className="text-sm text-strong">
-          {recipient.categoryNames.length === 1 ? (
+        ) : (
+          <div>
             <Link to={buildCausePath(recipient.primaryCategoryId)} className="impact-link">
               {recipient.primaryCategoryName}
             </Link>
-          ) : (
-            <div>
-              <Link to={buildCausePath(recipient.primaryCategoryId)} className="impact-link">
-                {recipient.primaryCategoryName}
-              </Link>
-              {recipient.categoryNames.length > 1 && (
-                <div className="mt-1 text-xs text-muted">+{recipient.categoryNames.length - 1} more</div>
-              )}
-            </div>
-          )}
-        </div>
-      ),
-    },
-  ];
+            {recipient.categoryNames.length > 1 && (
+              <div className="mt-1 text-xs text-muted">+{recipient.categoryNames.length - 1} more</div>
+            )}
+          </div>
+        )}
+      </div>
+    ),
+  },
+];
+
+const RecipientList = () => {
+  useDocumentTitle('Recipients');
+  const [searchTerm, setSearchTerm] = useState('');
+  const { combinedAssumptions } = useAssumptions();
+
+  const recipientStats = useMemo(() => buildRecipientStats(combinedAssumptions), [combinedAssumptions]);
+
+  // Memoized so the table receives a stable array identity per search term
+  // (its sort is memoized on data identity).
+  const filteredRecipients = useMemo(
+    () =>
+      searchTerm
+        ? recipientStats.filter((recipient) => recipient.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : recipientStats,
+    [recipientStats, searchTerm]
+  );
 
   return (
     <>

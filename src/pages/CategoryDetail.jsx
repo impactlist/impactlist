@@ -1,11 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import {
   getCostPerLifeFromCombined,
-  createCombinedAssumptions,
+  getDefaultCombinedAssumptions,
   calculateCategoryBreakdownForDonationFromCombined,
 } from '../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../utils/donationDataHelpers';
@@ -20,34 +20,22 @@ import useDocumentTitle from '../hooks/useDocumentTitle';
 const CategoryDetail = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
-  const [categoryInfo, setCategoryInfo] = useState(null);
   const { combinedAssumptions } = useAssumptions();
-  useDocumentTitle(categoryInfo?.name);
-  const handleEditCategoryAssumptions = () => {
-    navigate(`/assumptions?tab=categories&categoryId=${categoryId}`);
-  };
 
-  useEffect(() => {
-    // Get category info
-    const category = combinedAssumptions.getCategoryById(categoryId);
+  // Unknown IDs are expected input (stale links); NotFound renders below.
+  const category = combinedAssumptions.getCategoryById(categoryId);
 
-    if (!category) {
-      // Unknown IDs are expected input (stale links); NotFound renders below.
-      return;
-    }
+  const categoryInfo = useMemo(() => {
+    if (!category) return null;
 
-    // Get cost per life for this category using combined assumptions
     const currentYear = getCurrentYear();
     const costPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, currentYear);
-    // Get default cost per life (without custom values)
-    const defaultCombinedAssumptions = createCombinedAssumptions(null);
-    const defaultCostPerLife = getCostPerLifeFromCombined(defaultCombinedAssumptions, categoryId, currentYear);
+    // The default (non-customized) cost per life, shown for comparison.
+    const defaultCostPerLife = getCostPerLifeFromCombined(getDefaultCombinedAssumptions(), categoryId, currentYear);
 
-    // Calculate total donated to this category and lives saved
+    // Total donated to this category and lives saved, across all donations
     let totalDonated = 0;
     let totalLivesSaved = 0;
-
-    // Loop through all donations and add up amounts/lives for this category
     donations.forEach((donation) => {
       const categoryBreakdown = calculateCategoryBreakdownForDonationFromCombined(combinedAssumptions, donation);
       const targetCategory = categoryBreakdown.find((entry) => entry.categoryId === categoryId);
@@ -57,22 +45,24 @@ const CategoryDetail = () => {
       totalLivesSaved += targetCategory.livesSaved;
     });
 
-    setCategoryInfo({
+    return {
       name: category.name,
       costPerLife,
       defaultCostPerLife,
       totalDonated,
       totalLivesSaved,
       content: category.content,
-    });
-  }, [categoryId, combinedAssumptions]);
+    };
+  }, [categoryId, category, combinedAssumptions]);
 
-  if (!combinedAssumptions.getCategoryById(categoryId)) {
+  useDocumentTitle(categoryInfo?.name);
+
+  const handleEditCategoryAssumptions = () => {
+    navigate(`/assumptions?tab=categories&categoryId=${categoryId}`);
+  };
+
+  if (!category) {
     return <NotFound message={`No cause area found with ID "${categoryId}".`} />;
-  }
-
-  if (!categoryInfo) {
-    return <div className="impact-loading">Loading...</div>;
   }
 
   return (

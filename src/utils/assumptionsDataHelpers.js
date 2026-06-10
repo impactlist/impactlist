@@ -294,6 +294,19 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
   return combined;
 };
 
+// The defaults-only combined object never changes for an app load, but
+// building it costs a deep copy of the whole dataset — share one lazy
+// instance instead of rebuilding it per caller (it's only needed by views
+// that show "default" numbers next to customized ones).
+let defaultCombinedAssumptionsSingleton = null;
+
+export const getDefaultCombinedAssumptions = () => {
+  if (!defaultCombinedAssumptionsSingleton) {
+    defaultCombinedAssumptionsSingleton = createCombinedAssumptions();
+  }
+  return defaultCombinedAssumptionsSingleton;
+};
+
 /**
  * Get the effective cost per life for a category from combined assumptions
  * @param {Object} combinedAssumptions - The combined assumptions object

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { calculateDonorStatsFromCombined } from '../utils/assumptionsDataHelpers';
@@ -11,95 +11,87 @@ import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import FormattedScientificValue from '../components/shared/FormattedScientificValue';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
+// Donor table columns configuration (static — no component state involved)
+const donorColumns = [
+  {
+    key: 'photo',
+    label: '',
+    sortable: false,
+    render: (donor) => (
+      <div className="flex justify-center">
+        <DonorPhoto donorId={donor.id} donorName={donor.name} size="small" />
+      </div>
+    ),
+  },
+  {
+    key: 'rank',
+    label: 'Rank',
+    render: (donor) => <div className="text-sm text-strong">{donor.rank}</div>,
+  },
+  {
+    key: 'name',
+    label: 'Name',
+    render: (donor) => (
+      <Link to={`/donor/${encodeURIComponent(donor.id)}`} className="impact-link text-sm font-medium">
+        {donor.name}
+      </Link>
+    ),
+  },
+  {
+    key: 'totalLivesSaved',
+    label: 'Lives Saved',
+    tooltip: (
+      <div>
+        We first calculate the expected lives saved for each donation a person has made, based on our cost effectiveness
+        estimates for every charity. We then sum these values across all the donations a person has made to get their
+        total expected lives saved.
+        <br />
+        <br />
+        See the FAQ for more details.
+      </div>
+    ),
+    render: (donor) => (
+      <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
+        <FormattedScientificValue value={formatRoundedLives(donor.totalLivesSaved)} variant="compact" />
+      </div>
+    ),
+  },
+  {
+    key: 'totalDonated',
+    label: 'Donated',
+    render: (donor) => <div className="text-sm text-strong">{formatCurrency(donor.totalDonated)}</div>,
+  },
+  {
+    key: 'costPerLife',
+    label: 'Cost/Life',
+    tooltip: (
+      <div>
+        Cost/Life is the amount donated divided by the lives saved. For every dollar amount shown here, the equivalent
+        of one life is expected to be saved.
+      </div>
+    ),
+    render: (donor) => (
+      <div className={`text-sm ${donor.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
+        {donor.totalLivesSaved === 0 ? (
+          '∞'
+        ) : (
+          <FormattedScientificValue value={formatCurrency(donor.costPerLife)} variant="compact" />
+        )}
+      </div>
+    ),
+  },
+  {
+    key: 'netWorth',
+    label: 'Net Worth',
+    render: (donor) => <div className="text-sm text-strong">{formatCurrency(donor.netWorth)}</div>,
+  },
+];
+
 const DonorList = () => {
   useDocumentTitle('Top Donors by Lives Saved');
-  const [donorStats, setDonorStats] = useState([]);
   const { combinedAssumptions } = useAssumptions();
 
-  useEffect(() => {
-    if (!combinedAssumptions) {
-      throw new Error('combinedAssumptions is required but does not exist.');
-    }
-
-    // Calculate donor statistics on component mount
-    setDonorStats(calculateDonorStatsFromCombined(combinedAssumptions));
-  }, [combinedAssumptions]);
-
-  // Donor table columns configuration
-  const donorColumns = [
-    {
-      key: 'photo',
-      label: '',
-      sortable: false,
-      render: (donor) => (
-        <div className="flex justify-center">
-          <DonorPhoto donorId={donor.id} donorName={donor.name} size="small" />
-        </div>
-      ),
-    },
-    {
-      key: 'rank',
-      label: 'Rank',
-      render: (donor) => <div className="text-sm text-strong">{donor.rank}</div>,
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      render: (donor) => (
-        <Link to={`/donor/${encodeURIComponent(donor.id)}`} className="impact-link text-sm font-medium">
-          {donor.name}
-        </Link>
-      ),
-    },
-    {
-      key: 'totalLivesSaved',
-      label: 'Lives Saved',
-      tooltip: (
-        <div>
-          We first calculate the expected lives saved for each donation a person has made, based on our cost
-          effectiveness estimates for every charity. We then sum these values across all the donations a person has made
-          to get their total expected lives saved.
-          <br />
-          <br />
-          See the FAQ for more details.
-        </div>
-      ),
-      render: (donor) => (
-        <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-          <FormattedScientificValue value={formatRoundedLives(donor.totalLivesSaved)} variant="compact" />
-        </div>
-      ),
-    },
-    {
-      key: 'totalDonated',
-      label: 'Donated',
-      render: (donor) => <div className="text-sm text-strong">{formatCurrency(donor.totalDonated)}</div>,
-    },
-    {
-      key: 'costPerLife',
-      label: 'Cost/Life',
-      tooltip: (
-        <div>
-          Cost/Life is the amount donated divided by the lives saved. For every dollar amount shown here, the equivalent
-          of one life is expected to be saved.
-        </div>
-      ),
-      render: (donor) => (
-        <div className={`text-sm ${donor.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-          {donor.totalLivesSaved === 0 ? (
-            '∞'
-          ) : (
-            <FormattedScientificValue value={formatCurrency(donor.costPerLife)} variant="compact" />
-          )}
-        </div>
-      ),
-    },
-    {
-      key: 'netWorth',
-      label: 'Net Worth',
-      render: (donor) => <div className="text-sm text-strong">{formatCurrency(donor.netWorth)}</div>,
-    },
-  ];
+  const donorStats = useMemo(() => calculateDonorStatsFromCombined(combinedAssumptions), [combinedAssumptions]);
 
   return (
     <>

@@ -1,6 +1,8 @@
 # src/hooks/ — shared hooks
 
 - `useDocumentTitle(title)` — sets `"<title> — Impact List"`; no-ops on falsy (so detail pages can pass `entity?.name` while loading and NotFound owns the 404 title). Every page uses it.
+- `useCategoryChartData(combinedAssumptions, donations, {maxCategories})` — memoized per-category aggregation (donation amount + lives saved per category) behind the donor/recipient detail charts; collapses the tail into an "Other Causes" row past `maxCategories`. Pass real donations only (no synthesized "unknown" rows).
+- `useChartViewTransition(rawChartData)` — the detail charts' donations⇄lives-saved toggle state machine. The chart renders `valueTarget` with recharts animation; a toggle animates by holding the FROM value and retargeting, then rows rebuild once idle. Returns `{chartData, chartView, isTransitioning, handleChartViewChange}`.
 - `useDismissibleMenu` — outside-click + Escape dismissal for popovers/menus; use it instead of hand-rolling listeners.
 - `useAssumptionsEditorController` — the assumptions editor's tab/entity/URL orchestration.
 - `useAssumptionsShareActions` / `useSaveAssumptionsModal` — share-link and save-to-library flows shared by AssumptionsPage and AssumptionsSelector.

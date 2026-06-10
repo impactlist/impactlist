@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import {
@@ -12,8 +12,6 @@ import {
 import {
   calculateDonorStatsFromCombined,
   getCostPerLifeForRecipientFromCombined,
-  getCostPerLifeFromCombined,
-  getCostPerLifeForRecipientCategoryFromCombined,
   calculateLivesSavedForDonationFromCombined,
 } from '../utils/assumptionsDataHelpers';
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
@@ -25,423 +23,111 @@ import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import NotFound from './NotFound';
-import { CHART_ANIMATION_DURATION, DONATION_FEEDBACK_NOTE } from '../utils/constants';
+import { DONATION_FEEDBACK_NOTE } from '../utils/constants';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import useCategoryChartData from '../hooks/useCategoryChartData';
+import useChartViewTransition from '../hooks/useChartViewTransition';
+
+const EMPTY_DONATIONS = [];
 
 const DonorDetail = () => {
   const { donorId } = useParams();
-  const [donorStats, setDonorStats] = useState(null);
-  const [donorContent, setDonorContent] = useState(null);
-  const [donorDonations, setDonorDonations] = useState([]);
-  const [rawChartData, setRawChartData] = useState([]); // Store the raw data with both values
-  const [chartData, setChartData] = useState([]); // This will change format based on view
-  const [chartView, setChartView] = useState('livesSaved'); // 'donations' or 'livesSaved'
-  const [shouldAnimate, setShouldAnimate] = useState(false); // Only animate when user toggles view
-  const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
   const { combinedAssumptions } = useAssumptions();
-  useDocumentTitle(donorStats?.name);
 
-  // Calculate chart height based on number of categories (used later)
-  const calculateChartHeight = (categories) => {
-    // Allocate about 55px per category with a minimum height of 384px (corresponds to ~8-9 categories)
-    // Each additional category beyond that adds more height
-    return Math.max(384, categories.length * 55);
-  };
+  // Unknown IDs are expected input (stale links); NotFound renders below.
+  const donorData = getDonorById(donorId);
 
-  useEffect(() => {
-    if (!combinedAssumptions) {
-      throw new Error('combinedAssumptions is required but does not exist.');
-    }
+  const pageData = useMemo(() => {
+    if (!donorData) return null;
 
-    // Unknown IDs are expected input (stale links); NotFound renders below.
-    const donorData = getDonorById(donorId);
-    if (!donorData) {
-      return;
-    }
-
-    // Get full donor statistics
     const stats = calculateDonorStatsFromCombined(combinedAssumptions);
     const currentDonor = stats.find((donor) => donor.id === donorId);
-
     if (!currentDonor) {
       throw new Error(`Donor with ID "${donorId}" not found. Please check that this donor exists in the database.`);
     }
 
-    setDonorStats({
-      ...currentDonor,
-      about: donorData?.about || '',
-    });
-
-    // Get donor donations and sort by date (most recent first)
-    const donorDonationsList = getDonationsForDonor(donorId)
+    // The donor's recorded donations, most recent first.
+    const knownDonations = getDonationsForDonor(donorId)
       .map((donation) => {
         const recipientId = donation.recipientId;
         const recipient = combinedAssumptions.getRecipientById(recipientId);
-
-        // Throw error if recipient doesn't exist in our database
         if (!recipient) {
           throw new Error(
             `Recipient not found: ${donation.recipient} for donor ${donorId}. This recipient needs to be added to the recipients array.`
           );
         }
 
-        // Normal flow when recipient exists
         const donationYear = extractYearFromDonation(donation);
         const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, donationYear);
-
-        // Get the primary category ID for this recipient
         const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
         const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId) || { name: 'Other' };
 
-        const creditedAmount = getCreditedAmount(donation);
-
-        // Calculate lives saved
-        const totalLivesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
-
         return {
           ...donation,
-          creditedAmount,
-          categoryId: primaryCategoryId, // Use primary category ID
-          categoryName: primaryCategory.name, // Get the name from categoriesById
-          totalLivesSaved,
+          creditedAmount: getCreditedAmount(donation),
+          categoryId: primaryCategoryId,
+          categoryName: primaryCategory.name,
+          totalLivesSaved: calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation),
           costPerLife,
           dateObj: donation.date ? new Date(donation.date) : new Date(0),
         };
       })
       .sort((a, b) => b.dateObj - a.dateObj);
 
-    // Store donor content for rendering
-    setDonorContent(donorData?.content);
+    const tableDonations = [...knownDonations];
 
-    // Keep track of the sum of known donations for reference
-    const knownDonationsTotal = donorDonationsList.reduce((total, donation) => total + donation.creditedAmount, 0);
-
-    // If donor has totalDonated field and it's greater than the sum of known donations
-    if (donorData?.totalDonated && donorData.totalDonated > knownDonationsTotal) {
-      // Calculate the unknown amount
+    // If the donor's documented total exceeds the recorded donations, add a
+    // synthetic "Unknown" row carrying the remainder at the donor's average
+    // cost per life (table only — the category chart shows real data).
+    const knownDonationsTotal = knownDonations.reduce((total, donation) => total + donation.creditedAmount, 0);
+    if (donorData.totalDonated && donorData.totalDonated > knownDonationsTotal) {
       const unknownAmount = donorData.totalDonated - knownDonationsTotal;
-
-      // Calculate the average cost per life for all known donations
-      const totalLivesSaved = donorDonationsList.reduce((total, donation) => total + donation.totalLivesSaved, 0);
-
-      // Only calculate avg cost if there are lives saved (avoid division by zero)
-      const avgCostPerLife = totalLivesSaved !== 0 ? knownDonationsTotal / totalLivesSaved : 0;
-
-      // Calculate lives saved for the unknown amount using the same cost per life
+      const knownLivesSaved = knownDonations.reduce((total, donation) => total + donation.totalLivesSaved, 0);
+      const avgCostPerLife = knownLivesSaved !== 0 ? knownDonationsTotal / knownLivesSaved : 0;
       const unknownLivesSaved = avgCostPerLife !== 0 ? unknownAmount / avgCostPerLife : 0;
 
-      // Add the unknown donation to the list
-      donorDonationsList.unshift({
+      tableDonations.unshift({
         date: 'Unknown',
         donorId: donorId,
         donor: donorData.name,
         recipientId: 'unknown',
         recipient: 'Unknown',
         amount: unknownAmount,
-        categoryId: 'other', // Use 'other' as the primary category ID
-        categoryName: 'Unknown', // Use 'Unknown' as the primary category name
+        categoryId: 'other',
+        categoryName: 'Unknown',
         totalLivesSaved: unknownLivesSaved,
         costPerLife: avgCostPerLife,
-        dateObj: new Date(0), // Oldest date to sort at the end
+        dateObj: new Date(0),
         source: '',
         isUnknown: true,
       });
     }
 
-    // Enhance donations with categoryCount for display
-    const donationsWithCategoryCount = donorDonationsList.map((donation) => {
+    const donationsWithCategoryCount = tableDonations.map((donation) => {
       if (donation.isUnknown) return donation;
-
       const recipient = combinedAssumptions.getRecipientById(donation.recipientId);
-      const categoryCount = recipient ? Object.keys(recipient.categories).length : 1;
-
-      return {
-        ...donation,
-        categoryCount,
-      };
+      return { ...donation, categoryCount: Object.keys(recipient.categories).length };
     });
 
-    setDonorDonations(donationsWithCategoryCount);
+    return {
+      donorStats: { ...currentDonor, about: donorData.about || '' },
+      donorContent: donorData.content,
+      donorDonations: donationsWithCategoryCount,
+      chartDonations: knownDonations,
+    };
+  }, [donorId, donorData, combinedAssumptions]);
 
-    // Prepare category data for both donation amounts and lives saved
-    // Group donations by category, accounting for category fractions
-    const categoryAmounts = {};
-    const categoryLivesSaved = {};
-    const categoryBaselineLives = {};
-    let chartDonationsTotal = 0;
-    let chartLivesSavedTotal = 0;
+  const rawChartData = useCategoryChartData(combinedAssumptions, pageData?.chartDonations ?? EMPTY_DONATIONS, {
+    maxCategories: 12,
+  });
+  const { chartData, chartView, isTransitioning, handleChartViewChange } = useChartViewTransition(rawChartData);
+  useDocumentTitle(pageData?.donorStats.name);
 
-    donorDonationsList.forEach((donation) => {
-      // Skip unknown donations for the chart
-      if (donation.isUnknown) return;
-
-      // Get the recipient and its categories
-      const recipientId = donation.recipientId;
-      const recipient = combinedAssumptions.getRecipientById(recipientId);
-      if (!recipient) return;
-
-      // Process each category this recipient belongs to
-      Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
-        const fraction = categoryData.fraction;
-        const category = combinedAssumptions.getCategoryById(categoryId);
-        const categoryName = category.name;
-
-        // Get the costPerLife with multiplier properly applied
-        const donationYear = extractYearFromDonation(donation);
-        const costPerLife = getCostPerLifeForRecipientCategoryFromCombined(
-          combinedAssumptions,
-          recipientId,
-          categoryId,
-          donationYear
-        );
-
-        // Calculate category-specific amount and lives saved
-        const categoryAmount = donation.creditedAmount * fraction;
-        let livesSavedForCategory;
-
-        // Calculate lives saved directly from the credited amount
-        livesSavedForCategory = costPerLife !== 0 ? categoryAmount / costPerLife : 0; // Normal case
-
-        // Initialize category objects if they don't exist
-        if (!categoryAmounts[categoryName]) {
-          categoryAmounts[categoryName] = {
-            name: categoryName,
-            value: 0,
-            categoryId: categoryId,
-          };
-        }
-
-        if (!categoryLivesSaved[categoryName]) {
-          categoryLivesSaved[categoryName] = {
-            name: categoryName,
-            value: 0,
-            categoryId: categoryId,
-          };
-        }
-        if (!categoryBaselineLives[categoryName]) {
-          categoryBaselineLives[categoryName] = 0;
-        }
-
-        // Sum donation amounts
-        categoryAmounts[categoryName].value += categoryAmount;
-        chartDonationsTotal += categoryAmount;
-
-        // Sum lives saved
-        categoryLivesSaved[categoryName].value += livesSavedForCategory;
-        chartLivesSavedTotal += livesSavedForCategory;
-
-        const baseCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, categoryId, donationYear);
-        if (baseCostPerLife !== 0 && baseCostPerLife !== Infinity) {
-          categoryBaselineLives[categoryName] += categoryAmount / baseCostPerLife;
-        }
-      });
-    });
-
-    // Get the complete set of category names from both datasets
-    const allCategoryNames = new Set([...Object.keys(categoryAmounts), ...Object.keys(categoryLivesSaved)]);
-
-    // Create a unified dataset with both values
-    let unifiedData = Array.from(allCategoryNames).map((name) => {
-      const donationEntry = categoryAmounts[name] || {
-        name,
-        value: 0,
-        categoryId: categoryLivesSaved[name]?.categoryId,
-      };
-      const livesSavedEntry = categoryLivesSaved[name] || {
-        name,
-        value: 0,
-        categoryId: categoryAmounts[name]?.categoryId,
-      };
-      const categoryId = donationEntry.categoryId || livesSavedEntry.categoryId;
-      const effectiveCostPerLife = livesSavedEntry.value !== 0 ? donationEntry.value / livesSavedEntry.value : Infinity;
-      const baselineLives = categoryBaselineLives[name] || 0;
-      const baselineCostPerLife = baselineLives !== 0 ? donationEntry.value / baselineLives : Infinity;
-      const virtualMultiplier =
-        effectiveCostPerLife !== 0 && effectiveCostPerLife !== Infinity && baselineCostPerLife !== Infinity
-          ? baselineCostPerLife / effectiveCostPerLife
-          : undefined;
-      const hasVirtualMultiplier =
-        virtualMultiplier !== undefined &&
-        Number.isFinite(virtualMultiplier) &&
-        Math.abs(virtualMultiplier - 1.0) > 0.01;
-
-      return {
-        name,
-        donationValue: donationEntry.value,
-        livesSavedValue: livesSavedEntry.value,
-        categoryId,
-        effectiveCostPerLife,
-        donationPercentage: ((donationEntry.value / chartDonationsTotal) * 100).toFixed(1),
-        livesSavedPercentage:
-          chartLivesSavedTotal !== 0
-            ? ((Math.abs(livesSavedEntry.value) / Math.abs(chartLivesSavedTotal)) * 100).toFixed(1)
-            : 0,
-        costPerLife: effectiveCostPerLife,
-        hasMultiplier: hasVirtualMultiplier,
-        multiplier: hasVirtualMultiplier ? virtualMultiplier : undefined,
-      };
-    });
-
-    // Always sort by donation amount (largest first)
-    unifiedData.sort((a, b) => b.donationValue - a.donationValue);
-
-    // Limit to top categories if needed
-    if (unifiedData.length > 12) {
-      // Get top 11 categories
-      const topCategories = unifiedData.slice(0, 11);
-      const otherCategories = unifiedData.slice(11);
-
-      // Calculate totals for "Other" category
-      const otherDonationTotal = otherCategories.reduce((total, item) => total + item.donationValue, 0);
-      const otherLivesSavedTotal = otherCategories.reduce((total, item) => total + item.livesSavedValue, 0);
-
-      const otherDonationPercentage = ((otherDonationTotal / chartDonationsTotal) * 100).toFixed(1);
-      const otherLivesSavedPercentage =
-        chartLivesSavedTotal !== 0
-          ? ((Math.abs(otherLivesSavedTotal) / Math.abs(chartLivesSavedTotal)) * 100).toFixed(1)
-          : 0;
-
-      // Add "Other" category
-      if (otherDonationTotal > 0 || otherLivesSavedTotal !== 0) {
-        topCategories.push({
-          name: 'Other Causes',
-          donationValue: otherDonationTotal,
-          livesSavedValue: otherLivesSavedTotal,
-          effectiveCostPerLife: otherLivesSavedTotal !== 0 ? otherDonationTotal / otherLivesSavedTotal : Infinity,
-          donationPercentage: otherDonationPercentage,
-          livesSavedPercentage: otherLivesSavedPercentage,
-        });
-      }
-
-      unifiedData = topCategories;
-    }
-
-    // Store the raw data with both values
-    setRawChartData(unifiedData);
-  }, [donorId, combinedAssumptions]);
-
-  // Prepare the initial sorted data once
-  useEffect(() => {
-    if (rawChartData.length === 0) return;
-
-    // Sort the raw data by donation amount (largest first) for consistent positioning
-    const sortedData = [...rawChartData].sort((a, b) => {
-      // Always put "Other Causes" at the bottom
-      if (a.name === 'Other Causes') return 1;
-      if (b.name === 'Other Causes') return -1;
-      return b.donationValue - a.donationValue;
-    });
-
-    // Initialize with lives saved values to match the default view
-    const initialChartData = sortedData.map((item) => ({
-      name: item.name,
-      value: item.livesSavedValue, // Start with lives saved values to match default view
-      valueTarget: item.livesSavedValue, // Target is initially the same
-      donationValue: item.donationValue,
-      livesSavedValue: item.livesSavedValue,
-      categoryId: item.categoryId,
-      effectiveCostPerLife: item.effectiveCostPerLife,
-      donationPercentage: item.donationPercentage,
-      livesSavedPercentage: item.livesSavedPercentage,
-      costPerLife: item.costPerLife,
-      hasMultiplier: item.hasMultiplier,
-      multiplier: item.multiplier,
-    }));
-
-    setChartData(initialChartData);
-  }, [rawChartData, combinedAssumptions]); // Include combinedAssumptions in dependencies
-
-  // Handle the transition between views
-  useEffect(() => {
-    if (chartData.length === 0 || transitionStage !== 'shrinking') return;
-
-    // Create a deep copy of the current data to ensure React detects the change
-    // and properly animates between states
-    const initialData = chartData.map((item) => ({
-      ...item,
-      // Important: Keep the current value as is (this is what we're animating FROM)
-      value: item.valueTarget,
-      // Update the valueTarget to the new view's value (this is what we're animating TO)
-      valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
-    }));
-
-    // Set the data to start the animation
-    setChartData(initialData);
-
-    // Complete the transition after animation
-    const timer = setTimeout(() => {
-      setTransitionStage('none');
-    }, CHART_ANIMATION_DURATION);
-
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transitionStage, chartView, combinedAssumptions]); // Include combinedAssumptions in dependencies
-
-  // Update chart view whenever rawChartData or combinedAssumptions change
-  useEffect(() => {
-    if (chartData.length === 0 || !chartView) return;
-
-    // Only rebuild chart data when not in a transition (to avoid interrupting animations)
-    if (transitionStage === 'none' && !shouldAnimate) {
-      // Completely rebuild chart data from rawChartData
-      // This ensures all values (including donationValue and livesSavedValue) are current
-      const initialData = rawChartData.map((item) => ({
-        name: item.name,
-        // Set the current value based on the view
-        value: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
-        // Set the target value for animations
-        valueTarget: chartView === 'donations' ? item.donationValue : item.livesSavedValue,
-        // Copy all raw data fields directly from rawChartData for the most current values
-        donationValue: item.donationValue,
-        livesSavedValue: item.livesSavedValue,
-        categoryId: item.categoryId,
-        effectiveCostPerLife: item.effectiveCostPerLife,
-        donationPercentage: item.donationPercentage,
-        livesSavedPercentage: item.livesSavedPercentage,
-        costPerLife: item.costPerLife,
-        hasMultiplier: item.hasMultiplier,
-        multiplier: item.multiplier,
-      }));
-
-      // Sort data consistently (is this needed?)
-      const sortedData = [...initialData].sort((a, b) => {
-        // Always put "Other Causes" at the bottom
-        if (a.name === 'Other Causes') return 1;
-        if (b.name === 'Other Causes') return -1;
-        return b.donationValue - a.donationValue;
-      });
-
-      setChartData(sortedData);
-    }
-  }, [rawChartData, combinedAssumptions, chartView, transitionStage, shouldAnimate, chartData.length]); // Include all dependencies
-
-  // Separate effect to handle animation timing
-  useEffect(() => {
-    // When data is updated, delay turning off animation
-    // to ensure it completes
-    if (shouldAnimate) {
-      const timer = setTimeout(() => {
-        setShouldAnimate(false);
-      }, CHART_ANIMATION_DURATION + 50); // Add a small buffer
-
-      return () => clearTimeout(timer);
-    }
-  }, [chartData, shouldAnimate]);
-
-  const handleChartViewChange = (view) => {
-    setShouldAnimate(true);
-    setTransitionStage('shrinking');
-    setChartView(view);
-  };
-
-  if (!getDonorById(donorId)) {
+  if (!donorData) {
     return <NotFound message={`No donor found with ID "${donorId}".`} />;
   }
 
-  if (!donorStats) {
-    return <div className="impact-loading">Loading...</div>;
-  }
-
+  const { donorStats, donorContent, donorDonations } = pageData;
   const donorAboutContent = donorStats.about ? `## About\n\n${donorStats.about}` : null;
 
   return (
@@ -479,17 +165,12 @@ const DonorDetail = () => {
           chartData={chartData}
           chartView={chartView}
           onViewChange={handleChartViewChange}
-          isTransitioning={transitionStage !== 'none'}
+          isTransitioning={isTransitioning}
           toggleComponent={
-            <ImpactChartToggle
-              chartView={chartView}
-              onToggle={handleChartViewChange}
-              disabled={transitionStage !== 'none'}
-            />
+            <ImpactChartToggle chartView={chartView} onToggle={handleChartViewChange} disabled={isTransitioning} />
           }
           entityType="donor"
           className="mt-8"
-          containerHeight={calculateChartHeight(chartData)}
           combinedAssumptions={combinedAssumptions}
         />
 

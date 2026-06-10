@@ -1,7 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Tooltip from './Tooltip';
 
 const normalizeLayoutMeasurement = (value) => Math.round(value * 100) / 100;
+
+// Helper function to apply tiebreaker comparison
+const applyTiebreaker = (a, b, tiebreakColumn, tiebreakDirection) => {
+  const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
+  const aTiebreakValue = a[tiebreakColumn];
+  const bTiebreakValue = b[tiebreakColumn];
+
+  // Use appropriate comparison for tiebreaker
+  if (typeof aTiebreakValue === 'string' && typeof bTiebreakValue === 'string') {
+    return tiebreakMultiplier * aTiebreakValue.localeCompare(bTiebreakValue);
+  } else {
+    return tiebreakMultiplier * (aTiebreakValue - bTiebreakValue);
+  }
+};
 
 const SortableTable = ({
   columns,
@@ -158,20 +172,6 @@ const SortableTable = ({
     return 'px-4';
   };
 
-  // Helper function to apply tiebreaker comparison
-  const applyTiebreaker = (a, b, tiebreakColumn, tiebreakDirection) => {
-    const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
-    const aTiebreakValue = a[tiebreakColumn];
-    const bTiebreakValue = b[tiebreakColumn];
-
-    // Use appropriate comparison for tiebreaker
-    if (typeof aTiebreakValue === 'string' && typeof bTiebreakValue === 'string') {
-      return tiebreakMultiplier * aTiebreakValue.localeCompare(bTiebreakValue);
-    } else {
-      return tiebreakMultiplier * (aTiebreakValue - bTiebreakValue);
-    }
-  };
-
   // Handle column header click for sorting
   const handleSort = (columnKey) => {
     if (sortColumn === columnKey) {
@@ -184,36 +184,61 @@ const SortableTable = ({
     }
   };
 
-  // A sort column that exists on no row is a developer error (e.g. a column
-  // whose cell values are computed in render): sorting it would silently
-  // shuffle rows under a confident-looking sort arrow. Fail loudly instead.
-  if (data.length > 0 && sortColumn && data.every((row) => row[sortColumn] === undefined)) {
-    throw new Error(
-      `SortableTable: no row has a value for sort column "${sortColumn}". ` +
-        `Provide row data for it or mark the column as sortable: false.`
-    );
-  }
+  // Memoized: this component re-renders frequently from its own layout
+  // measurements, and the sort only depends on the data and sort state.
+  const sortedData = useMemo(() => {
+    // A sort column that exists on no row is a developer error (e.g. a column
+    // whose cell values are computed in render): sorting it would silently
+    // shuffle rows under a confident-looking sort arrow. Fail loudly instead.
+    if (data.length > 0 && sortColumn && data.every((row) => row[sortColumn] === undefined)) {
+      throw new Error(
+        `SortableTable: no row has a value for sort column "${sortColumn}". ` +
+          `Provide row data for it or mark the column as sortable: false.`
+      );
+    }
 
-  // Sort the data based on the sort column and direction
-  const sortedData = [...data].sort((a, b) => {
-    // Get values to compare
-    const aValue = a[sortColumn];
-    const bValue = b[sortColumn];
+    return [...data].sort((a, b) => {
+      // Get values to compare
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
 
-    // Determine sort order
-    const sortMultiplier = sortDirection === 'asc' ? 1 : -1;
+      // Determine sort order
+      const sortMultiplier = sortDirection === 'asc' ? 1 : -1;
 
-    // Special handling for cost per life column (both costPerLife and actualCostPerLife)
-    if (sortColumn === 'costPerLife' || sortColumn === 'actualCostPerLife') {
-      // Handle negative values in cost per life
-      // 1. Negative values are considered "worse" (higher cost) than any positive value
-      // 2. Among negative values, those closer to zero are worse than those further from zero
+      // Special handling for cost per life column (both costPerLife and actualCostPerLife)
+      if (sortColumn === 'costPerLife' || sortColumn === 'actualCostPerLife') {
+        // Handle negative values in cost per life
+        // 1. Negative values are considered "worse" (higher cost) than any positive value
+        // 2. Among negative values, those closer to zero are worse than those further from zero
 
-      // Both values are negative
-      if (aValue < 0 && bValue < 0) {
-        // Sort by absolute value, but reversed (closer to zero = higher cost)
-        // Math.abs converts to positive, we want smaller absolute values first when ascending
-        const result = sortMultiplier * (Math.abs(bValue) - Math.abs(aValue));
+        // Both values are negative
+        if (aValue < 0 && bValue < 0) {
+          // Sort by absolute value, but reversed (closer to zero = higher cost)
+          // Math.abs converts to positive, we want smaller absolute values first when ascending
+          const result = sortMultiplier * (Math.abs(bValue) - Math.abs(aValue));
+
+          // Use tiebreaker if values are equal and tiebreakColumn is provided
+          if (result === 0 && tiebreakColumn) {
+            return applyTiebreaker(a, b, tiebreakColumn, tiebreakDirection);
+          }
+
+          return result;
+        }
+
+        // Only a is negative
+        if (aValue < 0 && bValue >= 0) {
+          // Negative values are considered higher cost than positive values
+          return sortDirection === 'asc' ? 1 : -1; // In asc, a comes after b
+        }
+
+        // Only b is negative
+        if (aValue >= 0 && bValue < 0) {
+          // Negative values are considered higher cost than positive values
+          return sortDirection === 'asc' ? -1 : 1; // In asc, b comes after a
+        }
+
+        // Both are non-negative, use normal sorting
+        const result = sortMultiplier * (aValue - bValue);
 
         // Use tiebreaker if values are equal and tiebreakColumn is provided
         if (result === 0 && tiebreakColumn) {
@@ -223,20 +248,13 @@ const SortableTable = ({
         return result;
       }
 
-      // Only a is negative
-      if (aValue < 0 && bValue >= 0) {
-        // Negative values are considered higher cost than positive values
-        return sortDirection === 'asc' ? 1 : -1; // In asc, a comes after b
+      // Normal sorting for other columns
+      let result;
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        result = sortMultiplier * aValue.localeCompare(bValue);
+      } else {
+        result = sortMultiplier * (aValue - bValue);
       }
-
-      // Only b is negative
-      if (aValue >= 0 && bValue < 0) {
-        // Negative values are considered higher cost than positive values
-        return sortDirection === 'asc' ? -1 : 1; // In asc, b comes after a
-      }
-
-      // Both are non-negative, use normal sorting
-      const result = sortMultiplier * (aValue - bValue);
 
       // Use tiebreaker if values are equal and tiebreakColumn is provided
       if (result === 0 && tiebreakColumn) {
@@ -244,23 +262,8 @@ const SortableTable = ({
       }
 
       return result;
-    }
-
-    // Normal sorting for other columns
-    let result;
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      result = sortMultiplier * aValue.localeCompare(bValue);
-    } else {
-      result = sortMultiplier * (aValue - bValue);
-    }
-
-    // Use tiebreaker if values are equal and tiebreakColumn is provided
-    if (result === 0 && tiebreakColumn) {
-      return applyTiebreaker(a, b, tiebreakColumn, tiebreakDirection);
-    }
-
-    return result;
-  });
+    });
+  }, [data, sortColumn, sortDirection, tiebreakColumn, tiebreakDirection]);
 
   // Render sort indicator
   const renderSortIndicator = (columnKey, isSortable) => {
@@ -434,7 +437,9 @@ const SortableTable = ({
           {renderTableHeader('primary', !showStickyHeader)}
           <tbody>
             {sortedData.map((item, index) => (
-              <tr key={`row-${index}`}>
+              // Row identity survives re-sorting when rows carry an id, so
+              // React moves rows instead of rewriting every cell.
+              <tr key={item.id ?? `row-${index}`}>
                 {columns.map((column) => (
                   <td
                     key={`cell-${column.key}-${index}`}

@@ -66,85 +66,91 @@ export const AssumptionsProvider = ({ children }) => {
     }
   }, [userAssumptions]);
 
-  const replaceCategoryEffects = (categoryId, effectsData) => {
-    if (!categoryId) {
-      throw new Error("Required parameter 'categoryId' is missing");
-    }
+  // The mutators close over nothing but the stable setter and module-scope
+  // defaults, so they're created once — consumers can safely list them in
+  // effect/memo dependencies.
+  const mutators = useMemo(
+    () => ({
+      replaceCategoryEffects: (categoryId, effectsData) => {
+        if (!categoryId) {
+          throw new Error("Required parameter 'categoryId' is missing");
+        }
 
-    setUserAssumptions((prev) => apiHelpers.setCategoryEffects(prev, defaultAssumptions, categoryId, effectsData));
-  };
+        setUserAssumptions((prev) => apiHelpers.setCategoryEffects(prev, defaultAssumptions, categoryId, effectsData));
+      },
 
-  const resetCategoryToDefaults = (categoryId) => {
-    setUserAssumptions((prev) => apiHelpers.clearCategoryCustomValues(prev, categoryId));
-  };
+      resetCategoryToDefaults: (categoryId) => {
+        setUserAssumptions((prev) => apiHelpers.clearCategoryCustomValues(prev, categoryId));
+      },
 
-  const replaceRecipientCategoryEffects = (recipientId, categoryId, effectsData) => {
-    if (!recipientId) {
-      throw new Error("Required parameter 'recipientId' is missing");
-    }
-    if (!categoryId) {
-      throw new Error("Required parameter 'categoryId' is missing");
-    }
+      replaceRecipientCategoryEffects: (recipientId, categoryId, effectsData) => {
+        if (!recipientId) {
+          throw new Error("Required parameter 'recipientId' is missing");
+        }
+        if (!categoryId) {
+          throw new Error("Required parameter 'categoryId' is missing");
+        }
 
-    setUserAssumptions((prev) =>
-      apiHelpers.setRecipientCategoryEffects(prev, defaultAssumptions, recipientId, categoryId, effectsData)
-    );
-  };
+        setUserAssumptions((prev) =>
+          apiHelpers.setRecipientCategoryEffects(prev, defaultAssumptions, recipientId, categoryId, effectsData)
+        );
+      },
 
-  const replaceRecipientEffectsByCategory = (recipientId, effectsByCategory) => {
-    if (!recipientId) {
-      throw new Error("Required parameter 'recipientId' is missing");
-    }
+      replaceRecipientEffectsByCategory: (recipientId, effectsByCategory) => {
+        if (!recipientId) {
+          throw new Error("Required parameter 'recipientId' is missing");
+        }
 
-    setUserAssumptions((prev) =>
-      apiHelpers.setRecipientEffectsByCategory(prev, defaultAssumptions, recipientId, effectsByCategory)
-    );
-  };
+        setUserAssumptions((prev) =>
+          apiHelpers.setRecipientEffectsByCategory(prev, defaultAssumptions, recipientId, effectsByCategory)
+        );
+      },
 
-  const resetRecipientToDefaults = (recipientId) => {
-    if (!recipientId) {
-      throw new Error("Required parameter 'recipientId' is missing");
-    }
-    setUserAssumptions((prev) => apiHelpers.clearRecipientOverrides(prev, recipientId));
-  };
+      resetRecipientToDefaults: (recipientId) => {
+        if (!recipientId) {
+          throw new Error("Required parameter 'recipientId' is missing");
+        }
+        setUserAssumptions((prev) => apiHelpers.clearRecipientOverrides(prev, recipientId));
+      },
 
-  const updateGlobalParameterValue = (parameterName, value) => {
-    setUserAssumptions((prev) => apiHelpers.setGlobalParameter(prev, defaultAssumptions, parameterName, value));
-  };
+      updateGlobalParameterValue: (parameterName, value) => {
+        setUserAssumptions((prev) => apiHelpers.setGlobalParameter(prev, defaultAssumptions, parameterName, value));
+      },
 
-  const resetGlobalParameter = (parameterName) => {
-    setUserAssumptions((prev) => apiHelpers.clearGlobalParameter(prev, parameterName));
-  };
+      resetGlobalParameter: (parameterName) => {
+        setUserAssumptions((prev) => apiHelpers.clearGlobalParameter(prev, parameterName));
+      },
 
-  const resetAllGlobalParameters = () => {
-    setUserAssumptions((prev) => apiHelpers.clearAllGlobalParameters(prev));
-  };
+      resetAllGlobalParameters: () => {
+        setUserAssumptions((prev) => apiHelpers.clearAllGlobalParameters(prev));
+      },
 
-  const setAllUserAssumptions = (nextUserAssumptions) => {
-    const normalized = apiHelpers.normalizeUserAssumptions(nextUserAssumptions, defaultAssumptions);
-    setUserAssumptions(normalized);
-  };
+      setAllUserAssumptions: (nextUserAssumptions) => {
+        const normalized = apiHelpers.normalizeUserAssumptions(nextUserAssumptions, defaultAssumptions);
+        setUserAssumptions(normalized);
+      },
+    }),
+    []
+  );
 
-  const getNormalizedUserAssumptionsForSharing = () => {
-    return apiHelpers.normalizeUserAssumptions(userAssumptions, defaultAssumptions);
-  };
+  // Re-normalized once per assumptions change instead of per caller per
+  // render (several consumers fingerprint or serialize this).
+  const normalizedUserAssumptionsForSharing = useMemo(
+    () => apiHelpers.normalizeUserAssumptions(userAssumptions, defaultAssumptions),
+    [userAssumptions]
+  );
 
-  const contextValue = {
-    defaultAssumptions,
-    userAssumptions,
-    combinedAssumptions,
-    isUsingCustomValues: hasCustomValues(userAssumptions),
-    replaceCategoryEffects,
-    resetCategoryToDefaults,
-    replaceRecipientCategoryEffects,
-    replaceRecipientEffectsByCategory,
-    resetRecipientToDefaults,
-    updateGlobalParameterValue,
-    resetGlobalParameter,
-    resetAllGlobalParameters,
-    setAllUserAssumptions,
-    getNormalizedUserAssumptionsForSharing,
-  };
+  const contextValue = useMemo(
+    () => ({
+      defaultAssumptions,
+      userAssumptions,
+      combinedAssumptions,
+      isUsingCustomValues: hasCustomValues(userAssumptions),
+      ...mutators,
+      getNormalizedUserAssumptionsForSharing: () => normalizedUserAssumptionsForSharing,
+    }),
+    [userAssumptions, combinedAssumptions, mutators, normalizedUserAssumptionsForSharing]
+  );
 
   return <AssumptionsContext.Provider value={contextValue}>{children}</AssumptionsContext.Provider>;
 };

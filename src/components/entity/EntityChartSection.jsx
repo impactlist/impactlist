@@ -22,6 +22,7 @@ const EntityChartSection = ({
   toggleComponent,
   entityType,
   className = '',
+  // Minimum chart height; tall category lists grow at ~55px per row.
   containerHeight = 384,
   combinedAssumptions = null,
 }) => {
@@ -178,7 +179,7 @@ const EntityChartSection = ({
       isTransitioning={isTransitioning}
       className={className}
     >
-      <div style={{ height: containerHeight }}>
+      <div style={{ height: Math.max(containerHeight, chartData.length * 55) }}>
         <ImpactBarChart
           data={chartData}
           dataKey="valueTarget"

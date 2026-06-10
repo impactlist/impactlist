@@ -6,7 +6,7 @@ The app's central state. Holds `userAssumptions` (minimal diff from defaults, or
 
 - Persistence: `userAssumptions` round-trips through sessionStorage (`CUSTOM_EFFECTS_DATA_KEY`). The initializer parses inside try/catch and discards corrupted/incompatible data (with a console.error) — refresh can't clear storage, so throwing here would brick the tab permanently. Keep that guard.
 - All mutators normalize through `apiHelpers.normalizeUserAssumptions`, which **throws** on data the current schema doesn't know. Editor-produced data always passes; external data (saved library entries, shared links) is caught at the call sites in `AssumptionsSelector`, `AssumptionsPage`, and `GlobalSharedAssumptionsImport` — any new load path must catch and notify too.
-- Known debt (review item 12): the provider's value object and functions are recreated every render, which defeats downstream memoization; the fix is memoizing the value + exposing a memoized normalized-for-sharing result.
+- The context value is memoized: mutators are one stable `useMemo` object (they close over only the setter and module-scope defaults — safe in consumer dependency arrays), and `getNormalizedUserAssumptionsForSharing` returns a value memoized per `userAssumptions` change. Keep new context fields inside the value memo, and don't add mutators that close over render-scope state (that would break the stable-identity contract consumers rely on).
 
 ## NotificationContext
 

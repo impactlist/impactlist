@@ -159,9 +159,9 @@ describe('assumptions shape validation', () => {
   });
 
   it('rejects non-array effects with a 400 instead of storing them or crashing', () => {
-    expectInvalidAssumptions({ categories: { [firstCategoryId]: { effects: {} } } }, 'effects must be an array.');
+    expectInvalidAssumptions({ categories: { [firstCategoryId]: { effects: {} } } }, 'must be an array.');
     // This shape used to reach effects.splice and blow up as a 500.
-    expectInvalidAssumptions({ categories: { [firstCategoryId]: { effects: 'ab' } } }, 'effects must be an array.');
+    expectInvalidAssumptions({ categories: { [firstCategoryId]: { effects: 'ab' } } }, 'must be an array.');
   });
 
   it('rejects non-numeric global parameter values', () => {
@@ -170,20 +170,20 @@ describe('assumptions shape validation', () => {
   });
 
   it('rejects unknown global parameters, categories, recipients, and top-level keys', () => {
-    expectInvalidAssumptions({ globalParameters: { madeUpParameter: 1 } }, 'Unknown global parameter');
-    expectInvalidAssumptions({ categories: { madeUpCategory: { effects: [] } } }, 'Unknown category');
-    expectInvalidAssumptions({ recipients: { madeUpRecipient: { categories: {} } } }, 'Unknown recipient');
-    expectInvalidAssumptions({ madeUpSection: {} }, 'Unknown key');
+    expectInvalidAssumptions({ globalParameters: { madeUpParameter: 1 } }, 'unknown global parameter');
+    expectInvalidAssumptions({ categories: { madeUpCategory: { effects: [] } } }, 'unknown category');
+    expectInvalidAssumptions({ recipients: { madeUpRecipient: { categories: {} } } }, 'unknown recipient');
+    expectInvalidAssumptions({ madeUpSection: {} }, 'unknown section');
   });
 
   it('rejects unknown effect ids and unknown or non-numeric effect fields', () => {
     expectInvalidAssumptions(
       { categories: { [firstCategoryId]: { effects: [{ effectId: 'made-up-effect' }] } } },
-      'unknown effectId'
+      'unknown effect'
     );
     expectInvalidAssumptions(
       { categories: { [firstCategoryId]: { effects: [{ effectId: firstEffect.effectId, madeUpField: 1 }] } } },
-      'unknown effect field'
+      'unknown field'
     );
     expectInvalidAssumptions(
       {
@@ -207,11 +207,11 @@ describe('assumptions shape validation', () => {
           },
         },
       },
-      'duplicates effectId'
+      'duplicates effect'
     );
     expectInvalidAssumptions(
       { categories: { [firstCategoryId]: { effects: [{ effectId: firstEffect.effectId, disabled: 'yes' }] } } },
-      'disabled must be a boolean.'
+      'must be a boolean.'
     );
   });
 
@@ -239,7 +239,7 @@ describe('assumptions shape validation', () => {
           },
         },
       },
-      "Recipient effects support 'overrides', 'multipliers', and 'disabled'."
+      "recipient effects support 'overrides', 'multipliers', and 'disabled'."
     );
     expectInvalidAssumptions(
       {
@@ -253,7 +253,7 @@ describe('assumptions shape validation', () => {
           },
         },
       },
-      'unknown effect field'
+      'unknown field'
     );
     expectInvalidAssumptions(
       {

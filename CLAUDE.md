@@ -8,7 +8,7 @@ Most directories have their own CLAUDE.md (with an identical AGENTS.md) describi
 
 ## Workflow essentials
 
-- Fresh clone or after editing `content/`: run `npm run generate-data` before `npm run dev`/`npm test` — the app imports gitignored generated data, and nothing regenerates it automatically except `npm run build`.
+- The app imports gitignored generated data (`src/data/generatedData.js`); `npm run dev`/`npm test*`/`npm run build` all regenerate it automatically via pre-scripts. Run `npm run generate-data` yourself only before direct `npx vitest`/`npx playwright` invocations.
 - Verify with: `npm run test:run` (fast, ~6s), `npm run lint` (~2s), `npm run build`. CI (`.github/workflows/ci.yml`) runs generate → lint → coverage-gated tests (50% floors via `npm run test:coverage`) → build on pushes to master and PRs.
 - Tests are behavioral (Testing Library / subprocess fixtures for the generator / mocked Redis for the server). Write tests in the style of the suite you're extending.
 

@@ -2,7 +2,7 @@
 // These functions take the current state and return new state
 // They handle the complex nested structure of effects with overrides and multipliers
 
-import { isPlainObject } from './typeGuards';
+import { areValuesEqual, normalizeUserAssumptions as sharedNormalizeUserAssumptions } from './assumptionsNormalization';
 
 /**
  * Prune empty category structures from data object.
@@ -87,27 +87,8 @@ export const setCategoryFieldValue = (userAssumptions, defaultAssumptions, categ
   return newData;
 };
 
-/**
- * Helper to check if two values are equal (handles arrays and NaN)
- */
-const areValuesEqual = (valueA, valueB) => {
-  if (Array.isArray(valueA) && Array.isArray(valueB)) {
-    if (valueA.length !== valueB.length) {
-      return false;
-    }
-    return valueA.every((item, idx) => areValuesEqual(item, valueB[idx]));
-  }
-
-  if (Array.isArray(valueA) || Array.isArray(valueB)) {
-    return false;
-  }
-
-  if (valueA === valueB) {
-    return true;
-  }
-
-  return typeof valueA === 'number' && typeof valueB === 'number' && Number.isNaN(valueA) && Number.isNaN(valueB);
-};
+// areValuesEqual (array/NaN-aware equality) comes from the shared
+// normalization module — see the import at the top of this file.
 
 /**
  * Set all custom values for a category effect at once (batch update)
@@ -640,280 +621,16 @@ export const clearAllGlobalParameters = (userAssumptions) => {
 };
 
 /**
- * Remove keys from obj where predicate(key, value) returns true.
- * Deletes the obj key from parent if obj becomes empty.
+ * Validate and normalize user assumptions (remove default-equivalent
+ * values). Delegates to the shared implementation in
+ * assumptionsNormalization.js — the same code validates shared-link
+ * snapshots on the server. Throws when the assumptions reference entities,
+ * fields, or value types the current data schema doesn't know; callers
+ * loading external data (saved library entries, shared links, persisted
+ * sessions) must handle that.
  */
-const pruneObject = (parent, key, predicate) => {
-  const obj = parent[key];
-  if (!obj) return;
-  for (const k of Object.keys(obj)) {
-    if (predicate(k, obj[k])) {
-      delete obj[k];
-    }
-  }
-  if (Object.keys(obj).length === 0) {
-    delete parent[key];
-  }
-};
-
-/**
- * Normalize an effects array in place, removing effects that match defaults.
- * Returns true if the effects array is now empty.
- */
-const normalizeEffects = (effects, getDefaultEffect, isRecipientEffect = false) => {
-  for (let i = effects.length - 1; i >= 0; i--) {
-    const effect = effects[i];
-    const defaultEffect = getDefaultEffect(effect.effectId);
-
-    if (isRecipientEffect) {
-      // Recipient effects have overrides/multipliers structure
-      if (effect.overrides && defaultEffect) {
-        pruneObject(effect, 'overrides', (field, val) => areValuesEqual(val, defaultEffect[field]));
-      }
-      pruneObject(effect, 'multipliers', (_, val) => val === 1);
-
-      if (Object.hasOwn(effect, 'disabled')) {
-        const defaultDisabled = defaultEffect ? Boolean(defaultEffect.disabled) : false;
-        if (Boolean(effect.disabled) === defaultDisabled) {
-          delete effect.disabled;
-        } else {
-          effect.disabled = Boolean(effect.disabled);
-        }
-      }
-    } else if (defaultEffect) {
-      // Category effects store values directly
-      for (const field of Object.keys(effect)) {
-        if (field !== 'effectId' && areValuesEqual(effect[field], defaultEffect[field])) {
-          delete effect[field];
-        }
-      }
-    }
-
-    // Remove effect if only effectId remains
-    if (Object.keys(effect).length === 1) {
-      effects.splice(i, 1);
-    }
-  }
-  return effects.length === 0;
-};
-
 const incompatibleAssumptionsError = (message) =>
   new Error(`Saved assumptions are not compatible with the current data: ${message}`);
 
-const isFiniteNumber = (value) => typeof value === 'number' && Number.isFinite(value);
-
-/**
- * Reject user assumptions that reference entities or fields the current data
- * schema doesn't know, or whose values have the wrong type. Saved/shared
- * assumptions can outlive a data update, and silently keeping stale keys can
- * flip an effect's calculation model (e.g. a leftover costPerQALY override on
- * a now-population-based effect); malformed values are just as dangerous —
- * disabled: "false" is truthy and would silently disable the effect. This
- * mirrors the server-side snapshot validator.
- */
-const validateKnownAssumptionReferences = (data, defaultAssumptions) => {
-  for (const key of Object.keys(data)) {
-    if (!['globalParameters', 'categories', 'recipients'].includes(key)) {
-      throw incompatibleAssumptionsError(`unknown section "${key}".`);
-    }
-  }
-
-  for (const [param, value] of Object.entries(data.globalParameters || {})) {
-    if (!Object.hasOwn(defaultAssumptions.globalParameters || {}, param)) {
-      throw incompatibleAssumptionsError(`unknown global parameter "${param}".`);
-    }
-    if (!isFiniteNumber(value)) {
-      throw incompatibleAssumptionsError(`global parameter "${param}" must be a finite number.`);
-    }
-  }
-
-  const validateEffectEntries = (effects, baseEffects, context, isRecipientEffect) => {
-    if (!Array.isArray(effects)) {
-      throw incompatibleAssumptionsError(`effects for ${context} must be an array.`);
-    }
-    for (const effect of effects) {
-      if (!isPlainObject(effect)) {
-        throw incompatibleAssumptionsError(`effects for ${context} must be objects.`);
-      }
-      const baseEffect = baseEffects?.find((candidate) => candidate.effectId === effect.effectId);
-      if (!baseEffect) {
-        throw incompatibleAssumptionsError(`unknown effect "${effect.effectId}" in ${context}.`);
-      }
-      const effectLabel = `effect "${effect.effectId}" in ${context}`;
-
-      if (Object.hasOwn(effect, 'disabled') && typeof effect.disabled !== 'boolean') {
-        throw incompatibleAssumptionsError(`'disabled' on ${effectLabel} must be a boolean.`);
-      }
-
-      const validateFieldValue = (field, value, label) => {
-        if (!isFiniteNumber(baseEffect[field])) {
-          throw incompatibleAssumptionsError(`unknown field "${field}" on ${label}.`);
-        }
-        if (!isFiniteNumber(value)) {
-          throw incompatibleAssumptionsError(`field "${field}" on ${label} must be a finite number.`);
-        }
-      };
-
-      if (isRecipientEffect) {
-        for (const key of Object.keys(effect)) {
-          if (!['effectId', 'overrides', 'multipliers', 'disabled'].includes(key)) {
-            throw incompatibleAssumptionsError(
-              `unknown field "${key}" on ${effectLabel}; recipient effects support 'overrides', 'multipliers', and 'disabled'.`
-            );
-          }
-        }
-        for (const mapName of ['overrides', 'multipliers']) {
-          if (effect[mapName] === undefined) continue;
-          if (!isPlainObject(effect[mapName])) {
-            throw incompatibleAssumptionsError(`'${mapName}' on ${effectLabel} must be an object.`);
-          }
-          for (const [field, value] of Object.entries(effect[mapName])) {
-            validateFieldValue(field, value, `'${mapName}' of ${effectLabel}`);
-          }
-        }
-      } else {
-        for (const [field, value] of Object.entries(effect)) {
-          if (field === 'effectId' || field === 'disabled') continue;
-          validateFieldValue(field, value, effectLabel);
-        }
-      }
-    }
-  };
-
-  for (const [categoryId, category] of Object.entries(data.categories || {})) {
-    const baseCategory = defaultAssumptions.categories?.[categoryId];
-    if (!baseCategory) {
-      throw incompatibleAssumptionsError(`unknown category "${categoryId}".`);
-    }
-    if (!isPlainObject(category)) {
-      throw incompatibleAssumptionsError(`category "${categoryId}" entry must be an object.`);
-    }
-    for (const key of Object.keys(category)) {
-      if (key !== 'effects') {
-        throw incompatibleAssumptionsError(`unknown field "${key}" on category "${categoryId}".`);
-      }
-    }
-    if (category.effects !== undefined) {
-      validateEffectEntries(category.effects, baseCategory.effects, `category "${categoryId}"`, false);
-    }
-  }
-
-  for (const [recipientId, recipient] of Object.entries(data.recipients || {})) {
-    const baseRecipient = defaultAssumptions.recipients?.[recipientId];
-    if (!baseRecipient) {
-      throw incompatibleAssumptionsError(`unknown recipient "${recipientId}".`);
-    }
-    if (!isPlainObject(recipient)) {
-      throw incompatibleAssumptionsError(`recipient "${recipientId}" entry must be an object.`);
-    }
-    for (const key of Object.keys(recipient)) {
-      if (key !== 'categories') {
-        throw incompatibleAssumptionsError(`unknown field "${key}" on recipient "${recipientId}".`);
-      }
-    }
-    if (recipient.categories !== undefined && !isPlainObject(recipient.categories)) {
-      throw incompatibleAssumptionsError(`'categories' on recipient "${recipientId}" must be an object.`);
-    }
-    for (const [categoryId, category] of Object.entries(recipient.categories || {})) {
-      const baseCategory = defaultAssumptions.categories?.[categoryId];
-      if (!baseCategory || !Object.hasOwn(baseRecipient.categories || {}, categoryId)) {
-        throw incompatibleAssumptionsError(
-          `category "${categoryId}" is not associated with recipient "${recipientId}".`
-        );
-      }
-      if (!isPlainObject(category)) {
-        throw incompatibleAssumptionsError(
-          `category "${categoryId}" entry on recipient "${recipientId}" must be an object.`
-        );
-      }
-      for (const key of Object.keys(category)) {
-        if (key !== 'effects') {
-          throw incompatibleAssumptionsError(
-            `unknown field "${key}" on category "${categoryId}" of recipient "${recipientId}".`
-          );
-        }
-      }
-      if (category.effects !== undefined) {
-        validateEffectEntries(
-          category.effects,
-          baseCategory.effects,
-          `recipient "${recipientId}" (category "${categoryId}")`,
-          true
-        );
-      }
-    }
-  }
-};
-
-/**
- * Normalize user assumptions by removing any values that match defaults.
- * This cleans up legacy saved data where defaults were stored.
- * Returns the pruned data or null if completely empty.
- * Throws if the assumptions reference entities/fields unknown to the current
- * data schema — callers loading external data (saved library entries, shared
- * links, persisted sessions) must handle that case.
- */
-export const normalizeUserAssumptions = (userAssumptions, defaultAssumptions) => {
-  if (!userAssumptions) {
-    return null;
-  }
-
-  const data = JSON.parse(JSON.stringify(userAssumptions));
-  validateKnownAssumptionReferences(data, defaultAssumptions);
-
-  // Normalize global parameters
-  pruneObject(data, 'globalParameters', (param, val) =>
-    areValuesEqual(val, defaultAssumptions.globalParameters?.[param])
-  );
-
-  // Normalize categories
-  if (data.categories) {
-    for (const categoryId of Object.keys(data.categories)) {
-      const cat = data.categories[categoryId];
-      if (cat.effects) {
-        const isEmpty = normalizeEffects(cat.effects, (effectId) =>
-          defaultAssumptions.categories?.[categoryId]?.effects?.find((e) => e.effectId === effectId)
-        );
-        if (isEmpty) delete data.categories[categoryId];
-      } else {
-        delete data.categories[categoryId];
-      }
-    }
-    if (Object.keys(data.categories).length === 0) {
-      delete data.categories;
-    }
-  }
-
-  // Normalize recipients
-  if (data.recipients) {
-    for (const recipientId of Object.keys(data.recipients)) {
-      const recipient = data.recipients[recipientId];
-      if (recipient.categories) {
-        for (const categoryId of Object.keys(recipient.categories)) {
-          const cat = recipient.categories[categoryId];
-          if (cat.effects) {
-            const isEmpty = normalizeEffects(
-              cat.effects,
-              (effectId) =>
-                defaultAssumptions.recipients?.[recipientId]?.categories?.[categoryId]?.effects?.find(
-                  (e) => e.effectId === effectId
-                ) || defaultAssumptions.categories?.[categoryId]?.effects?.find((e) => e.effectId === effectId),
-              true
-            );
-            if (isEmpty) delete recipient.categories[categoryId];
-          } else {
-            delete recipient.categories[categoryId];
-          }
-        }
-        if (Object.keys(recipient.categories).length === 0) {
-          delete data.recipients[recipientId];
-        }
-      }
-    }
-    if (Object.keys(data.recipients).length === 0) {
-      delete data.recipients;
-    }
-  }
-
-  return Object.keys(data).length > 0 ? data : null;
-};
+export const normalizeUserAssumptions = (userAssumptions, defaultAssumptions) =>
+  sharedNormalizeUserAssumptions(userAssumptions, defaultAssumptions, incompatibleAssumptionsError);

@@ -12,7 +12,7 @@
 
 ## Build, Test, and Development Commands
 
-- `npm run generate-data`: Build `src/data/generatedData.js` from `content/`. Required on a fresh clone and after any `content/` edit — only `npm run build` runs it automatically.
+- `npm run generate-data`: Build `src/data/generatedData.js` from `content/`. `npm run dev`/`npm test*`/`npm run build` run it automatically via pre-scripts; run it manually only before direct `npx vitest`/`npx playwright` invocations.
 - `npm run dev`: Start Vite dev server.
 - `npm run build`: Generate data, then production build via Vite.
 - `npm run preview`: Serve the built app locally.

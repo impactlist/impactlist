@@ -1,6 +1,8 @@
 // Data validation utilities to prevent silent failures
 // All functions in this module should crash loudly when expected data is missing
-import { WEIGHT_NORMALIZATION_TOLERANCE } from './constants';
+// Explicit .js extension: this module is also imported by the Node-run
+// generator script, where extensionless ESM imports don't resolve.
+import { WEIGHT_NORMALIZATION_TOLERANCE } from './constants.js';
 
 /**
  * Assert that a value exists and is not null/undefined

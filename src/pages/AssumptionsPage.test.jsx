@@ -409,10 +409,15 @@ describe('AssumptionsPage routing integration', () => {
     const editorRoot = editor.closest('.assumptions-shell');
     expect(editorRoot).not.toBeNull();
 
-    const costField = within(editorRoot).getByRole('textbox', { name: fieldLabel });
+    // The category may have several effects of the same type; the first
+    // matching field belongs to effects[0], whose type chose fieldLabel.
+    const costField = within(editorRoot).getAllByRole('textbox', { name: fieldLabel })[0];
     await user.clear(costField);
     await user.type(costField, String(updatedValue));
-    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    // Multi-effect categories render header + footer Apply buttons; the footer
+    // one always exists.
+    const applyButtons = within(editorRoot).getAllByRole('button', { name: 'Apply' });
+    await user.click(applyButtons[applyButtons.length - 1]);
 
     let persisted;
     await waitFor(() => {

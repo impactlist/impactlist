@@ -117,7 +117,7 @@ describe('calculateFutureValueSeries', () => {
         timeLimit: 2,
         yearsPerLife: 10,
       })
-    ).toThrow(/greater than -100%/);
+    ).toThrow(/cannot be -100% or less/);
   });
 });
 

@@ -3,6 +3,7 @@
  */
 
 import { getEffectFieldNames } from '../constants/effectFieldDefinitions';
+import { getGlobalParameterError } from './globalParameterRules';
 
 /**
  * Detect the type of an effect based on its fields
@@ -246,41 +247,9 @@ export const validateGlobalField = (fieldName, value) => {
     return 'Invalid number';
   }
 
-  // Parameter-specific validations
-  if (fieldName === 'discountRate') {
-    // Discount rate cannot be negative and must be no greater than 100%
-    // Note: numValue is already in decimal form (0.1 = 10%)
-    if (numValue < 0) {
-      return 'Discount rate cannot be negative';
-    }
-    if (numValue > 1) {
-      return 'Discount rate must be no greater than 100%';
-    }
-  } else if (fieldName === 'populationGrowthRate') {
-    // Population growth rate cannot be -100% or less (would cause immediate collapse)
-    // Note: numValue is already in decimal form (-1 = -100%)
-    if (numValue <= -1) {
-      return 'Population growth rate cannot be -100% or less';
-    }
-  } else if (fieldName === 'timeLimit') {
-    if (numValue <= 0) {
-      return 'Time limit must be positive';
-    }
-  } else if (fieldName === 'populationLimit') {
-    if (numValue <= 0) {
-      return 'Population limit must be positive';
-    }
-  } else if (fieldName === 'currentPopulation') {
-    if (numValue <= 0) {
-      return 'Current population must be positive';
-    }
-  } else if (fieldName === 'yearsPerLife') {
-    if (numValue <= 0) {
-      return 'Years per life must be positive';
-    }
-  }
-
-  return null; // No error
+  // Parameter-specific constraints come from the shared rules table.
+  // Note: numValue is already in decimal form (0.1 = 10%).
+  return getGlobalParameterError(fieldName, numValue);
 };
 
 /**

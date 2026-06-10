@@ -12,6 +12,10 @@ const fixturesRoot = path.resolve(__dirname, '../__fixtures__/generate-data');
 
 const tempWorkspaces = [];
 
+// Pure shared modules the generator imports from src/ — they must exist in
+// the temp workspace for the script's relative imports to resolve.
+const SHARED_MODULES = ['src/utils/dataValidation.js', 'src/utils/constants.js', 'src/utils/globalParameterRules.js'];
+
 const setupWorkspaceFromFixture = (fixtureName) => {
   const fixtureContentDir = path.join(fixturesRoot, fixtureName, 'content');
   const tempDir = fs.mkdtempSync(path.join(repoRoot, '.tmp-generate-data-'));
@@ -20,6 +24,11 @@ const setupWorkspaceFromFixture = (fixtureName) => {
   fs.cpSync(fixtureContentDir, path.join(tempDir, 'content'), { recursive: true });
   fs.mkdirSync(path.join(tempDir, 'scripts'), { recursive: true });
   fs.copyFileSync(scriptSource, path.join(tempDir, 'scripts', 'generate-data-from-markdown.mjs'));
+  for (const modulePath of SHARED_MODULES) {
+    const target = path.join(tempDir, modulePath);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.copyFileSync(path.join(repoRoot, modulePath), target);
+  }
 
   return tempDir;
 };
@@ -312,5 +321,169 @@ donations:
     );
 
     runGeneratorExpectingError(workspace, "has unknown field 'sorce'");
+  });
+});
+
+describe('pipeline strictness', () => {
+  const writeContentFile = (workspaceDir, relativePath, contents) => {
+    const target = path.join(workspaceDir, 'content', relativePath);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, contents);
+  };
+
+  const runGeneratorExpectingError = (workspaceDir, expectedMessage) => {
+    const result = runGenerator(workspaceDir);
+    const output = `${result.stdout}\n${result.stderr}`;
+
+    expect(result.status, output).not.toBe(0);
+    expect(output).toContain(expectedMessage);
+    return output;
+  };
+
+  it('fails when two files declare the same entity id', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health_copy.md',
+      '---\nid: health\nname: Health Copy\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n'
+    );
+
+    const output = runGeneratorExpectingError(workspace, 'Duplicate category id "health"');
+    expect(output).toContain('health.md');
+    expect(output).toContain('health_copy.md');
+  });
+
+  it('fails on unknown frontmatter keys instead of silently ignoring them', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'donors/donor_a.md',
+      '---\nid: donor_a\nname: Donor A\nbirthdate: 1980-02-03\nnetWorth: 1000000\nabout: Donor A bio.\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, "has unknown field 'birthdate'");
+  });
+
+  it('fails on internal-notes heading variants that would be published', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n# Public Notes\n\nFine.\n\n## Internal Notes\n\nSecret editorial notes.\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'internal-notes heading variant');
+  });
+
+  it('fails on unreplaced {{PLACEHOLDER}} tokens', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n---\n\nSee {{TYPO_VARIABLE}} for details.\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'unreplaced placeholder {{TYPO_VARIABLE}}');
+  });
+
+  it('fails the build when category fractions do not sum to 1', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/education.md',
+      '---\nid: education\nname: Education\neffects:\n  - effectId: edu_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 200\n---\n'
+    );
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 0.5\n  - id: education\n    fraction: 0.4\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'do not sum to 1');
+  });
+
+  it('fails the build on out-of-bounds global parameters', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'globalParameters.md',
+      '---\ndiscountRate: 1.5\npopulationGrowthRate: 0.01\ntimeLimit: 100\npopulationLimit: 2\ncurrentPopulation: 8000000000\nyearsPerLife: 50\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'Discount rate must be no greater than 100%');
+  });
+
+  it('fails when a curated profile references a recipient that is filtered out for having no donations', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_unfunded.md',
+      '---\nid: recipient_unfunded\nname: Recipient Unfunded\ncategories:\n  - id: health\n    fraction: 1\n---\n'
+    );
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\nassumptions:\n  recipients:\n    recipient_unfunded:\n      categories:\n        health:\n          effects:\n            - effectId: health_effect\n              overrides:\n                costPerQALY: 50\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'references unknown recipient "recipient_unfunded"');
+  });
+
+  it('accepts curated profiles that customize recipients with their own default effects', async () => {
+    // Regression test: the recipient default effect entry is a wrapper
+    // ({effectId, overrides, multipliers}), and field legality must be
+    // checked against the base category effect — this used to hard-fail with
+    // "references unknown field".
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        multipliers:\n          costPerQALY: 4\n---\n'
+    );
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\nassumptions:\n  recipients:\n    recipient_one:\n      categories:\n        health:\n          effects:\n            - effectId: health_effect\n              multipliers:\n                costPerQALY: 2\n---\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    const profile = generated.curatedAssumptionProfilesById['test-profile'];
+    expect(profile.assumptions.recipients.recipient_one.categories.health.effects[0].multipliers.costPerQALY).toBe(2);
+  });
+
+  it('fails on unknown curated-profile frontmatter keys', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\ndescripton: typo\nassumptions:\n  categories:\n    health:\n      effects:\n        - effectId: health_effect\n          costPerQALY: 50\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, "has unknown field 'descripton'");
+  });
+
+  it('fails on unknown keys nested inside curated-profile entries', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\nassumptions:\n  categories:\n    health:\n      effects:\n        - effectId: health_effect\n          costPerQALY: 50\n      extraKey: 1\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, "has unknown field 'extraKey'");
+  });
+
+  it('fails on non-boolean disabled values in curated profiles', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\nassumptions:\n  categories:\n    health:\n      effects:\n        - effectId: health_effect\n          disabled: "false"\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, "must use a boolean for 'disabled'");
   });
 });

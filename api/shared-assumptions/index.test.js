@@ -63,7 +63,7 @@ describe('/api/shared-assumptions', () => {
     expect(res.statusCode).toBe(400);
     const body = JSON.parse(res.payload);
     expect(body.error).toBe('invalid_assumptions');
-    expect(body.message).toContain('effects must be an array');
+    expect(body.message).toContain('must be an array');
     expect(vi.mocked(runRedisCommand)).not.toHaveBeenCalled();
   });
 

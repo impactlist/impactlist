@@ -1,14 +1,8 @@
 // Startup validation to ensure data integrity
 // This runs when the app starts to catch data structure issues early
 import { categoriesById, recipientsById, donorsById, donations, globalParameters } from '../data/generatedData';
-import {
-  validateCategory,
-  validateRecipient,
-  assertExists,
-  assertPositiveNumber,
-  assertNonNegativeNumber,
-  assertNumber,
-} from './dataValidation';
+import { validateCategory, validateRecipient, assertExists, assertPositiveNumber } from './dataValidation';
+import { assertValidGlobalParameters } from './globalParameterRules';
 
 /**
  * Validate all categories in the data
@@ -105,10 +99,9 @@ const validateAllDonations = () => {
       assertExists(donation.date, 'donation.date', `for donation at index ${index}`);
       assertPositiveNumber(donation.amount, 'donation.amount', `for donation at index ${index}`);
 
-      // credit is optional, but if present must be positive
-      if (donation.credit !== undefined) {
-        assertPositiveNumber(donation.credit, 'donation.credit', `for donation at index ${index}`);
-      }
+      // The generator guarantees every donation row carries a credit
+      // fraction; treat its absence as the data corruption it would be.
+      assertPositiveNumber(donation.credit, 'donation.credit', `for donation at index ${index}`);
 
       // Ensure referenced donor exists
       if (!donorsById[donation.donorId]) {
@@ -126,16 +119,13 @@ const validateAllDonations = () => {
 };
 
 /**
- * Validate global parameters
+ * Validate global parameters against the shared rules table (all parameters
+ * present, no unknown ones, all values within bounds — including
+ * yearsPerLife, which an earlier hand-rolled version here forgot).
  */
 const validateGlobalParameters = () => {
   assertExists(globalParameters, 'globalParameters');
-
-  assertNonNegativeNumber(globalParameters.discountRate, 'globalParameters.discountRate');
-  assertNumber(globalParameters.populationGrowthRate, 'globalParameters.populationGrowthRate');
-  assertPositiveNumber(globalParameters.timeLimit, 'globalParameters.timeLimit');
-  assertPositiveNumber(globalParameters.populationLimit, 'globalParameters.populationLimit');
-  assertPositiveNumber(globalParameters.currentPopulation, 'globalParameters.currentPopulation');
+  assertValidGlobalParameters(globalParameters, 'in generated globalParameters');
 };
 
 /**

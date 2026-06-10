@@ -8,6 +8,7 @@
     "node": ">=22"
   },
   "scripts": {
+    "predev": "npm run generate-data",
     "dev": "vite",
     "build": "npm run generate-data && vite build",
     "preview": "vite preview",
@@ -15,9 +16,13 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "husky",
+    "pretest": "npm run generate-data",
     "test": "vitest",
+    "pretest:run": "npm run generate-data",
     "test:run": "vitest run",
+    "pretest:coverage": "npm run generate-data",
     "test:coverage": "vitest run --coverage",
+    "pretest:watch": "npm run generate-data",
     "test:watch": "vitest --watch",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"

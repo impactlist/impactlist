@@ -1,4 +1,5 @@
-import { assertExists, assertNonNegativeNumber, assertNumber, assertPositiveNumber } from './dataValidation';
+import { assertExists } from './dataValidation';
+import { assertValidGlobalParameters } from './globalParameterRules';
 import { getCurrentYear } from './donationDataHelpers';
 
 const FUTURE_VALUE_SERIES_ID = 'future-value';
@@ -33,14 +34,15 @@ const validateFutureValueParameters = (globalParameters) => {
   const context = 'in future value visualization';
 
   assertExists(globalParameters, 'globalParameters', context);
+  assertValidGlobalParameters(globalParameters, context);
 
   return {
-    currentPopulation: assertPositiveNumber(globalParameters.currentPopulation, 'currentPopulation', context),
-    populationLimitFactor: assertPositiveNumber(globalParameters.populationLimit, 'populationLimit', context),
-    growthRate: assertNumber(globalParameters.populationGrowthRate, 'populationGrowthRate', context),
-    discountRate: assertNonNegativeNumber(globalParameters.discountRate, 'discountRate', context),
-    timeLimit: assertNonNegativeNumber(globalParameters.timeLimit, 'timeLimit', context),
-    yearsPerLife: assertPositiveNumber(globalParameters.yearsPerLife, 'yearsPerLife', context),
+    currentPopulation: globalParameters.currentPopulation,
+    populationLimitFactor: globalParameters.populationLimit,
+    growthRate: globalParameters.populationGrowthRate,
+    discountRate: globalParameters.discountRate,
+    timeLimit: globalParameters.timeLimit,
+    yearsPerLife: globalParameters.yearsPerLife,
   };
 };
 

@@ -19,7 +19,7 @@ content/*.md  --npm run generate-data-->  src/data/generatedData.js (gitignored)
 
 ## Domain rules that override intuition
 
-- **Negative cost per life is legitimate**: donations to some recipients cause deaths. Never "fix" negatives, clamp to positive, or assume cost > 0. Sorting/formatting handles negatives deliberately (negatives are *worse* than any positive; closer to zero is worse than further).
+- **Negative cost per life is legitimate**: donations to some recipients cause deaths. Never "fix" negatives, clamp to positive, or assume cost > 0. Sorting/formatting handles negatives deliberately (negatives are _worse_ than any positive; closer to zero is worse than further).
 - **Cost per life of Infinity** means "no effect" (e.g. disabled effects); `'∞'` renders for it. Cost of 0 is invalid (asserted against), not "free".
 - Effect type is sniffed by field presence: `costPerQALY` ⇒ QALY effect; `costPerMicroprobability` ⇒ population effect. A stale field on an effect would silently flip its model — which is why validation rejects unknown fields everywhere.
 
@@ -37,7 +37,7 @@ Fail hard and loudly on unexpected states (project rule). The deliberate excepti
 
 ## Workflow gotchas
 
-- Fresh clone: `npm run generate-data` BEFORE `npm run dev` or `npm test` — `src/data/generatedData.js` is gitignored and everything imports it. Editing `content/` does nothing until you regenerate.
+- `src/data/generatedData.js` is gitignored and everything imports it; `npm run dev`/`npm test*`/`npm run build` regenerate it automatically via pre-scripts. Direct `npx vitest` runs do NOT — run `npm run generate-data` first on a fresh clone or after `content/` edits.
 - Vitest configuration lives under the `test` key in `vite.config.js` (there is no separate `vitest.config.js`), and there is intentionally no test-only path alias — import paths must work identically for tests and builds.
 - CI (`.github/workflows/ci.yml`): generate → lint → coverage-gated tests (50% floors) → build.
 - The prioritized improvement backlog lives in `docs/CodebaseReview-2026-06-10.md`; check it before starting refactors — several known issues are deliberately deferred to numbered items there.

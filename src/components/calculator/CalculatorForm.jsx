@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { formatLives, formatCurrency } from '../../utils/formatters';
+import { formatLives, formatCurrency, formatNumberWithCommas } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
@@ -20,13 +20,6 @@ const CalculatorForm = ({
   onYearChange,
   className = '',
 }) => {
-  // Format for display
-  const formatDonationInput = (value) => {
-    if (!value) return '';
-    const num = Number(value);
-    return isNaN(num) ? value : num.toLocaleString();
-  };
-
   return (
     <div className={`assumptions-shell p-6 ${className}`}>
       {/* Donation inputs header with reset button */}
@@ -81,7 +74,7 @@ const CalculatorForm = ({
                   id={`donation-${category.id}`}
                   type="text"
                   inputMode="decimal"
-                  value={formatDonationInput(amount)}
+                  value={formatNumberWithCommas(amount)}
                   onChange={(e) => onDonationChange(category.id, e.target.value)}
                   className="calculator-cause-card__input w-full rounded px-2 py-0.5 text-sm leading-tight"
                   placeholder="0"

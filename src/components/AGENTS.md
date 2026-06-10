@@ -22,6 +22,6 @@
 
 Behavioral Testing Library tests co-located with components. `framer-motion` is sometimes mocked per-file — mocks must export `AnimatePresence` too, since `ModalShell` uses it. ResizeObserver/matchMedia are stubbed globally in `src/test-setup.js`.
 
-## Known debt (tracked in docs/CodebaseReview-2026-06-10.md)
+## Shared building blocks worth knowing
 
-`CurrencyInput`/`NumericInput` are ~80% duplicates; `AssumptionsDropdown` has internal duplication and incomplete menu keyboard semantics (item 15). Prefer fixing through those items rather than piecemeal.
+`ImpactValueCell` is THE lives/cost-per-life table cell (∞ renders exactly for ±Infinity — the domain sentinel; NaN/0 deliberately render loud — and don't reintroduce `=== 0` checks). `ListPageShell` is the list-page scaffold. `CurrencyInput`/`NumericInput` share their cursor/comma core via `hooks/useFormattedNumberInput`; `FormField` deliberately does NOT use that hook — it is fully controlled (parent owns the draft string, percentage ×100 display transform) and only shares the formatter utilities.

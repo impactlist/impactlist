@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { formatNumberWithCommas, formatWithCursorHandling } from '../../utils/formatters';
+import { formatNumberWithCommas } from '../../utils/formatters';
+import useFormattedNumberInput from '../../hooks/useFormattedNumberInput';
 
 /**
  * Specialized input component for handling currency values with formatting.
@@ -26,59 +27,20 @@ const CurrencyInput = ({
   // (domain rule), so only positive-only call sites should opt in.
   inputMode = 'text',
 }) => {
-  const [localValue, setLocalValue] = useState('');
-  const [cursorPosition, setCursorPosition] = useState(null);
-  const inputRef = useRef(null);
-
-  // Initialize local value from prop
-  useEffect(() => {
-    if (value !== undefined && value !== null) {
-      // Only update local value if we don't have focus. Run the value through
-      // the same formatter typing uses so programmatically-set values display
-      // identically to typed ones (thousands separators included).
-      if (!inputRef.current || document.activeElement !== inputRef.current) {
-        const text = value.toString();
-        setLocalValue(formatWithCursorHandling(text, text.length).value);
-      }
-    } else {
-      setLocalValue('');
-    }
-  }, [value]);
-
-  // Maintain cursor position after formatting
-  useEffect(() => {
-    if (cursorPosition !== null && inputRef.current && document.activeElement === inputRef.current) {
-      inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
-    }
-  }, [cursorPosition, localValue]);
-
-  // Handle input changes
-  const handleChange = useCallback(
-    (e) => {
-      const newValue = e.target.value;
-      const currentCursorPosition = e.target.selectionStart;
-
-      // Format the value and handle cursor position in one operation
-      const result = formatWithCursorHandling(newValue, currentCursorPosition);
-
-      // Save the cursor position for later restoration
-      setCursorPosition(result.cursorPosition);
-
-      // Always update the local state with formatted value for display
-      setLocalValue(result.value);
-
-      // Pass the value to parent component
+  const emitChange = useCallback(
+    (formattedValue, rawValue) => {
       if (validateOnBlur) {
         // When validating on blur, we pass the original value as is
-        onChange(newValue);
+        onChange(rawValue);
       } else {
         // When not validating on blur, we can pass the cleaned value (without commas)
-        const cleanValue = newValue.replace(/,/g, '');
-        onChange(cleanValue);
+        onChange(rawValue.replace(/,/g, ''));
       }
     },
     [onChange, validateOnBlur]
   );
+
+  const { inputRef, localValue, setLocalValue, handleChange } = useFormattedNumberInput(value, emitChange);
 
   // Handle blur for validation
   const handleBlur = useCallback(() => {
@@ -109,7 +71,7 @@ const CurrencyInput = ({
         onChange(cleanValue);
       }
     }
-  }, [localValue, onChange, validateOnBlur]);
+  }, [localValue, onChange, setLocalValue, validateOnBlur]);
 
   const state = error ? 'error' : isCustom ? 'custom' : 'default';
   const hasDisplayOverlay = displayOnly && displayValue && localValue;

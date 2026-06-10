@@ -249,18 +249,18 @@ export const clearCategoryCustomValues = (userAssumptions, categoryId) => {
 };
 
 /**
- * Set an override for a specific field in a recipient's category effect
- * Removes any existing multiplier for the same field
- * If value matches default, removes the override instead
+ * Shared worker for the override/multiplier setters below — they are
+ * identical except for which map receives the value, which counterpart map
+ * is cleared, and what counts as "matches the default, remove instead".
  */
-export const setRecipientFieldOverride = (
+const setRecipientEffectFieldValue = (
   userAssumptions,
   defaultAssumptions,
   recipientId,
   categoryId,
   effectId,
   fieldName,
-  value
+  { mapKey, counterpartKey, value, isNoOpValue }
 ) => {
   // Validate that the effect exists in defaults
   // First check if recipient has custom effects, otherwise fall back to category defaults
@@ -277,19 +277,19 @@ export const setRecipientFieldOverride = (
     throw new Error(`Effect ${effectId} not found for recipient ${recipientId} category ${categoryId}`);
   }
 
-  // Check if value matches default - if so, remove instead of storing
-  const defaultValue = defaultEffect[fieldName];
-  if (areValuesEqual(value, defaultValue)) {
+  // A value matching its default means "no customization" — remove any stored
+  // entry instead of storing a no-op.
+  if (isNoOpValue(defaultEffect)) {
     if (!userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects) {
       return userAssumptions;
     }
     const newData = JSON.parse(JSON.stringify(userAssumptions));
     const effects = newData.recipients[recipientId].categories[categoryId].effects;
     const effectIndex = effects.findIndex((e) => e.effectId === effectId);
-    if (effectIndex !== -1 && effects[effectIndex].overrides) {
-      delete effects[effectIndex].overrides[fieldName];
-      if (Object.keys(effects[effectIndex].overrides).length === 0) {
-        delete effects[effectIndex].overrides;
+    if (effectIndex !== -1 && effects[effectIndex][mapKey]) {
+      delete effects[effectIndex][mapKey][fieldName];
+      if (Object.keys(effects[effectIndex][mapKey]).length === 0) {
+        delete effects[effectIndex][mapKey];
       }
       // Prune empty effect (only has effectId)
       if (Object.keys(effects[effectIndex]).length === 1) {
@@ -319,19 +319,40 @@ export const setRecipientFieldOverride = (
 
   const effect = effects[effectIndex];
 
-  if (!effect.overrides) effect.overrides = {};
-  effect.overrides[fieldName] = value;
+  if (!effect[mapKey]) effect[mapKey] = {};
+  effect[mapKey][fieldName] = value;
 
-  // Remove any multiplier for the same field
-  if (effect.multipliers && effect.multipliers[fieldName] !== undefined) {
-    delete effect.multipliers[fieldName];
-    if (Object.keys(effect.multipliers).length === 0) {
-      delete effect.multipliers;
+  // An override and a multiplier for the same field are mutually exclusive.
+  if (effect[counterpartKey] && effect[counterpartKey][fieldName] !== undefined) {
+    delete effect[counterpartKey][fieldName];
+    if (Object.keys(effect[counterpartKey]).length === 0) {
+      delete effect[counterpartKey];
     }
   }
 
   return newData;
 };
+
+/**
+ * Set an override for a specific field in a recipient's category effect
+ * Removes any existing multiplier for the same field
+ * If value matches default, removes the override instead
+ */
+export const setRecipientFieldOverride = (
+  userAssumptions,
+  defaultAssumptions,
+  recipientId,
+  categoryId,
+  effectId,
+  fieldName,
+  value
+) =>
+  setRecipientEffectFieldValue(userAssumptions, defaultAssumptions, recipientId, categoryId, effectId, fieldName, {
+    mapKey: 'overrides',
+    counterpartKey: 'multipliers',
+    value,
+    isNoOpValue: (defaultEffect) => areValuesEqual(value, defaultEffect[fieldName]),
+  });
 
 /**
  * Set a multiplier for a specific field in a recipient's category effect
@@ -346,76 +367,13 @@ export const setRecipientFieldMultiplier = (
   effectId,
   fieldName,
   multiplier
-) => {
-  // Validate that the effect exists in defaults
-  // First check if recipient has custom effects, otherwise fall back to category defaults
-  let defaultEffect = defaultAssumptions.recipients[recipientId]?.categories?.[categoryId]?.effects?.find(
-    (e) => e.effectId === effectId
-  );
-
-  // If recipient doesn't have custom effects, check the category's default effects
-  if (!defaultEffect) {
-    defaultEffect = defaultAssumptions.categories[categoryId]?.effects?.find((e) => e.effectId === effectId);
-  }
-
-  if (!defaultEffect) {
-    throw new Error(`Effect ${effectId} not found for recipient ${recipientId} category ${categoryId}`);
-  }
-
-  // A multiplier of 1 means "no change" - remove instead of storing
-  if (multiplier === 1) {
-    if (!userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects) {
-      return userAssumptions;
-    }
-    const newData = JSON.parse(JSON.stringify(userAssumptions));
-    const effects = newData.recipients[recipientId].categories[categoryId].effects;
-    const effectIndex = effects.findIndex((e) => e.effectId === effectId);
-    if (effectIndex !== -1 && effects[effectIndex].multipliers) {
-      delete effects[effectIndex].multipliers[fieldName];
-      if (Object.keys(effects[effectIndex].multipliers).length === 0) {
-        delete effects[effectIndex].multipliers;
-      }
-      // Prune empty effect (only has effectId)
-      if (Object.keys(effects[effectIndex]).length === 1) {
-        effects.splice(effectIndex, 1);
-      }
-    }
-    return pruneRecipientStructure(newData, recipientId, categoryId);
-  }
-
-  // Deep clone or create new structure
-  const newData = userAssumptions ? JSON.parse(JSON.stringify(userAssumptions)) : {};
-
-  // Initialize deeply nested structure
-  if (!newData.recipients) newData.recipients = {};
-  if (!newData.recipients[recipientId]) newData.recipients[recipientId] = { categories: {} };
-  if (!newData.recipients[recipientId].categories[categoryId]) {
-    newData.recipients[recipientId].categories[categoryId] = { effects: [] };
-  }
-
-  // Find or create the effect
-  const effects = newData.recipients[recipientId].categories[categoryId].effects;
-  let effectIndex = effects.findIndex((e) => e.effectId === effectId);
-  if (effectIndex === -1) {
-    effects.push({ effectId });
-    effectIndex = effects.length - 1;
-  }
-
-  const effect = effects[effectIndex];
-
-  if (!effect.multipliers) effect.multipliers = {};
-  effect.multipliers[fieldName] = multiplier;
-
-  // Remove any override for the same field
-  if (effect.overrides && effect.overrides[fieldName] !== undefined) {
-    delete effect.overrides[fieldName];
-    if (Object.keys(effect.overrides).length === 0) {
-      delete effect.overrides;
-    }
-  }
-
-  return newData;
-};
+) =>
+  setRecipientEffectFieldValue(userAssumptions, defaultAssumptions, recipientId, categoryId, effectId, fieldName, {
+    mapKey: 'multipliers',
+    counterpartKey: 'overrides',
+    value: multiplier,
+    isNoOpValue: () => multiplier === 1,
+  });
 
 /**
  * Clear all overrides and multipliers for a recipient

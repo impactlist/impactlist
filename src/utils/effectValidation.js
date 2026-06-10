@@ -311,7 +311,7 @@ export const validateRecipientEffects = (effects) => {
     if (effect.overrides) {
       Object.entries(effect.overrides).forEach(([fieldName, value]) => {
         if (value !== null && value !== undefined && value !== '') {
-          const effectType = effect.costPerQALY !== undefined ? 'qaly' : 'population';
+          const effectType = getEffectType(effect);
           const error = validateRecipientEffectField(fieldName, value, 'override', effectType);
           if (error) {
             allErrors[`${index}-${fieldName}-override`] = error;
@@ -325,7 +325,7 @@ export const validateRecipientEffects = (effects) => {
     if (effect.multipliers) {
       Object.entries(effect.multipliers).forEach(([fieldName, value]) => {
         if (value !== null && value !== undefined && value !== '') {
-          const effectType = effect.costPerQALY !== undefined ? 'qaly' : 'population';
+          const effectType = getEffectType(effect);
           const error = validateRecipientEffectField(fieldName, value, 'multiplier', effectType);
           if (error) {
             allErrors[`${index}-${fieldName}-multiplier`] = error;

@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { formatNumberWithCommas, formatWithCursorHandling } from '../../utils/formatters';
+import useFormattedNumberInput from '../../hooks/useFormattedNumberInput';
 
 /**
  * Reusable numeric input component that handles formatting, negative numbers, and decimals.
@@ -22,52 +22,9 @@ const NumericInput = ({
   // (domain rule), so only positive-only call sites should opt in.
   inputMode = 'text',
 }) => {
-  const [localValue, setLocalValue] = useState('');
-  const [cursorPosition, setCursorPosition] = useState(null);
-  const inputRef = useRef(null);
-
-  // Initialize local value from prop
-  useEffect(() => {
-    if (value !== undefined && value !== null) {
-      // Only update local value if we don't have focus
-      if (!inputRef.current || document.activeElement !== inputRef.current) {
-        // If it's a string (partial input), keep as-is
-        if (typeof value === 'string') {
-          setLocalValue(value);
-        } else {
-          // Format numeric values with commas
-          setLocalValue(formatNumberWithCommas(value));
-        }
-      }
-    } else {
-      setLocalValue('');
-    }
-  }, [value]);
-
-  // Maintain cursor position after formatting
-  useEffect(() => {
-    if (cursorPosition !== null && inputRef.current && document.activeElement === inputRef.current) {
-      inputRef.current.setSelectionRange(cursorPosition, cursorPosition);
-    }
-  }, [cursorPosition, localValue]);
-
-  // Handle input changes
-  const handleChange = useCallback(
-    (e) => {
-      const newValue = e.target.value;
-      const currentCursorPosition = e.target.selectionStart;
-
-      // Format the value and handle cursor position
-      const result = formatWithCursorHandling(newValue, currentCursorPosition);
-
-      // Save cursor position for restoration
-      setCursorPosition(result.cursorPosition);
-
-      // Update local display value
-      setLocalValue(result.value);
-
-      // Parse and pass to parent
-      const cleanValue = result.value.replace(/,/g, '');
+  const emitChange = useCallback(
+    (formattedValue) => {
+      const cleanValue = formattedValue.replace(/,/g, '');
 
       // Allow partial input states
       if (cleanValue === '' || cleanValue === '-' || cleanValue === '.' || cleanValue === '-.') {
@@ -80,6 +37,8 @@ const NumericInput = ({
     },
     [onChange]
   );
+
+  const { inputRef, localValue, handleChange } = useFormattedNumberInput(value, emitChange);
 
   const state = error ? 'error' : isCustom ? 'custom' : 'default';
 

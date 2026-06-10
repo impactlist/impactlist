@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 import { calculateDonorStatsFromCombined } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { formatRoundedLives, formatCurrency } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
-import FormattedScientificValue from '../components/shared/FormattedScientificValue';
+import ImpactValueCell from '../components/shared/ImpactValueCell';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 // Donor table columns configuration (static — no component state involved)
@@ -50,11 +50,7 @@ const donorColumns = [
         See the FAQ for more details.
       </div>
     ),
-    render: (donor) => (
-      <div className={`text-sm ${donor.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-        <FormattedScientificValue value={formatRoundedLives(donor.totalLivesSaved)} variant="compact" />
-      </div>
-    ),
+    render: (donor) => <ImpactValueCell kind="lives" value={donor.totalLivesSaved} positiveTone="success" />,
   },
   {
     key: 'totalDonated',
@@ -70,15 +66,7 @@ const donorColumns = [
         of one life is expected to be saved.
       </div>
     ),
-    render: (donor) => (
-      <div className={`text-sm ${donor.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-        {donor.totalLivesSaved === 0 ? (
-          '∞'
-        ) : (
-          <FormattedScientificValue value={formatCurrency(donor.costPerLife)} variant="compact" />
-        )}
-      </div>
-    ),
+    render: (donor) => <ImpactValueCell kind="currency" value={donor.costPerLife} />,
   },
   {
     key: 'netWorth',

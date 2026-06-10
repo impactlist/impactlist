@@ -5,12 +5,7 @@
 
 import { selectEffectsForYear, effectToCostPerLife, applyRecipientEffectToBase } from './effectsCalculation';
 import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } from './assumptionsDataHelpers';
-
-const getEffectType = (effect) => {
-  if (effect.costPerQALY !== undefined) return 'qaly';
-  if (effect.costPerMicroprobability !== undefined) return 'population';
-  return 'unknown';
-};
+import { getEffectType } from './effectValidation';
 
 const titleCaseWords = (value) => {
   return value

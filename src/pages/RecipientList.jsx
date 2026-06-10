@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import BackButton from '../components/shared/BackButton';
 import {
   getPrimaryCategoryId,
   getCategoryBreakdown,
@@ -15,12 +13,12 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { formatRoundedLives, formatCurrency } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 import { buildCausePath } from '../utils/causeRoutes';
-import PageHeader from '../components/shared/PageHeader';
 import SearchInput from '../components/shared/SearchInput';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
-import FormattedScientificValue from '../components/shared/FormattedScientificValue';
+import ListPageShell from '../components/shared/ListPageShell';
+import ImpactValueCell from '../components/shared/ImpactValueCell';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const buildRecipientStats = (combinedAssumptions) => {
@@ -106,11 +104,7 @@ const recipientColumns = [
         column together with the total amount given.
       </div>
     ),
-    render: (recipient) => (
-      <div className={`text-sm ${recipient.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
-        <FormattedScientificValue value={formatRoundedLives(recipient.totalLivesSaved)} variant="compact" />
-      </div>
-    ),
+    render: (recipient) => <ImpactValueCell kind="lives" value={recipient.totalLivesSaved} />,
   },
   {
     key: 'costPerLife',
@@ -121,17 +115,7 @@ const recipientColumns = [
         would need to donate to this organization to save the equivalent of one life.
       </div>
     ),
-    render: (recipient) => {
-      return (
-        <div className={`text-sm ${recipient.costPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-          {recipient.costPerLife === 0 ? (
-            '∞'
-          ) : (
-            <FormattedScientificValue value={formatCurrency(recipient.costPerLife)} variant="compact" />
-          )}
-        </div>
-      );
-    },
+    render: (recipient) => <ImpactValueCell kind="currency" value={recipient.costPerLife} />,
   },
   {
     key: 'totalReceived',
@@ -180,46 +164,26 @@ const RecipientList = () => {
   );
 
   return (
-    <>
-      <BackButton to="/" label="Back to top donors" />
-      <motion.div
-        className="impact-page flex flex-col items-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Page Header */}
-        <PageHeader title="Recipients" subtitle="Entities that have received donations" />
-
-        {/* Recipients Table Container */}
-        <motion.div
-          className="impact-page__container mb-12"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
-        >
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div className="order-2 w-full sm:order-1 sm:max-w-md">
-              <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
-            </div>
-            <div className="order-1 w-full min-w-0 sm:order-2">
-              <AssumptionsSelector className="mb-0" />
-            </div>
-          </div>
-          <div className="impact-surface impact-surface--table">
-            <SortableTable
-              columns={recipientColumns}
-              data={filteredRecipients}
-              defaultSortColumn="costPerLife"
-              defaultSortDirection="asc"
-              tiebreakColumn="totalLivesSaved"
-              tiebreakDirection="desc"
-            />
-          </div>
-        </motion.div>
-      </motion.div>
-    </>
+    <ListPageShell title="Recipients" subtitle="Entities that have received donations">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="order-2 w-full sm:order-1 sm:max-w-md">
+          <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
+        </div>
+        <div className="order-1 w-full min-w-0 sm:order-2">
+          <AssumptionsSelector className="mb-0" />
+        </div>
+      </div>
+      <div className="impact-surface impact-surface--table">
+        <SortableTable
+          columns={recipientColumns}
+          data={filteredRecipients}
+          defaultSortColumn="costPerLife"
+          defaultSortDirection="asc"
+          tiebreakColumn="totalLivesSaved"
+          tiebreakDirection="desc"
+        />
+      </div>
+    </ListPageShell>
   );
 };
 

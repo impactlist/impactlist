@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import BackButton from '../components/shared/BackButton';
 import { getDonationsForRecipient, getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeFromCombined,
@@ -9,11 +7,11 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
-import { formatRoundedLives, formatCurrency } from '../utils/formatters';
+import { formatCurrency } from '../utils/formatters';
 import { buildCausePath } from '../utils/causeRoutes';
-import PageHeader from '../components/shared/PageHeader';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
-import FormattedScientificValue from '../components/shared/FormattedScientificValue';
+import ListPageShell from '../components/shared/ListPageShell';
+import ImpactValueCell from '../components/shared/ImpactValueCell';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const buildCategoryStats = (combinedAssumptions) => {
@@ -88,17 +86,7 @@ const categoryColumns = [
         save the equivalent of one life in this area.
       </div>
     ),
-    render: (category) => {
-      return (
-        <div className={`text-sm ${category.actualCostPerLife < 0 ? 'text-danger' : 'text-strong'}`}>
-          {category.actualCostPerLife === 0 ? (
-            '∞'
-          ) : (
-            <FormattedScientificValue value={formatCurrency(category.actualCostPerLife)} variant="compact" />
-          )}
-        </div>
-      );
-    },
+    render: (category) => <ImpactValueCell kind="currency" value={category.actualCostPerLife} />,
   },
   {
     key: 'totalLivesSaved',
@@ -109,11 +97,7 @@ const categoryColumns = [
         assumptions.
       </div>
     ),
-    render: (category) => (
-      <div className={`text-sm ${category.totalLivesSaved < 0 ? 'text-danger' : 'text-strong'}`}>
-        <FormattedScientificValue value={formatRoundedLives(category.totalLivesSaved)} variant="compact" />
-      </div>
-    ),
+    render: (category) => <ImpactValueCell kind="lives" value={category.totalLivesSaved} />,
   },
   {
     key: 'totalDonated',
@@ -129,39 +113,19 @@ const CategoryList = () => {
   const categoryStats = useMemo(() => buildCategoryStats(combinedAssumptions), [combinedAssumptions]);
 
   return (
-    <>
-      <BackButton to="/" label="Back to top donors" />
-      <motion.div
-        className="impact-page flex flex-col items-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Page Header */}
-        <PageHeader title="Causes" subtitle="Focus areas for charitable giving" />
-
-        {/* Categories Table Container */}
-        <motion.div
-          className="impact-page__container mb-12"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
-        >
-          <AssumptionsSelector />
-          <div className="impact-surface impact-surface--table">
-            <SortableTable
-              columns={categoryColumns}
-              data={categoryStats}
-              defaultSortColumn="actualCostPerLife"
-              defaultSortDirection="asc"
-              tiebreakColumn="totalLivesSaved"
-              tiebreakDirection="desc"
-            />
-          </div>
-        </motion.div>
-      </motion.div>
-    </>
+    <ListPageShell title="Causes" subtitle="Focus areas for charitable giving">
+      <AssumptionsSelector />
+      <div className="impact-surface impact-surface--table">
+        <SortableTable
+          columns={categoryColumns}
+          data={categoryStats}
+          defaultSortColumn="actualCostPerLife"
+          defaultSortDirection="asc"
+          tiebreakColumn="totalLivesSaved"
+          tiebreakDirection="desc"
+        />
+      </div>
+    </ListPageShell>
   );
 };
 

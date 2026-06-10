@@ -23,6 +23,7 @@ import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
 import SampleDonationCalculator from '../components/shared/SampleDonationCalculator';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import NotFound from './NotFound';
 import { CHART_ANIMATION_DURATION } from '../utils/constants';
 
 const RecipientDetail = () => {
@@ -56,7 +57,8 @@ const RecipientDetail = () => {
     const recipient = combinedAssumptions.getRecipientById(recipientId);
 
     if (!recipient) {
-      throw new Error(`Invalid recipient ID: ${recipientId}. This recipient does not exist.`);
+      // Unknown IDs are expected input (stale links); NotFound renders below.
+      return;
     }
 
     const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, getCurrentYear());
@@ -101,7 +103,7 @@ const RecipientDetail = () => {
           ...donation,
           creditedAmount,
           totalLivesSaved,
-          dateObj: donation.date,
+          dateObj: new Date(donation.date),
         };
       })
       .sort((a, b) => b.dateObj - a.dateObj);
@@ -341,6 +343,10 @@ const RecipientDetail = () => {
     if (!recipientInfo?.categoryId) return;
     navigate(`/assumptions?tab=recipients&recipientId=${recipientId}&activeCategory=${recipientInfo.categoryId}`);
   };
+
+  if (!combinedAssumptions.getRecipientById(recipientId)) {
+    return <NotFound message={`No recipient found with ID "${recipientId}".`} />;
+  }
 
   if (!recipientInfo) {
     return <div className="impact-loading">Loading...</div>;

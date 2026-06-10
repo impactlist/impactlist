@@ -84,9 +84,12 @@ const RecipientTable = ({
                   </div>
                 ),
               },
+              // The remaining columns render values computed on the fly, so
+              // there is no row field to sort by.
               {
                 key: 'category',
                 label: 'Cause',
+                sortable: false,
                 render: (donation) => (
                   <CategoryDisplay
                     donation={donation}
@@ -98,6 +101,7 @@ const RecipientTable = ({
               {
                 key: 'lives',
                 label: 'Lives Saved',
+                sortable: false,
                 render: (donation) => {
                   const livesSaved = calculateLivesSaved(donation);
                   return (
@@ -111,6 +115,7 @@ const RecipientTable = ({
               {
                 key: 'costPerLife',
                 label: 'Cost Per Life',
+                sortable: false,
                 render: (donation) => {
                   const costPerLife = getCostPerLife(donation);
                   return (
@@ -123,6 +128,7 @@ const RecipientTable = ({
               {
                 key: 'actions',
                 label: 'Actions',
+                sortable: false,
                 render: (donation) => (
                   <div className="flex space-x-2">
                     <button

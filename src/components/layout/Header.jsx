@@ -23,7 +23,14 @@ const AssumptionsNavLabel = () => (
   </>
 );
 
-const Header = ({ isHome, isRecipients, isCalculator, isCategories, isFAQ, isAssumptions }) => {
+const Header = ({
+  isHome = false,
+  isRecipients = false,
+  isCalculator = false,
+  isCategories = false,
+  isFAQ = false,
+  isAssumptions = false,
+}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinkClass = ({ isActive = false, visibilityClass = '', layoutClass = '' } = {}) =>
@@ -175,15 +182,6 @@ Header.propTypes = {
   isCategories: PropTypes.bool,
   isFAQ: PropTypes.bool,
   isAssumptions: PropTypes.bool,
-};
-
-Header.defaultProps = {
-  isHome: false,
-  isRecipients: false,
-  isCalculator: false,
-  isCategories: false,
-  isFAQ: false,
-  isAssumptions: false,
 };
 
 export default Header;

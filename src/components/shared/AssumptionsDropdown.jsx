@@ -50,22 +50,22 @@ const getRenameErrorMessage = (errorCode) => {
 
 const AssumptionsDropdown = ({
   entries,
-  activeId,
-  hasUnsavedChanges,
-  inlineLabel,
-  className,
-  menuAriaLabel,
-  showCurrentSaveAction,
-  showCurrentShareAction,
-  showShareForLocal,
-  allowEntryManagementActions,
-  allowCopyLinkAction,
+  activeId = null,
+  hasUnsavedChanges = false,
+  inlineLabel = null,
+  className = '',
+  menuAriaLabel = 'Assumptions options',
+  showCurrentSaveAction = false,
+  showCurrentShareAction = false,
+  showShareForLocal = false,
+  allowEntryManagementActions = false,
+  allowCopyLinkAction = false,
   onLoad,
-  onSaveCurrent,
-  onShareCurrent,
-  onRename,
-  onDelete,
-  onCopyLink,
+  onSaveCurrent = () => {},
+  onShareCurrent = () => {},
+  onRename = () => ({ ok: true }),
+  onDelete = () => {},
+  onCopyLink = () => {},
   onDescription,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -517,24 +517,6 @@ AssumptionsDropdown.propTypes = {
   onDelete: PropTypes.func,
   onCopyLink: PropTypes.func,
   onDescription: PropTypes.func.isRequired,
-};
-
-AssumptionsDropdown.defaultProps = {
-  activeId: null,
-  hasUnsavedChanges: false,
-  inlineLabel: null,
-  className: '',
-  menuAriaLabel: 'Assumptions options',
-  showCurrentSaveAction: false,
-  showCurrentShareAction: false,
-  showShareForLocal: false,
-  allowEntryManagementActions: false,
-  allowCopyLinkAction: false,
-  onSaveCurrent: () => {},
-  onShareCurrent: () => {},
-  onRename: () => ({ ok: true }),
-  onDelete: () => {},
-  onCopyLink: () => {},
 };
 
 export default AssumptionsDropdown;

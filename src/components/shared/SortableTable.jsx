@@ -185,6 +185,16 @@ const SortableTable = ({
     }
   };
 
+  // A sort column that exists on no row is a developer error (e.g. a column
+  // whose cell values are computed in render): sorting it would silently
+  // shuffle rows under a confident-looking sort arrow. Fail loudly instead.
+  if (data.length > 0 && sortColumn && data.every((row) => row[sortColumn] === undefined)) {
+    throw new Error(
+      `SortableTable: no row has a value for sort column "${sortColumn}". ` +
+        `Provide row data for it or mark the column as sortable: false.`
+    );
+  }
+
   // Sort the data based on the sort column and direction
   const sortedData = [...data].sort((a, b) => {
     // Get values to compare

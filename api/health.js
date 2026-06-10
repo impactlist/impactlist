@@ -1,6 +1,7 @@
 import { runRedisCommand } from '../src/server/upstashRedisClient.js';
 import { sendJson } from '../src/server/sharedAssumptionsHttp.js';
 import { isSharedAssumptionsError } from '../src/server/sharedAssumptionsErrors.js';
+import { enforceRateLimit, extractClientIp } from '../src/server/sharedAssumptionsService.js';
 
 const HEALTH_EVAL_SCRIPT = "return 'ok'";
 
@@ -15,6 +16,8 @@ const runRedisChecks = async () => {
 };
 
 const handler = async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+
   if (req.method !== 'GET') {
     sendJson(res, 405, {
       ok: false,
@@ -40,6 +43,10 @@ const handler = async (req, res) => {
   }
 
   try {
+    // Redis checks cost Upstash commands, so anonymous callers can't run
+    // them without limit.
+    await enforceRateLimit('health', extractClientIp(req));
+
     const redisChecks = await runRedisChecks();
     sendJson(res, 200, {
       ...basePayload,
@@ -49,23 +56,25 @@ const handler = async (req, res) => {
       },
     });
   } catch (error) {
-    if (isSharedAssumptionsError(error)) {
-      sendJson(res, 503, {
+    if (isSharedAssumptionsError(error) && error.status === 429) {
+      sendJson(res, 429, {
         ok: false,
         error: error.code,
         message: error.message,
-        checks: {
-          app: 'ok',
-          redis: 'failed',
-        },
       });
       return;
     }
 
+    // Log the detail; don't echo internals (e.g. upstream Redis responses)
+    // on a public endpoint.
+    console.error('[health] Redis health check failed', {
+      code: isSharedAssumptionsError(error) ? error.code : undefined,
+      message: error?.message,
+    });
     sendJson(res, 503, {
       ok: false,
-      error: 'health_check_failed',
-      message: 'Health check failed.',
+      error: isSharedAssumptionsError(error) ? error.code : 'health_check_failed',
+      message: 'Redis health check failed.',
       checks: {
         app: 'ok',
         redis: 'failed',

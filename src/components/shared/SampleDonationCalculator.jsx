@@ -31,18 +31,16 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
   const isCategory = !!categoryId;
   const entityId = categoryId || recipientId;
 
-  // Calculate cost per life whenever year changes
+  // Calculate cost per life whenever year changes. Inputs here are validated
+  // entity data, so a failure is a real bug — let it surface instead of
+  // quietly rendering "N/A".
   useEffect(() => {
     if (!combinedAssumptions || !entityId) return;
 
-    try {
-      const cost = isCategory
-        ? getCostPerLifeFromCombined(combinedAssumptions, entityId, selectedYear)
-        : getCostPerLifeForRecipientFromCombined(combinedAssumptions, entityId, selectedYear);
-      setCostPerLife(cost);
-    } catch {
-      setCostPerLife(Infinity);
-    }
+    const cost = isCategory
+      ? getCostPerLifeFromCombined(combinedAssumptions, entityId, selectedYear)
+      : getCostPerLifeForRecipientFromCombined(combinedAssumptions, entityId, selectedYear);
+    setCostPerLife(cost);
   }, [combinedAssumptions, entityId, selectedYear, isCategory]);
 
   // Calculate lives saved whenever amount or cost per life changes

@@ -293,9 +293,4 @@ AssumptionsSelector.propTypes = {
   interactive: PropTypes.bool,
 };
 
-AssumptionsSelector.defaultProps = {
-  className: '',
-  interactive: undefined,
-};
-
 export default AssumptionsSelector;

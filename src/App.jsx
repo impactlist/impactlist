@@ -12,6 +12,7 @@ import AssumptionDetail from './pages/AssumptionDetail';
 import DonationCalculator from './pages/DonationCalculator';
 import FAQ from './pages/FAQ';
 import AssumptionsPage from './pages/AssumptionsPage';
+import NotFound from './pages/NotFound';
 import { AssumptionsProvider } from './contexts/AssumptionsContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Header from './components/layout/Header';
@@ -136,6 +137,7 @@ const AppContent = () => {
             <Route path="/calculator" element={<DonationCalculator />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/assumptions" element={<AssumptionsPage />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
         <Footer />

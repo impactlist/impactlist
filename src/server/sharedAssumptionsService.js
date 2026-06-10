@@ -1,7 +1,6 @@
 import { randomBytes } from 'crypto';
 import {
-  RATE_LIMIT_MAX_SAVES,
-  RATE_LIMIT_WINDOW_SECONDS,
+  RATE_LIMITS,
   SHARED_ASSUMPTIONS_SCHEMA_VERSION,
   SHARED_SNAPSHOT_TTL_SECONDS,
   buildRateLimitKey,
@@ -45,13 +44,13 @@ const generateSnapshotId = () => {
 };
 
 export const extractClientIp = (req) => {
-  const forwarded = req.headers['x-forwarded-for'];
+  const forwarded = req.headers?.['x-forwarded-for'];
   if (typeof forwarded === 'string' && forwarded.trim().length > 0) {
     const [first] = forwarded.split(',');
     return first.trim();
   }
 
-  const realIp = req.headers['x-real-ip'];
+  const realIp = req.headers?.['x-real-ip'];
   if (typeof realIp === 'string' && realIp.trim().length > 0) {
     return realIp.trim();
   }
@@ -59,17 +58,18 @@ export const extractClientIp = (req) => {
   return 'unknown';
 };
 
-const enforceRateLimit = async (clientIp) => {
-  const key = buildRateLimitKey(clientIp);
-  const countResult = await runRedisCommand('EVAL', RATE_LIMIT_LUA, '1', key, String(RATE_LIMIT_WINDOW_SECONDS));
+export const enforceRateLimit = async (scope, clientIp) => {
+  const limit = RATE_LIMITS[scope];
+  if (!limit) {
+    throw createSharedAssumptionsError(500, 'internal_error', `Unknown rate limit scope "${scope}".`);
+  }
+
+  const key = buildRateLimitKey(scope, clientIp);
+  const countResult = await runRedisCommand('EVAL', RATE_LIMIT_LUA, '1', key, String(limit.windowSeconds));
   const count = Number(countResult || 0);
 
-  if (count > RATE_LIMIT_MAX_SAVES) {
-    throw createSharedAssumptionsError(
-      429,
-      'rate_limited',
-      `Rate limit exceeded. Max ${RATE_LIMIT_MAX_SAVES} saves per hour.`
-    );
+  if (count > limit.max) {
+    throw createSharedAssumptionsError(429, 'rate_limited', limit.message);
   }
 };
 
@@ -125,7 +125,7 @@ const rollbackSlugClaim = async (slug) => {
 };
 
 export const createSharedSnapshot = async ({ assumptions, name, description, slug, clientIp }) => {
-  await enforceRateLimit(clientIp);
+  await enforceRateLimit('save', clientIp);
 
   const snapshotId = generateSnapshotId();
   const snapshotRecord = createSnapshotRecord({ assumptions, name, description, slug });

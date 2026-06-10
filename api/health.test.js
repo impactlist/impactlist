@@ -43,9 +43,12 @@ describe('/api/health', () => {
   });
 
   it('runs redis + eval checks when check=redis', async () => {
-    vi.mocked(runRedisCommand).mockResolvedValueOnce('PONG').mockResolvedValueOnce('ok');
+    vi.mocked(runRedisCommand)
+      .mockResolvedValueOnce(1) // rate-limit EVAL
+      .mockResolvedValueOnce('PONG')
+      .mockResolvedValueOnce('ok');
 
-    const req = { method: 'GET', query: { check: 'redis' } };
+    const req = { method: 'GET', query: { check: 'redis' }, headers: {} };
     const res = createResponse();
 
     await handler(req, res);
@@ -54,16 +57,30 @@ describe('/api/health', () => {
     const body = JSON.parse(res.payload);
     expect(body.checks.redisPing).toBe('ok');
     expect(body.checks.redisEval).toBe('ok');
-    expect(runRedisCommand).toHaveBeenNthCalledWith(1, 'PING');
-    expect(runRedisCommand).toHaveBeenNthCalledWith(2, 'EVAL', "return 'ok'", '0');
+    expect(runRedisCommand).toHaveBeenNthCalledWith(2, 'PING');
+    expect(runRedisCommand).toHaveBeenNthCalledWith(3, 'EVAL', "return 'ok'", '0');
   });
 
-  it('returns 503 when redis checks fail', async () => {
+  it('rate limits redis health checks', async () => {
+    vi.mocked(runRedisCommand).mockResolvedValueOnce(31); // over the health limit
+
+    const req = { method: 'GET', query: { check: 'redis' }, headers: {} };
+    const res = createResponse();
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(429);
+    expect(JSON.parse(res.payload).error).toBe('rate_limited');
+    expect(runRedisCommand).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns 503 with a generic message when redis checks fail', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(runRedisCommand).mockRejectedValue(
-      createSharedAssumptionsError(503, 'redis_quota_or_rate_limited', 'Redis service is rate limited.')
+      createSharedAssumptionsError(503, 'redis_quota_or_rate_limited', 'Upstream detail: quota exhausted.')
     );
 
-    const req = { method: 'GET', query: { check: 'redis' } };
+    const req = { method: 'GET', query: { check: 'redis' }, headers: {} };
     const res = createResponse();
 
     await handler(req, res);
@@ -72,6 +89,8 @@ describe('/api/health', () => {
     const body = JSON.parse(res.payload);
     expect(body.ok).toBe(false);
     expect(body.error).toBe('redis_quota_or_rate_limited');
+    expect(body.message).not.toContain('Upstream detail');
+    expect(errorSpy).toHaveBeenCalledTimes(1);
   });
 
   it('rejects non-GET methods', async () => {

@@ -9,6 +9,7 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
+import { useNotificationActions } from '../contexts/NotificationContext';
 import SpecificDonationModal from '../components/SpecificDonationModal';
 import PageHeader from '../components/shared/PageHeader';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
@@ -46,6 +47,7 @@ const DonationCalculator = () => {
     twoAbove: null,
   });
   const { combinedAssumptions } = useAssumptions();
+  const { showNotification } = useNotificationActions();
 
   // For specific donation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -124,9 +126,24 @@ const DonationCalculator = () => {
     const sortedCategories = [...categoriesData].sort((a, b) => a.name.localeCompare(b.name));
     setCategories(sortedCategories);
 
+    // A corrupted stored value would otherwise crash the calculator on every
+    // visit (refreshing can't fix persisted storage): discard it loudly and
+    // start fresh instead.
+    const readStoredJson = (key) => {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      try {
+        return JSON.parse(raw);
+      } catch (error) {
+        console.error(`Discarding corrupted localStorage value for "${key}"`, error);
+        localStorage.removeItem(key);
+        showNotification('error', 'Saved calculator data was corrupted and has been reset.');
+        return null;
+      }
+    };
+
     // Initialize donations object with saved values or empty values
-    const savedDonations = localStorage.getItem('donationCalculatorValues');
-    const parsedDonations = savedDonations ? JSON.parse(savedDonations) : {};
+    const parsedDonations = readStoredJson('donationCalculatorValues') || {};
 
     const initialDonations = {};
     sortedCategories.forEach((category) => {
@@ -136,11 +153,11 @@ const DonationCalculator = () => {
     setDonations(initialDonations);
 
     // Load specific donations
-    const savedSpecificDonations = localStorage.getItem('specificDonations');
+    const savedSpecificDonations = readStoredJson('specificDonations');
     if (savedSpecificDonations) {
-      setSpecificDonations(JSON.parse(savedSpecificDonations));
+      setSpecificDonations(savedSpecificDonations);
     }
-  }, [combinedAssumptions]);
+  }, [combinedAssumptions, showNotification]);
 
   // Calculate lives saved when donations, specificDonations, or combinedAssumptions change
   useEffect(() => {

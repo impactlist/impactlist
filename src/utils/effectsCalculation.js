@@ -45,14 +45,14 @@ const calculateDiscountWindowSum = (discountRate, windowLength) => {
  * Validate that an effect window is valid given time constraints
  * @param {number} startYear - Start year of the effect
  * @param {number} windowLength - Actual window length after trimming
- * @param {number} originalWindowLength - Original window length before trimming
  * @param {number} timeLimit - Maximum time horizon
  * @returns {boolean} True if window is valid, false otherwise
  */
-const validateEffectWindow = (startYear, windowLength, originalWindowLength, timeLimit) => {
-  // If window was trimmed to zero (but wasn't originally zero), it's invalid
-  // If start is beyond time limit or window is negative, it's invalid
-  return !(startYear >= timeLimit || windowLength < 0 || (windowLength === 0 && originalWindowLength !== 0));
+const validateEffectWindow = (startYear, windowLength, timeLimit) => {
+  // Invalid if the effect starts at/beyond the time horizon, or trimming
+  // produced a non-positive window. (Window lengths are asserted positive at
+  // every entry point, so a zero here always means "fully truncated".)
+  return !(startYear >= timeLimit || windowLength <= 0);
 };
 
 /**
@@ -141,32 +141,19 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   const originalWindowLength = effect.windowLength;
   const actualWindowLength = Math.min(effect.windowLength, globalParams.timeLimit - startYear);
 
-  if (!validateEffectWindow(startYear, actualWindowLength, effect.windowLength, globalParams.timeLimit)) {
+  if (!validateEffectWindow(startYear, actualWindowLength, globalParams.timeLimit)) {
     return Infinity;
   }
 
   // Calculate average discount factor based on actual constrained window
-  let averageDiscountFactor;
   const i = globalParams.discountRate;
-
-  if (effect.windowLength === 0) {
-    // Instantaneous pulse effect
-    averageDiscountFactor = calculateDiscountToTime(i, startYear);
-  } else {
-    // Fixed window effect - use actual constrained window length
-    const discountToWindowStart = calculateDiscountToTime(i, startYear);
-    const windowDiscountFactorSum = calculateDiscountWindowSum(i, actualWindowLength);
-    averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / actualWindowLength;
-  }
+  const discountToWindowStart = calculateDiscountToTime(i, startYear);
+  const windowDiscountFactorSum = calculateDiscountWindowSum(i, actualWindowLength);
+  const averageDiscountFactor = (discountToWindowStart * windowDiscountFactorSum) / actualWindowLength;
 
   const costPerLife = effect.costPerQALY * globalParams.yearsPerLife;
 
-  // Handle pulse effects (windowLength = 0) - no truncation adjustment needed
-  if (effect.windowLength === 0) {
-    return costPerLife / averageDiscountFactor;
-  }
-
-  // For windowed effects: account for truncation by adjusting for rate differences
+  // Account for truncation by adjusting for rate differences
   // Effects with longer original windows have lower rates, so truncation affects them differently
   const qalysDeliveredFraction = actualWindowLength / originalWindowLength;
   const truncationAdjustedCost = costPerLife / qalysDeliveredFraction;
@@ -201,7 +188,7 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
   const startYear = effect.startTime;
   const windowLength = Math.min(effect.windowLength, globalParams.timeLimit - startYear);
 
-  if (!validateEffectWindow(startYear, windowLength, effect.windowLength, globalParams.timeLimit)) {
+  if (!validateEffectWindow(startYear, windowLength, globalParams.timeLimit)) {
     return Infinity;
   }
 
@@ -253,97 +240,69 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
 
   let totalQALYs = 0;
 
-  // Handle instantaneous pulse effect specially
-  if (effect.windowLength === 0) {
-    const absoluteEffectYear = donationYear + startYear;
-    let populationAtEffect;
+  // Handle the effect window by splitting at the current year if needed
 
-    if (absoluteEffectYear <= currentYear) {
-      // Historical: backtrack from current population
-      const yearsAgo = currentYear - absoluteEffectYear;
-      populationAtEffect = P0 / Math.pow(1 + historicalG, yearsAgo);
+  // Calculate historical portion (if effect starts before current year)
+  if (effectStartsInPast) {
+    const historicalDuration = effectEndsInPast ? windowLength : currentYear - effectStartYear;
+    const yearsBackToStart = currentYear - effectStartYear;
+    const populationAtHistStart = P0 / Math.pow(1 + historicalG, yearsBackToStart);
+
+    totalQALYs += calculateWindowQALYs(startYear, historicalDuration, historicalG, populationAtHistStart);
+  }
+
+  // Calculate future portion (if effect extends beyond current year)
+  if (!effectEndsInPast) {
+    let futureStart, futureDuration, populationAtFutureStart;
+
+    if (effectStartsInPast) {
+      // Effect spans the boundary - future portion starts at current year
+      futureStart = yearsFromDonationToNow;
+      futureDuration = effectEndYear - currentYear;
+      populationAtFutureStart = P0; // Current population
     } else {
-      // Future: project from current population
-      const yearsAhead = absoluteEffectYear - currentYear;
+      // Effect entirely in future
+      futureStart = startYear;
+      futureDuration = windowLength;
+      // Project population to effect start
+      const yearsToEffectStart = effectStartYear - currentYear;
       // Assert growth rate is valid
       if (g <= -1) {
         throw new Error(`Population growth rate must be greater than -100% (got ${g * 100}%)`);
       }
-      populationAtEffect = P0 * Math.pow(1 + g, yearsAhead);
+      populationAtFutureStart = P0 * Math.pow(1 + g, yearsToEffectStart);
       // Apply population limit
       if (globalParams.populationLimit > 1) {
-        populationAtEffect = Math.min(populationAtEffect, populationLimitNumerical);
+        populationAtFutureStart = Math.min(populationAtFutureStart, populationLimitNumerical);
       } else if (globalParams.populationLimit < 1) {
-        populationAtEffect = Math.max(populationAtEffect, populationLimitNumerical);
+        populationAtFutureStart = Math.max(populationAtFutureStart, populationLimitNumerical);
       }
     }
 
-    totalQALYs = populationAtEffect * fraction * qalyPerYear * calculateDiscountToTime(r, startYear);
-  } else {
-    // Handle extended window effects by splitting at current year if needed
+    // First, check if the population starts in a "capped" or "floored" state.
+    const startsAboveCeiling =
+      g > 0 && globalParams.populationLimit > 1 && populationAtFutureStart >= populationLimitNumerical;
+    const startsBelowFloor =
+      g < 0 && globalParams.populationLimit < 1 && populationAtFutureStart <= populationLimitNumerical;
 
-    // Calculate historical portion (if effect starts before current year)
-    if (effectStartsInPast) {
-      const historicalDuration = effectEndsInPast ? windowLength : currentYear - effectStartYear;
-      const yearsBackToStart = currentYear - effectStartYear;
-      const populationAtHistStart = P0 / Math.pow(1 + historicalG, yearsBackToStart);
+    if (startsAboveCeiling || startsBelowFloor) {
+      // If starting at/past the limit, the entire future duration has a constant population at the limit.
+      totalQALYs += calculateWindowQALYs(futureStart, futureDuration, 0, populationLimitNumerical);
+    } else {
+      // Otherwise, the population is starting "unconstrained".
+      // Check if it will hit the limit during the effect window.
+      const yearToHitLimit = calculateYearToPopulationLimit(populationAtFutureStart, populationLimitNumerical, g);
 
-      totalQALYs += calculateWindowQALYs(startYear, historicalDuration, historicalG, populationAtHistStart);
-    }
+      if (yearToHitLimit >= 0 && yearToHitLimit < futureDuration) {
+        // It hits the limit. Split the calculation into a growing/shrinking part and a constant part.
+        totalQALYs += calculateWindowQALYs(futureStart, yearToHitLimit, g, populationAtFutureStart);
 
-    // Calculate future portion (if effect extends beyond current year)
-    if (!effectEndsInPast) {
-      let futureStart, futureDuration, populationAtFutureStart;
-
-      if (effectStartsInPast) {
-        // Effect spans the boundary - future portion starts at current year
-        futureStart = yearsFromDonationToNow;
-        futureDuration = effectEndYear - currentYear;
-        populationAtFutureStart = P0; // Current population
+        const remainingDuration = futureDuration - yearToHitLimit;
+        const limitStartTime = futureStart + yearToHitLimit;
+        totalQALYs += calculateWindowQALYs(limitStartTime, remainingDuration, 0, populationLimitNumerical);
       } else {
-        // Effect entirely in future
-        futureStart = startYear;
-        futureDuration = windowLength;
-        // Project population to effect start
-        const yearsToEffectStart = effectStartYear - currentYear;
-        // Assert growth rate is valid
-        if (g <= -1) {
-          throw new Error(`Population growth rate must be greater than -100% (got ${g * 100}%)`);
-        }
-        populationAtFutureStart = P0 * Math.pow(1 + g, yearsToEffectStart);
-        // Apply population limit
-        if (globalParams.populationLimit > 1) {
-          populationAtFutureStart = Math.min(populationAtFutureStart, populationLimitNumerical);
-        } else if (globalParams.populationLimit < 1) {
-          populationAtFutureStart = Math.max(populationAtFutureStart, populationLimitNumerical);
-        }
-      }
-
-      // First, check if the population starts in a "capped" or "floored" state.
-      const startsAboveCeiling =
-        g > 0 && globalParams.populationLimit > 1 && populationAtFutureStart >= populationLimitNumerical;
-      const startsBelowFloor =
-        g < 0 && globalParams.populationLimit < 1 && populationAtFutureStart <= populationLimitNumerical;
-
-      if (startsAboveCeiling || startsBelowFloor) {
-        // If starting at/past the limit, the entire future duration has a constant population at the limit.
-        totalQALYs += calculateWindowQALYs(futureStart, futureDuration, 0, populationLimitNumerical);
-      } else {
-        // Otherwise, the population is starting "unconstrained".
-        // Check if it will hit the limit during the effect window.
-        const yearToHitLimit = calculateYearToPopulationLimit(populationAtFutureStart, populationLimitNumerical, g);
-
-        if (yearToHitLimit >= 0 && yearToHitLimit < futureDuration) {
-          // It hits the limit. Split the calculation into a growing/shrinking part and a constant part.
-          totalQALYs += calculateWindowQALYs(futureStart, yearToHitLimit, g, populationAtFutureStart);
-
-          const remainingDuration = futureDuration - yearToHitLimit;
-          const limitStartTime = futureStart + yearToHitLimit;
-          totalQALYs += calculateWindowQALYs(limitStartTime, remainingDuration, 0, populationLimitNumerical);
-        } else {
-          // It never hits the limit within the window. Calculate with normal growth/shrinkage.
-          totalQALYs += calculateWindowQALYs(futureStart, futureDuration, g, populationAtFutureStart);
-        }
+        // It never hits the limit within the window. Calculate with normal growth/shrinkage.
+        totalQALYs += calculateWindowQALYs(futureStart, futureDuration, g, populationAtFutureStart);
       }
     }
   }

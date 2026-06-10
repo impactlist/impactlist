@@ -14,6 +14,7 @@ import SampleDonationCalculator from '../components/shared/SampleDonationCalcula
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import { donations } from '../data/generatedData';
 import MarkdownContent from '../components/shared/MarkdownContent';
+import NotFound from './NotFound';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();
@@ -29,7 +30,8 @@ const CategoryDetail = () => {
     const category = combinedAssumptions.getCategoryById(categoryId);
 
     if (!category) {
-      throw new Error(`Invalid category ID: ${categoryId}. This category does not exist.`);
+      // Unknown IDs are expected input (stale links); NotFound renders below.
+      return;
     }
 
     // Get cost per life for this category using combined assumptions
@@ -62,6 +64,10 @@ const CategoryDetail = () => {
       content: category.content,
     });
   }, [categoryId, combinedAssumptions]);
+
+  if (!combinedAssumptions.getCategoryById(categoryId)) {
+    return <NotFound message={`No cause area found with ID "${categoryId}".`} />;
+  }
 
   if (!categoryInfo) {
     return <div className="impact-loading">Loading...</div>;

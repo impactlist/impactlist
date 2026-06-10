@@ -23,6 +23,7 @@ import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import NotFound from './NotFound';
 import { CHART_ANIMATION_DURATION, DONATION_FEEDBACK_NOTE } from '../utils/constants';
 
 const DonorDetail = () => {
@@ -51,6 +52,12 @@ const DonorDetail = () => {
       throw new Error('combinedAssumptions is required but does not exist.');
     }
 
+    // Unknown IDs are expected input (stale links); NotFound renders below.
+    const donorData = getDonorById(donorId);
+    if (!donorData) {
+      return;
+    }
+
     // Get full donor statistics
     const stats = calculateDonorStatsFromCombined(combinedAssumptions);
     const currentDonor = stats.find((donor) => donor.id === donorId);
@@ -58,9 +65,6 @@ const DonorDetail = () => {
     if (!currentDonor) {
       throw new Error(`Donor with ID "${donorId}" not found. Please check that this donor exists in the database.`);
     }
-
-    // Find the donor object
-    const donorData = getDonorById(donorId);
 
     setDonorStats({
       ...currentDonor,
@@ -455,6 +459,10 @@ const DonorDetail = () => {
     setTransitionStage('shrinking');
     setChartView(view);
   };
+
+  if (!getDonorById(donorId)) {
+    return <NotFound message={`No donor found with ID "${donorId}".`} />;
+  }
 
   if (!donorStats) {
     return <div className="impact-loading">Loading...</div>;

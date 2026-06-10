@@ -10,9 +10,9 @@ import {
 const ShareAssumptionsModal = ({
   isOpen,
   onClose,
-  assumptions,
+  assumptions = null,
   assumptionName = null,
-  onSaved,
+  onSaved = () => {},
   title = 'Share Assumptions',
   initialDescription = '',
   initialSlug = '',
@@ -263,16 +263,6 @@ ShareAssumptionsModal.propTypes = {
     description: PropTypes.string,
     shareUrl: PropTypes.string,
   }),
-};
-
-ShareAssumptionsModal.defaultProps = {
-  assumptions: null,
-  assumptionName: null,
-  onSaved: () => {},
-  title: 'Share Assumptions',
-  initialDescription: '',
-  initialSlug: '',
-  initialSavedResult: null,
 };
 
 export default ShareAssumptionsModal;

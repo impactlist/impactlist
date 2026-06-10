@@ -5,8 +5,8 @@ const ConfirmActionModal = ({
   isOpen,
   title,
   description,
-  confirmLabel,
-  cancelLabel,
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
   onConfirm,
   onCancel,
   confirmVariant = 'danger',
@@ -61,13 +61,6 @@ ConfirmActionModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   confirmVariant: PropTypes.oneOf(['primary', 'danger']),
   isBusy: PropTypes.bool,
-};
-
-ConfirmActionModal.defaultProps = {
-  confirmLabel: 'Confirm',
-  cancelLabel: 'Cancel',
-  confirmVariant: 'danger',
-  isBusy: false,
 };
 
 export default ConfirmActionModal;

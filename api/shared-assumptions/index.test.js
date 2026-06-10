@@ -51,7 +51,7 @@ describe('/api/shared-assumptions', () => {
   it('rejects invalid assumptions with a 400 before touching storage', async () => {
     const req = {
       method: 'POST',
-      headers: {},
+      headers: { 'content-type': 'application/json' },
       // This shape used to escape validation and blow up as a 500 inside
       // normalization.
       body: { assumptions: { categories: { [firstCategoryId]: { effects: 'ab' } } } },
@@ -74,7 +74,7 @@ describe('/api/shared-assumptions', () => {
 
     const req = {
       method: 'POST',
-      headers: { 'x-forwarded-for': '203.0.113.5' },
+      headers: { 'x-forwarded-for': '203.0.113.5', 'content-type': 'application/json' },
       body: {
         assumptions: { globalParameters: { [firstGlobalParamName]: Number(firstGlobalParamValue) + 1 } },
         name: 'Route test scenario',

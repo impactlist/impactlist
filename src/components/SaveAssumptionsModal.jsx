@@ -193,12 +193,4 @@ SaveAssumptionsModal.propTypes = {
   duplicateOfLabel: PropTypes.string,
 };
 
-SaveAssumptionsModal.defaultProps = {
-  defaultLabel: '',
-  defaultDescription: '',
-  updateExistingLabel: '',
-  canUpdateExisting: false,
-  duplicateOfLabel: null,
-};
-
 export default SaveAssumptionsModal;

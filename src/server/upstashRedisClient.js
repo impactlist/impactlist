@@ -85,6 +85,8 @@ const assertValidPipelineResult = (payload, expectedLength) => {
   });
 };
 
+const REDIS_REQUEST_TIMEOUT_MS = 5000;
+
 export const runRedisPipeline = async (commands) => {
   if (!Array.isArray(commands) || commands.length === 0) {
     throw createSharedAssumptionsError(500, 'redis_invalid_pipeline', 'Redis pipeline requires at least one command.');
@@ -92,11 +94,19 @@ export const runRedisPipeline = async (commands) => {
 
   const { restUrl, restToken } = assertRedisConfigured();
 
-  const response = await globalThis.fetch(`${restUrl}/pipeline`, {
-    method: 'POST',
-    headers: buildHeaders(restToken),
-    body: JSON.stringify(commands),
-  });
+  let response;
+  try {
+    response = await globalThis.fetch(`${restUrl}/pipeline`, {
+      method: 'POST',
+      headers: buildHeaders(restToken),
+      body: JSON.stringify(commands),
+      // A hung upstream would otherwise pin the function until the platform
+      // timeout.
+      signal: globalThis.AbortSignal.timeout(REDIS_REQUEST_TIMEOUT_MS),
+    });
+  } catch (error) {
+    throw createSharedAssumptionsError(503, 'redis_unavailable', `Redis request failed: ${error?.name || 'error'}.`);
+  }
 
   if (!response.ok) {
     const errorBody = await parseErrorBody(response);

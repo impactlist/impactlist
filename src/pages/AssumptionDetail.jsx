@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import MarkdownContent from '../components/shared/MarkdownContent';
+import NotFound from './NotFound';
 import { assumptionsById } from '../data/generatedData';
 
 const AssumptionDetail = () => {
@@ -9,7 +10,7 @@ const AssumptionDetail = () => {
   const assumption = assumptionsById[assumptionId];
 
   if (!assumption) {
-    throw new Error(`Invalid assumption ID: ${assumptionId}. This assumption does not exist.`);
+    return <NotFound message={`No assumption found with ID "${assumptionId}".`} />;
   }
 
   return (

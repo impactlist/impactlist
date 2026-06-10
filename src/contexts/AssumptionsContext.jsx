@@ -41,8 +41,16 @@ export const AssumptionsProvider = ({ children }) => {
     const savedData = globalThis.sessionStorage.getItem(CUSTOM_EFFECTS_DATA_KEY);
     if (!savedData) return null;
 
-    const parsed = JSON.parse(savedData);
-    return normalizeUserAssumptions(parsed, defaultAssumptions);
+    try {
+      return normalizeUserAssumptions(JSON.parse(savedData), defaultAssumptions);
+    } catch (error) {
+      // A corrupted or schema-incompatible stored value would otherwise crash
+      // the whole app on every load of this tab (refreshing can't fix
+      // persisted storage). Discard it loudly and fall back to defaults.
+      console.error('Discarding corrupted stored assumptions', error);
+      globalThis.sessionStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      return null;
+    }
   });
 
   const combinedAssumptions = useMemo(

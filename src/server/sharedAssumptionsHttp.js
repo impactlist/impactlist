@@ -78,12 +78,7 @@ const parseBodyFromStream = (req) =>
     req.on('error', onError);
   });
 
-export const parseJsonBody = async (req) => {
-  if (req.body && typeof req.body === 'object') {
-    return req.body;
-  }
-
-  const raw = await parseBodyFromStream(req);
+const parseJsonString = (raw) => {
   if (!raw) {
     throw createSharedAssumptionsError(400, 'invalid_payload', 'Request body is required.');
   }
@@ -93,6 +88,42 @@ export const parseJsonBody = async (req) => {
   } catch {
     throw createSharedAssumptionsError(400, 'invalid_json', 'Request body must be valid JSON.');
   }
+};
+
+const assertWithinBodyLimit = (sizeBytes) => {
+  if (sizeBytes > MAX_BODY_BYTES) {
+    throw createSharedAssumptionsError(413, 'payload_too_large', 'Request body is too large.');
+  }
+};
+
+export const parseJsonBody = async (req) => {
+  // Require JSON up front. Vercel parses non-JSON content types differently
+  // (e.g. text/plain arrives as a string with its stream already consumed),
+  // and cross-origin "simple" text/plain POSTs shouldn't reach the handlers.
+  const contentType = String(req.headers?.['content-type'] || '');
+  if (!/^application\/json\b/i.test(contentType.trim())) {
+    throw createSharedAssumptionsError(415, 'unsupported_media_type', 'Content-Type must be application/json.');
+  }
+
+  // The platform may deliver the body pre-parsed (object), raw (string or
+  // Buffer), or not at all (a stream, e.g. under `vite`/`vercel dev`). The
+  // stream path enforces MAX_BODY_BYTES as it reads; the pre-parsed paths
+  // must enforce it too, or the cap silently doesn't exist in production.
+  if (typeof req.body === 'string') {
+    assertWithinBodyLimit(textEncoder.encode(req.body).length);
+    return parseJsonString(req.body);
+  }
+  if (globalThis.Buffer?.isBuffer?.(req.body)) {
+    assertWithinBodyLimit(req.body.length);
+    return parseJsonString(req.body.toString('utf8'));
+  }
+  if (req.body && typeof req.body === 'object') {
+    // Re-serialized size approximates wire size closely enough for a cap.
+    assertWithinBodyLimit(textEncoder.encode(JSON.stringify(req.body)).length);
+    return req.body;
+  }
+
+  return parseJsonString(await parseBodyFromStream(req));
 };
 
 const getRequestContext = (req) => {
@@ -105,6 +136,13 @@ const getRequestContext = (req) => {
     url: req.url || 'unknown',
   };
 };
+
+// 5xx details (e.g. upstream Redis response bodies) belong in the logs, not
+// in responses to anonymous clients.
+const publicServerErrorMessage = (status) =>
+  status === 503
+    ? 'Service is temporarily unavailable. Please try again later.'
+    : 'An unexpected server error occurred. Please try again later.';
 
 export const handleApiError = (reqOrRes, resOrError, maybeError) => {
   const hasRequestArg = maybeError !== undefined;
@@ -120,6 +158,17 @@ export const handleApiError = (reqOrRes, resOrError, maybeError) => {
         code: error.code,
         message: error.message,
       });
+
+      sendJson(res, error.status, {
+        error: error.code,
+        message: publicServerErrorMessage(error.status),
+      });
+      return;
+    }
+
+    if (error.status === 429) {
+      // Abuse signal — the production monitoring plan watches for these.
+      console.warn('[shared-assumptions] Rate limited', getRequestContext(req));
     }
 
     sendJson(res, error.status, {

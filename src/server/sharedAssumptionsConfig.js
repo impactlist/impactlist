@@ -11,6 +11,27 @@ export const MIN_SLUG_LENGTH = 3;
 export const RATE_LIMIT_MAX_SAVES = 10;
 export const RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
 
+// Per-scope request limits, enforced per client IP per window. Reads and
+// health checks cost Upstash commands too, so they get (generous) limits to
+// keep anonymous traffic from burning the quota.
+export const RATE_LIMITS = {
+  save: {
+    max: RATE_LIMIT_MAX_SAVES,
+    windowSeconds: RATE_LIMIT_WINDOW_SECONDS,
+    message: `Rate limit exceeded. Max ${RATE_LIMIT_MAX_SAVES} saves per hour.`,
+  },
+  read: {
+    max: 300,
+    windowSeconds: RATE_LIMIT_WINDOW_SECONDS,
+    message: 'Too many requests. Please try again later.',
+  },
+  health: {
+    max: 30,
+    windowSeconds: RATE_LIMIT_WINDOW_SECONDS,
+    message: 'Too many requests. Please try again later.',
+  },
+};
+
 export const SLUG_REGEX = /^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/;
 
 export const RESERVED_SLUGS = new Set([
@@ -57,4 +78,4 @@ export const getAppDataVersion = () => {
 
 export const buildSnapshotKey = (id) => `assumptions:snapshot:${id}`;
 export const buildSlugKey = (slug) => `assumptions:slug:${slug}`;
-export const buildRateLimitKey = (clientIp) => `assumptions:ratelimit:${clientIp || 'unknown'}`;
+export const buildRateLimitKey = (scope, clientIp) => `assumptions:ratelimit:${scope}:${clientIp || 'unknown'}`;

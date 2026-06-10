@@ -74,35 +74,48 @@ export const calculateEffectCostPerLife = (effect, globalParameters, previewYear
     return Infinity;
   }
 
-  try {
-    const cleanedEffect = cleanEffectForCalculation(effect);
+  const cleanedEffect = cleanEffectForCalculation(effect);
 
-    // Check if effect is applicable to preview year
-    if (effect.validTimeInterval) {
-      const [start, end] = effect.validTimeInterval;
-      // null start means "from beginning of time"
-      if (start !== null && previewYear < start) return Infinity;
-      // null end means "to present/future"
-      if (end !== null && previewYear > end) return Infinity;
-    }
+  // Check if effect is applicable to preview year
+  if (effect.validTimeInterval) {
+    const [start, end] = effect.validTimeInterval;
+    // null start means "from beginning of time"
+    if (start !== null && previewYear < start) return Infinity;
+    // null end means "to present/future"
+    if (end !== null && previewYear > end) return Infinity;
+  }
 
-    // Check for invalid values that would cause calculation errors
-    const effectType = getEffectType(cleanedEffect);
-    if (effectType === 'qaly' && (cleanedEffect.costPerQALY === 0 || cleanedEffect.costPerQALY === undefined)) {
-      return Infinity;
-    }
-    if (
-      effectType === 'population' &&
-      (cleanedEffect.costPerMicroprobability === 0 || cleanedEffect.costPerMicroprobability === undefined)
-    ) {
-      return Infinity;
-    }
-
-    return effectToCostPerLife(cleanedEffect, globalParameters, previewYear);
-  } catch {
-    // During editing, return Infinity for invalid calculations
+  // While the user is typing, fields can hold partial or unparseable input
+  // (cleaned to 0 or left as strings) and zero/negative values the
+  // calculation layer rejects. Pre-screen those expected states and render
+  // them as Infinity ("N/A"); anything that throws past this point is a real
+  // bug and must surface rather than be swallowed.
+  const fieldNames = getEffectFieldNames(cleanedEffect);
+  if (fieldNames.length === 0) {
+    // Neither costPerQALY nor costPerMicroprobability is set.
     return Infinity;
   }
+  const hasNonNumericField = fieldNames.some(
+    (field) => typeof cleanedEffect[field] !== 'number' || !Number.isFinite(cleanedEffect[field])
+  );
+  if (hasNonNumericField || cleanedEffect.startTime < 0 || cleanedEffect.windowLength <= 0) {
+    return Infinity;
+  }
+
+  const effectType = getEffectType(cleanedEffect);
+  if (effectType === 'qaly' && cleanedEffect.costPerQALY === 0) {
+    return Infinity;
+  }
+  if (
+    effectType === 'population' &&
+    (cleanedEffect.costPerMicroprobability === 0 ||
+      cleanedEffect.populationFractionAffected <= 0 ||
+      cleanedEffect.qalyImprovementPerYear === 0)
+  ) {
+    return Infinity;
+  }
+
+  return effectToCostPerLife(cleanedEffect, globalParameters, previewYear);
 };
 
 /**

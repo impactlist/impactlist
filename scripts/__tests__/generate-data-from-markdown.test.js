@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -18,7 +19,10 @@ const SHARED_MODULES = ['src/utils/dataValidation.js', 'src/utils/constants.js',
 
 const setupWorkspaceFromFixture = (fixtureName) => {
   const fixtureContentDir = path.join(fixturesRoot, fixtureName, 'content');
-  const tempDir = fs.mkdtempSync(path.join(repoRoot, '.tmp-generate-data-'));
+  // The OS temp dir, NOT the repo root: dev-server file watchers (vite,
+  // vercel dev) watch the repo recursively, and workspaces flickering in and
+  // out of existence mid-run crash their directory scans with ENOENT.
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'impactlist-generate-data-'));
   tempWorkspaces.push(tempDir);
 
   fs.cpSync(fixtureContentDir, path.join(tempDir, 'content'), { recursive: true });
@@ -29,6 +33,11 @@ const setupWorkspaceFromFixture = (fixtureName) => {
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.copyFileSync(path.join(repoRoot, modulePath), target);
   }
+  // The copied script resolves its bare imports (gray-matter, glob) through
+  // node's upward node_modules walk, which finds nothing under the OS temp
+  // dir — link the repo's install into the workspace. afterEach's rmSync
+  // unlinks the symlink without following it.
+  fs.symlinkSync(path.join(repoRoot, 'node_modules'), path.join(tempDir, 'node_modules'), 'dir');
 
   return tempDir;
 };
@@ -43,9 +52,10 @@ const runGenerator = (workspaceDir) => {
 };
 
 const loadGeneratedModule = async (workspaceDir) => {
+  // No cache-busting query needed: every workspace path is unique (mkdtemp),
+  // and vite-node mangles `?t=` queries on files outside the project root.
   const outputPath = path.join(workspaceDir, 'src', 'data', 'generatedData.js');
-  const moduleUrl = `${pathToFileURL(outputPath).href}?t=${Date.now()}-${Math.random()}`;
-  return import(moduleUrl);
+  return import(pathToFileURL(outputPath).href);
 };
 
 afterEach(() => {

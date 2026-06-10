@@ -11,6 +11,14 @@ export default defineConfig({
     setupFiles: './src/test-setup.js',
     css: true,
     exclude: [...configDefaults.exclude, 'e2e/**', '.claude/**', '.worktrees/**'],
+    server: {
+      deps: {
+        // The generator pipeline tests import the module their subprocess
+        // wrote into an OS temp workspace; vite-node can't transform files
+        // outside the project root, so hand these to native import().
+        external: [/impactlist-generate-data-/],
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

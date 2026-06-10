@@ -10,6 +10,7 @@ import {
   getAppDataVersion,
 } from './sharedAssumptionsConfig.js';
 import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
+import { validateStoredAssumptions } from './sharedAssumptionsValidation.js';
 import { runRedisCommand, runRedisPipeline } from './upstashRedisClient.js';
 
 const ID_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -166,6 +167,15 @@ export const getSharedSnapshot = async (reference) => {
     parsed = JSON.parse(rawSnapshot);
   } catch {
     throw createSharedAssumptionsError(500, 'invalid_snapshot', 'Stored snapshot could not be parsed.');
+  }
+
+  // Never serve a snapshot the current schema can't represent: it predates
+  // write-side validation or the data schema has drifted since it was stored.
+  // The 500 is logged by handleApiError, so poison snapshots surface in logs.
+  try {
+    validateStoredAssumptions(parsed.assumptions);
+  } catch (error) {
+    throw createSharedAssumptionsError(500, 'invalid_snapshot', `Stored snapshot failed validation: ${error.message}`);
   }
 
   return {

@@ -148,6 +148,34 @@ describe('sharedAssumptionsService', () => {
     await expect(getSharedSnapshot('missing')).rejects.toBeInstanceOf(SharedAssumptionsError);
   });
 
+  it('refuses to serve stored snapshots whose assumptions fail validation', async () => {
+    vi.mocked(runRedisPipeline).mockResolvedValueOnce([
+      null,
+      JSON.stringify({
+        createdAt: '2026-02-13T00:00:00.000Z',
+        assumptions: { globalParameters: { timeLimit: 'poison' } },
+      }),
+    ]);
+
+    await expect(getSharedSnapshot('abc123def456')).rejects.toMatchObject({
+      status: 500,
+      code: 'invalid_snapshot',
+      message: expect.stringContaining('failed validation'),
+    });
+  });
+
+  it('refuses to serve stored snapshots with missing assumptions', async () => {
+    vi.mocked(runRedisPipeline).mockResolvedValueOnce([
+      null,
+      JSON.stringify({ createdAt: '2026-02-13T00:00:00.000Z' }),
+    ]);
+
+    await expect(getSharedSnapshot('abc123def456')).rejects.toMatchObject({
+      status: 500,
+      code: 'invalid_snapshot',
+    });
+  });
+
   it('extractClientIp prefers first forwarded IP and falls back to x-real-ip', () => {
     expect(
       extractClientIp({

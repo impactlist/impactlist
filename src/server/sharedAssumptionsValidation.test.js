@@ -93,3 +93,208 @@ describe('sharedAssumptionsValidation', () => {
     ).toThrowError(SharedAssumptionsError);
   });
 });
+
+describe('assumptions shape validation', () => {
+  const [firstCategoryId, firstCategory] = Object.entries(defaults.categories)[0];
+  const firstEffect = firstCategory.effects[0];
+  const numericEffectField = Object.keys(firstEffect).find((field) => typeof firstEffect[field] === 'number');
+
+  const [recipientId, defaultRecipient] = Object.entries(defaults.recipients).find(
+    ([, recipient]) => recipient.categories && Object.keys(recipient.categories).length > 0
+  );
+  const recipientCategoryId = Object.keys(defaultRecipient.categories)[0];
+  const recipientBaseEffect = defaults.categories[recipientCategoryId].effects[0];
+  const recipientNumericField = Object.keys(recipientBaseEffect).find(
+    (field) => typeof recipientBaseEffect[field] === 'number'
+  );
+  const unrelatedCategoryId = Object.keys(defaults.categories).find(
+    (categoryId) => !Object.hasOwn(defaultRecipient.categories, categoryId)
+  );
+
+  const expectInvalidAssumptions = (assumptions, messageFragment) => {
+    try {
+      validateCreatePayload({ assumptions });
+      throw new Error('Expected assumptions to be rejected');
+    } catch (error) {
+      expect(error).toBeInstanceOf(SharedAssumptionsError);
+      expect(error.status).toBe(400);
+      expect(error.code).toBe('invalid_assumptions');
+      expect(error.message).toContain(messageFragment);
+    }
+  };
+
+  it('accepts a fully-loaded valid payload, including negative values', () => {
+    const result = validateCreatePayload({
+      assumptions: {
+        globalParameters: { [firstGlobalParamName]: Number(firstGlobalParamValue) + 1 },
+        categories: {
+          [firstCategoryId]: {
+            effects: [{ effectId: firstEffect.effectId, [numericEffectField]: -123.45, disabled: false }],
+          },
+        },
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [recipientCategoryId]: {
+                effects: [
+                  {
+                    effectId: recipientBaseEffect.effectId,
+                    overrides: { [recipientNumericField]: -5 },
+                    multipliers: { [recipientNumericField]: 2 },
+                    disabled: true,
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    });
+
+    expect(result.assumptions.globalParameters[firstGlobalParamName]).toBe(Number(firstGlobalParamValue) + 1);
+    expect(result.assumptions.categories[firstCategoryId].effects[0][numericEffectField]).toBe(-123.45);
+    expect(result.assumptions.recipients[recipientId].categories[recipientCategoryId].effects[0].overrides).toEqual({
+      [recipientNumericField]: -5,
+    });
+  });
+
+  it('rejects non-array effects with a 400 instead of storing them or crashing', () => {
+    expectInvalidAssumptions({ categories: { [firstCategoryId]: { effects: {} } } }, 'effects must be an array.');
+    // This shape used to reach effects.splice and blow up as a 500.
+    expectInvalidAssumptions({ categories: { [firstCategoryId]: { effects: 'ab' } } }, 'effects must be an array.');
+  });
+
+  it('rejects non-numeric global parameter values', () => {
+    expectInvalidAssumptions({ globalParameters: { [firstGlobalParamName]: 'abc' } }, 'must be a finite number.');
+    expectInvalidAssumptions({ globalParameters: { [firstGlobalParamName]: null } }, 'must be a finite number.');
+  });
+
+  it('rejects unknown global parameters, categories, recipients, and top-level keys', () => {
+    expectInvalidAssumptions({ globalParameters: { madeUpParameter: 1 } }, 'Unknown global parameter');
+    expectInvalidAssumptions({ categories: { madeUpCategory: { effects: [] } } }, 'Unknown category');
+    expectInvalidAssumptions({ recipients: { madeUpRecipient: { categories: {} } } }, 'Unknown recipient');
+    expectInvalidAssumptions({ madeUpSection: {} }, 'Unknown key');
+  });
+
+  it('rejects unknown effect ids and unknown or non-numeric effect fields', () => {
+    expectInvalidAssumptions(
+      { categories: { [firstCategoryId]: { effects: [{ effectId: 'made-up-effect' }] } } },
+      'unknown effectId'
+    );
+    expectInvalidAssumptions(
+      { categories: { [firstCategoryId]: { effects: [{ effectId: firstEffect.effectId, madeUpField: 1 }] } } },
+      'unknown effect field'
+    );
+    expectInvalidAssumptions(
+      {
+        categories: {
+          [firstCategoryId]: { effects: [{ effectId: firstEffect.effectId, [numericEffectField]: 'NaN-ish' }] },
+        },
+      },
+      'must be a finite number.'
+    );
+  });
+
+  it('rejects duplicate effect ids and non-boolean disabled flags', () => {
+    expectInvalidAssumptions(
+      {
+        categories: {
+          [firstCategoryId]: {
+            effects: [
+              { effectId: firstEffect.effectId, [numericEffectField]: 1 },
+              { effectId: firstEffect.effectId, [numericEffectField]: 2 },
+            ],
+          },
+        },
+      },
+      'duplicates effectId'
+    );
+    expectInvalidAssumptions(
+      { categories: { [firstCategoryId]: { effects: [{ effectId: firstEffect.effectId, disabled: 'yes' }] } } },
+      'disabled must be a boolean.'
+    );
+  });
+
+  it('rejects recipient categories the recipient is not associated with', () => {
+    expectInvalidAssumptions(
+      {
+        recipients: {
+          [recipientId]: { categories: { [unrelatedCategoryId]: { effects: [] } } },
+        },
+      },
+      'not associated with recipient'
+    );
+  });
+
+  it('rejects recipient effect fields outside overrides/multipliers/disabled', () => {
+    expectInvalidAssumptions(
+      {
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [recipientCategoryId]: {
+                effects: [{ effectId: recipientBaseEffect.effectId, [recipientNumericField]: 5 }],
+              },
+            },
+          },
+        },
+      },
+      "Recipient effects support 'overrides', 'multipliers', and 'disabled'."
+    );
+    expectInvalidAssumptions(
+      {
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [recipientCategoryId]: {
+                effects: [{ effectId: recipientBaseEffect.effectId, overrides: { madeUpField: 5 } }],
+              },
+            },
+          },
+        },
+      },
+      'unknown effect field'
+    );
+    expectInvalidAssumptions(
+      {
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [recipientCategoryId]: {
+                effects: [{ effectId: recipientBaseEffect.effectId, overrides: { [recipientNumericField]: 'x' } }],
+              },
+            },
+          },
+        },
+      },
+      'must be a finite number.'
+    );
+  });
+
+  it('rejects __proto__ and other prototype-rewiring keys anywhere in the payload', () => {
+    expectInvalidAssumptions({ globalParameters: JSON.parse('{"__proto__": 1}') }, 'Forbidden key');
+    expectInvalidAssumptions(
+      { categories: { [firstCategoryId]: { effects: [JSON.parse('{"effectId": "x", "constructor": 1}')] } } },
+      'Forbidden key'
+    );
+    expectInvalidAssumptions(
+      {
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [recipientCategoryId]: {
+                effects: [
+                  {
+                    effectId: recipientBaseEffect.effectId,
+                    overrides: JSON.parse('{"prototype": 2}'),
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+      'Forbidden key'
+    );
+  });
+});

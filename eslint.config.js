@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import prettierPlugin from 'eslint-plugin-prettier';
-//import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import { FlatCompat } from '@eslint/eslintrc';
 
 const compat = new FlatCompat();
@@ -35,7 +35,7 @@ export default [
   js.configs.recommended,
   ...compat.extends('plugin:react/recommended'),
   ...compat.extends('plugin:react-hooks/recommended'),
-  // ...compat.extends('plugin:jsx-a11y/recommended'),
+  ...compat.extends('plugin:jsx-a11y/recommended'),
   ...compat.extends('plugin:prettier/recommended'),
   {
     files: ['**/*.js', '**/*.jsx'],
@@ -43,7 +43,7 @@ export default [
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       prettier: prettierPlugin,
-      //'jsx-a11y': jsxA11yPlugin,
+      'jsx-a11y': jsxA11yPlugin,
     },
     languageOptions: {
       ecmaVersion: 2022,

@@ -4,7 +4,9 @@ globs:
 alwaysApply: true
 ---
 
-# Your rule content
+# Impact List rules
+
+For project structure, commands, architecture, and per-directory gotchas, read `AGENTS.md` at the repo root and the AGENTS.md inside whichever directory you're working in. This file only adds Cursor-specific behavioral rules.
 
 ## Most Critical Instructions
 - Never try to run the web server. I'm already running it. If you want to test your changes just ask me of it works.

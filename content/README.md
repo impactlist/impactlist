@@ -4,10 +4,12 @@ This directory contains all the data for the Impact List application in a mainta
 
 ## Directory Structure
 
-- `/causes/`: Contains one file per effectiveness cause with its name and effects configuration
+- `/categories/`: Contains one file per effectiveness cause area with its name and effects configuration
 - `/donors/`: Contains one file per donor with their information
 - `/recipients/`: Contains one file per recipient organization with their information and category allocations
 - `/donations/`: Contains files that list donation events, typically organized by donor name, though any donation can appear in any file
+- `/assumptions/`: Contains one file per global assumption with its written justification (rendered on /assumption/:id pages)
+- `/assumptions/profiles/`: Curated assumption profiles (named bundles of overrides users can load; strictly validated at build time)
 - `globalParameters.md`: Contains global simulation parameters
 
 ## File Formats

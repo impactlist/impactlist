@@ -21,7 +21,8 @@ Join [the discord](https://discord.gg/6GNre8U2ta) to learn more about these and 
 - React
 - Tailwind CSS
 - Vite
-- Vitest
+- Vitest (unit/integration tests)
+- Playwright (end-to-end tests)
 
 ## Local development
 
@@ -96,8 +97,12 @@ Test Scripts Available:
 
 - npm run test - Run tests in watch mode
 - npm run test:run - Run once and exit
-- npm run test:coverage - Generate coverage report
+- npm run test:coverage - Generate coverage report (enforces 50% coverage floors)
 - npm run test:watch - Explicit watch mode
+- npm run test:e2e - Playwright end-to-end tests (builds the app and serves a preview automatically)
+- npm run test:e2e:headed - Same, with a visible browser
+
+CI (GitHub Actions) runs lint, the coverage-gated unit suite, and the production build on every push/PR; the e2e suite runs nightly.
 
 ## Shared Assumptions Redis Setup Across Branches/Worktrees
 
@@ -125,6 +130,8 @@ Each worktree can be linked to a different Vercel project, and `vercel pull` ove
    - run `vercel dev`
      - `vercel dev --listen 3001`
 
+   See `.env.example` for the environment variables the shared-assumptions API reads (and a spelling gotcha to avoid).
+
 ### Quick checklist per branch/worktree
 
 1. Check linked project:
@@ -141,9 +148,9 @@ Each worktree can be linked to a different Vercel project, and `vercel pull` ove
    - `vercel pull --yes --environment=development`
 
 4. Verify Redis is configured:
-   - `curl http://localhost:3003/api/health?check=redis`
+   - `curl http://localhost:3001/api/health?check=redis`
    - Response should indicate Redis checks are OK.
 
 ## Other
 
-When running 'npm audit fix', and '--omit=dev' to analyze only the dependencies in the deployed app/runtime.
+When running `npm audit` or `npm audit fix`, add `--omit=dev` to analyze only the dependencies in the deployed app/runtime. (Note: `npm audit fix --omit=dev` prunes devDependencies from node_modules — run a plain `npm install` afterwards to restore them.)

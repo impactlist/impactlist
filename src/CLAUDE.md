@@ -38,6 +38,6 @@ Fail hard and loudly on unexpected states (project rule). The deliberate excepti
 ## Workflow gotchas
 
 - Fresh clone: `npm run generate-data` BEFORE `npm run dev` or `npm test` — `src/data/generatedData.js` is gitignored and everything imports it. Editing `content/` does nothing until you regenerate.
-- `vitest.config.js` and `vite.config.js` are separate; vitest defines an `@ -> src` alias that vite does NOT — don't use it in app code.
+- Vitest configuration lives under the `test` key in `vite.config.js` (there is no separate `vitest.config.js`), and there is intentionally no test-only path alias — import paths must work identically for tests and builds.
 - CI (`.github/workflows/ci.yml`): generate → lint → coverage-gated tests (50% floors) → build.
 - The prioritized improvement backlog lives in `docs/CodebaseReview-2026-06-10.md`; check it before starting refactors — several known issues are deliberately deferred to numbered items there.

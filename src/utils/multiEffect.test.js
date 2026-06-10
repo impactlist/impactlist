@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateCostPerLife } from '../src/utils/effectsCalculation';
+import { calculateCostPerLife } from './effectsCalculation';
 
 const globalParams = {
   yearsPerLife: 80,

@@ -1,8 +1,10 @@
 # Gemini.md
 
-This file provides guidance to Gemini CLU when working with code in this repository.
+This file provides guidance to Gemini CLI when working with code in this repository.
 
 If you are Claude Code, ignore this file -- it's for another coding agent.
+
+For project structure, commands, architecture, and per-directory gotchas, read `AGENTS.md` at the repo root and the AGENTS.md inside whichever directory you're working in (they're paired with identical CLAUDE.md files). This file only adds Gemini-specific behavioral rules.
 
 ## Most Critical Instructions
 

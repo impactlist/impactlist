@@ -37,3 +37,9 @@ test-results/
 .worktrees/
 .vercel/
 .env*.local
+
+# Local agent settings
+.claude/settings.local.json
+
+# Generator test temp workspaces
+.tmp-generate-data-*/

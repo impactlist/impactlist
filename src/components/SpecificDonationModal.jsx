@@ -19,12 +19,12 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const [isExistingRecipient, setIsExistingRecipient] = useState(true);
 
   // Helper function to get a valid year for calculations
-  const getValidYearForCalculation = () => {
+  const getValidYearForCalculation = useCallback(() => {
     const yearNum = parseInt(donationYear, 10);
     const currentYear = getCurrentYear();
     // Use current year as fallback if year is invalid or in the future
     return !donationYear || isNaN(yearNum) || yearNum < 1900 || yearNum > currentYear ? currentYear : yearNum;
-  };
+  }, [donationYear]);
 
   // References for search input and dropdown
   const searchInputRef = useRef(null);
@@ -51,24 +51,19 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       .slice(0, 10); // Limit to first 10 results
   }, [searchTerm, allRecipients, showDropdown]);
 
+  // Callers pass the year explicitly (usually getValidYearForCalculation()).
+  // Deliberately NOT dependent on the year field state: this callback is a
+  // dependency of the init effect below, and an identity change mid-entry
+  // would re-run resetForm and wipe the user's in-progress form.
   const getDefaultCustomCostPerLife = useCallback(
-    (categoryId, year = null) => {
+    (categoryId, year) => {
       if (!categoryId) {
         return '';
       }
 
-      // `year` is passed explicitly when hydrating an existing saved donation.
-      // During normal modal interaction, we derive it from the current year field state.
-      const parsedDonationYear = parseInt(donationYear, 10);
-      const fallbackYear =
-        !donationYear || isNaN(parsedDonationYear) || parsedDonationYear < 1900 || parsedDonationYear > getCurrentYear()
-          ? getCurrentYear()
-          : parsedDonationYear;
-      const yearToUse = year ?? fallbackYear;
-
-      return String(getCostPerLifeFromCombined(combinedAssumptions, categoryId, yearToUse));
+      return String(getCostPerLifeFromCombined(combinedAssumptions, categoryId, year));
     },
-    [combinedAssumptions, donationYear]
+    [combinedAssumptions]
   );
 
   // Initialize with editing data if provided
@@ -143,8 +138,14 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       return;
     }
 
-    setCustomCostPerLife(getDefaultCustomCostPerLife(selectedCategory));
-  }, [getDefaultCustomCostPerLife, hasEditedCustomCostPerLife, isExistingRecipient, selectedCategory]);
+    setCustomCostPerLife(getDefaultCustomCostPerLife(selectedCategory, getValidYearForCalculation()));
+  }, [
+    getDefaultCustomCostPerLife,
+    getValidYearForCalculation,
+    hasEditedCustomCostPerLife,
+    isExistingRecipient,
+    selectedCategory,
+  ]);
 
   const handleSelectRecipient = (recipient) => {
     setSelectedRecipient(recipient);
@@ -452,6 +453,12 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                           role="option"
                           aria-selected={index === highlightedIndex}
                           onClick={() => handleSelectRecipient(recipient)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault();
+                              handleSelectRecipient(recipient);
+                            }
+                          }}
                           className={`cursor-pointer px-4 py-2 recipient-item ${
                             index === highlightedIndex ? 'bg-indigo-100 text-indigo-900' : 'hover:bg-indigo-50'
                           }`}
@@ -506,7 +513,9 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       const nextCategory = e.target.value;
                       setSelectedCategory(nextCategory);
                       setHasEditedCustomCostPerLife(false);
-                      setCustomCostPerLife(nextCategory ? getDefaultCustomCostPerLife(nextCategory) : '');
+                      setCustomCostPerLife(
+                        nextCategory ? getDefaultCustomCostPerLife(nextCategory, getValidYearForCalculation()) : ''
+                      );
                     }}
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                       errors.category ? 'border-red-300' : 'border-gray-300'
@@ -557,7 +566,9 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       setHasEditedCustomCostPerLife(true);
                     }}
                     placeholder={
-                      selectedCategory ? formatWithCommas(getDefaultCustomCostPerLife(selectedCategory)) : '0'
+                      selectedCategory
+                        ? formatWithCommas(getDefaultCustomCostPerLife(selectedCategory, getValidYearForCalculation()))
+                        : '0'
                     }
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                       errors.customCostPerLife ? 'border-red-300' : 'border-gray-300'

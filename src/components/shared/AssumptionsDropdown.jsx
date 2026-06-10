@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import PropTypes from 'prop-types';
 import IconActionButton from './IconActionButton';
@@ -71,6 +71,16 @@ const AssumptionsDropdown = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editingSurface, setEditingSurface] = useState(null);
+  const renameInputRef = useRef(null);
+
+  // Focus the rename input when inline editing starts. (Imperative focus
+  // after an explicit user action, rather than the autoFocus attribute,
+  // which jsx-a11y rejects because it can steal focus on page load.)
+  useEffect(() => {
+    if (editingId !== null) {
+      renameInputRef.current?.focus();
+    }
+  }, [editingId, editingSurface]);
   const [editLabel, setEditLabel] = useState('');
   const [renameError, setRenameError] = useState('');
   const labelId = useId();
@@ -278,6 +288,9 @@ const AssumptionsDropdown = ({
       className={`saved-assumptions-panel ${inlineLabel ? 'saved-assumptions-panel--inline' : ''}`.trim()}
       ref={dropdownRef}
     >
+      {/* The wrapper click only widens the pointer target; the inner
+          summary-trigger <button> provides the keyboard/AT path. */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div
         className="assumptions-entry assumptions-entry--compact saved-assumptions-panel__summary"
         data-active={selectedEntryUiState.isActive}
@@ -305,7 +318,7 @@ const AssumptionsDropdown = ({
                   }
                 }}
                 className="impact-field__input h-8 rounded-md px-2 text-sm"
-                autoFocus
+                ref={renameInputRef}
               />
               <button type="button" onClick={commitRename} className="impact-btn impact-btn--secondary impact-btn--xs">
                 Save
@@ -382,6 +395,9 @@ const AssumptionsDropdown = ({
               });
 
               return (
+                /* The row click only widens the pointer target; the inner
+                   load-target <button> provides the keyboard/AT path. */
+                // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                 <div
                   key={entry.id}
                   className="assumptions-entry assumptions-entry--compact saved-assumptions-panel__menu-entry"
@@ -410,7 +426,7 @@ const AssumptionsDropdown = ({
                             }
                           }}
                           className="impact-field__input h-8 rounded-md px-2 text-sm"
-                          autoFocus
+                          ref={renameInputRef}
                         />
                         <button
                           type="button"

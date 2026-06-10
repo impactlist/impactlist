@@ -47,13 +47,13 @@ const getPersistedCustomEffectsData = () => {
 
 const openAssumptionsLibraryMenu = async (user) => {
   const section = screen.getByText('Active Assumptions').closest('section');
-  const openMenu = section.querySelector('[role="menu"]');
+  const openMenu = section.querySelector('.saved-assumptions-panel__menu');
 
   if (!openMenu) {
     await user.click(screen.getByRole('button', { name: /Select assumptions set/i }));
   }
 
-  return section.querySelector('[role="menu"]');
+  return section.querySelector('.saved-assumptions-panel__menu');
 };
 
 const getActiveAssumptionsSummary = () =>

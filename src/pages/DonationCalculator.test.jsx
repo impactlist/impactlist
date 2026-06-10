@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import DonationCalculator from './DonationCalculator';
@@ -78,6 +78,49 @@ describe('DonationCalculator persistence', () => {
     renderCalculator();
 
     expect(await screen.findByText('My Custom Charity')).toBeInTheDocument();
+  });
+
+  it('asks for confirmation before clearing all specific donations', async () => {
+    localStorage.setItem(
+      'specificDonations',
+      JSON.stringify([
+        {
+          id: 'test-donation-1',
+          recipientName: 'My Custom Charity',
+          amount: 5000,
+          date: '2024',
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: 1000,
+        },
+      ])
+    );
+
+    renderCalculator();
+    expect(await screen.findByText('My Custom Charity')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /clear all/i }));
+    expect(await screen.findByText('Clear all specific donations?')).toBeInTheDocument();
+
+    // Cancel keeps the donation (both in the UI and in storage).
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => {
+      expect(screen.queryByText('Clear all specific donations?')).not.toBeInTheDocument();
+    });
+    expect(screen.getByText('My Custom Charity')).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem('specificDonations'))).toHaveLength(1);
+
+    // Confirming clears the table and persists the empty list. (The dialog's
+    // confirm button shares its label with the table's trigger, so scope to
+    // the dialog.)
+    fireEvent.click(screen.getByRole('button', { name: /clear all/i }));
+    const dialog = await screen.findByRole('dialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Clear All' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('My Custom Charity')).not.toBeInTheDocument();
+    });
+    expect(JSON.parse(localStorage.getItem('specificDonations'))).toEqual([]);
   });
 
   it('discards corrupted category values, clears the key, and notifies instead of crashing', async () => {

@@ -11,6 +11,7 @@ import { getCurrentYear } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
 import SpecificDonationModal from '../components/SpecificDonationModal';
+import ConfirmActionModal from '../components/ConfirmActionModal';
 import PageHeader from '../components/shared/PageHeader';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 
@@ -168,6 +169,7 @@ const DonationCalculator = () => {
   // For specific donation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDonation, setEditingDonation] = useState(null);
+  const [isClearAllConfirmOpen, setIsClearAllConfirmOpen] = useState(false);
 
   // Notify (once, post-render) if the load discarded corrupted storage.
   useEffect(() => {
@@ -301,6 +303,12 @@ const DonationCalculator = () => {
     setSpecificDonations((prev) => prev.filter((item) => item.id !== id));
   };
 
+  // Clearing every specific donation is destructive — confirm first.
+  const handleConfirmClearAll = () => {
+    setSpecificDonations([]);
+    setIsClearAllConfirmOpen(false);
+  };
+
   // Get cost per life for a specific donation (for display in the table)
   const getCostPerLifeForSpecificDonation = (donation) => {
     const donationYear = getDonationYear(donation);
@@ -376,11 +384,21 @@ const DonationCalculator = () => {
             onAddClick={() => openDonationModal()}
             onEditClick={(donation) => openDonationModal(donation)}
             onDeleteClick={handleDeleteSpecificDonation}
+            onClearAll={() => setIsClearAllConfirmOpen(true)}
             calculateLivesSaved={calculateLivesSavedForSpecificDonation}
             getCostPerLife={getCostPerLifeForSpecificDonation}
             className="mt-8"
           />
         </motion.div>
+
+        <ConfirmActionModal
+          isOpen={isClearAllConfirmOpen}
+          title="Clear all specific donations?"
+          description={`This removes ${specificDonations.length === 1 ? 'your 1 specific donation' : `all ${specificDonations.length} specific donations`} from the calculator. This cannot be undone.`}
+          confirmLabel="Clear All"
+          onConfirm={handleConfirmClearAll}
+          onCancel={() => setIsClearAllConfirmOpen(false)}
+        />
 
         {/* Specific Donation Modal */}
         <AnimatePresence>

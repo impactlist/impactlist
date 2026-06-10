@@ -349,11 +349,14 @@ const SortableTable = ({
               className={`${getColumnPadding(column.key)} group py-4 text-left ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
             >
               <div className="impact-table__header-inner">
+                {/* Disabled (not aria-hidden) when the sticky clone overlays
+                    this header: the column must KEEP its accessible name for
+                    screen-reader table navigation; only the obscured tab stop
+                    goes away. */}
                 <button
                   type="button"
                   className="impact-table__sort-button"
                   disabled={!isColumnInteractive}
-                  aria-hidden={!isColumnInteractive}
                   aria-label={`Sort by ${column.label || column.key}`}
                   onClick={() => handleSort(column.key)}
                 >
@@ -411,7 +414,9 @@ const SortableTable = ({
       <div className="impact-table-sticky-rail" data-visible={showStickyHeader ? 'true' : 'false'}>
         <div className="impact-table-sticky-viewport">
           <div ref={stickyTrackRef} className="impact-table-sticky-track" style={stickyTrackStyle}>
-            <table className="impact-table impact-table--sticky" role="presentation" aria-hidden={!showStickyHeader}>
+            {/* Purely visual duplicate of the primary header — always hidden
+                from assistive tech (the primary table keeps the semantics). */}
+            <table className="impact-table impact-table--sticky" role="presentation" aria-hidden={true}>
               {renderColGroup()}
               {renderTableHeader('sticky', showStickyHeader)}
             </table>

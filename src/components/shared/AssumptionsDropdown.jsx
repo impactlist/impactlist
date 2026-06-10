@@ -103,6 +103,10 @@ const AssumptionsDropdown = ({
     [entries, selectedEntry.id]
   );
 
+  const summaryTriggerRef = useRef(null);
+  // Set before opening the menu via keyboard; consumed by the effect below.
+  const pendingMenuFocusRef = useRef(null);
+
   const cancelRename = useCallback(() => {
     setEditingId(null);
     setEditingSurface(null);
@@ -110,16 +114,99 @@ const AssumptionsDropdown = ({
     setRenameError('');
   }, []);
 
-  const closeMenu = useCallback(() => {
-    setMenuOpen(false);
-    cancelRename();
-  }, [cancelRename]);
+  const closeMenu = useCallback(
+    (reason) => {
+      setMenuOpen(false);
+      cancelRename();
+      // Keyboard convention: Escape returns focus to the trigger. Outside
+      // clicks keep focus where the user clicked.
+      if (reason === 'escape') {
+        summaryTriggerRef.current?.focus();
+      }
+    },
+    [cancelRename]
+  );
 
   const toggleMenu = useCallback(() => {
     setMenuOpen((current) => !current);
   }, []);
 
   const dropdownRef = useDismissibleMenu(menuOpen, closeMenu);
+
+  // --- keyboard semantics --------------------------------------------------
+  // This popup is deliberately a DISCLOSURE, not an ARIA menu: its rows mix a
+  // load action with Tab-reachable icon buttons and an inline rename input,
+  // which strict menu semantics forbid. Arrow keys rove focus across the
+  // load targets ([data-menu-item]) as a convenience; everything else keeps
+  // normal Tab order.
+  const getMenuItems = useCallback(
+    () => [...(dropdownRef.current?.querySelectorAll('[data-menu-item]:not([disabled])') || [])],
+    [dropdownRef]
+  );
+
+  const focusMenuItem = useCallback(
+    (index) => {
+      const items = getMenuItems();
+      if (items.length === 0) {
+        return;
+      }
+      const boundedIndex = Math.min(Math.max(index, 0), items.length - 1);
+      items[boundedIndex].focus();
+    },
+    [getMenuItems]
+  );
+
+  useEffect(() => {
+    if (menuOpen && pendingMenuFocusRef.current) {
+      focusMenuItem(pendingMenuFocusRef.current === 'last' ? Number.MAX_SAFE_INTEGER : 0);
+      pendingMenuFocusRef.current = null;
+    }
+  }, [menuOpen, focusMenuItem]);
+
+  const handleTriggerKeyDown = (event) => {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+      return;
+    }
+    event.preventDefault();
+
+    if (menuOpen) {
+      // Already open: the open-effect won't rerun, so move focus directly.
+      focusMenuItem(event.key === 'ArrowDown' ? 0 : Number.MAX_SAFE_INTEGER);
+      return;
+    }
+
+    pendingMenuFocusRef.current = event.key === 'ArrowDown' ? 'first' : 'last';
+    setMenuOpen(true);
+  };
+
+  const handleMenuItemKeyDown = (event) => {
+    const items = getMenuItems();
+    if (items.length === 0) {
+      return;
+    }
+    const currentIndex = items.indexOf(event.currentTarget);
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        focusMenuItem(currentIndex + 1);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        focusMenuItem(currentIndex <= 0 ? 0 : currentIndex - 1);
+        break;
+      case 'Home':
+        event.preventDefault();
+        focusMenuItem(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        focusMenuItem(items.length - 1);
+        break;
+      default:
+        break;
+    }
+  };
 
   useEffect(() => {
     if (editingSurface === 'menu' && editingId && !menuOpen) {
@@ -331,13 +418,19 @@ const AssumptionsDropdown = ({
             <>
               <button
                 id={buttonId}
+                ref={summaryTriggerRef}
                 type="button"
                 className="saved-assumption-row__load-target saved-assumptions-panel__summary-trigger"
                 onClick={(event) => {
                   event.stopPropagation();
+                  // Keyboard activation (Enter/Space report detail 0) moves
+                  // focus into the menu, per the menu-button pattern.
+                  if (!menuOpen && event.detail === 0) {
+                    pendingMenuFocusRef.current = 'first';
+                  }
                   toggleMenu();
                 }}
-                aria-haspopup="menu"
+                onKeyDown={handleTriggerKeyDown}
                 aria-expanded={menuOpen}
                 aria-controls={menuOpen ? menuId : undefined}
                 aria-label={
@@ -385,7 +478,7 @@ const AssumptionsDropdown = ({
       </div>
 
       {menuOpen && (
-        <div id={menuId} className="saved-assumptions-panel__menu" role="menu" aria-label={menuAriaLabel}>
+        <div id={menuId} className="saved-assumptions-panel__menu" role="group" aria-label={menuAriaLabel}>
           <div className="saved-assumptions-panel__menu-list">
             {visibleEntries.map((entry) => {
               const entryUiState = getEntryUiState(entry, {
@@ -447,13 +540,14 @@ const AssumptionsDropdown = ({
                       <>
                         <button
                           type="button"
-                          role="menuitemradio"
-                          aria-checked={entryUiState.isActive}
+                          data-menu-item
+                          aria-pressed={entryUiState.isActive}
                           disabled={entryUiState.isLoadDisabled}
                           onClick={(event) => {
                             event.stopPropagation();
                             handleLoad(entry);
                           }}
+                          onKeyDown={handleMenuItemKeyDown}
                           className="saved-assumption-row__load-target"
                           data-selected={entryUiState.isActive}
                         >

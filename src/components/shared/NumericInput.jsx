@@ -17,6 +17,10 @@ const NumericInput = ({
   disabled = false,
   isCustom = false,
   prefix = null, // Optional prefix like "$" or "%"
+  // 'decimal' brings up a numeric keypad on mobile, but iOS's decimal pad
+  // has NO minus key — negative values are legitimate for several fields
+  // (domain rule), so only positive-only call sites should opt in.
+  inputMode = 'text',
 }) => {
   const [localValue, setLocalValue] = useState('');
   const [cursorPosition, setCursorPosition] = useState(null);
@@ -96,7 +100,7 @@ const NumericInput = ({
           ref={inputRef}
           id={id}
           type="text"
-          inputMode="text"
+          inputMode={inputMode}
           value={localValue}
           onChange={handleChange}
           placeholder={placeholder}
@@ -126,6 +130,7 @@ NumericInput.propTypes = {
   disabled: PropTypes.bool,
   isCustom: PropTypes.bool,
   prefix: PropTypes.string,
+  inputMode: PropTypes.oneOf(['text', 'decimal', 'numeric']),
 };
 
 export default React.memo(NumericInput);

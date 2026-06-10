@@ -21,6 +21,10 @@ const CurrencyInput = ({
   displayOnly = false, // If true, render a read-only display surface instead of a disabled input
   ariaLabel,
   displayValue = null,
+  // 'decimal' brings up a numeric keypad on mobile, but iOS's decimal pad
+  // has NO minus key — negative values are legitimate for cost fields
+  // (domain rule), so only positive-only call sites should opt in.
+  inputMode = 'text',
 }) => {
   const [localValue, setLocalValue] = useState('');
   const [cursorPosition, setCursorPosition] = useState(null);
@@ -29,9 +33,12 @@ const CurrencyInput = ({
   // Initialize local value from prop
   useEffect(() => {
     if (value !== undefined && value !== null) {
-      // Only update local value if we don't have focus
+      // Only update local value if we don't have focus. Run the value through
+      // the same formatter typing uses so programmatically-set values display
+      // identically to typed ones (thousands separators included).
       if (!inputRef.current || document.activeElement !== inputRef.current) {
-        setLocalValue(value.toString());
+        const text = value.toString();
+        setLocalValue(formatWithCursorHandling(text, text.length).value);
       }
     } else {
       setLocalValue('');
@@ -149,7 +156,7 @@ const CurrencyInput = ({
             ref={inputRef}
             id={id}
             type="text"
-            inputMode="text"
+            inputMode={inputMode}
             value={localValue}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -188,6 +195,7 @@ CurrencyInput.propTypes = {
   displayOnly: PropTypes.bool,
   ariaLabel: PropTypes.string,
   displayValue: PropTypes.node,
+  inputMode: PropTypes.oneOf(['text', 'decimal', 'numeric']),
 };
 
 export default React.memo(CurrencyInput);

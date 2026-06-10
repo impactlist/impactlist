@@ -71,7 +71,7 @@ vi.mock('../../utils/savedAssumptionsStore', () => ({
 describe('AssumptionsSelector', () => {
   const openMenu = async (user) => {
     await user.click(screen.getByRole('button', { name: /Active assumptions:/ }));
-    return screen.getByRole('menu', { name: 'Assumptions options' });
+    return screen.getByRole('group', { name: 'Assumptions options' });
   };
 
   const getMenuRow = (menu, label) => within(menu).getByText(label).closest('.assumptions-entry');
@@ -133,7 +133,7 @@ describe('AssumptionsSelector', () => {
     render(<AssumptionsSelector />);
 
     const menu = await openMenu(user);
-    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('menuitemradio'));
+    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('button', { name: /Longtermist/ }));
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);
     expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
@@ -145,7 +145,9 @@ describe('AssumptionsSelector', () => {
     render(<AssumptionsSelector />);
 
     const menu = await openMenu(user);
-    await user.click(within(getMenuRow(menu, 'My Saved Assumptions')).getByRole('menuitemradio'));
+    await user.click(
+      within(getMenuRow(menu, 'My Saved Assumptions')).getByRole('button', { name: /My Saved Assumptions/ })
+    );
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(savedEntry.assumptions);
     expect(mockMarkSavedAssumptionsLoaded).toHaveBeenCalledWith(savedEntry.id);
@@ -260,7 +262,7 @@ describe('AssumptionsSelector', () => {
     render(<AssumptionsSelector />);
 
     const menu = await openMenu(user);
-    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('menuitemradio'));
+    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('button', { name: /Longtermist/ }));
 
     expect(screen.getByRole('heading', { name: 'Overwrite your unsaved assumptions?' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
@@ -281,7 +283,7 @@ describe('AssumptionsSelector', () => {
     render(<AssumptionsSelector />);
 
     const menu = await openMenu(user);
-    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('menuitemradio'));
+    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('button', { name: /Longtermist/ }));
     await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);

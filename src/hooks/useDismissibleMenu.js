@@ -1,5 +1,13 @@
 import { useEffect, useRef } from 'react';
 
+/**
+ * Outside-click + Escape dismissal for popovers/menus. Attach the returned
+ * ref to the element containing both the trigger and the popover.
+ *
+ * `onDismiss` receives the reason — `'outside'` or `'escape'` — so callers
+ * can restore focus to the trigger on Escape (the keyboard convention)
+ * without stealing focus from whatever an outside click landed on.
+ */
 const useDismissibleMenu = (isOpen, onDismiss) => {
   const menuRef = useRef(null);
 
@@ -13,12 +21,12 @@ const useDismissibleMenu = (isOpen, onDismiss) => {
         return;
       }
 
-      onDismiss();
+      onDismiss('outside');
     };
 
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
-        onDismiss();
+        onDismiss('escape');
       }
     };
 

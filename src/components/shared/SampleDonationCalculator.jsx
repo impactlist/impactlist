@@ -85,6 +85,7 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
             label="Donation Amount"
             prefix="$"
             className=""
+            inputMode="decimal"
           />
         </div>
 

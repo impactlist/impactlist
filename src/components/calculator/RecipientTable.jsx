@@ -17,6 +17,7 @@ const RecipientTable = ({
   onAddClick,
   onEditClick,
   onDeleteClick,
+  onClearAll,
   calculateLivesSaved,
   getCostPerLife,
   className = '',
@@ -32,7 +33,7 @@ const RecipientTable = ({
         <h2 className="text-xl font-bold text-strong">Your Specific Donations</h2>
         <div className="flex space-x-2">
           <button
-            onClick={() => onDeleteClick && donations.forEach((donation) => onDeleteClick(donation.id))}
+            onClick={onClearAll}
             className="impact-btn impact-btn--secondary impact-btn--sm inline-flex items-center"
             disabled={donations.length === 0}
           >
@@ -200,6 +201,7 @@ RecipientTable.propTypes = {
   onAddClick: PropTypes.func.isRequired,
   onEditClick: PropTypes.func,
   onDeleteClick: PropTypes.func,
+  onClearAll: PropTypes.func.isRequired,
   calculateLivesSaved: PropTypes.func.isRequired,
   getCostPerLife: PropTypes.func.isRequired,
   className: PropTypes.string,

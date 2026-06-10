@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import ModalShell from './shared/ModalShell';
+import ModalShell, { ModalHeader } from './shared/ModalShell';
+import CurrencyInput from './shared/CurrencyInput';
 import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
 import { formatLives, formatCurrency } from '../utils/formatters';
@@ -32,6 +33,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
   const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
   const allCategories = useMemo(() => combinedAssumptions.getAllCategories(), [combinedAssumptions]);
+  const sortedCategories = useMemo(
+    () => [...allCategories].sort((a, b) => a.name.localeCompare(b.name)),
+    [allCategories]
+  );
 
   // State to control dropdown visibility
   const [showDropdown, setShowDropdown] = useState(false);
@@ -206,25 +211,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     }
   };
 
-  // Format a number with commas
-  const formatWithCommas = (value) => {
-    if (!value) return '';
-
-    const rawValue = value.toString().replace(/,/g, '');
-    if (rawValue === '' || rawValue === '-' || rawValue === '.' || rawValue.endsWith('.')) {
-      return rawValue;
-    }
-
-    const number = Number(rawValue);
-    if (isNaN(number)) return rawValue;
-
-    if (Math.abs(number) >= 1000) {
-      return number.toLocaleString('en-US');
-    }
-
-    return rawValue;
-  };
-
   // Clean a number input value
   const cleanNumberInput = (value) => {
     return value.toString().replace(/,/g, '');
@@ -358,66 +344,48 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
   const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
 
+  const recipientToggleClass = (isActiveOption) =>
+    `flex-1 ${isActiveOption ? 'impact-btn impact-btn--custom-accent' : 'impact-btn impact-btn--secondary'}`;
+
   return (
     <ModalShell
       isOpen={isOpen}
       onClose={onClose}
       labelledBy="specific-donation-modal-title"
-      panelClassName="max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto p-0"
+      panelClassName="max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto"
     >
       <div data-testid="specific-donation-modal">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex justify-between items-center">
-            <h2 id="specific-donation-modal-title" className="text-2xl font-bold text-gray-800">
-              {editingDonation ? 'Edit Donation' : 'Add Specific Donation'}
-            </h2>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700 focus:outline-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+        <ModalHeader
+          title={editingDonation ? 'Edit Donation' : 'Add Specific Donation'}
+          titleId="specific-donation-modal-title"
+          onClose={onClose}
+        />
+
+        <div className="mb-6">
+          <div className="mb-4 flex gap-4">
+            <button
+              type="button"
+              onClick={() => setIsExistingRecipient(true)}
+              className={recipientToggleClass(isExistingRecipient)}
+            >
+              Existing Recipient
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsExistingRecipient(false)}
+              className={recipientToggleClass(!isExistingRecipient)}
+            >
+              New Recipient
             </button>
           </div>
-        </div>
 
-        <div className="p-6">
-          <div className="mb-6">
-            <div className="flex space-x-4 mb-4">
-              <button
-                type="button"
-                onClick={() => setIsExistingRecipient(true)}
-                className={`px-4 py-2 rounded-md text-sm font-medium flex-1 ${
-                  isExistingRecipient
-                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
-                    : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
-                }`}
-              >
-                Existing Recipient
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsExistingRecipient(false)}
-                className={`px-4 py-2 rounded-md text-sm font-medium flex-1 ${
-                  !isExistingRecipient
-                    ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
-                    : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
-                }`}
-              >
-                New Recipient
-              </button>
-            </div>
-
-            {isExistingRecipient ? (
-              <div>
-                <label htmlFor="recipient-search" className="block text-sm font-medium text-gray-700 mb-1">
-                  Search for a recipient
-                </label>
-                <div className="relative">
+          {isExistingRecipient ? (
+            <div className="impact-field" data-state={errors.recipient ? 'error' : 'default'}>
+              <label htmlFor="recipient-search" className="impact-field__label">
+                Search for a recipient
+              </label>
+              <div className="relative">
+                <div className="impact-field__control">
                   <input
                     id="recipient-search"
                     ref={searchInputRef}
@@ -431,81 +399,81 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     onFocus={() => setShowDropdown(true)}
                     onKeyDown={handleKeyDown}
                     placeholder="Type to search..."
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.recipient ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className="impact-field__input"
                     onBlur={(e) => {
                       if (!e.relatedTarget || !e.relatedTarget.classList.contains('recipient-item')) {
                         setTimeout(() => setShowDropdown(false), 200);
                       }
                     }}
                   />
-                  {showDropdown && searchTerm && filteredRecipients.length > 0 && (
-                    <div
-                      ref={dropdownRef}
-                      role="listbox"
-                      aria-label="Recipient search results"
-                      className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm"
-                    >
-                      {filteredRecipients.map((recipient, index) => (
-                        <div
-                          key={recipient.name}
-                          role="option"
-                          aria-selected={index === highlightedIndex}
-                          onClick={() => handleSelectRecipient(recipient)}
-                          onKeyDown={(event) => {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                              event.preventDefault();
-                              handleSelectRecipient(recipient);
-                            }
-                          }}
-                          className={`cursor-pointer px-4 py-2 recipient-item ${
-                            index === highlightedIndex ? 'bg-indigo-100 text-indigo-900' : 'hover:bg-indigo-50'
-                          }`}
-                          tabIndex="0"
-                        >
-                          {recipient.name}
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
-                {errors.recipient && <p className="mt-1 text-sm text-danger">{errors.recipient}</p>}
-                {searchTerm && filteredRecipients.length === 0 && showDropdown && !selectedRecipient && (
-                  <p className="mt-1 text-sm text-gray-500">No recipients found. Try another search term.</p>
-                )}
-                {selectedRecipient && recipientCostPerLife && (
-                  <p className="mt-1 text-xs text-gray-500">
-                    Cost per life:{' '}
-                    <FormattedScientificValue value={formatCurrency(recipientCostPerLife)} variant="compact" />
-                  </p>
+                {showDropdown && searchTerm && filteredRecipients.length > 0 && (
+                  <div
+                    ref={dropdownRef}
+                    role="listbox"
+                    aria-label="Recipient search results"
+                    className="impact-surface absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md py-1 text-sm shadow-lg focus:outline-none"
+                  >
+                    {filteredRecipients.map((recipient, index) => (
+                      <div
+                        key={recipient.name}
+                        role="option"
+                        aria-selected={index === highlightedIndex}
+                        onClick={() => handleSelectRecipient(recipient)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            handleSelectRecipient(recipient);
+                          }
+                        }}
+                        className={`recipient-item cursor-pointer px-4 py-2 text-strong ${
+                          index === highlightedIndex
+                            ? 'bg-[var(--accent-soft)]'
+                            : 'hover:bg-[var(--accent-soft)] hover:bg-opacity-60'
+                        }`}
+                        tabIndex="0"
+                      >
+                        {recipient.name}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
-            ) : (
-              <div>
-                <div className="mb-4">
-                  <label htmlFor="custom-recipient-name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Recipient Name
-                  </label>
+              {errors.recipient && <p className="impact-field__error">{errors.recipient}</p>}
+              {searchTerm && filteredRecipients.length === 0 && showDropdown && !selectedRecipient && (
+                <p className="mt-1 text-sm text-muted">No recipients found. Try another search term.</p>
+              )}
+              {selectedRecipient && recipientCostPerLife && (
+                <p className="mt-1 text-xs text-muted">
+                  Cost per life:{' '}
+                  <FormattedScientificValue value={formatCurrency(recipientCostPerLife)} variant="compact" />
+                </p>
+              )}
+            </div>
+          ) : (
+            <div>
+              <div className="impact-field mb-4" data-state={errors.customRecipientName ? 'error' : 'default'}>
+                <label htmlFor="custom-recipient-name" className="impact-field__label">
+                  Recipient Name
+                </label>
+                <div className="impact-field__control">
                   <input
                     id="custom-recipient-name"
                     type="text"
                     value={customRecipientName}
                     onChange={(e) => setCustomRecipientName(e.target.value)}
                     placeholder="Enter recipient name"
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.customRecipientName ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className="impact-field__input"
                   />
-                  {errors.customRecipientName && (
-                    <p className="mt-1 text-sm text-danger">{errors.customRecipientName}</p>
-                  )}
                 </div>
+                {errors.customRecipientName && <p className="impact-field__error">{errors.customRecipientName}</p>}
+              </div>
 
-                <div className="mb-4">
-                  <label htmlFor="custom-recipient-cause" className="block text-sm font-medium text-gray-700 mb-1">
-                    Cause
-                  </label>
+              <div className="impact-field mb-4" data-state={errors.category ? 'error' : 'default'}>
+                <label htmlFor="custom-recipient-cause" className="impact-field__label">
+                  Cause
+                </label>
+                <div className="impact-field__control">
                   <select
                     id="custom-recipient-cause"
                     value={selectedCategory}
@@ -517,116 +485,91 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                         nextCategory ? getDefaultCustomCostPerLife(nextCategory, getValidYearForCalculation()) : ''
                       );
                     }}
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.category ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className="impact-field__input"
                   >
                     <option value="">Select a cause</option>
-                    {allCategories
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
+                    {sortedCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
                   </select>
-                  {errors.category && <p className="mt-1 text-sm text-danger">{errors.category}</p>}
-                  {selectedCategory && (
-                    <p className="mt-1 text-xs text-gray-500">
-                      Default cost per life:{' '}
-                      <FormattedScientificValue
-                        value={formatCurrency(
-                          getCostPerLifeFromCombined(
-                            combinedAssumptions,
-                            selectedCategory,
-                            getValidYearForCalculation()
-                          )
-                        )}
-                        variant="compact"
-                      />
-                    </p>
-                  )}
                 </div>
-
-                <div className="mb-4">
-                  <label
-                    htmlFor="custom-recipient-cost-per-life"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Cost per life
-                  </label>
-                  <input
-                    id="custom-recipient-cost-per-life"
-                    type="text"
-                    inputMode="decimal"
-                    value={formatWithCommas(customCostPerLife)}
-                    onChange={(e) => {
-                      const newValue = e.target.value;
-                      setCustomCostPerLife(newValue);
-                      setHasEditedCustomCostPerLife(true);
-                    }}
-                    placeholder={
-                      selectedCategory
-                        ? formatWithCommas(getDefaultCustomCostPerLife(selectedCategory, getValidYearForCalculation()))
-                        : '0'
-                    }
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.customCostPerLife ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                  />
-                  {errors.customCostPerLife && <p className="mt-1 text-sm text-danger">{errors.customCostPerLife}</p>}
-                  <p className="mt-1 text-xs text-gray-500">
-                    This starts at the selected cause&apos;s current cost per life, and you can edit it for this
-                    recipient.
+                {errors.category && <p className="impact-field__error">{errors.category}</p>}
+                {selectedCategory && (
+                  <p className="mt-1 text-xs text-muted">
+                    Default cost per life:{' '}
+                    <FormattedScientificValue
+                      value={formatCurrency(
+                        getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, getValidYearForCalculation())
+                      )}
+                      variant="compact"
+                    />
                   </p>
-                  {customCostPerLife && !isNaN(Number(cleanNumberInput(customCostPerLife))) && (
-                    <p className="mt-1 text-xs text-gray-500">
-                      Recipient cost per life:{' '}
-                      <FormattedScientificValue
-                        value={formatCurrency(Number(cleanNumberInput(customCostPerLife)))}
-                        variant="compact"
-                      />
-                    </p>
-                  )}
-                </div>
+                )}
               </div>
-            )}
-          </div>
 
-          {/* Display information about selected recipient or cause */}
-          {customRecipientName && !isExistingRecipient && selectedCategory && (
-            <div className="mb-4 p-3 bg-indigo-50 rounded-md">
-              <p className="text-sm text-indigo-600">
-                Cause: {allCategories.find((c) => c.id === selectedCategory)?.name || ''}
-              </p>
+              <div className="mb-4">
+                {/* Negative cost per life is legal here (domain rule), so the
+                    input keeps the default text inputMode — iOS's decimal
+                    keypad has no minus key. */}
+                <CurrencyInput
+                  id="custom-recipient-cost-per-life"
+                  label="Cost per life"
+                  value={customCostPerLife}
+                  onChange={(value) => {
+                    setCustomCostPerLife(value);
+                    setHasEditedCustomCostPerLife(true);
+                  }}
+                  placeholder={
+                    selectedCategory ? getDefaultCustomCostPerLife(selectedCategory, getValidYearForCalculation()) : '0'
+                  }
+                  error={errors.customCostPerLife}
+                />
+                <p className="mt-1 text-xs text-muted">
+                  This starts at the selected cause&apos;s current cost per life, and you can edit it for this
+                  recipient.
+                </p>
+                {customCostPerLife && !isNaN(Number(cleanNumberInput(customCostPerLife))) && (
+                  <p className="mt-1 text-xs text-muted">
+                    Recipient cost per life:{' '}
+                    <FormattedScientificValue
+                      value={formatCurrency(Number(cleanNumberInput(customCostPerLife)))}
+                      variant="compact"
+                    />
+                  </p>
+                )}
+              </div>
             </div>
           )}
+        </div>
 
-          <div className="mb-4">
-            <label htmlFor="specific-donation-amount" className="block text-sm font-medium text-gray-700 mb-1">
-              Donation Amount
-            </label>
-            <div className="flex items-center">
-              <span className="mr-1 text-gray-600">$</span>
-              <input
-                id="specific-donation-amount"
-                type="text"
-                inputMode="numeric"
-                value={formatWithCommas(amount)}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0"
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                  errors.amount ? 'border-red-300' : 'border-gray-300'
-                }`}
-              />
-            </div>
-            {errors.amount && <p className="mt-1 text-sm text-danger">{errors.amount}</p>}
+        {/* Display information about selected recipient or cause */}
+        {customRecipientName && !isExistingRecipient && selectedCategory && (
+          <div className="mb-4 rounded-md bg-[var(--accent-soft)] p-3">
+            <p className="text-sm text-strong">
+              Cause: {allCategories.find((c) => c.id === selectedCategory)?.name || ''}
+            </p>
           </div>
+        )}
 
-          <div className="mb-4">
-            <label htmlFor="specific-donation-year" className="block text-sm font-medium text-gray-700 mb-1">
-              Year
-            </label>
+        <div className="mb-4">
+          <CurrencyInput
+            id="specific-donation-amount"
+            label="Donation Amount"
+            value={amount}
+            onChange={setAmount}
+            placeholder="0"
+            error={errors.amount}
+            inputMode="decimal"
+          />
+        </div>
+
+        <div className="impact-field mb-4" data-state={errors.year ? 'error' : 'default'}>
+          <label htmlFor="specific-donation-year" className="impact-field__label">
+            Year
+          </label>
+          <div className="impact-field__control">
             <input
               id="specific-donation-year"
               type="text"
@@ -634,42 +577,34 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
               value={donationYear}
               onChange={(e) => setDonationYear(e.target.value)}
               placeholder={getCurrentYear().toString()}
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
-                errors.year ? 'border-red-300' : 'border-gray-300'
-              }`}
+              className="impact-field__input"
             />
-            {errors.year && <p className="mt-1 text-sm text-danger">{errors.year}</p>}
           </div>
+          {errors.year && <p className="impact-field__error">{errors.year}</p>}
+        </div>
 
-          {/* Lives saved preview */}
-          {amount && !errors.amount && (
-            <div className={`mb-4 p-3 ${livesSaved < 0 ? 'bg-red-50' : 'bg-emerald-50'} rounded-md`}>
-              <p className={`text-sm ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
-                Estimated lives saved:{' '}
-                <span className="font-medium">
-                  {livesSaved < 0 ? '-' : ''}
-                  <FormattedScientificValue value={formatLives(Math.abs(livesSaved))} />
-                </span>
-              </p>
-            </div>
-          )}
-
-          <div className="flex space-x-3 mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="flex-1 px-4 py-2 bg-indigo-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              {editingDonation ? 'Update' : 'Add'} Donation
-            </button>
+        {/* Lives saved preview */}
+        {amount && !errors.amount && (
+          <div
+            className={`mb-4 rounded-md p-3 ${livesSaved < 0 ? 'bg-[var(--danger-soft)]' : 'bg-[var(--success-soft)]'}`}
+          >
+            <p className={`text-sm ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>
+              Estimated lives saved:{' '}
+              <span className="font-medium">
+                {livesSaved < 0 ? '-' : ''}
+                <FormattedScientificValue value={formatLives(Math.abs(livesSaved))} />
+              </span>
+            </p>
           </div>
+        )}
+
+        <div className="mt-6 flex gap-3">
+          <button type="button" onClick={onClose} className="impact-btn impact-btn--secondary">
+            Cancel
+          </button>
+          <button type="button" onClick={handleSubmit} className="impact-btn impact-btn--custom-accent flex-1">
+            {editingDonation ? 'Update' : 'Add'} Donation
+          </button>
         </div>
       </div>
     </ModalShell>

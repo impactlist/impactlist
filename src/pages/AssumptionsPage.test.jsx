@@ -68,7 +68,7 @@ const getAssumptionsLibrarySection = () => screen.getByText('Active Assumptions'
 
 const openAssumptionsLibraryMenu = async (user) => {
   const section = getAssumptionsLibrarySection();
-  const openMenu = within(section).queryByRole('menu');
+  const openMenu = within(section).queryByRole('group', { name: 'Assumptions Library entries' });
 
   if (!openMenu) {
     await user.click(within(section).getByRole('button', { name: /Select assumptions set/i }));
@@ -76,7 +76,7 @@ const openAssumptionsLibraryMenu = async (user) => {
 
   return {
     section,
-    menu: await within(section).findByRole('menu'),
+    menu: await within(section).findByRole('group', { name: 'Assumptions Library entries' }),
   };
 };
 
@@ -461,7 +461,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(within(longtermistRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
     expect(within(longtermistRow).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
 
-    await user.click(within(longtermistRow).getByRole('menuitemradio'));
+    await user.click(longtermistRow.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('10,000,000,000');
@@ -492,7 +492,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const { menu } = await openAssumptionsLibraryMenu(user);
     const row = getAssumptionsLibraryRow(menu, 'Longtermist');
-    await user.click(within(row).getByRole('menuitemradio'));
+    await user.click(row.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
       expect(queryActiveAssumptionsActionButton('Save')).not.toBeInTheDocument();
@@ -801,7 +801,9 @@ describe('AssumptionsPage routing integration', () => {
 
     const { menu } = await openAssumptionsLibraryMenu(userEvent.setup());
     const row = getAssumptionsLibraryRow(menu, 'Remote Without Description');
-    expect(within(row).queryByRole('button', { name: /description/i })).not.toBeInTheDocument();
+    // Target the action labels precisely — the row's LOAD button is also a
+    // button and its accessible name contains the entry label ("…Description").
+    expect(within(row).queryByRole('button', { name: /view description|add description/i })).not.toBeInTheDocument();
   });
 
   it('does not allow replacing remote saved assumptions and saves as new local instead', async () => {
@@ -1212,7 +1214,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const { menu } = await openAssumptionsLibraryMenu(user);
     const defaultRow = getAssumptionsLibraryRow(menu, 'Default');
-    await user.click(within(defaultRow).getByRole('menuitemradio'));
+    await user.click(defaultRow.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(
@@ -1272,7 +1274,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const { menu } = await openAssumptionsLibraryMenu(user);
     const defaultRow = getAssumptionsLibraryRow(menu, 'Default');
-    await user.click(within(defaultRow).getByRole('menuitemradio'));
+    await user.click(defaultRow.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
       expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
@@ -1316,7 +1318,7 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
     const { menu } = await openAssumptionsLibraryMenu(user);
     const importedRow = getAssumptionsLibraryRow(menu, 'Imported From Friend');
-    await user.click(within(importedRow).getByRole('menuitemradio'));
+    await user.click(importedRow.querySelector('[data-menu-item]'));
 
     expect(await screen.findByText('Overwrite your unsaved assumptions?')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
@@ -1362,7 +1364,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const { menu } = await openAssumptionsLibraryMenu(user);
     const targetRow = getAssumptionsLibraryRow(menu, 'Target Saved');
-    await user.click(within(targetRow).getByRole('menuitemradio'));
+    await user.click(targetRow.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
       expect(screen.queryByText('Overwrite your unsaved assumptions?')).not.toBeInTheDocument();

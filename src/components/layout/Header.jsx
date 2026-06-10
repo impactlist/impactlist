@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CAUSES_PATH } from '../../utils/causeRoutes';
+import useDismissibleMenu from '../../hooks/useDismissibleMenu';
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -32,6 +33,7 @@ const Header = ({
   isAssumptions = false,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuToggleRef = useRef(null);
 
   const navLinkClass = ({ isActive = false, visibilityClass = '', layoutClass = '' } = {}) =>
     joinClasses(visibilityClass, layoutClass, NAV_LINK_BASE, NAV_LINK_TONE, isActive ? NAV_LINK_ACTIVE : '');
@@ -44,8 +46,20 @@ const Header = ({
     setIsMobileMenuOpen(false);
   };
 
+  // Escape/outside-click dismissal; Escape also returns focus to the toggle
+  // (the disclosure-pattern convention — outside clicks keep their target).
+  const dismissMobileMenu = useCallback((reason) => {
+    setIsMobileMenuOpen(false);
+    if (reason === 'escape') {
+      menuToggleRef.current?.focus();
+    }
+  }, []);
+
+  const headerRef = useDismissibleMenu(isMobileMenuOpen, dismissMobileMenu);
+
   return (
     <motion.div
+      ref={headerRef}
       className="w-full bg-slate-800 py-4 shadow-lg relative"
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
@@ -99,9 +113,12 @@ const Header = ({
             </Link>
             {/* Hamburger Menu Button - visible below md */}
             <button
+              ref={menuToggleRef}
               onClick={toggleMobileMenu}
               className="md:hidden text-slate-200 hover:text-white hover:bg-slate-700 p-2 rounded-md transition-colors"
               aria-label="Toggle mobile menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-nav-menu"
             >
               <motion.svg
                 width="24"
@@ -128,6 +145,7 @@ const Header = ({
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            id="mobile-nav-menu"
             className="md:hidden absolute top-full left-0 right-0 bg-slate-800 shadow-lg border-t border-slate-700 z-50"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

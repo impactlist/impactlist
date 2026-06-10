@@ -16,7 +16,7 @@
 - **`SortableTable`**: throws if asked to sort a column no row has data for — columns whose cells are computed in `render` must set `sortable: false` (see `calculator/RecipientTable.jsx`). Its cost-per-life comparator encodes the domain rule (negatives sort worse than all positives; closer to zero = worse) — covered by `SortableTable.test.jsx`; don't change ordering semantics without updating those tests. The sort is memoized on data identity — callers must pass memoized arrays — and rows key by `item.id` when present (index fallback otherwise), so give rows ids where you can. The sticky-header clone is `role="presentation"`/aria-hidden, so role-based queries in tests see only the primary table.
 - **No `.defaultProps`** on function components (React 19 ignores them) — use destructure defaults.
 - React 19 + framer-motion for transitions; PropTypes on shared components; `prop-types` is a direct dependency.
-- Styling: `impact-*` classes / `var(--*)` tokens from `src/index.css`. `SpecificDonationModal` still uses raw gray/indigo utilities — migrating it to the design system is review item 15, don't copy its style.
+- Styling: `impact-*` classes / `var(--*)` tokens from `src/index.css` — every component, including all modals, uses them; don't introduce raw palette utilities (gray/indigo/etc.).
 
 ## Testing
 

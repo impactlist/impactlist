@@ -48,6 +48,67 @@ const getRenameErrorMessage = (errorCode) => {
   return 'Could not rename saved assumptions.';
 };
 
+// The inline-rename input + Save/Cancel pair, shared by the summary row and
+// menu rows (previously duplicated). Handlers receive the triggering event so
+// menu call sites can stop row-click propagation.
+const EntryRenameControls = ({ editLabel, inputRef, onEditLabelChange, onCommit, onCancel }) => (
+  <div className="saved-assumption-row__edit-controls">
+    <input
+      type="text"
+      value={editLabel}
+      onChange={(event) => onEditLabelChange(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          onCommit(event);
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          onCancel(event);
+        }
+      }}
+      className="impact-field__input h-8 rounded-md px-2 text-sm"
+      ref={inputRef}
+    />
+    <button type="button" onClick={onCommit} className="impact-btn impact-btn--secondary impact-btn--xs">
+      Save
+    </button>
+    <button type="button" onClick={onCancel} className="impact-btn impact-btn--secondary impact-btn--xs">
+      Cancel
+    </button>
+  </div>
+);
+
+EntryRenameControls.propTypes = {
+  editLabel: PropTypes.string.isRequired,
+  inputRef: PropTypes.object,
+  onEditLabelChange: PropTypes.func.isRequired,
+  onCommit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
+
+// Entry label + source pill, shared by the summary row and menu rows
+// (previously duplicated).
+const EntryLabel = ({ entry, uiState, showPill }) => (
+  <>
+    <span className="saved-assumption-row__label text-sm font-semibold text-strong">{entry.label}</span>
+    {showPill && (
+      <span
+        className="assumption-state-pill assumption-state-pill--compact"
+        data-state={uiState.isCurated ? 'curated' : uiState.isRemote ? 'remote' : 'local'}
+        title={uiState.isRemote && entry.reference ? `Remote ref: ${entry.reference}` : undefined}
+      >
+        {uiState.isCurated ? 'Curated' : uiState.isRemote ? 'Remote' : 'Local'}
+      </span>
+    )}
+  </>
+);
+
+EntryLabel.propTypes = {
+  entry: PropTypes.object.isRequired,
+  uiState: PropTypes.object.isRequired,
+  showPill: PropTypes.bool.isRequired,
+};
+
 const AssumptionsDropdown = ({
   entries,
   activeId = null,
@@ -111,6 +172,11 @@ const AssumptionsDropdown = ({
     setEditingId(null);
     setEditingSurface(null);
     setEditLabel('');
+    setRenameError('');
+  }, []);
+
+  const handleEditLabelChange = useCallback((value) => {
+    setEditLabel(value);
     setRenameError('');
   }, []);
 
@@ -387,33 +453,13 @@ const AssumptionsDropdown = ({
       >
         <div className="saved-assumption-row__top saved-assumption-row__top--summary">
           {selectedEntryUiState.isEditing ? (
-            <div className="saved-assumption-row__edit-controls">
-              <input
-                type="text"
-                value={editLabel}
-                onChange={(event) => {
-                  setEditLabel(event.target.value);
-                  setRenameError('');
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault();
-                    commitRename();
-                  } else if (event.key === 'Escape') {
-                    event.preventDefault();
-                    cancelRename();
-                  }
-                }}
-                className="impact-field__input h-8 rounded-md px-2 text-sm"
-                ref={renameInputRef}
-              />
-              <button type="button" onClick={commitRename} className="impact-btn impact-btn--secondary impact-btn--xs">
-                Save
-              </button>
-              <button type="button" onClick={cancelRename} className="impact-btn impact-btn--secondary impact-btn--xs">
-                Cancel
-              </button>
-            </div>
+            <EntryRenameControls
+              editLabel={editLabel}
+              inputRef={renameInputRef}
+              onEditLabelChange={handleEditLabelChange}
+              onCommit={commitRename}
+              onCancel={cancelRename}
+            />
           ) : (
             <>
               <button
@@ -439,24 +485,11 @@ const AssumptionsDropdown = ({
                 aria-labelledby={inlineLabel ? `${labelId} ${buttonId}` : undefined}
               >
                 <span className="saved-assumption-row__identity">
-                  <span className="saved-assumption-row__label text-sm font-semibold text-strong">
-                    {selectedEntry.label}
-                  </span>
-                  {!selectedEntryUiState.isDefaultEntry && !selectedEntryUiState.isCustomEntry && (
-                    <span
-                      className="assumption-state-pill assumption-state-pill--compact"
-                      data-state={
-                        selectedEntryUiState.isCurated ? 'curated' : selectedEntryUiState.isRemote ? 'remote' : 'local'
-                      }
-                      title={
-                        selectedEntryUiState.isRemote && selectedEntry.reference
-                          ? `Remote ref: ${selectedEntry.reference}`
-                          : undefined
-                      }
-                    >
-                      {selectedEntryUiState.isCurated ? 'Curated' : selectedEntryUiState.isRemote ? 'Remote' : 'Local'}
-                    </span>
-                  )}
+                  <EntryLabel
+                    entry={selectedEntry}
+                    uiState={selectedEntryUiState}
+                    showPill={!selectedEntryUiState.isDefaultEntry && !selectedEntryUiState.isCustomEntry}
+                  />
                 </span>
               </button>
               {renderEntryActions(selectedEntry, selectedEntryUiState, 'summary')}
@@ -501,41 +534,13 @@ const AssumptionsDropdown = ({
                 >
                   <div className="saved-assumption-row__top saved-assumption-row__top--menu">
                     {entryUiState.isEditing ? (
-                      <div className="saved-assumption-row__edit-controls">
-                        <input
-                          type="text"
-                          value={editLabel}
-                          onChange={(event) => {
-                            setEditLabel(event.target.value);
-                            setRenameError('');
-                          }}
-                          onKeyDown={(event) => {
-                            if (event.key === 'Enter') {
-                              event.preventDefault();
-                              commitRename();
-                            } else if (event.key === 'Escape') {
-                              event.preventDefault();
-                              cancelRename();
-                            }
-                          }}
-                          className="impact-field__input h-8 rounded-md px-2 text-sm"
-                          ref={renameInputRef}
-                        />
-                        <button
-                          type="button"
-                          onClick={(event) => stopActionEvent(event, commitRename)}
-                          className="impact-btn impact-btn--secondary impact-btn--xs"
-                        >
-                          Save
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(event) => stopActionEvent(event, cancelRename)}
-                          className="impact-btn impact-btn--secondary impact-btn--xs"
-                        >
-                          Cancel
-                        </button>
-                      </div>
+                      <EntryRenameControls
+                        editLabel={editLabel}
+                        inputRef={renameInputRef}
+                        onEditLabelChange={handleEditLabelChange}
+                        onCommit={(event) => stopActionEvent(event, commitRename)}
+                        onCancel={(event) => stopActionEvent(event, cancelRename)}
+                      />
                     ) : (
                       <>
                         <button
@@ -551,22 +556,7 @@ const AssumptionsDropdown = ({
                           className="saved-assumption-row__load-target"
                           data-selected={entryUiState.isActive}
                         >
-                          <span className="saved-assumption-row__label text-sm font-semibold text-strong">
-                            {entry.label}
-                          </span>
-                          {!entryUiState.isDefaultEntry && (
-                            <span
-                              className="assumption-state-pill assumption-state-pill--compact"
-                              data-state={
-                                entryUiState.isCurated ? 'curated' : entryUiState.isRemote ? 'remote' : 'local'
-                              }
-                              title={
-                                entryUiState.isRemote && entry.reference ? `Remote ref: ${entry.reference}` : undefined
-                              }
-                            >
-                              {entryUiState.isCurated ? 'Curated' : entryUiState.isRemote ? 'Remote' : 'Local'}
-                            </span>
-                          )}
+                          <EntryLabel entry={entry} uiState={entryUiState} showPill={!entryUiState.isDefaultEntry} />
                         </button>
                         {renderEntryActions(entry, entryUiState)}
                       </>

@@ -4,7 +4,8 @@ import userEvent from '@testing-library/user-event';
 import AssumptionsSelector from './AssumptionsSelector';
 
 const mockSetAllUserAssumptions = vi.fn();
-const mockMarkSavedAssumptionsLoaded = vi.fn();
+// Returns the real store contract — the library hook checks `.ok`.
+const mockMarkSavedAssumptionsLoaded = vi.fn(() => ({ ok: true }));
 const mockSetActiveSavedAssumptionsId = vi.fn();
 const mockShowNotification = vi.fn();
 const mockAssumptionsState = {
@@ -301,5 +302,23 @@ describe('AssumptionsSelector', () => {
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Copy Link' })).not.toBeInTheDocument();
+  });
+
+  it('shows a storage error instead of a silent no-op when activating a matching entry cannot persist', async () => {
+    // Current state already matches the saved entry → the load resolves to
+    // "activate-matching-entry", whose store write we make fail.
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+    mockMarkSavedAssumptionsLoaded.mockReturnValueOnce({ ok: false });
+
+    const user = userEvent.setup();
+    render(<AssumptionsSelector />);
+
+    const menu = await openMenu(user);
+    await user.click(
+      within(getMenuRow(menu, 'My Saved Assumptions')).getByRole('button', { name: /My Saved Assumptions/ })
+    );
+
+    expect(mockShowNotification).toHaveBeenCalledWith('error', expect.stringMatching(/could not save assumptions/i));
+    expect(mockSetActiveSavedAssumptionsId).not.toHaveBeenCalled();
   });
 });

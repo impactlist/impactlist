@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
@@ -15,49 +15,27 @@ import { useNotificationActions } from '../contexts/NotificationContext';
 import useAssumptionsSelectorPreference from '../hooks/useAssumptionsSelectorPreference';
 import useSaveAssumptionsModal from '../hooks/useSaveAssumptionsModal';
 import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
-import {
-  ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED,
-  getActiveAssumptionsLabel,
-} from '../utils/assumptionsSelectorDisplayPreference';
-import {
-  getAssumptionsLoadRequest,
-  isCurrentAssumptionsStateRepresentedByLibrary,
-  OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL,
-} from '../utils/assumptionsLoadHelpers';
-import {
-  getCuratedAssumptionsEntries,
-  hasCuratedAssumptionsLabel,
-  isCuratedAssumptionsEntryId,
-} from '../utils/curatedAssumptionsProfiles';
+import { ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED } from '../utils/assumptionsSelectorDisplayPreference';
+import { OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL } from '../utils/assumptionsLoadHelpers';
+import { hasCuratedAssumptionsLabel } from '../utils/curatedAssumptionsProfiles';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import useAssumptionsLibrary, { STORAGE_ERROR_MESSAGE } from '../hooks/useAssumptionsLibrary';
 import {
   completeSavedAssumptionsMigration,
-  createComparableAssumptionsFingerprint,
   deleteSavedAssumptions,
-  getActiveSavedAssumptionsId,
-  getSavedAssumptions,
-  markSavedAssumptionsLoaded,
   maybeRunSavedAssumptionsMigration,
   renameSavedAssumptions,
-  SAVED_ASSUMPTIONS_CHANGED_EVENT,
-  setActiveSavedAssumptionsId,
   updateSavedAssumptions,
 } from '../utils/savedAssumptionsStore';
-
-const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
-const DEFAULT_ASSUMPTIONS_ENTRY_ID = '__default__';
+import { DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../constants/assumptionsLibraryEntries';
 
 const AssumptionsPage = () => {
   useDocumentTitle('Assumptions Editor');
-  const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
+  const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing } = useAssumptions();
   const { showNotification } = useNotificationActions();
   const [showSelectorEveryPage, setShowSelectorEveryPage] = useAssumptionsSelectorPreference();
   const shouldReduceMotion = useReducedMotion();
-  const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [savedAssumptions, setSavedAssumptions] = useState([]);
-  const [activeSavedAssumptionsId, setActiveSavedAssumptionsIdState] = useState(null);
-  const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
   const [pendingDeleteEntryId, setPendingDeleteEntryId] = useState(null);
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
   const [migrationPromptOpen, setMigrationPromptOpen] = useState(false);
@@ -69,80 +47,29 @@ const AssumptionsPage = () => {
   const initialCategoryId = searchParams.get('categoryId') || null;
   const initialRecipientId = searchParams.get('recipientId') || null;
   const initialActiveCategory = searchParams.get('activeCategory') || null;
-  const assumptionsForSharing = getNormalizedUserAssumptionsForSharing();
-  const libraryEntries = useMemo(
-    () => [...curatedAssumptions, ...savedAssumptions],
-    [curatedAssumptions, savedAssumptions]
-  );
-  const currentFingerprint = useMemo(
-    () => createComparableAssumptionsFingerprint(assumptionsForSharing),
-    [assumptionsForSharing]
-  );
-  const activeLibraryEntry = useMemo(
-    () => libraryEntries.find((entry) => entry.id === activeSavedAssumptionsId) || null,
-    [activeSavedAssumptionsId, libraryEntries]
-  );
-  const activeLibraryEntryFingerprint = useMemo(
-    () => createComparableAssumptionsFingerprint(activeLibraryEntry?.assumptions),
-    [activeLibraryEntry?.assumptions]
-  );
-  const hasUnsavedChanges = activeLibraryEntry
-    ? activeLibraryEntryFingerprint !== currentFingerprint
-    : isUsingCustomValues;
+
+  const {
+    assumptionsForSharing,
+    libraryEntries,
+    activeSavedAssumptionsId,
+    activeLibraryEntry,
+    activeLibraryEntryFingerprint,
+    currentFingerprint,
+    hasUnsavedChanges,
+    activeAssumptionsLabel,
+    pendingLoadEntry,
+    handleLoadEntry,
+    handleContinuePendingLoad,
+    handleCancelPendingLoad,
+    persistAsActive,
+    refreshSavedAssumptions,
+  } = useAssumptionsLibrary({ notifyOnEntrySwitch: true });
+
   const activePanelEntryId = activeSavedAssumptionsId || DEFAULT_ASSUMPTIONS_ENTRY_ID;
-  const isCurrentStateRepresentedBySavedAssumptions = useMemo(
-    () =>
-      isCurrentAssumptionsStateRepresentedByLibrary({
-        isUsingCustomValues,
-        currentFingerprint,
-        libraryEntries,
-      }),
-    [currentFingerprint, isUsingCustomValues, libraryEntries]
-  );
   // `isUsingCustomValues` becomes false when the current state matches the built-in default assumptions,
   // but users can still have unsaved edits relative to a previously loaded saved set. Keep summary-row
   // Save/Share actions visible in that case so they can preserve or share the diverged state.
   const shouldShowCurrentAssumptionsActions = isUsingCustomValues || hasUnsavedChanges;
-  const activeAssumptionsLabel = useMemo(
-    () =>
-      getActiveAssumptionsLabel({
-        activeLibraryEntry,
-        activeSavedAssumptionsId,
-        hasUnsavedChanges,
-      }),
-    [activeLibraryEntry, activeSavedAssumptionsId, hasUnsavedChanges]
-  );
-
-  const refreshSavedAssumptions = useCallback(() => {
-    const entries = getSavedAssumptions();
-    const activeId = getActiveSavedAssumptionsId();
-    const activeExists =
-      activeId && (entries.some((entry) => entry.id === activeId) || isCuratedAssumptionsEntryId(activeId));
-
-    if (activeId && !activeExists) {
-      setActiveSavedAssumptionsId(null);
-      setActiveSavedAssumptionsIdState(null);
-    } else {
-      setActiveSavedAssumptionsIdState(activeId || null);
-    }
-
-    setSavedAssumptions(entries);
-  }, []);
-
-  useEffect(() => {
-    refreshSavedAssumptions();
-  }, [refreshSavedAssumptions]);
-
-  useEffect(() => {
-    const handleSavedAssumptionsChanged = () => {
-      refreshSavedAssumptions();
-    };
-
-    globalThis.addEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
-    return () => {
-      globalThis.removeEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
-    };
-  }, [refreshSavedAssumptions]);
 
   useEffect(() => {
     if (migrationCheckDone) {
@@ -206,14 +133,6 @@ const AssumptionsPage = () => {
     return result || { ok: true };
   }, []);
 
-  const persistAsActive = useCallback(
-    (entryId) => {
-      setActiveSavedAssumptionsId(entryId);
-      setActiveSavedAssumptionsIdState(entryId);
-      refreshSavedAssumptions();
-    },
-    [refreshSavedAssumptions]
-  );
   const {
     shareModalOpen,
     shareModalInitialResult,
@@ -231,122 +150,6 @@ const AssumptionsPage = () => {
     persistAsActive,
     showNotification,
   });
-
-  const applySavedAssumptionsEntry = useCallback(
-    (entry) => {
-      if (!entry?.assumptions) {
-        showNotification('error', 'Saved assumptions entry is invalid.');
-        return;
-      }
-
-      try {
-        setAllUserAssumptions(entry.assumptions);
-      } catch (error) {
-        // Saved entries can outlive a data update; loading one must not
-        // crash the app.
-        console.error('Failed to load saved assumptions entry', error);
-        showNotification('error', `Could not load "${entry.label || 'saved assumptions'}": ${error.message}`);
-        return;
-      }
-
-      if (entry.source === 'curated') {
-        persistAsActive(entry.id);
-        return;
-      }
-
-      const loadedResult = markSavedAssumptionsLoaded(entry.id);
-      if (!loadedResult.ok) {
-        showNotification('error', STORAGE_ERROR_MESSAGE);
-        return;
-      }
-
-      persistAsActive(entry.id);
-    },
-    [persistAsActive, setAllUserAssumptions, showNotification]
-  );
-
-  const applyDefaultAssumptions = useCallback(() => {
-    setAllUserAssumptions(null);
-    setActiveSavedAssumptionsId(null);
-    setActiveSavedAssumptionsIdState(null);
-    refreshSavedAssumptions();
-  }, [refreshSavedAssumptions, setAllUserAssumptions]);
-
-  const handleLoadSavedAssumptions = useCallback(
-    (entry) => {
-      const loadRequest = getAssumptionsLoadRequest({
-        entry,
-        activeId: activeSavedAssumptionsId,
-        currentFingerprint,
-        isUsingCustomValues,
-        isCurrentStateRepresentedBySavedAssumptions,
-        defaultEntryId: DEFAULT_ASSUMPTIONS_ENTRY_ID,
-      });
-
-      if (loadRequest.type === 'already-default') {
-        showNotification('info', 'Default assumptions are already loaded.');
-        return;
-      }
-
-      if (loadRequest.type === 'activate-matching-entry') {
-        if (entry.source === 'curated') {
-          persistAsActive(entry.id);
-        } else {
-          const loadedResult = markSavedAssumptionsLoaded(entry.id);
-          if (loadedResult.ok) {
-            persistAsActive(entry.id);
-          }
-        }
-        const isSameActiveEntry = activeSavedAssumptionsId === entry.id;
-        showNotification(
-          'info',
-          isSameActiveEntry ? 'These assumptions are already loaded.' : 'Switched active saved assumptions entry.'
-        );
-        return;
-      }
-
-      if (loadRequest.type === 'confirm') {
-        setPendingLoadEntry(entry);
-        return;
-      }
-
-      if (loadRequest.type === 'apply-default') {
-        applyDefaultAssumptions();
-        return;
-      }
-
-      if (loadRequest.type === 'apply-entry') {
-        applySavedAssumptionsEntry(entry);
-      }
-    },
-    [
-      activeSavedAssumptionsId,
-      applyDefaultAssumptions,
-      applySavedAssumptionsEntry,
-      currentFingerprint,
-      isCurrentStateRepresentedBySavedAssumptions,
-      isUsingCustomValues,
-      persistAsActive,
-      showNotification,
-    ]
-  );
-
-  const handleContinuePendingLoad = useCallback(() => {
-    if (!pendingLoadEntry) {
-      return;
-    }
-    if (pendingLoadEntry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
-      applyDefaultAssumptions();
-      setPendingLoadEntry(null);
-      return;
-    }
-    applySavedAssumptionsEntry(pendingLoadEntry);
-    setPendingLoadEntry(null);
-  }, [applyDefaultAssumptions, applySavedAssumptionsEntry, pendingLoadEntry]);
-
-  const handleCancelPendingLoad = useCallback(() => {
-    setPendingLoadEntry(null);
-  }, []);
 
   const handleShareButtonClick = useCallback(() => {
     const prepareResult = commitPendingEdits();
@@ -507,7 +310,7 @@ const AssumptionsPage = () => {
           activeId={activePanelEntryId}
           hasUnsavedChanges={hasUnsavedChanges}
           showCurrentActions={shouldShowCurrentAssumptionsActions}
-          onLoad={handleLoadSavedAssumptions}
+          onLoad={handleLoadEntry}
           onSaveCurrent={handleSaveAssumptionsClick}
           onShareCurrent={handleShareButtonClick}
           onRename={handleRenameSavedAssumptions}

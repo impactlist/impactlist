@@ -1,208 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getCuratedAssumptionsEntries, isCuratedAssumptionsEntryId } from '../../utils/curatedAssumptionsProfiles';
-import {
-  createComparableAssumptionsFingerprint,
-  getActiveSavedAssumptionsId,
-  getSavedAssumptions,
-  markSavedAssumptionsLoaded,
-  SAVED_ASSUMPTIONS_CHANGED_EVENT,
-  setActiveSavedAssumptionsId,
-} from '../../utils/savedAssumptionsStore';
-import { useAssumptions } from '../../contexts/AssumptionsContext';
-import { useNotificationActions } from '../../contexts/NotificationContext';
-import {
-  getAssumptionsLoadRequest,
-  isCurrentAssumptionsStateRepresentedByLibrary,
-  OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL,
-} from '../../utils/assumptionsLoadHelpers';
+import useAssumptionsLibrary from '../../hooks/useAssumptionsLibrary';
 import useAssumptionsSelectorPreference from '../../hooks/useAssumptionsSelectorPreference';
-import { getActiveAssumptionsLabel } from '../../utils/assumptionsSelectorDisplayPreference';
+import { OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL } from '../../utils/assumptionsLoadHelpers';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
 import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import InfoTooltipIcon from './InfoTooltipIcon';
-import AssumptionsDropdown, { DEFAULT_ASSUMPTIONS_ENTRY_ID } from './AssumptionsDropdown';
+import AssumptionsDropdown from './AssumptionsDropdown';
 
 const AssumptionsSelector = ({ className = '', interactive }) => {
-  const [savedAssumptions, setSavedAssumptions] = useState([]);
-  const [activeSavedAssumptionsIdState, setActiveSavedAssumptionsIdState] = useState(null);
-  const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
-  const { getNormalizedUserAssumptionsForSharing, isUsingCustomValues, setAllUserAssumptions } = useAssumptions();
-  const { showNotification } = useNotificationActions();
   const [showSelectorEveryPage] = useAssumptionsSelectorPreference();
 
-  const assumptionsForSharing = useMemo(
-    () => getNormalizedUserAssumptionsForSharing(),
-    [getNormalizedUserAssumptionsForSharing]
-  );
-  const curatedAssumptions = useMemo(() => getCuratedAssumptionsEntries(), []);
-  const libraryEntries = useMemo(
-    () => [...curatedAssumptions, ...savedAssumptions],
-    [curatedAssumptions, savedAssumptions]
-  );
-  const currentAssumptionsFingerprint = useMemo(
-    () => createComparableAssumptionsFingerprint(assumptionsForSharing),
-    [assumptionsForSharing]
-  );
-  const activeLibraryEntry = useMemo(
-    () => libraryEntries.find((entry) => entry.id === activeSavedAssumptionsIdState) || null,
-    [activeSavedAssumptionsIdState, libraryEntries]
-  );
-  const activeLibraryEntryFingerprint = useMemo(
-    () => createComparableAssumptionsFingerprint(activeLibraryEntry?.assumptions),
-    [activeLibraryEntry?.assumptions]
-  );
-  const hasUnsavedChanges = activeLibraryEntry
-    ? activeLibraryEntryFingerprint !== currentAssumptionsFingerprint
-    : isUsingCustomValues;
-  const isCurrentStateRepresentedBySavedAssumptions = useMemo(
-    () =>
-      isCurrentAssumptionsStateRepresentedByLibrary({
-        isUsingCustomValues,
-        currentFingerprint: currentAssumptionsFingerprint,
-        libraryEntries,
-      }),
-    [currentAssumptionsFingerprint, isUsingCustomValues, libraryEntries]
-  );
-  const currentSelectionLabel = useMemo(
-    () =>
-      getActiveAssumptionsLabel({
-        activeLibraryEntry,
-        activeSavedAssumptionsId: activeSavedAssumptionsIdState,
-        hasUnsavedChanges,
-      }),
-    [activeLibraryEntry, activeSavedAssumptionsIdState, hasUnsavedChanges]
-  );
+  const {
+    libraryEntries,
+    activeSavedAssumptionsId,
+    hasUnsavedChanges,
+    activeAssumptionsLabel,
+    pendingLoadEntry,
+    handleLoadEntry,
+    handleContinuePendingLoad,
+    handleCancelPendingLoad,
+  } = useAssumptionsLibrary();
+
   // This dropdown path is controlled by the "show on every page" preference from the
   // Assumptions page, so it remains available without forcing it on by default.
   const shouldRenderInteractive = interactive ?? showSelectorEveryPage;
-
-  const refreshSavedAssumptions = useCallback(() => {
-    const entries = getSavedAssumptions();
-    const activeId = getActiveSavedAssumptionsId();
-    const activeExists =
-      activeId && (entries.some((entry) => entry.id === activeId) || isCuratedAssumptionsEntryId(activeId));
-
-    setSavedAssumptions(entries);
-    setActiveSavedAssumptionsIdState(activeExists ? activeId : null);
-  }, []);
-
-  useEffect(() => {
-    refreshSavedAssumptions();
-  }, [refreshSavedAssumptions]);
-
-  useEffect(() => {
-    const handleSavedAssumptionsChanged = () => {
-      refreshSavedAssumptions();
-    };
-
-    globalThis.addEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
-    return () => {
-      globalThis.removeEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
-    };
-  }, [refreshSavedAssumptions]);
-
-  const applyDefaultAssumptions = useCallback(() => {
-    setAllUserAssumptions(null);
-    setActiveSavedAssumptionsId(null);
-    setActiveSavedAssumptionsIdState(null);
-  }, [setAllUserAssumptions]);
-
-  const applySavedAssumptionsEntry = useCallback(
-    (entry) => {
-      if (!entry?.assumptions) {
-        return;
-      }
-
-      try {
-        setAllUserAssumptions(entry.assumptions);
-      } catch (error) {
-        // Saved entries can outlive a data update; loading one must not
-        // crash the app.
-        console.error('Failed to load saved assumptions entry', error);
-        showNotification('error', `Could not load "${entry.label || 'saved assumptions'}": ${error.message}`);
-        return;
-      }
-
-      if (entry.source !== 'curated') {
-        markSavedAssumptionsLoaded(entry.id);
-      }
-
-      setActiveSavedAssumptionsId(entry.id);
-      setActiveSavedAssumptionsIdState(entry.id);
-    },
-    [setAllUserAssumptions, showNotification]
-  );
-
-  const handleLoad = useCallback(
-    (entry) => {
-      const loadRequest = getAssumptionsLoadRequest({
-        entry,
-        activeId: activeSavedAssumptionsIdState,
-        currentFingerprint: currentAssumptionsFingerprint,
-        isUsingCustomValues,
-        isCurrentStateRepresentedBySavedAssumptions,
-        defaultEntryId: DEFAULT_ASSUMPTIONS_ENTRY_ID,
-      });
-
-      if (loadRequest.type === 'already-default') {
-        showNotification('info', 'Default assumptions are already loaded.');
-        return;
-      }
-
-      if (loadRequest.type === 'confirm') {
-        setPendingLoadEntry(entry);
-        return;
-      }
-
-      if (loadRequest.type === 'apply-default') {
-        applyDefaultAssumptions();
-        return;
-      }
-
-      if (loadRequest.type === 'activate-matching-entry') {
-        if (entry.source !== 'curated') {
-          markSavedAssumptionsLoaded(entry.id);
-        }
-        setActiveSavedAssumptionsId(entry.id);
-        setActiveSavedAssumptionsIdState(entry.id);
-        return;
-      }
-
-      if (loadRequest.type === 'apply-entry') {
-        applySavedAssumptionsEntry(entry);
-      }
-    },
-    [
-      activeSavedAssumptionsIdState,
-      applyDefaultAssumptions,
-      applySavedAssumptionsEntry,
-      currentAssumptionsFingerprint,
-      isCurrentStateRepresentedBySavedAssumptions,
-      isUsingCustomValues,
-      showNotification,
-    ]
-  );
-
-  const handleContinuePendingLoad = useCallback(() => {
-    if (!pendingLoadEntry) {
-      return;
-    }
-
-    if (pendingLoadEntry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
-      applyDefaultAssumptions();
-      setPendingLoadEntry(null);
-      return;
-    }
-
-    applySavedAssumptionsEntry(pendingLoadEntry);
-    setPendingLoadEntry(null);
-  }, [applyDefaultAssumptions, applySavedAssumptionsEntry, pendingLoadEntry]);
-
-  const handleCancelPendingLoad = useCallback(() => {
-    setPendingLoadEntry(null);
-  }, []);
 
   const handleDescriptionModalOpen = useCallback((entry) => {
     if (!entry?.id || (!entry.description && !entry.content)) {
@@ -236,7 +59,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
   );
   const displayLabel = (
     <>
-      <span className="assumptions-selector-bar__display-text">Active assumptions: {currentSelectionLabel}</span>
+      <span className="assumptions-selector-bar__display-text">Active assumptions: {activeAssumptionsLabel}</span>
       <InfoTooltipIcon
         className="assumptions-selector-bar__label-tooltip"
         iconClassName="h-4 w-4 text-muted"
@@ -264,7 +87,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
         className={className}
         inlineLabel={inlineLabel}
         entries={libraryEntries}
-        activeId={activeSavedAssumptionsIdState}
+        activeId={activeSavedAssumptionsId}
         hasUnsavedChanges={hasUnsavedChanges}
         menuAriaLabel="Assumptions options"
         allowEntryManagementActions={false}
@@ -272,7 +95,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
         showCurrentSaveAction={false}
         showCurrentShareAction={false}
         showShareForLocal={false}
-        onLoad={handleLoad}
+        onLoad={handleLoadEntry}
         onDescription={handleDescriptionModalOpen}
       />
 

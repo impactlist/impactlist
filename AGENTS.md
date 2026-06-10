@@ -17,7 +17,7 @@
 - `npm run build`: Generate data, then production build via Vite.
 - `npm run preview`: Serve the built app locally.
 - `npm test` / `npm run test:run`: Vitest (watch / single run). `npm run test:coverage` enforces 50% coverage floors.
-- `npm run test:e2e`: Playwright (builds production first).
+- `npm run test:e2e`: Playwright, chromium only (builds production first). `npm run test:e2e:release` adds firefox + webkit — release-prep only, never routine verification.
 - `npm run lint` / `npm run lint:fix`: Lint (and auto-fix) JS/JSX.
 
 ## Coding Style & Naming Conventions

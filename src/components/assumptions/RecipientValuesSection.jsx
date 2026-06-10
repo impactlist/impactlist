@@ -76,7 +76,9 @@ const RecipientValuesSection = ({
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {filteredRecipients
+          {/* Copy before sorting — sorting the prop array in place mutates
+              the caller's state during render. */}
+          {[...filteredRecipients]
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((recipient) => {
               const recipientCategories = Object.entries(recipient.categories || {});

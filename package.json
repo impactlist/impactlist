@@ -24,8 +24,9 @@
     "test:coverage": "vitest run --coverage",
     "pretest:watch": "npm run generate-data",
     "test:watch": "vitest --watch",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:headed": "playwright test --headed --project=chromium",
+    "test:e2e:release": "playwright install firefox webkit && playwright test"
   },
   "lint-staged": {
     "**/*.{js,jsx}": [

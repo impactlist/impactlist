@@ -23,10 +23,22 @@ export default defineConfig({
     timeout: 180 * 1000,
     reuseExistingServer: !process.env.CI,
   },
+  // Routine runs (npm run test:e2e, the nightly workflow) pin
+  // --project=chromium and stay fast. firefox/webkit exist ONLY for
+  // `npm run test:e2e:release` — the pre-release/publicity cross-browser
+  // pass. Don't add them to anything that runs repeatedly.
   projects: [
     {
       name: 'chromium',
       use: { browserName: 'chromium' },
+    },
+    {
+      name: 'firefox',
+      use: { browserName: 'firefox' },
+    },
+    {
+      name: 'webkit',
+      use: { browserName: 'webkit' },
     },
   ],
 });

@@ -99,8 +99,9 @@ Test Scripts Available:
 - npm run test:run - Run once and exit
 - npm run test:coverage - Generate coverage report (enforces 50% coverage floors)
 - npm run test:watch - Explicit watch mode
-- npm run test:e2e - Playwright end-to-end tests (builds the app and serves a preview automatically)
+- npm run test:e2e - Playwright end-to-end tests, chromium only (builds the app and serves a preview automatically)
 - npm run test:e2e:headed - Same, with a visible browser
+- npm run test:e2e:release - The cross-browser pass (chromium + firefox + webkit, self-installs browsers). Run before a release or publicity push, not routinely
 
 CI (GitHub Actions) runs lint, the coverage-gated unit suite, and the production build on every push/PR; the e2e suite runs nightly.
 

@@ -21,4 +21,4 @@ The math that produces every number on the site lives here. Treat `effectsCalcul
 - `effectToCostPerLife` branches on `costPerQALY !== undefined` — a stray field flips the model. That's why unknown-field rejection exists at every external boundary.
 - `selectEffectsForYear` filters by `validTimeInterval` (`[start|null, end|null]`); effects also re-filter inside `calculateCostPerLife` — harmless double filter, don't "fix" one without the other.
 - `effectsVisualization.js` returns a points ARRAY with `seriesMetadata` attached as an expando property — `.map`/`.filter` upstream silently strips it.
-- Test conventions: `effectsCalculation.test.js` is property-style (monotonicity, boundary continuity, integration-matches-total) — extend in that spirit. Several validation files still have thin coverage (see docs/CodebaseReview-2026-06-10.md §2.8).
+- Test conventions: `effectsCalculation.test.js` is property-style (monotonicity, boundary continuity, integration-matches-total) — extend in that spirit. The validation/editor utilities have direct suites (`effectValidation.test.js`, `effectEditorUtils.test.js`); extend those rather than testing through components.

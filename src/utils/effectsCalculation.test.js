@@ -445,8 +445,7 @@ describe('effectsCalculation', () => {
         expect(totalIntegrated).toBeCloseTo(totalExpectedLives, 4);
       });
 
-      it('should debug unified approach with simple case', () => {
-        // Super simple test case to isolate the issue
+      it('shortening timeLimit truncates the effect window, monotonically raising cost per life', () => {
         const simpleParams = { ...baseGlobalParams, discountRate: 0.0, timeLimit: 20 };
 
         // Simple effect: starts at year 0, runs 10 years, with zero discount

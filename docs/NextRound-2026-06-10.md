@@ -50,15 +50,15 @@ This is the best-protected refactor remaining: the 50+ `AssumptionsPage` integra
 
 **Verification:** those three suites plus the e2e assumptions flows. **Decision needed:** none.
 
-### W5. Verification-layer backfill (§2.8 remainder + one-liners) — M, purely additive
+### W5. ✅ Done 2026-06-10 — Verification-layer backfill (§2.8 remainder + one-liners) — M, purely additive
 
 - **`src/utils/effectValidation.js` — 385 lines, still zero direct tests**, including `getRecipientEffectsChangeState` (called "the most fragile editor logic" in the review; item 6's hook tests exercise it only indirectly via `getEffectsToSave`).
 - **Unit tests for the item-7 chart hooks** — `useCategoryChartData` (aggregation, fraction splits, the top-12/"Other Causes" cap, percentage formatting) and `useChartViewTransition` (idle rebuild, the FROM→TO transition, animation-flag timing). Item 6's hook got eight tests; these two got only indirect e2e coverage.
 - **Rename the `"should debug unified approach with simple case"` test** in `effectsCalculation.test.js` to describe what it asserts.
 - **`RecipientValuesSection.jsx` still `.sort()`s `filteredRecipients` in place during render** — same mutation class the last review round fixed in `SpecificDonationModal`; one-line `[...]` copy (or a memo).
-- Optional: run the e2e suite on firefox/webkit **in the nightly only** (keeping PR-blocking runs chromium-fast).
+- ~~Optional: run the e2e suite on firefox/webkit in the nightly only~~ _(✅ resolved 2026-06-10, differently: there is no nightly consumer for a solo project, so firefox/webkit are defined as Playwright projects but run ONLY via `npm run test:e2e:release` — the pre-release/publicity cross-browser pass. All routine entry points pin `--project=chromium`.)_
 
-**Verification:** the new tests are the deliverable; full suite + lint. **Decision needed:** whether cross-browser nightly is wanted.
+**Verification:** the new tests are the deliverable; full suite + lint. **Decision needed:** ~~whether cross-browser nightly is wanted~~ (resolved — see above).
 
 ### W6. Small-clones sweep (rest of §2.4.6) — M
 
@@ -96,4 +96,4 @@ Grouping principle: items that share a **verification surface** (one build/test/
 | **B — library hook**       | W4           | M    | Single component surface; the best-tested refactor target in the repo.                                                                                                                                                                                                                                      | none                                                           |
 | **D — small-clones sweep** | W6           | M    | Mechanical refactors amortized under one full sweep.                                                                                                                                                                                                                                                        | ∞-sentinel rule                                                |
 
-**Recommended order: A → C → B → D.** _Chunk A completed 2026-06-10: SPA rewrite no longer excludes dotted URLs (dev-server exclusions kept for `vercel dev`), immutable `Cache-Control` on `/assets/*` plus the safe security-header set (CSP deliberately skipped), generator emits `sitemap.xml`/`robots.txt` (356 URLs; origin from `SITE_ORIGIN` → `VERCEL_PROJECT_PRODUCTION_URL` → localhost; gitignored; pipeline-tested), and `manualChunks` isolates the dataset — entry chunk 1.37MB → 416KB with the data in an immutably-cached 968KB chunk._ A is the only chunk users can feel and the only one needing up-front decisions; C makes everything after it safer; B and D are interchangeable. Each chunk is a single reviewable commit in the style of the prior rounds.
+**Recommended order: A → C → B → D.** _Chunk A completed 2026-06-10: SPA rewrite no longer excludes dotted URLs (dev-server exclusions kept for `vercel dev`), immutable `Cache-Control` on `/assets/*` plus the safe security-header set (CSP deliberately skipped), generator emits `sitemap.xml`/`robots.txt` (356 URLs; origin from `SITE_ORIGIN` → `VERCEL_PROJECT_PRODUCTION_URL` → localhost; gitignored; pipeline-tested), and `manualChunks` isolates the dataset — entry chunk 1.37MB → 416KB with the data in an immutably-cached 968KB chunk._ _Chunk C completed 2026-06-10: 33 new unit tests (effectValidation, getRecipientEffectsChangeState, both chart hooks), the debug-named test renamed, the RecipientValuesSection in-place sort fixed — and the first `test:e2e:release` run passed 24/24 across chromium/firefox/webkit._ A is the only chunk users can feel and the only one needing up-front decisions; C makes everything after it safer; B and D are interchangeable. Each chunk is a single reviewable commit in the style of the prior rounds.

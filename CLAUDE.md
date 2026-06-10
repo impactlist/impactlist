@@ -9,7 +9,8 @@ Most directories have their own CLAUDE.md (with an identical AGENTS.md) describi
 ## Workflow essentials
 
 - The app imports gitignored generated data (`src/data/generatedData.js`); `npm run dev`/`npm test*`/`npm run build` all regenerate it automatically via pre-scripts. Run `npm run generate-data` yourself only before direct `npx vitest`/`npx playwright` invocations.
-- Verify with: `npm run test:run` (fast, ~6s), `npm run lint` (~2s), `npm run build`. CI (`.github/workflows/ci.yml`) runs generate → lint → coverage-gated tests (50% floors via `npm run test:coverage`) → build on pushes to master and PRs.
+- Verify with: `npm run test:run` (fast, ~6s), `npm run lint` (~2s), `npm run build`. CI (`.github/workflows/ci.yml`) runs generate → lint → coverage-gated tests (50% floors via `npm run test:coverage`) → build on pushes to master and PRs. E2e (`npm run test:e2e`) is chromium-only by design.
+- `npm run test:e2e:release` runs the e2e suite on chromium + firefox + webkit (self-installs the extra browsers). It exists ONLY for preparing a release or publicity push — do NOT run it as part of routine verification, even when finalizing UI changes; chromium e2e is the session gate.
 - Tests are behavioral (Testing Library / subprocess fixtures for the generator / mocked Redis for the server). Write tests in the style of the suite you're extending.
 
 ## Most Critical Instructions

@@ -7,6 +7,7 @@
 - `useAssumptionsEditorController` — the assumptions editor's tab/entity/URL orchestration.
 - `useAssumptionsShareActions` / `useSaveAssumptionsModal` — share-link and save-to-library flows shared by AssumptionsPage and AssumptionsSelector.
 - `useAssumptionsSelectorPreference` — localStorage-backed "show selector on every page" preference.
+- `useRecipientEffectsDraft` — the recipient effect editors' entire draft state machine (stringly override drafts, override/multiplier exclusivity, validation errors, preview costs, minimal save shape via `getEffectsToSave()` — drafts carry an internal `_baseEffect` that must never reach saved state). Takes `defaultAssumptions`/`userAssumptions` as arguments (pure; unit-tested with synthetic data).
 - `useRecipientEffectAdapter` — adapts recipient override/multiplier wrappers onto the category effect-input layouts.
 - `useGlobalForm` — global-parameters form state for the editor.
 - `useAssumptionsForm.js` — **misnamed**: it actually exports `useRecipientSearch` (recipient search/filter state). Rename pending; don't add a real `useAssumptionsForm` without resolving the collision.

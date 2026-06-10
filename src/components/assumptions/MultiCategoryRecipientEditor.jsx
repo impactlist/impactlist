@@ -1,23 +1,14 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import RecipientQalyEffectInputs from './effects/RecipientQalyEffectInputs';
-import RecipientPopulationEffectInputs from './effects/RecipientPopulationEffectInputs';
-import EffectCostDisplay from '../shared/EffectCostDisplay';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import EffectEditorActionButtons from '../shared/EffectEditorActionButtons';
-import DisableToggleButton from '../shared/DisableToggleButton';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
-import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
-import {
-  buildRecipientEditableEffects,
-  calculateEffectCostPerLife,
-  getRecipientEffectsChangeState,
-  haveEffectsChanged,
-} from '../../utils/effectEditorUtils';
+import RecipientEffectCard from './RecipientEffectCard';
+import useRecipientEffectsDraft from '../../hooks/useRecipientEffectsDraft';
+import { getRecipientEffectsChangeState } from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
-import { getEffectType, validateRecipientEffectField } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
@@ -26,7 +17,7 @@ import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * A single category's effect section within the multi-category editor.
- * Manages its own effect state and reports changes to the parent.
+ * Manages its own draft state and reports changes to the parent.
  */
 const CategoryEffectSection = ({
   recipientId,
@@ -37,133 +28,31 @@ const CategoryEffectSection = ({
   onEffectsChange,
   sectionRef,
 }) => {
-  const [tempEditToEffects, setTempEditToEffects] = useState([]);
-  const [errors, setErrors] = useState({});
   const { defaultAssumptions, userAssumptions } = useAssumptions();
 
-  // Get default effects for this recipient category
-  const defaultRecipientEffects = useMemo(() => {
-    if (!defaultAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects) {
-      return [];
-    }
-    return defaultAssumptions.recipients[recipientId].categories[categoryId].effects;
-  }, [defaultAssumptions, recipientId, categoryId]);
-
-  // Get base category effects for reference
-  const baseCategoryEffects = useMemo(() => {
-    if (!category?.effects) {
-      return [];
-    }
-    return category.effects;
-  }, [category]);
-
-  const baselineEffects = useMemo(() => {
-    const userRecipientEffects = userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-    const userCategoryEffects = userAssumptions?.categories?.[categoryId]?.effects;
-    return buildRecipientEditableEffects({
-      baseCategoryEffects,
-      defaultRecipientEffects,
-      userRecipientEffects,
-      userCategoryEffects,
-    });
-  }, [baseCategoryEffects, defaultRecipientEffects, userAssumptions, recipientId, categoryId]);
-
-  // Initialize temp effects from recipient's current effects
-  useEffect(() => {
-    setTempEditToEffects(baselineEffects);
-  }, [baselineEffects]);
-
-  const hasUnsavedChanges = useMemo(() => {
-    return haveEffectsChanged(tempEditToEffects, baselineEffects);
-  }, [tempEditToEffects, baselineEffects]);
-
-  const toggleEffectDisabled = (effectIndex) => {
-    setTempEditToEffects((prev) => {
-      const newEffects = [...prev];
-      newEffects[effectIndex] = {
-        ...newEffects[effectIndex],
-        disabled: !newEffects[effectIndex].disabled,
-      };
-      return newEffects;
-    });
-  };
-
-  const updateEffectField = (effectIndex, fieldName, value) => {
-    setTempEditToEffects((prev) => {
-      const newEffects = [...prev];
-      const effect = { ...newEffects[effectIndex] };
-
-      if (!effect.overrides) effect.overrides = {};
-      if (!effect.multipliers) effect.multipliers = {};
-
-      effect.overrides = { ...effect.overrides, [fieldName]: value };
-
-      if (value === '' || value === null || value === undefined) {
-        delete effect.overrides[fieldName];
-      }
-      // Override-only UI: editing a field always removes multiplier mode for that field.
-      delete effect.multipliers[fieldName];
-
-      newEffects[effectIndex] = effect;
-      return newEffects;
-    });
-
-    const error = validateRecipientEffectField(
-      fieldName,
-      value,
-      'override',
-      getEffectType(tempEditToEffects[effectIndex]._baseEffect)
-    );
-    const errorKey = `${effectIndex}-${fieldName}-override`;
-
-    setErrors((prev) => {
-      const newErrors = { ...prev };
-      if (error) {
-        newErrors[errorKey] = error;
-      } else {
-        delete newErrors[errorKey];
-        delete newErrors[`${effectIndex}-${fieldName}-multiplier`];
-      }
-      return newErrors;
-    });
-  };
-
-  // Calculate cost per life for each effect
-  const effectCostPerLife = useMemo(() => {
-    const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
-
-    return tempEditToEffects.map((effect) => {
-      const baseEffect = effect._baseEffect;
-      if (!baseEffect) return Infinity;
-
-      if (baseEffect.disabled || effect.disabled) {
-        return Infinity;
-      }
-
-      const effectToApply = {
-        effectId: effect.effectId,
-        overrides: { ...(effect.overrides || {}) },
-        multipliers: { ...(effect.multipliers || {}) },
-        disabled: effect.disabled,
-      };
-
-      if (Object.keys(effectToApply.overrides).length === 0) delete effectToApply.overrides;
-      if (Object.keys(effectToApply.multipliers).length === 0) delete effectToApply.multipliers;
-
-      const modifiedEffect = applyRecipientEffectToBase(baseEffect, effectToApply, `effect ${effect.effectId}`);
-      return calculateEffectCostPerLife(modifiedEffect, globalParameters, yearForCalculation);
-    });
-  }, [tempEditToEffects, globalParameters, previewYear]);
-
-  // Calculate combined cost per life for this category
-  const combinedCostPerLife = useMemo(() => {
-    return calculateCombinedCostPerLife(effectCostPerLife);
-  }, [effectCostPerLife]);
+  const {
+    effects,
+    errors,
+    hasUnsavedChanges,
+    effectCostPerLife,
+    combinedCostPerLife,
+    effectInputSources,
+    toggleEffectDisabled,
+    updateEffectField,
+  } = useRecipientEffectsDraft({
+    recipientId,
+    categoryId,
+    category,
+    globalParameters,
+    previewYear,
+    defaultAssumptions,
+    userAssumptions,
+  });
 
   // Report changes to parent whenever effects or errors change
   useEffect(() => {
-    onEffectsChange(categoryId, tempEditToEffects, errors, hasUnsavedChanges, combinedCostPerLife);
-  }, [categoryId, tempEditToEffects, errors, hasUnsavedChanges, combinedCostPerLife, onEffectsChange]);
+    onEffectsChange(categoryId, effects, errors, hasUnsavedChanges, combinedCostPerLife);
+  }, [categoryId, effects, errors, hasUnsavedChanges, combinedCostPerLife, onEffectsChange]);
 
   return (
     <div ref={sectionRef} className="effect-card effect-card--flush effect-card--category-group mb-4 overflow-hidden">
@@ -176,7 +65,7 @@ const CategoryEffectSection = ({
             </Link>
           </h3>
           {/* Only show combined cost when there are multiple effects */}
-          {tempEditToEffects.length > 1 && (
+          {effects.length > 1 && (
             <div className="effect-card__summary">
               <span>Combined cost per life: </span>
               <span
@@ -199,95 +88,20 @@ const CategoryEffectSection = ({
 
       {/* Effects list */}
       <div className="effect-card__category-body p-3 space-y-3">
-        {tempEditToEffects.map((effect, index) => {
-          const baseEffect = effect._baseEffect;
-          const effectType = getEffectType(baseEffect);
-          const costPerLife = effectCostPerLife[index];
-
-          const defaultRecipientEffect = defaultRecipientEffects.find((e) => e.effectId === effect.effectId);
-          const defaultCategoryEffect = defaultAssumptions?.categories?.[categoryId]?.effects?.find(
-            (e) => e.effectId === effect.effectId
-          );
-          const userCategoryEffect = userAssumptions?.categories?.[categoryId]?.effects?.find(
-            (e) => e.effectId === effect.effectId
-          );
-
-          const isDisabledByCategory = baseEffect?.disabled || false;
-          const isDisabledByRecipient = effect.disabled || false;
-          const isFullyDisabled = isDisabledByCategory || isDisabledByRecipient;
-
-          return (
-            <div key={effect.effectId} className="effect-card effect-card--section transition-all duration-200">
-              <div className="mb-2">
-                <div className="flex flex-wrap justify-between items-start gap-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h4 className={`effect-card__title ${isFullyDisabled ? 'effect-disabled' : ''}`}>
-                      Effect {index + 1}: {effect.effectId}
-                    </h4>
-                    {!isDisabledByCategory && (
-                      <DisableToggleButton
-                        isDisabled={isDisabledByRecipient}
-                        onToggle={() => toggleEffectDisabled(index)}
-                      />
-                    )}
-                    {isDisabledByCategory && (
-                      <span className={`effect-card__disabled-note ${isFullyDisabled ? 'effect-disabled' : ''}`}>
-                        (Disabled in cause)
-                      </span>
-                    )}
-                  </div>
-                  <div className={isFullyDisabled ? 'effect-disabled' : ''}>
-                    <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm whitespace-nowrap" />
-                  </div>
-                </div>
-                {baseEffect?.validTimeInterval && (
-                  <p className={`effect-card__meta mt-1 ${isFullyDisabled ? 'effect-disabled' : ''}`}>
-                    Active:{' '}
-                    {baseEffect.validTimeInterval[0] === null
-                      ? `Until ${baseEffect.validTimeInterval[1]}`
-                      : `${baseEffect.validTimeInterval[0]} - ${baseEffect.validTimeInterval[1] || 'present'}`}
-                    {(previewYear < baseEffect.validTimeInterval[0] ||
-                      (baseEffect.validTimeInterval[1] && previewYear > baseEffect.validTimeInterval[1])) && (
-                      <span className="effect-card__meta--inactive ml-2">(Not active in {previewYear})</span>
-                    )}
-                  </p>
-                )}
-              </div>
-
-              <div className={isFullyDisabled ? 'effect-disabled-content' : ''}>
-                {effectType === 'qaly' ? (
-                  <RecipientQalyEffectInputs
-                    effectIndex={index}
-                    defaultCategoryEffect={defaultCategoryEffect}
-                    userCategoryEffect={userCategoryEffect}
-                    defaultRecipientEffect={defaultRecipientEffect}
-                    errors={errors}
-                    overrides={effect.overrides}
-                    multipliers={effect.multipliers}
-                    onChange={updateEffectField}
-                    globalParameters={globalParameters}
-                    isDisabled={isFullyDisabled}
-                  />
-                ) : effectType === 'population' ? (
-                  <RecipientPopulationEffectInputs
-                    effectIndex={index}
-                    defaultCategoryEffect={defaultCategoryEffect}
-                    userCategoryEffect={userCategoryEffect}
-                    defaultRecipientEffect={defaultRecipientEffect}
-                    errors={errors}
-                    overrides={effect.overrides}
-                    multipliers={effect.multipliers}
-                    onChange={updateEffectField}
-                    globalParameters={globalParameters}
-                    isDisabled={isFullyDisabled}
-                  />
-                ) : (
-                  <div className="text-sm text-danger">Unknown effect type</div>
-                )}
-              </div>
-            </div>
-          );
-        })}
+        {effects.map((effect, index) => (
+          <RecipientEffectCard
+            key={effect.effectId}
+            effect={effect}
+            index={index}
+            costPerLife={effectCostPerLife[index]}
+            sources={effectInputSources[index]}
+            errors={errors}
+            onChange={updateEffectField}
+            onToggleDisabled={() => toggleEffectDisabled(index)}
+            globalParameters={globalParameters}
+            previewYear={previewYear}
+          />
+        ))}
       </div>
     </div>
   );
@@ -300,7 +114,8 @@ CategoryEffectSection.propTypes = {
   globalParameters: PropTypes.object.isRequired,
   previewYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   onEffectsChange: PropTypes.func.isRequired,
-  sectionRef: PropTypes.object,
+  // Accepts a callback ref (what the parent passes) or a ref object.
+  sectionRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
 /**
@@ -320,8 +135,6 @@ const MultiCategoryRecipientEditor = ({
   const [categoryData, setCategoryData] = useState({});
   const sectionRefs = useRef({});
   const scrollContainerRef = useRef(null);
-  // Keep hook usage consistent with other editors even though defaults aren't needed here
-  useAssumptions();
 
   // Scroll to active category on mount
   useEffect(() => {

@@ -24,4 +24,4 @@ Behavioral Testing Library tests co-located with components. `framer-motion` is 
 
 ## Known debt (tracked in docs/CodebaseReview-2026-06-10.md)
 
-`CurrencyInput`/`NumericInput` are ~80% duplicates; `AssumptionsDropdown` has internal duplication and incomplete menu keyboard semantics; the effect-editor trio duplication is item 6. Prefer fixing through those items rather than piecemeal.
+`CurrencyInput`/`NumericInput` are ~80% duplicates; `AssumptionsDropdown` has internal duplication and incomplete menu keyboard semantics (item 15). Prefer fixing through those items rather than piecemeal.

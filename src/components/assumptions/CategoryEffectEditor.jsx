@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import QalyEffectInputs from './effects/QalyEffectInputs';
 import PopulationEffectInputs from './effects/PopulationEffectInputs';
-import EffectCostDisplay from '../shared/EffectCostDisplay';
+import EffectCard from './EffectCard';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
 import EffectEditorActionButtons from '../shared/EffectEditorActionButtons';
-import DisableToggleButton from '../shared/DisableToggleButton';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import {
   calculateEffectCostPerLife,
@@ -209,65 +208,37 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
         <div className="space-y-3">
           {tempEditToEffects.map((effect, index) => {
             const effectType = getEffectType(effect);
-            const costPerLife = effectCostPerLife[index];
+            const isDisabled = effect.disabled || false;
+            const inputProps = {
+              effect,
+              effectIndex: index,
+              defaultEffect: defaultEffects.find((e) => e.effectId === effect.effectId),
+              errors,
+              onChange: updateEffectField,
+              globalParameters,
+              isDisabled,
+            };
 
             return (
-              <div key={index} className="effect-card effect-card--section transition-all duration-200">
-                <div className="mb-2">
-                  <div className="flex flex-wrap justify-between items-start gap-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h4 className={`effect-card__title ${effect.disabled ? 'effect-disabled' : ''}`}>
-                        Effect {index + 1}: {effect.effectId}
-                      </h4>
-                      <DisableToggleButton
-                        isDisabled={effect.disabled || false}
-                        onToggle={() => toggleEffectDisabled(index)}
-                      />
-                    </div>
-                    <div className={effect.disabled ? 'effect-disabled' : ''}>
-                      <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm whitespace-nowrap" />
-                    </div>
-                  </div>
-                  {effect.validTimeInterval && (
-                    <p className={`effect-card__meta mt-1 ${effect.disabled ? 'effect-disabled' : ''}`}>
-                      Active:{' '}
-                      {effect.validTimeInterval[0] === null
-                        ? `Until ${effect.validTimeInterval[1]}`
-                        : `${effect.validTimeInterval[0]} - ${effect.validTimeInterval[1] || 'present'}`}
-                      {(previewYear < effect.validTimeInterval[0] ||
-                        (effect.validTimeInterval[1] && previewYear > effect.validTimeInterval[1])) && (
-                        <span className="effect-card__meta--inactive ml-2">(Not active in {previewYear})</span>
-                      )}
-                    </p>
-                  )}
-                </div>
-
-                <div className={effect.disabled ? 'effect-disabled-content' : ''}>
-                  {effectType === 'qaly' ? (
-                    <QalyEffectInputs
-                      effect={effect}
-                      effectIndex={index}
-                      defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
-                      errors={errors}
-                      onChange={updateEffectField}
-                      globalParameters={globalParameters}
-                      isDisabled={effect.disabled || false}
-                    />
-                  ) : effectType === 'population' ? (
-                    <PopulationEffectInputs
-                      effect={effect}
-                      effectIndex={index}
-                      defaultEffect={defaultEffects.find((e) => e.effectId === effect.effectId)}
-                      errors={errors}
-                      onChange={updateEffectField}
-                      globalParameters={globalParameters}
-                      isDisabled={effect.disabled || false}
-                    />
-                  ) : (
-                    <div className="text-sm text-danger">Unknown effect type</div>
-                  )}
-                </div>
-              </div>
+              <EffectCard
+                key={index}
+                index={index}
+                effectId={effect.effectId}
+                costPerLife={effectCostPerLife[index]}
+                isDisabled={isDisabled}
+                isToggledOff={isDisabled}
+                onToggleDisabled={() => toggleEffectDisabled(index)}
+                validTimeInterval={effect.validTimeInterval}
+                previewYear={previewYear}
+              >
+                {effectType === 'qaly' ? (
+                  <QalyEffectInputs {...inputProps} />
+                ) : effectType === 'population' ? (
+                  <PopulationEffectInputs {...inputProps} />
+                ) : (
+                  <div className="text-sm text-danger">Unknown effect type</div>
+                )}
+              </EffectCard>
             );
           })}
         </div>

@@ -8,7 +8,6 @@ const SortableTable = ({
   data,
   defaultSortColumn,
   defaultSortDirection = 'desc',
-  rankKey,
   tiebreakColumn,
   tiebreakDirection = 'desc',
 }) => {
@@ -263,19 +262,6 @@ const SortableTable = ({
     return result;
   });
 
-  // If rankKey is provided, preserve the original rank values
-  // This ensures that even when sorted by a different column, the rank column still shows the correct rank
-  const rankedData = rankKey
-    ? sortedData.map((item) => {
-        // Find the original item with this item's ID to get its rank
-        const originalItem = data.find((original) => original.name === item.name);
-        return {
-          ...item,
-          [rankKey]: originalItem[rankKey],
-        };
-      })
-    : sortedData;
-
   // Render sort indicator
   const renderSortIndicator = (columnKey, isSortable) => {
     if (!isSortable) {
@@ -447,7 +433,7 @@ const SortableTable = ({
           {renderColGroup()}
           {renderTableHeader('primary', !showStickyHeader)}
           <tbody>
-            {rankedData.map((item, index) => (
+            {sortedData.map((item, index) => (
               <tr key={`row-${index}`}>
                 {columns.map((column) => (
                   <td

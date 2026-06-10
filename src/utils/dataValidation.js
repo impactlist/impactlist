@@ -242,32 +242,6 @@ export const validateRecipient = (recipient, recipientId) => {
 };
 
 /**
- * Validate global parameters structure
- * @param {Object} globalParams - The global parameters object
- */
-export const validateGlobalParameters = (globalParams) => {
-  assertExists(globalParams, 'globalParameters');
-  assertObject(globalParams, 'globalParameters');
-
-  // Parameters that must be positive (> 0)
-  assertPositiveNumber(globalParams.currentPopulation, 'currentPopulation', 'in globalParameters');
-  assertPositiveNumber(globalParams.yearsPerLife, 'yearsPerLife', 'in globalParameters');
-  assertPositiveNumber(globalParams.timeLimit, 'timeLimit', 'in globalParameters');
-
-  // Parameters that must be non-negative (>= 0)
-  assertNumber(globalParams.populationLimit, 'populationLimit', 'in globalParameters');
-  if (globalParams.populationLimit < 0) {
-    throw new Error(
-      'Field populationLimit in globalParameters must be non-negative, got: ' + globalParams.populationLimit
-    );
-  }
-
-  // Parameters that can be any number (including negative)
-  assertNumber(globalParams.discountRate, 'discountRate', 'in globalParameters');
-  assertNumber(globalParams.populationGrowthRate, 'populationGrowthRate', 'in globalParameters');
-};
-
-/**
  * No-op function that crashes loudly instead of returning fallback values
  * Use this to replace any silent fallback patterns in the codebase
  * @param {string} message - Error message describing what was expected

@@ -16,6 +16,7 @@ const mockGetCostPerLifeFromCombined = vi.fn();
 const mockGetCostPerLifeForRecipientFromCombined = vi.fn();
 
 vi.mock('framer-motion', () => ({
+  AnimatePresence: ({ children }) => children,
   motion: {
     div: ({ children, ...props }) => <div {...props}>{children}</div>,
   },

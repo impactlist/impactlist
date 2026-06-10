@@ -5,6 +5,7 @@ import BackButton from '../components/shared/BackButton';
 import {
   getPrimaryCategoryId,
   getCategoryBreakdown,
+  getCreditedAmount,
   getDonationsForRecipient,
   getCurrentYear,
 } from '../utils/donationDataHelpers';
@@ -20,8 +21,10 @@ import PageHeader from '../components/shared/PageHeader';
 import SearchInput from '../components/shared/SearchInput';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import FormattedScientificValue from '../components/shared/FormattedScientificValue';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const RecipientList = () => {
+  useDocumentTitle('Recipients');
   const [recipientStats, setRecipientStats] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const { combinedAssumptions } = useAssumptions();
@@ -38,10 +41,7 @@ const RecipientList = () => {
       const recipientId = recipient.id;
 
       const recipientDonations = getDonationsForRecipient(recipientId);
-      const totalReceived = recipientDonations.reduce((sum, d) => {
-        const creditedAmount = d.credit !== undefined ? d.amount * d.credit : d.amount;
-        return sum + creditedAmount;
-      }, 0);
+      const totalReceived = recipientDonations.reduce((sum, d) => sum + getCreditedAmount(d), 0);
       const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, currentYear);
 
       // Get the primary category and all categories for display

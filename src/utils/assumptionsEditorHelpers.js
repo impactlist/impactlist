@@ -2,23 +2,6 @@
 // defaultAssumptions and userAssumptions without needing combinedAssumptions
 
 import { calculateCostPerLife } from './effectsCalculation';
-import { mergeRecipientEffects } from './assumptionsDataHelpers';
-
-/**
- * Get all categories from default assumptions
- * @param {Object} defaultAssumptions - Default assumptions object
- * @returns {Array} Array of category objects with id and name
- */
-export const getAllCategoriesFromDefaults = (defaultAssumptions) => {
-  if (!defaultAssumptions?.categories) return [];
-
-  return Object.entries(defaultAssumptions.categories).map(([id, category]) => ({
-    id,
-    name: category.name,
-    effects: category.effects,
-    content: category.content,
-  }));
-};
 
 /**
  * Get all recipients from default assumptions
@@ -67,23 +50,6 @@ export const getCategoryFromDefaults = (defaultAssumptions, categoryId) => {
     effects: category.effects,
     content: category.content,
   };
-};
-
-/**
- * Find recipient ID by name from default assumptions
- * @param {Object} defaultAssumptions - Default assumptions object
- * @param {string} recipientName - Recipient name to search for
- * @returns {string|null} Recipient ID or null if not found
- */
-export const findRecipientIdFromDefaults = (defaultAssumptions, recipientName) => {
-  if (!defaultAssumptions?.recipients) return null;
-
-  for (const [id, recipient] of Object.entries(defaultAssumptions.recipients)) {
-    if (recipient.name === recipientName) {
-      return id;
-    }
-  }
-  return null;
 };
 
 /**
@@ -155,53 +121,6 @@ export const recipientHasEffectOverrides = (defaultAssumptions, userAssumptions,
   }
 
   return false;
-};
-
-/**
- * Get merged recipient data (combining default and user)
- * @param {Object} defaultAssumptions - Default assumptions
- * @param {Object|null} userAssumptions - User assumptions
- * @param {string} recipientId - Recipient ID
- * @returns {Object|null} Merged recipient data
- */
-export const getMergedRecipient = (defaultAssumptions, userAssumptions, recipientId) => {
-  const defaultRecipient = defaultAssumptions?.recipients?.[recipientId];
-  if (!defaultRecipient) return null;
-
-  const userRecipient = userAssumptions?.recipients?.[recipientId];
-  if (!userRecipient) {
-    return { ...defaultRecipient, id: recipientId };
-  }
-
-  // Merge categories
-  const mergedCategories = { ...defaultRecipient.categories };
-
-  if (userRecipient.categories) {
-    Object.entries(userRecipient.categories).forEach(([categoryId, userCategoryData]) => {
-      if (!mergedCategories[categoryId]) {
-        mergedCategories[categoryId] = userCategoryData;
-      } else {
-        // Merge the category data
-        mergedCategories[categoryId] = {
-          ...mergedCategories[categoryId],
-          ...userCategoryData,
-        };
-
-        // If both have effects, merge them properly
-        if (mergedCategories[categoryId].effects && userCategoryData.effects) {
-          const defaultEffects = defaultRecipient.categories?.[categoryId]?.effects || [];
-          mergedCategories[categoryId].effects = mergeRecipientEffects(defaultEffects, userCategoryData.effects);
-        }
-      }
-    });
-  }
-
-  return {
-    ...defaultRecipient,
-    ...userRecipient,
-    id: recipientId,
-    categories: mergedCategories,
-  };
 };
 
 /**

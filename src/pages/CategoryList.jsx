@@ -14,8 +14,10 @@ import { buildCausePath } from '../utils/causeRoutes';
 import PageHeader from '../components/shared/PageHeader';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import FormattedScientificValue from '../components/shared/FormattedScientificValue';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const CategoryList = () => {
+  useDocumentTitle('Cause Areas');
   const [categoryStats, setCategoryStats] = useState([]);
   const { combinedAssumptions } = useAssumptions();
 

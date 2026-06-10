@@ -1,17 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  getPrimaryCategoryId,
-  getDonationsForRecipient,
-  getTotalAmountForRecipient,
-  getCurrentYear,
-} from '../utils/donationDataHelpers';
-import {
-  calculateDonorStatsFromCombined,
-  getCostPerLifeForRecipientFromCombined,
-  calculateLivesSavedForDonationFromCombined,
-} from '../utils/assumptionsDataHelpers';
+import { calculateDonorStatsFromCombined } from '../utils/assumptionsDataHelpers';
 import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatRoundedLives, formatCurrency } from '../utils/formatters';
@@ -19,10 +9,11 @@ import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import FormattedScientificValue from '../components/shared/FormattedScientificValue';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const DonorList = () => {
+  useDocumentTitle('Top Donors by Lives Saved');
   const [donorStats, setDonorStats] = useState([]);
-  const [, setRecipientStats] = useState([]);
   const { combinedAssumptions } = useAssumptions();
 
   useEffect(() => {
@@ -31,50 +22,7 @@ const DonorList = () => {
     }
 
     // Calculate donor statistics on component mount
-    const stats = calculateDonorStatsFromCombined(combinedAssumptions);
-    setDonorStats(stats);
-
-    // Calculate recipient statistics
-    const recipientStats = combinedAssumptions
-      .getAllRecipients()
-      .map((recipient) => {
-        // Use the recipient ID directly (now included in the object)
-        const recipientId = recipient.id;
-
-        const totalReceived = getTotalAmountForRecipient(recipientId);
-        const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, getCurrentYear());
-
-        // Get the primary category for display
-        const primaryCategoryId = getPrimaryCategoryId(combinedAssumptions, recipientId);
-        const primaryCategory = combinedAssumptions.getCategoryById(primaryCategoryId);
-
-        if (!primaryCategory) {
-          throw new Error(
-            `Invalid primary category "${primaryCategoryId}" for recipient "${recipient.name}". This category does not exist in categoriesById.`
-          );
-        }
-
-        // Calculate total lives saved for this recipient
-        const recipientDonations = getDonationsForRecipient(recipientId);
-        const totalLivesSaved = recipientDonations.reduce(
-          (sum, donation) => sum + calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation),
-          0
-        );
-
-        return {
-          id: recipientId,
-          name: recipient.name,
-          primaryCategoryId: primaryCategoryId,
-          categoryName: primaryCategory.name,
-          totalReceived,
-          costPerLife,
-          totalLivesSaved,
-        };
-      })
-      .filter((recipient) => recipient !== null) // Filter out any recipients that couldn't be processed
-      .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved);
-
-    setRecipientStats(recipientStats);
+    setDonorStats(calculateDonorStatsFromCombined(combinedAssumptions));
   }, [combinedAssumptions]);
 
   // Donor table columns configuration
@@ -184,7 +132,6 @@ const DonorList = () => {
               data={donorStats}
               defaultSortColumn="totalLivesSaved"
               defaultSortDirection="desc"
-              rankKey="rank"
             />
           </div>
         </motion.div>

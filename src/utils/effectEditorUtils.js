@@ -145,19 +145,6 @@ export const cleanEffectsForSave = (effects) => {
 };
 
 /**
- * Format cost per life for display
- * @param {number} cost - Cost value
- * @param {boolean} showInfinity - Whether to show infinity symbol
- * @returns {string} Formatted cost string
- */
-export const formatCostForDisplay = (cost, showInfinity = true) => {
-  if (cost === Infinity) {
-    return showInfinity ? '∞' : 'Invalid';
-  }
-  return new Intl.NumberFormat('en-US').format(Math.round(cost));
-};
-
-/**
  * Sorts effects by active date (latest to earliest), with standard effects before population effects
  * for effects that end in the same year.
  *

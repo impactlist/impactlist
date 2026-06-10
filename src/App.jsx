@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigationType,
+  useParams,
+} from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import DonorList from './pages/DonorList';
-import DonorDetail from './pages/DonorDetail';
-import RecipientDetail from './pages/RecipientDetail';
-import RecipientList from './pages/RecipientList';
-import CategoryList from './pages/CategoryList';
-import CategoryDetail from './pages/CategoryDetail';
-import AssumptionDetail from './pages/AssumptionDetail';
-import DonationCalculator from './pages/DonationCalculator';
-import FAQ from './pages/FAQ';
-import AssumptionsPage from './pages/AssumptionsPage';
 import NotFound from './pages/NotFound';
+
+// Pages are lazy-loaded so visitors don't download the assumptions editor,
+// charts, and KaTeX up front just to view the home list.
+const DonorList = lazy(() => import('./pages/DonorList'));
+const DonorDetail = lazy(() => import('./pages/DonorDetail'));
+const RecipientDetail = lazy(() => import('./pages/RecipientDetail'));
+const RecipientList = lazy(() => import('./pages/RecipientList'));
+const CategoryList = lazy(() => import('./pages/CategoryList'));
+const CategoryDetail = lazy(() => import('./pages/CategoryDetail'));
+const AssumptionDetail = lazy(() => import('./pages/AssumptionDetail'));
+const DonationCalculator = lazy(() => import('./pages/DonationCalculator'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const AssumptionsPage = lazy(() => import('./pages/AssumptionsPage'));
 import { AssumptionsProvider } from './contexts/AssumptionsContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Header from './components/layout/Header';
@@ -72,13 +83,17 @@ ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// Scroll to top component that runs on route changes
+// Scroll to top on forward navigations. POP navigations (back/forward
+// buttons) keep the browser's restored scroll position.
 const ScrollToTop = () => {
   const { pathname } = useLocation();
+  const navigationType = useNavigationType();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (navigationType !== 'POP') {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, navigationType]);
 
   return null;
 };
@@ -124,21 +139,23 @@ const AppContent = () => {
           isAssumptions={isAssumptions}
         />
         <div className={`flex-grow ${isAssumptions ? 'relative' : 'bg-[var(--bg-canvas-strong)]'}`}>
-          <Routes>
-            <Route path="/" element={<DonorList />} />
-            <Route path="/donor/:donorId" element={<DonorDetail />} />
-            <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
-            <Route path="/cause/:categoryId" element={<CategoryDetail />} />
-            <Route path="/category/:categoryId" element={<LegacyCauseDetailRedirect />} />
-            <Route path="/assumption/:assumptionId" element={<AssumptionDetail />} />
-            <Route path={CAUSES_PATH} element={<CategoryList />} />
-            <Route path="/categories" element={<LegacyCausesListRedirect />} />
-            <Route path="/recipients" element={<RecipientList />} />
-            <Route path="/calculator" element={<DonationCalculator />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/assumptions" element={<AssumptionsPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<div className="impact-loading">Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<DonorList />} />
+              <Route path="/donor/:donorId" element={<DonorDetail />} />
+              <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
+              <Route path="/cause/:categoryId" element={<CategoryDetail />} />
+              <Route path="/category/:categoryId" element={<LegacyCauseDetailRedirect />} />
+              <Route path="/assumption/:assumptionId" element={<AssumptionDetail />} />
+              <Route path={CAUSES_PATH} element={<CategoryList />} />
+              <Route path="/categories" element={<LegacyCausesListRedirect />} />
+              <Route path="/recipients" element={<RecipientList />} />
+              <Route path="/calculator" element={<DonationCalculator />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/assumptions" element={<AssumptionsPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </div>
         <Footer />
       </div>

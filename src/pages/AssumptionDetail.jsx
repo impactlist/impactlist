@@ -4,10 +4,12 @@ import BackButton from '../components/shared/BackButton';
 import MarkdownContent from '../components/shared/MarkdownContent';
 import NotFound from './NotFound';
 import { assumptionsById } from '../data/generatedData';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const AssumptionDetail = () => {
   const { assumptionId } = useParams();
   const assumption = assumptionsById[assumptionId];
+  useDocumentTitle(assumption?.name);
 
   if (!assumption) {
     return <NotFound message={`No assumption found with ID "${assumptionId}".`} />;

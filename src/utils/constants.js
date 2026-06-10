@@ -33,18 +33,8 @@ export const CHART_MEDIUM_WIDTH_THRESHOLD = 400;
 export const CHART_DEFAULT_WIDTH = 500;
 export const CHART_ANIMATION_DURATION = 600;
 
-// Chart colors
+// Chart colors (consumers index with modulo, so series beyond ten wrap)
 export const CHART_COLORS = [
-  '#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf',
   '#1f77b4',
   '#ff7f0e',
   '#2ca02c',

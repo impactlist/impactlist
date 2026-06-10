@@ -72,23 +72,6 @@ const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null 
 };
 
 /**
- * Add one digit after the decimal if the number is < 100 and is a non-integer, otherwise round to integer.
- * @param {number} num - A non-negative number to format
- * @returns {string} - Formatted number
- */
-export const formatNumberWithNoMoreThanOneDecimal = (num) => {
-  // Round to 1 decimal place first
-  const rounded = Math.round(num * 10) / 10;
-
-  // If the rounded value is >= 100 or is effectively an integer, show as integer
-  if (rounded >= 100 || Number.isInteger(rounded)) {
-    return Math.round(rounded).toString();
-  } else {
-    return rounded.toFixed(1);
-  }
-};
-
-/**
  * Format a number to a specified number of significant figures
  * @param {number} num - The number to format
  * @param {number} sigFigs - Number of significant figures
@@ -393,13 +376,12 @@ export const formatRoundedLives = (lives) => formatLives(Math.round(lives));
  * - Values < $10 are shown with at most 2 significant digits
  *
  * @param {number} amount - The amount to format
- * @param {number|null} effectivenessRate - Optional parameter for handling special cases
  * @returns {string} - Formatted currency string
  */
-export const formatCurrency = (amount, effectivenessRate = null) => {
+export const formatCurrency = (amount) => {
   if (amount === 0) {
     return '$0';
-  } else if (effectivenessRate === 0 || amount === null || amount === undefined) {
+  } else if (amount === null || amount === undefined) {
     return '∞';
   } else if (amount === Infinity || amount === -Infinity) {
     return '∞';

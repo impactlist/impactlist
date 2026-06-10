@@ -15,12 +15,14 @@ import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import { donations } from '../data/generatedData';
 import MarkdownContent from '../components/shared/MarkdownContent';
 import NotFound from './NotFound';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
   const [categoryInfo, setCategoryInfo] = useState(null);
   const { combinedAssumptions } = useAssumptions();
+  useDocumentTitle(categoryInfo?.name);
   const handleEditCategoryAssumptions = () => {
     navigate(`/assumptions?tab=categories&categoryId=${categoryId}`);
   };

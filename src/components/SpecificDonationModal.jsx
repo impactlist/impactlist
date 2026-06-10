@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import ModalShell from './shared/ModalShell';
 import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
 import { formatLives, formatCurrency } from '../utils/formatters';
@@ -357,23 +357,17 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
   const recipientCostPerLife = selectedRecipient ? getRecipientCostPerLife() : null;
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      data-testid="specific-donation-modal"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+    <ModalShell
+      isOpen={isOpen}
+      onClose={onClose}
+      labelledBy="specific-donation-modal-title"
+      panelClassName="max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto p-0"
     >
-      <motion.div
-        className="my-auto max-h-[calc(100vh-2rem)] w-full max-w-lg overflow-y-auto rounded-lg bg-[var(--bg-surface)] shadow-xl"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.15 }}
-      >
+      <div data-testid="specific-donation-modal">
         <div className="p-6 border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 id="specific-donation-modal-title" className="text-2xl font-bold text-gray-800">
               {editingDonation ? 'Edit Donation' : 'Add Specific Donation'}
             </h2>
             <button onClick={onClose} className="text-gray-500 hover:text-gray-700 focus:outline-none">
@@ -666,8 +660,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             </button>
           </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </ModalShell>
   );
 };
 

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import PageHeader from '../components/shared/PageHeader';
 import BackButton from '../components/shared/BackButton';
 import { CAUSES_PATH } from '../utils/causeRoutes';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const FAQCard = ({ question, isOpen, onToggle, children }) => (
   <article className="impact-surface faq-card" data-open={isOpen}>
@@ -52,6 +53,7 @@ FAQCard.propTypes = {
 };
 
 const FAQ = () => {
+  useDocumentTitle('FAQ');
   const [openItems, setOpenItems] = useState(() => new Set([0]));
 
   const toggleItem = useCallback((index) => {

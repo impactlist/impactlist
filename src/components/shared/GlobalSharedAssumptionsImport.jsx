@@ -80,7 +80,20 @@ const GlobalSharedAssumptionsImport = () => {
         return false;
       }
 
-      const normalizedIncoming = normalizeUserAssumptions(snapshot.assumptions, defaultAssumptions);
+      let normalizedIncoming;
+      try {
+        normalizedIncoming = normalizeUserAssumptions(snapshot.assumptions, defaultAssumptions);
+      } catch (error) {
+        // Defense in depth: the server validates snapshots on write and read,
+        // but a stale or hostile payload must never crash the app or get
+        // persisted into the local library.
+        console.error('Rejected shared assumptions payload', error);
+        showNotification('error', `Could not import shared assumptions: ${error.message}`);
+        setPendingImport(null);
+        removeImportParam('shared', reference);
+        return false;
+      }
+
       if (!normalizedIncoming) {
         showNotification('error', 'Shared assumptions link did not contain usable custom assumptions.');
         setPendingImport(null);

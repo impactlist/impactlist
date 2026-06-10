@@ -421,6 +421,116 @@ describe('assumptionsAPIHelpers', () => {
     expect(userAssumptions).toEqual(original);
   });
 
+  it('normalizeUserAssumptions rejects references unknown to the current data schema', () => {
+    const defaults = buildDefaultAssumptions();
+
+    expect(() => normalizeUserAssumptions({ legacySection: {} }, defaults)).toThrow(/unknown section/);
+    expect(() => normalizeUserAssumptions({ globalParameters: { removedParam: 1 } }, defaults)).toThrow(
+      /unknown global parameter/
+    );
+    expect(() => normalizeUserAssumptions({ categories: { removedCategory: { effects: [] } } }, defaults)).toThrow(
+      /unknown category/
+    );
+    expect(() =>
+      normalizeUserAssumptions({ categories: { health: { effects: [{ effectId: 'removedEffect' }] } } }, defaults)
+    ).toThrow(/unknown effect/);
+    // A field that no longer exists on the effect would silently flip its
+    // calculation model if kept (e.g. costPerMicroprobability on a QALY
+    // effect), so it must be rejected.
+    expect(() =>
+      normalizeUserAssumptions(
+        { categories: { health: { effects: [{ effectId: 'e1', costPerMicroprobability: 5 }] } } },
+        defaults
+      )
+    ).toThrow(/unknown field/);
+    expect(() =>
+      normalizeUserAssumptions(
+        {
+          recipients: {
+            recipientA: {
+              categories: { health: { effects: [{ effectId: 'e1', overrides: { costPerMicroprobability: 5 } }] } },
+            },
+          },
+        },
+        defaults
+      )
+    ).toThrow(/unknown field/);
+    expect(() => normalizeUserAssumptions({ recipients: { removedRecipient: { categories: {} } } }, defaults)).toThrow(
+      /unknown recipient/
+    );
+  });
+
+  it('normalizeUserAssumptions rejects malformed value types, not just unknown keys', () => {
+    const defaults = buildDefaultAssumptions();
+
+    // disabled: "false" is truthy — if accepted it would silently disable the
+    // effect (and the recipient path would boolean-cast it to true).
+    expect(() =>
+      normalizeUserAssumptions(
+        { categories: { health: { effects: [{ effectId: 'e1', disabled: 'false' }] } } },
+        defaults
+      )
+    ).toThrow(/'disabled'.*must be a boolean/);
+    expect(() =>
+      normalizeUserAssumptions(
+        {
+          recipients: {
+            recipientA: { categories: { health: { effects: [{ effectId: 'e1', disabled: 'false' }] } } },
+          },
+        },
+        defaults
+      )
+    ).toThrow(/'disabled'.*must be a boolean/);
+
+    // String numeric fields would NaN-propagate or crash deep in the math.
+    expect(() =>
+      normalizeUserAssumptions(
+        { categories: { health: { effects: [{ effectId: 'e1', costPerQALY: '5' }] } } },
+        defaults
+      )
+    ).toThrow(/must be a finite number/);
+    expect(() =>
+      normalizeUserAssumptions(
+        {
+          recipients: {
+            recipientA: {
+              categories: { health: { effects: [{ effectId: 'e1', overrides: { costPerQALY: '5' } }] } },
+            },
+          },
+        },
+        defaults
+      )
+    ).toThrow(/must be a finite number/);
+    expect(() => normalizeUserAssumptions({ globalParameters: { discountRate: '0.05' } }, defaults)).toThrow(
+      /must be a finite number/
+    );
+
+    // Direct fields on recipient effects are silently ignored by the merge —
+    // reject them like the server does.
+    expect(() =>
+      normalizeUserAssumptions(
+        {
+          recipients: {
+            recipientA: { categories: { health: { effects: [{ effectId: 'e1', costPerQALY: 5 }] } } },
+          },
+        },
+        defaults
+      )
+    ).toThrow(/recipient effects support 'overrides', 'multipliers', and 'disabled'/);
+
+    // Non-object override/multiplier maps.
+    expect(() =>
+      normalizeUserAssumptions(
+        {
+          recipients: {
+            recipientA: { categories: { health: { effects: [{ effectId: 'e1', overrides: 'abc' }] } } },
+          },
+        },
+        defaults
+      )
+    ).toThrow(/'overrides'.*must be an object/);
+  });
+
   it('setRecipientFieldOverride is idempotent for repeated identical updates', () => {
     const defaults = buildDefaultAssumptions();
 

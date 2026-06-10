@@ -29,6 +29,7 @@ import {
   hasCuratedAssumptionsLabel,
   isCuratedAssumptionsEntryId,
 } from '../utils/curatedAssumptionsProfiles';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 import {
   completeSavedAssumptionsMigration,
   createComparableAssumptionsFingerprint,
@@ -47,6 +48,7 @@ const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some s
 const DEFAULT_ASSUMPTIONS_ENTRY_ID = '__default__';
 
 const AssumptionsPage = () => {
+  useDocumentTitle('Assumptions Editor');
   const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotificationActions();
   const [showSelectorEveryPage, setShowSelectorEveryPage] = useAssumptionsSelectorPreference();
@@ -237,7 +239,16 @@ const AssumptionsPage = () => {
         return;
       }
 
-      setAllUserAssumptions(entry.assumptions);
+      try {
+        setAllUserAssumptions(entry.assumptions);
+      } catch (error) {
+        // Saved entries can outlive a data update; loading one must not
+        // crash the app.
+        console.error('Failed to load saved assumptions entry', error);
+        showNotification('error', `Could not load "${entry.label || 'saved assumptions'}": ${error.message}`);
+        return;
+      }
+
       if (entry.source === 'curated') {
         persistAsActive(entry.id);
         return;

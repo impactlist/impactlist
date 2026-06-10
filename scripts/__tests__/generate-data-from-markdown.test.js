@@ -54,9 +54,9 @@ describe('generate-data-from-markdown script', () => {
     expect(result.status).toBe(0);
 
     const generated = await loadGeneratedModule(workspace);
-    expect(generated.allDonations).toHaveLength(2);
+    expect(generated.donations).toHaveLength(2);
 
-    const donationsByDonor = Object.fromEntries(generated.allDonations.map((donation) => [donation.donorId, donation]));
+    const donationsByDonor = Object.fromEntries(generated.donations.map((donation) => [donation.donorId, donation]));
 
     expect(donationsByDonor.donor_a).toMatchObject({
       donorId: 'donor_a',
@@ -216,7 +216,7 @@ donations:
     expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
 
     const generated = await loadGeneratedModule(workspace);
-    expect(generated.allDonations).toHaveLength(2);
+    expect(generated.donations).toHaveLength(2);
   });
 
   it('allows identical donations that are disambiguated with distinct notes', async () => {
@@ -247,7 +247,7 @@ donations:
     expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
 
     const generated = await loadGeneratedModule(workspace);
-    expect(generated.allDonations).toHaveLength(2);
+    expect(generated.donations).toHaveLength(2);
   });
 
   it('fails on a rolled-over calendar date that YAML would silently accept', () => {

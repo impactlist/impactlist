@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { AnimatePresence, motion } from 'framer-motion';
+import ModalShell, { ModalHeader } from './shared/ModalShell';
 import {
   ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD,
   MAX_ASSUMPTION_DESCRIPTION_LENGTH,
@@ -39,89 +39,63 @@ const AssumptionsDescriptionModal = ({
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div className="impact-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <div className="flex min-h-screen items-center justify-center px-4 py-6">
-            <motion.div
-              className="impact-modal__scrim"
-              onClick={handleRequestClose}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+    <ModalShell isOpen={isOpen} onClose={handleRequestClose} labelledBy="assumptions-description-modal-title">
+      <ModalHeader
+        title={entryLabel || 'Unnamed assumption'}
+        titleId="assumptions-description-modal-title"
+        onClose={handleRequestClose}
+      />
+
+      {isReadOnly ? (
+        <>
+          <p id="assumptions-description-modal-label" className="impact-modal__label mb-1 block">
+            Description:
+          </p>
+          <div
+            aria-labelledby="assumptions-description-modal-label"
+            className="impact-modal__markdown-scroll"
+            role="region"
+          >
+            <MarkdownContent
+              content={description || 'No description available.'}
+              className="impact-modal__markdown"
+              delay={0}
             />
-            <motion.div
-              className="impact-modal__panel"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 16 }}
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="impact-modal__title">{entryLabel || 'Unnamed assumption'}</h2>
-                <button
-                  type="button"
-                  onClick={handleRequestClose}
-                  aria-label="Close modal"
-                  className="impact-modal__close text-sm font-medium"
-                >
-                  X
-                </button>
-              </div>
-
-              {isReadOnly ? (
-                <>
-                  <p id="assumptions-description-modal-label" className="impact-modal__label mb-1 block">
-                    Description:
-                  </p>
-                  <div
-                    aria-labelledby="assumptions-description-modal-label"
-                    className="impact-modal__markdown-scroll"
-                    role="region"
-                  >
-                    <MarkdownContent
-                      content={description || 'No description available.'}
-                      className="impact-modal__markdown"
-                      delay={0}
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <label htmlFor="assumptions-description-modal" className="impact-modal__label mb-1 block">
-                    Description:
-                  </label>
-                  <textarea
-                    id="assumptions-description-modal"
-                    value={description}
-                    onChange={(event) => setDescription(event.target.value)}
-                    className="impact-modal__input impact-modal__textarea"
-                    rows={6}
-                    maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
-                    placeholder="Add notes about this assumptions set."
-                  />
-                </>
-              )}
-              {!isReadOnly && description.length > ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD && (
-                <p className="impact-modal__char-count">
-                  {MAX_ASSUMPTION_DESCRIPTION_LENGTH - description.length} characters remaining
-                </p>
-              )}
-
-              <div className="mt-6 flex justify-end gap-2">
-                <button type="button" onClick={onClose} className="impact-btn impact-btn--secondary">
-                  {isReadOnly ? 'Close' : 'Cancel'}
-                </button>
-                {!isReadOnly && (
-                  <button type="button" onClick={handleSave} className="impact-btn impact-btn--custom-accent">
-                    Save Description
-                  </button>
-                )}
-              </div>
-            </motion.div>
           </div>
-        </motion.div>
+        </>
+      ) : (
+        <>
+          <label htmlFor="assumptions-description-modal" className="impact-modal__label mb-1 block">
+            Description:
+          </label>
+          <textarea
+            id="assumptions-description-modal"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            className="impact-modal__input impact-modal__textarea"
+            rows={6}
+            maxLength={MAX_ASSUMPTION_DESCRIPTION_LENGTH}
+            placeholder="Add notes about this assumptions set."
+          />
+        </>
       )}
-    </AnimatePresence>
+      {!isReadOnly && description.length > ASSUMPTION_DESCRIPTION_REMAINING_COUNT_THRESHOLD && (
+        <p className="impact-modal__char-count">
+          {MAX_ASSUMPTION_DESCRIPTION_LENGTH - description.length} characters remaining
+        </p>
+      )}
+
+      <div className="mt-6 flex justify-end gap-2">
+        <button type="button" onClick={onClose} className="impact-btn impact-btn--secondary">
+          {isReadOnly ? 'Close' : 'Cancel'}
+        </button>
+        {!isReadOnly && (
+          <button type="button" onClick={handleSave} className="impact-btn impact-btn--custom-accent">
+            Save Description
+          </button>
+        )}
+      </div>
+    </ModalShell>
   );
 };
 

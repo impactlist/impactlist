@@ -121,9 +121,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
               <tr key={row.rank} className={row.isCurrentUser ? 'impact-mini-row--current' : ''}>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">{row.rank}</td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
-                  {row.isPlaceholder ? (
-                    <span className="text-muted">—</span>
-                  ) : row.isCurrentUser ? (
+                  {row.isCurrentUser ? (
                     <span className="font-medium text-[var(--accent-strong)]">You</span>
                   ) : (
                     <Link to={`/donor/${encodeURIComponent(row.id)}`} className="impact-link">
@@ -133,27 +131,19 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
                   <span className={row.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}>
-                    {row.isPlaceholder ? (
-                      '—'
-                    ) : (
-                      <FormattedScientificValue value={formatRoundedLives(row.totalLivesSaved)} variant="compact" />
-                    )}
+                    <FormattedScientificValue value={formatRoundedLives(row.totalLivesSaved)} variant="compact" />
                   </span>
                 </td>
+                <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">{formatCurrency(row.totalDonated)}</td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
-                  {row.isPlaceholder ? '—' : formatCurrency(row.totalDonated)}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
-                  {row.isPlaceholder ? (
-                    '—'
-                  ) : row.totalLivesSaved === 0 ? (
+                  {row.totalLivesSaved === 0 ? (
                     '∞'
                   ) : (
                     <FormattedScientificValue value={formatCurrency(row.costPerLife)} variant="compact" />
                   )}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
-                  {row.isPlaceholder ? '—' : row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}
+                  {row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}
                 </td>
               </tr>
             ))}

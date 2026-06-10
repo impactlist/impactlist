@@ -5,28 +5,8 @@ import {
   formatLives,
   formatRoundedLives,
   formatCurrency,
-  formatNumberWithNoMoreThanOneDecimal,
   calculateCursorPosition,
 } from './formatters';
-
-describe('formatNumberWithNoMoreThanOneDecimal', () => {
-  it('should format numbers less than 100 with one decimal place if not integer', () => {
-    expect(formatNumberWithNoMoreThanOneDecimal(45.678)).toBe('45.7');
-    expect(formatNumberWithNoMoreThanOneDecimal(1.234)).toBe('1.2');
-    expect(formatNumberWithNoMoreThanOneDecimal(99.99)).toBe('100');
-  });
-
-  it('should format integers without decimal places', () => {
-    expect(formatNumberWithNoMoreThanOneDecimal(45)).toBe('45');
-    expect(formatNumberWithNoMoreThanOneDecimal(100)).toBe('100');
-    expect(formatNumberWithNoMoreThanOneDecimal(1000)).toBe('1000');
-  });
-
-  it('should round numbers >= 100 to integers', () => {
-    expect(formatNumberWithNoMoreThanOneDecimal(100.5)).toBe('101');
-    expect(formatNumberWithNoMoreThanOneDecimal(999.9)).toBe('1000');
-  });
-});
 
 describe('formatNumber', () => {
   it('should format small numbers without commas', () => {
@@ -215,10 +195,6 @@ describe('formatCurrency', () => {
   it('should return ∞ for null/undefined', () => {
     expect(formatCurrency(null)).toBe('∞');
     expect(formatCurrency(undefined)).toBe('∞');
-  });
-
-  it('should return ∞ when effectiveness rate is 0', () => {
-    expect(formatCurrency(1000, 0)).toBe('∞');
   });
 
   it('should switch extremely large currency values to scientific notation', () => {

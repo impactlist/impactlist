@@ -18,10 +18,12 @@ import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import CalculatorStats from '../components/calculator/CalculatorStats';
 import CalculatorForm from '../components/calculator/CalculatorForm';
 import RecipientTable from '../components/calculator/RecipientTable';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 /* global localStorage */
 
 const DonationCalculator = () => {
+  useDocumentTitle('Donation Calculator');
   const [categories, setCategories] = useState([]);
   const [donations, setDonations] = useState({});
   const [specificDonations, setSpecificDonations] = useState([]);

@@ -351,50 +351,6 @@ export const calculateLivesSavedSegments = (
 };
 
 /**
- * Calculate breakdown of total lives saved
- * @param {Array} points - Array of visualization points
- * @returns {Object} Breakdown with totals and percentages
- */
-export const calculateIntegralBreakdown = (points) => {
-  const breakdown = {
-    historical: { lives: 0, percentage: 0 },
-    futureGrowth: { lives: 0, percentage: 0 },
-    populationLimit: { lives: 0, percentage: 0 },
-    qaly: { lives: 0, percentage: 0 },
-    total: 0,
-  };
-
-  if (!points || points.length < 2) return breakdown;
-
-  // Integrate using trapezoidal rule
-  for (let i = 1; i < points.length; i++) {
-    const dt = points[i].year - points[i - 1].year;
-    const avgHistorical = (points[i - 1].historical + points[i].historical) / 2;
-    const avgFuture = (points[i - 1]['future-growth'] + points[i]['future-growth']) / 2;
-    const avgLimit = (points[i - 1]['population-limit'] + points[i]['population-limit']) / 2;
-    const avgQaly = (points[i - 1].qaly + points[i].qaly) / 2;
-
-    breakdown.historical.lives += avgHistorical * dt;
-    breakdown.futureGrowth.lives += avgFuture * dt;
-    breakdown.populationLimit.lives += avgLimit * dt;
-    breakdown.qaly.lives += avgQaly * dt;
-  }
-
-  breakdown.total =
-    breakdown.historical.lives + breakdown.futureGrowth.lives + breakdown.populationLimit.lives + breakdown.qaly.lives;
-
-  // Calculate percentages
-  if (breakdown.total > 0) {
-    breakdown.historical.percentage = (breakdown.historical.lives / breakdown.total) * 100;
-    breakdown.futureGrowth.percentage = (breakdown.futureGrowth.lives / breakdown.total) * 100;
-    breakdown.populationLimit.percentage = (breakdown.populationLimit.lives / breakdown.total) * 100;
-    breakdown.qaly.percentage = (breakdown.qaly.lives / breakdown.total) * 100;
-  }
-
-  return breakdown;
-};
-
-/**
  * Format large numbers for display
  * @param {number} value - Value to format
  * @param {number} precision - Number of decimal places

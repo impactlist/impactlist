@@ -530,13 +530,6 @@ export const getSavedAssumptions = () => {
   }));
 };
 
-export const getSavedAssumptionsRaw = () => loadSavedAssumptionsUnsafe();
-
-export const getSavedAssumptionsLimits = () => ({
-  maxEntries: MAX_SAVED_ASSUMPTIONS,
-  maxBytes: MAX_SAVED_ASSUMPTIONS_BYTES,
-});
-
 export const getActiveSavedAssumptionsId = () => {
   const raw = getActiveEntryStorage().getItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
   return raw && raw.trim().length > 0 ? raw.trim() : null;
@@ -677,19 +670,6 @@ export const deleteSavedAssumptions = (id) => {
 
   emitSavedAssumptionsChanged();
   return { ok: true };
-};
-
-export const loadSavedAssumptionsById = (id) => {
-  const current = loadSavedAssumptionsUnsafe();
-  const entry = current.find((candidate) => candidate.id === id);
-  if (!entry) {
-    return null;
-  }
-
-  return {
-    ...entry,
-    shareUrl: buildDerivedShareUrl(entry.reference),
-  };
 };
 
 export const markSavedAssumptionsLoaded = (id) => {

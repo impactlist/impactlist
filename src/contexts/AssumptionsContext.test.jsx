@@ -34,6 +34,13 @@ const renderWithProvider = async () => {
   };
 };
 
+// A cost field valid for the given base effect's type: overriding or
+// multiplying a field the effect doesn't have is rejected by normalization.
+const findCostField = (baseEffect) =>
+  Object.keys(baseEffect).find(
+    (field) => !['effectId', 'startTime', 'windowLength'].includes(field) && typeof baseEffect[field] === 'number'
+  );
+
 const findRecipientScenario = (context) => {
   for (const [recipientId, recipient] of Object.entries(context.combinedAssumptions.recipients)) {
     for (const categoryId of Object.keys(recipient.categories || {})) {
@@ -43,6 +50,7 @@ const findRecipientScenario = (context) => {
           recipientId,
           categoryId,
           effectId: category.effects[0].effectId,
+          costField: findCostField(category.effects[0]),
         };
       }
     }
@@ -200,7 +208,7 @@ describe('AssumptionsContext integration', () => {
         {
           effectId: scenario.effectId,
           overrides: { startTime: 6, windowLength: 11 },
-          multipliers: { costPerQALY: 2 },
+          multipliers: { [scenario.costField]: 2 },
           disabled: true,
         },
       ]);
@@ -212,7 +220,7 @@ describe('AssumptionsContext integration', () => {
       expect(effect.effectId).toBe(scenario.effectId);
       expect(effect.disabled).toBe(true);
       expect(effect.overrides).toEqual({ startTime: 6, windowLength: 11 });
-      expect(effect.multipliers).toEqual({ costPerQALY: 2 });
+      expect(effect.multipliers).toEqual({ [scenario.costField]: 2 });
     });
   });
 
@@ -246,20 +254,21 @@ describe('AssumptionsContext integration', () => {
 
     const [recipientId, recipient] = recipientEntry;
     const [firstCategoryId, secondCategoryId] = Object.keys(recipient.categories);
-    const firstEffectId = context.combinedAssumptions.categories[firstCategoryId].effects[0].effectId;
-    const secondEffectId = context.combinedAssumptions.categories[secondCategoryId].effects[0].effectId;
+    const firstEffect = context.combinedAssumptions.categories[firstCategoryId].effects[0];
+    const secondEffect = context.combinedAssumptions.categories[secondCategoryId].effects[0];
+    const secondCostField = findCostField(secondEffect);
 
     act(() => {
       getContext().replaceRecipientEffectsByCategory(recipientId, {
-        [firstCategoryId]: [{ effectId: firstEffectId, overrides: { startTime: 5 } }],
-        [secondCategoryId]: [{ effectId: secondEffectId, multipliers: { costPerQALY: 1.4 } }],
+        [firstCategoryId]: [{ effectId: firstEffect.effectId, overrides: { startTime: 5 } }],
+        [secondCategoryId]: [{ effectId: secondEffect.effectId, multipliers: { [secondCostField]: 1.4 } }],
       });
     });
 
     await waitFor(() => {
       const recipientData = getContext().userAssumptions?.recipients?.[recipientId];
       expect(recipientData?.categories?.[firstCategoryId]?.effects?.[0]?.overrides?.startTime).toBe(5);
-      expect(recipientData?.categories?.[secondCategoryId]?.effects?.[0]?.multipliers?.costPerQALY).toBe(1.4);
+      expect(recipientData?.categories?.[secondCategoryId]?.effects?.[0]?.multipliers?.[secondCostField]).toBe(1.4);
     });
   });
 

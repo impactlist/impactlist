@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import {
   getPrimaryCategoryId,
   getCategoryBreakdown,
+  getCreditedAmount,
   getDonationsForRecipient,
   getCurrentYear,
   extractYearFromDonation,
@@ -25,6 +26,7 @@ import SampleDonationCalculator from '../components/shared/SampleDonationCalcula
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import NotFound from './NotFound';
 import { CHART_ANIMATION_DURATION } from '../utils/constants';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const RecipientDetail = () => {
   const { recipientId } = useParams();
@@ -37,9 +39,8 @@ const RecipientDetail = () => {
   const [chartView, setChartView] = useState('livesSaved'); // 'donations' or 'livesSaved'
   const [shouldAnimate, setShouldAnimate] = useState(false); // Only animate when user toggles view
   const [transitionStage, setTransitionStage] = useState('none'); // 'none', 'shrinking', 'growing'
-  const [, setChartContainerWidth] = useState(800); // Default to a reasonable width
-  const chartContainerRef = useRef(null);
   const { combinedAssumptions } = useAssumptions();
+  useDocumentTitle(recipientInfo?.name);
 
   // Calculate chart height based on number of categories (used later)
   const calculateChartHeight = (categories) => {
@@ -91,13 +92,7 @@ const RecipientDetail = () => {
         // Calculate lives saved for this donation
         const totalLivesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
 
-        // Apply credit multiplier if it exists
-        const creditedAmount =
-          donation.creditedAmount !== undefined
-            ? donation.creditedAmount
-            : donation.credit !== undefined
-              ? donation.amount * donation.credit
-              : donation.amount;
+        const creditedAmount = getCreditedAmount(donation);
 
         return {
           ...donation,
@@ -311,27 +306,6 @@ const RecipientDetail = () => {
       return () => clearTimeout(timer);
     }
   }, [chartData, shouldAnimate]);
-
-  // Effect to handle chart container resizing
-  useEffect(() => {
-    const updateContainerWidth = () => {
-      if (chartContainerRef.current) {
-        const width = chartContainerRef.current.clientWidth;
-        setChartContainerWidth(width);
-      }
-    };
-
-    // Initial update
-    updateContainerWidth();
-
-    // Add resize listener
-    window.addEventListener('resize', updateContainerWidth);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', updateContainerWidth);
-    };
-  }, []);
 
   const handleChartViewChange = (view) => {
     setShouldAnimate(true);

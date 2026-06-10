@@ -115,7 +115,15 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
         return;
       }
 
-      setAllUserAssumptions(entry.assumptions);
+      try {
+        setAllUserAssumptions(entry.assumptions);
+      } catch (error) {
+        // Saved entries can outlive a data update; loading one must not
+        // crash the app.
+        console.error('Failed to load saved assumptions entry', error);
+        showNotification('error', `Could not load "${entry.label || 'saved assumptions'}": ${error.message}`);
+        return;
+      }
 
       if (entry.source !== 'curated') {
         markSavedAssumptionsLoaded(entry.id);
@@ -124,7 +132,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
       setActiveSavedAssumptionsId(entry.id);
       setActiveSavedAssumptionsIdState(entry.id);
     },
-    [setAllUserAssumptions]
+    [setAllUserAssumptions, showNotification]
   );
 
   const handleLoad = useCallback(

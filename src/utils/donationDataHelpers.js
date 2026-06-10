@@ -128,13 +128,26 @@ export const getDonationsForRecipient = (recipientId) => {
   return donations.filter((donation) => donation.recipientId === recipientId);
 };
 
+/**
+ * The portion of a donation's amount credited to the donor on this row.
+ * Generated data precomputes `creditedAmount`; rows with only a `credit`
+ * fraction are multiplied out; calculator-created donations have neither and
+ * count in full.
+ */
+export const getCreditedAmount = (donation) => {
+  if (donation.creditedAmount !== undefined) {
+    return donation.creditedAmount;
+  }
+  if (donation.credit !== undefined) {
+    return donation.amount * donation.credit;
+  }
+  return donation.amount;
+};
+
 // Helper to get total amount received by a recipient
 export const getTotalAmountForRecipient = (recipientId) => {
   const recipientDonations = getDonationsForRecipient(recipientId);
-  return recipientDonations.reduce((total, donation) => {
-    const creditedAmount = donation.credit !== undefined ? donation.amount * donation.credit : donation.amount;
-    return total + creditedAmount;
-  }, 0);
+  return recipientDonations.reduce((total, donation) => total + getCreditedAmount(donation), 0);
 };
 
 /**
@@ -164,32 +177,4 @@ export const extractYearFromDonation = (donation) => {
  */
 export const getCurrentYear = () => {
   return new Date().getFullYear();
-};
-
-/**
- * Check if a recipient has effect overrides for a specific category
- * @param {Object} combinedAssumptions - The combined assumptions object
- * @param {string} recipientId - The recipient ID
- * @param {string} categoryId - The category ID
- * @returns {boolean} True if the recipient has effect overrides for this category
- */
-export const recipientHasEffectOverrides = (combinedAssumptions, recipientId, categoryId) => {
-  const recipient = combinedAssumptions.getRecipientById(recipientId);
-  if (!recipient || !recipient.categories) {
-    return false;
-  }
-
-  const categoryData = recipient.categories[categoryId];
-  if (!categoryData || !categoryData.effects || !Array.isArray(categoryData.effects)) {
-    return false;
-  }
-
-  // Check if any effect has overrides or multipliers
-  return categoryData.effects.some((effect) => {
-    const hasOverrides =
-      effect.overrides && typeof effect.overrides === 'object' && Object.keys(effect.overrides).length > 0;
-    const hasMultipliers =
-      effect.multipliers && typeof effect.multipliers === 'object' && Object.keys(effect.multipliers).length > 0;
-    return hasOverrides || hasMultipliers;
-  });
 };

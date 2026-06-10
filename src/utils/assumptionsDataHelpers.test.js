@@ -12,12 +12,6 @@ import {
   calculateDonorStatsFromCombined,
   getCostPerLifeForRecipientCategoryFromCombined,
   getEffectiveCostPerLifeFromCombined,
-  isCategoryCustomized,
-  isRecipientCategoryCustomized,
-  isGlobalParameterCustomized,
-  getCustomizedCategories,
-  getCustomizedRecipients,
-  getCustomizedGlobalParameters,
 } from './assumptionsDataHelpers';
 import * as donationDataHelpers from './donationDataHelpers';
 import { categoriesById, globalParameters, recipientsById } from '../data/generatedData.js';
@@ -389,44 +383,5 @@ describe('assumptionsDataHelpers', () => {
     expect(stats[0].unknownLivesSaved).toBeGreaterThan(0);
     expect(stats[0].totalLivesSaved).toBeCloseTo(3000 / recipientCost, 10);
     expect(stats[0].costPerLife).toBeCloseTo(recipientCost, 10);
-  });
-
-  it('customization helpers return expected flags and keys', () => {
-    const userAssumptions = {
-      globalParameters: {
-        discountRate: 0.03,
-      },
-      categories: {
-        health: {
-          effects: [{ effectId: 'health-effect', costPerQALY: 150 }],
-        },
-      },
-      recipients: {
-        recipientA: {
-          categories: {
-            health: {
-              effects: [{ effectId: 'health-effect', overrides: { startTime: 3 } }],
-            },
-          },
-        },
-      },
-    };
-
-    expect(isCategoryCustomized(userAssumptions, 'health')).toBe(true);
-    expect(isCategoryCustomized(userAssumptions, 'aid')).toBe(false);
-
-    expect(isRecipientCategoryCustomized(userAssumptions, 'recipientA', 'health')).toBe(true);
-    expect(isRecipientCategoryCustomized(userAssumptions, 'recipientA', 'aid')).toBe(false);
-
-    expect(isGlobalParameterCustomized(userAssumptions, 'discountRate')).toBe(true);
-    expect(isGlobalParameterCustomized(userAssumptions, 'timeLimit')).toBe(false);
-
-    expect(getCustomizedCategories(userAssumptions)).toEqual(['health']);
-    expect(getCustomizedRecipients(userAssumptions)).toEqual(['recipientA']);
-    expect(getCustomizedGlobalParameters(userAssumptions)).toEqual(['discountRate']);
-
-    expect(getCustomizedCategories(null)).toEqual([]);
-    expect(getCustomizedRecipients(null)).toEqual([]);
-    expect(getCustomizedGlobalParameters(null)).toEqual([]);
   });
 });

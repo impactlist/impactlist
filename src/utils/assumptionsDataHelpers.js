@@ -10,7 +10,13 @@ import {
   crashInsteadOfFallback,
 } from './dataValidation.js';
 import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants.js';
-import { getAllDonors, getDonationsForDonor, getDonorId, extractYearFromDonation } from './donationDataHelpers.js';
+import {
+  getAllDonors,
+  getCreditedAmount,
+  getDonationsForDonor,
+  getDonorId,
+  extractYearFromDonation,
+} from './donationDataHelpers.js';
 
 /**
  * Create a default assumptions object from the base data
@@ -464,8 +470,7 @@ export const calculateCategoryBreakdownForDonationFromCombined = (combinedAssump
 
   const recipient = getRecipientFromCombined(combinedAssumptions, donation.recipientId);
   const donationYear = extractYearFromDonation(donation);
-  const credit = donation.credit === undefined ? 1 : assertPositiveNumber(donation.credit, 'donation.credit');
-  const creditedAmount = donation.amount * credit;
+  const creditedAmount = getCreditedAmount(donation);
 
   return Object.entries(recipient.categories).map(([categoryId, categoryData]) => {
     const fraction = assertPositiveNumber(
@@ -516,12 +521,7 @@ export const calculateLivesSavedForDonationFromCombined = (combinedAssumptions, 
   const costPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, donation.recipientId, donationYear);
   const validCostPerLife = assertNonZeroNumber(costPerLife, 'costPerLife', `for recipient ${donation.recipientId}`);
 
-  let credit = 1;
-  if (donation.credit !== undefined) {
-    credit = assertPositiveNumber(donation.credit, 'donation.credit');
-  }
-
-  const creditedAmount = donation.amount * credit;
+  const creditedAmount = getCreditedAmount(donation);
 
   // If cost per life is infinite, no lives can be saved
   if (validCostPerLife === Infinity) {
@@ -572,7 +572,7 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
 
     // Calculate totals based on actual donations using combined assumptions
     for (const donation of donorData) {
-      const creditedAmount = donation.amount * donation.credit;
+      const creditedAmount = getCreditedAmount(donation);
       totalDonated += creditedAmount;
       knownDonations += creditedAmount;
 
@@ -660,67 +660,4 @@ export const getEffectiveCostPerLifeFromCombined = (combinedAssumptions, entity,
   }
 
   throw new Error('No valid calculation method found for cost per life.');
-};
-
-/**
- * Check if a category has custom user values
- * @param {Object|null} userAssumptions - User's custom overrides
- * @param {string} categoryId - Category ID to check
- * @returns {boolean} True if category has custom values
- */
-export const isCategoryCustomized = (userAssumptions, categoryId) => {
-  return !!userAssumptions?.categories?.[categoryId]?.effects;
-};
-
-/**
- * Check if a recipient category has custom user values
- * @param {Object|null} userAssumptions - User's custom overrides
- * @param {string} recipientId - Recipient ID
- * @param {string} categoryId - Category ID
- * @returns {boolean} True if recipient category has custom values
- */
-export const isRecipientCategoryCustomized = (userAssumptions, recipientId, categoryId) => {
-  return !!userAssumptions?.recipients?.[recipientId]?.categories?.[categoryId]?.effects;
-};
-
-/**
- * Check if a global parameter has custom user value
- * @param {Object|null} userAssumptions - User's custom overrides
- * @param {string} parameterKey - Parameter key to check
- * @returns {boolean} True if parameter has custom value
- */
-export const isGlobalParameterCustomized = (userAssumptions, parameterKey) => {
-  return !!userAssumptions?.globalParameters?.[parameterKey];
-};
-
-/**
- * Get all customized categories
- * @param {Object|null} userAssumptions - User's custom overrides
- * @returns {string[]} Array of customized category IDs
- */
-export const getCustomizedCategories = (userAssumptions) => {
-  if (!userAssumptions?.categories) return [];
-  return Object.keys(userAssumptions.categories).filter(
-    (categoryId) => userAssumptions.categories[categoryId]?.effects
-  );
-};
-
-/**
- * Get all customized recipients
- * @param {Object|null} userAssumptions - User's custom overrides
- * @returns {string[]} Array of customized recipient IDs
- */
-export const getCustomizedRecipients = (userAssumptions) => {
-  if (!userAssumptions?.recipients) return [];
-  return Object.keys(userAssumptions.recipients);
-};
-
-/**
- * Get all customized global parameters
- * @param {Object|null} userAssumptions - User's custom overrides
- * @returns {string[]} Array of customized parameter keys
- */
-export const getCustomizedGlobalParameters = (userAssumptions) => {
-  if (!userAssumptions?.globalParameters) return [];
-  return Object.keys(userAssumptions.globalParameters);
 };

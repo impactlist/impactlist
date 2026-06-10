@@ -8,19 +8,22 @@
 - Content: `content/` (categories, donors, recipients, donations, `globalParameters.md`).
 - Scripts: `scripts/` (e.g., `generate-data-from-markdown.js`).
 - Static: `public/`, entry `index.html`.
+- Most directories contain an AGENTS.md (identical to the sibling CLAUDE.md) with that area's architecture and gotchas — read it before working there. `src/AGENTS.md` has the overall data-flow map; `docs/CodebaseReview-2026-06-10.md` is the prioritized improvement backlog.
 
 ## Build, Test, and Development Commands
 
+- `npm run generate-data`: Build `src/data/generatedData.js` from `content/`. Required on a fresh clone and after any `content/` edit — only `npm run build` runs it automatically.
 - `npm run dev`: Start Vite dev server.
-- `npm run generate-data`: Build `src/data/generatedData.js` from `content/`.
 - `npm run build`: Generate data, then production build via Vite.
 - `npm run preview`: Serve the built app locally.
+- `npm test` / `npm run test:run`: Vitest (watch / single run). `npm run test:coverage` enforces 50% coverage floors.
+- `npm run test:e2e`: Playwright (builds production first).
 - `npm run lint` / `npm run lint:fix`: Lint (and auto-fix) JS/JSX.
 
 ## Coding Style & Naming Conventions
 
 - Formatting: Prettier (2-space indent, 120 char width, single quotes). Config in `.prettierrc`.
-- Linting: ESLint with React, Hooks, and Prettier plugins (`eslint.config.js`). Warnings blocked in CI via `lint-staged`.
+- Linting: ESLint with React, Hooks, and Prettier plugins (`eslint.config.js`). Pre-commit `lint-staged` blocks warnings (`--max-warnings=0`); GitHub Actions CI (`.github/workflows/ci.yml`) runs lint, coverage-gated tests, and the build on pushes/PRs.
 - Components: Named arrow functions in PascalCase files, e.g. `src/components/RecipientList.jsx`.
 - Utilities: camelCase files, e.g. `src/utils/effectsCalculation.js`.
 - Hooks: `useX` naming in `src/hooks/`, e.g. `useAssumptionsForm.js`.

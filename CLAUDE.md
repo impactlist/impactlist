@@ -2,6 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Where to find context
+
+Most directories have their own CLAUDE.md (with an identical AGENTS.md) describing that area's architecture and gotchas — read the one for whatever you're touching. Start with `src/CLAUDE.md` for the overall architecture and data-flow map. The prioritized improvement backlog is `docs/CodebaseReview-2026-06-10.md`; check it before refactoring, since many known issues are deliberately deferred to numbered items there.
+
+## Workflow essentials
+
+- Fresh clone or after editing `content/`: run `npm run generate-data` before `npm run dev`/`npm test` — the app imports gitignored generated data, and nothing regenerates it automatically except `npm run build`.
+- Verify with: `npm run test:run` (fast, ~6s), `npm run lint` (~2s), `npm run build`. CI (`.github/workflows/ci.yml`) runs generate → lint → coverage-gated tests (50% floors via `npm run test:coverage`) → build on pushes to master and PRs.
+- Tests are behavioral (Testing Library / subprocess fixtures for the generator / mocked Redis for the server). Write tests in the style of the suite you're extending.
+
 ## Most Critical Instructions
 
 - Avoid code duplication when you have an opportunity to modularize or reuse code (the DRY principle). When making changes, look for and flag opportunities to simplify code (without compromising functionality.)

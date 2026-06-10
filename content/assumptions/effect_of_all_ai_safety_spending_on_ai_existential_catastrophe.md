@@ -157,6 +157,9 @@ Several caveats matter:
 3. **The best future dollar is not necessarily the historical average dollar.**  
    The category page uses this estimate as a baseline anchor for marginal giving, not as proof that every additional donation buys the same amount of risk reduction.
 
+4. **The spending total and the credited achievements are not perfectly aligned.**  
+   The roughly \$1 billion total counts frontier-lab internal safety work only at a conservative few tens of millions of dollars per year, while some of the clearest achievements in the positive-channels story (responsible-scaling policies, preparedness frameworks, frontier eval norms) were substantially produced by lab-internal investment beyond that. To the extent that is true, the per-dollar effect of the counted spending is overstated; including all lab-internal safety investment in the denominator would raise the cost per microprobability roughly proportionally.
+
 ---
 
 ## 6. Conclusion

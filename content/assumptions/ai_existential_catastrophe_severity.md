@@ -15,7 +15,7 @@ The category page models a broader event than extinction alone. It includes:
 - irreversible human disempowerment by AI systems
 - stable totalitarian lock-in or other permanent global conditions that drastically curtail humanity's future
 
-**Summary:** A reasonable central estimate is **0.75 QALY-equivalents lost per affected person per year**, with a plausible range of **0.5–0.9**. This is a weighted average of roughly **0.9** for extinction and **0.45** for permanent non-extinction catastrophes, using the probability page's current `8% extinction + 4 percentage points non-extinction` decomposition. If that probability split changes, this weighted severity should be recalculated.
+**Summary:** A reasonable central estimate for the baseline catastrophe class is **0.75 QALY-equivalents lost per affected person per year**, with a plausible range of **0.5–0.9**. This is a weighted average of roughly **0.9** for extinction and **0.45** for permanent non-extinction catastrophes, using the probability page's current `8% extinction + 4 percentage points non-extinction` decomposition. If that probability split changes, this weighted severity should be recalculated. For the category page's cost-effectiveness model, the relevant severity is that of the **averted** risk rather than the baseline class; because safety spending skews toward extinction prevention, that works out slightly higher, at about **0.78** (see Section 4).
 
 ---
 
@@ -76,9 +76,23 @@ It is also much larger than an ordinary political or economic setback:
 
 So `0.45` is a reasonable central value for the permanent non-extinction component: lower than extinction, but still an enormous welfare loss.
 
+It helps to be explicit about what `0.45` is made of. Measured day-to-day wellbeing differences between the freest and most repressive societies today are real but bounded: cross-country life-satisfaction gaps are on the order of 1–3 points on a 0–10 scale even between very free and very unfree countries. ([World Happiness Report](https://worldhappiness.report/)) A purely hedonic reading of permanent lock-in might therefore justify something more like `0.1–0.3`. The remainder of the `0.45` reflects the non-hedonic losses that make this an *existential* catastrophe rather than merely a bad regime: the permanent loss of agency, autonomy, and humanity's ability to choose and revise its own future. Readers who give little weight to those non-hedonic components should use a lower value; readers who treat permanent loss of human self-determination as nearly extinction-equivalent should use a higher one.
+
 ---
 
-## 4. Plausible range: 0.5–0.9 for the combined event
+## 4. Severity of the averted risk: about 0.78
+
+The weighted average above describes the baseline catastrophe class. But the category page does not value the baseline class directly — it values the risk that marginal safety spending actually removes, and that is not a proportional slice of the baseline.
+
+The [spending-effect page](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe) estimates that historical safety work has been only about 75% as relevant to the non-extinction channels as to extinction. Under its model, the averted risk decomposes into roughly `0.10` percentage points of extinction and `0.038` percentage points of non-extinction catastrophe — about **73% extinction**, versus 67% in the baseline class. The severity of the averted mix is therefore:
+
+- `S_averted = (0.726 x 0.9) + (0.274 x 0.45) ≈ 0.78`
+
+The category page uses **0.78** for this reason. Readers who reject that relevance model and assume safety work reduces all channels proportionally should use **0.75** instead; the difference is small (about 4%).
+
+---
+
+## 5. Plausible range: 0.5–0.9 for the combined event
 
 The range applies to the **overall weighted-average catastrophe class**, not specifically to the non-extinction component by itself.
 
@@ -87,13 +101,14 @@ The range applies to the **overall weighted-average catastrophe class**, not spe
 
 ---
 
-## 5. Conclusion
+## 6. Conclusion
 
 The best central estimate is:
 
 - **Extinction severity:** about `0.9`
 - **Permanent non-extinction catastrophe severity:** about `0.45`
-- **Combined severity under the current probability split:** about `0.75`
+- **Combined severity of the baseline catastrophe class:** about `0.75`
+- **Severity of the averted risk (used by the category page):** about `0.78`
 - **Plausible combined range:** about `0.5–0.9`
 
 This is the right order of magnitude once AI existential catastrophe is understood to include both extinction and permanent non-extinction outcomes such as irreversible disempowerment and totalitarian lock-in.

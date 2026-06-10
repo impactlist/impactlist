@@ -298,6 +298,9 @@ Several important caveats apply:
 5. **Extreme optimism should stay in the tail.**  
    Some published comparisons use AGI-safety assumptions that imply several percentage points of risk reduction per \$1B. Those are best treated as upper-tail scenarios, not as default working estimates.
 
+6. **The denominator counts lab-internal spending only conservatively, and the headline number is a rate, not a measurement of a total.**  
+   McAleese's aggregation counts for-profit frontier-lab safety teams at roughly \$19–54 million per year, which is likely well below actual frontier-lab safety investment in 2024–2025. Several of the positive channels above (responsible-scaling policies, preparedness frameworks, eval norms) were substantially funded by that largely uncounted internal investment, so attributing them fully to the counted ~\$1 billion overstates its per-dollar effect. Note also that the central estimate was derived from a per-dollar rate (about 10 bp per \$1B, from the cost-effectiveness bars above) rather than from independently measuring the total reduction achieved. The cost-per-microprobability conclusion therefore rests mainly on that rate judgment; the cumulative-spending total mostly scales the claimed total reduction, not the marginal cost.
+
 ---
 
 ## 6. Summary

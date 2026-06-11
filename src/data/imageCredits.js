@@ -162,6 +162,16 @@ export const imageCredits = [
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0',
   },
   {
+    donorId: 'hansjorg-wyss',
+    name: 'Hansjörg Wyss',
+    author: 'Oceana',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Hansjorg_Wyss_profile_image.png',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
+    notes: 'Cropped and resized from the original.',
+  },
+  {
     donorId: 'jaan-tallinn',
     name: 'Jaan Tallinn',
     author: 'Christopher Michel',
@@ -481,6 +491,16 @@ export const imageCredits = [
     license: 'CC BY 4.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/4.0',
     notes: 'Cropped and resized from the original.',
+  },
+  {
+    donorId: 't-denny-sanford',
+    name: 'T. Denny Sanford',
+    author: 'JBarnes84',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:T_Denny_Sanford_meets_volunteers.jpg',
+    license: 'CC BY-SA 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0',
+    notes: 'Face crop from an event photo — the only freely licensed photo of Sanford; somewhat soft at full size.',
   },
   {
     donorId: 'vitalik-buterin',

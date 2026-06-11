@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   getPrimaryCategoryId,
@@ -15,11 +15,11 @@ import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatCurrency } from '../utils/formatters';
 import { buildCausePath } from '../utils/causeRoutes';
-import SearchInput from '../components/shared/SearchInput';
-import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import ListSearchControls from '../components/shared/ListSearchControls';
 import ListPageShell from '../components/shared/ListPageShell';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import useNameSearch from '../hooks/useNameSearch';
 
 const buildRecipientStats = (combinedAssumptions) => {
   const currentYear = getCurrentYear();
@@ -148,31 +148,14 @@ const recipientColumns = [
 
 const RecipientList = () => {
   useDocumentTitle('Recipients');
-  const [searchTerm, setSearchTerm] = useState('');
   const { combinedAssumptions } = useAssumptions();
 
   const recipientStats = useMemo(() => buildRecipientStats(combinedAssumptions), [combinedAssumptions]);
-
-  // Memoized so the table receives a stable array identity per search term
-  // (its sort is memoized on data identity).
-  const filteredRecipients = useMemo(
-    () =>
-      searchTerm
-        ? recipientStats.filter((recipient) => recipient.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        : recipientStats,
-    [recipientStats, searchTerm]
-  );
+  const { searchTerm, setSearchTerm, filteredItems: filteredRecipients } = useNameSearch(recipientStats);
 
   return (
     <ListPageShell title="Recipients" subtitle="Entities that have received donations">
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div className="order-2 w-full sm:order-1 sm:max-w-md">
-          <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search recipients..." />
-        </div>
-        <div className="order-1 w-full min-w-0 sm:order-2">
-          <AssumptionsSelector className="mb-0" />
-        </div>
-      </div>
+      <ListSearchControls searchTerm={searchTerm} onSearchChange={setSearchTerm} placeholder="Search recipients..." />
       <div className="impact-surface impact-surface--table">
         <SortableTable
           columns={recipientColumns}
@@ -181,6 +164,7 @@ const RecipientList = () => {
           defaultSortDirection="asc"
           tiebreakColumn="totalLivesSaved"
           tiebreakDirection="desc"
+          emptyMessage="No recipients match your search."
         />
       </div>
     </ListPageShell>

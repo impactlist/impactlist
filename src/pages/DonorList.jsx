@@ -7,9 +7,10 @@ import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatCurrency } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
-import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import ListSearchControls from '../components/shared/ListSearchControls';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import useNameSearch from '../hooks/useNameSearch';
 
 // Donor table columns configuration (static — no component state involved)
 const donorColumns = [
@@ -80,6 +81,7 @@ const DonorList = () => {
   const { combinedAssumptions } = useAssumptions();
 
   const donorStats = useMemo(() => calculateDonorStatsFromCombined(combinedAssumptions), [combinedAssumptions]);
+  const { searchTerm, setSearchTerm, filteredItems: filteredDonors } = useNameSearch(donorStats);
 
   return (
     <>
@@ -104,14 +106,15 @@ const DonorList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <AssumptionsSelector />
+          <ListSearchControls searchTerm={searchTerm} onSearchChange={setSearchTerm} placeholder="Search donors..." />
 
           <div className="impact-surface impact-surface--table">
             <SortableTable
               columns={donorColumns}
-              data={donorStats}
+              data={filteredDonors}
               defaultSortColumn="totalLivesSaved"
               defaultSortDirection="desc"
+              emptyMessage="No donors match your search."
             />
           </div>
         </motion.div>

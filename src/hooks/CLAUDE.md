@@ -1,6 +1,7 @@
 # src/hooks/ — shared hooks
 
 - `useDocumentTitle(title)` — sets `"<title> — Impact List"`; no-ops on falsy (so detail pages can pass `entity?.name` while loading and NotFound owns the 404 title). Every page uses it.
+- `useNameSearch(items)` — list-page search state: returns `{searchTerm, setSearchTerm, filteredItems}` filtering by `name` (case-insensitive, query trimmed). `filteredItems` is memoized per term — safe to pass straight to SortableTable. Used by DonorList and RecipientList.
 - `useCategoryChartData(combinedAssumptions, donations, {maxCategories})` — memoized per-category aggregation (donation amount + lives saved per category) behind the donor/recipient detail charts; collapses the tail into an "Other Causes" row past `maxCategories`. Pass real donations only (no synthesized "unknown" rows).
 - `useChartViewTransition(rawChartData)` — the detail charts' donations⇄lives-saved toggle state machine. The chart renders `valueTarget` with recharts animation; a toggle animates by holding the FROM value and retargeting, then rows rebuild once idle. Returns `{chartData, chartView, isTransitioning, handleChartViewChange}`.
 - `useFormattedNumberInput(value, emitChange)` — the formatted-number input core (local display state, comma formatting, cursor preservation, prop→display sync) behind CurrencyInput/NumericInput; `emitChange(formatted, raw)` leaves parsing to the component.

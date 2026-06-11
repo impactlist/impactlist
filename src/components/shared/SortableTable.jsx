@@ -24,6 +24,7 @@ const SortableTable = ({
   defaultSortDirection = 'desc',
   tiebreakColumn,
   tiebreakDirection = 'desc',
+  emptyMessage,
 }) => {
   // Ignore tiny width drift from layout measurement and browser rounding.
   // Real mobile/tablet overflow is much larger than this.
@@ -441,6 +442,13 @@ const SortableTable = ({
           {renderColGroup()}
           {renderTableHeader('primary', !showStickyHeader)}
           <tbody>
+            {sortedData.length === 0 && emptyMessage && (
+              <tr>
+                <td colSpan={columns.length} className="px-4 py-8 text-center text-sm text-muted">
+                  {emptyMessage}
+                </td>
+              </tr>
+            )}
             {sortedData.map((item, index) => (
               // Row identity survives re-sorting when rows carry an id, so
               // React moves rows instead of rewriting every cell.

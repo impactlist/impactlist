@@ -64,4 +64,38 @@ describe('SortableTable', () => {
 
     expect(getDataRowNames()).toEqual(['Charlie', 'Alpha', 'Delta', 'Bravo']);
   });
+
+  it('renders the empty message when there are no rows', () => {
+    render(
+      <SortableTable
+        columns={columns}
+        data={[]}
+        defaultSortColumn="costPerLife"
+        defaultSortDirection="asc"
+        emptyMessage="No donors match your search."
+      />
+    );
+
+    expect(screen.getByText('No donors match your search.')).toBeInTheDocument();
+  });
+
+  it('does not render the empty message when there are rows', () => {
+    render(
+      <SortableTable
+        columns={columns}
+        data={data}
+        defaultSortColumn="costPerLife"
+        defaultSortDirection="asc"
+        emptyMessage="No donors match your search."
+      />
+    );
+
+    expect(screen.queryByText('No donors match your search.')).not.toBeInTheDocument();
+  });
+
+  it('renders an empty body when there are no rows and no empty message', () => {
+    render(<SortableTable columns={columns} data={[]} defaultSortColumn="costPerLife" defaultSortDirection="asc" />);
+
+    expect(screen.getAllByRole('row')).toHaveLength(1); // header only
+  });
 });

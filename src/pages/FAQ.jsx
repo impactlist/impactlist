@@ -437,6 +437,21 @@ const FAQ = () => {
             <FAQCard question="How can I contact you?" isOpen={isOpen(11)} onToggle={() => toggleItem(11)}>
               <p>Email elliotolds at {`[Google's email service]`} with any questions.</p>
             </FAQCard>
+
+            <FAQCard
+              question="Where do the donor photos come from?"
+              isOpen={isOpen(12)}
+              onToggle={() => toggleItem(12)}
+            >
+              <p>
+                Donor photos are either freely licensed/public-domain images or AI-generated synthetic placeholders
+                where no suitable freely licensed photo was available. Which images are synthetic is disclosed on the{' '}
+                <Link to="/image-credits" className="impact-link">
+                  image credits
+                </Link>{' '}
+                page, along with sources, licenses, and modification notes.
+              </p>
+            </FAQCard>
           </div>
         </motion.div>
       </motion.div>

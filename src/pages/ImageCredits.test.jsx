@@ -21,6 +21,30 @@ describe('ImageCredits', () => {
     expect(screen.getByRole('heading', { name: /image credits/i })).toBeInTheDocument();
   });
 
+  it('links back to the top donors page', () => {
+    renderPage();
+    expect(screen.getByRole('link', { name: 'Back to top donors' })).toHaveAttribute('href', '/');
+  });
+
+  it('explains that some donor images are AI-generated synthetic images', () => {
+    renderPage();
+    expect(screen.getByText(/we used an AI-generated synthetic image instead/i)).toBeInTheDocument();
+  });
+
+  it('describes synthetic entries as images and photographs as photos', () => {
+    renderPage();
+    const synthetic = imageCredits.find((c) => c.license.startsWith('AI-generated'));
+    const photo = imageCredits.find((c) => !c.license.startsWith('AI-generated'));
+    expect(synthetic).toBeTruthy();
+    expect(photo).toBeTruthy();
+
+    const items = screen.getAllByRole('listitem');
+    const syntheticItem = items.find((li) => within(li).queryByRole('link', { name: synthetic.name }));
+    const photoItem = items.find((li) => within(li).queryByRole('link', { name: photo.name }));
+    expect(syntheticItem).toHaveTextContent(/Image(,| by )/);
+    expect(photoItem).toHaveTextContent(/Photo(,| by )/);
+  });
+
   it('renders one entry per credited photo, each with source and license links', () => {
     renderPage();
     const items = screen.getAllByRole('listitem');
@@ -36,7 +60,7 @@ describe('ImageCredits', () => {
     }
   });
 
-  it('every credit entry documents a free license or a labeled AI generation', () => {
+  it('every credit entry documents a free license or a disclosed AI generation', () => {
     const freeLicense = /^(CC BY(-SA)?( \d\.\d)?|CC0( \d\.\d)?|Public domain|AI-generated)/i;
     for (const credit of imageCredits) {
       expect(credit.license, `${credit.donorId} license`).toMatch(freeLicense);

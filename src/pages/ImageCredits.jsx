@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PageHeader from '../components/shared/PageHeader';
+import ListPageShell from '../components/shared/ListPageShell';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import { imageCredits } from '../data/imageCredits';
 
@@ -11,14 +11,14 @@ const ImageCredits = () => {
   useDocumentTitle('Image Credits');
 
   return (
-    <div className="impact-page">
-      <PageHeader
-        title="Image Credits"
-        subtitle="Every photo on this site comes from a freely licensed source. Donors without a freely licensed photo are shown with a placeholder."
-      />
-      <div className="impact-page__container">
-        <ul className="space-y-4">
-          {sortedCredits.map((credit) => (
+    <ListPageShell
+      title="Image Credits"
+      subtitle="Most donor images come from freely licensed or public-domain sources. When no suitable freely licensed photo was available, we used an AI-generated synthetic image instead; each one is identified in its entry below."
+    >
+      <ul className="space-y-4">
+        {sortedCredits.map((credit) => {
+          const isSynthetic = credit.license.startsWith('AI-generated');
+          return (
             <li key={credit.donorId} className="impact-surface flex items-center gap-4 p-4">
               <img
                 src={`/images/people/small/${credit.donorId}.jpeg`}
@@ -35,7 +35,8 @@ const ImageCredits = () => {
                   {credit.name}
                 </Link>
                 <p className="text-sm text-[var(--text-muted)]">
-                  Photo{credit.author ? ` by ${credit.author}` : ''}, via{' '}
+                  {isSynthetic ? 'Image' : 'Photo'}
+                  {credit.author ? ` by ${credit.author}` : ''}, via{' '}
                   <a href={credit.sourceUrl} target="_blank" rel="noopener noreferrer" className="impact-link">
                     {credit.sourceName}
                   </a>
@@ -55,10 +56,10 @@ const ImageCredits = () => {
                 </p>
               </div>
             </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+          );
+        })}
+      </ul>
+    </ListPageShell>
   );
 };
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const SOCIAL_LINK_CLASS = 'text-slate-400 hover:text-white transition-colors';
@@ -48,11 +47,6 @@ const Footer = () => {
             <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z" />
           </svg>
         </a>
-      </div>
-      <div className="mt-4">
-        <Link to="/image-credits" className="text-slate-400 hover:text-white transition-colors text-sm">
-          Image credits
-        </Link>
       </div>
     </motion.div>
   );

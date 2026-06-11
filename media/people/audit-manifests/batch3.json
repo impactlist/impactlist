@@ -1,0 +1,134 @@
+[
+  {
+    "donorId": "marc-benioff",
+    "file": "public/images/people/small/marc-benioff.jpeg",
+    "status": "confirmed",
+    "author": "U.S. Department of Homeland Security",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Marc_Benioff,_2024_(cropped).jpg",
+    "license": "Public domain (U.S. federal government work)",
+    "licenseUrl": "https://www.usa.gov/government-copyright",
+    "notes": "Local image is a square crop of this DHS photo (taken 2024-09-18, DHS Flickr photo 54008815844, account DHSgov). Verified by visual comparison: identical frame (same smile, hair, pinstripe suit, dark background)."
+  },
+  {
+    "donorId": "mark-zuckerberg",
+    "file": "public/images/people/small/mark-zuckerberg.jpeg",
+    "status": "confirmed",
+    "author": "Anthony Quintano",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mark_Zuckerberg_F8_2018_Keynote_(cropped_2).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local image is a tight head crop of this photo from the Facebook F8 2018 keynote (taken 2018-04-30). Verified by head-region pixel comparison (eyes, ear, hairline, blue stage background)."
+  },
+  {
+    "donorId": "melinda-gates",
+    "file": "public/images/people/small/melinda-gates.jpeg",
+    "status": "replaced",
+    "author": "World Economic Forum (swiss-image.ch)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Melinda_Gates_-_World_Economic_Forum_Annual_Meeting_2011.jpg",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "notes": "Previous local image was traced exactly to Commons File:Melinda Gates 2014.jpg (Press Information Bureau / Ministry of Women and Child Development, Government of India), but its license is GODL-India, which is outside the approved whitelist (PD/CC0/CC BY/CC BY-SA), so the file was replaced. New image: center-cropped square head shot, resized to 460x460, from the WEF Annual Meeting 2011 photo (license-reviewed on Commons, cropped there from File:Bill & Melinda Gates, David Cameron - World Economic Forum Annual Meeting 2011.jpg, WEF Flickr)."
+  },
+  {
+    "donorId": "michael-bloomberg",
+    "file": "public/images/people/small/michael-bloomberg.jpeg",
+    "status": "confirmed",
+    "author": "Michel Temer (official Flickr of the Presidency of Brazil)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Michael_Bloomberg_(36720142205).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local image is a saturation-boosted square crop of this photo (visit to Bloomberg HQ, New York, 2016-09-19). Verified by head-region comparison including the distinctive white mark under his left eye and the same background person."
+  },
+  {
+    "donorId": "peter-thiel",
+    "file": "public/images/people/small/peter-thiel.jpeg",
+    "status": "confirmed",
+    "author": "Gage Skidmore",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Peter_Thiel_by_Gage_Skidmore.jpg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "notes": "Local image is a tight head crop of this 2022-02-09 photo. Verified visually: identical smile, head angle, and distinctive yellow-green/black split backdrop."
+  },
+  {
+    "donorId": "ray-dalio",
+    "file": "public/images/people/small/ray-dalio.jpeg",
+    "status": "confirmed",
+    "author": "Web Summit (photo: Harry Murphy/Web Summit via Sportsfile)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Web_Summit_2018_-_Forum_-_Day_2,_November_7_HM1_7481_(44858045925).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local image is a square crop of this Web Summit 2018 Forum-stage photo (2018-11-07). The retained original /tmp/ray_dalio_original.jpg carries matching Web Summit EXIF description and is the identical frame (same gesture, headset mic, FORUM backdrop)."
+  },
+  {
+    "donorId": "reid-hoffman",
+    "file": "public/images/people/small/reid-hoffman.jpg",
+    "status": "confirmed",
+    "author": "startupofyou (Flickr account for Reid Hoffman's book The Startup of You)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Reid_Hoffman_in_SF_2011.jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local image is a tight head crop of this 2011-10-20 photo. License reviewed on Commons at upload (Flickr upload bot, reviewer Bbolkowy, 2012). Verified by head-region pixel comparison (same forehead mole, glasses glint, bokeh background)."
+  },
+  {
+    "donorId": "sergey-brin",
+    "file": "public/images/people/small/sergey-brin.jpeg",
+    "status": "confirmed",
+    "author": "JD Lasica",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sergey_Brin_(50910683).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local image is a head crop of this photo from the Web 2.0 Conference, San Francisco (2005-10-07). FlickreviewR passed (cc-by-2.0). Verified by head-region comparison (same smile, hair curls, lavender O'Reilly backdrop, raised arm at right edge)."
+  },
+  {
+    "donorId": "steve-ballmer",
+    "file": "public/images/people/small/steve-ballmer.jpeg",
+    "status": "confirmed",
+    "author": "Martin Olsson (mnemo); derivative work by Off2riorob",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Steve_ballmer_2007_outdoors2-2.jpg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "notes": "Local image is a square crop of this retouched derivative of File:Steve ballmer 2007 outdoors2.jpg. Verified visually: identical frame (outdoor green background, same expression). Also available under GFDL."
+  },
+  {
+    "donorId": "vitalik-buterin",
+    "file": "public/images/people/small/vitalik-buterin.jpeg",
+    "status": "confirmed",
+    "author": "John Phillips (TechCrunch)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Vitalik_Buterin_TechCrunch_London_2015_(cropped).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local image is a tight crop of this TechCrunch Disrupt London 2015 photo (2015-12-08, TechCrunch Flickr 22987802684). Verified visually: same headset mic, expression, and green TechCrunch-branded backdrop."
+  },
+  {
+    "donorId": "warren-buffett",
+    "file": "public/images/people/small/warren-buffett.jpeg",
+    "status": "confirmed",
+    "author": "Aaron Friedman",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Warren_Buffett_with_Fisher_College_of_Business_Student_-_4395161160_(cropped).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local image is a tight head crop of this photo from a Fisher College of Business dinner with Buffett (2010-02-26, Flickr 4395161160). Verified by head-region comparison: identical flash glint on the left eyeglass lens, same squint, smile, and red paisley tie at collar."
+  },
+  {
+    "donorId": "unknown",
+    "file": "public/images/people/small/unknown.jpeg",
+    "status": "confirmed",
+    "author": "n/a (generic vector-style silhouette, no photographic content)",
+    "sourceName": "n/a",
+    "sourceUrl": "n/a",
+    "licenseUrl": "n/a",
+    "license": "n/a (non-photographic placeholder; simple geometric silhouette below threshold of originality)",
+    "notes": "Verified visually: 958x958 generic gray head-and-shoulders silhouette avatar on a light gray background — the standard default-avatar shape, not a photo of any person. Left untouched."
+  }
+]

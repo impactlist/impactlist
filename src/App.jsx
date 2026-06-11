@@ -24,6 +24,7 @@ const AssumptionDetail = lazy(() => import('./pages/AssumptionDetail'));
 const DonationCalculator = lazy(() => import('./pages/DonationCalculator'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const AssumptionsPage = lazy(() => import('./pages/AssumptionsPage'));
+const ImageCredits = lazy(() => import('./pages/ImageCredits'));
 import { AssumptionsProvider } from './contexts/AssumptionsContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Header from './components/layout/Header';
@@ -153,6 +154,7 @@ const AppContent = () => {
               <Route path="/calculator" element={<DonationCalculator />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/assumptions" element={<AssumptionsPage />} />
+              <Route path="/image-credits" element={<ImageCredits />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -221,9 +221,17 @@ Distinctions that trip people up: `global-health` is developing-world health int
 
 Recipients can also override or multiply category effect parameters (`effects:` with `overrides`/`multipliers`). That's rare and belongs to deep effectiveness analysis — the default-justification boilerplate is the norm for new recipients. If your research strongly suggests a recipient is far more/less effective than its category baseline, flag it in your report and (only if asked to pursue it) use the effectiveness-estimation skill at `.claude/skills/effectiveness-estimation/SKILL.md` — don't hand-roll a multiplier inline.
 
-## Step 5 — Photo (best effort)
+## Step 5 — Photo (best effort, license required)
 
-The site shows `public/images/people/small/<donor-id>.jpeg` (`.jpg` also works), square-cropped, ~460×460 (any reasonable square size works), falling back to `unknown.jpeg` when absent. Wikimedia Commons usually has a freely licensed photo of public figures: download it, square-crop (`sips -c <side> <side> in.jpg --out out.jpeg` on macOS), and drop it in. If you can't get a properly licensed image, skip this and note it in your report — the fallback renders fine.
+The site shows `public/images/people/small/<donor-id>.jpeg` (`.jpg` also works), square-cropped, ~460×460 (any reasonable square size works), falling back to `unknown.jpeg` when absent.
+
+**Only freely licensed images may ship**: public domain, CC0, CC BY, or CC BY-SA. Never use an image whose license you can't document — no search-result grabs, no press photos without an explicit license, no CC BY-NC/ND. Wikimedia Commons covers most public figures; the World Economic Forum's Flickr (CC BY-SA) and US-government photos (public domain) are good fallbacks. Download, square-crop (`sips -c <side> <side> in.jpg --out out.jpeg` on macOS), drop it in.
+
+**Every photo you add requires a credit entry** in `src/data/imageCredits.js` (rendered at /image-credits — this is what keeps the site attribution-compliant for CC images): `{donorId, name, author, sourceName, sourceUrl (the file's source page, not the raw image), license, licenseUrl}`. A photo without a credit entry is a bug; `ImageCredits.test.jsx` enforces the license whitelist.
+
+**Also save the uncropped original** to `media/people/original/<donor-id>.<original ext>` (repo root, NOT under `public/` — originals shouldn't ship in the build). This preserves the full image for future re-cropping.
+
+If no acceptably licensed image exists, skip the photo and note it in your report — the fallback renders fine. (The maintainer sometimes commissions AI-generated portraits for such donors via an open-weights model; those are added manually with `license: 'AI-generated (<model>) — no copyright claimed'` and the model card as `licenseUrl`. Don't generate these yourself — flag the missing photo instead.)
 
 ## Step 6 — Validate and report
 

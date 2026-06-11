@@ -1,0 +1,134 @@
+[
+  {
+    "donorId": "anne-wojcicki",
+    "file": "public/images/people/small/anne-wojcicki.jpeg",
+    "status": "confirmed",
+    "author": "TechCrunch",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Anne_Wojcicki_(36938473750)_(cropped).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local file is a square head crop of this TechCrunch Disrupt SF 2017 photo (matched on earpiece mic, necklace pendants, and DISRUPT signage fragments). Original on TechCrunch's Flickr: https://www.flickr.com/photos/techcrunch/36938473750/"
+  },
+  {
+    "donorId": "azim-premji",
+    "file": "public/images/people/small/azim-premji.jpeg",
+    "status": "confirmed",
+    "author": "World Economic Forum",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Azim_H._Premji_World_Economic_Forum_2013.jpg",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "notes": "Local file is a square head crop of this Davos 2013 photo from the World Economic Forum Flickr stream (verified against full-resolution head crop: identical expression, pinstripe suit, and FORUM backdrop lettering)."
+  },
+  {
+    "donorId": "bill-gates",
+    "file": "public/images/people/small/bill-gates.jpeg",
+    "status": "replaced",
+    "author": "Bogdan Hoyaux / European Union",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bill_Gates_at_the_European_Commission_-_P067383-987995_(cropped)_5.jpg",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "notes": "Previous local image was a TV/video interview screengrab with no traceable free license, so it was replaced. New image is the June 2025 European Commission visit portrait (current English Wikipedia lead image), center-cropped square and resized to 460x460. EC source: https://audiovisual.ec.europa.eu/en/photo/P-067383~2F00-01"
+  },
+  {
+    "donorId": "cari-tuna",
+    "file": "public/images/people/small/cari-tuna.jpg",
+    "status": "confirmed",
+    "author": "The Centre for Effective Altruism",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cari_Tuna_speaking_at_EA_Global_2016.png",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "notes": "Local file is a square head crop of this still from the EA Global 2016 talk video (verified frame-identical against the full-resolution Commons PNG)."
+  },
+  {
+    "donorId": "carlos-slim",
+    "file": "public/images/people/small/carlos-slim.jpeg",
+    "status": "confirmed",
+    "author": "Secretaría de Cultura Ciudad de México",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carlos_Slim_(45680472234)_(cropped).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Matches the hint from the previous agent: December 2018 photo from the Secretaría de Cultura CDMX Flickr stream (https://www.flickr.com/photos/culturacdmx/45680472234). Local file is a tighter square crop."
+  },
+  {
+    "donorId": "david-geffen",
+    "file": "public/images/people/small/david-geffen.jpeg",
+    "status": "confirmed",
+    "author": "Tony Barnard, Los Angeles Times",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:David_Geffen.jpg",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "notes": "1973 Los Angeles Times photo (UCLA Library digital collection, https://digital.library.ucla.edu/catalog/ark:/21198/zz0002p863). Local file is a square crop of the Commons image."
+  },
+  {
+    "donorId": "dustin-moskovitz",
+    "file": "public/images/people/small/dustin-moskovitz.jpeg",
+    "status": "confirmed",
+    "author": "Moskov (Dustin Moskovitz, Commons uploader; sister upload's EXIF credits photographer Bart Nagel, 2011)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dustin_Moskovitz2.jpg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "notes": "Local file is a square crop of this 2011 headshot, released CC BY-SA 3.0 on Commons as own work by the subject's account (used as his Wikipedia photo)."
+  },
+  {
+    "donorId": "elon-musk",
+    "file": "public/images/people/small/elon-musk.jpeg",
+    "status": "confirmed",
+    "author": "Debbie Rowe (The Royal Society)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elon_Musk_Royal_Society_(crop2).jpg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "notes": "The 2018 Royal Society admissions-day portrait; local file is a square crop of this widely used Commons crop."
+  },
+  {
+    "donorId": "eric-schmidt",
+    "file": "public/images/people/small/eric-schmidt.jpeg",
+    "status": "confirmed",
+    "author": "Guillaume Paumier",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eric_Schmidt_at_the_37th_G8_Summit_in_Deauville_037.jpg",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "notes": "Local file is a tight square head crop of this 2011 G8 Summit (Deauville) press conference photo."
+  },
+  {
+    "donorId": "george-lucas",
+    "file": "public/images/people/small/george-lucas.jpeg",
+    "status": "confirmed",
+    "author": "Kevin Payravi",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:George_Lucas_2024.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "notes": "Matches the hint that it was recently sourced from Commons: May 2024 photo, local file is a square crop."
+  },
+  {
+    "donorId": "george-soros",
+    "file": "public/images/people/small/george-soros.jpeg",
+    "status": "confirmed",
+    "author": "Niccolò Caranti",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:George_Soros_-_Festival_Economia_2018_1.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "notes": "Local file is a tighter square crop of this Festival Economia 2018 (Trento) photo."
+  },
+  {
+    "donorId": "jaan-tallinn",
+    "file": "public/images/people/small/jaan-tallinn.jpeg",
+    "status": "confirmed",
+    "author": "Christopher Michel",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jaan_Tallinn_2014.jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local file is a square crop of this 2014 black-and-white conference portrait."
+  }
+]

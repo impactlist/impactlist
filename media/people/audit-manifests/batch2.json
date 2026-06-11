@@ -1,0 +1,123 @@
+[
+  {
+    "donorId": "jack-dorsey",
+    "file": "public/images/people/small/jack-dorsey.jpeg",
+    "status": "confirmed",
+    "author": "Office of Senator Mark Warner (Flickr: Mark Warner)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jack_Dorsey_in_Washington_D.C._-_2018_(MRW_4445)_(44538272181).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local file is a square crop of this exact photo (Senate Intelligence Committee hearing, Washington D.C., 2018-09-05) from Senator Mark Warner's Flickr stream. Verified visually; not modified."
+  },
+  {
+    "donorId": "jed-mccaleb",
+    "file": "public/images/people/small/jed-mccaleb.jpeg",
+    "status": "unresolved",
+    "author": "",
+    "sourceName": "",
+    "sourceUrl": "",
+    "license": "",
+    "licenseUrl": "",
+    "notes": "No acceptably-licensed image found. Wikimedia Commons has no photo of him (Wikidata Q28449997 has no P18 image). The only Flickr photo located (JedMcCalebJoyceKimStellar, flickr.com/photos/134236968@N07/19352937984) is CC BY-ND, which is not acceptable. Local file (likely a Stellar/press headshot, provenance unknown) left untouched."
+  },
+  {
+    "donorId": "jeff-bezos",
+    "file": "public/images/people/small/jeff-bezos.jpeg",
+    "status": "confirmed",
+    "author": "Seattle City Council",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_(39074799225).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local file is a square crop of this exact photo (Amazon Spheres grand opening, 2018-01-29); a Commons '(cropped)' variant of the same file exists with near-identical framing. Verified visually; not modified."
+  },
+  {
+    "donorId": "jensen-huang",
+    "file": "public/images/people/small/jensen-huang.jpeg",
+    "status": "replaced",
+    "author": "Peter Dasilva, European Union (EC Audiovisual Service)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jensen_Huang_(cropped)_(2024).jpg",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "notes": "Previous local image (casual smiling shot, wooden wall with paper-bird decor) matched no Commons file; provenance unknown, so it was replaced. New image: 2024 portrait taken during Josep Borrell's US visit (EC Audiovisual Service P-063789), top-anchored 1129x1129 square crop resized to 460x460."
+  },
+  {
+    "donorId": "john-doerr",
+    "file": "public/images/people/small/john-doerr.jpeg",
+    "status": "confirmed",
+    "author": "TechCrunch (Flickr; photo _SJP2372 by Steve Jennings for TechCrunch)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:TechCrunch_SF_2013_SJP2372_(9727140956).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local file is a square crop of this exact photo (TechCrunch Disrupt SF 2013). Commons artist field credits TechCrunch's Flickr account. Verified visually; not modified."
+  },
+  {
+    "donorId": "ken-griffin",
+    "file": "public/images/people/small/ken-griffin.jpeg",
+    "status": "confirmed",
+    "author": "Paul Elledge / Citadel Enterprise Americas LLC",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kenneth_C._Griffin_photo.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "notes": "Local file is a square crop of this exact portrait. Commons metadata: Artist = Paul Elledge, Credit = Citadel Enterprise Americas LLC, CC BY-SA 4.0. Matches the provided hint. Verified visually; not modified."
+  },
+  {
+    "donorId": "larry-ellison",
+    "file": "public/images/people/small/larry-ellison.jpeg",
+    "status": "confirmed",
+    "author": "Oracle Corporate Communications",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Larry_Ellison_on_stage.jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local file is a square crop of this exact photo (Oracle OpenWorld, 2009-10-15, from Oracle's Flickr); framing matches the Commons '(cropped)' variant of the same file. Verified visually; not modified."
+  },
+  {
+    "donorId": "larry-page",
+    "file": "public/images/people/small/larry-page.jpeg",
+    "status": "confirmed",
+    "author": "Marcin Mycielski, European Parliament (Commons user Stansfield)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Larry_Page_in_the_European_Parliament,_17.06.2009.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "notes": "Local file is a square crop of this exact photo (European Parliament, 2009-06-17). File is multi-licensed GFDL + cc-by-sa-all (CC BY-SA 1.0 through 4.0); CC BY-SA 4.0 recorded. Verified visually; not modified."
+  },
+  {
+    "donorId": "laurene-powell-jobs",
+    "file": "public/images/people/small/laurene-powell-jobs.jpeg",
+    "status": "confirmed",
+    "author": "Craig McDean (for Emerson Collective)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Laurene_Powell_Jobs_2025.jpg",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "notes": "Local file is a square crop of this exact portrait. License independently verified at the original source (emersoncollective.com/articles/q-and-a-with-ec-founder-and-president-laurene-powell-jobs): 'Photography by Craig McDean. Licensed to the public under a Creative Commons Attribution 4.0 license.' Not modified."
+  },
+  {
+    "donorId": "li-ka-shing",
+    "file": "public/images/people/small/li-ka-shing.jpeg",
+    "status": "confirmed",
+    "author": "EdTech Stanford University School of Medicine (Flickr)",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Li_Ka_Shing.jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "notes": "Local file is a square crop of this exact photo (Stanford School of Medicine event, 2010-09-29, Flickr IMG_5485). This is the exact Commons file the hint referred to. Verified visually; not modified."
+  },
+  {
+    "donorId": "mackenzie-scott",
+    "file": "public/images/people/small/mackenzie-scott.jpeg",
+    "status": "replaced",
+    "author": "U.S. Department of Homeland Security",
+    "sourceName": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalization_Ceremony_(27590969882).jpg",
+    "license": "Public domain (U.S. federal government work)",
+    "licenseUrl": "https://www.usa.gov/government-works",
+    "notes": "Previous local image was the widely-circulated press headshot with no free license found anywhere; replaced. New image is a face crop (96x96 region upscaled to 460x460) of the 2016-06-15 DHS naturalization-ceremony photo — the same public-domain source English Wikipedia uses (File:MacKenzie Scott.jpg is a tiny crop of it). Quality is limited because her face is only ~40px in the 1280x854 original; this is the only freely-licensed photo of her that exists."
+  }
+]

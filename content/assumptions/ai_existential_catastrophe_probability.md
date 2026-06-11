@@ -100,7 +100,7 @@ Still, the broader event should be materially higher than extinction alone. A re
 - XPT's broader AI-catastrophe numbers are materially above its extinction numbers
 - the recent disempowerment and authoritarianism literature makes it hard to justify an uplift near zero
 
-We do **not** use the full gap between `14.4%` and `8%`, because survey means can be fat-tailed, some respondents may already fold disempowerment into their extinction-style answers, and the site's event definition is narrower than every bad authoritarian or surveillance outcome. But a net uplift of about **4 percentage points** is a reasonable best guess.
+We do **not** use the full gap between 14.4% and 8%, because survey means can be fat-tailed, some respondents may already fold disempowerment into their extinction-style answers, and the site's event definition is narrower than every bad authoritarian or surveillance outcome. But a net uplift of about **4 percentage points** is a reasonable best guess.
 
 ---
 

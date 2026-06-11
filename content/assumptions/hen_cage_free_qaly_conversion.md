@@ -27,7 +27,7 @@ For the animal-welfare category, the cleanest single-number central estimate is 
 
 ### 2. Why use 0.5 for the negative share of the welfare range?
 
-The `0.5` term assumes the welfare range is roughly symmetric around a neutral point, so the negative portion makes up half the total range.
+The 0.5 term assumes the welfare range is roughly symmetric around a neutral point, so the negative portion makes up half the total range.
 
 This is a modeling convention rather than a directly measured fact. The point is not that hens literally spend half their lives in negative welfare and half in positive welfare. The point is that once a total welfare range is specified, and there is no strong additional argument that neutral is far from the midpoint, a symmetric split is the cleanest default way to map "fraction of negative welfare removed" into the total welfare range.
 
@@ -66,7 +66,7 @@ The animal-welfare category currently uses **0.0125-0.0575** as a practical rang
 $$0.1 \times 0.5 \times 0.25 = 0.0125$$
 $$0.46 \times 0.5 \times 0.25 = 0.0575$$
 
-The `25%` bridge assumption is itself also important. Holding the other central inputs fixed, moving that term from **15% to 35%** would shift the conversion from about **0.0249** to **0.0581** QALYs per hen-year:
+The 25% bridge assumption is itself also important. Holding the other central inputs fixed, moving that term from **15% to 35%** would shift the conversion from about **0.0249** to **0.0581** QALYs per hen-year:
 
 $$0.332 \times 0.5 \times 0.15 = 0.0249$$
 $$0.332 \times 0.5 \times 0.35 = 0.0581$$

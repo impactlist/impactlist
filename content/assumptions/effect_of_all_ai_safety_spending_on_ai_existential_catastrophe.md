@@ -60,27 +60,27 @@ Recent work makes these channels more concrete:
 
 Those papers do not prove that historical AI safety funding has already bought large amounts of lock-in prevention. But they do strengthen the case that governance, preparedness, and institutional work can reduce broader existential-catastrophe pathways, not just literal extinction.
 
-The key point is that the uplift should probably be **less than proportional** to the increase in event size, but not much smaller than proportional. The broader event on the category page is about `1.5x` larger than the extinction-only event (`12%` versus `8%`). The extra risk mass is not mostly generic bad AI governance; it is mainly irreversible loss of human control, with AI-enabled political lock-in as a smaller but important component. Much of the historical AI safety portfolio is relevant to those pathways.
+The key point is that the uplift should probably be **less than proportional** to the increase in event size, but not much smaller than proportional. The broader event on the category page is about 1.5x larger than the extinction-only event (12% versus 8%). The extra risk mass is not mostly generic bad AI governance; it is mainly irreversible loss of human control, with AI-enabled political lock-in as a smaller but important component. Much of the historical AI safety portfolio is relevant to those pathways.
 
-We use a simple relative-relevance model. The percentages below are informed judgments, not empirical measurements; the model is meant to make the structure of the argument transparent and locate the multiplier in the right region, not to pin down a precise value. The exact split is uncertain, but a reasonable decomposition of the extra `4 percentage points` is:
+We use a simple relative-relevance model. The percentages below are informed judgments, not empirical measurements; the model is meant to make the structure of the argument transparent and locate the multiplier in the right region, not to pin down a precise value. The exact split is uncertain, but a reasonable decomposition of the extra 4 percentage points is:
 
 - about **3 percentage points** from irreversible AI disempowerment or loss of human control
 - about **1 percentage point** from stable AI-enabled totalitarian lock-in or comparable permanent political closure
 
 Relative to extinction-prevention impact:
 
-- Technical alignment, control, interpretability, and evals seem about **80%** as relevant to irreversible disempowerment as to extinction, but only about **30%** as relevant to political lock-in. Across the `3:1` split above, that gives `0.675` relative relevance to the extra non-extinction event mass.
-- Governance, preparedness, standards, institutions, and field-building seem about **90%** as relevant to irreversible disempowerment and about **80%** as relevant to political lock-in. Across the same split, that gives `0.875` relative relevance.
+- Technical alignment, control, interpretability, and evals seem about **80%** as relevant to irreversible disempowerment as to extinction, but only about **30%** as relevant to political lock-in. Across the 3:1 split above, that gives 0.675 relative relevance to the extra non-extinction event mass.
+- Governance, preparedness, standards, institutions, and field-building seem about **90%** as relevant to irreversible disempowerment and about **80%** as relevant to political lock-in. Across the same split, that gives 0.875 relative relevance.
 
 If roughly **60%** of historical impact came through technical channels and **40%** through governance/institutional channels, the average relevance to the extra non-extinction mass is:
 
-- `0.6 x 0.675 + 0.4 x 0.875 = 0.755`
+- $0.6 \times 0.675 + 0.4 \times 0.875 = 0.755$
 
 So the uplift over the extinction-only estimate is:
 
-- `1 + (4 / 8) x 0.755 = 1.3775`
+- $1 + (4 / 8) \times 0.755 = 1.3775$
 
-Rounded, this supports an uplift of about **1.4x** over the extinction-only spending-effect estimate. The sensitivity table below is therefore important: nearby multipliers remain live, even though `1.4x` is the best single estimate.
+Rounded, this supports an uplift of about **1.4x** over the extinction-only spending-effect estimate. The sensitivity table below is therefore important: nearby multipliers remain live, even though 1.4x is the best single estimate.
 
 ---
 
@@ -88,7 +88,7 @@ Rounded, this supports an uplift of about **1.4x** over the extinction-only spen
 
 The broader probability estimate used on the category page is about **12%**, compared with an extinction-only anchor of about **8%**. That is about a **1.5x** increase in the size of the modeled event.
 
-As argued above, a full `1.5x` tractability uplift would be too high unless we thought the historical portfolio was equally effective against extinction and non-extinction catastrophe channels. The relative-relevance model gives a **partial-overlap uplift** of about **1.4x**:
+As argued above, a full 1.5x tractability uplift would be too high unless we thought the historical portfolio was equally effective against extinction and non-extinction catastrophe channels. The relative-relevance model gives a **partial-overlap uplift** of about **1.4x**:
 
 - extinction-only anchor: about **0.1 percentage points**
 - broader existential-catastrophe estimate: about **0.14 percentage points**
@@ -97,7 +97,7 @@ That is directionally supported by three facts:
 
 - the broader event is larger than extinction alone
 - many of the same interventions act on both extinction and non-extinction catastrophe channels
-- the overlap is real but incomplete, so the uplift should be material without simply matching the full `1.5x` event-size increase
+- the overlap is real but incomplete, so the uplift should be material without simply matching the full 1.5x event-size increase
 
 So **0.14 percentage points** is a reasonable best guess.
 
@@ -105,9 +105,9 @@ So **0.14 percentage points** is a reasonable best guess.
 
 The exact multiplier is still a judgment call. Nearby values move the estimate as follows:
 
-- `1.2x`: `0.12` percentage points -> about **\$833,000 per microprobability**
-- `1.4x`: `0.14` percentage points -> about **\$714,000 per microprobability**
-- `1.5x`: `0.15` percentage points -> about **\$667,000 per microprobability**
+- 1.2x: 0.12 percentage points → about **\$833,000 per microprobability**
+- 1.4x: 0.14 percentage points → about **\$714,000 per microprobability**
+- 1.5x: 0.15 percentage points → about **\$667,000 per microprobability**
 
 This sensitivity is meaningful, but it does not change the order of magnitude.
 
@@ -126,19 +126,19 @@ This range is deliberately wide because the evidence is indirect. There is no cl
 
 At the central estimate:
 
-- `0.14 percentage points = 0.0014 probability`
-- `0.0014 / 10^-6 = 1,400 microprobabilities`
-- `\$1B / 1,400 ≈ \$714,000 per microprobability`
+- $0.14 \text{ percentage points} = 0.0014 \text{ probability}$
+- $0.0014 / 10^{-6} = 1{,}400 \text{ microprobabilities}$
+- $$\$1\text{B} / 1{,}400 \approx \$714{,}000 \text{ per microprobability}$$
 
 At the lower end of the range:
 
-- `0.014 percentage points = 140 microprobabilities`
-- `\$1B / 140 ≈ \$7.1 million per microprobability`
+- $0.014 \text{ percentage points} = 140 \text{ microprobabilities}$
+- $$\$1\text{B} / 140 \approx \$7.1 \text{ million per microprobability}$$
 
 At the upper end of the range:
 
-- `0.70 percentage points = 7,000 microprobabilities`
-- `\$1B / 7,000 ≈ \$143,000 per microprobability`
+- $0.70 \text{ percentage points} = 7{,}000 \text{ microprobabilities}$
+- $$\$1\text{B} / 7{,}000 \approx \$143{,}000 \text{ per microprobability}$$
 
 So the best single estimate is roughly **\$714,000 per microprobability**, with a wide positive range from about **\$143,000** to about **\$7.1 million** on the field-level approach alone.
 

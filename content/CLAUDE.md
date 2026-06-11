@@ -6,6 +6,16 @@
 - Donation rules are build-enforced (see the `scripts/` context file): strict `YYYY-MM-DD` dates, positive numeric amounts, credit maps summing to 1, no duplicate events across files — every donation event is recorded in exactly ONE file, with `credit` (not file location) determining attribution. Genuinely identical separate donations need distinct `notes`.
 - A level-1 `# Internal Notes` heading and everything under it is stripped from published content. Only that exact heading is stripped — any other variant (`## Internal Notes`, different casing) fails the build rather than shipping publicly.
 - `{{VARIABLE}}` placeholders (e.g. `{{CONTRIBUTION_NOTE}}`) are substituted by the generator from `MARKDOWN_VARIABLES`; an unknown/unreplaced `{{TOKEN}}` fails the build.
-- Math in content renders via KaTeX: `$...$` inline, `$$...$$` block; escape literal dollars as `\$`; `{,}` for thousands separators inside math (full conventions in the "Math rendering" section of the repo-root CLAUDE.md — they apply regardless of which agent you are).
 - Domain reminder: some recipients have NEGATIVE cost per life (donations cause deaths) — that's intended, not a data error.
 - Effectiveness write-ups (cost-per-life justifications in `assumptions/`, `categories/`, `recipients/`) have a dedicated skill: use the effectiveness-estimation skill at `.claude/skills/effectiveness-estimation/SKILL.md` (Claude Code invokes it as `/effectiveness-estimation`; other agents can read the SKILL.md directly).
+
+## Math rendering
+
+Published markdown renders via `react-markdown` + `remark-math` + `rehype-katex` (`src/components/shared/MarkdownContent.jsx`); KaTeX CSS is imported in `src/main.jsx`. These conventions apply regardless of which agent you are.
+
+- Delimiters: `$...$` inline, `$$...$$` block. Used mid-line, `$$...$$` still renders as inline math; on a line of its own it renders as a centered display block.
+- NEVER typeset math in backtick code spans: backslash escapes are not processed inside them (`` `\$1B` `` shows a literal backslash) and the site's prose styling wraps code in visible quote marks. Calculations, equations, and variables go in `$...$`/`$$...$$`; standalone numbers, percentages, and multipliers in prose (0.75, 12%, 1.4x) are plain text; backticks are only for genuine code identifiers (YAML field names like `windowLength`, slugs, file paths).
+- Escape literal dollar signs as `\$` in prose — a bare `$` can pair with a later one and silently swallow the text between them as math.
+- Math containing a literal `\$` MUST use `$$...$$` delimiters, never single-`$`. Escapes are not processed while scanning for the closing delimiter of a single-`$` span (it behaves like a code span), so the `$` inside `\$714{,}000` terminates the math early and the line shatters into broken fragments; a `$$` span is safe because a lone `$` can't close it.
+- Inside math: `{,}` for thousands separators (`\$40{,}000`), `\text{–}` for en-dashes/ranges (`0.1\text{–}0.2`), `\text{...}` for words/units, `\approx`, `\times`, subscripts like `Q_{\text{extra}}`. Both `\frac` and `\dfrac` are in use — match the file you are editing.
+- Verification: KaTeX-validating the LaTeX alone is NOT sufficient — the `\$` failure happens in the markdown tokenizer before KaTeX runs. When in doubt, render the changed file through the real pipeline (ReactMarkdown + remark-math + rehype-katex in a small node script) and check for `katex-error` and leftover backslash artifacts.

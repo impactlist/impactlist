@@ -55,13 +55,13 @@ How these fit together: Assumptions 5 and 6 set the cost per microprobability. A
 
 The point estimate (\$714,000 per microprobability) and range (\$143,000–\$7.1 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 5 and 6, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.14 percentage points**:
 
-- Microprobabilities averted: `0.0014 / 10^-6 = 1,400`
-- Cost per microprobability: `\$1B / 1,400 ≈ \$714,000`
+- Microprobabilities averted: $0.0014 / 10^{-6} = 1{,}400$
+- Cost per microprobability: $$\$1\text{B} / 1{,}400 \approx \$714{,}000$$
 
-(The three significant figures are an artifact of the round `0.14` input, not real precision.)
+(The three significant figures are an artifact of the round 0.14 input, not real precision.)
 
-Pessimistic case: `0.014` percentage points -> about **\$7.1 million** per microprobability  
-Optimistic case: `0.70` percentage points -> about **\$143,000** per microprobability
+- Pessimistic case: 0.014 percentage points → about **\$7.1 million** per microprobability
+- Optimistic case: 0.70 percentage points → about **\$143,000** per microprobability
 
 This estimate is already meant to be net of positive and negative effects, because the underlying assumption page explicitly tries to account for both. It also includes more than just extinction-prevention channels: the same technical, governance, and institutional work can bear on irreversible disempowerment and lock-in as well, though probably not quite as strongly as they bear on literal extinction.
 
@@ -91,25 +91,25 @@ The figures below use the site's default global parameters (Assumption 3) and it
 
 **Example 1 — Time limit = 40 years (25-year window)**
 
-- Person-years in the window: about `274 billion`
-- QALYs at stake: `274B x 0.78 ≈ 213 billion`
-- QALYs saved per microprobability: `213B x 10^-6 = 213,000`
-- Cost per QALY: `\$714,000 / 213,000 ≈ \$3.4/QALY` (about \$270 per life of 80 QALYs)
+- Person-years in the window: about 274 billion
+- QALYs at stake: $274\text{B} \times 0.78 \approx 213 \text{ billion}$
+- QALYs saved per microprobability: $213\text{B} \times 10^{-6} = 213{,}000$
+- Cost per QALY: $$\$714{,}000 / 213{,}000 \approx \$3.4/\text{QALY}$$ (about \$270 per life of 80 QALYs)
 
 **Example 2 — Time limit = 100 years (the default; 85-year window)**
 
-- Person-years in the window: about `1,290 billion`
-- QALYs at stake: `1,290B x 0.78 ≈ 1,000 billion`
-- QALYs saved per microprobability: `1,000B x 10^-6 = 1,000,000`
-- Cost per QALY: `\$714,000 / 1,000,000 ≈ \$0.71/QALY` (about \$57 per life)
+- Person-years in the window: about 1,290 billion
+- QALYs at stake: $1{,}290\text{B} \times 0.78 \approx 1{,}000 \text{ billion}$
+- QALYs saved per microprobability: $1{,}000\text{B} \times 10^{-6} = 1{,}000{,}000$
+- Cost per QALY: $$\$714{,}000 / 1{,}000{,}000 \approx \$0.71/\text{QALY}$$ (about \$57 per life)
 
 **Example 3 — Time limit = 1,000 years (985-year window)**
 
 - The population reaches the default cap (10x today's) after about 230 years, so most of the window sits at the cap
-- Person-years in the window: about `71,000 billion`
-- QALYs at stake: `71,000B x 0.78 ≈ 55,000 billion`
-- QALYs saved per microprobability: `55,000B x 10^-6 = 55 million`
-- Cost per QALY: `\$714,000 / 55M ≈ \$0.013/QALY` (about \$1 per life)
+- Person-years in the window: about 71,000 billion
+- QALYs at stake: $71{,}000\text{B} \times 0.78 \approx 55{,}000 \text{ billion}$
+- QALYs saved per microprobability: $55{,}000\text{B} \times 10^{-6} = 55 \text{ million}$
+- Cost per QALY: $$\$714{,}000 / 55\text{M} \approx \$0.013/\text{QALY}$$ (about \$1 per life)
 
 Because the default population curve grows at 1% per year until it hits the cap, the QALYs at stake scale faster than linearly with the time limit, and the long-horizon numbers are dominated by the population growth and cap parameters — both of which users can edit.
 

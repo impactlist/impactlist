@@ -38,11 +38,11 @@ export const imageCredits = [
   {
     donorId: 'cari-tuna',
     name: 'Cari Tuna',
-    author: 'The Centre for Effective Altruism',
+    author: 'Joi Ito',
     sourceName: 'Wikimedia Commons',
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Cari_Tuna_speaking_at_EA_Global_2016.png',
-    license: 'CC BY-SA 4.0',
-    licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Cari_Tuna_UCSF_Genomics_Boot_Camp_2016_(cropped).jpg',
+    license: 'CC BY 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
   },
   {
     donorId: 'carlos-slim',
@@ -119,12 +119,20 @@ export const imageCredits = [
   {
     donorId: 'jack-dorsey',
     name: 'Jack Dorsey',
-    author: 'Office of Senator Mark Warner (Flickr: Mark Warner)',
+    author: 'David Shankbone',
     sourceName: 'Wikimedia Commons',
-    sourceUrl:
-      'https://commons.wikimedia.org/wiki/File:Jack_Dorsey_in_Washington_D.C._-_2018_(MRW_4445)_(44538272181).jpg',
-    license: 'CC BY 2.0',
-    licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Jack_Dorsey_2012_Shankbone.JPG',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
+  },
+  {
+    donorId: 'jed-mccaleb',
+    name: 'Jed McCaleb',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Jed McCaleb exists.',
   },
   {
     donorId: 'jeff-bezos',

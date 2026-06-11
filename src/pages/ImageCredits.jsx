@@ -43,6 +43,14 @@ const ImageCredits = () => {
                   <a href={credit.licenseUrl} target="_blank" rel="noopener noreferrer" className="impact-link">
                     {credit.license}
                   </a>
+                  {/* CC licenses require indicating modifications (e.g. CC BY 4.0 §3(a)(1)(B)).
+                      Every shipped photo is a square crop/resize of its source. */}
+                  {(() => {
+                    const modifications =
+                      credit.modifications ??
+                      (credit.license.startsWith('CC') ? 'cropped and resized from the original' : null);
+                    return modifications ? `; ${modifications}` : '';
+                  })()}
                   {credit.notes ? ` — ${credit.notes}` : ''}
                 </p>
               </div>

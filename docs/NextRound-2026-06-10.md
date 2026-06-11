@@ -78,7 +78,7 @@ All mechanical DRY work guarded by existing suites; batched so one verification 
 
 - **§2.2.5–6 — server write-side backstops and smaller items.** Global storage quota and content-hash dedup need a product decision on limits; `schemaVersion`/`appDataVersion` need a decision (migration story vs. delete); rightmost-trusted `x-forwarded-for` parsing matters only off-Vercel. Low urgency behind the existing 10-saves/hour limit.
 - **Per-page OG + OG image (§2.7.1 dynamic half).** Requires prerendering, SSR, or an edge function — an architecture choice to make once, deliberately.
-- **§2.3.9 — generator structure.** The four near-identical loaders and the 1,100-line script work fine behind their 28 subprocess tests; restructuring is style payoff only. The genuinely useful fragments (entity-link build checks, `content/README.md` `/causes/` fix, the `sergey_brin_family_foundaiton.md` filename typo) could ride along with any chunk.
+- **§2.3.9 — generator structure.** The four near-identical loaders and the 1,100-line script work fine behind their 28 subprocess tests; restructuring is style payoff only. The genuinely useful fragment remaining — entity-link build checks — could ride along with any chunk. _(Of the other two fragments once listed here: the `content/README.md` `/causes/` fix turned out to be already done by item 16's README pass, and the `sergey_brin_family_foundaiton.md` filename typo was renamed 2026-06-11.)_
 - **Runtime-fetched dataset** (see W3) — only if the chunk split proves insufficient.
 - **`engines` bump to `>=24`** — blocked on confirming the Vercel function runtime in the dashboard.
 - **CSP** — see W1; its own carefully-tested item if wanted.

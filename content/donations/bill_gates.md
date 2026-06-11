@@ -34,9 +34,11 @@ donations:
     recipient: harvard-university
     amount: 25_000_000
     credit:
-      bill-gates: 0.5
-      melinda-gates: 0.5
+      bill-gates: 0.25
+      melinda-gates: 0.25
+      steve-ballmer: 0.5
     source: 'https://www.thecrimson.com/article/1996/10/30/gates-ballmer-donate-25-m-for'
+    notes: 'Joint gift from Bill Gates and Steve Ballmer for the Maxwell Dworkin engineering building, named for their mothers. Individual shares were not disclosed, so the gift is split evenly between the Gates household and Ballmer.'
 
   - date: 1997-07-23
     recipient: gates-library-foundation

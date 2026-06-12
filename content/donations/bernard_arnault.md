@@ -2,11 +2,11 @@
 donations:
   - date: 2019-09-24
     recipient: notre-dame-de-paris-reconstruction
-    amount: 220_000_000
+    amount: 110_000_000
     credit:
       bernard-arnault: 1.0
     source: 'https://apnews.com/article/7e5f17ed830dfa6f1bb3ad43aef37022'
-    notes: 'EUR 200,000,000 Notre-Dame reconstruction commitment, converted at approximately 1.10 USD/EUR near the September 24, 2019 patronage-convention date. AP reported in November 2024 that Bernard Arnault committed EUR 200 million and that the billionaire donors fully honored their pledges; the original pledge was co-announced by the Arnault family and LVMH Group (https://www.vogue.com/article/kering-lvmh-pledge-300-million-euros-to-repair-notre-dame), and public sources do not publish a separate family-versus-corporate allocation.'
+    notes: 'Half of the EUR 200,000,000 Notre-Dame reconstruction commitment (EUR 100M assumed family share, converted at approximately 1.10 USD/EUR near the September 24, 2019 patronage-convention date). The pledge was co-announced by the Arnault family AND LVMH Group (https://www.vogue.com/article/kering-lvmh-pledge-300-million-euros-to-repair-notre-dame); LVMH, a public company Arnault only part-owns, recorded Notre-Dame patronage in its own corporate reporting, and no family-versus-corporate split was published — so the family share is assumed at 50% per the dataset''s convention for undisclosed splits with a corporate co-pledger (cf. the Griffin/Convergent treatment). AP reported in November 2024 that the pledges were fully honored. If a definitive split surfaces, adjust this row.'
 
   - date: 2023-09-06
     recipient: les-restos-du-coeur

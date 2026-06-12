@@ -15,4 +15,4 @@ Modules backing the `/api/shared-assumptions` endpoints (Vercel serverless). **N
 
 ## Testing
 
-Every module has a co-located test; Redis is mocked via `vi.mock('./upstashRedisClient.js')` with per-call `mockResolvedValueOnce` sequences (rate-limit EVAL is always the first call on guarded paths). Route-level tests live next to the handlers in `api/`.
+Every module has a co-located test; Redis is mocked via `vi.mock('./upstashRedisClient.js')` with per-call `mockResolvedValueOnce` sequences (rate-limit EVAL is always the first call on guarded paths). Route-level tests live in `tests/api/` — NOT next to the handlers, because Vercel deploys every `.js` file under `api/` as a serverless function (see the `api/` context file).

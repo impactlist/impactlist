@@ -1,12 +1,12 @@
 ---
 donations:
-  - date: 2025-03-31
+  - date: 2010-07-01
     recipient: shiv-nadar-foundation
     amount: 1_850_000_000
     credit:
       shiv-nadar: 1.0
     source: 'https://www.shivnadarfoundation.org/'
-    notes: 'Conservative aggregate row for completed giving into/through the Shiv Nadar Foundation, SSN Trust, and affiliated SNF charitable institution ecosystem through the latest 2024-25/2026 official foundation materials. The Foundation says it was established by Shiv Nadar and has invested over USD 1.85 billion in seven education and art institutions. Individual annual inflows for this Indian trust ecosystem are not publicly available; dated to the end of Indian FY2025 and kept as one aggregate to avoid double-counting downstream institution outlays or annual philanthropy-ranking estimates.'
+    notes: 'Conservative aggregate floor for Nadar''s contributions INTO the Shiv Nadar Foundation / SSN Trust ecosystem, using the foundation''s own statement that it has invested over USD 1.85 billion in seven education and art institutions as the floor for what Nadar put in (the documented-grantmaking floor method — individual annual inflows for this Indian trust ecosystem are not publicly available). Kept as one aggregate to avoid double-counting downstream institution outlays or annual philanthropy-ranking estimates. The giving spans roughly 1994 (foundation established) through FY2025, so the row is dated near the period midpoint per the dataset''s aggregate-dating convention.'
 
   - date: 2005-01-17
     recipient: prime-ministers-national-relief-fund

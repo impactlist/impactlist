@@ -11,7 +11,7 @@ donations:
   # and the Chronicle of Philanthropy notes their giving can't be tracked
   # year-by-year for the Philanthropy 50. What IS attested is cumulative grants
   # out of their vehicles, so the vehicle era is recorded below as ONE sourced
-  # cumulative row (2026-04-01, ballmer-group). To avoid double counting:
+  # cumulative row (dated 2020-07-01, the 2015-2026 midpoint; ballmer-group). To avoid double counting:
   #   - NO DAF-inflow rows are recorded (the 2016 $1.9B leak is deliberately
   #     omitted — those dollars exit via the grants the cumulative row counts);
   #   - NO individual Ballmer Group/Rainier grants are itemized (UO $425M 2022,
@@ -56,14 +56,14 @@ donations:
 
   # --- Ballmer Group era (2015 – early 2026), single cumulative row ---
 
-  - date: 2026-04-01
+  - date: 2020-07-01
     recipient: ballmer-group
     amount: 7_000_000_000
     credit:
       steve-ballmer: 0.5
       connie-ballmer: 0.5
     source: 'https://lifestylesmagazine.com/latest-news/110-million-new-gift-from-steve-and-connie-ballmer-strengthens-youth-mental-health-workforce-raising-their-philanthropic-giving-above-7-billion/'
-    notes: 'Cumulative grants from 2015 through early 2026 via the Ballmers'' giving vehicles — Ballmer Group (an LLC granting through their Goldman Sachs Philanthropy Fund donor-advised fund) and, since 2024, Rainier Climate Group. Recorded once at the attestation date as a conservative floor ("more than $7 billion", per April 2026 reporting and the Chronicle of Philanthropy''s ten-year retrospective at https://www.philanthropy.com/news/power-couple-giving-the-10-year-journey-of-steve-and-connie-ballmer/) because the Ballmers disclose no year-by-year totals. Subsumes all their individually announced vehicle grants, including the $425M Ballmer Institute for Children''s Behavioral Health gift to the University of Oregon (2022), just over $1B of climate giving (2022–2024), a $350M Blue Meridian Partners commitment (2024–2029), $65M of LA wildfire relief including the FireAid match (2025), and $110M for the Los Angeles youth mental-health workforce (2026).'
+    notes: 'Cumulative grants from 2015 through early 2026 via the Ballmers'' giving vehicles — Ballmer Group (an LLC granting through their Goldman Sachs Philanthropy Fund donor-advised fund) and, since 2024, Rainier Climate Group. Recorded once, dated at the 2015-2026 period midpoint per the dataset''s aggregate-dating convention (the attestation is from April 2026), as a conservative floor ("more than $7 billion", per April 2026 reporting and the Chronicle of Philanthropy''s ten-year retrospective at https://www.philanthropy.com/news/power-couple-giving-the-10-year-journey-of-steve-and-connie-ballmer/) because the Ballmers disclose no year-by-year totals. Subsumes all their individually announced vehicle grants, including the $425M Ballmer Institute for Children''s Behavioral Health gift to the University of Oregon (2022), just over $1B of climate giving (2022–2024), a $350M Blue Meridian Partners commitment (2024–2029), $65M of LA wildfire relief including the FireAid match (2025), and $110M for the Los Angeles youth mental-health workforce (2026).'
 
   # Connie Ballmer's personal gift (credit hers alone; kept in this file per the
   # one-file-per-event convention used for other couples).

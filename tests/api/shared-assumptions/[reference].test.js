@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../../src/server/upstashRedisClient.js', () => ({
+vi.mock('../../../src/server/upstashRedisClient.js', () => ({
   runRedisCommand: vi.fn(),
   runRedisPipeline: vi.fn(),
 }));
 
-import handler from './[reference].js';
-import { serverDefaultAssumptions } from '../../src/server/sharedAssumptionsNormalization.js';
-import { runRedisCommand, runRedisPipeline } from '../../src/server/upstashRedisClient.js';
+import handler from '../../../api/shared-assumptions/[reference].js';
+import { serverDefaultAssumptions } from '../../../src/server/sharedAssumptionsNormalization.js';
+import { runRedisCommand, runRedisPipeline } from '../../../src/server/upstashRedisClient.js';
 
 const [firstGlobalParamName, firstGlobalParamValue] = Object.entries(serverDefaultAssumptions.globalParameters)[0];
 

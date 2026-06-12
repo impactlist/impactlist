@@ -1,5 +1,5 @@
 import { assertExists } from './dataValidation';
-import { assertValidGlobalParameters } from './globalParameterRules';
+import { assertValidGlobalParameters, getGlobalParameterError } from './globalParameterRules';
 import { getCurrentYear } from './donationDataHelpers';
 
 const FUTURE_VALUE_SERIES_ID = 'future-value';
@@ -12,7 +12,11 @@ const getPreviewParameterValue = (paramKey, formValues, globalParameters, defaul
     return defaultGlobalParameters[paramKey];
   }
 
-  if (typeof rawValue === 'number' && Number.isFinite(rawValue)) {
+  // Mid-typing form values are expected input, including finite numbers the
+  // rules reject (a time limit of 0, a negative population limit). The field
+  // shows its validation error; the preview keeps rendering the last saved
+  // value rather than feeding the invalid number into math that asserts.
+  if (typeof rawValue === 'number' && Number.isFinite(rawValue) && !getGlobalParameterError(paramKey, rawValue)) {
     return rawValue;
   }
 

@@ -367,6 +367,37 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
+  it('shows inline errors instead of crashing when typed global values are out of range', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    // Each of these previously crashed the page: the future-value preview
+    // graph fed the invalid number into math that asserts.
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '-1');
+    expect(await screen.findByText('Time limit must be positive')).toBeInTheDocument();
+
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '0');
+    expect(await screen.findByText('Time limit must be positive')).toBeInTheDocument();
+
+    const discountRateInput = screen.getByLabelText('Discount Rate (%)');
+    await user.clear(discountRateInput);
+    await user.type(discountRateInput, '-1');
+    expect(await screen.findByText('Discount rate cannot be negative')).toBeInTheDocument();
+
+    const populationLimitInput = screen.getByLabelText('Population Limit Factor');
+    await user.clear(populationLimitInput);
+    await user.type(populationLimitInput, '-1');
+    expect(await screen.findByText('Population limit must be positive')).toBeInTheDocument();
+
+    // The page is still alive and invalid values cannot be applied.
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+    expect(screen.getByRole('tab', { name: 'Global' })).toBeInTheDocument();
+  });
+
   it('blocks global save when input is incomplete', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');

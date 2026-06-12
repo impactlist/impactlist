@@ -36,6 +36,25 @@ describe('resolveFutureValuePreviewParameters', () => {
     expect(previewParameters.populationLimit).toBe(globalParameters.populationLimit);
   });
 
+  it('keeps saved values for finite numbers the parameter rules reject (typed mid-edit)', () => {
+    // Each of these crashed the editor when fed into the preview math:
+    // assertValidGlobalParameters throws on them.
+    const previewParameters = resolveFutureValuePreviewParameters(globalParameters, defaultGlobalParameters, {
+      timeLimit: { raw: 0 },
+      discountRate: { raw: -0.01 },
+      populationLimit: { raw: -1 },
+    });
+
+    expect(previewParameters.timeLimit).toBe(globalParameters.timeLimit);
+    expect(previewParameters.discountRate).toBe(globalParameters.discountRate);
+    expect(previewParameters.populationLimit).toBe(globalParameters.populationLimit);
+
+    const negativeTimeLimit = resolveFutureValuePreviewParameters(globalParameters, defaultGlobalParameters, {
+      timeLimit: { raw: -1 },
+    });
+    expect(negativeTimeLimit.timeLimit).toBe(globalParameters.timeLimit);
+  });
+
   it('returns null when required inputs are missing', () => {
     expect(resolveFutureValuePreviewParameters(null, {}, {})).toBeNull();
     expect(resolveFutureValuePreviewParameters({}, null, {})).toBeNull();

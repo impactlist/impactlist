@@ -59,6 +59,25 @@ describe('DonationCalculator persistence', () => {
     });
   });
 
+  it('treats a zero category amount as cleared instead of crashing', async () => {
+    renderCalculator();
+
+    const input = await screen.findByLabelText(firstCategory.name);
+    fireEvent.change(input, { target: { value: '1000' } });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$1,000');
+    });
+
+    // Typing 0 over an existing value clears the field's contribution.
+    fireEvent.change(input, { target: { value: '0' } });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$0');
+    });
+    expect(screen.getByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
+  });
+
   it('restores saved specific donations from localStorage', async () => {
     localStorage.setItem(
       'specificDonations',

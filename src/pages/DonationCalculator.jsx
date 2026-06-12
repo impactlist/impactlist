@@ -39,6 +39,14 @@ const readStoredJson = (key) => {
   }
 };
 
+// Category amounts arrive as user-typed strings. Empty, zero, or mid-typing
+// values (e.g. '', '0', '0.', '.') mean "no donation for this category" —
+// typing 0 is a valid way to clear a field, never an error.
+const parseDonationAmount = (value) => {
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0 ? amount : null;
+};
+
 // Helper function to get the year from a specific donation
 const getDonationYear = (donation) => {
   // Specific donations store year in 'date' field as a string
@@ -192,10 +200,9 @@ const DonationCalculator = () => {
 
     // Calculate for each category
     Object.entries(donations).forEach(([categoryId, amount]) => {
-      // Skip empty or invalid inputs
-      if (!amount || isNaN(Number(amount))) return;
+      const donationAmount = parseDonationAmount(amount);
+      if (donationAmount === null) return;
 
-      const donationAmount = Number(amount);
       totalAmount += donationAmount;
 
       const yearForCalc = categoryYear === '' || isNaN(categoryYear) ? getCurrentYear() : parseInt(categoryYear, 10);
@@ -268,9 +275,9 @@ const DonationCalculator = () => {
 
   // Calculate lives saved for a specific category
   const getLivesSavedForCategory = (categoryId, amount, year = categoryYear) => {
-    if (!amount || isNaN(Number(amount))) return 0;
+    const donationAmount = parseDonationAmount(amount);
+    if (donationAmount === null) return 0;
 
-    const donationAmount = Number(amount);
     const yearForCalculation = year === '' || isNaN(year) ? getCurrentYear() : parseInt(year, 10);
     return calculateLivesSavedForCategoryFromCombined(
       combinedAssumptions,

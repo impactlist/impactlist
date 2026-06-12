@@ -8,6 +8,15 @@
 
 export const imageCredits = [
   {
+    donorId: 'amancio-ortega',
+    name: 'Amancio Ortega',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Amancio Ortega exists.',
+  },
+  {
     donorId: 'andrew-forrest',
     name: 'Andrew Forrest',
     author: 'Xuthoria',
@@ -33,6 +42,16 @@ export const imageCredits = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Azim_H._Premji_World_Economic_Forum_2013.jpg',
     license: 'CC BY-SA 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0',
+  },
+  {
+    donorId: 'bernard-arnault',
+    name: 'Bernard Arnault',
+    author: 'Jeremy Barande / Ecole polytechnique Universite Paris-Saclay',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Bernard_Arnault_(3)_-_2017_(cropped).jpg',
+    license: 'CC BY-SA 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0',
+    notes: 'Square-cropped from the Commons crop; original file preserved under media/people/original.',
   },
   {
     donorId: 'bill-ackman',
@@ -172,6 +191,16 @@ export const imageCredits = [
     notes: 'Cropped and resized from the original.',
   },
   {
+    donorId: 'hasso-plattner',
+    name: 'Hasso Plattner',
+    author: 'Epic-chair',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Hasso_Plattner_(cropped).jpg',
+    license: 'CC BY-SA 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0',
+    notes: 'Square-cropped from the Commons crop; original file preserved under media/people/original.',
+  },
+  {
     donorId: 'jaan-tallinn',
     name: 'Jaan Tallinn',
     author: 'Christopher Michel',
@@ -235,6 +264,15 @@ export const imageCredits = [
     license: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
     notes: 'Cropped and resized from the original.',
+  },
+  {
+    donorId: 'jeremy-grantham',
+    name: 'Jeremy Grantham',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Jeremy Grantham exists.',
   },
   {
     donorId: 'john-arnold',
@@ -316,6 +354,25 @@ export const imageCredits = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Li_Ka_Shing.jpg',
     license: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
+  },
+  {
+    donorId: 'lisbet-rausing',
+    name: 'Lisbet Rausing',
+    author: 'Unknown author',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Lisbet_Rausing,_b%26w_portrait.jpg',
+    license: 'CC BY 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/4.0',
+    notes: 'Square-cropped from the Commons original.',
+  },
+  {
+    donorId: 'lynn-schusterman',
+    name: 'Lynn Schusterman',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Lynn Schusterman exists.',
   },
   {
     donorId: 'mackenzie-scott',
@@ -410,6 +467,16 @@ export const imageCredits = [
     notes: 'Synthetic likeness, not a photograph — the only freely licensed photos of Phil Knight are from 1957.',
   },
   {
+    donorId: 'pony-ma',
+    name: 'Pony Ma',
+    author: '中国新闻网',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E9%A9%AC%E5%8C%96%E8%85%BE_Pony_Ma_2019.jpg',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
+    notes: 'Square-cropped and resized from the original.',
+  },
+  {
     donorId: 'pierre-omidyar',
     name: 'Pierre Omidyar',
     author: 'Joi',
@@ -465,6 +532,16 @@ export const imageCredits = [
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
   },
   {
+    donorId: 'shiv-nadar',
+    name: 'Shiv Nadar',
+    author: 'Unknown author',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Shiv_Nadar.png',
+    license: 'CC BY-SA 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0',
+    notes: 'Square-cropped and resized from the Commons original.',
+  },
+  {
     donorId: 'stanley-druckenmiller',
     name: 'Stanley Druckenmiller',
     sourceName: 'FLUX.2 [dev]',
@@ -472,6 +549,17 @@ export const imageCredits = [
     license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
     licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
     notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Stanley Druckenmiller exists.',
+  },
+  {
+    donorId: 'stephen-schwarzman',
+    name: 'Stephen Schwarzman',
+    author: 'UKinUSA',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:DBT_Magdalen_College,_Oxford_%26_Stephen_Schwarzman_19_March_2024-5_-_53600715712_(cropped).jpg',
+    license: 'CC BY-SA 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0',
+    notes: 'Square-cropped from the Commons crop; original file preserved under media/people/original.',
   },
   {
     donorId: 'steve-ballmer',

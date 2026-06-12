@@ -179,7 +179,7 @@ const GlobalValuesSection = ({ globalParameters, defaultGlobalParameters, formVa
           <div className="text-sm">
             <p className="mb-1 font-semibold">Note: Animal lives vs. human lives</p>
             <p>
-              Adjust relative value assumptions inside{' '}
+              Adjust the assumptions about the relative value of animal lives vs. human lives inside the{' '}
               <a href={buildCausePath('animal-welfare')} className="assumptions-link">
                 Animal Welfare
               </a>{' '}

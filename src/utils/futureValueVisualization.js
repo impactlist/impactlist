@@ -1,8 +1,11 @@
 import { assertExists } from './dataValidation';
 import { assertValidGlobalParameters, getGlobalParameterError } from './globalParameterRules';
 import { getCurrentYear } from './donationDataHelpers';
+import { NONZERO_EPSILON } from './visualizationConstants';
 
 const FUTURE_VALUE_SERIES_ID = 'future-value';
+// Caps the densely sampled window. When decay ends that window before the time
+// limit, the sentinel sample at the real limit can push the series to MAX + 1.
 const MAX_SAMPLED_POINTS = 240;
 
 const getPreviewParameterValue = (paramKey, formValues, globalParameters, defaultGlobalParameters) => {
@@ -81,20 +84,53 @@ const getDiscountFactorAtTime = (discountRate, timeYears) => {
   return Math.pow(1 + discountRate, -timeYears);
 };
 
-const buildSampleTimes = (timeLimit) => {
+// Discounting (or a shrinking population) can drive the series to negligible
+// values long before the time limit. Sampling the full window uniformly would
+// then bury the entire visible curve inside a single step, starving the graph
+// of detail and badly overestimating the trapezoid integral in
+// calculateFutureValueTotal. Find where the series first becomes negligible so
+// sampling can concentrate on the part that matters.
+//
+// The series is piecewise exponential with one regime change (the population
+// cap or floor), and the validated discount rate is non-negative, so once the
+// value is below the threshold and falling it never recovers. Doubling probes
+// locate that point within a factor of two, which is all the sampler needs.
+const findEffectiveTimeLimit = (parameters) => {
+  const { timeLimit, discountRate } = parameters;
+  let previousValue = getPopulationAtTime(parameters, 0);
+
+  for (let probe = 1; probe < timeLimit; probe *= 2) {
+    const value = getPopulationAtTime(parameters, probe) * getDiscountFactorAtTime(discountRate, probe);
+    if (value <= NONZERO_EPSILON && value < previousValue) {
+      return probe;
+    }
+    previousValue = value;
+  }
+
+  return timeLimit;
+};
+
+const buildSampleTimes = (parameters) => {
+  const { timeLimit } = parameters;
+
   if (timeLimit <= 0) {
     return [0];
   }
 
-  const step = timeLimit <= MAX_SAMPLED_POINTS - 1 ? 1 : timeLimit / (MAX_SAMPLED_POINTS - 1);
+  const effectiveTimeLimit = findEffectiveTimeLimit(parameters);
+  // Indexed interpolation (not an accumulating step) so the endpoint is exact
+  // and the point count is deterministic.
+  const intervalCount = Math.min(Math.ceil(effectiveTimeLimit), MAX_SAMPLED_POINTS - 1);
   const sampledTimes = [];
 
-  for (let time = 0; time < timeLimit; time += step) {
-    sampledTimes.push(time);
+  for (let i = 0; i < intervalCount; i += 1) {
+    sampledTimes.push((i * effectiveTimeLimit) / intervalCount);
   }
+  sampledTimes.push(effectiveTimeLimit);
 
-  const lastSample = sampledTimes[sampledTimes.length - 1];
-  if (typeof lastSample !== 'number' || Math.abs(lastSample - timeLimit) > 1e-9) {
+  // Keep a final sample at the real limit so the series spans the full window;
+  // everything past the effective limit is negligible by construction.
+  if (effectiveTimeLimit < timeLimit) {
     sampledTimes.push(timeLimit);
   }
 
@@ -125,7 +161,7 @@ export const calculateFutureValueSeries = (globalParameters, options = {}) => {
 
   const currentYear = options.currentYear ?? getCurrentYear();
   const { timeLimit, yearsPerLife, discountRate } = validatedParameters;
-  const sampledTimes = buildSampleTimes(timeLimit);
+  const sampledTimes = buildSampleTimes(validatedParameters);
 
   const points = sampledTimes.map((timeYears) => {
     const population = getPopulationAtTime(validatedParameters, timeYears);

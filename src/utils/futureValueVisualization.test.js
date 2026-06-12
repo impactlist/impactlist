@@ -4,6 +4,7 @@ import {
   calculateFutureValueTotal,
   resolveFutureValuePreviewParameters,
 } from './futureValueVisualization';
+import { NONZERO_EPSILON } from './visualizationConstants';
 
 describe('resolveFutureValuePreviewParameters', () => {
   const globalParameters = {
@@ -124,6 +125,70 @@ describe('calculateFutureValueSeries', () => {
     expect(points.length).toBeLessThanOrEqual(240);
     expect(points[0].year).toBe(2030);
     expect(points[points.length - 1].year).toBeCloseTo(3030, 10);
+  });
+
+  it('concentrates samples on the visible decay when discounting empties a long horizon', () => {
+    // 1% discounting decays the series to nothing within a few thousand years.
+    // Uniform sampling over the million-year window would put that entire decay
+    // inside one ~4,200-year step: a single visible point and a trapezoid total
+    // ~20x too high.
+    const { points, totalFutureLives } = calculateFutureValueSeries(
+      {
+        currentPopulation: 8_000_000_000,
+        populationGrowthRate: 0,
+        populationLimit: 10,
+        discountRate: 0.01,
+        timeLimit: 1_000_000,
+        yearsPerLife: 80,
+      },
+      { currentYear: 2030 }
+    );
+
+    const visiblePoints = points.filter((point) => point['future-value'] > NONZERO_EPSILON);
+    expect(visiblePoints.length).toBeGreaterThan(100);
+    expect(points.length).toBeLessThanOrEqual(241);
+    expect(points[points.length - 1].year).toBeCloseTo(1_002_030, 6);
+
+    // Flat population, so the exact integral is closed-form.
+    const analyticTotal = (8_000_000_000 * (1 - Math.pow(1.01, -1_000_000))) / Math.log(1.01) / 80;
+    expect(Math.abs(totalFutureLives - analyticTotal) / analyticTotal).toBeLessThan(0.02);
+  });
+
+  it('concentrates samples the same way when a shrinking population empties the horizon', () => {
+    const { points } = calculateFutureValueSeries(
+      {
+        currentPopulation: 8_000_000_000,
+        populationGrowthRate: -0.01,
+        populationLimit: 10,
+        discountRate: 0,
+        timeLimit: 1_000_000,
+        yearsPerLife: 80,
+      },
+      { currentYear: 2030 }
+    );
+
+    const visiblePoints = points.filter((point) => point['future-value'] > NONZERO_EPSILON);
+    expect(visiblePoints.length).toBeGreaterThan(100);
+    expect(points[points.length - 1].year).toBeCloseTo(1_002_030, 6);
+  });
+
+  it('keeps uniform sampling across the full window when nothing decays', () => {
+    const { points } = calculateFutureValueSeries(
+      {
+        currentPopulation: 100,
+        populationGrowthRate: 0.01,
+        populationLimit: 10,
+        discountRate: 0,
+        timeLimit: 1_000_000,
+        yearsPerLife: 80,
+      },
+      { currentYear: 2030 }
+    );
+
+    expect(points.length).toBeLessThanOrEqual(240);
+    expect(points[1].year - points[0].year).toBeGreaterThan(4000);
+    expect(points.every((point) => point['future-value'] > NONZERO_EPSILON)).toBe(true);
+    expect(points[points.length - 1].year).toBeCloseTo(1_002_030, 6);
   });
 
   it('throws for invalid global parameter values instead of silently coercing them', () => {

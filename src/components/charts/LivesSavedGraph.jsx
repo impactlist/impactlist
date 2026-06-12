@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatLargeNumber, formatCalendarYear, generateEvenlySpacedTicks } from '../../utils/effectsVisualization';
+import { NONZERO_EPSILON } from '../../utils/visualizationConstants';
 import { formatLives } from '../../utils/formatters';
 import { getCategoryVariantColor } from '../../utils/chartColors';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
@@ -165,8 +166,6 @@ const formatYAxisTick = (value) => {
   const precision = Math.abs(value) < 10 ? 2 : 1;
   return formatLargeNumber(value, precision);
 };
-
-const NONZERO_EPSILON = 1e-9;
 
 const hasNonZeroSeriesValue = (point, effectIds) => {
   return effectIds.some((id) => Math.abs(point[id] || 0) > NONZERO_EPSILON);

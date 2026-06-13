@@ -8,6 +8,16 @@
 
 export const imageCredits = [
   {
+    donorId: 'aliko-dangote',
+    name: 'Aliko Dangote',
+    author: 'World Economic Forum / Matthew Jordaan',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Aliko_Dangote.jpg',
+    license: 'CC BY-SA 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0',
+    notes: 'Square-cropped and resized from the Commons original.',
+  },
+  {
     donorId: 'amancio-ortega',
     name: 'Amancio Ortega',
     sourceName: 'FLUX.2 [dev]',
@@ -44,6 +54,15 @@ export const imageCredits = [
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0',
   },
   {
+    donorId: 'barbara-picower',
+    name: 'Barbara Picower',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Barbara Picower exists.',
+  },
+  {
     donorId: 'bernard-arnault',
     name: 'Bernard Arnault',
     author: 'Jeremy Barande / Ecole polytechnique Universite Paris-Saclay',
@@ -52,6 +71,15 @@ export const imageCredits = [
     license: 'CC BY-SA 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0',
     notes: 'Square-cropped from the Commons crop; original file preserved under media/people/original.',
+  },
+  {
+    donorId: 'billi-marcus',
+    name: 'Billi Marcus',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Billi Marcus exists.',
   },
   {
     donorId: 'bill-ackman',
@@ -127,6 +155,36 @@ export const imageCredits = [
     licenseUrl: 'https://creativecommons.org/licenses/by/4.0',
   },
   {
+    donorId: 'david-sainsbury',
+    name: 'David Sainsbury',
+    author: 'Policy Exchange',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Lord_Sainsbury_launching_his_new_book_%27Progressive_Capitalism%27_at_Policy_Exchange.jpg',
+    license: 'CC BY 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
+    notes: 'Square-cropped and resized from the Commons original; original file preserved under media/people/original.',
+  },
+  {
+    donorId: 'dietmar-hopp',
+    name: 'Dietmar Hopp',
+    author: 'Smalltown Boy at German Wikipedia',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Dietmar_Hopp_Sinsheim.jpg',
+    license: 'CC BY-SA 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0',
+    notes: 'Square-cropped and resized from the Commons original.',
+  },
+  {
+    donorId: 'donald-bren',
+    name: 'Donald Bren',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Donald Bren exists.',
+  },
+  {
     donorId: 'dustin-moskovitz',
     name: 'Dustin Moskovitz',
     author: "Moskov (Dustin Moskovitz, Commons uploader; sister upload's EXIF credits photographer Bart Nagel, 2011)",
@@ -134,6 +192,17 @@ export const imageCredits = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Dustin_Moskovitz2.jpg',
     license: 'CC BY-SA 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0',
+  },
+  {
+    donorId: 'edythe-broad',
+    name: 'Edythe Broad',
+    author: 'Jeremiah Garcia',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Edythe_Broad_(cropped).jpg',
+    license: 'CC BY 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
+    notes:
+      'Square-cropped from the Commons crop; original uncropped Eli and Edythe Broad file preserved under media/people/original.',
   },
   {
     donorId: 'elon-musk',
@@ -437,6 +506,17 @@ export const imageCredits = [
     license: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
     notes: 'Cropped and resized from the original.',
+  },
+  {
+    donorId: 'michael-milken',
+    name: 'Michael Milken',
+    author: 'Maryland GovPics',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:Announcement_of_Recipient_of_$25,000_Milken_National_Educator_Award_(cropped).jpg',
+    license: 'CC BY 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
+    notes: 'Square-cropped from the Commons crop; original file preserved under media/people/original.',
   },
   {
     donorId: 'oprah-winfrey',

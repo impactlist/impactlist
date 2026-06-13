@@ -50,9 +50,23 @@ describe('ImageCredits', () => {
     const items = screen.getAllByRole('listitem');
     expect(items).toHaveLength(imageCredits.length);
 
+    // Index each entry by its donor href in one pass, then look each credit up
+    // directly. The previous nested scan (every item × every credit, each a
+    // name-based query that resolves accessible names) was O(n²) and timed out
+    // on CI as the list grew.
+    const itemByDonorId = new Map();
+    for (const item of items) {
+      const profileLink = within(item)
+        .getAllByRole('link')
+        .find((link) => link.getAttribute('href')?.startsWith('/donor/'));
+      expect(profileLink, 'each entry links to a donor profile').toBeTruthy();
+      itemByDonorId.set(profileLink.getAttribute('href').replace('/donor/', ''), item);
+    }
+
     for (const credit of imageCredits) {
-      const item = items.find((li) => within(li).queryByRole('link', { name: credit.name }));
+      const item = itemByDonorId.get(credit.donorId);
       expect(item, `entry for ${credit.donorId}`).toBeTruthy();
+      expect(within(item).getByRole('link', { name: credit.name })).toBeInTheDocument();
       const sourceLink = within(item).getByRole('link', { name: credit.sourceName });
       expect(sourceLink).toHaveAttribute('href', credit.sourceUrl);
       const licenseLink = within(item).getByRole('link', { name: credit.license });

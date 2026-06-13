@@ -201,8 +201,9 @@ export const imageCredits = [
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Edythe_Broad_(cropped).jpg',
     license: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
+    modifications: 'background replaced using FLUX.2 [dev]; cropped to Edythe and resized from the original',
     notes:
-      'Square-cropped from the Commons crop; original uncropped Eli and Edythe Broad file preserved under media/people/original.',
+      'Photographic likeness is the original CC BY work; cropped from the two-person "Eli and Edythe Broad" photo, with the event backdrop replaced. Edited source preserved under media/people/original.',
   },
   {
     donorId: 'elon-musk',
@@ -281,11 +282,11 @@ export const imageCredits = [
   {
     donorId: 'jack-dorsey',
     name: 'Jack Dorsey',
-    author: 'David Shankbone',
-    sourceName: 'Wikimedia Commons',
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Jack_Dorsey_2012_Shankbone.JPG',
-    license: 'CC BY 3.0',
-    licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph.',
   },
   {
     donorId: 'jan-koum',

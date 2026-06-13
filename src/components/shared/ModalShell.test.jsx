@@ -45,7 +45,10 @@ describe('ModalShell', () => {
     );
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-    expect(outside).toHaveFocus();
+    // Focus is restored in the unmount cleanup (a passive effect), which runs
+    // just after the panel's DOM is removed — so focus briefly lands on <body>
+    // before returning to the trigger. Poll rather than asserting once.
+    await waitFor(() => expect(outside).toHaveFocus());
     outside.remove();
   });
 

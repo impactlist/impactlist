@@ -20,7 +20,7 @@ Unlike a typical cause area, donations to AI existential-risk charities are best
 
 This effect captures welfare gains from reducing the probability that advanced AI causes an existential catastrophe: either **literal human extinction**, or a permanent global outcome such as **irreversible disempowerment** or **stable totalitarian lock-in** severe enough to permanently and drastically curtail humanity's future.
 
-This broader event definition matches the standard existential-risk framing more closely than extinction-only modeling does. It also better fits how many expert surveys and technical arguments are actually framed: not just around everyone dying, but around outcomes that irreversibly and drastically reduce humanity's long-term welfare.
+This matches how existential risk is usually framed: not just everyone dying, but any outcome that irreversibly and drastically reduces humanity's welfare.
 
 ## What kinds of charities are we modeling?
 
@@ -128,7 +128,7 @@ Conceptually, the start time stands in for the expected date at which welfare lo
 
 ### Duration
 
-The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Combined with the 15-year start time, the default window covers years 15 through 100 — an 85-year window. The very large `windowLength` in the YAML frontmatter is just a ceiling so the calculator can accommodate long horizons; in practice the effect is clamped by the user's chosen global time-limit parameter.
+The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Combined with the 15-year start time, the default window covers years 15 through 100 — an 85-year window. The large `windowLength` in the frontmatter is only a ceiling; the effect is clamped by the global time-limit parameter.
 
 Because the modeled catastrophe is permanent by construction, the value of this cause area is highly sensitive to how much weight you place on future people.
 

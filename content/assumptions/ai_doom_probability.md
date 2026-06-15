@@ -170,7 +170,7 @@ Arvind Narayanan and Sayash Kapoor argue that ["superintelligence" is not a cohe
 
 **Current systems lack key dangerous properties**
 
-Mitchell and others argue that present-day systems lack grounded understanding, robust agency, long-term planning, and genuine common sense. On this view, classic doom arguments may be extrapolating too much from systems that merely predict text.
+Mitchell and others argue that present-day systems lack grounded understanding, robust agency, long-term planning, and genuine common sense. On this view, classic doom arguments may be extrapolating too much from systems that have fundamental limitations.
 
 **Superforecaster skepticism**
 

@@ -18,7 +18,7 @@ import { calculateCombinedCostPerLife } from '../../utils/effectsCalculation';
 import { getEffectType, validateEffectField, validateEffects } from '../../utils/effectValidation';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import { mergeEffects } from '../../utils/assumptionsDataHelpers';
-import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { getCurrentYear, resolveCalcYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 
@@ -107,8 +107,7 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
 
   // Calculate cost per life for each effect
   const effectCostPerLife = useMemo(() => {
-    // Use current year if previewYear is empty or invalid
-    const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
+    const yearForCalculation = resolveCalcYear(previewYear);
     return tempEditToEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters, yearForCalculation));
   }, [tempEditToEffects, globalParameters, previewYear]);
 

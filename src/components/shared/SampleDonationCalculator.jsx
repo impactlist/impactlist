@@ -5,7 +5,7 @@ import NumericInput from './NumericInput';
 import LivesSavedGraph from '../charts/LivesSavedGraph';
 import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { formatCurrency, formatLives } from '../../utils/formatters';
-import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { getCurrentYear, resolveCalcYear } from '../../utils/donationDataHelpers';
 import { calculateLivesSavedSegments } from '../../utils/effectsVisualization';
 import FormattedScientificValue from './FormattedScientificValue';
 
@@ -31,17 +31,21 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
   const isCategory = !!categoryId;
   const entityId = categoryId || recipientId;
 
-  // Calculate cost per life whenever year changes. Inputs here are validated
-  // entity data, so a failure is a real bug — let it surface instead of
-  // quietly rendering "N/A".
+  // selectedYear can be a transient '' (or other partial value) while the user
+  // edits the YearSelector, so sanitize it before any cost calculation.
+  const yearForCalc = resolveCalcYear(selectedYear);
+
+  // Calculate cost per life whenever the year changes. Entity data is validated,
+  // so a failure here is a real bug — let it surface instead of quietly
+  // rendering "N/A".
   useEffect(() => {
     if (!combinedAssumptions || !entityId) return;
 
     const cost = isCategory
-      ? getCostPerLifeFromCombined(combinedAssumptions, entityId, selectedYear)
-      : getCostPerLifeForRecipientFromCombined(combinedAssumptions, entityId, selectedYear);
+      ? getCostPerLifeFromCombined(combinedAssumptions, entityId, yearForCalc)
+      : getCostPerLifeForRecipientFromCombined(combinedAssumptions, entityId, yearForCalc);
     setCostPerLife(cost);
-  }, [combinedAssumptions, entityId, selectedYear, isCategory]);
+  }, [combinedAssumptions, entityId, yearForCalc, isCategory]);
 
   // Calculate lives saved whenever amount or cost per life changes
   useEffect(() => {
@@ -63,10 +67,10 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
     }
 
     // Calculate points using sampling approach - now returns points with effect breakdowns
-    const points = calculateLivesSavedSegments(entityId, amount, selectedYear, combinedAssumptions, { isCategory });
+    const points = calculateLivesSavedSegments(entityId, amount, yearForCalc, combinedAssumptions, { isCategory });
 
     return points;
-  }, [donationAmount, selectedYear, costPerLife, entityId, combinedAssumptions, isCategory]);
+  }, [donationAmount, yearForCalc, costPerLife, entityId, combinedAssumptions, isCategory]);
 
   return (
     <div className="impact-surface p-6 mb-8">
@@ -92,7 +96,7 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
         <div className="flex items-center">
           <div className="space-y-1 mt-3">
             <div className="text-sm text-muted">
-              Cost per life in {selectedYear}:{' '}
+              Cost per life in {yearForCalc}:{' '}
               <span className="font-semibold text-strong">
                 {costPerLife === Infinity ? (
                   'N/A'

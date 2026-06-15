@@ -7,7 +7,7 @@ import {
   calculateLivesSavedForCategoryFromCombined,
   calculateDonorStatsFromCombined,
 } from '../utils/assumptionsDataHelpers';
-import { getCurrentYear } from '../utils/donationDataHelpers';
+import { getCurrentYear, resolveCalcYear } from '../utils/donationDataHelpers';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
 import SpecificDonationModal from '../components/SpecificDonationModal';
@@ -205,7 +205,7 @@ const DonationCalculator = () => {
 
       totalAmount += donationAmount;
 
-      const yearForCalc = categoryYear === '' || isNaN(categoryYear) ? getCurrentYear() : parseInt(categoryYear, 10);
+      const yearForCalc = resolveCalcYear(categoryYear);
       totalLives += calculateLivesSavedForCategoryFromCombined(
         combinedAssumptions,
         categoryId,
@@ -278,7 +278,7 @@ const DonationCalculator = () => {
     const donationAmount = parseDonationAmount(amount);
     if (donationAmount === null) return 0;
 
-    const yearForCalculation = year === '' || isNaN(year) ? getCurrentYear() : parseInt(year, 10);
+    const yearForCalculation = resolveCalcYear(year);
     return calculateLivesSavedForCategoryFromCombined(
       combinedAssumptions,
       categoryId,
@@ -376,9 +376,7 @@ const DonationCalculator = () => {
             onReset={resetDonations}
             getLivesSavedForCategory={getLivesSavedForCategory}
             getCostPerLifeForCategory={(categoryId) => {
-              const yearForCalculation =
-                categoryYear === '' || isNaN(categoryYear) ? getCurrentYear() : parseInt(categoryYear, 10);
-              return getCostPerLifeFromCombined(combinedAssumptions, categoryId, yearForCalculation);
+              return getCostPerLifeFromCombined(combinedAssumptions, categoryId, resolveCalcYear(categoryYear));
             }}
             categoryYear={categoryYear}
             onYearChange={setCategoryYear}

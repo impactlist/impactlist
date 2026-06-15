@@ -178,3 +178,18 @@ export const extractYearFromDonation = (donation) => {
 export const getCurrentYear = () => {
   return new Date().getFullYear();
 };
+
+/**
+ * Resolve a year value coming from a YearSelector-bound input into a concrete
+ * integer year for calculations. YearSelector deliberately emits '' (and other
+ * partial states) while the field is being edited, so cost/lives helpers — which
+ * assert an integer year — must sanitize it first. Falls back to the current
+ * year for any value that does not parse to an integer (empty string,
+ * whitespace, non-numeric text, etc.).
+ * @param {number|string} value - Year value from a YearSelector-bound input
+ * @returns {number} A valid integer year
+ */
+export const resolveCalcYear = (value) => {
+  const parsed = parseInt(value, 10);
+  return Number.isInteger(parsed) ? parsed : getCurrentYear();
+};

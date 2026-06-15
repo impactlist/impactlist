@@ -7,7 +7,7 @@ import {
   haveEffectsChanged,
 } from '../utils/effectEditorUtils';
 import { getEffectType, validateRecipientEffectField } from '../utils/effectValidation';
-import { getCurrentYear } from '../utils/donationDataHelpers';
+import { resolveCalcYear } from '../utils/donationDataHelpers';
 
 /**
  * Draft state for editing one recipient category's effect overrides — the
@@ -119,7 +119,7 @@ const useRecipientEffectsDraft = ({
   // Preview cost per life for each draft, applying in-progress overrides to
   // the base effect. Disabled at either level shows as Infinity.
   const effectCostPerLife = useMemo(() => {
-    const yearForCalculation = previewYear === '' || isNaN(previewYear) ? getCurrentYear() : previewYear;
+    const yearForCalculation = resolveCalcYear(previewYear);
 
     return effects.map((effect) => {
       const baseEffect = effect._baseEffect;

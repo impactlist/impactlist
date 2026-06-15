@@ -3,7 +3,7 @@ id: timelines-to-agi
 name: 'Timelines to AGI'
 ---
 
-_The following analysis was done on June 15th 2026 by Claude Opus 4.8 (1M context), with prompts from Impact List staff._
+_The following analysis was done on June 15th 2026 by Claude Opus 4.8, with prompts from Impact List staff._
 
 ## When will AGI arrive?
 

@@ -3,7 +3,7 @@ id: ai-existential-catastrophe-severity
 name: 'Severity of AI-caused existential catastrophe'
 ---
 
-_The following analysis was done on April 15th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 15th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How severe should AI-caused existential catastrophe be modeled per affected person per year?
 

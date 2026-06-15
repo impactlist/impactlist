@@ -12,7 +12,7 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 16th 2025, written by Gemini 3 Pro Thinking and edited by Impact List staff for clarity._
+_The following analysis was done on December 16th 2025, written by Gemini 3 Pro and edited by Impact List staff for clarity._
 
 We assign Khan Academy a **cost per QALY of \$2,000**. The main reason it comes in below the baseline [Education](/cause/education) estimate is Khan Academy's unusually low cost of reaching learners at scale.
 

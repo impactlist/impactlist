@@ -12,7 +12,7 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 19th 2025, written by Google Gemini 3 Pro Thinking and edited by Impact List staff for clarity._
+_The following analysis was done on December 19th 2025, written by Google Gemini 3 Pro and edited by Impact List staff for clarity._
 
 We assign the Thiel Fellowship a **cost per QALY of \$1,600**. The case for a low number rests on the Fellowship's "hits-based" strategy of accelerating unusually high-upside talent rather than improving average educational outcomes.
 

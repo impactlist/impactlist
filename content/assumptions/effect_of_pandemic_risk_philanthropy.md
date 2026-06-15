@@ -3,7 +3,7 @@ id: effect-of-pandemic-risk-philanthropy
 name: 'Effect of previous pandemic-risk philanthropy'
 ---
 
-_The following analysis was done on April 10th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How much has existing pandemic-risk philanthropy reduced global catastrophic pandemic risk?
 

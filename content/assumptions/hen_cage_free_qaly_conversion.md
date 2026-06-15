@@ -3,7 +3,7 @@ id: hen-cage-free-qaly-conversion
 name: 'QALY-equivalent hen welfare gain from cage-free reforms'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
 ## How many human-equivalent QALYs does moving a laying hen from conventional cages to aviaries create per hen-year?
 

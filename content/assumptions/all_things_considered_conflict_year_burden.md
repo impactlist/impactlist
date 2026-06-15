@@ -3,7 +3,7 @@ id: all-things-considered-conflict-year-burden
 name: 'All-things-considered burden of a representative conflict-year'
 ---
 
-_The following analysis was done on April 14th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How many QALY-equivalents are lost in a representative serious conflict-year?
 

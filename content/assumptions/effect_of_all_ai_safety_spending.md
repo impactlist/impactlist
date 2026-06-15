@@ -3,7 +3,7 @@ id: effect-of-all-ai-safety-spending
 name: 'Effect of all previous AI safety spending'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and Claude Opus 4.6 (Max), with prompts from Impact List staff._
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
 ## How much has existing AI safety spending reduced AI extinction risk?
 

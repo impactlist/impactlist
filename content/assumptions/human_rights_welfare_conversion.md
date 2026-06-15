@@ -3,7 +3,7 @@ id: human-rights-welfare-conversion
 name: 'Human rights welfare conversion model'
 ---
 
-_The following analysis was done on April 14th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How should the Human Rights category convert rights harms into QALY-equivalent welfare?
 

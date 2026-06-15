@@ -3,7 +3,7 @@ id: effect-of-nuclear-risk-philanthropy
 name: 'Effect of all previous nuclear-risk philanthropy'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How much has existing nuclear-risk philanthropy reduced catastrophic nuclear-war risk?
 

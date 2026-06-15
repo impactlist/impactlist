@@ -3,7 +3,7 @@ id: effect-of-all-ai-safety-spending-on-ai-existential-catastrophe
 name: 'Effect of all previous AI safety spending on AI existential catastrophe'
 ---
 
-_The following analysis was done on April 15th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 15th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How much has existing AI safety spending reduced AI existential-catastrophe risk?
 

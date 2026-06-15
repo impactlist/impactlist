@@ -3,7 +3,7 @@ id: effect-of-top-conflict-mitigation-spending
 name: 'Effect of top conflict-mitigation spending'
 ---
 
-_The following analysis was done on April 14th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How much conflict does top-tier conflict-mitigation spending avert?
 

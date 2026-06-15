@@ -3,7 +3,7 @@ id: ai-existential-catastrophe-probability
 name: 'Probability of AI-caused existential catastrophe'
 ---
 
-_The following analysis was done on April 15th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 15th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## What is the probability of AI-caused existential catastrophe this century?
 

@@ -3,7 +3,7 @@ id: global-priorities-channel-model
 name: 'Global Priorities channel model'
 ---
 
-_The following analysis was done on April 10th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How should Global Priorities Research be modeled?
 

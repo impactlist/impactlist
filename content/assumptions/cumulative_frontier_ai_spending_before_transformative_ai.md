@@ -3,7 +3,7 @@ id: cumulative-frontier-ai-spending-before-transformative-ai
 name: 'Cumulative frontier AI spending before transformative AI'
 ---
 
-_The following analysis was done on April 6th 2026 by Codex (GPT-5) and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5 and edited by Impact List staff for clarity._
 
 ## How much frontier AI spending happens before transformative AI arrives?
 

@@ -16,7 +16,7 @@ categories:
 
 # Justification of cost per life for the AI Existential Risk cause
 
-_The following analysis was done on December 18th 2025, written by Claude Opus 4.5 Thinking and edited by Impact List staff for clarity._
+_The following analysis was done on December 18th 2025, written by Claude Opus 4.5 and edited by Impact List staff for clarity._
 
 We arrive at the cost per life multiplier by analyzing the effective deployment rate of donations to Astera Institute for AI existential risk reduction specifically.
 

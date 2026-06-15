@@ -3,7 +3,7 @@ id: frontier-equivalent-share-of-ai-capabilities-philanthropy
 name: 'Frontier-equivalent share of AI capabilities philanthropy'
 ---
 
-_The following analysis was done on April 6th 2026 by Codex (GPT-5) and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5 and edited by Impact List staff for clarity._
 
 ## How much does a dollar to AI capabilities philanthropy accelerate the frontier?
 

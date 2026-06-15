@@ -12,7 +12,7 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 15th 2026 by GPT-5.4 (Extra High) and revised on June 10th 2026 by Claude Fable 5, with prompts from Impact List staff._
+_The following analysis was done on April 15th 2026 by GPT-5.4 and revised on June 10th 2026 by Claude Fable 5, with prompts from Impact List staff._
 
 Unlike a typical cause area, donations to AI existential-risk charities are best modeled as slightly reducing the probability of a catastrophe rather than directly buying QALYs. We therefore estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of an **AI-caused existential catastrophe**.
 

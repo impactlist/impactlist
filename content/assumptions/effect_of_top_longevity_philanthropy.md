@@ -3,7 +3,7 @@ id: effect-of-top-longevity-philanthropy
 name: 'Effect of top longevity philanthropy'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High), with prompts from Impact List staff._
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 ## How much can \$50 million of top longevity philanthropy increase the probability that a first-generation gerotherapeutic is validated and meaningfully diffuses?
 

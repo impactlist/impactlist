@@ -12,7 +12,7 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 16th 2025, written by Google Gemini 3 Pro Thinking and edited by Impact List staff for clarity._
+_The following analysis was done on December 16th 2025, written by Google Gemini 3 Pro and edited by Impact List staff for clarity._
 
 We assign the Charter Cities Institute (CCI) a **cost per QALY of \$400**. The main reason it comes in below the baseline [Improving Institutions](/cause/institutions) estimate is that successful institutional improvements in lower-income countries can generate much larger welfare gains per dollar.
 

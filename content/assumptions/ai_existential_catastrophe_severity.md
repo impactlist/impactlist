@@ -15,7 +15,7 @@ The category page models a broader event than extinction alone. It includes:
 - irreversible human disempowerment by AI systems
 - stable totalitarian lock-in or other permanent global conditions that drastically curtail humanity's future
 
-**Summary:** A reasonable central estimate for the baseline catastrophe class is **0.75 QALY-equivalents lost per affected person per year**, with a plausible range of **0.5–0.9**. This is a weighted average of roughly **0.9** for extinction and **0.45** for permanent non-extinction catastrophes, using the probability page's current decomposition (8% extinction plus 4 percentage points non-extinction). If that probability split changes, this weighted severity should be recalculated. For the category page's cost-effectiveness model, the relevant severity is that of the **averted** risk rather than the baseline class; because safety spending skews toward extinction prevention, that works out slightly higher, at about **0.78** (see Section 4).
+**Summary:** A reasonable central estimate for the baseline catastrophe class is **0.77 QALY-equivalents lost per affected person per year**, with a plausible range of **0.5–0.9**. This is a weighted average of roughly **0.9** for extinction and **0.45** for permanent non-extinction catastrophes, using the probability page's current decomposition (10% extinction plus 4 percentage points non-extinction). If that probability split changes, this weighted severity should be recalculated. For the category page's cost-effectiveness model, the relevant severity is that of the **averted** risk rather than the baseline class; because safety spending skews toward extinction prevention, that works out slightly higher, at about **0.80** (see Section 4).
 
 ---
 
@@ -25,14 +25,14 @@ We use:
 
 - extinction severity: $S_e = 0.9$
 - permanent non-extinction catastrophe severity: $S_n = 0.45$
-- extinction probability component: $P_e = 8\%$
+- extinction probability component: $P_e = 10\%$
 - non-extinction probability component: $P_n = 4\%$
 
 So the central severity for the combined event class is:
 
-$$S = \frac{P_e \times S_e + P_n \times S_n}{P_e + P_n} = \frac{0.08 \times 0.9 + 0.04 \times 0.45}{0.12} = 0.75$$
+$$S = \frac{P_e \times S_e + P_n \times S_n}{P_e + P_n} = \frac{0.10 \times 0.9 + 0.04 \times 0.45}{0.14} = 0.77$$
 
-This is intentionally coupled to the probability decomposition. If the category later uses, for example, $8\% + 8\%$ rather than $8\% + 4\%$, the central severity should not be left at 0.75 by default.
+This is intentionally coupled to the probability decomposition. If the category later uses, for example, $10\% + 8\%$ rather than $10\% + 4\%$, the central severity should not be left at 0.77 by default.
 
 ---
 
@@ -79,15 +79,15 @@ It helps to be explicit about what 0.45 is made of. Measured day-to-day wellbein
 
 ---
 
-## 4. Severity of the averted risk: about 0.78
+## 4. Severity of the averted risk: about 0.80
 
 The weighted average above describes the baseline catastrophe class. But the category page does not value the baseline class directly — it values the risk that marginal safety spending actually removes, and that is not a proportional slice of the baseline.
 
-The [spending-effect page](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe) estimates that historical safety work has been only about 75% as relevant to the non-extinction channels as to extinction. Under its model, the averted risk decomposes into roughly 0.10 percentage points of extinction and 0.038 percentage points of non-extinction catastrophe — about **73% extinction**, versus 67% in the baseline class. The severity of the averted mix is therefore:
+The [spending-effect page](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe) estimates that historical safety work has been only about 75% as relevant to the non-extinction channels as to extinction. Under its model, the averted risk decomposes into roughly 0.10 percentage points of extinction and 0.030 percentage points of non-extinction catastrophe — about **77% extinction**, versus 71% in the baseline class. The severity of the averted mix is therefore:
 
-$$S_{\text{averted}} = (0.726 \times 0.9) + (0.274 \times 0.45) \approx 0.78$$
+$$S_{\text{averted}} = (0.769 \times 0.9) + (0.231 \times 0.45) \approx 0.80$$
 
-The category page uses **0.78** for this reason. Readers who reject that relevance model and assume safety work reduces all channels proportionally should use **0.75** instead; the difference is small (about 4%).
+The category page uses **0.80** for this reason. Readers who reject that relevance model and assume safety work reduces all channels proportionally should use **0.77** instead; the difference is small (about 4%).
 
 ---
 
@@ -106,8 +106,8 @@ The best central estimate is:
 
 - **Extinction severity:** about 0.9
 - **Permanent non-extinction catastrophe severity:** about 0.45
-- **Combined severity of the baseline catastrophe class:** about 0.75
-- **Severity of the averted risk (used by the category page):** about 0.78
+- **Combined severity of the baseline catastrophe class:** about 0.77
+- **Severity of the averted risk (used by the category page):** about 0.80
 - **Plausible combined range:** about 0.5–0.9
 
 This is the right order of magnitude once AI existential catastrophe is understood to include both extinction and permanent non-extinction outcomes such as irreversible disempowerment and totalitarian lock-in.

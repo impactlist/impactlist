@@ -20,7 +20,7 @@ Let:
 
 For concreteness, suppose the current working estimate is:
 
-- $p_{\text{with}} \approx 8\%$ probability of AI-caused extinction this century, reflecting a rough synthesis of expert surveys, forecasting tournaments, and public estimates. ([See detailed justification](/assumption/ai-doom-probability))
+- $p_{\text{with}} \approx 10\%$ probability of AI-caused extinction this century, reflecting a rough synthesis of expert surveys, forecasting tournaments, and public estimates. ([See detailed justification](/assumption/ai-doom-probability))
 
 The goal is to estimate:
 
@@ -30,17 +30,17 @@ The goal is to estimate:
 A reasonable summary is:
 
 - **Best-guess:**  
-  $X \approx 0.1$ percentage points
+  $X \approx 0.125$ percentage points
 - **Plausible positive range:**  
   $Y \approx 0.01$ percentage points, $Z \approx 0.5$ percentage points
 
-That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.1 percentage points** (for example, from 8.1% to 8.0%), with a wide positive range of **0.01–0.5 percentage points**.
+That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.125 percentage points** (for example, from about 10.13% to 10.0%), with a wide positive range of **0.01–0.5 percentage points**.
 
 This corresponds to about:
 
-- **10 basis points per \$1 billion**
-- **\$100 million per basis point**
-- **\$1 million per microprobability**
+- **12.5 basis points per \$1 billion**
+- **\$80 million per basis point**
+- **\$800,000 per microprobability**
 
 ---
 
@@ -54,11 +54,11 @@ $$
 
 measured in **percentage points**.
 
-For example, if $X = 0.1$ percentage points and $p_{\text{with}} = 8\%$:
+For example, if $X = 0.125$ percentage points and $p_{\text{with}} = 10\%$:
 
-- $p_{\text{without}} \approx 8.1\%$
-- $p_{\text{with}} \approx 8.0\%$
-- Relative risk reduction is about $0.1 / 8.1 \approx 1\%$
+- $p_{\text{without}} \approx 10.125\%$
+- $p_{\text{with}} \approx 10.0\%$
+- Relative risk reduction is about $0.125 / 10.125 \approx 1.2\%$
 
 Most formal work does **not** estimate $X$ directly. Instead, it estimates cost-effectiveness in terms of:
 
@@ -212,49 +212,49 @@ The literature and cross-checks above suggest:
 
 - The **lower end** of plausible views for historical AI safety spending is around **1 bp per \$1B** = **0.01 percentage points per \$1B**
 - The **upper end of clearly non-extreme views** is perhaps around **50 bp per \$1B** = **0.5 percentage points per \$1B**
-- A reasonable **central estimate** for realized historical AI safety spending is around **10 bp per \$1B** = **0.1 percentage points per \$1B**
+- A reasonable **central estimate** for realized historical AI safety spending is around **12.5 bp per \$1B** = **0.125 percentage points per \$1B**
 
-Why 10 bp rather than 5 or 20?
+Why about 12.5 bp?
 
 - **Higher than generic Rethink-style anchors:** AI safety is a particularly central and time-sensitive x-risk area, and some historical spending really did reach unusually leveraged labs, policy institutions, and training programs
 - **Lower than the most optimistic bars:** historical spending includes field-building, mixed-effect work, and dollars that were not all cherry-picked home runs
-- **Exactly on the "good bet" bar:** \$100M per bp is a clean benchmark for "good longtermist spending," and historical AI safety spending plausibly looks about that strong on net
+- **Modestly better than the "good bet" bar:** at about \$80M per bp this is a bit stronger than Linch Zhang's \$100M-per-bp benchmark for "good longtermist spending" — appropriate for an unusually leveraged area, and consistent with a higher (~10%) baseline leaving more absolute risk for a given relative improvement to remove
 
 ### 4.2 Mapping to $X$, $Y$, and $Z$ for \$1B of Spending
 
 If cumulative AI safety-related spending to date is roughly \$1B, then:
 
 - **Best-guess absolute reduction in AI-extinction risk this century:**  
-  $X \approx 0.1$ percentage points
+  $X \approx 0.125$ percentage points
 - **Plausible positive range:**  
   $Y \approx 0.01$ percentage points,  
   $Z \approx 0.5$ percentage points
 
-Under the illustrative baseline $p_{\text{with}} = 8\%$:
+Under the working baseline $p_{\text{with}} = 10\%$:
 
-- $p_{\text{without}} = p_{\text{with}} + X \approx 8.1\%$
-- So $X = 0.1$ percentage points corresponds to a **relative risk reduction** of roughly:
+- $p_{\text{without}} = p_{\text{with}} + X \approx 10.125\%$
+- So $X = 0.125$ percentage points corresponds to a **relative risk reduction** of roughly:
 
 $$
-\frac{0.1}{8.1} \approx 1\%
+\frac{0.125}{10.125} \approx 1.2\%
 $$
 
 In words:
 
-> A reasonable best guess is that AI safety-related spending to date has reduced AI-caused extinction risk this century by about **one percent in relative terms**, for example from roughly 8.1% to 8.0%.
+> A reasonable best guess is that AI safety-related spending to date has reduced AI-caused extinction risk this century by a bit over **one percent in relative terms**, for example from roughly 10.13% to 10.0%.
 
 ### 4.3 Implied Cost per Basis Point and per Microprobability
 
-With the central estimate $X = 0.1$ percentage points:
+With the central estimate $X = 0.125$ percentage points:
 
-- 0.1 percentage points = **10 bp**
-- \$1B / 10 bp = **\$100M per bp**
-- 0.001 / 10^-6 = **1,000 microprobabilities**
-- \$1B / 1,000 = **\$1M per microprobability**
+- 0.125 percentage points = **12.5 bp**
+- \$1B / 12.5 bp = **\$80M per bp**
+- 0.00125 / 10^-6 = **1,250 microprobabilities**
+- \$1B / 1,250 = **\$800k per microprobability**
 
 Comparison:
 
-- This exactly matches Linch Zhang's "\$100M per bp" good-bet bar
+- This is modestly better than Linch Zhang's "\$100M per bp" good-bet bar
 - It is better than generic Rethink-style modeling
 - It is worse than the super-PPE benchmark and far below extreme AGI-safety upper-tail assumptions
 
@@ -299,7 +299,7 @@ Several important caveats apply:
    Some published comparisons use AGI-safety assumptions that imply several percentage points of risk reduction per \$1B. Those are best treated as upper-tail scenarios, not as default working estimates.
 
 6. **The denominator counts lab-internal spending only conservatively, and the headline number is a rate, not a measurement of a total.**  
-   McAleese's aggregation counts for-profit frontier-lab safety teams at roughly \$19–54 million per year, which is likely well below actual frontier-lab safety investment in 2024–2025. Several of the positive channels above (responsible-scaling policies, preparedness frameworks, eval norms) were substantially funded by that largely uncounted internal investment, so attributing them fully to the counted ~\$1 billion overstates its per-dollar effect. Note also that the central estimate was derived from a per-dollar rate (about 10 bp per \$1B, from the cost-effectiveness bars above) rather than from independently measuring the total reduction achieved. The cost-per-microprobability conclusion therefore rests mainly on that rate judgment; the cumulative-spending total mostly scales the claimed total reduction, not the marginal cost.
+   McAleese's aggregation counts for-profit frontier-lab safety teams at roughly \$19–54 million per year, which is likely well below actual frontier-lab safety investment in 2024–2025. Several of the positive channels above (responsible-scaling policies, preparedness frameworks, eval norms) were substantially funded by that largely uncounted internal investment, so attributing them fully to the counted ~\$1 billion overstates its per-dollar effect. Note also that the central estimate was derived from a relative-reduction-times-baseline judgment (about 12.5 bp per \$1B at the working baseline) rather than from independently measuring the total reduction achieved. The cost-per-microprobability conclusion therefore rests mainly on that rate judgment; the cumulative-spending total mostly scales the claimed total reduction, not the marginal cost.
 
 ---
 
@@ -308,15 +308,15 @@ Several important caveats apply:
 Putting everything together:
 
 - The **central estimate** for how much roughly \$1B of AI safety-related spending has reduced AI-caused extinction risk this century is:
-  - $X \approx 0.1$ percentage points
+  - $X \approx 0.125$ percentage points
 - A **plausible positive range** for this reduction is:
   - $Y \approx 0.01$ percentage points
   - $Z \approx 0.5$ percentage points
 
 In cost-effectiveness terms, this corresponds to:
 
-- about **\$100M per basis point**
-- about **\$1M per microprobability**
+- about **\$80M per basis point**
+- about **\$800k per microprobability**
 
 These figures:
 
@@ -324,6 +324,6 @@ These figures:
 - reflect the fact that AI safety is unusually high leverage but not obviously miraculous
 - leave room for both mixed effects and delayed benefits
 
-From this perspective, it is reasonable to treat $X \approx 0.1$ percentage points, with a positive range of roughly 0.01–0.5, as a good working characterization of the realized effect of AI safety spending to date on AI-extinction risk this century.
+From this perspective, it is reasonable to treat $X \approx 0.125$ percentage points, with a positive range of roughly 0.01–0.5, as a good working characterization of the realized effect of AI safety spending to date on AI-extinction risk this century.
 
 {{CONTRIBUTION_NOTE}}

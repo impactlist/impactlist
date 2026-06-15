@@ -13,7 +13,7 @@ effects:
   - effectId: population-doom
     startTime: 15
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 208_000_000
+    costPerMicroprobability: 167_000_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: -0.9
 ---
@@ -206,7 +206,7 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 
 ### Point Estimates
 
-- **Cost per microprobability (increase):** \$208 million (\$30 million–\$2 billion)
+- **Cost per microprobability (increase):** \$167 million (\$30 million–\$2 billion)
 - **Population fraction affected:** 1.0
 - **QALY improvement per affected person per year:** -0.9
 - **Start time:** 15 years
@@ -216,7 +216,7 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 
 ### Assumptions
 
-1. The baseline probability of AI-caused extinction this century is about **8%**. ([See detailed justification](/assumption/ai-doom-probability))
+1. The baseline probability of AI-caused extinction this century is about **10%**. ([See detailed justification](/assumption/ai-doom-probability))
 2. Total cumulative frontier or near-frontier AI spending before transformative AI is roughly **\$5 trillion**. ([See detailed justification](/assumption/cumulative-frontier-ai-spending-before-transformative-ai))
 3. A marginal philanthropic dollar in this cause is best modeled as about **30 cents of frontier-equivalent capability acceleration**. ([See detailed justification](/assumption/frontier-equivalent-share-of-ai-capabilities-philanthropy))
 4. As a first-pass model, small marginal accelerations of frontier capability progress increase extinction risk roughly in proportion to how much they speed up the race. This linearity assumption is obviously imperfect, but it is the cleanest tractable baseline.
@@ -235,22 +235,22 @@ $$
 
 Using:
 
-- $p_{\text{doom}} = 0.08$
+- $p_{\text{doom}} = 0.10$
 - $a_{\text{frontier}} = 0.30$
 - $S_{\text{total}} = 5 \times 10^{12}$
 
 We get:
 
 $$
-\Delta p_{\text{doom}} / \$ \approx 0.08 \times \dfrac{0.30}{5 \times 10^{12}} \approx 4.8 \times 10^{-15}
+\Delta p_{\text{doom}} / \$ \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \approx 6.0 \times 10^{-15}
 $$
 
 That is:
 
-- About **0.0048 microprobabilities of extra extinction risk per \$1 million**
-- Or about **\$208 million per +1 microprobability**
+- About **0.006 microprobabilities of extra extinction risk per \$1 million**
+- Or about **\$167 million per +1 microprobability**
 
-So we use **\$208 million** per +1 microprobability as the point estimate.
+So we use **\$167 million** per +1 microprobability as the point estimate.
 
 This is strongly negative on any worldview that gives substantial weight to future generations.
 
@@ -270,7 +270,7 @@ With the default 100-year time limit, a world population of roughly 10 billion, 
 So at the central estimate, **\$1 million** donated to AI capabilities increases expected losses by roughly:
 
 $$
-0.0048 \times 900{,}000 \approx 4{,}300 \text{ QALYs}
+0.006 \times 900{,}000 \approx 5{,}400 \text{ QALYs}
 $$
 
 This downside becomes much larger if you extend the time horizon beyond 100 years.
@@ -293,12 +293,12 @@ At the default 100-year time horizon and default 0% discount rate, the central e
 
 - **standard-mundane:** about **9.6 QALYs gained** (\$1,000,000 / \$104,000)
 - **standard-utopia:** about **58.8 QALYs gained** (\$1,000,000 / \$17,000)
-- **population-doom:** about **4,327 QALYs destroyed** (0.0048 microprobabilities times about 900,000 QALYs per microprobability)
+- **population-doom:** about **5,400 QALYs destroyed** (0.006 microprobabilities times about 900,000 QALYs per microprobability)
 
 So at the default settings, the net effect is roughly:
 
 $$
-9.6 + 58.8 - 4{,}327 \approx -4{,}260 \text{ QALYs}
+9.6 + 58.8 - 5{,}400 \approx -5{,}330 \text{ QALYs}
 $$
 
 This is the single most important takeaway from the default model: at ordinary time horizons, the existential-risk downside dominates the positive terms unless the user substantially changes the underlying assumptions.

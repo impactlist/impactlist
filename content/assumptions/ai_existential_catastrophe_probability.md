@@ -15,29 +15,29 @@ In the AI context, the main cases are:
 - irreversible human disempowerment by AI systems
 - stable AI-enabled totalitarian lock-in or other global outcomes that permanently prevent humanity from determining its own future
 
-**Summary:** We estimate the baseline probability of AI-caused existential catastrophe this century at approximately **12%**, with a plausible range of **3–35%**. The central estimate can be thought of as roughly **8% extinction risk plus 4 percentage points of additional irreversible-disempowerment or lock-in risk**.
+**Summary:** We estimate the baseline probability of AI-caused existential catastrophe this century at approximately **14%**, with a plausible range of **3–35%**. The central estimate can be thought of as roughly **10% extinction risk plus 4 percentage points of additional irreversible-disempowerment or lock-in risk**.
 
 ---
 
-## 1. Extinction-only anchor: about 8%
+## 1. Extinction-only anchor: about 10%
 
 The broader catastrophe estimate should start from an explicit **extinction-only** anchor rather than treating that anchor as unexplained background.
 
-The site's dedicated extinction-only page still uses about **8%** as the best single estimate for AI-caused human extinction this century. ([See detailed justification](/assumption/ai-doom-probability)) That page gives the full case, but the short version is:
+The site's dedicated extinction-only page uses about **10%** as the best single estimate for AI-caused human extinction this century. ([See detailed justification](/assumption/ai-doom-probability)) That page gives the full case, but the short version is:
 
 - broad AI-researcher surveys cluster around **5%** medians for extremely bad AI outcomes, with substantial mass above 10%
 - the AI-specific XPT domain-expert median is lower, at about **3%**, but domain experts and superforecasters disagree sharply and structured forecasting does not clearly dominate here
 - several prominent researchers and analysts who have engaged seriously with alignment and racing dynamics land around the **10%** neighborhood or above
 - the technical arguments for serious extinction risk are still live: misalignment, deceptive behavior, instrumental convergence, racing pressures, and the lack of reliable ways to verify robust control of highly capable systems
 
-So **8%** is not meant as a precise forecast. It is a working estimate that sits:
+So **10%** is not meant as a precise forecast. It is a working estimate that sits:
 
 - above the most optimistic structured-forecasting anchors
-- above the 3% XPT domain-expert median
-- modestly above the 5% survey medians
-- below the more alarmed 10–20% public views and below Grace et al.'s **14.4%** mean on the broader extinction-or-severe-disempowerment wording
+- well above the 3% XPT domain-expert median
+- above the 5% survey medians
+- in line with Toby Ord's roughly 10% and below Grace et al.'s **14.4%** mean on the broader extinction-or-severe-disempowerment wording
 
-That makes **8%** a reasonable extinction-only anchor for the broader estimate to build on.
+That makes **10%** a reasonable extinction-only anchor for the broader estimate to build on.
 
 ---
 
@@ -96,24 +96,24 @@ The right move is **not** to add a separate disempowerment probability and a sep
 
 Still, the broader event should be materially higher than extinction alone. A reasonable central uplift is about **4 percentage points**:
 
-- Grace et al.'s broader extinction-or-severe-disempowerment question has a **14.4%** mean, which is several points above the extinction-only working anchor
+- Grace et al.'s broader extinction-or-severe-disempowerment question has a **14.4%** mean, several points above the extinction-only working anchor
 - XPT's broader AI-catastrophe numbers are materially above its extinction numbers
 - the recent disempowerment and authoritarianism literature makes it hard to justify an uplift near zero
 
-We do **not** use the full gap between 14.4% and 8%, because survey means can be fat-tailed, some respondents may already fold disempowerment into their extinction-style answers, and the site's event definition is narrower than every bad authoritarian or surveillance outcome. But a net uplift of about **4 percentage points** is a reasonable best guess.
+The uplift is best read as an independent estimate of the non-extinction existential-catastrophe mass (irreversible disempowerment plus stable lock-in), not as a mechanical fraction of any survey gap. We keep it at about **4 percentage points**: large enough to reflect that the disempowerment and authoritarianism literature makes near-zero implausible, but bounded because many scenarios overlap with extinction, some survey respondents already fold disempowerment into their extinction-style answers, and the site's event definition is narrower than every bad authoritarian or surveillance outcome.
 
 ---
 
-## 5. Combined point estimate: 12%
+## 5. Combined point estimate: 14%
 
 Putting those pieces together:
 
-- extinction-only anchor: about **8%**
+- extinction-only anchor: about **10%**
 - additional non-extinction existential-catastrophe risk: about **4 percentage points**
 
-So the broader point estimate is about **12%**.
+So the broader point estimate is about **14%**.
 
-This is meaningfully above the extinction-only anchor, but still below the raw **14.4%** mean from Grace et al.'s broader survey wording. That seems like the right place to land once we account for overlap, definitional ambiguity, and the fact that not every AI-enabled authoritarian outcome is severe enough to count as an existential catastrophe.
+This sits just below the raw **14.4%** mean from Grace et al.'s broader extinction-or-severe-disempowerment question — a reasonable convergence, since that survey question is the closest direct analogue to the catastrophe definition used here. We do not push above it, because many scenarios overlap with extinction, some respondents may already fold disempowerment into their extinction-style answers, and not every AI-enabled authoritarian outcome is severe enough to count as an existential catastrophe.
 
 ### Plausible range: 3–35%
 
@@ -130,12 +130,12 @@ This is a broad range, but that is appropriate. Much of the disagreement here is
 
 The cleanest all-things-considered view is:
 
-- **AI-caused existential catastrophe this century:** about **12%**
+- **AI-caused existential catastrophe this century:** about **14%**
 - **Plausible range:** about **3–35%**
 
 The central estimate is best understood as:
 
-- about **8%** extinction risk
+- about **10%** extinction risk
 - plus about **4 percentage points** of additional irreversible-disempowerment or lock-in risk
 
 That decomposition is not exact, but it is the clearest way to show why the broader estimate is higher than extinction-only p(doom).

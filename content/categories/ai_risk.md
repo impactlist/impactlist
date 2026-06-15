@@ -3,7 +3,7 @@ id: ai-risk
 name: 'AI Existential Risk'
 effects:
   - effectId: population
-    startTime: 15
+    startTime: 10
     windowLength: 1_000_000_000_000
     costPerMicroprobability: 625_000
     populationFractionAffected: 1.0
@@ -33,15 +33,15 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 - **Cost per microprobability:** \$625,000 (\$143,000–\$7.1 million)
 - **Population fraction affected:** 1.0 (the modeled event is global by construction)
 - **QALY improvement per affected person per year:** 0.80 (0.5–0.9)
-- **Start time:** 15 years (~2041)
-- **Duration:** From the start time to the global time limit parameter (default 100 years, so an 85-year window by default), capped at a trillion years
+- **Start time:** 10 years (~2036)
+- **Duration:** From the start time to the global time limit parameter (default 100 years, so a 90-year window by default), capped at a trillion years
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
 
 1. The baseline probability of AI-caused existential catastrophe this century is approximately 14%, with a plausible range around 3–35%. A useful decomposition is about 10% extinction risk plus about 4 percentage points of additional irreversible-disempowerment or lock-in risk. ([See detailed justification](/assumption/ai-existential-catastrophe-probability))
-2. The aggregate median forecast for high-level machine intelligence (HLMI) is around 2047, but with substantial probability mass in the 2030s and early 2040s. ([Grace et al. 2024](https://arxiv.org/abs/2401.02843))
+2. AGI — machines that can do any mental task better and more cheaply than humans — most likely arrives around 2036, with a plausible range of roughly 2030–2050. That is roughly when catastrophic AI risk becomes pressing. ([See detailed justification](/assumption/timelines-to-agi))
 3. The QALYs at stake are computed from the site's global population parameters: about 8.3 billion people today, growing at 1% per year, capped at 10x today's population, with no discounting by default (all user-adjustable). For reference, the UN projects world population to peak around 10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
 4. Conditional on such a catastrophe occurring, the average welfare shortfall is roughly 0.77 QALY-equivalents per affected person per year for the baseline catastrophe class, with a plausible range of 0.5–0.9. Because the risk that safety spending actually averts skews toward extinction (the most severe outcome), the severity used here is 0.80. ([See detailed justification](/assumption/ai-existential-catastrophe-severity))
 5. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions; frontier-lab internal safety work is counted only at a conservative few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Open Philanthropy](https://www.openphilanthropy.org/focus/potential-risks-advanced-ai/))
@@ -87,23 +87,23 @@ The point estimate used here (0.80) is slightly higher than the baseline 0.77 be
 
 **How total QALYs scale with the time limit:**
 
-The figures below use the site's default global parameters (Assumption 3) and its actual population model, so they match what the site displays. The effect window always runs from year 15 to the time limit.
+The figures below use the site's default global parameters (Assumption 3) and its actual population model, so they match what the site displays. The effect window always runs from year 10 to the time limit.
 
-**Example 1 — Time limit = 40 years (25-year window)**
+**Example 1 — Time limit = 40 years (30-year window)**
 
-- Person-years in the window: about 274 billion
-- QALYs at stake: $274\text{B} \times 0.80 \approx 219 \text{ billion}$
-- QALYs saved per microprobability: $219\text{B} \times 10^{-6} = 219{,}000$
-- Cost per QALY: $$\$625{,}000 / 219{,}000 \approx \$2.9/\text{QALY}$$ (about \$230 per life of 80 QALYs)
+- Person-years in the window: about 321 billion
+- QALYs at stake: $321\text{B} \times 0.80 \approx 257 \text{ billion}$
+- QALYs saved per microprobability: $257\text{B} \times 10^{-6} = 257{,}000$
+- Cost per QALY: $$\$625{,}000 / 257{,}000 \approx \$2.4/\text{QALY}$$ (about \$195 per life of 80 QALYs)
 
-**Example 2 — Time limit = 100 years (the default; 85-year window)**
+**Example 2 — Time limit = 100 years (the default; 90-year window)**
 
-- Person-years in the window: about 1,290 billion
-- QALYs at stake: $1{,}290\text{B} \times 0.80 \approx 1{,}030 \text{ billion}$
-- QALYs saved per microprobability: $1{,}030\text{B} \times 10^{-6} = 1{,}030{,}000$
-- Cost per QALY: $$\$625{,}000 / 1{,}030{,}000 \approx \$0.61/\text{QALY}$$ (about \$49 per life)
+- Person-years in the window: about 1,335 billion
+- QALYs at stake: $1{,}335\text{B} \times 0.80 \approx 1{,}070 \text{ billion}$
+- QALYs saved per microprobability: $1{,}070\text{B} \times 10^{-6} = 1{,}070{,}000$
+- Cost per QALY: $$\$625{,}000 / 1{,}070{,}000 \approx \$0.58/\text{QALY}$$ (about \$47 per life)
 
-**Example 3 — Time limit = 1,000 years (985-year window)**
+**Example 3 — Time limit = 1,000 years (990-year window)**
 
 - The population reaches the default cap (10x today's) after about 230 years, so most of the window sits at the cap
 - Person-years in the window: about 71,000 billion
@@ -113,22 +113,17 @@ The figures below use the site's default global parameters (Assumption 3) and it
 
 Because the default population curve grows at 1% per year until it hits the cap, the QALYs at stake scale faster than linearly with the time limit, and the long-horizon numbers are dominated by the population growth and cap parameters — both of which users can edit.
 
-These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is not unique to this page; it is a general feature of existential-risk expected-value models when you combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. The result is highly sensitive to a few contestable assumptions — the effectiveness of marginal safety work, the severity assigned to non-extinction catastrophes, and especially the time limit and discount rate. But within the modeled range the headline comparison is robust: at the default time limit, the cost per microprobability would have to exceed roughly \$64 million — about nine times the pessimistic end of our range — before this category looked worse than a \$5,000-per-life global-health benchmark. The decision-relevant cruxes are therefore whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
+These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is not unique to this page; it is a general feature of existential-risk expected-value models when you combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. The result is highly sensitive to a few contestable assumptions — the effectiveness of marginal safety work, the severity assigned to non-extinction catastrophes, and especially the time limit and discount rate. But within the modeled range the headline comparison is robust: at the default time limit, the cost per microprobability would have to exceed roughly \$67 million — about nine times the pessimistic end of our range — before this category looked worse than a \$5,000-per-life global-health benchmark. The decision-relevant cruxes are therefore whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
 
 ### Start time
 
-The 15-year start time means the main risk arrives around **2041**. This is earlier than the 50% date in the Grace et al. survey for high-level machine intelligence (2047), but that still seems appropriate for two reasons:
+The 10-year start time means the main risk arrives around **2036**, which is our central [AGI estimate](/assumption/timelines-to-agi) — the point at which machines can outperform humans on any mental task and catastrophic risks become pressing. The window opens around when highly capable systems plausibly become strategically decisive.
 
-1. Catastrophic risk could become serious **before** full economy-wide AI performance at roughly HLMI level if systems become strategically dangerous first.
-2. We still need a round number that is not too anchored on the exact median of one survey.
-
-So 15 years is a compromise between very short timelines and much slower views.
-
-Conceptually, the start time stands in for the expected date at which welfare losses would begin conditional on the catastrophe occurring — a single number approximating a distribution over arrival times. It is a second-order input: shifting it by a decade changes the QALYs at stake by roughly 8% at the default time limit, far less than the cost and severity assumptions move the result.
+Conceptually, the start time stands in for the expected date at which welfare losses would begin conditional on the catastrophe occurring — a single number approximating a distribution over arrival times. It is a second-order input: shifting it by a decade changes the QALYs at stake by roughly 8% at the default time limit, far less than the cost and severity assumptions move the result. Users who hold shorter or longer timelines should adjust it.
 
 ### Duration
 
-The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Combined with the 15-year start time, the default window covers years 15 through 100 — an 85-year window. The large `windowLength` in the frontmatter is only a ceiling; the effect is clamped by the global time-limit parameter.
+The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Combined with the 10-year start time, the default window covers years 10 through 100 — a 90-year window. The large `windowLength` in the frontmatter is only a ceiling; the effect is clamped by the global time-limit parameter.
 
 Because the modeled catastrophe is permanent by construction, the value of this cause area is highly sensitive to how much weight you place on future people.
 
@@ -153,7 +148,7 @@ If you disagree with an input, the propagation is straightforward:
 
 5. **How severe non-extinction catastrophes are relative to extinction.** Permanent lock-in or disempowerment is not best modeled as ordinary bad policy, but it is also not literally identical to everyone dying.
 
-6. **Timelines.** If transformative AI arrives very soon, there is less time for philanthropy to matter. If it arrives much later, today's work may need to be refreshed over decades.
+6. **Timelines.** If transformative AI arrives very soon, there is less time for philanthropy to matter. If it arrives much later, today's work may need to be refreshed over decades. ([See timelines to AGI](/assumption/timelines-to-agi))
 
 7. **Where to draw the boundary around the modeled event.** AI can worsen surveillance, repression, and concentration of power by many degrees. The hard question is which of those pathways are merely very bad and which are global, effectively irreversible, and severe enough to count as permanent curtailment of humanity's future.
 

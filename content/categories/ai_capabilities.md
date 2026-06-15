@@ -7,11 +7,11 @@ effects:
     windowLength: 20
     costPerQALY: 104_000
   - effectId: standard-utopia
-    startTime: 15
+    startTime: 10
     windowLength: 5
-    costPerQALY: 17_000
+    costPerQALY: 33_000
   - effectId: population-doom
-    startTime: 15
+    startTime: 10
     windowLength: 1_000_000_000_000
     costPerMicroprobability: 167_000_000
     populationFractionAffected: 1.0
@@ -123,16 +123,16 @@ Importantly, this is **not** the probability that advanced AI is merely "on bala
 
 ### Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$17,000 (\$5,000–\$150,000)
-- **Start time:** 15 years
+- **Cost per QALY:** \$33,000 (\$10,000–\$300,000)
+- **Start time:** 10 years
 - **Duration:** 5 years
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ### Assumptions
 
-1. In the 2023 AI Impacts survey, the aggregate forecast put a 50% chance on HLMI by 2047. ([Grace et al. 2024](https://aiimpacts.org/wp-content/uploads/2023/04/Thousands_of_AI_authors_on_the_future_of_AI.pdf))
-2. We use a rough baseline of **20 years to transformative AI**, consistent with the above survey once we allow for large uncertainty and the distinction between HLMI and fully transformative deployment.
+1. AGI — machines that can do any mental task better and more cheaply than humans — most likely arrives around 2036 (the broader physical-task HLMI bar is later). The 2023 AI Impacts survey put a 50% chance on HLMI by 2047, but that survey is dated and more recent aggregates are substantially shorter. ([Grace et al. 2024](https://aiimpacts.org/wp-content/uploads/2023/04/Thousands_of_AI_authors_on_the_future_of_AI.pdf), [timelines to AGI](/assumption/timelines-to-agi))
+2. We use a baseline of about **10 years to transformative AI** (mid-2030s, ≈ the AGI date above), consistent with the [timelines estimate](/assumption/timelines-to-agi). The cumulative-spending denominator below is kept at \$5 trillion: the shorter horizon is offset by a higher average annual frontier-spend rate, reflecting the current capex ramp.
 3. Total cumulative frontier or near-frontier AI spending before transformative AI is reached is roughly **\$5 trillion** centrally. ([See detailed justification](/assumption/cumulative-frontier-ai-spending-before-transformative-ai))
 4. A marginal philanthropic dollar in this cause is best modeled as about **30 cents of frontier-equivalent capability acceleration**, after accounting for crowd-out and the fact that some funded work is not direct frontier training. ([See detailed justification](/assumption/frontier-equivalent-share-of-ai-capabilities-philanthropy))
 5. Grace et al. (2024) report that respondents assigned about **10%** median probability and about **23%** mean probability to "extremely good" outcomes from HLMI. Because this effect is meant to capture only very good futures, we use **10%** as the central probability. ([Grace et al. 2024](https://aiimpacts.org/wp-content/uploads/2023/04/Thousands_of_AI_authors_on_the_future_of_AI.pdf))
@@ -161,23 +161,23 @@ Using the central assumptions:
 - $p_{\text{good}} = 0.10$
 - $a_{\text{frontier}} = 0.30$
 - $S_{\text{total}} = 5 \times 10^{12}$
-- $T = 20$
+- $T = 10$
 - $\Delta Q_{\text{year}} = 5 \times 10^{8}$
 
 This gives:
 
 $$
-\text{QALYs per \$} \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \times 20 \times 5 \times 10^{8}
-\approx 6 \times 10^{-5}
+\text{QALYs per \$} \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \times 10 \times 5 \times 10^{8}
+\approx 3 \times 10^{-5}
 $$
 
 So:
 
 $$
-\text{Cost per QALY} \approx \dfrac{1}{6 \times 10^{-5}} \approx \$16{,}700
+\text{Cost per QALY} \approx \dfrac{1}{3 \times 10^{-5}} \approx \$33{,}300
 $$
 
-So we use **\$17,000/QALY** as the point estimate.
+So we use **\$33,000/QALY** as the point estimate.
 
 Two points are worth emphasizing:
 
@@ -190,7 +190,7 @@ As with the doom effect below, this timing model assumes that small marginal cap
 
 #### Start time
 
-We use a 15-year start time because the point of this effect is not today's copilots or narrow models. It is earlier arrival of genuinely transformative systems, which still seems more likely to matter in the 2030s or 2040s than in the next few years.
+We use a 10-year start time because the point of this effect is not today's copilots or narrow models. It is earlier arrival of genuinely transformative systems, which our [timelines estimate](/assumption/timelines-to-agi) places in the mid-2030s rather than the next few years.
 
 #### Duration
 
@@ -209,7 +209,7 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 - **Cost per microprobability (increase):** \$167 million (\$30 million–\$2 billion)
 - **Population fraction affected:** 1.0
 - **QALY improvement per affected person per year:** -0.9
-- **Start time:** 15 years
+- **Start time:** 10 years
 - **Duration:** Defined by the global time limit parameter (default is 100 years)
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
@@ -262,22 +262,22 @@ The point estimate is 1.0 because extinction kills everyone.
 
 The value is **-0.9** because this effect is harm, not benefit, and because the symmetric positive AI-risk category uses 0.9 QALYs per human life-year rather than 1.0.
 
-With the default 100-year time limit, a world population of roughly 10 billion, and an average welfare level of about 0.9 QALYs/year:
+With the default 100-year time limit and the site's population model (about 8.3 billion people today growing at 1%/year), the effect window runs from year 10 to year 100 — roughly **1,335 billion person-years** — and at about 0.9 QALYs per person-year:
 
-- Total QALYs destroyed: **about 900 billion**
-- QALYs destroyed per microprobability: **about 900,000**
+- Total QALYs destroyed: **about 1,200 billion**
+- QALYs destroyed per microprobability: **about 1,200,000**
 
 So at the central estimate, **\$1 million** donated to AI capabilities increases expected losses by roughly:
 
 $$
-0.006 \times 900{,}000 \approx 5{,}400 \text{ QALYs}
+0.006 \times 1{,}200{,}000 \approx 7{,}200 \text{ QALYs}
 $$
 
 This downside becomes much larger if you extend the time horizon beyond 100 years.
 
 #### Start time
 
-We use a 15-year start time for the same reason as in Effect 2: the relevant risk is not from today's narrow uses alone, but from the period when highly capable systems plausibly become strategically decisive.
+We use a 10-year start time for the same reason as in Effect 2: the relevant risk is not from today's narrow uses alone, but from the period (mid-2030s) when highly capable systems plausibly become strategically decisive.
 
 #### Duration
 
@@ -292,13 +292,13 @@ The duration is controlled by the global time limit parameter. Extinction has es
 At the default 100-year time horizon and default 0% discount rate, the central estimates imply the following rough magnitudes per **\$1 million donated**:
 
 - **standard-mundane:** about **9.6 QALYs gained** (\$1,000,000 / \$104,000)
-- **standard-utopia:** about **58.8 QALYs gained** (\$1,000,000 / \$17,000)
-- **population-doom:** about **5,400 QALYs destroyed** (0.006 microprobabilities times about 900,000 QALYs per microprobability)
+- **standard-utopia:** about **30.3 QALYs gained** (\$1,000,000 / \$33,000)
+- **population-doom:** about **7,200 QALYs destroyed** (0.006 microprobabilities times about 1,200,000 QALYs per microprobability)
 
 So at the default settings, the net effect is roughly:
 
 $$
-9.6 + 58.8 - 5{,}400 \approx -5{,}330 \text{ QALYs}
+9.6 + 30.3 - 7{,}200 \approx -7{,}160 \text{ QALYs}
 $$
 
 This is the single most important takeaway from the default model: at ordinary time horizons, the existential-risk downside dominates the positive terms unless the user substantially changes the underlying assumptions.

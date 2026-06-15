@@ -9,7 +9,7 @@ _The following analysis was done on April 6th 2026 by GPT-5 and edited by Impact
 
 This document asks:
 
-> Before transformative AI or HLMI arrives, how much total **frontier or near-frontier capability spending** will the world plausibly do?
+> Before transformative AI arrives, how much total **frontier or near-frontier capability spending** will the world plausibly do?
 
 We include:
 
@@ -47,7 +47,7 @@ At the same time, we should not simply extrapolate current exponential growth fo
 There are at least four reasons:
 
 1. **Not all AI investment is frontier investment.** A large share of current spending is adoption, applications, services, and ordinary enterprise tooling.
-2. **Timelines may be shorter than a simple long-run capex trend suggests.** If transformative AI arrives in the 2030s or 2040s, cumulative pre-transformative spending has less time to compound.
+2. **Timelines may be shorter than a simple long-run capex trend suggests.** If transformative AI arrives in the mid-2030s, cumulative pre-transformative spending has less time to compound.
 3. **Some bottlenecks are physical and institutional.** Power, permitting, chip supply, and geopolitics can all slow the rate at which money turns into effective frontier compute.
 4. **Algorithmic progress substitutes for spending.** Better algorithms reduce the amount of physical spending needed to reach a given capability level.
 
@@ -57,26 +57,21 @@ So it would also be overconfident to assume frontier-relevant spending before tr
 
 ## 3. Timelines anchor the calculation
 
-Grace et al. (2024) found an aggregate forecast of **50% HLMI by 2047**. ([Grace et al. 2024](https://aiimpacts.org/wp-content/uploads/2023/04/Thousands_of_AI_authors_on_the_future_of_AI.pdf))
+Our [timelines estimate](/assumption/timelines-to-agi) puts AGI — and roughly with it, transformative AI — in the mid-2030s, on the order of **10 years** out. (That is substantially sooner than the dated 50%-HLMI-by-2047 figure from the 2023 expert survey, whose definition also requires automating physical work.)
 
-Using that as a rough anchor, a simple way to think about the problem is:
+A simple way to think about the problem is:
 
 $$
 \text{Cumulative spend} \approx \text{average annual frontier-relevant spend} \times \text{years to transformative AI}
 $$
 
-If the world averages roughly **\$250 billion/year** of frontier-relevant spending over the next **20 years**, cumulative spending is:
+Frontier-relevant spending — the model training, frontier-lab R&D, and the compute, chip, and energy buildout that actually pushes the frontier, **not** routine enterprise adoption or downstream apps — is already in the low hundreds of billions of dollars per year and ramping hard: hyperscaler AI capex and projects like Stargate (≈\$125 billion/year on its own) are scaling quickly, and frontier training compute has been growing about 5x/year. Starting in the hundreds of billions today and rising toward \$1 trillion+/year as the buildout continues, a **\$500 billion/year** average over the next **~10 years** is a reasonable midpoint:
 
 $$
-250\text{B} \times 20 = 5\text{T}
+500\text{B} \times 10 = 5\text{T}
 $$
 
-This is not an exact forecast. It is a stylized midpoint that tries to account for:
-
-- current spending already being very high
-- future growth likely being substantial
-- only a subset of total AI spending counting as frontier-relevant
-- timelines plausibly being on the order of decades rather than half a century
+This is a stylized estimate, not a forecast. The average annual rate is the dominant uncertainty — a slower ramp or a sooner arrival of transformative AI points lower, a sustained buildout points higher — which is why the range below is wide.
 
 ---
 
@@ -113,4 +108,4 @@ Users who think timelines are longer, or that much future spending will be downs
 
 # Internal Notes
 
-The \$5T central estimate may need to be revisited soon if frontier-compute capex continues rising at the current pace. Stargate alone implies \$125B/year, and if similar hyperscaler spending persists the right central estimate could drift upward even if the current \$2–15T range still covers it.
+The \$5T central estimate now reflects a roughly \$500B/year average over a ~10-year horizon (see [timelines to AGI](/assumption/timelines-to-agi)). It could drift upward if frontier capex keeps rising — Stargate alone implies ~\$125B/year, and sustained hyperscaler spending could push the average annual rate well above \$500B — though the current \$2–15T range still covers that.

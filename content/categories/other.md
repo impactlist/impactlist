@@ -20,7 +20,7 @@ This is a fallback bucket for donations that cannot yet be classified more preci
 
 The goal is to estimate the expected value of giving to this actual bucket of miscellaneous philanthropy.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$75,000 (\$35,000-\$300,000)
 - **Start time:** 1 year
@@ -79,12 +79,12 @@ This estimate also passes a useful outside-view sanity check: **\$75,000/QALY** 
 
 ### Range
 
-The range is a practical sensitivity range, not a formal confidence interval.
+The range is our plausible range, kept wide because these models are rough.
 
 - **Optimistic:** stronger direct recipients, better downstream allocation, and fewer unknowns gives about **\$35,000/QALY**.
 - **Pessimistic:** weaker direct recipients, more dilution through vehicles, and more opaque recipients gives about **\$300,000/QALY**.
 
-### Start Time
+### Start time
 
 The **1-year** start time reflects that some `Other` recipients can spend quickly, while others take longer to deploy funds or create downstream impact.
 

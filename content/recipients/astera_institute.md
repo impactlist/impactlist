@@ -24,7 +24,7 @@ We arrive at the cost per life multiplier by analyzing the effective deployment 
 
 This effect captures the discount applied to donations intended for AI x-risk reduction when routed through the Astera Institute. Unlike dedicated AI safety organizations (e.g., MIRI, ARC, Redwood Research), Astera operates as a multi-cause private foundation with significant endowment accumulation, low payout rates, and an AI research program (Obelisk) that primarily pursues AGI capabilities rather than traditional alignment work.
 
-## Point Estimates
+## Point estimates
 
 - **Cost per QALY multiplier:** 0.1x (relative to baseline AI safety organization)
 
@@ -39,23 +39,23 @@ This effect captures the discount applied to donations intended for AI x-risk re
 
 ## Details
 
-### Derivation of the Multiplier (0.1x)
+### Derivation of the multiplier (0.1x)
 
 We calculate the effective deployment multiplier ($M$) by combining four discount factors that capture how donations are diluted before reaching AI x-risk work.
 
-### 1. Payout Rate Discount
+### 1. Payout rate discount
 
 Astera's annual expenditure as a percentage of assets:
 
 $$D_{payout} = \frac{\text{Actual Payout}}{\text{Standard Payout}} = \frac{1.4\%}{5\%} = 0.28$$
 
-### 2. External Grant Discount
+### 2. External grant discount
 
 Percentage of expenses flowing to external organizations vs. internal operations:
 
 $$D_{external} = \frac{\text{Grants Paid}}{\text{Total Expenses}} = \frac{\$5.3M}{\$27.5M} = 0.19$$
 
-### 3. AI X-Risk Focus Discount
+### 3. AI x-risk focus discount
 
 Estimated share of AI spending dedicated to genuine safety/alignment work (vs. capabilities):
 
@@ -63,13 +63,13 @@ $$D_{safety} = \frac{\text{Safety Work}}{\text{Total AI Work}} \approx 0.15$$
 
 This reflects that Obelisk's primary mission is building AGI, with safety as a secondary consideration. Steve Byrnes' alignment research represents a small fraction of the AI program budget.
 
-### 4. Cause Area Allocation Discount
+### 4. Cause area allocation discount
 
 AI/AGI share of Astera's total portfolio:
 
 $$D_{cause} = \frac{\text{AI Budget}}{\text{Total Budget}} \approx 0.30$$
 
-### 5. Final Multiplier Calculation
+### 5. Final multiplier calculation
 
 For donations earmarked for AI x-risk, we apply the payout and safety discounts:
 

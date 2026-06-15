@@ -27,7 +27,7 @@ dignity, social functioning, and freedom from exploitation after converting thos
 terms. It does **not** try to model the average human-rights NGO, nor use broad expressive advocacy or litigation to
 anchor the headline estimate when the public evidence is still too thin.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$310 (\$100–\$4,000)
 - **Start time:** 2 years
@@ -48,18 +48,18 @@ this page and enter your own values.*
    range of about **1–4**, once omitted mortality risk, post-intervention persistence, safety, autonomy, dignity, and
    broader psychosocial harms are included. ([See detailed justification](/assumption/human-rights-welfare-conversion))
 3. For category-level marginal giving, a reasonable central external-validity markup on the strongest VAWG trial
-   results is about **3x**, with a practical range of **1.5x–5x**, to account for transportability, scaling, and
+   results is about **3x**, with a plausible range of **1.5x–5x**, to account for transportability, scaling, and
    publication-bias risk.
 4. Community-based anti-bonded-labour programs in Freedom Fund's India hotspots appear promising but are supported by
    weaker evidence than the VAWG literature. A Freedom Fund evidence paper summarising external evaluations reports
    roughly **125,000 fewer individuals in bonded labour** across target villages after about **\$15.8 million** in
    spending across two India hotspots, implying roughly **\$126** per fewer person in bondage. ([Freedom Fund 2024 evidence paper](https://www.freedomfund.org/app/uploads/2024/03/Freedom-Fund-Evidence-in-Practice-Paper-Unlocking-what-works.pdf))
 5. A typical person avoiding bonded labour or similar labour trafficking plausibly gains about **1.0 QALY-equivalent**
-   in total, with a practical range of about **0.4–2.0**. This combines health-related quality-of-life loss,
+   in total, with a plausible range of about **0.4–2.0**. This combines health-related quality-of-life loss,
    exploitation duration, fear, shame, worthlessness, restricted agency, and impaired daily functioning into one
    all-things-considered welfare estimate. ([See detailed justification](/assumption/human-rights-welfare-conversion))
 6. For category-level marginal giving, the Freedom Fund-style anti-slavery evidence should be discounted by about
-   **4x**, with a practical range of **2x–8x**, for attribution, substitution, durability, and multi-component-program
+   **4x**, with a plausible range of **2x–8x**, for attribution, substitution, durability, and multi-component-program
    uncertainty.
 7. A reasonable central portfolio split for this category is about **70% VAWG prevention** and **30% anti-slavery /
    anti-trafficking work**. This is a modeling judgment about the strongest current direct-welfare human-rights
@@ -164,9 +164,9 @@ The high end is around **\$4,000/QALY** if the donor funds weaker implementation
 less durable or less attributable than they first appear, or if the portfolio leans toward weaker direct-welfare
 rights work than the category is trying to model.
 
-So **\$100-\$4,000/QALY** is best read as a practical sensitivity range, not a formal confidence interval.
+So **\$100-\$4,000/QALY** is best read as our plausible range, kept wide because these models are rough.
 
-### Start Time
+### Start time
 
 We use a **2-year** start time because these interventions usually need time for mobilisation, training, survivor
 identification, and local institutional response before they translate into less violence or fewer people in
@@ -185,7 +185,7 @@ So 20 years is a compromise:
 - Long enough to reflect that these are not just one-year benefits
 - Short enough to avoid assuming universal permanent gains or perfectly persistent institutional change
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are mainly for **high-impact human-rights charities with relatively direct welfare effects**, such as:
 
@@ -205,7 +205,7 @@ They are **not** estimates for:
 Those efforts may still matter a great deal. They are just not the best-evidenced anchors for the category's current
 point estimate.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How much of the best VAWG evidence travels to new settings and implementers.** Strong RCT evidence exists, but the
    very best trial results may not be fully reproducible everywhere.

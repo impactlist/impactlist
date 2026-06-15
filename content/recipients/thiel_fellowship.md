@@ -20,7 +20,7 @@ We assign the Thiel Fellowship a **cost per QALY of \$1,600**. The case for a lo
 
 This effect captures the welfare gains from the **Thiel Fellowship**, which pays young people \$100,000 to drop out of college and pursue entrepreneurial or scientific projects. While the baseline "Standard Education" cause focuses on increasing educational attainment (e.g., university scholarships, K-12 interventions), the Thiel Fellowship acts as a "talent acceleration" mechanism. We model this as shifting from a **Normal Distribution strategy** (lifting the average student's wages) to a **Power Law strategy** (uncapping the upside of outlier talent). The primary impact comes from accelerating the creation of high-impact technology companies (e.g., Ethereum, Figma) and the cultural shift against credentialism.
 
-## Point Estimates
+## Point estimates
 
 - **Cost per QALY:** \$1,600
 
@@ -43,7 +43,7 @@ $$\text{Relative effectiveness} = \dfrac{EV_{TF}}{EV_{Base}}$$
 
 We analyze the Expected Value (EV) of a \$100,000 investment in both scenarios.
 
-### 1. Baseline: Standard Scholarship (EV_Base)
+### 1. Baseline: standard scholarship (EV_Base)
 
 Investing \$100k in a standard US university scholarship.
 

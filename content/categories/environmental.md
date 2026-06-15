@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from donations to the best current **non-climate environmental** charities, especially those that reduce toxic exposure or air pollution: lead-source elimination, toxic-site remediation, and clean-air policy/data/advocacy. The current quantitative anchors are pollution-focused. The estimate does not separately model biodiversity, ecosystem existence value, or scenic/amenity value, but that is a scope and evidence decision, not because those benefits are outside QALY-equivalent welfare.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$50 (\$15–\$30,000)
 - **Start time:** 2 years
@@ -84,11 +84,11 @@ The weaker end of the cause area consists of environmental projects where attrib
 - **Optimistic:** about **\$15/QALY**, corresponding to a very strong lead-source-elimination opportunity where most of the central-case skepticism penalties do not apply, but some model error and external-validity discount still remain.
 - **Pessimistic:** about **\$30,000/QALY**, corresponding to environmental projects where attributable welfare benefits are diffuse, secondary, or poorly measured.
 
-So the practical sensitivity range is **\$15-\$30,000/QALY**.
+So our plausible range is **\$15-\$30,000/QALY**.
 
-This is a practical range, not a formal uncertainty interval. Biodiversity, ecosystem existence value, and nonhuman-animal welfare could in principle be converted into QALY-equivalent welfare too. We do not add a separate term for them here because the current category model is anchored on pollution-focused recipients and the public dollar-to-outcome evidence for those broader environmental channels is much thinner. If the recipient mix shifts toward conservation or ecosystem protection, this page should either split the category or add a dedicated welfare-conversion model.
+This interval covers the pollution-focused channels the category model is anchored on. Biodiversity, ecosystem existence value, and nonhuman-animal welfare could in principle be converted into QALY-equivalent welfare too. We do not add a separate term for them here because the current category model is anchored on pollution-focused recipients and the public dollar-to-outcome evidence for those broader environmental channels is much thinner. If the recipient mix shifts toward conservation or ecosystem protection, this page should either split the category or add a dedicated welfare-conversion model.
 
-### Start Time
+### Start time
 
 The 2-year start time reflects the lag between funding and realized benefits. Lead regulations, monitoring systems, cleanup projects, and air-quality policies usually take some time to design, pass, enforce, and translate into lower exposure. Some site-specific remediation can work faster, but 2 years is a reasonable portfolio average.
 
@@ -96,14 +96,14 @@ The 2-year start time reflects the lag between funding and realized benefits. Le
 
 The 40-year duration reflects the long-lived nature of successful pollution-control wins. Lead paint bans, cleaner manufacturing standards, contaminated-site remediation, and cleaner-air governance can reduce exposures for many future birth cohorts, not just the people reached in the first year or two after implementation. As rough anchors for persistence, the U.S. banned consumer lead-based paint in **1978** and completed the phaseout of leaded gasoline in **1996**, and those changes have remained in force for decades. ([EPA on lead paint](https://www.epa.gov/lead/protect-your-family-sources-lead), [EPA on leaded gasoline](https://www.epa.gov/archive/epa/aboutepa/epa-takes-final-step-phaseout-leaded-gasoline.html))
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 - Lead paint, spices, cookware, battery recycling, and other source-reduction efforts aimed at lowering human lead exposure
 - Toxic-site cleanup and industrial contamination remediation where human welfare is the main benefit
 - Clean-air data, advocacy, litigation, and policy work where the main pathway is lower human exposure to pollution
 - Not climate mitigation, and not biodiversity/scenic/amenity value unless a recipient-level model can translate those outcomes into QALY-equivalent welfare
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How representative LEEP's modeled paint portfolio is of the best current marginal environmental-health giving opportunities.** It is the strongest quantitative anchor we found, but it is still only one organization's model.
 2. **Whether the right penalty on predictive, program-specific lead models is closer to 3x or 30x than 10x.** This is the biggest judgment call in the estimate.

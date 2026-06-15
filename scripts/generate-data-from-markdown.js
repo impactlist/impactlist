@@ -30,6 +30,15 @@ const MARKDOWN_VARIABLES = {
   CONTRIBUTION_NOTE: `_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
   RECIPIENT_DEFAULT_JUSTIFICATION: `The cost per life of this recipient is assumed to be the same as for the baseline for each of its cause areas.
 You can see how these cost per life values were calculated by going to the pages of its associated cause areas (see above).`,
+  // Inline definition tooltip for the term "plausible range". Use at the FIRST mention of
+  // a plausible range on a page; the link is rendered as a hover/tap tooltip (not a link)
+  // by MarkdownContent's CustomLink, with the text sourced from src/constants/contentTooltips.js.
+  // PLAUSIBLE_RANGE_CAP is the sentence-case variant for the start of a sentence or label;
+  // PLAUSIBLE_RANGES is the plural (used in the cost-per-life "Point estimates and plausible
+  // ranges" heading, where the tooltip labels the parenthetical ranges in that section).
+  PLAUSIBLE_RANGE: `[plausible range](#tooltip:plausible-range)`,
+  PLAUSIBLE_RANGE_CAP: `[Plausible range](#tooltip:plausible-range)`,
+  PLAUSIBLE_RANGES: `[plausible ranges](#tooltip:plausible-range)`,
 };
 
 // glob does not guarantee result ordering (it's filesystem-dependent), and

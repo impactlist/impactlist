@@ -20,9 +20,9 @@ Let:
 A reasonable summary is:
 
 - **Best guess:** $X \approx 0.1$ percentage points
-- **Plausible positive range:** about **0.03-0.3** percentage points
+- **{{PLAUSIBLE_RANGE_CAP}}:** about **0.03-0.3** percentage points
 
-That is: a strong \$50 million longevity-philanthropy portfolio plausibly raises the chance of a meaningful first-generation gerotherapeutic by about **one tenth of a percentage point**, with a wide positive range around that value.
+That is: a strong \$50 million longevity-philanthropy portfolio plausibly raises the chance of a meaningful first-generation gerotherapeutic by about **one tenth of a percentage point**, with a wide range around that value.
 
 This is a judgment-heavy estimate. There is no clean empirical dataset that directly measures this parameter.
 
@@ -110,7 +110,7 @@ Another way to see the scale is that **0.1 percentage points** is an extremely s
 Putting everything together:
 
 - a reasonable best guess is that **\$50 million of top longevity philanthropy** raises the probability of a meaningful first-generation gerotherapeutic by about **0.1 percentage points**
-- a plausible positive range is about **0.03-0.3 percentage points**
+- a plausible range is about **0.03-0.3 percentage points**
 
 This estimate is:
 

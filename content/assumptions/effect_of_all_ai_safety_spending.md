@@ -16,7 +16,7 @@ Let:
 - $p_{\text{with}}$ = estimated probability of AI-caused extinction this century **in the actual world**, with existing AI safety spending
 - $p_{\text{without}}$ = estimated probability of AI-caused extinction this century in a **counterfactual world** where no such spending occurred
 - $X = p_{\text{without}} - p_{\text{with}}$ in **percentage points**, i.e. absolute risk reduction
-- $Y, Z$ = lower and upper bounds of a **plausible positive range** for $X$
+- $Y, Z$ = lower and upper bounds of a **{{PLAUSIBLE_RANGE}}** for $X$
 
 For concreteness, suppose the current working estimate is:
 
@@ -25,16 +25,14 @@ For concreteness, suppose the current working estimate is:
 The goal is to estimate:
 
 - A **best-guess** value for $X$
-- A **plausible positive range** $Y$–$Z$
+- A **plausible range** $Y$–$Z$
 
 A reasonable summary is:
 
-- **Best-guess:**  
-  $X \approx 0.125$ percentage points
-- **Plausible positive range:**  
-  $Y \approx 0.01$ percentage points, $Z \approx 0.5$ percentage points
+- **Best-guess:** $X \approx 0.125$ percentage points
+- **Plausible range:** $Y \approx 0.01$ percentage points, $Z \approx 0.5$ percentage points
 
-That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.125 percentage points** (for example, from about 10.13% to 10.0%), with a wide positive range of **0.01–0.5 percentage points**.
+That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.125 percentage points** (for example, from about 10.13% to 10.0%), with a wide range of **0.01–0.5 percentage points**.
 
 This corresponds to about:
 
@@ -44,7 +42,7 @@ This corresponds to about:
 
 ---
 
-## 1. Conceptual Framing
+## 1. Conceptual framing
 
 The central quantity of interest is:
 
@@ -76,9 +74,9 @@ To get $X$ from this style of modeling:
 
 ---
 
-## 2. What the Literature Says About "Basis Points per \$1B"
+## 2. What the literature says about "basis points per \$1B"
 
-### 2.1 Rethink Priorities' CURVE Modeling
+### 2.1 Rethink Priorities' CURVE modeling
 
 Rethink Priorities has modeled existential-risk interventions in terms of **basis points of risk reduction per \$1B** as part of its worldview investigations and portfolio tools.
 
@@ -100,7 +98,7 @@ This is a useful lower anchor, but not an AI-specific verdict:
 - It is not specifically about the very best AI safety opportunities
 - It does not fully capture AI-specific channels such as frontier-lab governance and eval norms
 
-### 2.2 EA Community Cost-Effectiveness "Bars"
+### 2.2 EA community cost-effectiveness "bars"
 
 Longtermist discussions often express cost-effectiveness as **dollars per basis point** of existential-risk reduction.
 
@@ -115,7 +113,7 @@ Two useful reference points are:
 
 These heuristics suggest that **highly cost-effective** x-risk opportunities can plausibly live around **10–30 bp per \$1B**, but those are best thought of as **good or very good opportunities**, not the average dollar spent in the whole historical field.
 
-### 2.3 Other Risk Domains
+### 2.3 Other risk domains
 
 Concrete cost-effectiveness models in other existential or global catastrophic risk areas provide additional benchmarks.
 
@@ -134,7 +132,7 @@ Denkenberger et al. compare AGI safety and food-system resilience in [“Long te
 
 That benchmark should be interpreted as an **upper-tail optimistic AGI safety assumption**, not anything like a consensus or median estimate.
 
-### 2.4 Takeaway from the Literature
+### 2.4 Takeaway from the literature
 
 Putting the literature together:
 
@@ -146,7 +144,7 @@ This suggests that if historical AI safety spending really achieved only **0.01 
 
 ---
 
-## 3. AI-Specific Considerations
+## 3. AI-specific considerations
 
 To turn these generic ranges into an estimate for the **realized impact of AI safety spending to date**, we need to ask:
 
@@ -154,7 +152,7 @@ To turn these generic ranges into an estimate for the **realized impact of AI sa
 2. How that spending plausibly affected AI-extinction risk
 3. How much weight to place on positive vs. offsetting channels
 
-### 3.1 What the \$1 Billion Has Funded
+### 3.1 What the \$1 billion has funded
 
 Stephen McAleese's [overview of the AI safety funding situation](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation) remains the best public aggregation we found. Together with [Open Philanthropy's focus-area totals](https://www.openphilanthropy.org/focus/potential-risks-advanced-ai/), it supports the claim that cumulative AI safety-related spending is on the order of **\$1 billion**.
 
@@ -169,7 +167,7 @@ Very roughly, that spending has gone into:
 - **Internal frontier-lab safety and risk-governance work**  
   e.g. preparedness teams, evals, red-teaming, deployment policies, and model-risk frameworks
 
-### 3.2 Positive Channels
+### 3.2 Positive channels
 
 There are several plausible ways this spending reduced extinction risk:
 
@@ -180,7 +178,7 @@ There are several plausible ways this spending reduced extinction risk:
 
 These are not proof of a large risk reduction, but they are clear evidence that the field has produced more than just abstract academic discussion.
 
-### 3.3 Negative or Offsetting Channels
+### 3.3 Negative or offsetting channels
 
 There are also important reasons not to assume every historical dollar was strongly beneficial:
 
@@ -191,7 +189,7 @@ There are also important reasons not to assume every historical dollar was stron
 
 So the relevant quantity is the **net realized effect**, not the gross effect of the best parts of the portfolio.
 
-### 3.4 Underinvestment Relative to the Stakes
+### 3.4 Underinvestment relative to the stakes
 
 The paper by Charles I. Jones, [“The AI Dilemma: Growth versus Existential Risk”](https://www.nber.org/papers/w33602), suggests that optimal spending on AI risk mitigation can be on the order of **1–5% of world GDP per year** under many parameterizations.
 
@@ -204,9 +202,9 @@ current spending is tiny relative to what such models say could be justified. Th
 
 ---
 
-## 4. Converting the Evidence into Values for $X$, $Y$, and $Z$
+## 4. Converting the evidence into values for $X$, $Y$, and $Z$
 
-### 4.1 Best-Guess Tractability
+### 4.1 Best-guess tractability
 
 The literature and cross-checks above suggest:
 
@@ -220,15 +218,12 @@ Why about 12.5 bp?
 - **Lower than the most optimistic bars:** historical spending includes field-building, mixed-effect work, and dollars that were not all cherry-picked home runs
 - **Modestly better than the "good bet" bar:** at about \$80M per bp this is a bit stronger than Linch Zhang's \$100M-per-bp benchmark for "good longtermist spending" — appropriate for an unusually leveraged area, and consistent with a higher (~10%) baseline leaving more absolute risk for a given relative improvement to remove
 
-### 4.2 Mapping to $X$, $Y$, and $Z$ for \$1B of Spending
+### 4.2 Mapping to $X$, $Y$, and $Z$ for \$1B of spending
 
 If cumulative AI safety-related spending to date is roughly \$1B, then:
 
-- **Best-guess absolute reduction in AI-extinction risk this century:**  
-  $X \approx 0.125$ percentage points
-- **Plausible positive range:**  
-  $Y \approx 0.01$ percentage points,  
-  $Z \approx 0.5$ percentage points
+- **Best-guess absolute reduction in AI-extinction risk this century:** $X \approx 0.125$ percentage points
+- **Plausible range:** $Y \approx 0.01$ percentage points, $Z \approx 0.5$ percentage points
 
 Under the working baseline $p_{\text{with}} = 10\%$:
 
@@ -243,7 +238,7 @@ In words:
 
 > A reasonable best guess is that AI safety-related spending to date has reduced AI-caused extinction risk this century by a bit over **one percent in relative terms**, for example from roughly 10.13% to 10.0%.
 
-### 4.3 Implied Cost per Basis Point and per Microprobability
+### 4.3 Implied cost per basis point and per microprobability
 
 With the central estimate $X = 0.125$ percentage points:
 
@@ -279,7 +274,7 @@ Overall, the central estimate and bounds are broadly consistent with:
 
 ---
 
-## 5. Caveats and Uncertainties
+## 5. Caveats and uncertainties
 
 Several important caveats apply:
 
@@ -309,7 +304,7 @@ Putting everything together:
 
 - The **central estimate** for how much roughly \$1B of AI safety-related spending has reduced AI-caused extinction risk this century is:
   - $X \approx 0.125$ percentage points
-- A **plausible positive range** for this reduction is:
+- A **plausible range** for this reduction is:
   - $Y \approx 0.01$ percentage points
   - $Z \approx 0.5$ percentage points
 
@@ -324,6 +319,6 @@ These figures:
 - reflect the fact that AI safety is unusually high leverage but not obviously miraculous
 - leave room for both mixed effects and delayed benefits
 
-From this perspective, it is reasonable to treat $X \approx 0.125$ percentage points, with a positive range of roughly 0.01–0.5, as a good working characterization of the realized effect of AI safety spending to date on AI-extinction risk this century.
+From this perspective, it is reasonable to treat $X \approx 0.125$ percentage points, with a range of roughly 0.01–0.5, as a good working characterization of the realized effect of AI safety spending to date on AI-extinction risk this century.
 
 {{CONTRIBUTION_NOTE}}

@@ -22,7 +22,7 @@ This category is necessarily broader and messier than categories such as [Homele
 
 The estimate is meant to be **all-things-considered**. It counts hardship relief, stress reduction, caregiver respite, social-role functioning, social connection, and local safety in **QALY-equivalent** terms. The hard question is how much of that welfare strong local charities buy per dollar, not whether those effects sit outside the metric.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$29,000 (\$10,000–\$185,000)
 - **Start time:** 1 year
@@ -123,7 +123,7 @@ So the portfolio mix matters a lot. This is appropriate: a city-focused charity 
 
 #### Range
 
-The stated range is a practical sensitivity range, not a full confidence interval.
+The stated range is kept deliberately wide because these models are rough.
 
 **Optimistic case**
 
@@ -151,9 +151,9 @@ $$
 \dfrac{1}{0.10/50000 + 0.20/100000 + 0.70/500000} \approx 185{,}000
 $$
 
-Rounded, that gives a practical range of about **\$10,000-\$185,000/QALY**.
+Rounded, that gives a plausible range of about **\$10,000-\$185,000/QALY**.
 
-### Start Time
+### Start time
 
 The **1-year** start time reflects that local-community charities usually begin delivering benefits quickly. Food support, caregiver support, crisis response, smoking-cessation outreach, and neighborhood programs can all begin affecting participants within months, even if some downstream health gains show up later.
 
@@ -167,7 +167,7 @@ The **10-year** duration reflects the fact that this is a mixed-service category
 
 So although a minority of the portfolio has very long downstream tails, much of it does not. A 10-year window is therefore a better central approximation for a mixed local-community portfolio than a duration anchored mainly on the longest-lived interventions.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 This category is best read as a model of **strong local mixed-service charities in wealthy countries**, not the average unrestricted donation to any community institution.
 
@@ -186,7 +186,7 @@ This estimate is **not** a good model of:
 - pure health charities, which should usually be modeled under [Health / Medicine](/category/health-medicine)
 - arts, religious, or political organizations, which belong in their own categories
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How broad the real recipient mix is.** If the typical local-community recipient is closer to a food-and-health nonprofit than to a civic umbrella institution, the category is better than **\$29,000/QALY**. If it is mostly the latter, it is worse.
 

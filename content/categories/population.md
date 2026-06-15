@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from charities that increase the number of wanted births in rich countries through noncoercive means, such as family-policy research and advocacy, fertility-care access, and related policy work. Most of the value comes from the added person's own lifetime wellbeing. Smaller but still real benefits likely also accrue to parents who achieve their desired family size, and there are probably some positive broader spillovers from additional people in aging rich societies. The estimate therefore treats the added person's own life as the main driver while also including a modest explicit allowance for secondary effects.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$600 (\$240-\$2,000)
 - **Start time:** 2 years
@@ -48,7 +48,7 @@ The same NBER work finds that when Sweden removed public IVF coverage at age 40,
 
 ### 4. A reasonable central estimate is about \$45,000 per additional wanted birth
 
-The family-policy evidence and the fertility-care evidence point to a similar order of magnitude. Some interventions may come in closer to \$20,000 per extra birth; weaker or less targeted interventions may be closer to \$100,000. For a category-level estimate, **\$45,000 per additional wanted birth** is a reasonable central number, with a broad practical range of **\$20,000-\$100,000**.
+The family-policy evidence and the fertility-care evidence point to a similar order of magnitude. Some interventions may come in closer to \$20,000 per extra birth; weaker or less targeted interventions may be closer to \$100,000. For a category-level estimate, **\$45,000 per additional wanted birth** is a reasonable central number, with a broad plausible range of **\$20,000-\$100,000**.
 
 This should be interpreted as the cost of actually causing one more wanted birth, not the cost of serving one family or publishing one piece of research. For research and policy organizations, the crucial question is whether their indirect route to policy change beats or at least approaches the direct public-policy benchmarks above. Using those public-policy and fertility-care anchors is better than pretending there is a precise philanthropy-specific estimate. ([Milligan 2002](https://www.nber.org/papers/w8845), [e61 Institute](https://e61.in/how-financial-incentives-shape-fertility-in-australia/), [Agha, Chorniy, and Canaan 2024](https://www.nber.org/papers/w32445), [Hoorens et al. 2024](https://academic.oup.com/humrep/article/39/5/981/7618943))
 
@@ -95,9 +95,9 @@ The range comes from:
 - **Optimistic:** \$20,000 per additional birth, 80 QALYs for the added person, 3 parental QALYs, and 1 broader-spillover QALY gives about **\$240/QALY**
 - **Pessimistic:** \$100,000 per additional birth, 50 QALYs for the added person, 0.5 parental QALYs, and 0 broader-spillover QALYs gives about **\$2,000/QALY**
 
-So the practical sensitivity range is **\$240-\$2,000/QALY**.
+So our plausible range is **\$240-\$2,000/QALY**.
 
-### Start Time
+### Start time
 
 The **2-year** start time reflects delay from research or advocacy to uptake, from policy change or coverage change to household response, and then from conception to birth. Some direct fertility-care support could produce effects faster than this, but 2 years is a reasonable category-level average.
 
@@ -105,7 +105,7 @@ The **2-year** start time reflects delay from research or advocacy to uptake, fr
 
 The **80-year** duration is meant to capture the added person's lifetime stream of wellbeing, not an annualized policy effect. It is a rough proxy for the period over which the main welfare gains from an additional wanted life accrue.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 This category is meant for charities that plausibly increase wanted births through autonomy-respecting means, such as:
 
@@ -121,7 +121,7 @@ It is **not** meant for:
 - generic demography or academic work with no plausible path to changing births
 - ordinary child welfare or family service charities whose main effects are better modeled in other categories
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **The real philanthropic cost per additional wanted birth.** The public-policy and fertility-care evidence is useful, but the hardest question is whether research and advocacy organizations can cause births at similar or better cost.
 2. **Timing versus completed fertility.** Some interventions mainly shift births earlier rather than increasing the total number of children people eventually have.

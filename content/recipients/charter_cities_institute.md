@@ -20,7 +20,7 @@ We assign the Charter Cities Institute (CCI) a **cost per QALY of \$400**. The m
 
 This effect captures the welfare gains from creating "Charter Cities": new urban jurisdictions in the Global South with special governance rights. While the baseline "Improving Institutions" cause focuses on legislative reform in high-income nations (e.g., zoning in the US), CCI attempts to replicate the "Singapore effect" in Low-to-Middle Income Countries (LMICs). We model this as a high-variance, high-reward arbitrage: accepting a lower probability of success in exchange for vastly higher marginal utility of income.
 
-## Point Estimates
+## Point estimates
 
 - **Cost per QALY:** \$400
 
@@ -43,13 +43,13 @@ $$\text{Relative effectiveness} = \frac{EV_{CCI}}{EV_{Base}}$$
 
 We decompose Expected Value ($EV$) into two components: Probability of Success ($P$) and Value of Outcome ($V$).
 
-### 1. Probability Ratio
+### 1. Probability ratio
 
 The baseline (US zoning reform) is estimated to have a 12% success rate, while CCI (new city governance) is estimated at 3%. This makes CCI approximately 4x less reliable:
 
 $$P_{ratio} = \frac{P_{CCI}}{P_{Base}} = \frac{3\%}{12\%} = 0.25$$
 
-### 2. Valuation Ratio
+### 2. Valuation ratio
 
 This captures how efficiently economic gains convert to QALYs:
 

@@ -22,7 +22,7 @@ This effect captures welfare gains from reducing the probability of a **global c
 
 We intentionally model a catastrophe that is worse than a limited regional exchange but narrower than literal human extinction. If you think nuclear war also carries substantial extinction or centuries-long civilizational-collapse risk, the true cost per microprobability would be lower than the estimate on this page.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per microprobability:** \$2.4 million (\$0.5–\$12 million)
 - **Population fraction affected:** 0.9 (0.7–1.0)
@@ -38,14 +38,14 @@ We intentionally model a catastrophe that is worse than a limited regional excha
 2. Direct blast and radiation deaths from a US-Russia exchange are likely on the order of **tens of millions**; Rethink Priorities' central estimate is about **51 million** direct deaths. ([Rodriguez 2019](https://rethinkpriorities.org/research-area/how-many-people-would-be-killed-as-a-direct-result-of-a-us-russia-nuclear-exchange/))
 3. Current nuclear risk is elevated. Open Nuclear Network's 2024 survey found median forecasts of **5%** from experts and **1%** from superforecasters for a >10 million-death nuclear catastrophe by **2045**, while SIPRI reports that all nine nuclear-armed states continued modernizing their arsenals in 2024 and that the expiry of **New START on February 5, 2026** raises the prospect of an unregulated arms buildup. ([ONN 2024](https://opennuclear.org/en/open-nuclear-network/publication/can-humanity-achieve-century-nuclear-peace), [SIPRI 2025 world nuclear forces](https://www.sipri.org/yearbook/2025/06), [SIPRI 2025 arms control](https://www.sipri.org/yearbook/2025/08))
 4. Philanthropic funding specifically focused on nuclear risk reduction is only about **\$30 million per year** after the MacArthur Foundation's exit. ([Founders Pledge 2023](https://www.founderspledge.com/research/global-catastrophic-nuclear-risk-a-guide-for-philanthropists))
-5. A mature but still tiny nuclear-philanthropy field spending roughly **\$600 million over 20 years** plausibly reduces 20-year catastrophe risk by about **0.025 percentage points**, with a practical positive range around **0.005–0.12 percentage points**. ([See detailed justification](/assumption/effect-of-nuclear-risk-philanthropy))
+5. A mature but still tiny nuclear-philanthropy field spending roughly **\$600 million over 20 years** plausibly reduces 20-year catastrophe risk by about **0.025 percentage points**, with a plausible range around **0.005–0.12 percentage points**. ([See detailed justification](/assumption/effect-of-nuclear-risk-philanthropy))
 6. World population at the relevant horizon is about **10.3 billion**. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
 7. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing roughly **40 years** of otherwise expected life cost on the order of **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 8. Severe survivors of a global catastrophic nuclear war lose roughly **7 QALYs** on average through some combination of shortened life expectancy from famine, disease, and infrastructure collapse, plus years of much lower quality of life during recovery.
 
 ## Details
 
-### Cost per Microprobability
+### Cost per microprobability
 
 The cleanest way to model this cause area is:
 
@@ -74,13 +74,11 @@ The load-bearing input here is Assumption 5. The dedicated assumption page argue
 - **Pessimistic:** \$600M buys only **0.005 percentage points** = 50 microprobabilities -> **\$12 million** per microprobability
 - **Optimistic:** \$600M buys **0.12 percentage points** = 1,200 microprobabilities -> **\$500,000** per microprobability
 
-So the practical sensitivity range is **\$500,000–\$12 million per microprobability**.
-
-This should be read as a practical sensitivity range, not a full uncertainty interval. The true uncertainty is wider. If one thought that current philanthropy has almost no leverage over great-power nuclear risk, the estimate would get worse quickly. If one thought philanthropy can occasionally unlock extremely leveraged crisis-management or doctrine wins, the estimate could get much better.
+Those parameter-sweep bounds are tighter than our true uncertainty, so we widen them into a plausible range of roughly **\$300,000–\$30 million per microprobability**. The wider tails reflect the scenarios the sweep holds fixed: if current philanthropy has almost no leverage over great-power nuclear risk the cost is much higher, while if philanthropy can occasionally unlock extremely leveraged crisis-management or doctrine wins it is lower.
 
 One reason not to be more optimistic than this by default is that nuclear philanthropy is trying to influence outcomes that are highly path-dependent, politically constrained, and hard to measure. One reason not to be much more pessimistic is that the field is extremely neglected and some of the relevant levers really are high leverage. A single avoided escalation pathway can matter enormously.
 
-### Population Fraction Affected
+### Population fraction affected
 
 The point estimate (0.9) and range (0.7–1.0) reflect that a catastrophe of the kind modeled here would affect nearly everyone through:
 
@@ -90,7 +88,7 @@ The point estimate (0.9) and range (0.7–1.0) reflect that a catastrophe of the
 
 So even people far from the detonations would often still face severe shortages of calories, medicine, and state protection. We stop short of **1.0** only because some remote communities and a minority of countries might avoid the worst direct harms.
 
-### QALY Improvement per Affected Person per Year
+### QALY improvement per affected person per year
 
 The point estimate (0.75) and range (0.5–0.9) are derived by distributing total QALY losses across the affected population and duration.
 
@@ -135,7 +133,7 @@ $$
 
 This is extremely good by ordinary global-health standards, but that is a general feature of catastrophe-risk models when both the stakes and tractability are nontrivial.
 
-### Start Time
+### Start time
 
 The 15-year start time means the main modeled risk arrives around **2041**.
 
@@ -156,7 +154,7 @@ The 30-year duration is an equivalent-impact window that balances three things:
 
 So 30 years should not be read as a forecast that recovery takes exactly 30 years. It is an accounting device that spreads the catastrophe's total welfare losses over a period long enough to reflect both the acute shock and the life-years destroyed by premature death.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates assume marginal donations go to **high-leverage nuclear-risk-reduction organizations**, not to the average anti-war or peacebuilding organization.
 
@@ -175,7 +173,7 @@ We are **not** modeling:
 - nuclear energy philanthropy
 - broad foreign-policy work with only weak relevance to catastrophic nuclear risk
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How severe nuclear winter would really be in the relevant scenarios.** Xia et al. is the best current quantitative anchor, but uncertainty remains about soot generation, adaptation, trade responses, and food substitution.
 

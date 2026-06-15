@@ -26,7 +26,7 @@ The estimate is **not** for the average partisan donation. Most political dollar
 
 We also intentionally leave out the most speculative benefits and harms of politics, such as broad effects on national identity, civic culture, or very long-run ideological trajectories. Those channels may matter a lot, but they are too easy to manipulate with storytelling. This page instead tries to anchor on the narrower question: **how much near-term welfare can strong political giving buy through changing election-linked policy?**
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$20,000 (\$3,000–\$300,000)
 - **Start time:** 1 year
@@ -40,7 +40,7 @@ We also intentionally leave out the most speculative benefits and harms of polit
 2. Turnout mobilization effects are more robust than persuasion effects. A large review of field experiments finds average complier effects around **2.54 percentage points** for door-to-door canvassing, about **0.98 percentage points** for live commercial phone calls, and about **0.16 percentage points per conventional mailing**, while social-pressure mail can do much more. Newer meta-analysis finds that these tactics still work in high-salience elections but are attenuated relative to low-salience contests. ([Green, McGrath & Aronow 2013](https://cpb-us-e1.wpmucdn.com/sites.northwestern.edu/dist/b/3288/files/2019/10/2013-GMA-Field-Experiments-Turnout.pdf), [Mann & Haenschen 2024](https://research.voteamerica.org/a-meta-analysis-of-voter-mobilization-tactics-by-electoral-salience/))
 3. Large modern campaigns can still alter outcomes at scale. Enos and Fowler estimate that the 2012 presidential campaigns **combined** increased turnout in highly targeted states by **7-8 percentage points** on average, largely through ground campaigning, and found no evidence of diminishing marginal returns to ground campaigning at that scale. ([Enos & Fowler 2018](https://www.cambridge.org/core/journals/political-science-research-and-methods/article/aggregate-effects-of-largescale-campaigns-on-voter-turnout/20C500B0DE62227873FD24CB3555F779))
 4. Broadcast advertising also matters, especially down-ballot. Sides, Vavreck, and Warshaw find television ad effects are **2-4x larger** in gubernatorial, House, and Senate races than in presidential races, and Hewitt et al. use a **\$200 per vote** benchmark for TV advertising when modeling campaign persuasion. ([Sides, Vavreck & Warshaw 2022](https://www.cambridge.org/core/journals/american-political-science-review/article/effect-of-television-advertising-in-united-states-elections/29ED18D9FB4B7AA52F6404ECF15F4114), [Hewitt et al. 2024](https://doi.org/10.1017/S0003055423001387))
-5. After heavily discounting for counter-spending, saturation, imperfect targeting, and the fact that many dollars do not land in the very best tactical opportunities, a well-targeted **\$10 million** political donation is assumed to raise win probability by about **1 percentage point** in a true toss-up, with a practical range around **0.5-1.5 percentage points** for the sensitivity analysis below.
+5. After heavily discounting for counter-spending, saturation, imperfect targeting, and the fact that many dollars do not land in the very best tactical opportunities, a well-targeted **\$10 million** political donation is assumed to raise win probability by about **1 percentage point** in a true toss-up, with a plausible range around **0.5-1.5 percentage points** for the sensitivity analysis below.
 6. A single electoral cycle can easily put at least the low billions of clearly welfare-relevant policy at stake. The clearest narrow anchor is U.S. global health appropriations: KFF reports that the **FY 2027 President's Budget Request released on April 3, 2026** proposed the main Global Health Programs account at **\$5.1 billion**, versus **\$9.4 billion in FY 2026**, a **\$4.3 billion** gap. Using a **\$1.5 billion** welfare-relevant policy wedge over one term is therefore a narrowly scoped working estimate rather than a claim about the full stakes of major races. ([KFF FY27 Budget Request](https://www.kff.org/global-health-policy/global-health-funding-in-the-fy-2027-presidents-budget-request/))
 7. Because Assumption 6 is specifically anchored to global-health appropriations, the most relevant outside view for converting that wedge into QALYs is the global-health aid and LMIC health-spending literature rather than rich-country technology-appraisal thresholds. Bendavid et al. report median ICERs around **\$8.2**, **\$9.7**, **\$48.9**, and **\$67.7 per DALY averted** for TB, malaria, HIV, and maternal, newborn, and child health in aid-recipient settings; Fan et al. 2024 also find that **61%** of recent health-aid projects mention interventions on a Disease Control Priorities-style list of highly cost-effective interventions. At the other end, Daroudi et al. estimate **cost per DALY averted** of around **\$998** in low-HDI countries and **\$6,522** in medium-HDI countries. Since this is a mortality-heavy global-health context, treating DALYs and QALYs as approximately interchangeable is good enough for this parameter. A political appropriation dollar should land well above the direct-intervention frontier because it passes through legislation, agencies, and mixed portfolios before reaching beneficiaries, so **\$1,500/QALY** is a reasonable middle estimate for the global-health slice of the policy wedge. ([Bendavid et al. 2015](https://pubmed.ncbi.nlm.nih.gov/26153314/), [Fan et al. 2024](https://www.cgdev.org/publication/cost-effectiveness-health-aid-exploratory-quantitative-analysis), [Daroudi et al. 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC7863358/))
 8. A single close race, ballot measure, or candidate-selection contest is assumed to have about **5% marginal influence** on whether the modeled policy wedge is realized. This is meant to average across many cases where one contest matters little and a smaller number of cases where chamber control, veto power, agenda control, or a closely divided legislature makes one outcome highly consequential. As a rough empirical anchor, Cook Political Report's December 19, 2024 post-election review said **a little less than 10% of House races were truly competitive**, which is roughly **40 of 435 seats**. ([Cook Political Report 2024 House review](https://www.cookpolitical.com/analysis/house/house-overview/twelve-things-we-learned-2024-house-elections))
@@ -178,12 +178,12 @@ Using **5%** says: most high-leverage political donations will not decide histor
 
 ### Range
 
-The practical sensitivity range is wide because all four main parameters can move a lot.
+Our plausible range is wide because all four main parameters can move a lot.
 
 - **Pessimistic:** 0.5% win-probability shift, 3% pivotality, \$750 million policy wedge, and \$3,000/QALY conversion gives about **\$270,000/QALY**.
 - **Optimistic:** 1.5% win-probability shift, 8% pivotality, \$2 billion policy wedge, and \$750/QALY conversion gives about **\$3,100/QALY**.
 
-Rounded, that gives a practical range of about **\$3,000-\$300,000/QALY**.
+Rounded, that gives a plausible range of about **\$3,000-\$300,000/QALY**.
 
 That range is deliberately wide, because political spending really does have a lumpy, hits-based structure:
 
@@ -193,7 +193,7 @@ That range is deliberately wide, because political spending really does have a l
 
 The point estimate is therefore best interpreted as a central all-things-considered guess for **strong** political opportunities, not as a claim that the category is tightly measured.
 
-### Start Time
+### Start time
 
 The **1-year** start time reflects the lag from donation to election to governing action. A donation may be spent within weeks, but the benefits only begin if the backed side wins and then influences a budget, law, or executive action. One year is therefore a reasonable round estimate for the first meaningful welfare effects.
 
@@ -201,7 +201,7 @@ The **1-year** start time reflects the lag from donation to election to governin
 
 The **4-year** duration reflects one governing term. Some policy gains last longer and others are reversed faster, but a term-length window fits election-dependent appropriations and regulatory priorities without baking in large persistence assumptions.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are mainly for:
 
@@ -219,7 +219,7 @@ They are **not** estimates for:
 
 Those activities may still matter, but they should either be modeled much worse than this or placed in a different category.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How much marginal money still changes outcomes in saturated, polarized elections.** The literature clearly rejects "money does nothing," but it also rejects simplistic models where every contact or ad works well.
 2. **How often donors are genuinely marginal.** Some extra spending is partly offset by other donors, parties, or super PACs.

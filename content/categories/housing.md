@@ -27,7 +27,7 @@ The main benefit is not that housing restores recipients to perfect health. It i
 
 This does not cover broad housing-supply reform, zoning reform, or generic affordable-housing construction.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$30,000 (\$15,000-\$80,000)
 - **Start time:** 0 years
@@ -125,13 +125,13 @@ Rounded, that gives a point estimate of **\$30,000/QALY**.
 
 **Range**
 
-The stated **\$15,000-\$80,000/QALY** range is a practical sensitivity range, not a full confidence interval.
+The stated **\$15,000-\$80,000/QALY** range is our plausible range, kept wide because these models are rough.
 
 The low end corresponds to unusually strong targeting: rapid-rehousing / prevention programs, especially good hospital-discharge models, or other interventions that mostly buy cheap housing stability for very high-risk clients.
 
 The high end corresponds to a mix tilted toward more intensive supportive-housing programs, weaker health spillovers, lower persistence after services end, or more capital-heavy / medically complex service models.
 
-### Start Time
+### Start time
 
 We use a **0-year** start time because the main mechanism here is fast. Rent-arrears assistance, move-in support, rapid rehousing, and hospital discharge services typically affect housing status within weeks or months, not after a multiyear lag.
 
@@ -147,7 +147,7 @@ We use a **2-year** duration because that is where the direct evidence base is s
 
 Some specific interventions may have longer tails than 2 years, and the OUD model uses a lifetime horizon. But category-level estimates should be anchored to directly observed persistence, not to the most optimistic extrapolation. The Community Guide also notes that long-run health effects remain under-studied, which supports a 2-year default duration.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 This estimate is best read as a model of **strong direct-service homelessness / housing philanthropy** in high-income settings.
 
@@ -166,7 +166,7 @@ Poor fits include:
 - broad land-use or zoning reform, which should usually be modeled as an institutional-reform bet instead
 - shelters or service providers that mainly offer temporary relief without much durable housing placement
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **What the marginal intervention mix really is.** The category looks much better if marginal dollars mostly fund prevention, rapid rehousing, or strong hospital-discharge models, and worse if they mostly fund expensive permanent-supportive-housing slots.
 2. **How large the housed-vs-unhoused utility gap really is.** This is one of the biggest drivers of the estimate. Treating housed clients as utility 1.0 is too optimistic, but there is still real uncertainty about the right value.

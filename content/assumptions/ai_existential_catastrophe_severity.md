@@ -15,7 +15,7 @@ The category page models a broader event than extinction alone. It includes:
 - irreversible human disempowerment by AI systems
 - stable totalitarian lock-in or other permanent global conditions that drastically curtail humanity's future
 
-**Summary:** A reasonable central estimate for the baseline catastrophe class is **0.77 QALY-equivalents lost per affected person per year**, with a plausible range of **0.5–0.9**. This is a weighted average of roughly **0.9** for extinction and **0.45** for permanent non-extinction catastrophes, using the probability page's current decomposition (10% extinction plus 4 percentage points non-extinction). If that probability split changes, this weighted severity should be recalculated. For the category page's cost-effectiveness model, the relevant severity is that of the **averted** risk rather than the baseline class; because safety spending skews toward extinction prevention, that works out slightly higher, at about **0.80** (see Section 4).
+**Summary:** A reasonable central estimate for the baseline catastrophe class is **0.77 QALY-equivalents lost per affected person per year**, with a {{PLAUSIBLE_RANGE}} of **0.5–0.9**. This is a weighted average of roughly **0.9** for extinction and **0.45** for permanent non-extinction catastrophes, using the probability page's current decomposition (10% extinction plus 4 percentage points non-extinction). If that probability split changes, this weighted severity should be recalculated. For the category page's cost-effectiveness model, the relevant severity is that of the **averted** risk rather than the baseline class; because safety spending skews toward extinction prevention, that works out slightly higher, at about **0.80** (see Section 4).
 
 ---
 

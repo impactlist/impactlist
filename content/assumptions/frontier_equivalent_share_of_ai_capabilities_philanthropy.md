@@ -13,13 +13,13 @@ This document asks:
 
 This quantity is not directly observable. It is an **inference** that combines evidence about where frontier progress happens, how much capital is already in the field, and what kinds of projects philanthropy in this area actually funds.
 
-**Summary:** We use **30 cents of frontier-equivalent acceleration per donated dollar** as our point estimate, with a plausible range of **10–60 cents**.
+**Summary:** We use **30 cents of frontier-equivalent acceleration per donated dollar** as our point estimate, with a {{PLAUSIBLE_RANGE}} of **10–60 cents**.
 
 This is **not** the same quantity as the ordinary-benefit additionality used in [AGI Development](/cause/ai-capabilities). That number asks how much extra welfare would fail to happen without the donation. This number asks how much the donation moves the technical frontier. A dollar can therefore have low ordinary additionality but higher frontier impact if frontier actors can quickly copy and absorb the output.
 
 ---
 
-## 1. Why This Number Is Not Close to 100%
+## 1. Why this number is not close to 100%
 
 The frontier is now overwhelmingly driven by industry.
 
@@ -34,7 +34,7 @@ So it would be clearly wrong to model a dollar here as **\$1 of fully additional
 
 ---
 
-## 2. Why This Number Is Not Close to Zero Either
+## 2. Why this number is not close to zero either
 
 Even though private capital dominates, it would also be wrong to model the frontier effect as negligible.
 
@@ -58,7 +58,7 @@ These examples show why we should not act as though all philanthropy in this spa
 
 ---
 
-## 3. Our Point Estimate: 30 Cents on the Dollar
+## 3. Our point estimate: 30 cents on the dollar
 
 Putting the above together:
 
@@ -74,7 +74,7 @@ $$
 
 That is, **\$1 donated here is best modeled as about \$0.30 of frontier-equivalent capability acceleration**.
 
-### Plausible Range
+### Plausible range
 
 - **0.10** if the marginal dollar mainly funds public-interest deployment, broad education, or research that is only loosely tied to the frontier.
 - **0.60** if the marginal dollar goes to an open-model effort, a near-frontier university lab, or a recipient whose work is quickly incorporated into frontier systems.
@@ -85,7 +85,7 @@ We do not use values close to **0.0** because that would ignore how much academi
 
 ---
 
-## 4. Why This Assumption Matters
+## 4. Why this assumption matters
 
 This single parameter is doing important work in the AGI Development cause:
 

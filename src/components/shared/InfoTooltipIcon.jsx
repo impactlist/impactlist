@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from './Tooltip';
 
-const InfoTooltipIcon = ({ content, className = '', iconClassName = 'h-4 w-4' }) => {
+const InfoTooltipIcon = ({ content, className = '', iconClassName = 'h-4 w-4', ariaLabel }) => {
   return (
     <span className={`inline-flex ${className}`.trim()}>
-      <Tooltip content={content}>
+      <Tooltip content={content} ariaLabel={ariaLabel}>
         <svg className={iconClassName} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden={true}>
           <path
             strokeLinecap="round"
@@ -23,6 +23,7 @@ InfoTooltipIcon.propTypes = {
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   className: PropTypes.string,
   iconClassName: PropTypes.string,
+  ariaLabel: PropTypes.string,
 };
 
 export default InfoTooltipIcon;

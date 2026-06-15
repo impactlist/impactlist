@@ -50,7 +50,7 @@ This page justifies three especially important judgment calls:
 
 - using **\$400/QALY** for the counterfactual cost-effectiveness of influenced capital
 - using **40%** for the direct improvement in that capital's all-things-considered welfare output
-- using a broader-strategic channel worth about **100%** of the direct philanthropic channel, with a practical range of **0%-300%**
+- using a broader-strategic channel worth about **100%** of the direct philanthropic channel, with a {{PLAUSIBLE_RANGE}} of **0%-300%**
 
 ## 1. Why use an all-things-considered QALY model?
 
@@ -77,7 +77,7 @@ The site's own category estimates already suggest that serious opportunities spa
 
 Coefficient Giving's public bar is even stronger: it says its current minimum grantmaking bar is roughly equivalent to **one healthy life-year per \$50** spent. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/))
 
-That does **not** mean the counterfactual capital influenced by GPR is usually as weak as ordinary philanthropy or as strong as Coefficient's own current frontier. A central figure of **\$400/QALY** is a reasonable middle ground for capital that is already trying to do good, but is still materially improvable by better prioritization. A practical range of **\$200-\$1,000/QALY** reflects donors who are respectively closer to or further from the frontier.
+That does **not** mean the counterfactual capital influenced by GPR is usually as weak as ordinary philanthropy or as strong as Coefficient's own current frontier. A central figure of **\$400/QALY** is a reasonable middle ground for capital that is already trying to do good, but is still materially improvable by better prioritization. A plausible range of **\$200-\$1,000/QALY** reflects donors who are respectively closer to or further from the frontier.
 
 ## 3. Why use 40% for the direct improvement factor?
 
@@ -94,7 +94,7 @@ So the central question is not whether a large improvement is possible in princi
 
 The public evidence supports a meaningful but not extreme central figure. Rethink Priorities says its GHD research supported major donors whose program budgets total **hundreds of millions of dollars**, and publicly reports one case where its research shifted **\$8 million** toward a more cost-effective lead intervention. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/), [RP impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/)) RP also describes cross-cause prioritization tools that compare very different downstream priorities rather than making only narrow within-cause tweaks. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) Coefficient Giving says it has helped Good Ventures give **over \$4 billion** historically and directed **over \$100 million** from non-Good-Ventures donors in 2024, with that number more than doubling in 2025 so far. ([Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
 
-Taken together, that evidence supports a model where the average influenced dollar gets materially better, but not one where every influenced dollar is pushed all the way to the current best opportunity. A direct improvement factor of **40%**, with a practical range of **15%-80%**, is therefore a moderate central choice.
+Taken together, that evidence supports a model where the average influenced dollar gets materially better, but not one where every influenced dollar is pushed all the way to the current best opportunity. A direct improvement factor of **40%**, with a plausible range of **15%-80%**, is therefore a moderate central choice.
 
 ## 4. Why model broader strategic spillovers as a separate channel?
 
@@ -111,7 +111,7 @@ That suggests the non-donation effects of strong GPR should not be set to zero. 
 
 These are not obviously tiny effects relative to later grant reallocation. For some of the strongest GPR, they may be a large part of the point. A cause-prioritization report that changes which field a donor backs can also change who later enters that field, which institutions get built around it, and which policy ideas become live options.
 
-At the same time, these spillovers are harder to attribute cleanly than later grants, so they should not be treated as measured with the same confidence. The category therefore models them as a separate strategic channel worth about **100%** of the direct philanthropic channel in the central case, with a practical range of **0%-300%**.
+At the same time, these spillovers are harder to attribute cleanly than later grants, so they should not be treated as measured with the same confidence. The category therefore models them as a separate strategic channel worth about **100%** of the direct philanthropic channel in the central case, with a plausible range of **0%-300%**.
 
 That central figure should not be read as saying spillovers are exactly equal to later philanthropic effects. It is a rough claim that, for frontier-style GPR, the broader strategic effects are plausibly of the **same order of magnitude** as the later grant-allocation effects, not merely a 10% or 25% footnote.
 

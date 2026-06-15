@@ -45,7 +45,7 @@ These are also **different notions of additionality**. Ordinary additionality as
 
 This effect captures non-transformative gains from AI as a general-purpose technology: faster knowledge work, better software and services, scientific assistance, and other quality-of-life improvements before transformative AI dominates the picture.
 
-### Point Estimates
+### Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$104,000 (\$40,000–\$800,000)
 - **Start time:** 3 years
@@ -105,7 +105,7 @@ That number should not be read as fully netting out every ordinary downside. Som
 
 It is also worth noting that the \$100,000/QALY conversion benchmark is mainly a rich-country benchmark. To the extent that AI capability gains substantially improve the lives of lower-income populations, the true cost per QALY would be somewhat lower than this estimate suggests.
 
-#### Start Time
+#### Start time
 
 We use a 3-year start time because AI deployment is already happening, but philanthropic funding still usually needs time to turn into tools, products, model releases, adoption, and diffusion.
 
@@ -121,7 +121,7 @@ This effect captures the value of bringing forward a **genuinely very good** tra
 
 Importantly, this is **not** the probability that advanced AI is merely "on balance good." It is the probability that capability acceleration causes an earlier world that is so much better than the baseline that it is reasonable to model the gap as a large QALY gain.
 
-### Point Estimates
+### Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$17,000 (\$5,000–\$150,000)
 - **Start time:** 15 years
@@ -188,7 +188,7 @@ Because this timing model multiplies several uncertain terms, different plausibl
 
 As with the doom effect below, this timing model assumes that small marginal capability pushes translate roughly linearly into timeline acceleration. That assumption is obviously imperfect: real progress may involve thresholds, bottlenecks, and nonlinear race dynamics. We use linearity here as the cleanest tractable baseline.
 
-#### Start Time
+#### Start time
 
 We use a 15-year start time because the point of this effect is not today's copilots or narrow models. It is earlier arrival of genuinely transformative systems, which still seems more likely to matter in the 2030s or 2040s than in the next few years.
 
@@ -204,7 +204,7 @@ This effect captures the harm from AI capability work slightly increasing the pr
 
 Note: The QALY improvement per year is **-0.9** (negative), indicating this is a harmful effect.
 
-### Point Estimates
+### Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per microprobability (increase):** \$167 million (\$30 million–\$2 billion)
 - **Population fraction affected:** 1.0
@@ -225,7 +225,7 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 
 ### Details
 
-#### Cost per Microprobability
+#### Cost per microprobability
 
 We use the same frontier-acceleration model as in Effect 2, but now apply it to extinction risk instead of upside:
 
@@ -254,11 +254,11 @@ So we use **\$167 million** per +1 microprobability as the point estimate.
 
 This is strongly negative on any worldview that gives substantial weight to future generations.
 
-#### Population Fraction Affected
+#### Population fraction affected
 
 The point estimate is 1.0 because extinction kills everyone.
 
-#### QALY Improvement per Affected Person per Year
+#### QALY improvement per affected person per year
 
 The value is **-0.9** because this effect is harm, not benefit, and because the symmetric positive AI-risk category uses 0.9 QALYs per human life-year rather than 1.0.
 
@@ -275,7 +275,7 @@ $$
 
 This downside becomes much larger if you extend the time horizon beyond 100 years.
 
-#### Start Time
+#### Start time
 
 We use a 15-year start time for the same reason as in Effect 2: the relevant risk is not from today's narrow uses alone, but from the period when highly capable systems plausibly become strategically decisive.
 
@@ -287,7 +287,7 @@ The duration is controlled by the global time limit parameter. Extinction has es
 
 ---
 
-## Worked Example at Default Settings
+## Worked example at default settings
 
 At the default 100-year time horizon and default 0% discount rate, the central estimates imply the following rough magnitudes per **\$1 million donated**:
 
@@ -305,7 +305,7 @@ This is the single most important takeaway from the default model: at ordinary t
 
 ---
 
-## What Kinds of Projects Are We Modeling?
+## What kinds of projects are we modeling?
 
 These estimates are meant for donations whose **main effect is to accelerate AI capabilities**, such as:
 
@@ -322,7 +322,7 @@ We are **not** modeling:
 
 Recipient-level multipliers matter a lot here. A dollar to OpenAI, Anthropic, or a near-frontier university lab should not be treated as identical.
 
-## Key Uncertainties
+## Key uncertainties
 
 These numbers are rough order-of-magnitude judgments. The biggest uncertainties are:
 

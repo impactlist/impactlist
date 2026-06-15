@@ -20,7 +20,7 @@ This effect captures charities that improve health and wellbeing by increasing d
 
 We do **not** model preservation, elite arts production, or broad subsidy to cultural institutions unless they clearly translate into direct, attributable participation gains. The evidence for those broader pathways is much weaker from a donor-effectiveness perspective.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$23,000 (\$9,000–\$60,000)
 - **Start time:** 1 year
@@ -99,7 +99,7 @@ One factor not explicitly modeled above is the funding counterfactual: what frac
 
 We also do **not** separately credit NHS savings or productivity gains in the central figure, even though some studies and the DCMS report suggest they exist. That keeps the estimate focused on participant welfare and avoids double counting.
 
-### Start Time
+### Start time
 
 The 1-year start time reflects grant cycles, partnership-building, facilitator hiring, and participant recruitment. Once a programme is operating, benefits can begin within weeks, but the time from donation to a functioning referral or outreach pipeline is often several months.
 

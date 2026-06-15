@@ -24,7 +24,7 @@ This effect captures welfare gains from **domestic social-justice philanthropy i
 
 This is a messy, upstream category. The strongest opportunities here can be genuinely valuable because a successful rights expansion can improve the lives of many people at once for years. But a large share of real-world "social justice" philanthropy is several steps removed from outcomes, and some common activities, especially generic workplace DEI programming, have weak durable evidence. So the right model is **not** "the best measured civil-rights win," but a portfolio average across the kinds of social-justice work that strong charities in this category actually fund.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$20,000 (\$8,000–\$200,000)
 - **Start time:** 2 years
@@ -158,7 +158,7 @@ So this bucket should not be treated as zero. But it also should not be allowed 
 
 ### Range
 
-The stated range is a practical sensitivity range, not a formal confidence interval.
+The stated range is our plausible range, kept wide because these models are rough.
 
 **Optimistic case**
 
@@ -188,11 +188,11 @@ $$
 \dfrac{1}{0.20/60000 + 0.60/300000 + 0.20/1500000} \approx 183{,}000
 $$
 
-Rounded, that gives a practical upper range near **\$200,000/QALY**.
+Rounded, that gives an upper bound near **\$200,000/QALY**.
 
-So the practical range is **\$8,000-\$200,000/QALY**.
+So the plausible range is **\$8,000-\$200,000/QALY**.
 
-### Start Time
+### Start time
 
 The **2-year** start time reflects that most important wins in this category are not direct-service interventions. Litigation, legislative advocacy, ballot campaigns, coalition building, and organizational infrastructure all typically need some time before they change people's actual day-to-day lives.
 
@@ -206,7 +206,7 @@ The **15-year** duration is a compromise across very different pathways:
 
 So 15 years is best read as an expected-value average across a mixed portfolio rather than as the literal lifespan of any one reform.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are mainly for **strong social-justice charities in rich democracies** that do things like:
 
@@ -221,7 +221,7 @@ They are **not** estimates for:
 - average DEI consulting or generic one-off workplace trainings
 - direct service programs whose effects are better captured under another category such as [Health / Medicine](/category/health-medicine), [Human Rights and Justice](/category/human-rights), [Political](/category/political), or [Local Community](/category/local-community)
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How much of the category is really in the strong rights bucket.** If the typical marginal dollar is mostly funding ballot and litigation work near the front lines of civil-rights or reproductive-rights defense, the category is better than **\$20,000/QALY**. If it is mostly diffuse movement maintenance or corporate reform, it is worse.
 

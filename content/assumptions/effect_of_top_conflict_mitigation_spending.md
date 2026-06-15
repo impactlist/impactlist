@@ -14,16 +14,14 @@ This document analyzes the question:
 Let:
 
 - $p$ = the probability that **\$1 million** of additional top-tier conflict-mitigation spending averts one representative serious conflict-year
-- $Y, Z$ = lower and upper bounds of a practical positive range for $p$
+- $Y, Z$ = lower and upper bounds of a {{PLAUSIBLE_RANGE}} for $p$
 
 A reasonable summary is:
 
-- **Best-guess:**  
-  $p \approx 0.1\%$
-- **Practical positive range:**  
-  $Y \approx 0.03\%$, $Z \approx 0.3\%$
+- **Best-guess:** $p \approx 0.1\%$
+- **Plausible range:** $Y \approx 0.03\%$, $Z \approx 0.3\%$
 
-That is, an additional **\$1 million** to a top-tier mediation / diplomacy / conflict-analysis organization plausibly has about a **0.1%** chance of averting one representative serious conflict-year, with a practical range of about **0.03–0.3%**.
+That is, an additional **\$1 million** to a top-tier mediation / diplomacy / conflict-analysis organization plausibly has about a **0.1%** chance of averting one representative serious conflict-year, with a plausible range of about **0.03–0.3%**.
 
 This is the single most uncertain input in the category estimate, and reasonable people could easily land somewhat below or above the range used here.
 
@@ -147,7 +145,7 @@ This arithmetic also implicitly assumes that the conflicts these organizations e
 
 ---
 
-## 5. Why widen the practical range to 0.03–0.3%?
+## 5. Why widen the plausible range to 0.03–0.3%?
 
 The direct BOTEC above gives something like **0.04–0.18%**. We widen that slightly to **0.03–0.3%** because there are several uncertainties that the simple arithmetic does not capture well:
 
@@ -156,7 +154,7 @@ The direct BOTEC above gives something like **0.04–0.18%**. We widen that slig
 - the budget denominator is a mix of averages, while marginal dollars may go to better or worse opportunities than the portfolio mean
 - Clayton and Dorussen's estimate is itself uncertain and based on observational data
 
-So **0.03–0.3%** is best read as a practical working range rather than a statistically derived interval.
+So **0.03–0.3%** is best read as our plausible range, not a statistically derived interval.
 
 ---
 
@@ -186,7 +184,7 @@ Overall, these considerations support using a round central estimate of about **
 
 ---
 
-## Bottom Line
+## Bottom line
 
 A reasonable best guess is that:
 
@@ -194,7 +192,7 @@ $$
 p \approx 0.1\%
 $$
 
-with a practical positive range of roughly:
+with a plausible range of roughly:
 
 $$
 0.03\% \text{ to } 0.3\%

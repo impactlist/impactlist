@@ -15,7 +15,7 @@ Here "AI-caused existential catastrophe" includes:
 - irreversible human disempowerment
 - stable totalitarian lock-in or other global outcomes that permanently and drastically curtail humanity's future
 
-**Summary:** A reasonable best guess is that roughly \$1 billion of AI safety spending has reduced this broader catastrophe risk by about **0.16 percentage points**, with a plausible positive range of **0.014–0.70 percentage points**.
+**Summary:** A reasonable best guess is that roughly \$1 billion of AI safety spending has reduced this broader catastrophe risk by about **0.16 percentage points**, with a {{PLAUSIBLE_RANGE}} of **0.014–0.70 percentage points**.
 
 That corresponds to about:
 
@@ -111,9 +111,9 @@ The exact multiplier is still a judgment call. Nearby values move the estimate a
 
 This sensitivity is meaningful, but it does not change the order of magnitude.
 
-### Plausible positive range: 0.014–0.70 percentage points
+### Plausible range: 0.014–0.70 percentage points
 
-We keep a wide positive range:
+We keep a wide range:
 
 - **0.014 percentage points** corresponds to a pessimistic-but-still-positive view where the field helped a bit, but far less than advocates hoped.
 - **0.70 percentage points** corresponds to a strong view where the best historical spending had unusually high leverage on frontier-lab norms, preparedness, and governance.
@@ -140,7 +140,7 @@ At the upper end of the range:
 - $0.70 \text{ percentage points} = 7{,}000 \text{ microprobabilities}$
 - $$\$1\text{B} / 7{,}000 \approx \$143{,}000 \text{ per microprobability}$$
 
-So the best single estimate is roughly **\$625,000 per microprobability**, with a wide positive range from about **\$143,000** to about **\$7.1 million** on the field-level approach alone.
+So the best single estimate is roughly **\$625,000 per microprobability**, with a wide range from about **\$143,000** to about **\$7.1 million** on the field-level approach alone.
 
 ---
 
@@ -167,7 +167,7 @@ Several caveats matter:
 The best single estimate is:
 
 - **Risk reduction from roughly \$1B of AI safety spending:** about **0.16 percentage points**
-- **Plausible positive range:** about **0.014–0.70 percentage points**
+- **Plausible range:** about **0.014–0.70 percentage points**
 
 In cost-effectiveness terms, that implies about **\$625,000 per microprobability** of reducing AI-caused existential catastrophe risk.
 

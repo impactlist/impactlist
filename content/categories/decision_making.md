@@ -20,7 +20,7 @@ This effect captures welfare gains from donations to charities that improve how 
 
 This is a hits-based and highly upstream category. The strongest evidence is that some methods here improve prediction quality. The weaker and more important question is how often that actually changes important decisions. So the cleanest model is not a single smooth formula, but a scenario-weighted expected-value model.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$4,000 (\$1,000–\$150,000)
 - **Start time:** 2 years
@@ -103,16 +103,14 @@ The current split is explicitly hits-based: the **major-win** scenario contribut
 
 ### Range
 
-The practical sensitivity range is wide because this category is very uncertainty-heavy.
+Our plausible range is wide because this category is very uncertainty-heavy.
 
 - **Pessimistic:** \$8 million cost, 80% / 18% / 2% scenario weights, and scenario values of \$1M / \$15M / \$100M gives about **\$150,000/QALY**.
 - **Optimistic:** \$3 million cost, 40% / 40% / 20% scenario weights, and scenario values of \$20M / \$150M / \$1.2B gives about **\$1,000/QALY**.
 
-So the practical range is **\$1,000-\$150,000/QALY**.
+That sweep spans **\$1,000-\$150,000/QALY**, but the true distribution is fatter-tailed, so our plausible range is wider, roughly **\$800-\$300,000/QALY**.
 
-This is better read as a practical sensitivity range than as a full uncertainty interval. The true distribution is probably even fatter-tailed.
-
-### Start Time
+### Start time
 
 The 2-year start time reflects the fact that these interventions can matter faster than legislation-scale reform but slower than direct service delivery. A charity can publish useful work sooner than that, but it usually takes at least one or two funding, policy, or strategy cycles before the work predictably affects consequential decisions.
 
@@ -120,7 +118,7 @@ The 2-year start time reflects the fact that these interventions can matter fast
 
 Assumption 11 gives the main durability anchors. We use 10 years rather than something like 15-30 years because most charities in this category are not themselves GAO, the What Works Network, or the regulatory-review framework created by E.O. 12866. Many outputs are closer to reports, tools, and advisory relationships that may decay within 2-5 years. The reason not to use a very short duration is that some of those efforts do become semi-embedded routines or lasting relationships. So 10 years is an expected-value compromise between a common short-lived case and a rarer but important long-lived case.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are aimed at organizations like:
 
@@ -130,7 +128,7 @@ These estimates are aimed at organizations like:
 
 We are **not** modeling generic journalism, generic civic engagement, or direct service delivery here.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How often current charities actually change decisions rather than only improving discussion.** This is the central crux.
 2. **How fat-tailed the distribution is.** A few rare wins may dominate the category's expected value.

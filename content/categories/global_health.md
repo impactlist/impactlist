@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from donations to exceptionally cost-effective global-health charities, especially GiveWell-style programs that prevent child deaths from malaria, vitamin A deficiency, and vaccine-preventable disease. The estimate is meant to model the best currently donatable global-health opportunities, not the average global-health nonprofit. Because these programs mostly help very young children, the gains are dominated by many decades of additional life.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$90 (\$30–\$150)
 - **Start time:** 1 year
@@ -113,9 +113,9 @@ The low end is around **\$30/QALY** if a donation resembles especially strong pu
 
 The high end is around **\$150/QALY** if marginal opportunities are closer to the funding bar, if the intervention mix tilts toward weaker countries or programs inside the top-charity set, or if each child death averted corresponds to closer to **45-50 QALYs**.
 
-So the practical sensitivity range is **\$30-\$150/QALY**. This should be read as a practical range rather than a full confidence interval; GiveWell itself emphasizes that these models are rough and are used mainly for comparing grants rather than for precise cardinal measurement.
+So our plausible range is **\$30-\$150/QALY**, kept wide because these models are rough; GiveWell itself emphasizes that they are used mainly for comparing grants rather than for precise cardinal measurement.
 
-### Start Time
+### Start time
 
 Some benefits begin almost immediately once children receive nets, preventive malaria medicine, supplements, or vaccines. But this site's start-time field is not asking when the first pill is swallowed; it is asking when a donation reliably turns into real-world impact.
 
@@ -132,7 +132,7 @@ We use a **60-year** duration because these programs mainly avert deaths among c
 
 The duration field measures **how long** the benefit lasts, while the cost-effectiveness calculation separately uses **55 QALYs per death averted** to account for less-than-perfect health. A 60-year window is therefore a reasonable round approximation for an under-five child-survival portfolio.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are for **GiveWell-style child-survival philanthropy**: seasonal malaria chemoprevention, insecticide-treated bed nets, vitamin A supplementation, and vaccination incentives.
 
@@ -146,7 +146,7 @@ They are **not** estimates for:
 
 Those causes can still be very valuable, but they are usually less tightly evidence-backed and less cost-effective than the narrow set of top child-survival opportunities modeled here.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How close the next marginal donor dollar really is to GiveWell's current public 8x bar.** If the best current unfunded opportunities are materially better than the bar, the estimate is too pessimistic. If a donor funds weaker programs than GiveWell's current top set, it is too optimistic.
 2. **How many QALYs a child death averted should count for.** The 55-QALY central estimate is reasonable, but different views about lifetime health, age-weighting, or life quality can move the number.

@@ -20,7 +20,7 @@ This effect captures welfare gains from **nonpartisan efforts to improve the rul
 
 This is an upstream and somewhat hits-based category. The strongest cases here are not vague "institution building" in the abstract, but interventions that either remove a major bottleneck or make a large public system materially easier to use. The weakest cases are generic thought leadership, purely ideological institution-building, or work with no clear route to concrete institutional change.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$3,000 (\$500–\$60,000)
 - **Start time:** 3 years
@@ -93,16 +93,16 @@ The central split is still hits-based: the **major-win** scenario contributes \$
 
 ### Range
 
-The practical sensitivity range is wide because this category is both heterogeneous and fat-tailed.
+Our plausible range is wide because this category is both heterogeneous and fat-tailed.
 
 - **Pessimistic:** \$15 million cost, 75% / 20% / 5% scenario weights, and scenario values of \$5M / \$50M / \$250M gives about **\$57,000/QALY**.
 - **Optimistic:** \$6 million cost, 35% / 40% / 25% scenario weights, and scenario values of \$50M / \$400M / \$4B gives about **\$500/QALY**.
 
-So the practical range is **\$500-\$60,000/QALY**.
+So our plausible range is **\$500-\$60,000/QALY**.
 
 The single most important parameter is the **major-win probability**. Holding the scenario values and \$10 million cost fixed, moving the major-win probability from **5%** to **25%** changes the estimate from roughly **\$4,200/QALY** to roughly **\$1,600/QALY**. The wider \$500-\$60,000 range comes from varying costs and scenario values as well, not just that one probability.
 
-### Start Time
+### Start time
 
 The 3-year start time reflects that these interventions usually matter faster than deep scientific or cultural change, but slower than direct service. A good organization can publish work or ship tools sooner than that, but durable institutional impact usually requires some combination of coalition building, legal design, procurement, implementation, and adaptation inside the target institution.
 
@@ -110,7 +110,7 @@ The 3-year start time reflects that these interventions usually matter faster th
 
 The 25-year duration is a compromise across very different pathways. Some institutional wins, especially software, workflow, and administrative-process improvements, may decay within 5-10 years as systems change. But the category's strongest legal, regulatory, and governance reforms can persist for decades. Twenty-five years is therefore an expected-value middle ground between shorter-lived administrative wins and genuinely durable institutional reforms.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are aimed at organizations like:
 
@@ -122,7 +122,7 @@ This is also roughly the ecosystem historically funded through Open Philanthropy
 
 We are **not** modeling partisan campaign spending, generic journalism, pure forecasting and evidence-synthesis work, or direct service programs whose main effect is better modeled in another category.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How much of the category should be driven by housing-style reforms versus administrative service delivery.** Housing may dominate the upside, but many actual charities in the category are doing something else.
 

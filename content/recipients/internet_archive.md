@@ -20,7 +20,7 @@ We assign the Internet Archive a **cost per QALY of \$3,000**. The core idea is 
 
 This effect captures the welfare gains from the universal preservation of digital knowledge (The Wayback Machine, Open Library). While the baseline "Science and Tech" cause focuses on the expensive, high-risk process of _discovering new_ information (R&D), the Internet Archive focuses on the highly efficient process of _preventing the loss_ of existing information. We model this as "Civilizational Insurance": safeguarding the epistemic foundation upon which all other science, law, and culture rely.
 
-## Point Estimates
+## Point estimates
 
 - **Cost per QALY:** \$3,000
 
@@ -43,17 +43,17 @@ $$\text{Relative effectiveness} = \frac{Eff_{IA}}{Eff_{Base}}$$
 
 We decompose Efficiency into two components: Cost ($C$) and Value Retention ($V$).
 
-### 1. Cost Ratio
+### 1. Cost ratio
 
 Baseline R&D is labor and capital intensive with high failure rates. The Internet Archive, by contrast, treats storage as a commodity—the cost to "save" a page is fractions of a cent. This makes preservation ~20x cheaper than discovery per unit of information:
 
 $$C_{ratio} = \frac{C_{IA}}{C_{Base}} \approx 0.05$$
 
-### 2. Value Ratio
+### 2. Value ratio
 
 New discoveries have high marginal value (new cures, new tech). Old data has lower marginal value per unit (an old webpage is usually less valuable than a new patent), but the volume is massive. We assume the average unit of preserved data is roughly **0.5x** as valuable as a unit of newly discovered data (discounting for "digital junk," but crediting for "critical historical record").
 
-### 3. Uniqueness Adjustment
+### 3. Uniqueness adjustment
 
 If one lab fails to invent a drug, another often will (concurrent invention). But if the Internet Archive misses a snapshot of a deleted government page, that record is likely gone forever. IA has higher counterfactual leverage. We assign a **2x** boost for this uniqueness.
 

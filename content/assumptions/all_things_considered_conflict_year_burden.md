@@ -14,7 +14,7 @@ The [Conflict Mitigation](/category/conflict-mitigation) page uses:
 A reasonable summary is:
 
 - **Best-guess:** about **3,000,000 QALY-equivalents**
-- **Practical range:** about **1,000,000-5,000,000 QALY-equivalents**
+- **{{PLAUSIBLE_RANGE_CAP}}:** about **1,000,000-5,000,000 QALY-equivalents**
 
 This is meant to capture the main welfare losses of civil conflict in one common unit. It includes direct deaths and injuries, displacement, disrupted healthcare, hunger, mental illness, lost income, governance deterioration, and long-run institutional damage, expressed in QALY-equivalent terms.
 
@@ -57,7 +57,7 @@ Using:
 
 - $H = 1{,}000{,}000$
 - $m = 200\%$ in the central case
-- practical range for $m$ of **0%-400%**
+- plausible range for $m$ of **0%-400%**
 
 gives:
 
@@ -65,7 +65,7 @@ $$
 B = 1{,}000{,}000 \times (1 + 2.0) = 3{,}000{,}000
 $$
 
-with a practical range from:
+with a plausible range from:
 
 $$
 1{,}000{,}000 \times (1 + 0) = 1{,}000{,}000
@@ -77,7 +77,7 @@ $$
 1{,}000{,}000 \times (1 + 4.0) = 5{,}000{,}000
 $$
 
-Why use **400%** as the top of the practical range? Because Coefficient / Open Philanthropy's own BOTEC suggests a case where non-DALY harms are about **4x** the DALY component. So the upper end here is not inventing a new order of magnitude; it is allowing the broader-welfare component to be as large as one already-published conflict BOTEC suggests.
+Why use **400%** as the top of the plausible range? Because Coefficient / Open Philanthropy's own BOTEC suggests a case where non-DALY harms are about **4x** the DALY component. So the upper end here is not inventing a new order of magnitude; it is allowing the broader-welfare component to be as large as one already-published conflict BOTEC suggests.
 
 Why use **200%** rather than **400%** in the center? The **400%** figure comes from one broader BOTEC for an average civil war, and it likely reflects a mix of larger wars, very large income losses, and a stronger total-war framing than the category's representative serious conflict-year model. But the cited evidence still points clearly toward non-health harms being larger than the health component, not merely equal to it. A **200%** uplift says the broader-welfare component is about twice the health burden. That keeps the central estimate materially below the **4x** anchor while still treating lost income, governance deterioration, and institutional damage as the larger share of total welfare loss.
 
@@ -89,6 +89,6 @@ The cleanest summary is:
 - broader-welfare uplift: about **200%**
 - total representative conflict-year burden: about **3,000,000 QALY-equivalents**
 
-with a practical range of about **1,000,000-5,000,000**.
+with a plausible range of about **1,000,000-5,000,000**.
 
 This is not a precise number. But it is more faithful to an all-things-considered welfare estimate than stopping at health harms alone.

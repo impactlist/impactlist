@@ -15,7 +15,7 @@ In the AI context, the main cases are:
 - irreversible human disempowerment by AI systems
 - stable AI-enabled totalitarian lock-in or other global outcomes that permanently prevent humanity from determining its own future
 
-**Summary:** We estimate the baseline probability of AI-caused existential catastrophe this century at approximately **14%**, with a plausible range of **3–35%**. We decompose that probability into the extinction probability plus the *incremental* probability of a non-extinction existential outcome:
+**Summary:** We estimate the baseline probability of AI-caused existential catastrophe this century at approximately **14%**, with a {{PLAUSIBLE_RANGE}} of **3–35%**. We decompose that probability into the extinction probability plus the *incremental* probability of a non-extinction existential outcome:
 
 $$P(\text{existential catastrophe}) = P(\text{extinction}) + P(\text{disempowerment or lock-in, no extinction})$$
 

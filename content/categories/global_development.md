@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from donations to unusually effective charities that help people in extreme poverty become materially better off, especially through large unconditional cash transfers and related "big push" livelihood interventions. The main benefits are higher consumption, greater asset ownership, better food security, improved psychological wellbeing, and in some cases lower child mortality. We mostly leave interventions whose main value comes from preventing disease or death to the Global Health category, and we do not try to model broad economy-wide growth effects here.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$210 (\$120–\$600)
 - **Start time:** 1 year
@@ -67,7 +67,7 @@ Second, it handles recent evidence better. In particular, [Walker et al. 2025](h
 
 Third, it avoids overstating the case for graduation programs. The graduation literature is impressive. [Banerjee, Duflo, and Sharma 2021](https://www.aeaweb.org/articles?id=10.1257/aeri.20200667&page=549) find positive effects on consumption, food security, income, and health still present **10 years** later in India, and [Balboni et al. 2022](https://academic.oup.com/qje/article/137/2/785/6455333) provide unusually strong evidence for genuine poverty traps in Bangladesh. But those programs are more complex, harder to scale well, and more sensitive to local implementation quality than plain cash. For a generic category estimate aimed at strong marginal donations, GiveDirectly-style transfers are the safer central anchor, while graduation evidence supports the view that durable gains are possible.
 
-The range **(\$120-\$600/QALY)** is best read as a practical sensitivity range, not a full confidence interval. The biggest levers are:
+The range **(\$120-\$600/QALY)** is our plausible range, kept wide because these models are rough. The biggest levers are:
 
 - how many multiples of GiveWell's benchmark the best marginal poverty program really achieves
 - how much QALY-equivalent value we should assign to one GiveWell consumption unit
@@ -78,7 +78,7 @@ For a pessimistic case, using roughly **1.5x benchmark** and **0.4 QALYs per uni
 
 We intentionally do **not** use deworming as a core anchor for this page. Deworming may have long-run income effects, but its main identity is still a health intervention, and counting it here would blur the line between this category and Global Health.
 
-### Start Time
+### Start time
 
 GiveDirectly says its poverty-relief transfers are typically sent about a month after enrollment, so some benefits begin very quickly. We still use **1 year** because this category is not only "cash arrives in someone's phone account," but the broader effect on living standards from donation through targeting, enrollment, delivery, and realized household spending. Graduation-style programs also take longer to ramp up, so one year is a reasonable portfolio average.
 

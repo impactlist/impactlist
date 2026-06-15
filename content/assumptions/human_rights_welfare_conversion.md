@@ -39,13 +39,13 @@ A reasonable practical summary is:
 
 - **Central:** measured DALYs capture roughly **40%** of the total welfare effect
 - **Equivalent statement:** **1 measured DALY averted -> about 2.5 total QALY-equivalent gains**
-- **Practical range:** about **1–4 total QALY-equivalents** per measured DALY
+- **{{PLAUSIBLE_RANGE_CAP}}:** about **1–4 total QALY-equivalents** per measured DALY
 
 Why not use a much larger number? Because Ferrari already includes some major mental-health sequelae, and some broader
 harms overlap with those measured health effects. Why not use no uplift at all? Because the paper itself clearly says
 that mortality, persistence, and broader impacts are left out.
 
-So a **2.5x** total conversion, with a practical range of **1–4x**, is a reasonable summary.
+So a **2.5x** total conversion, with a plausible range of **1–4x**, is a reasonable summary.
 
 ## 2. Why treat one person avoiding bonded labour as about 1.0 QALY-equivalent?
 
@@ -83,7 +83,7 @@ That central figure should not be read as precise. It is a shorthand for a bundl
 - shame and worthlessness
 - reduced freedom and daily functioning
 
-A practical range of about **0.4–2.0 QALY-equivalents** per person avoided is reasonable. The low end corresponds to
+A plausible range of about **0.4–2.0 QALY-equivalents** per person avoided is reasonable. The low end corresponds to
 shorter duration and milder average utility loss; the high end corresponds to longer duration and more severe welfare
 losses.
 
@@ -91,8 +91,8 @@ losses.
 
 The category's welfare conversions are:
 
-- **VAWG:** **1 measured DALY averted -> about 2.5 total QALY-equivalent gains**, with a practical range of **1–4**
-- **Bonded labour:** **about 1.0 QALY-equivalent per person avoided**, with a practical range of **0.4–2.0**
+- **VAWG:** **1 measured DALY averted -> about 2.5 total QALY-equivalent gains**, with a plausible range of **1–4**
+- **Bonded labour:** **about 1.0 QALY-equivalent per person avoided**, with a plausible range of **0.4–2.0**
 
 These are uncertain, but they are more faithful to an all-things-considered welfare estimate than treating autonomy,
 dignity, fear, and post-intervention persistence as real but effectively zero in the headline calculation.

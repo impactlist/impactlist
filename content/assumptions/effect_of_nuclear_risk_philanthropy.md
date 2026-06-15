@@ -16,16 +16,14 @@ Let:
 - $p_{\text{with}}$ = estimated probability of such a catastrophe in the actual world, with existing nuclear-risk philanthropy
 - $p_{\text{without}}$ = estimated probability in a counterfactual world without that philanthropy
 - $X = p_{\text{without}} - p_{\text{with}}$ in **percentage points**
-- $Y, Z$ = lower and upper bounds of a practical positive range for $X$
+- $Y, Z$ = lower and upper bounds of a {{PLAUSIBLE_RANGE}} for $X$
 
 A reasonable summary is:
 
-- **Best-guess:**  
-  $X \approx 0.025$ percentage points
-- **Practical positive range:**  
-  $Y \approx 0.005$ percentage points, $Z \approx 0.12$ percentage points
+- **Best-guess:** $X \approx 0.025$ percentage points
+- **Plausible range:** $Y \approx 0.005$ percentage points, $Z \approx 0.12$ percentage points
 
-That is, roughly **\$600 million** of nuclear-risk philanthropy plausibly reduced 20-year catastrophic nuclear-war risk by about **0.025 percentage points**, with a practical positive range of about **0.005–0.12 percentage points**.
+That is, roughly **\$600 million** of nuclear-risk philanthropy plausibly reduced 20-year catastrophic nuclear-war risk by about **0.025 percentage points**, with a plausible range of about **0.005–0.12 percentage points**.
 
 This corresponds to about:
 
@@ -186,7 +184,7 @@ This does **not** mean philanthropy is implementing the whole six-policy bundle.
 
 ---
 
-## 6. Why use 0.005–0.12 percentage points as the practical range?
+## 6. Why use 0.005–0.12 percentage points as the plausible range?
 
 The same bridge gives a natural way to think about the lower and upper bounds.
 
@@ -217,7 +215,7 @@ At the other end, **0.12 percentage points** corresponds to:
 
 That is clearly optimistic, especially if one puts a lot of weight on the **1%** baseline-risk view. But it does not look absurd on more expert-heavy or blended risk views, especially if one thinks philanthropy occasionally helps produce unusually leveraged doctrine, crisis-management, or institutional wins.
 
-So the practical range is best understood as:
+So the plausible range is best understood as:
 
 - **0.005 percentage points** = philanthropy has real but quite limited causal leverage
 - **0.12 percentage points** = philanthropy is occasionally able to buy very leveraged wins and capture several percent of the total policy-bundle effect
@@ -260,7 +258,7 @@ So the central **0.025 percentage-point** estimate is best read as a middle grou
 
 ---
 
-## Bottom Line
+## Bottom line
 
 A reasonable best guess is that roughly **\$600 million** of nuclear-risk philanthropy over about **20 years** has reduced the probability of a **>10 million-death nuclear catastrophe** over the next roughly **20 years** by about:
 
@@ -268,7 +266,7 @@ $$
 0.025 \text{ percentage points}
 $$
 
-with a practical positive range of roughly:
+with a plausible range of roughly:
 
 $$
 0.005 \text{ to } 0.12 \text{ percentage points}

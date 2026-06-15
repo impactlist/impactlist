@@ -24,7 +24,7 @@ That event definition lines up reasonably well with catastrophe-style biosecurit
 
 We intentionally model a catastrophe that is narrower than extinction. If you think catastrophic pandemics also carry substantial extinction risk or centuries-long civilizational-collapse risk, the true cost per microprobability would be lower than the estimate on this page.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per microprobability:** \$1 million (\$250,000–\$4 million)
 - **Population fraction affected:** 0.9 (0.75–1.0)
@@ -40,14 +40,14 @@ We intentionally model a catastrophe that is narrower than extinction. If you th
 2. In postmortem medians for risk by **2100**, the XPT found about **3%** catastrophic risk from engineered pathogens and **0.85%** from natural pathogens among domain experts, versus **0.8%** and **1%** among superforecasters. ([Forecasting Research Institute](https://forecastingresearch.org/s/XPT.pdf))
 3. Worst-case engineered pandemics could kill hundreds of millions or billions, and ordinary pandemic defenses are not reliable against severe "wildfire" or "stealth" scenarios. ([Founders Pledge GCBR report](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf), [GCSP catastrophic-pandemics paper](https://www.gcsp.ch/sites/default/files/2024-12/securing-civilisation-against-catastrophic-pandemics-gp-31.pdf))
 4. Pandemic-risk philanthropy remains small relative to the stakes. Open Philanthropy alone reports **140+ grants** and **\$250+ million** since 2015, while Founders Pledge argues that relevant philanthropic funding outside direct response still remains in the **tens of millions** and that there were no other funders on Open Philanthropy's scale as of mid-2023. ([Open Philanthropy](https://www.openphilanthropy.org/focus/biosecurity-pandemic-preparedness/), [Founders Pledge](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf))
-5. A mature but still small pandemic-risk philanthropy field spending roughly **\$400 million over about 10 years** plausibly reduces 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a practical positive range around **0.01–0.16 percentage points**. ([See detailed justification](/assumption/effect-of-pandemic-risk-philanthropy))
+5. A mature but still small pandemic-risk philanthropy field spending roughly **\$400 million over about 10 years** plausibly reduces 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a plausible range around **0.01–0.16 percentage points**. ([See detailed justification](/assumption/effect-of-pandemic-risk-philanthropy))
 6. Average world population over the modeled **2036-2051** window is about **9.9 billion** under the site's default population assumptions. This is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf).
 7. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing about **40 years** of otherwise expected life cost around **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 8. Severe survivors of a global catastrophic pandemic lose a few QALYs on average through some combination of long post-viral illness, organ damage, lost access to healthcare, bereavement, and years of lower quality of life.
 
 ## Details
 
-### Cost per Microprobability
+### Cost per microprobability
 
 The cleanest way to model this cause area is:
 
@@ -93,11 +93,9 @@ All things considered, **\$1 million per microprobability** still looks like a r
 - **Pessimistic:** \$400M buys only **0.01 percentage points** = 100 microprobabilities -> **\$4 million** per microprobability
 - **Optimistic:** \$400M buys **0.16 percentage points** = 1,600 microprobabilities -> **\$250,000** per microprobability
 
-So the practical sensitivity range is **\$250,000–\$4 million per microprobability**.
+Those parameter-sweep bounds are tighter than our true uncertainty, so we widen them into a plausible range of roughly **\$150,000–\$10 million per microprobability**. The wider tails reflect the scenarios the sweep holds fixed: if philanthropy has almost no leverage over catastrophic-pandemic risk the cost is much higher, while if the best current interventions are unusually high-leverage and past field-building has already unlocked substantial public action it is lower.
 
-This should be read as a practical positive range, not a full uncertainty interval. The true uncertainty is wider. If one thought philanthropy has almost no leverage over catastrophic-pandemic risk, the estimate would get worse quickly. If one thought the best current interventions are unusually high-leverage and that historical field-building has already unlocked a lot of public action, it could get better.
-
-### Population Fraction Affected
+### Population fraction affected
 
 The point estimate (0.9) and range (0.75–1.0) reflect that a catastrophe of the kind modeled here would affect nearly everyone through:
 
@@ -109,7 +107,7 @@ The [GCSP catastrophic-pandemics paper](https://www.gcsp.ch/sites/default/files/
 
 We stop short of **1.0** only because some remote communities and unusually resilient areas might avoid the very worst consequences.
 
-### QALY Improvement per Affected Person per Year
+### QALY improvement per affected person per year
 
 The point estimate (0.35) and range (0.2–0.6) are derived by distributing total QALY losses across the affected population and duration.
 
@@ -154,7 +152,7 @@ $$
 
 That is extremely good by ordinary global-health standards, but that is a general feature of catastrophe-risk models when the stakes are huge and tractability is nontrivial.
 
-### Start Time
+### Start time
 
 The 10-year start time means the main modeled risk arrives around **2036**.
 
@@ -175,7 +173,7 @@ The 15-year duration is an equivalent-impact window that balances three things:
 
 So 15 years should not be read as a literal forecast that recovery takes exactly 15 years. It is an accounting device that spreads a catastrophe's total welfare losses over a window long enough to reflect both the acute shock and the life-years destroyed by premature death.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates assume marginal donations go to **high-leverage pandemic-risk-reduction organizations**, not to the average public-health or medical charity.
 
@@ -194,7 +192,7 @@ We are **not** modeling:
 - broad medical research without a fairly direct route to catastrophic-pandemic risk reduction
 - charities mainly focused on routine endemic disease burden rather than worst-case pandemics
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How much weight to put on expert versus superforecaster risk estimates.** The XPT gap is material, and the answer changes how optimistic one should be about marginal work.
 

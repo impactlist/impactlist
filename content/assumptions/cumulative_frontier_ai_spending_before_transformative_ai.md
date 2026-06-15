@@ -21,11 +21,11 @@ We include:
 
 We do **not** mean all spending on "AI" in the broadest sense. Most enterprise software adoption, routine automation, and downstream app work should not be counted in full here.
 
-**Summary:** We use **\$5 trillion** as a central estimate, with a plausible range of **\$2–15 trillion**.
+**Summary:** We use **\$5 trillion** as a central estimate, with a {{PLAUSIBLE_RANGE}} of **\$2–15 trillion**.
 
 ---
 
-## 1. Why the Number Is Clearly in the Trillions, Not Billions
+## 1. Why the number is clearly in the trillions, not billions
 
 Current spending is already very large.
 
@@ -40,7 +40,7 @@ So a denominator like \$100 billion or even \$500 billion is now too low for mos
 
 ---
 
-## 2. Why the Number Is Not Obviously Tens of Trillions Either
+## 2. Why the number is not obviously tens of trillions either
 
 At the same time, we should not simply extrapolate current exponential growth forever.
 
@@ -55,7 +55,7 @@ So it would also be overconfident to assume frontier-relevant spending before tr
 
 ---
 
-## 3. Timelines Anchor the Calculation
+## 3. Timelines anchor the calculation
 
 Grace et al. (2024) found an aggregate forecast of **50% HLMI by 2047**. ([Grace et al. 2024](https://aiimpacts.org/wp-content/uploads/2023/04/Thousands_of_AI_authors_on_the_future_of_AI.pdf))
 
@@ -80,7 +80,7 @@ This is not an exact forecast. It is a stylized midpoint that tries to account f
 
 ---
 
-## 4. Our Point Estimate: \$5 Trillion
+## 4. Our point estimate: \$5 trillion
 
 We use:
 
@@ -90,7 +90,7 @@ $$
 
 as our central estimate of total frontier or near-frontier capability spending before transformative AI.
 
-### Plausible Range
+### Plausible range
 
 - **\$2 trillion** if transformative AI arrives relatively soon, or if only a fairly narrow slice of future AI capex turns out to be truly frontier-relevant.
 - **\$15 trillion** if timelines are longer, the capex boom continues, and a larger fraction of spending ends up mattering for the frontier.
@@ -99,7 +99,7 @@ This range is wide because the true answer depends heavily on both timelines and
 
 ---
 
-## 5. Why This Assumption Matters
+## 5. Why this assumption matters
 
 This denominator appears in both the upside and downside timing models for AGI Development.
 

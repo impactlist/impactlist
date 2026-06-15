@@ -22,7 +22,7 @@ Representative fits include [AFAR's TAME work](https://www.afar.org/tame-trial),
 
 We do **not** model supplements, concierge longevity medicine, generic wellness advice, or very open-ended basic biology with no plausible medium-term path to human benefit.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$10,000 (\$2,000-\$100,000)
 - **Start time:** 10 years
@@ -118,7 +118,7 @@ TAME is the clearest illustration. If a multi-year, FDA-engaged trial around a c
 
 #### Range
 
-The stated range is a practical sensitivity range, not a full uncertainty interval.
+We build our plausible range from a parameter sweep, then widen it to capture the tails the sweep misses.
 
 **Optimistic case**
 
@@ -148,11 +148,11 @@ $$
 \dfrac{75{,}000{,}000}{0.0005 \times 5{,}000{,}000 \times 0.25} = 120{,}000
 $$
 
-So the practical range is **\$2,000-\$100,000/QALY**.
+The sweep itself spans **\$2,000-\$100,000/QALY**.
 
-That still does **not** capture the full downside tail. If geroscience biomarkers never become decision-useful, if first-generation interventions barely work, or if donor money mostly substitutes for funding that would have happened anyway, the true value could be worse than \$100,000/QALY. Conversely, if one or two bottlenecks prove much easier than they currently look, the true value could be much better than \$2,000/QALY.
+Widening for the tails the sweep misses gives a plausible range of roughly **\$1,000-\$250,000/QALY**. The downside reflects geroscience biomarkers never becoming decision-useful, first-generation interventions barely working, or donor money mostly substituting for funding that would have happened anyway; the upside reflects one or two bottlenecks proving much easier than they currently look.
 
-### Start Time
+### Start time
 
 The **10-year** start time reflects how slow this field still is from donation to broad health benefit.
 
@@ -177,7 +177,7 @@ This should be longer than an ordinary one-off medical intervention because vali
 
 Fifty years is a reasonable compromise between "this matters for decades" and "do not assume indefinite persistence."
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 This estimate is meant to model **strong marginal longevity philanthropy**, not the average donation to anything branded as anti-aging.
 
@@ -199,7 +199,7 @@ Poor fits include:
 
 So this category should be read as the estimate for the **best serious translational opportunities**, not for the average thing a donor might find under the word "longevity."
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **Whether first-generation gerotherapeutics really deliver meaningful health gains.** The field has plenty of biological promise and some encouraging human signals, but still no clean, widely accepted proof that a therapy meaningfully slows human aging in practice.
 

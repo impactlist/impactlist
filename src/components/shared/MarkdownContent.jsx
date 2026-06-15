@@ -3,6 +3,15 @@ import ReactMarkdown from 'react-markdown';
 import { Link, useInRouterContext } from 'react-router-dom';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import InfoTooltipIcon from './InfoTooltipIcon';
+import { CONTENT_TOOLTIPS } from '../../constants/contentTooltips';
+
+// Markdown links whose href starts with this sentinel render the phrase as plain
+// text followed by an info-icon tooltip, instead of a hyperlink. A `#`-fragment is
+// used because react-markdown's default URL sanitizer preserves fragment hrefs (a
+// custom `tooltip:` protocol would be stripped). The text after the prefix is a key
+// into CONTENT_TOOLTIPS. Authored via the {{PLAUSIBLE_RANGE}} generator variable.
+const TOOLTIP_HREF_PREFIX = '#tooltip:';
 
 // Custom link component that opens external links in a new tab and styles all links blue
 // eslint-disable-next-line no-unused-vars
@@ -11,6 +20,35 @@ const CustomLink = ({ node, href, title, children }) => {
   const isExternal = href && (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'));
   const isInternalRoute = href && href.startsWith('/') && !href.startsWith('//');
   const linkClass = 'impact-link';
+
+  if (href && href.startsWith(TOOLTIP_HREF_PREFIX)) {
+    const content = CONTENT_TOOLTIPS[href.slice(TOOLTIP_HREF_PREFIX.length)];
+    if (content) {
+      const term =
+        typeof children === 'string'
+          ? children
+          : Array.isArray(children)
+            ? children.filter((child) => typeof child === 'string').join('')
+            : '';
+      // `nowrap` keeps the info icon glued to the end of the phrase rather than
+      // orphaning onto the next line.
+      return (
+        <span className="impact-glossary">
+          {children}
+          <InfoTooltipIcon
+            content={content}
+            className="impact-glossary__info"
+            iconClassName="h-3 w-3"
+            ariaLabel={term ? `${term} definition` : 'Definition'}
+          />
+        </span>
+      );
+    }
+    // Unknown key: render the phrase as plain text. The authoring token guarantees a
+    // valid key, so this only guards against a hand-written typo rather than shipping a
+    // broken-looking link.
+    return <span>{children}</span>;
+  }
 
   if (isExternal) {
     return (

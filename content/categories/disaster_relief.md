@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from **acute humanitarian response** after disasters, outbreaks, and sudden displacement crises: emergency health care, treatment of acute malnutrition, outbreak control, emergency WASH (water, sanitation, and hygiene), cash/basic-needs assistance, and related rapid relief for displaced or crisis-affected populations. It does **not** include long-run reconstruction, disaster-risk reduction, or anticipatory action.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$4,000 (\$800–\$20,000)
 - **Start time:** 0 years
@@ -94,7 +94,7 @@ This is the weighted harmonic mean: we convert each component to QALYs per dolla
 
 This should be read as an estimate for donations to **strong general disaster-relief charities**, not for the very best disease-specific emergency-health opportunity and not for the average dollar spent across the whole humanitarian system.
 
-### Start Time
+### Start time
 
 The 0-year start time reflects that good disaster relief works immediately or not at all. The main value comes from rapid response in the first hours, days, or months of a crisis.
 
@@ -102,7 +102,7 @@ The 0-year start time reflects that good disaster relief works immediately or no
 
 The 20-year duration is a compromise for a mixed portfolio. Some benefits are very short-run improvements in health and living conditions, while others are deaths averted among children and adults with decades of life ahead of them. A 20-year window is a reasonable middle ground for discounting purposes without pretending that all benefits either vanish within months or last a full child lifetime.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are meant to represent **strong acute-response charities** that can actually move resources quickly in emergencies, such as organizations focused on emergency health, nutrition, WASH, cash/basic-needs support, or coordinated field response.
 
@@ -113,7 +113,7 @@ We are **not** modeling:
 - conflict prevention or peacebuilding,
 - ordinary development aid delivered outside an acute crisis.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **Portfolio mix.** The biggest question is what fraction of marginal funding buys highly targeted health interventions versus broader assistance, logistics, and coordination.
 2. **Crisis selection, salience, and timing.** The same intervention can be excellent in a severe outbreak and much less effective when money arrives late, in a lower-risk setting, or into a highly salient crisis that is already attracting heavy funding.

@@ -1845,6 +1845,29 @@
     box-shadow: var(--shadow-focus);
   }
 
+  /* Inline glossary term inside published markdown prose (see MarkdownContent):
+     the phrase renders as normal text followed by a small info-icon tooltip. The
+     wrapper keeps the term and icon on the same line; the icon reuses the shared
+     `.assumptions-tooltip-trigger` styling. */
+  .impact-glossary {
+    white-space: nowrap;
+  }
+
+  /* Render the icon as a small superscript marker right after the phrase. */
+  .impact-glossary__info {
+    margin-left: 0.05em;
+    vertical-align: super;
+  }
+
+  /* The shared trigger class is tuned for the editor's flex layout; strip its
+     native button chrome (default padding/border) so only the icon shows. */
+  .impact-glossary__info .assumptions-tooltip-trigger {
+    padding: 0;
+    border: 0;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
   .assumptions-tooltip {
     border-radius: 10px;
     border: 1px solid color-mix(in srgb, var(--border-strong) 60%, white 40%);

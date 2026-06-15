@@ -27,7 +27,7 @@ students' quality of life. We do **not** assume that generic school spending, el
 endowments, or marginal gifts to already-rich institutions are equally effective. The goal is to
 estimate the best marginal education philanthropy, not average education expenditure.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$25,000 (\$15,000–\$60,000)
 - **Start time:** 2 years
@@ -116,7 +116,7 @@ The same paper's alternative persistence scenarios imply roughly:
 - **Optimistic / permanent completion effect:** about \$15,000-\$17,000 per QALY
 - **Pessimistic / acceleration-only:** about \$47,000-\$54,000 per QALY
 
-So a reasonable practical range for the attainment pathway is roughly **\$15,000-\$55,000/QALY**.
+So a reasonable plausible range for the attainment pathway is roughly **\$15,000-\$55,000/QALY**.
 
 This is not just one lucky program. ASAP-style comprehensive supports have now replicated across
 settings. In Ohio, MDRC finds a **15 percentage point** increase in degree receipt after eight
@@ -148,7 +148,7 @@ low-to-mid five-figure \$/QALY range as the best degree-completion programs**.
 
 The two strongest literatures converge surprisingly well:
 
-- **Degree completion / college support:** roughly \$25,000/QALY centrally, with plausible range
+- **Degree completion / college support:** roughly \$25,000/QALY centrally, with a plausible range
   from the mid-teens to the low \$50,000s depending on how persistent the completion effect is.
 - **School wellbeing / anti-bullying:** roughly \$15,000-\$25,000/QALY in the better direct
   studies, with some weaker programs looking less attractive.
@@ -160,8 +160,7 @@ optimistic benefit-cost interpretations, because we want a category-level estima
 across strong education charities rather than assuming every marginal dollar finds an ACE- or
 KiVa-level opportunity.
 
-The range **\$15,000-\$60,000/QALY** is meant as a practical uncertainty range rather than a full
-confidence interval. The low end corresponds to unusually strong, persistent attainment effects or
+The range **\$15,000-\$60,000/QALY** is kept deliberately wide because these models are rough. The low end corresponds to unusually strong, persistent attainment effects or
 the better direct school-wellbeing programs. The high end corresponds to cases where attainment
 programs mainly accelerate completion rather than permanently raise it, or where implementation
 quality is good but not exceptional.
@@ -174,7 +173,7 @@ as the core calculation. The 2024 Lancet Public Health meta-analysis is useful h
 that more education is associated with lower adult mortality, but the quasi-experimental evidence
 is not solid enough to let that association carry the headline estimate on its own.
 
-### Start Time
+### Start time
 
 The 2-year start time is a compromise between the two main pathways in this category. School-climate
 and anti-bullying interventions improve students' quality of life within the academic year, while

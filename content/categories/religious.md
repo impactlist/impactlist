@@ -22,7 +22,7 @@ The central question is not whether religion is true, nor whether religion has a
 
 The main benefits here appear to come from community, meaning, social support, lower substance abuse, and modest improvements in mental health and possibly mortality. We do **not** give separate central credit for the direct food-bank, housing, disaster-relief, or medical work done by some religious organizations, because those outputs are better modeled in other categories and ordinary congregations spend only a small share of their budgets directly on social services.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$130,000 (\$40,000–\$600,000)
 - **Start time:** 1 year
@@ -93,7 +93,7 @@ $$
 
 This is a large discount, but it is the right direction given the attenuation in sibling and within-person designs, the mixed European evidence, and the fact that the strongest positive results come from U.S. Christian samples. So the central estimate is much smaller than the headline observational mortality literature, but not zero. A value of **0.015 QALYs per participant-year** corresponds to about **5.5 full-health-equivalent days per year**. This is a reasonable order of magnitude for a real but moderate benefit from extra community, meaning, and behavioral protection, especially when the evidence is strongest in U.S. Christian settings and weaker elsewhere.
 
-The practical range is wide:
+The plausible range is wide:
 
 - **Optimistic:** **0.03-0.04 QALYs/year** if a meaningful share of the observational mortality and depression literature is genuinely causal, and if the relevant charities mostly help people who are isolated or at elevated risk.
 - **Pessimistic:** **0.005 QALYs/year** if most of the apparent benefit is selection and only a small residual effect remains after better identification.
@@ -120,7 +120,7 @@ That is already a meaningful penalty for partial crowdout and substitution. It s
 
 #### Range
 
-The stated range is a practical sensitivity range, not a full confidence interval.
+The stated range is kept deliberately wide because these models are rough.
 
 **Optimistic case**
 
@@ -144,9 +144,9 @@ $$
 \dfrac{4800}{0.008} = 600{,}000
 $$
 
-That gives a practical range of about **\$40,000-\$600,000/QALY**.
+That gives a plausible range of about **\$40,000-\$600,000/QALY**.
 
-### Start Time
+### Start time
 
 The **1-year** start time reflects that donations to congregations or ministries usually affect current staffing, facilities, small-group programming, and pastoral support fairly quickly. Benefits to participants can begin within months, but a 1-year estimate is a reasonable average once one includes budgeting and program cycles.
 
@@ -160,7 +160,7 @@ The **10-year** duration reflects a mixed picture:
 
 So a 10-year window is a reasonable middle ground between treating the donation as purely one-year support and treating it as if it permanently changed a life course.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 This estimate is meant to represent charities whose main output is **organized religious participation itself**:
 
@@ -177,7 +177,7 @@ This estimate is **not** a good model of:
 
 If a religiously affiliated recipient is mainly providing a standard social service, the relevant social-service category is usually the better estimate.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How much of the observational literature is causal.** This is the biggest issue. If the large mortality and depression estimates are mostly causal, the category is much better than **\$130,000/QALY**. If they are mostly selection, it is much worse.
 

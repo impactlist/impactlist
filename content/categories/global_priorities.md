@@ -20,7 +20,7 @@ This effect captures welfare gains from **global priorities research (GPR)**: re
 
 The main pathway is indirect: a dollar to GPR is valuable when it improves much larger later resource flows. The clearest quantified channel is later philanthropy, but the central model also includes a second strategic channel for talent, institution-building, and policy effects expressed in QALY-equivalent terms.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$5 (\$0.30–\$300)
 - **Start time:** 5 years
@@ -31,10 +31,10 @@ The main pathway is indirect: a dollar to GPR is valuable when it improves much 
 ## Assumptions
 
 1. A strong marginal GPR team can productively use around **\$2 million** of additional annual funding, with a rough plausible range of **\$1-3 million**. Recent public funding-need figures from Rethink Priorities put its Worldview Investigations team at **\$2 million** of room for more funding in 2026 and its Global Health & Development team at **\$1.785 million**. We use **\$2 million** as a representative scale for a serious but still fairly small GPR program. ([Rethink Priorities 2025 Results / 2026 Plans](https://rethinkpriorities.org/2025-results/))
-2. A frontier GPR team serving major funders can plausibly influence around **\$200 million** of later philanthropic allocation decisions, with a practical range of about **\$50 million-\$300 million**. This is meant to describe unusually strong organizations with access to major funders, not the median GPR dollar. RP says its research supported donors whose program budgets total **hundreds of millions of dollars** and publicly reports one case where **\$8 million** was shifted toward a more cost-effective lead intervention. Coefficient Giving says it has helped Good Ventures give **over \$4 billion** historically and directed **over \$100 million** from non-Good-Ventures donors in 2024, with that figure more than doubling in 2025 so far. ([Rethink Priorities 2025 Results / 2026 Plans](https://rethinkpriorities.org/2025-results/), [Rethink Priorities impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/), [Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
-3. Better prioritization increases the welfare output of the influenced capital by about **40%** on average through better grant selection, better across-cause allocation, and better timing, with a rough practical range of **15%-80%**. This is an all-things-considered QALY improvement, not a human-health-only improvement. ([See detailed justification](/assumption/global-priorities-channel-model))
-4. The average counterfactual cost-effectiveness of the influenced capital is around **\$400/QALY**, with a rough practical range of **\$200-\$1,000/QALY**. This is meant to represent impact-motivated but non-frontier allocation across the kinds of causes major funders actually consider. ([See detailed justification](/assumption/global-priorities-channel-model))
-5. A separate broader-strategic channel, covering talent reallocation, institution-building, and policy uptake, is worth about **100%** of the direct philanthropic-allocation channel in the central case, with a rough practical range of **0%-300%**. ([See detailed justification](/assumption/global-priorities-channel-model))
+2. A frontier GPR team serving major funders can plausibly influence around **\$200 million** of later philanthropic allocation decisions, with a plausible range of about **\$50 million-\$300 million**. This is meant to describe unusually strong organizations with access to major funders, not the median GPR dollar. RP says its research supported donors whose program budgets total **hundreds of millions of dollars** and publicly reports one case where **\$8 million** was shifted toward a more cost-effective lead intervention. Coefficient Giving says it has helped Good Ventures give **over \$4 billion** historically and directed **over \$100 million** from non-Good-Ventures donors in 2024, with that figure more than doubling in 2025 so far. ([Rethink Priorities 2025 Results / 2026 Plans](https://rethinkpriorities.org/2025-results/), [Rethink Priorities impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/), [Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
+3. Better prioritization increases the welfare output of the influenced capital by about **40%** on average through better grant selection, better across-cause allocation, and better timing, with a rough plausible range of **15%-80%**. This is an all-things-considered QALY improvement, not a human-health-only improvement. ([See detailed justification](/assumption/global-priorities-channel-model))
+4. The average counterfactual cost-effectiveness of the influenced capital is around **\$400/QALY**, with a rough plausible range of **\$200-\$1,000/QALY**. This is meant to represent impact-motivated but non-frontier allocation across the kinds of causes major funders actually consider. ([See detailed justification](/assumption/global-priorities-channel-model))
+5. A separate broader-strategic channel, covering talent reallocation, institution-building, and policy uptake, is worth about **100%** of the direct philanthropic-allocation channel in the central case, with a rough plausible range of **0%-300%**. ([See detailed justification](/assumption/global-priorities-channel-model))
 6. Applied GPR often takes **2-4 years** to change major funding decisions, while more foundational work can take longer. A **5-year** start time is a reasonable portfolio average. Recent examples include lead-exposure research commissioned in 2021 helping set up the Lead Exposure Action Fund in 2024, while deeper cause-selection bets at Open Philanthropy / Coefficient have shaped grantmaking over much longer periods. ([Rethink Priorities impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/), [Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
 7. Once GPR changes how a major donor or institution thinks about a cause, that effect can persist for well over a decade through repeated grants, new funds, follow-on institutions, and later strategic decisions. A **25-year** window seems like a reasonable central estimate for the mix of shorter-lived applied work and rarer, longer-lived worldview or cause-selection shifts. ([Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/), [Rethink Priorities 2025 Results / 2026 Plans](https://rethinkpriorities.org/2025-results/))
 
@@ -122,9 +122,7 @@ The **broader strategic channel** is meant to capture a further point: strong GP
 - **Pessimistic:** \$2.5M cost, \$50M influenced, 15% direct improvement, \$1,000/QALY baseline, and no broader strategic channel gives about **\$330/QALY**.
 - **Optimistic:** \$1.5M cost, \$300M influenced, 80% direct improvement, \$200/QALY baseline, and a broader strategic channel worth **300%** of the direct channel gives about **\$0.30/QALY**.
 
-So the practical sensitivity range is **\$0.30-\$300/QALY**.
-
-This is better read as a practical range than as a full uncertainty interval. The true distribution is probably very heavy-tailed: many projects have little impact, while a few meaningfully reshape very large funding decisions.
+Treating these as the bounds of our plausible range and allowing for a heavy upper tail gives roughly **\$0.20-\$600/QALY**: many GPR projects have little impact, while a few reshape very large funding decisions, which is what pulls the optimistic tail so low.
 
 The optimistic tail is intentionally demanding. It implies a rare case where a small research team materially improves very large later decisions and where the broader talent / institution / policy effects are several times larger than the later-philanthropy channel itself. That is not meant to describe an ordinary good year for GPR; it is meant to describe an unusually successful frontier case.
 
@@ -132,7 +130,7 @@ The range is intentionally asymmetric. Relative to the **\$5/QALY** point estima
 
 External discussions of GPR are broadly directionally consistent with this picture. For example, [80,000 Hours](https://80000hours.org/problem-profiles/global-priorities-research/) and [Giving What We Can](https://www.givingwhatwecan.org/effective-altruism-effective-giving/global-priorities) both describe GPR as highly neglected and potentially very high leverage. They are not direct **\$/QALY** estimates, but they fit the basic picture of GPR as a multiplier on very large later decisions.
 
-### Start Time
+### Start time
 
 The 5-year start time reflects the mix of two very different pathways.
 
@@ -148,7 +146,7 @@ Coefficient's current portfolio still reflects cause-selection work that began i
 
 At the same time, not every prioritization judgment remains live forever; some research becomes outdated as the world changes. A **25-year** window is therefore a compromise between short-lived applied reports and rarer, much longer-lived changes in worldviews or institutional strategy.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates assume marginal donations go to **high-quality, frontier-style GPR organizations** that do work such as:
 
@@ -168,7 +166,7 @@ We are **not** mainly modeling:
 
 Those effects are better handled elsewhere, especially under Meta and Theory.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **Attribution.** Large donors usually have multiple inputs, not just one research organization. It is hard to know how much credit GPR really deserves for a major shift.
 2. **Marginal versus average impact.** Public case studies may overrepresent unusually successful work, and much of the public evidence comes from a few organizations and one very large donor relationship. The next dollar could do less than the historical average.

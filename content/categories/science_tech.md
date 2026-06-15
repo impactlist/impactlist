@@ -20,7 +20,7 @@ This effect captures welfare gains from **strong marginal science and technology
 
 We exclude areas that are modeled separately, especially direct health delivery, climate mitigation, pandemics, AI existential risk, AI capabilities, and longevity-specific philanthropy.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$60,000 (\$20,000-\$250,000)
 - **Start time:** 5 years
@@ -35,7 +35,7 @@ We exclude areas that are modeled separately, especially direct health delivery,
 3. Standard project grants are often far from fully additional. [Jacob & Lefgren 2011](https://www.nber.org/system/files/working_papers/w13519/w13519.pdf) find that receiving a roughly **\$1.7 million NIH R01** raised publication output by only about **7%** over five years for marginal applicants, consistent with substantial substitution to other funding sources.
 4. Flexible philanthropy can do materially better than that low-additionality ordinary-grant benchmark. [Azoulay, Graff Zivin, and Manso](https://www.nber.org/papers/w15466) find that Howard Hughes Medical Institute investigators produced high-impact papers at a much higher rate than similarly accomplished NIH-funded scientists, suggesting that unusually flexible, risk-tolerant funding can unlock more exploratory and valuable work.
 5. Science philanthropy is already large and not obviously neglected. [Shekhtman, Gates, and Barabási 2024](https://www.nature.com/articles/s41598-024-58367-2) find that philanthropic support to research institutions has reached about **\$30 billion per year**, rivals major federal agencies in scale, is strongly local, and is highly stable over time. That argues against assuming marginal donor dollars are close to **100% additional**.
-6. A reasonable central **additionality / marginality factor** for strong science-and-tech philanthropy is about **25%**, with a practical range around **10%-40%**.
+6. A reasonable central **additionality / marginality factor** for strong science-and-tech philanthropy is about **25%**, with a plausible range around **10%-40%**.
 7. A money-metric value of a QALY in high-income policy settings is about **\$100,000**. That is near the lower end of ICER's benchmark range, and it is also broadly consistent with WELLBY-style conversions for non-health benefits: the UK Green Book supplementary guidance uses about **£13,000 per WELLBY**, and Frijters and Krekel suggest roughly **6 WELLBYs per QALY**, which lands in a similar order of magnitude. ([ICER 2023 Value Assessment Framework](https://icer.org/wp-content/uploads/2023/10/ICER_2023_2026_VAF_For-Publication_110425.pdf), [HMT Green Book 2021](https://www.gov.uk/government/publications/green-book-supplementary-guidance-wellbeing), [Frijters & Krekel 2021](https://eprints.lse.ac.uk/114605/1/Frijters_PR3.pdf))
 8. **First meaningful benefits** often begin after about **5 years**. This is earlier than full mature diffusion because the site's `startTime` parameter marks when benefits begin, not when they peak. Scientific software, data resources, tools, fellowships, and early translational wins can start mattering within a few years even if the full long-run value takes much longer. ([Morris, Wooding, and Grant 2011](https://journals.sagepub.com/doi/full/10.1258/jrsm.2011.110180), [Hanney et al. 2015](https://health-policy-systems.biomedcentral.com/articles/10.1186/1478-4505-13-1), [Comin & Hobijn 2010](https://www.hbs.edu/faculty/Pages/item.aspx?num=30764))
 9. Once a useful discovery, tool, or platform starts helping people, a **25-year** effective benefit window is a reasonable central estimate. Many benefits persist across multiple cohorts and product cycles, but they do not last forever because technologies are superseded, institutions change, and some research lines turn out to be dead ends.
@@ -103,7 +103,7 @@ This factor should also be read as covering more than simple crowd-out. The empi
 
 #### Range
 
-The stated range is a practical sensitivity range, not a full confidence interval.
+The stated range is our plausible range, kept wide because these models are rough.
 
 **Optimistic case**
 
@@ -133,11 +133,11 @@ $$
 
 Rounded, that is about **\$250,000/QALY**.
 
-So the practical range is **\$20,000-\$250,000/QALY**.
+So the plausible range is **\$20,000-\$250,000/QALY**.
 
 This still does **not** capture the full downside tail. Unrestricted gifts to already-rich universities, endowment accumulation, or prestige science with weak paths to human benefit can be worse than **\$250,000/QALY**. Conversely, unusually catalytic science philanthropy that funds neglected bottlenecks, open infrastructure, or genuinely breakthrough translational work can be much better than **\$20,000/QALY**.
 
-### Start Time
+### Start time
 
 The **5-year** start time means the first meaningful benefits begin about five years after donation.
 
@@ -155,7 +155,7 @@ This should be longer than a one-off service intervention because discoveries an
 
 Twenty-five years is a reasonable compromise between "innovation has long tails" and "do not assume every funded project reshapes civilization forever."
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 This estimate is best read as a model of **strong marginal science-and-tech philanthropy**, not the average unrestricted gift to any university or science-branded nonprofit.
 
@@ -174,7 +174,7 @@ Poor fits include:
 - hobbyist or speculative technology projects with little credible path to broad welfare gains
 - work that mainly belongs in other categories such as AI safety, AI capabilities, climate, pandemics, or longevity
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How additional the marginal dollar really is.** This is the single most important uncertainty. If most marginal donations mainly substitute for government, university, or other foundation funding, the category is much worse than **\$60,000/QALY**. If donors really are filling neglected bottlenecks, it is much better.
 

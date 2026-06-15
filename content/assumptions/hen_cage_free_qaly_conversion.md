@@ -7,7 +7,7 @@ _The following analysis was done on April 6th 2026 by GPT-5.4 (Extra High) and C
 
 ## How many human-equivalent QALYs does moving a laying hen from conventional cages to aviaries create per hen-year?
 
-We estimate that moving a laying hen from conventional cages to aviaries creates about **0.0415 human-equivalent QALYs per hen-year**, with a practical range of about **0.0125-0.0575**.
+We estimate that moving a laying hen from conventional cages to aviaries creates about **0.0415 human-equivalent QALYs per hen-year**, with a {{PLAUSIBLE_RANGE}} of about **0.0125-0.0575**.
 
 This assumption is the bridge between animal-welfare evidence and the QALY framework used throughout Impact List. It is not directly observed in a single study. Instead, it is constructed from three components:
 
@@ -23,7 +23,7 @@ The most uncertain component is the final one: how much of a hen's negative welf
 
 Rethink Priorities' Moral Weight Project estimated chickens' sentience-adjusted welfare range at **0.332** of a human's at the median. RP's later farmed-animal allocation tool uses **0.46** as a practical default when sentience is handled separately rather than folded into a single all-things-considered multiplier. ([RP Welfare Range Estimates](https://rethinkpriorities.org/research-area/welfare-range-estimates/), [RP Farmed Animal Recipients Tool](https://rethinkpriorities.org/research-area/distributing-resources-across-farmed-animal-recipients/))
 
-For the animal-welfare category, the cleanest single-number central estimate is **0.332**, because the model is not separately representing sentience probability and experience intensity. For sensitivity analysis, **0.1-0.46** is a practical range that spans a more skeptical lower bound and RP's later, less-sentience-adjusted default.
+For the animal-welfare category, the cleanest single-number central estimate is **0.332**, because the model is not separately representing sentience probability and experience intensity. For sensitivity analysis, **0.1-0.46** is a plausible range that spans a more skeptical lower bound and RP's later, less-sentience-adjusted default.
 
 ### 2. Why use 0.5 for the negative share of the welfare range?
 
@@ -61,7 +61,7 @@ Putting the central terms together:
 
 $$0.332 \times 0.5 \times 0.25 = 0.0415 \text{ human-equivalent QALYs per hen-year}$$
 
-The animal-welfare category currently uses **0.0125-0.0575** as a practical range, which comes from varying the chicken welfare-range term from **0.1 to 0.46** while holding the other terms fixed:
+The animal-welfare category currently uses **0.0125-0.0575** as a plausible range, which comes from varying the chicken welfare-range term from **0.1 to 0.46** while holding the other terms fixed:
 
 $$0.1 \times 0.5 \times 0.25 = 0.0125$$
 $$0.46 \times 0.5 \times 0.25 = 0.0575$$

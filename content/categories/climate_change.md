@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures human-health benefits from donations to top climate charities that reduce greenhouse gas emissions through policy advocacy, innovation policy, market shaping, and related systems change. We measure those reductions in **tCO₂e**: metric tons of **carbon-dioxide equivalent**, a standard unit that converts different greenhouse gases such as methane into a common warming-based scale. The core estimate models avoided climate mortality from reduced emissions. It largely excludes air-pollution co-benefits and most non-fatal climate harms, so it should be read as a partial health estimate for strong mitigation philanthropy rather than a full accounting of climate damages.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$590 (\$60–\$7,400)
 - **Start time:** 5 years
@@ -72,13 +72,11 @@ The other important judgment call is $L$, the QALYs lost per death. The older Eu
 - **Pessimistic:** 0.3 tCO₂e/\$ and 2 QALYs per death gives about \$7,400/QALY.
 - **Optimistic:** 7 tCO₂e/\$ and 10 QALYs per death gives about \$60/QALY.
 
-So the practical sensitivity range is **\$60-\$7,400/QALY**.
-
-Both bounds hold $M$, the Bressler mortality figure, fixed at its central value. Letting that parameter vary as well would widen the range further, so this is better read as a practical sensitivity range than as a full uncertainty interval.
+These two bounds hold $M$, the Bressler mortality figure, fixed at its central value; letting it vary too would widen things further. Accounting for that, our plausible range is roughly **\$40-\$15,000/QALY**.
 
 [IPCC AR6](https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-3/) and [WHO 2025](https://www.who.int/publications/i/item/B09460) both emphasize that climate mitigation often creates large health gains from cleaner air, and that these gains typically arrive sooner than the avoided climate damages themselves. We mostly exclude those co-benefits from the headline number because they vary a lot by intervention mix and would be easy to overcount in a simple CO₂-based model.
 
-### Start Time
+### Start time
 
 The 5-year start time reflects the lag between a donation and observable emissions reductions. Systems-change climate charities usually need time to influence policy, regulation, supply chains, or innovation pathways, after which deployment still takes a few years. Some methane-focused or fossil-pollution-focused wins can generate benefits faster, but 5 years is a reasonable portfolio average.
 

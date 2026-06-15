@@ -20,7 +20,7 @@ We assign Khan Academy a **cost per QALY of \$2,000**. The main reason it comes 
 
 This effect captures the welfare gains from free, globally accessible digital education. While the baseline "Education" cause focuses on high-touch, high-cost interventions in rich countries (e.g., intensive student advising or anti-bullying programs costing thousands per student), Khan Academy operates as a software platform. We model this as a "volume play": while the probability of a life-changing outcome per user is lower than intensive mentoring, the cost per user is orders of magnitude lower, and the reach extends into high-impact regions (Global South).
 
-## Point Estimates
+## Point estimates
 
 - **Cost per QALY:** \$2,000
 
@@ -43,19 +43,19 @@ $$\text{Relative effectiveness} = \frac{Eff_{KA}}{Eff_{Base}}$$
 
 We decompose Efficiency into three components: Cost ($C$), Probability of Success ($P$), and Value of Outcome ($V$).
 
-### 1. Cost Ratio
+### 1. Cost ratio
 
 The baseline relies on labor-intensive interventions costing ~\$5,000 per student, while Khan Academy operates at ~\$5 per active learner. This makes Khan Academy 1000x cheaper per unit of delivery:
 
 $$C_{ratio} = \frac{C_{KA}}{C_{Base}} = \frac{5}{5000} = 0.001$$
 
-### 2. Probability/Intensity Ratio
+### 2. Probability/intensity ratio
 
 The baseline has high compliance and high impact (e.g., ~25% success rate for intensive advising). Khan Academy has low compliance and variable impact—we assume only 1 in ~400 active users achieves a counterfactual life outcome equivalent to the baseline intervention. This makes Khan Academy 400x less reliable per user:
 
 $$P_{ratio} = \frac{P_{KA}}{P_{Base}} \approx 0.0025$$
 
-### 3. Valuation Ratio
+### 3. Valuation ratio
 
 The baseline targets rich country students, while Khan Academy reaches a mix of rich and Global South users. We apply a conservative **2x** valuation boost to Khan Academy to account for its reach into regions where the marginal utility of education/income is higher.
 

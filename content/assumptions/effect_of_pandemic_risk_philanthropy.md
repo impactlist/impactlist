@@ -16,16 +16,14 @@ Let:
 - $p_{\text{with}}$ = estimated probability of such a catastrophe in the actual world, with existing pandemic-risk philanthropy
 - $p_{\text{without}}$ = estimated probability in a counterfactual world without that philanthropy
 - $X = p_{\text{without}} - p_{\text{with}}$ in **percentage points**
-- $Y, Z$ = lower and upper bounds of a practical positive range for $X$
+- $Y, Z$ = lower and upper bounds of a {{PLAUSIBLE_RANGE}} for $X$
 
 A reasonable summary is:
 
-- **Best-guess:**  
-  $X \approx 0.04$ percentage points
-- **Practical positive range:**  
-  $Y \approx 0.01$ percentage points, $Z \approx 0.16$ percentage points
+- **Best-guess:** $X \approx 0.04$ percentage points
+- **Plausible range:** $Y \approx 0.01$ percentage points, $Z \approx 0.16$ percentage points
 
-That is, roughly **\$400 million** of pandemic-risk philanthropy plausibly reduced 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a practical positive range of about **0.01–0.16 percentage points**.
+That is, roughly **\$400 million** of pandemic-risk philanthropy plausibly reduced 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a plausible range of about **0.01–0.16 percentage points**.
 
 This corresponds to about:
 
@@ -175,7 +173,7 @@ The claim is therefore modest. It is **not** that philanthropy has made catastro
 
 ---
 
-## 6. Why use 0.01–0.16 percentage points as the practical range?
+## 6. Why use 0.01–0.16 percentage points as the plausible range?
 
 ### Lower bound: 0.01 percentage points
 
@@ -220,7 +218,7 @@ For the upper bound $Z = 0.16$ percentage points:
 - **1,600 microprobabilities**
 - **\$250,000 per microprobability**
 
-So the practical positive range is:
+So the plausible range is:
 
 - **\$250,000–\$4 million per microprobability**
 
@@ -229,7 +227,7 @@ So the practical positive range is:
 ## 8. Summary
 
 - **Central estimate:** roughly **\$400 million** of pandemic-risk philanthropy has reduced 20-year catastrophic-pandemic risk by about **0.04 percentage points**
-- **Practical positive range:** about **0.01–0.16 percentage points**
+- **Plausible range:** about **0.01–0.16 percentage points**
 - **Implied cost-effectiveness:** about **\$100M per basis point** or **\$1M per microprobability**
 
 {{CONTRIBUTION_NOTE}}

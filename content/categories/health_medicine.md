@@ -23,7 +23,7 @@ This effect captures health gains from strong health and medicine philanthropy i
 
 This estimate excludes global-health programs in poorer countries, pandemic-risk reduction, and longevity moonshots, which are modeled separately.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$15,000 (\$6,000-\$50,000)
 - **Start time:** 7 years
@@ -140,7 +140,7 @@ So the main takeaway is not that the mix is unimportant; it is that across a rea
 
 #### Range
 
-The stated range is a practical sensitivity range, not a full confidence interval.
+The stated range is our plausible range, kept wide because these models are rough.
 
 **Optimistic case**
 
@@ -166,9 +166,9 @@ $$
 \dfrac{1}{0.2/20000 + 0.8/80000} = 50{,}000
 $$
 
-So the practical range is **\$6,000-\$50,000/QALY**.
+So the plausible range is **\$6,000-\$50,000/QALY**.
 
-### Start Time
+### Start time
 
 Direct programs usually start generating health gains quickly, often in about **1-2 years**. Research typically takes much longer; the main returns-to-research literature points to lags around **15-17 years**.
 
@@ -182,7 +182,7 @@ A 40-year duration is a reasonable central estimate because:
 - research-enabled interventions can keep benefiting new cohorts of patients for decades before being superseded
 - the site's 100-year time cap already truncates very long tails of benefit
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 This estimate is best read as a model of **strong marginal health / medicine philanthropy** in rich countries, not the average unrestricted donation to any hospital or medical school.
 
@@ -194,7 +194,7 @@ Representative fits include:
 
 This estimate is **not** a good model of generic hospital fundraising, prestige building projects, or low-additionality donations to already-rich academic medical centers. Those can easily be much worse than the category default and should ideally be estimated at the recipient level.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How research-heavy the real marginal opportunity set is.** A 40/60 versus 60/40 direct/research split moves the estimate by a few thousand dollars per QALY. If the best marginal dollars are mostly direct programs, this category is better than \$15,000/QALY; if they are mostly research or institutional fundraising, it is worse.
 2. **Where the direct-program bucket really sits.** The best cited examples are around \$4,400-\$6,200/QALY, but strong real-world opportunities could easily be higher once additionality, implementation friction, and recipient fit are accounted for.

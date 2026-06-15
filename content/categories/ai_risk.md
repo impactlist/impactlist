@@ -22,13 +22,13 @@ This effect captures welfare gains from reducing the probability that advanced A
 
 This broader event definition matches the standard existential-risk framing more closely than extinction-only modeling does. It also better fits how many expert surveys and technical arguments are actually framed: not just around everyone dying, but around humanity irreversibly losing the ability to choose its own future.
 
-## What Kinds of Charities Are We Modeling?
+## What kinds of charities are we modeling?
 
 These estimates are for **high-leverage, explicitly existential-risk-focused AI safety charities**: technical alignment and control work, governance and standards work aimed at reducing catastrophic risk, and field-building that increases strong safety talent or institutional capacity.
 
 They are **not** estimates for generic AI ethics, ordinary responsible-AI work focused mainly on bias or privacy, or projects that mainly make frontier systems more capable.
 
-## Point Estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per microprobability:** \$625,000 (\$143,000–\$7.1 million)
 - **Population fraction affected:** 1.0 (the modeled event is global by construction)
@@ -45,13 +45,13 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 3. The QALYs at stake are computed from the site's global population parameters: about 8.3 billion people today, growing at 1% per year, capped at 10x today's population, with no discounting by default (all user-adjustable). For reference, the UN projects world population to peak around 10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
 4. Conditional on such a catastrophe occurring, the average welfare shortfall is roughly 0.77 QALY-equivalents per affected person per year for the baseline catastrophe class, with a plausible range of 0.5–0.9. Because the risk that safety spending actually averts skews toward extinction (the most severe outcome), the severity used here is 0.80. ([See detailed justification](/assumption/ai-existential-catastrophe-severity))
 5. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions; frontier-lab internal safety work is counted only at a conservative few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Open Philanthropy](https://www.openphilanthropy.org/focus/potential-risks-advanced-ai/))
-6. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible positive range around 0.014–0.70 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
+6. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.014–0.70 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
 
 How these fit together: Assumptions 5 and 6 set the cost per microprobability. Assumptions 3 and 4 set the QALYs at stake per microprobability. Assumption 2 informs the start time. Assumption 1 mainly constrains how much risk there is to reduce — the QALY value of a microprobability does not itself depend on the baseline probability (see Key Uncertainties).
 
 ## Details
 
-### Cost per Microprobability
+### Cost per microprobability
 
 The point estimate (\$625,000 per microprobability) and range (\$143,000–\$7.1 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 5 and 6, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.16 percentage points**:
 
@@ -69,7 +69,7 @@ The field-level estimate is based on the historical average effect of AI safety 
 
 This is a single line of evidence rather than a convergence of independent methods. We have not found a second approach — for example, a bottom-up estimate of how much catastrophe risk one additional safety career averts — whose inputs are well-grounded enough to add real information, so the stated range is just the plausible range of the field-level estimate itself and should be read with that limitation in mind.
 
-### Population Fraction Affected
+### Population fraction affected
 
 The point estimate (1.0) reflects that the modeled event is global by construction.
 
@@ -77,7 +77,7 @@ In literal extinction, everyone dies. In irreversible disempowerment or stable l
 
 This is a simplifying convention. In real lock-in or disempowerment scenarios the intensity of harm could be uneven across people, but the model absorbs that heterogeneity into the severity term rather than trying to split the world into fully affected and partially affected sub-populations.
 
-### QALY Improvement per Affected Person per Year
+### QALY improvement per affected person per year
 
 The baseline catastrophe class has an average welfare shortfall of about 0.77 QALY-equivalents per affected person per year: a weighted average of roughly 0.9 for extinction and 0.45 for permanent non-extinction catastrophes, using the 10% + 4% decomposition from Assumption 1.
 
@@ -115,7 +115,7 @@ Because the default population curve grows at 1% per year until it hits the cap,
 
 These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is not unique to this page; it is a general feature of existential-risk expected-value models when you combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. The result is highly sensitive to a few contestable assumptions — the effectiveness of marginal safety work, the severity assigned to non-extinction catastrophes, and especially the time limit and discount rate. But within the modeled range the headline comparison is robust: at the default time limit, the cost per microprobability would have to exceed roughly \$64 million — about nine times the pessimistic end of our range — before this category looked worse than a \$5,000-per-life global-health benchmark. The decision-relevant cruxes are therefore whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
 
-### Start Time
+### Start time
 
 The 15-year start time means the main risk arrives around **2041**. This is earlier than the 50% date in the Grace et al. survey for high-level machine intelligence (2047), but that still seems appropriate for two reasons:
 
@@ -132,7 +132,7 @@ The duration is controlled by the global "time limit" parameter, which defaults 
 
 Because the modeled catastrophe is permanent by construction, the value of this cause area is highly sensitive to how much weight you place on future people.
 
-### Adjusting These Numbers
+### Adjusting these numbers
 
 If you disagree with an input, the propagation is straightforward:
 
@@ -141,7 +141,7 @@ If you disagree with an input, the propagation is straightforward:
 - **Severity** scales the QALYs at stake linearly: using 0.5 instead of 0.80 makes the cost per QALY about 1.6x higher.
 - **Net-negative views** are representable too: if you think marginal safety work accelerates capabilities enough to be net-harmful, enter a negative cost per microprobability. The stated range deliberately covers only net-positive views, but the underlying assumption pages acknowledge real probability mass on zero or negative effect.
 
-## Key Uncertainties
+## Key uncertainties
 
 1. **How high the underlying catastrophe risk really is.** The baseline probability constrains tractability rather than entering the QALY arithmetic directly: if AI existential catastrophe risk is closer to 3% than 14%, there is roughly a fifth as much risk to remove, and the achievable reduction per dollar plausibly scales down with it (see "Adjusting These Numbers" above).
 

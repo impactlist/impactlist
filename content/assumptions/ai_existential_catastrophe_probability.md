@@ -15,29 +15,24 @@ In the AI context, the main cases are:
 - irreversible human disempowerment by AI systems
 - stable AI-enabled totalitarian lock-in or other global outcomes that permanently prevent humanity from determining its own future
 
-**Summary:** We estimate the baseline probability of AI-caused existential catastrophe this century at approximately **14%**, with a plausible range of **3–35%**. The central estimate can be thought of as roughly **10% extinction risk plus 4 percentage points of additional irreversible-disempowerment or lock-in risk**.
+**Summary:** We estimate the baseline probability of AI-caused existential catastrophe this century at approximately **14%**, with a plausible range of **3–35%**. We decompose that probability into the extinction probability plus the *incremental* probability of a non-extinction existential outcome:
+
+$$P(\text{existential catastrophe}) = P(\text{extinction}) + P(\text{disempowerment or lock-in, no extinction})$$
+
+The second term is the mass on irreversible disempowerment or stable lock-in in worlds where humanity is *not* literally wiped out — not disempowerment risk in general. Numerically, the estimate is roughly **10%** extinction risk plus **4 percentage points** of this non-extinction existential risk.
 
 ---
 
 ## 1. Extinction-only anchor: about 10%
 
-The broader catastrophe estimate should start from an explicit **extinction-only** anchor rather than treating that anchor as unexplained background.
+The broader estimate builds on an explicit **extinction-only** anchor. The site's dedicated extinction page lands on about **10%** as the best single estimate for AI-caused human extinction this century ([detailed justification](/assumption/ai-doom-probability)). In brief, that figure reflects:
 
-The site's dedicated extinction-only page uses about **10%** as the best single estimate for AI-caused human extinction this century. ([See detailed justification](/assumption/ai-doom-probability)) That page gives the full case, but the short version is:
+- broad AI-researcher surveys clustering around **5%** medians for extremely bad outcomes, with substantial mass above 10%
+- an AI-specific XPT domain-expert median of about **3%**, set against sharp disagreement between domain experts and superforecasters that keeps structured forecasting from dominating
+- a cluster of researchers who have engaged seriously with alignment and racing dynamics landing around **10%** or above
+- live technical arguments: misalignment, deceptive behavior, instrumental convergence, racing pressures, and no reliable way to verify robust control of highly capable systems
 
-- broad AI-researcher surveys cluster around **5%** medians for extremely bad AI outcomes, with substantial mass above 10%
-- the AI-specific XPT domain-expert median is lower, at about **3%**, but domain experts and superforecasters disagree sharply and structured forecasting does not clearly dominate here
-- several prominent researchers and analysts who have engaged seriously with alignment and racing dynamics land around the **10%** neighborhood or above
-- the technical arguments for serious extinction risk are still live: misalignment, deceptive behavior, instrumental convergence, racing pressures, and the lack of reliable ways to verify robust control of highly capable systems
-
-So **10%** is not meant as a precise forecast. It is a working estimate that sits:
-
-- above the most optimistic structured-forecasting anchors
-- well above the 3% XPT domain-expert median
-- above the 5% survey medians
-- in line with Toby Ord's roughly 10% and below Grace et al.'s **14.4%** mean on the broader extinction-or-severe-disempowerment wording
-
-That makes **10%** a reasonable extinction-only anchor for the broader estimate to build on.
+As a working estimate rather than a precise forecast, **10%** sits above the optimistic forecasting anchors and the 5% survey medians, in line with Toby Ord's roughly 10%, and below Grace et al.'s **14.4%** mean on the broader extinction-or-severe-disempowerment wording. That makes it a reasonable base for the broader estimate to build on.
 
 ---
 
@@ -53,7 +48,7 @@ Three details matter:
 - On a more specific question about future AI advances causing **human extinction or similarly permanent and severe disempowerment within 100 years**, the mean was **14.4%** and the median was **5%**.
 - Between **38% and 51%** of respondents gave at least a **10%** chance to advanced AI leading to outcomes as bad as human extinction, depending on the exact wording.
 
-So the most directly relevant survey evidence is already broader than literal extinction. It assigns nontrivial probability mass not just to everyone dying, but to the wider class of permanent disasters that destroy humanity's ability to determine its own future.
+So the most directly relevant survey evidence is already broader than literal extinction: it puts nontrivial mass not just on everyone dying, but on the wider class of permanent disasters that end humanity's ability to determine its own future.
 
 Grace et al. also report that more than half of respondents thought "substantial" or "extreme" concern was warranted about several AI-related scenarios, including **authoritarian control**. That does not by itself imply existential catastrophe, but it strengthens the case that non-extinction political lock-in belongs inside the serious-risk discussion rather than outside it.
 
@@ -90,54 +85,35 @@ Leonard Dung's paper [“The argument for near-term human disempowerment through
 
 The political-lock-in pathway is also more concrete than a generic dystopia thought experiment. Work on AI-enabled repression and surveillance, including [Feldstein 2019](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3314162) and [Tokson 2025](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5182213), shows how AI can centralize power, expand surveillance, weaken checks on authority, and make authoritarian drift easier to sustain.
 
-These papers do **not** prove that stable totalitarian lock-in is likely. But they do show that the non-extinction pathways are concrete enough that their probability mass should not be rounded to zero.
+These papers do **not** show that irreversible disempowerment or stable lock-in is likely. They show that the non-extinction pathways are concrete enough that their probability mass should not be rounded to zero.
 
-The right move is **not** to add a separate disempowerment probability and a separate lock-in probability on top of extinction with no overlap. Many scenarios blur together: the same misaligned or badly governed AI systems can contribute to extinction, permanent disempowerment, or political lock-in.
+We therefore add a central uplift of about **4 percentage points** for non-extinction existential outcomes — irreversible disempowerment plus stable lock-in. This is an estimate of that mass directly, not a mechanical fraction of any survey gap, and its size is bounded on both ends:
 
-Still, the broader event should be materially higher than extinction alone. A reasonable central uplift is about **4 percentage points**:
-
-- Grace et al.'s broader extinction-or-severe-disempowerment question has a **14.4%** mean, several points above the extinction-only working anchor
-- XPT's broader AI-catastrophe numbers are materially above its extinction numbers
-- the recent disempowerment and authoritarianism literature makes it hard to justify an uplift near zero
-
-The uplift is best read as an independent estimate of the non-extinction existential-catastrophe mass (irreversible disempowerment plus stable lock-in), not as a mechanical fraction of any survey gap. We keep it at about **4 percentage points**: large enough to reflect that the disempowerment and authoritarianism literature makes near-zero implausible, but bounded because many scenarios overlap with extinction, some survey respondents already fold disempowerment into their extinction-style answers, and the site's event definition is narrower than every bad authoritarian or surveillance outcome.
+- **Not near zero**, because the disempowerment and authoritarianism literature describes concrete, live pathways, and because broader event definitions consistently draw higher probabilities — Grace et al.'s extinction-or-severe-disempowerment mean (**14.4%**) runs several points above the extinction-only anchor, and XPT's broader-catastrophe numbers run well above its extinction numbers.
+- **Not much larger**, because many of these scenarios overlap with extinction rather than stacking on top of it, some survey respondents already fold disempowerment into their extinction-style answers, and our event definition excludes milder authoritarian or surveillance outcomes. (4 percentage points is still a meaningful absolute increment, not a rounding term.)
 
 ---
 
 ## 5. Combined point estimate: 14%
 
-Putting those pieces together:
+Combining the two pieces:
 
 - extinction-only anchor: about **10%**
 - additional non-extinction existential-catastrophe risk: about **4 percentage points**
 
-So the broader point estimate is about **14%**.
-
-This sits just below the raw **14.4%** mean from Grace et al.'s broader extinction-or-severe-disempowerment question — a reasonable convergence, since that survey question is the closest direct analogue to the catastrophe definition used here. We do not push above it, because many scenarios overlap with extinction, some respondents may already fold disempowerment into their extinction-style answers, and not every AI-enabled authoritarian outcome is severe enough to count as an existential catastrophe.
+gives a broader point estimate of about **14%**. This lands just below the **14.4%** mean from Grace et al.'s extinction-or-severe-disempowerment question — the closest direct survey analogue to the catastrophe definition used here. That convergence is a consistency check on the decomposition, not its source.
 
 ### Plausible range: 3–35%
 
-We suggest a plausible range of **3–35%**:
+- **3%** gives substantial weight to optimistic readings of the forecasting evidence, to skepticism that disempowerment or lock-in pathways are common, and to institutions adapting faster than pessimists expect.
+- **35%** gives room for views on which extinction, gradual disempowerment, and lock-in are all serious channels and current AI governance stays weak relative to the stakes.
 
-- **3%** gives substantial weight to optimistic interpretations of forecasting evidence, to skepticism that disempowerment or lock-in pathways are common, and to the possibility that institutions adapt faster than pessimists expect.
-- **35%** gives room for views on which extinction, gradual disempowerment, and lock-in are all serious channels, and where current AI governance remains weak relative to the stakes.
-
-This is a broad range, but that is appropriate. Much of the disagreement here is not over arithmetic. It is over deep questions about AI capabilities, alignment, institutions, authoritarian dynamics, and whether civilization can stay meaningfully in control.
+The range is wide because the disagreement is not about arithmetic but about deep questions: AI capabilities, alignment, institutional resilience, authoritarian dynamics, and whether civilization stays meaningfully in control.
 
 ---
 
 ## 6. Conclusion
 
-The cleanest all-things-considered view is:
-
-- **AI-caused existential catastrophe this century:** about **14%**
-- **Plausible range:** about **3–35%**
-
-The central estimate is best understood as:
-
-- about **10%** extinction risk
-- plus about **4 percentage points** of additional irreversible-disempowerment or lock-in risk
-
-That decomposition is not exact, but it is the clearest way to show why the broader estimate is higher than extinction-only p(doom).
+AI-caused **existential catastrophe** this century — extinction together with irreversible disempowerment and stable lock-in — comes to about **14%**, with a plausible range of **3–35%**. The decomposition into roughly **10%** extinction risk plus **4 percentage points** of non-extinction existential risk is not exact, but it is the clearest way to see why the broader estimate exceeds extinction-only p(doom).
 
 {{CONTRIBUTION_NOTE}}

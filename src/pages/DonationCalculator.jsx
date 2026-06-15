@@ -8,6 +8,7 @@ import {
   calculateDonorStatsFromCombined,
 } from '../utils/assumptionsDataHelpers';
 import { getCurrentYear, resolveCalcYear } from '../utils/donationDataHelpers';
+import { isPlainObject } from '../utils/typeGuards';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
 import SpecificDonationModal from '../components/SpecificDonationModal';
@@ -45,6 +46,37 @@ const readStoredJson = (key) => {
 const parseDonationAmount = (value) => {
   const amount = Number(value);
   return Number.isFinite(amount) && amount > 0 ? amount : null;
+};
+
+// A persisted specific donation is only usable if its lives-saved can be
+// computed without throwing (see livesSavedForSpecificDonation): it needs a
+// parseable year, a finite amount, and a recipient/category that still resolves
+// in the current data. A data update that renames or removes a recipient or
+// category — or hand-tampered storage — can leave entries that would otherwise
+// throw on every visit and brick the calculator, so we drop those on load.
+const isUsableSpecificDonation = (donation, combinedAssumptions) => {
+  if (!isPlainObject(donation)) return false;
+  if (!donation.date || isNaN(parseInt(donation.date, 10))) return false;
+  // amount is summed into the running total (totalAmount += donation.amount), so a
+  // numeric string would concatenate rather than add. Require an actual positive
+  // number, matching the modal and parseDonationAmount.
+  if (typeof donation.amount !== 'number' || !Number.isFinite(donation.amount) || donation.amount <= 0) {
+    return false;
+  }
+
+  if (donation.isCustomRecipient) {
+    if (!donation.categoryId) return false;
+    // An explicit custom cost is used directly; otherwise the category must still exist.
+    if (donation.customCostPerLife !== undefined && donation.customCostPerLife !== null) {
+      // Cost per life may be negative (donations that cause deaths), but never zero:
+      // the modal rejects zero and it would divide to infinite impact.
+      const cost = Number(donation.customCostPerLife);
+      return Number.isFinite(cost) && cost !== 0;
+    }
+    return !!combinedAssumptions.getCategoryById(donation.categoryId);
+  }
+
+  return !!combinedAssumptions.findRecipientId(donation.recipientName);
 };
 
 // Helper function to get the year from a specific donation
@@ -145,10 +177,24 @@ const DonationCalculator = () => {
   const [storedCalculatorState] = useState(() => {
     const donationsRead = readStoredJson('donationCalculatorValues');
     const specificDonationsRead = readStoredJson('specificDonations');
+
+    // readStoredJson only catches unparseable JSON; a parseable-but-wrong-shape
+    // value (e.g. from a prior app version or tampering) would still crash the
+    // calculator. Validate the shape too, discarding what we can't safely use.
+    const donationsValid = donationsRead.value === null || isPlainObject(donationsRead.value);
+
+    const storedSpecific = specificDonationsRead.value;
+    const specificArray = Array.isArray(storedSpecific) ? storedSpecific : [];
+    const specificDonations = specificArray.filter((donation) =>
+      isUsableSpecificDonation(donation, combinedAssumptions)
+    );
+    const specificShapeValid =
+      storedSpecific === null || (Array.isArray(storedSpecific) && specificDonations.length === storedSpecific.length);
+
     return {
-      donations: donationsRead.value || {},
-      specificDonations: specificDonationsRead.value || [],
-      corrupted: donationsRead.corrupted || specificDonationsRead.corrupted,
+      donations: donationsValid && donationsRead.value ? donationsRead.value : {},
+      specificDonations,
+      corrupted: donationsRead.corrupted || specificDonationsRead.corrupted || !donationsValid || !specificShapeValid,
     };
   });
 
@@ -179,10 +225,10 @@ const DonationCalculator = () => {
   const [editingDonation, setEditingDonation] = useState(null);
   const [isClearAllConfirmOpen, setIsClearAllConfirmOpen] = useState(false);
 
-  // Notify (once, post-render) if the load discarded corrupted storage.
+  // Notify (once, post-render) if the load discarded corrupted or unusable storage.
   useEffect(() => {
     if (storedCalculatorState.corrupted) {
-      showNotification('error', 'Saved calculator data was corrupted and has been reset.');
+      showNotification('error', "Some saved calculator data couldn't be loaded and was discarded.");
     }
   }, [storedCalculatorState, showNotification]);
 

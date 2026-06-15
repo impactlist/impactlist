@@ -148,7 +148,9 @@ describe('DonationCalculator persistence', () => {
 
     renderCalculator();
 
-    expect(await screen.findByText('Saved calculator data was corrupted and has been reset.')).toBeInTheDocument();
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
     // The corrupted value is discarded; the save effect then re-persists a
     // clean empty state, so the key must hold valid JSON with no amounts.
     const stored = JSON.parse(localStorage.getItem('donationCalculatorValues'));
@@ -163,10 +165,134 @@ describe('DonationCalculator persistence', () => {
 
     renderCalculator();
 
-    expect(await screen.findByText('Saved calculator data was corrupted and has been reset.')).toBeInTheDocument();
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
     // Discarded, then re-persisted as a clean empty list by the save effect.
     expect(JSON.parse(localStorage.getItem('specificDonations'))).toEqual([]);
     expect(screen.getByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
     expect(errorSpy).toHaveBeenCalled();
+  });
+
+  it('discards parseable-but-wrong-shape persisted state instead of crashing', async () => {
+    // Valid JSON, wrong shape: a non-array specificDonations (would hit
+    // `.forEach`) and a non-object donations map. Both must be discarded, not
+    // crash the totals calculation.
+    localStorage.setItem('specificDonations', JSON.stringify({ not: 'an array' }));
+    localStorage.setItem('donationCalculatorValues', JSON.stringify(['wrong', 'shape']));
+
+    renderCalculator();
+
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem('specificDonations'))).toEqual([]);
+    // The wrong-shape category map is also discarded and re-persisted as a clean
+    // empty map (no amounts), same as the unparseable case above.
+    const storedDonations = JSON.parse(localStorage.getItem('donationCalculatorValues'));
+    expect(Object.values(storedDonations).every((value) => value === '')).toBe(true);
+  });
+
+  it('keeps a negative custom cost per life but drops zero cost and string amounts', async () => {
+    // Cost per life can be negative (donations that cause deaths) — that entry
+    // must survive. A zero cost (divides to infinite impact) and a string amount
+    // (would concatenate into the running total) must be dropped.
+    localStorage.setItem(
+      'specificDonations',
+      JSON.stringify([
+        {
+          id: 'keep-negative',
+          recipientName: 'Harmful Charity',
+          amount: 5000,
+          date: '2024',
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: -2000,
+        },
+        {
+          id: 'drop-zero-cost',
+          recipientName: 'Zero Cost',
+          amount: 5000,
+          date: '2024',
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: 0,
+        },
+        {
+          id: 'drop-string-amount',
+          recipientName: 'String Amount',
+          amount: '5000',
+          date: '2024',
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: 1000,
+        },
+      ])
+    );
+
+    renderCalculator();
+
+    expect(await screen.findByText('Harmful Charity')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
+
+    await waitFor(() => {
+      const stored = JSON.parse(localStorage.getItem('specificDonations'));
+      expect(stored).toHaveLength(1);
+      expect(stored[0].id).toBe('keep-negative');
+    });
+  });
+
+  it('drops specific donations that can no longer be computed (missing date / stale recipient) and keeps the rest', async () => {
+    localStorage.setItem(
+      'specificDonations',
+      JSON.stringify([
+        // Valid — survives.
+        {
+          id: 'keep',
+          recipientName: 'My Custom Charity',
+          amount: 5000,
+          date: '2024',
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: 1000,
+        },
+        // Missing date — would throw in getDonationYear.
+        {
+          id: 'drop-no-date',
+          recipientName: 'My Custom Charity',
+          amount: 5000,
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: 1000,
+        },
+        // Existing-recipient reference that no longer resolves — would throw.
+        {
+          id: 'drop-stale-recipient',
+          recipientName: 'A Charity That No Longer Exists In The Data',
+          amount: 5000,
+          date: '2024',
+        },
+      ])
+    );
+
+    renderCalculator();
+
+    // The valid donation renders; the page does not crash.
+    expect(await screen.findByText('My Custom Charity')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
+
+    // The save effect re-persists only the usable donation.
+    await waitFor(() => {
+      const stored = JSON.parse(localStorage.getItem('specificDonations'));
+      expect(stored).toHaveLength(1);
+      expect(stored[0].id).toBe('keep');
+    });
   });
 });

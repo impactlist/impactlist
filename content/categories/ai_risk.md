@@ -20,11 +20,11 @@ Unlike a typical cause area, donations to AI existential-risk charities are best
 
 This effect captures welfare gains from reducing the probability that advanced AI causes an existential catastrophe: either **literal human extinction**, or a permanent global outcome such as **irreversible disempowerment** or **stable totalitarian lock-in** severe enough to permanently and drastically curtail humanity's future.
 
-This broader event definition matches the standard existential-risk framing more closely than extinction-only modeling does. It also better fits how many expert surveys and technical arguments are actually framed: not just around everyone dying, but around humanity irreversibly losing the ability to choose its own future.
+This broader event definition matches the standard existential-risk framing more closely than extinction-only modeling does. It also better fits how many expert surveys and technical arguments are actually framed: not just around everyone dying, but around outcomes that irreversibly and drastically reduce humanity's long-term welfare.
 
 ## What kinds of charities are we modeling?
 
-These estimates are for **high-leverage, explicitly existential-risk-focused AI safety charities**: technical alignment and control work, governance and standards work aimed at reducing catastrophic risk, and field-building that increases strong safety talent or institutional capacity.
+These estimates are for **explicitly existential-risk-focused AI safety charities**: technical alignment and control work, governance and standards work aimed at reducing catastrophic risk, and field-building that increases strong safety talent or institutional capacity.
 
 They are **not** estimates for generic AI ethics, ordinary responsible-AI work focused mainly on bias or privacy, or projects that mainly make frontier systems more capable.
 
@@ -34,7 +34,7 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 - **Population fraction affected:** 1.0 (the modeled event is global by construction)
 - **QALY improvement per affected person per year:** 0.80 (0.5–0.9)
 - **Start time:** 15 years (~2041)
-- **Duration:** From the start time to the global time limit parameter (default 100 years, so an 85-year window by default)
+- **Duration:** From the start time to the global time limit parameter (default 100 years, so an 85-year window by default), capped at a trillion years
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 

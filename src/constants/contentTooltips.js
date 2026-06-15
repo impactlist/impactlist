@@ -8,5 +8,5 @@
 // Tooltip carrying the text below. See src/components/shared/MarkdownContent.jsx.
 export const CONTENT_TOOLTIPS = {
   'plausible-range':
-    "A plausible range is our 80% credence interval: we're about 80% confident the true value lies inside it, with roughly a 10% chance it's lower and a 10% chance it's higher. Rougher estimates use wider ranges.",
+    "Our ranges represent 80% credence intervals: we're about 80% confident the true value lies inside it, with roughly a 10% chance it's lower and a 10% chance it's higher.",
 };

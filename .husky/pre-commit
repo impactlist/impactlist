@@ -1,1 +1,17 @@
+set -e
+
+# Keep .agents/skills a byte-for-byte mirror of the canonical .claude/skills.
+# Only act when this commit actually touches the skills.
+if ! git diff --cached --quiet -- .claude/skills; then
+  # The mirror is generated from the WORKING TREE, so unstaged skill edits would leak
+  # into the committed mirror and desync it from the committed canonical. Refuse loudly.
+  if ! git diff --quiet -- .claude/skills; then
+    echo "pre-commit: .claude/skills has unstaged changes while skill edits are staged." >&2
+    echo "Stage all skill edits (git add .claude/skills) or stash the rest, then re-commit." >&2
+    exit 1
+  fi
+  node scripts/sync-skills.js
+  git add .agents/skills
+fi
+
 npx lint-staged

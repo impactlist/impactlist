@@ -10,6 +10,7 @@ import {
   crashInsteadOfFallback,
 } from './dataValidation.js';
 import { SIMULATION_AMOUNT, WEIGHT_NORMALIZATION_TOLERANCE } from './constants.js';
+import { getDonorProminence } from '../constants/donorProminence.js';
 import {
   getAllDonors,
   getCreditedAmount,
@@ -631,10 +632,18 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
     };
   });
 
-  // Filter out donors with no donations and sort by lives saved
+  // Filter out donors with no donations and sort by lives saved. Exact ties
+  // (e.g. spouses who split every donation 50/50) are broken by prominence so
+  // the more well-known donor ranks first, then by name so the order is always
+  // deterministic rather than incidental to data order.
   const filteredStats = donorStats
     .filter((donor) => donor.totalDonated > 0)
-    .sort((a, b) => b.totalLivesSaved - a.totalLivesSaved)
+    .sort(
+      (a, b) =>
+        b.totalLivesSaved - a.totalLivesSaved ||
+        getDonorProminence(b.id) - getDonorProminence(a.id) ||
+        a.name.localeCompare(b.name)
+    )
     .map((donor, index) => ({
       ...donor,
       rank: index + 1,

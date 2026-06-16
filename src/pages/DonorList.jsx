@@ -114,6 +114,8 @@ const DonorList = () => {
               data={filteredDonors}
               defaultSortColumn="totalLivesSaved"
               defaultSortDirection="desc"
+              tiebreakColumn="rank"
+              tiebreakDirection="asc"
               emptyMessage="No donors match your search."
             />
           </div>

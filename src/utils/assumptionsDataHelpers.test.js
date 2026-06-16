@@ -384,4 +384,45 @@ describe('assumptionsDataHelpers', () => {
     expect(stats[0].totalLivesSaved).toBeCloseTo(3000 / recipientCost, 10);
     expect(stats[0].costPerLife).toBeCloseTo(recipientCost, 10);
   });
+
+  it('breaks an exact lives-saved tie by prominence so the more well-known donor ranks first', () => {
+    const combined = createCombinedAssumptions(buildDefaults(), null);
+
+    // cari-tuna and dustin-moskovitz give identically (mirroring their real
+    // 50/50 joint giving), producing a byte-for-byte tie on lives saved. Without
+    // a tiebreak "Cari" would win the alphabetical fallback; the prominence map
+    // promotes the more well-known Moskovitz above his tie partner.
+    const identicalDonation = [{ recipientId: 'recipientA', amount: 1000, credit: 1, date: '2020-01-01' }];
+    vi.spyOn(donationDataHelpers, 'getAllDonors').mockReturnValue([
+      { id: 'cari-tuna', name: 'Cari Tuna', netWorth: 5_200_000_000 },
+      { id: 'dustin-moskovitz', name: 'Dustin Moskovitz', netWorth: 5_200_000_000 },
+    ]);
+    vi.spyOn(donationDataHelpers, 'getDonorId').mockImplementation((donor) => donor.id);
+    vi.spyOn(donationDataHelpers, 'getDonationsForDonor').mockReturnValue(identicalDonation);
+
+    const stats = calculateDonorStatsFromCombined(combined);
+    const moskovitz = stats.find((d) => d.id === 'dustin-moskovitz');
+    const tuna = stats.find((d) => d.id === 'cari-tuna');
+
+    expect(moskovitz.totalLivesSaved).toBe(tuna.totalLivesSaved); // exact tie
+    expect(moskovitz.rank).toBe(1);
+    expect(tuna.rank).toBe(2);
+  });
+
+  it('breaks ties between unlisted donors deterministically by name, regardless of input order', () => {
+    const combined = createCombinedAssumptions(buildDefaults(), null);
+
+    const identicalDonation = [{ recipientId: 'recipientA', amount: 1000, credit: 1, date: '2020-01-01' }];
+    vi.spyOn(donationDataHelpers, 'getAllDonors').mockReturnValue([
+      { id: 'zeta', name: 'Zeta Giver', netWorth: 1 },
+      { id: 'alpha', name: 'Alpha Giver', netWorth: 1 },
+    ]);
+    vi.spyOn(donationDataHelpers, 'getDonorId').mockImplementation((donor) => donor.id);
+    vi.spyOn(donationDataHelpers, 'getDonationsForDonor').mockReturnValue(identicalDonation);
+
+    const stats = calculateDonorStatsFromCombined(combined);
+    // Neither is in the prominence map, so the name fallback orders them
+    // alphabetically even though "zeta" was listed first.
+    expect(stats.map((d) => d.id)).toEqual(['alpha', 'zeta']);
+  });
 });

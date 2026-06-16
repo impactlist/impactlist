@@ -3,7 +3,7 @@ id: 'michael-milken'
 name: 'Michael Milken'
 birthDate: 1946-07-04
 netWorth: 7_100_000_000
-about: 'Michael Milken is an American financier known for developing the high-yield bond market and for later founding or co-founding the Milken Institute, the Prostate Cancer Foundation, and the Milken Family Foundation. Born in 1946 in Encino, California. [Wikipedia](https://en.wikipedia.org/wiki/Michael_Milken)'
+about: 'Michael Milken made his fortune as a financier at Drexel Burnham Lambert by developing the high-yield bond market, a career also marked by securities-law convictions and a later presidential pardon. Born in 1946 in Encino, California. His philanthropy is unusually institution-building: the Prostate Cancer Foundation, Milken Institute, FasterCures, Milken Educator Awards, and family foundations focus on medical research, public health, education, economic policy, aging, and philanthropy itself, with a strong belief in using finance, prizes, convening, and data to accelerate solutions. [Milken Institute](https://milkeninstitute.org/about), [Wikipedia](https://en.wikipedia.org/wiki/Michael_Milken)'
 ---
 
 # Internal Notes

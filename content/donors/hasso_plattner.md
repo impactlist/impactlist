@@ -3,7 +3,7 @@ id: 'hasso-plattner'
 name: 'Hasso Plattner'
 birthDate: 1944-01-21
 netWorth: 12_100_000_000
-about: 'Hasso Plattner co-founded SAP SE and chaired its supervisory board from 2003 to 2024. Born in 1944 in Berlin. [Wikipedia](https://en.wikipedia.org/wiki/Hasso_Plattner)'
+about: 'Hasso Plattner made his fortune as a co-founder of SAP, the German enterprise-software company, and later chaired its supervisory board. Born in 1944 in Berlin. After joining the Giving Pledge, he created the Hasso Plattner Foundation, which supports science and education through the Hasso Plattner Institute and digital-health work, plus social projects, nature conservation, and art and culture institutions such as Museum Barberini and Das Minsk in Potsdam. [Wikipedia](https://en.wikipedia.org/wiki/Hasso_Plattner)'
 ---
 
 # Internal Notes

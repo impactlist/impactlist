@@ -3,7 +3,7 @@ id: 'george-kaiser'
 name: 'George Kaiser'
 birthDate: 1942-07-29
 netWorth: 16_000_000_000
-about: 'George Kaiser is an oil and banking billionaire who built Kaiser-Francis Oil Company and has been chairman and principal shareholder of BOK Financial Corporation since 1991. Born in 1942 in Tulsa, Oklahoma. Nearly all of his giving flows through the George Kaiser Family Foundation, which works to break the cycle of poverty in Tulsa, and he signed the Giving Pledge in 2010, saying the foundation will receive virtually all of his wealth. [Wikipedia](https://en.wikipedia.org/wiki/George_Kaiser)'
+about: 'George Kaiser built Kaiser-Francis Oil from his family''s Tulsa oil business and became chairman and majority owner of BOK Financial after buying Bank of Oklahoma out of receivership. Born in 1942 in Tulsa, Oklahoma. Through George Kaiser Family Foundation, his giving is intensely place-based in Tulsa and evidence-oriented, focused on breaking intergenerational poverty through early childhood, public education, maternal and child wellness, criminal justice reform, neighborhoods, arts, and civic vitality; he signed the Giving Pledge and says most of his wealth will flow through GKFF. [GKFF](https://www.gkff.org/about/about-george-kaiser). [Wikipedia](https://en.wikipedia.org/wiki/George_Kaiser)'
 ---
 
 # Internal Notes

@@ -3,7 +3,7 @@ id: 'oprah-winfrey'
 name: 'Oprah Winfrey'
 birthDate: 1954-01-29
 netWorth: 3_000_000_000
-about: 'Oprah Winfrey is an American media proprietor, television host, actress, producer, author, and philanthropist. Born in 1954 in Kosciusko, Mississippi, she built Harpo Productions and the Oprah Winfrey Network, and has funded education, cultural, disaster-relief, and community programs through direct gifts and the Oprah Winfrey Charitable Foundation. [Wikipedia](https://en.wikipedia.org/wiki/Oprah_Winfrey)'
+about: 'Oprah Winfrey became a billionaire by turning The Oprah Winfrey Show into a media business through Harpo Productions, then expanding into magazines, film, cable, books, and ownership stakes. Born in 1954 in Kosciusko, Mississippi. Her giving has centered on education and opportunity for women and children, especially the Oprah Winfrey Leadership Academy for Girls in South Africa, Morehouse scholarships, U.S. schools, museums, disaster relief, COVID-era aid, and community programs through the Oprah Winfrey Foundation, Oprah''s Angel Network, and the Oprah Winfrey Charitable Foundation; her public story makes education and self-determination central themes. [Oprah Winfrey Charitable Foundation](https://en.wikipedia.org/wiki/Oprah_Winfrey_Charitable_Foundation). [Wikipedia](https://en.wikipedia.org/wiki/Oprah_Winfrey)'
 ---
 
 # Internal Notes

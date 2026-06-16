@@ -3,7 +3,7 @@ id: 'charles-koch'
 name: 'Charles Koch'
 birthDate: 1935-11-01
 netWorth: 74_000_000_000
-about: 'Charles Koch is the chairman and co-CEO of Koch, Inc. and has led the privately held conglomerate since 1967. Born in 1935 in Wichita, Kansas, he funds charitable work through the Charles Koch Foundation and related Stand Together organizations. [Wikipedia](https://en.wikipedia.org/wiki/Charles_Koch)'
+about: 'Charles Koch is chairman and co-CEO of Koch, Inc., the privately held energy, chemicals, manufacturing, and investment conglomerate he has led since 1967 after inheriting and expanding his family business. Born in 1935 in Wichita, Kansas. His philanthropy runs through the Charles Koch Foundation and Stand Together network, which fund higher education, free-market and civil-liberties policy work, criminal justice reform, poverty and addiction programs, and entrepreneurship; Koch frames the work around bottom-up solutions and empowering people, while his political and policy giving remains influential and controversial. [Stand Together](https://standtogether.org/about-us/). [Wikipedia](https://en.wikipedia.org/wiki/Charles_Koch)'
 ---
 
 # Internal Notes

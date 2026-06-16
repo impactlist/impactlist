@@ -3,7 +3,7 @@ id: 'stephen-schwarzman'
 name: 'Stephen Schwarzman'
 birthDate: 1947-02-14
 netWorth: 50_000_000_000
-about: 'Stephen A. Schwarzman is the chairman, CEO, and co-founder of Blackstone. Born in 1947 in Philadelphia, he graduated from Yale and Harvard Business School before co-founding Blackstone in 1985. [Wikipedia](https://en.wikipedia.org/wiki/Stephen_A._Schwarzman)'
+about: 'Stephen A. Schwarzman made his fortune by co-founding Blackstone in 1985 and building it into one of the world''s largest alternative-asset managers. Born in 1947 in Philadelphia. His philanthropy centers on elite education, leadership, computing, culture, and AI: Schwarzman Scholars at Tsinghua, major gifts to the New York Public Library, MIT''s Schwarzman College of Computing, and Oxford''s Schwarzman Centre for the Humanities and Institute for Ethics in AI. A Giving Pledge signer, he has also been criticized for the naming power and political context around some gifts. [Wikipedia](https://en.wikipedia.org/wiki/Stephen_A._Schwarzman)'
 ---
 
 # Notes

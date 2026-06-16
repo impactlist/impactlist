@@ -3,5 +3,5 @@ id: 'dustin-moskovitz'
 name: 'Dustin Moskovitz'
 birthDate: 1984-05-22
 netWorth: 5_200_000_000
-about: "Dustin Moskovitz co-founded Facebook as Mark Zuckerberg's college roommate at Harvard. Born in 1984 in Florida, he later co-founded Asana, a work management platform. He is married to [Cari Tuna](/donor/cari-tuna). [Wikipedia](https://en.wikipedia.org/wiki/Dustin_Moskovitz)"
+about: 'Dustin Moskovitz made his fortune as a Facebook co-founder and later co-founded Asana, where he has remained closely involved. Born in 1984 in Florida. With his wife [Cari Tuna](/donor/cari-tuna), he created Good Ventures and became an early major funder of GiveWell and Open Philanthropy/Coefficient Giving; their data-driven, effective-altruist giving prioritizes importance, neglectedness, and tractability across global health, scientific research, pandemic preparedness, AI safety, farm animal welfare, economic opportunity, and other high-impact causes. [Good Ventures](https://goodventures.org/). [Wikipedia](https://en.wikipedia.org/wiki/Dustin_Moskovitz)'
 ---

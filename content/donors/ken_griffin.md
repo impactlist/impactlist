@@ -3,7 +3,7 @@ id: 'ken-griffin'
 name: 'Ken Griffin'
 birthDate: 1968-10-15
 netWorth: 49_600_000_000
-about: 'Ken Griffin founded the hedge fund Citadel in 1990 and leads it as CEO; he is also majority owner of the market maker Citadel Securities. Born in 1968 in Daytona Beach, Florida. Since 2023 his philanthropy is branded as Griffin Catalyst. [Wikipedia](https://en.wikipedia.org/wiki/Kenneth_C._Griffin)'
+about: 'Ken Griffin made his fortune by founding Citadel, a multistrategy hedge fund he began after trading from his Harvard dorm room, and by building the separate market maker Citadel Securities. Born in 1968 in Daytona Beach, Florida. His philanthropy is organized through [Griffin Catalyst](https://www.griffincatalyst.org/), which funds education, science and medicine, communities, upward mobility, freedom and democracy, and enterprise and innovation; major gifts include Harvard, medical research, museums, Miami civic projects, and charter schools, alongside a high-profile role in political giving. [Wikipedia](https://en.wikipedia.org/wiki/Kenneth_C._Griffin)'
 ---
 
 # Internal Notes

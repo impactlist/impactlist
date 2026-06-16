@@ -3,7 +3,7 @@ id: 'aliko-dangote'
 name: 'Aliko Dangote'
 birthDate: 1957-04-10
 netWorth: 36_700_000_000
-about: 'Aliko Dangote is a Nigerian industrialist who founded Dangote Group and built major cement, commodities, and refining businesses. Born in 1957 in Kano, Nigeria. [Wikipedia](https://en.wikipedia.org/wiki/Aliko_Dangote)'
+about: 'Aliko Dangote is a Nigerian industrialist whose fortune came from Dangote Group, which grew from commodity trading into cement, sugar, flour, fertilizer, and the Dangote refinery; he is widely ranked as Africa''s richest person and built one of the continent''s largest manufacturing conglomerates. Born in 1957 in Kano, Nigeria. His philanthropy is mainly through the Aliko Dangote Foundation, with programs in nutrition, primary health care, disease control, education, economic empowerment, and disaster relief; he has also partnered with the Gates Foundation on polio and malaria work in Nigeria. [Wikipedia](https://en.wikipedia.org/wiki/Aliko_Dangote)'
 ---
 
 # Internal Notes

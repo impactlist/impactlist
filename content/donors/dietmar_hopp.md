@@ -3,7 +3,7 @@ id: 'dietmar-hopp'
 name: 'Dietmar Hopp'
 birthDate: 1940-04-26
 netWorth: 6_200_000_000
-about: 'Dietmar Hopp co-founded SAP SE and is a longtime backer of TSG 1899 Hoffenheim. Born in 1940 in Heidelberg, Germany. [Wikipedia](https://en.wikipedia.org/wiki/Dietmar_Hopp)'
+about: 'Dietmar Hopp made his fortune as one of SAP''s five co-founders, later serving as SAP CEO and supervisory-board chair and retaining a large stake in the software company. Born in 1940 in Heidelberg, Germany. Through Dietmar Hopp Stiftung, founded in 1995 with SAP shares from his private holdings, he backs medicine, education, social projects, sport, and climate work mainly in Germany''s Rhine-Neckar region; he is also known for heavy support of TSG 1899 Hoffenheim, a high-profile and sometimes controversial football investment. [Wikipedia](https://en.wikipedia.org/wiki/Dietmar_Hopp)'
 ---
 
 # Internal Notes

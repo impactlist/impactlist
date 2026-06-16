@@ -2,7 +2,7 @@
 id: 'billi-marcus'
 name: 'Billi Marcus'
 netWorth: 5_150_000_000
-about: 'Billi Marcus is an Atlanta philanthropist and the surviving spouse of Bernard "Bernie" Marcus, the Home Depot co-founder. Her public philanthropy has flowed through the Marcus Foundation, the Billi Marcus Foundation, and the Billi and Bernie Marcus Foundation, with major support for medical, Jewish, education, veterans, and community causes. [Wikipedia](https://en.wikipedia.org/wiki/Bernard_Marcus)'
+about: 'Billi Marcus is an Atlanta philanthropist and the surviving spouse of Home Depot co-founder Bernard "Bernie" Marcus, whose fortune came from building the home-improvement retailer. Her public philanthropy is tied to Marcus family vehicles, including the Marcus Foundation, the Billi Marcus Foundation, and the Billi and Bernie Marcus Foundation, with major support for medical research and care, childhood brain tumors, autism and developmental disabilities, Jewish and Israeli causes, veterans and traumatic brain injury, education, civic and free-enterprise projects, and community institutions such as Georgia Aquarium. Bernie and Billi Marcus signed the Giving Pledge, and Billi continues foundation roles after his 2024 death. [Wikipedia](https://en.wikipedia.org/wiki/Bernard_Marcus)'
 ---
 
 # Internal Notes

@@ -3,5 +3,5 @@ id: 'pierre-omidyar'
 name: 'Pierre Omidyar'
 birthDate: 1967-06-21
 netWorth: 12_300_000_000
-about: 'Pierre Omidyar is a French-born Iranian-American technology entrepreneur, software engineer, and philanthropist who founded eBay and co-founded Omidyar Network with his wife Pam. Born in Paris in 1967, he has also backed journalism, civic institutions, human rights, global development, and youth health initiatives through the Omidyar philanthropic ecosystem. [Wikipedia](https://en.wikipedia.org/wiki/Pierre_Omidyar)'
+about: 'Pierre Omidyar made his fortune by creating eBay as an online marketplace and later retaining and diversifying wealth after eBay''s public offering and PayPal era. Born in Paris in 1967. With Pam Omidyar, he uses a hybrid philanthropy-and-investment model through Omidyar Network and related entities, backing civic technology, responsible technology, journalism, financial inclusion, property rights, education, democracy, human rights, and antimonopoly work; he signed the Giving Pledge and is known for treating markets and institutions as tools for social change. [Omidyar Network](https://en.wikipedia.org/wiki/Omidyar_Network). [Wikipedia](https://en.wikipedia.org/wiki/Pierre_Omidyar)'
 ---

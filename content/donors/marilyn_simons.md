@@ -2,7 +2,7 @@
 id: 'marilyn-simons'
 name: 'Marilyn Simons'
 netWorth: 32_500_000_000
-about: 'Marilyn Simons co-founded the Simons Foundation in 1994 with her husband Jim Simons (the mathematician and Renaissance Technologies founder, who died in 2024), serving as its president for 26 years and now chairing its board. Born around 1951 on Long Island, she earned a BA and a PhD in economics from Stony Brook University. [Wikipedia](https://en.wikipedia.org/wiki/Marilyn_Simons)'
+about: 'Marilyn Simons became a major philanthropist through the Simons family fortune from Renaissance Technologies and through her own long leadership of the Simons Foundation, which she co-founded in 1994 with Jim Simons. Born around 1951 on Long Island. A Stony Brook-trained economist, she served as foundation president for 26 years and now co-chairs its board; her giving emphasizes basic science, mathematics, computational science, autism and neuroscience research, STEM education and outreach, Cold Spring Harbor Laboratory, Stony Brook, K-12 education, and the MJS Foundation. [Simons Foundation](https://www.simonsfoundation.org/people/marilyn-simons/), [Simons Foundation](https://en.wikipedia.org/wiki/Simons_Foundation). [Wikipedia](https://en.wikipedia.org/wiki/Marilyn_Simons)'
 ---
 
 # Internal Notes

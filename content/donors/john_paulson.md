@@ -3,7 +3,7 @@ id: 'john-paulson'
 name: 'John Paulson'
 birthDate: 1955-12-14
 netWorth: 3_800_000_000
-about: 'John Paulson founded the hedge fund Paulson & Co. in 1994 and became known for his profitable short bet against the U.S. subprime mortgage market before the 2008 financial crisis. Born in 1955 in Queens, New York City. [Wikipedia](https://en.wikipedia.org/wiki/John_Paulson)'
+about: 'John Paulson made his fortune through Paulson & Co., the hedge fund he founded in 1994, and became famous for a highly profitable credit-default-swap bet against subprime mortgage securities before the 2008 financial crisis. Born in 1955 in Queens, New York City. His giving has centered on education, science, health, and New York civic institutions, including $400 million to Harvard engineering, $100 million to NYU, and $100 million to Central Park Conservancy; the Harvard and Central Park gifts also drew debate about elite-institution philanthropy. [Wikipedia](https://en.wikipedia.org/wiki/John_Paulson)'
 ---
 
 # Internal Notes

@@ -3,7 +3,7 @@ id: 'shiv-nadar'
 name: 'Shiv Nadar'
 birthDate: 1945-07-14
 netWorth: 34_100_000_000
-about: 'Shiv Nadar founded HCL in 1976 and created the Shiv Nadar Foundation, whose schools, universities, and museum focus on education and art in India. Born in 1945 in Moolaipozhi, Tamil Nadu. [Wikipedia](https://en.wikipedia.org/wiki/Shiv_Nadar)'
+about: 'Shiv Nadar made his fortune by founding HCL in 1976 and helping build it from an Indian computer-hardware venture into a global IT services group. Born in 1945 in Moolaipozhi, Tamil Nadu. Since the mid-1990s, his giving through the Shiv Nadar Foundation has focused on institution building in India, especially education for high-potential students, universities, SSN institutions, VidyaGyan schools, and art through the Kiran Nadar Museum of Art. He is one of India''s largest individual philanthropists and has committed more than $1 billion to philanthropy. [Wikipedia](https://en.wikipedia.org/wiki/Shiv_Nadar)'
 ---
 
 # Internal Notes

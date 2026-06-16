@@ -3,7 +3,7 @@ id: 'jk-rowling'
 name: 'J.K. Rowling'
 birthDate: 1965-07-31
 netWorth: 1_200_000_000
-about: 'J.K. Rowling is the British author of the Harry Potter series and the Cormoran Strike novels under the Robert Galbraith pseudonym. Born in 1965 in Yate, Gloucestershire, she founded the Volant Charitable Trust, co-founded Lumos, and has funded multiple sclerosis research through the Anne Rowling Regenerative Neurology Clinic. [Wikipedia](https://en.wikipedia.org/wiki/J._K._Rowling)'
+about: 'J.K. Born in 1965 in Yate, Gloucestershire. Rowling made her fortune from the Harry Potter books and the broader Wizarding World franchise, while also writing the Cormoran Strike novels as Robert Galbraith. Her philanthropy is shaped by her own experience of poverty and her mother''s death from multiple sclerosis: she founded the Volant Charitable Trust for women, children, and social deprivation, co-founded Lumos to move children out of institutions and into family care, and made major gifts to the Anne Rowling Regenerative Neurology Clinic; her later public advocacy on sex and gender is highly contested and partly outside conventional charity. [Wikipedia](https://en.wikipedia.org/wiki/J._K._Rowling)'
 ---
 
 # Internal Notes

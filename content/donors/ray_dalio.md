@@ -3,7 +3,7 @@ id: 'ray-dalio'
 name: 'Ray Dalio'
 birthDate: 1949-08-08
 netWorth: 20_900_000_000
-about: 'Ray Dalio founded Bridgewater Associates, the hedge fund and macro-investing firm, in 1975. Born in 1949 in New York City, he and his wife Barbara organize much of their giving through Dalio Philanthropies and the Dalio Foundation. [Wikipedia](https://en.wikipedia.org/wiki/Ray_Dalio)'
+about: 'Ray Dalio built his fortune by founding Bridgewater Associates in 1975 and turning it into one of the world''s largest hedge funds. Born in 1949 in New York City. He and Barbara Dalio give mainly through Dalio Philanthropies and the Dalio Foundation, with major commitments to ocean exploration and conservation through OceanX, education and equal opportunity in Connecticut, health justice, public-sector effectiveness, and meditation-related programs. A Giving Pledge signer, Dalio frames both investing and philanthropy around explicit principles, experimentation, and systems-level problem solving. [Wikipedia](https://en.wikipedia.org/wiki/Ray_Dalio)'
 ---
 
 # Internal Notes

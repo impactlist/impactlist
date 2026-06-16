@@ -3,7 +3,7 @@ id: 'jan-koum'
 name: 'Jan Koum'
 birthDate: 1976-02-24
 netWorth: 17_000_000_000
-about: 'Jan Koum co-founded WhatsApp and led it as CEO until Facebook acquired the company in 2014. Born in 1976 in Kyiv, then in the Ukrainian SSR, he immigrated to the United States as a teenager. [Wikipedia](https://en.wikipedia.org/wiki/Jan_Koum)'
+about: 'Jan Koum made his fortune by co-founding WhatsApp, the ad-free messaging service Facebook acquired in 2014, after immigrating from Soviet Ukraine to California as a teenager and working at Yahoo. Born in 1976 in Kyiv, then in the Ukrainian SSR. A low-profile donor, he has given through donor-advised funds and the Koum Family Foundation to Jewish and Israeli causes, hospitals and medical research, universities, Ukraine-related relief, and some U.S. civic and political causes; his public giving often reflects his Jewish identity and interest in practical institutions. [Wikipedia](https://en.wikipedia.org/wiki/Jan_Koum)'
 ---
 
 # Internal Notes

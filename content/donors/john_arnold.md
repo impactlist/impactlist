@@ -2,7 +2,7 @@
 id: 'john-arnold'
 name: 'John Arnold'
 netWorth: 1_450_000_000
-about: 'John Arnold is a former energy trader who founded Centaurus Advisors and later co-founded Arnold Ventures with Laura Arnold. Born in 1974 in Dallas, he now focuses on philanthropy and serves on Meta''s board. [Wikipedia](https://en.wikipedia.org/wiki/John_D._Arnold)'
+about: 'John Arnold made his fortune as a natural-gas trader at Enron and then as founder of Centaurus Advisors, a Houston energy hedge fund he closed in 2012. Born in 1974 in Dallas. With [Laura Arnold](/donor/laura-arnold), he co-founded [Arnold Ventures](https://www.arnoldventures.org/about), which funds evidence-based policy work in health, criminal justice, higher education and career pathways, infrastructure, and public finance; their [Giving Pledge](https://www.givingpledge.org/pledger/laura-and-john-arnold/) letter frames wealth as an instrument for transformative change and emphasizes scalable, self-sustaining reforms. [Wikipedia](https://en.wikipedia.org/wiki/John_D._Arnold)'
 ---
 
 # Internal Notes

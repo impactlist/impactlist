@@ -2,7 +2,7 @@
 id: 'barbara-picower'
 name: 'Barbara Picower'
 netWorth: 3_362_000_000
-about: 'Barbara Picower founded The JPB Foundation, now Freedom Together Foundation, in 2012 after the estate of her late husband, Jeffry Picower, settled Bernard Madoff-related claims. She led the foundation through a decade of grantmaking in poverty, environment, and medical research and remains president emerita and board chair. [Freedom Together Foundation](https://www.freedomtogether.org/who-we-are/)'
+about: 'Barbara Picower founded The JPB Foundation in 2012, after the estate of her late husband, Jeffry Picower, settled Bernard Madoff-related claims, and built it into a large private foundation funded by Picower estate assets. JPB made grants in poverty, environment, and medical research; after she stepped back from day-to-day leadership in 2024, the foundation was renamed Freedom Together Foundation and shifted toward multiracial democracy, community and worker power, racial and gender justice, belonging, reproductive health, medical research, and community grants. [Freedom Together Foundation](https://www.freedomtogether.org/who-we-are/)'
 ---
 
 # Internal Notes

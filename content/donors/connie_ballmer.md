@@ -3,7 +3,7 @@ id: 'connie-ballmer'
 name: 'Connie Ballmer'
 birthDate: 1962-09-01
 netWorth: 66_500_000_000
-about: 'Connie Ballmer co-founded Ballmer Group, the philanthropy focused on economic mobility for children and families that she leads with her husband [Steve Ballmer](/donor/steve-ballmer). Born in 1962, she graduated from the University of Oregon in 1984, later serving as a UO trustee and an NPR Foundation board member. [Ballmer Group](https://ballmergroup.org/)'
+about: 'Connie Ballmer built her philanthropic platform alongside [Steve Ballmer](/donor/steve-ballmer) and co-founded Ballmer Group in 2015 after his Microsoft fortune. Born in 1962. She focuses on economic mobility for U.S. children and families, with grants in early childhood, foster care, education, behavioral health, housing, regional systems work in Washington, southeast Michigan, and Los Angeles, and data-driven public-sector capacity; she also co-founded Rainier Climate and has supported journalism and civic institutions. [Ballmer Group](https://ballmergroup.org/our-team/)'
 ---
 
 # Internal Notes

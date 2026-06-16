@@ -3,7 +3,7 @@ id: 'edythe-broad'
 name: 'Edythe Broad'
 birthDate: 1936-01-01
 netWorth: 6_700_000_000
-about: 'Edythe Broad is an American philanthropist, art collector, and co-founder of The Broad Foundations with her late husband Eli Broad. Their giving built or supported The Broad, the Broad Art Foundation, the Broad Institute, and major education, science, and arts programs. [Wikipedia](https://en.wikipedia.org/wiki/Edythe_Broad)'
+about: 'Edythe Broad is an art collector and philanthropist who co-founded The Broad Foundations with her late husband Eli Broad, whose fortune came from KB Home and SunAmerica. Born in 1936. The Broads built major institutions in contemporary art, genomics, education, and medical research, including The Broad museum, The Broad Art Foundation, the Broad Institute, and Broad-backed education and arts programs; after Eli''s death in 2021, Edythe continues the foundations'' work and stewardship of one of the leading postwar and contemporary art collections. [The Broad](https://www.thebroad.org/about). [Wikipedia](https://en.wikipedia.org/wiki/Edythe_Broad)'
 ---
 
 # Internal Notes

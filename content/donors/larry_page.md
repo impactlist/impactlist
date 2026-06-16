@@ -3,6 +3,6 @@ id: 'larry-page'
 name: 'Larry Page'
 birthDate: 1973-03-26
 netWorth: 252_000_000_000
-about: 'Larry Page co-founded Google with Sergey Brin while they were PhD students at Stanford. Born in 1973 in East Lansing, Michigan, he served as CEO of Alphabet until 2019. [Wikipedia](https://en.wikipedia.org/wiki/Larry_Page)'
+about: 'Larry Page made his fortune by co-founding Google with Sergey Brin at Stanford, developing PageRank, and later serving as CEO of Google and Alphabet while remaining a controlling Alphabet shareholder. Born in 1973 in East Lansing, Michigan. His philanthropy is comparatively private and has flowed through the Carl Victor Page Memorial Foundation and Google-related efforts, with grants for global health emergencies such as Ebola, renewable-energy and technology work, and vocal-cord research; public profiles note that his disclosed giving has been modest relative to his wealth. [Wikipedia](https://en.wikipedia.org/wiki/Larry_Page)'
 # totalDonated: 1_600_000_000
 ---

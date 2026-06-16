@@ -3,7 +3,7 @@ id: 'donald-bren'
 name: 'Donald Bren'
 birthDate: 1932-05-11
 netWorth: 19_200_000_000
-about: 'Donald Bren is the chairman and owner of Irvine Company, the private real estate developer behind much of Irvine and the Irvine Ranch master plan. Born in 1932 in Los Angeles. [Wikipedia](https://en.wikipedia.org/wiki/Donald_Bren)'
+about: 'Donald Bren made his fortune as chairman and owner of Irvine Company, shaping master-planned communities and commercial real estate around the Irvine Ranch. Born in 1932 in Los Angeles. His giving emphasizes Southern California education, research, conservation, and public schools: the Donald Bren Foundation and Irvine Company have funded UC and Caltech chairs, UC Irvine and UC Santa Barbara programs, Caltech''s space solar power work, Irvine schools, and the permanent preservation of much of the Irvine Ranch, with lifetime giving reported above $2 billion. [Donald Bren](https://www.donaldbren.com/). [Wikipedia](https://en.wikipedia.org/wiki/Donald_Bren)'
 ---
 
 # Internal Notes

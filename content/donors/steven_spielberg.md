@@ -3,7 +3,7 @@ id: 'steven-spielberg'
 name: 'Steven Spielberg'
 birthDate: 1946-12-18
 netWorth: 7_100_000_000
-about: 'Steven Spielberg is a filmmaker, producer, and co-founder of Amblin Entertainment and DreamWorks, best known for films including Jaws, E.T., Jurassic Park, Schindler''s List, Saving Private Ryan, and Lincoln. Born in 1946 in Cincinnati, Ohio, he is married to Kate Capshaw. [Wikipedia](https://en.wikipedia.org/wiki/Steven_Spielberg)'
+about: 'Steven Spielberg made his fortune as one of the most commercially successful film directors and producers, co-founding Amblin Entertainment and DreamWorks after hits from Jaws and E.T. Born in 1946 in Cincinnati, Ohio. through Jurassic Park and Schindler''s List. His philanthropy is strongly shaped by Jewish memory and anti-hate education: he used profits from Schindler''s List to found the Shoah Foundation, which preserves Holocaust and genocide testimony, and he and Kate Capshaw also fund Jewish culture, social justice, gun-safety advocacy, and racial and economic justice causes. [Wikipedia](https://en.wikipedia.org/wiki/Steven_Spielberg)'
 ---
 
 # Internal Notes

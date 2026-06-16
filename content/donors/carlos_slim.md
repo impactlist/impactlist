@@ -3,7 +3,7 @@ id: 'carlos-slim'
 name: 'Carlos Slim'
 birthDate: 1940-01-28
 netWorth: 125_000_000_000
-about: 'Carlos Slim is a Mexican business magnate who controls América Móvil, Latin America''s largest telecommunications company, and the conglomerate Grupo Carso. Born in 1940 in Mexico City, he was ranked the world''s richest person from 2010 to 2013. Nearly all of his giving flows through Fundación Carlos Slim. [Wikipedia](https://en.wikipedia.org/wiki/Carlos_Slim)'
+about: 'Carlos Slim made his fortune through telecommunications, especially Telmex and América Móvil, plus Grupo Carso industrial, retail, construction, and financial holdings. Born in 1940 in Mexico City. His giving runs mainly through Fundación Carlos Slim and related Mexican institutions, with broad programs in education, employment training, health, nutrition, economic development, migrants, road safety, sport, environment, justice, culture, disaster relief, research, and innovation; he often emphasizes capacity-building platforms and partnerships rather than signing Western billionaire pledge campaigns. [Fundación Carlos Slim](https://fundacioncarlosslim.org/english/) [Wikipedia](https://en.wikipedia.org/wiki/Carlos_Slim)'
 ---
 
 # Internal Notes

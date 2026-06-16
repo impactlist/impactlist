@@ -71,4 +71,35 @@ describe('MarkdownContent', () => {
     expect(screen.queryByRole('link')).toBeNull();
     expect(screen.queryByRole('button')).toBeNull();
   });
+
+  it('renders a :::details directive as a collapsed <details> block with markdown inside', () => {
+    render(
+      <MemoryRouter>
+        <MarkdownContent
+          content={[
+            'Intro line stays visible.',
+            '',
+            ':::details{title="How we derived the figure"}',
+            'The cost is $\\frac{1}{2}$ the prior, per [GiveWell](https://www.givewell.org).',
+            ':::',
+            '',
+          ].join('\n')}
+          delay={0}
+        />
+      </MemoryRouter>
+    );
+
+    // The title renders as the <summary>, and the block is collapsed by default (no `open`).
+    const summary = screen.getByText('How we derived the figure');
+    expect(summary.tagName).toBe('SUMMARY');
+    const details = summary.closest('details');
+    expect(details).toBeInTheDocument();
+    expect(details).not.toHaveAttribute('open');
+
+    // The body stays markdown: KaTeX math renders cleanly (no error node) and the link
+    // keeps its new-tab target.
+    expect(details.querySelector('.katex')).toBeInTheDocument();
+    expect(details.querySelector('.katex-error')).toBeNull();
+    expect(screen.getByRole('link', { name: 'GiveWell' })).toHaveAttribute('target', '_blank');
+  });
 });

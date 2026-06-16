@@ -22,3 +22,18 @@ Published markdown renders via `react-markdown` + `remark-math` + `rehype-katex`
 - Inside math: `{,}` for thousands separators (`\$40{,}000`), `\text{–}` for en-dashes/ranges (`0.1\text{–}0.2`), `\text{...}` for words/units, `\approx`, `\times`, subscripts like `Q_{\text{extra}}`. Both `\frac` and `\dfrac` are in use — match the file you are editing.
 - Verification: KaTeX-validating the LaTeX alone is NOT sufficient — the `\$` failure happens in the markdown tokenizer before KaTeX runs. When in doubt, render the changed file through the real pipeline (ReactMarkdown + remark-math + rehype-katex in a small node script) and check for `katex-error` and leftover backslash artifacts.
 - No GitHub-flavored markdown: the plugin chain above omits `remark-gfm`, so GFM-only syntax renders as literal text rather than formatting — pipe tables, `~~strikethrough~~`, and `- [ ]` task lists all pass through verbatim. Present tabular content as prose or bullet lists (or, for a small grid of numbers, a KaTeX `array`), never a pipe table.
+
+## Collapsible details
+
+Wrap deep supporting detail — a parameter derivation, sensitivity sweep, or worked calculation — in a `:::details` container directive (powered by `remark-directive`) so it renders as a native, **collapsed-by-default** `<details>` block the reader expands on demand. The body is ordinary markdown, so `$...$` math, links, and `{{PLAUSIBLE_RANGE}}` tooltips all render normally inside it:
+
+```text
+:::details{title="How we derived the per-life figure"}
+Full derivation goes here — math, [sources](https://example.org), and prose all work.
+:::
+```
+
+- `title` is the always-visible summary line. It is a plain-text directive attribute, **not** markdown — write a literal `$` normally (do NOT escape it as `\$`; a backslash there renders literally), and don't put math or other markup in it. Omit `title` and the summary falls back to "Details".
+- Collapsed-by-default is the whole point: keep the load-bearing claim and its result in the always-visible prose, and put only the expandable derivation inside. Never hide content the reader needs to follow the argument.
+- `:::details` is the ONLY wired-up directive — other `:::name`/`::name`/`:name` directives have no renderer and degrade to undecorated blocks, so don't use them.
+- Implemented by the `remarkCollapsibleDetails` plugin in `src/components/shared/MarkdownContent.jsx`, styled via `.impact-details` in `src/index.css`.

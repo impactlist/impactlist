@@ -46,6 +46,7 @@
     "react-router-dom": "^7.15.0",
     "recharts": "^2.15.2",
     "rehype-katex": "^7.0.1",
+    "remark-directive": "^4.0.0",
     "remark-math": "^6.0.0"
   },
   "devDependencies": {

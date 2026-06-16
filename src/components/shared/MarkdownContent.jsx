@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { Link, useInRouterContext } from 'react-router-dom';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import remarkDirective from 'remark-directive';
 import InfoTooltipIcon from './InfoTooltipIcon';
 import { CONTENT_TOOLTIPS } from '../../constants/contentTooltips';
 
@@ -73,6 +74,27 @@ const CustomLink = ({ node, href, title, children }) => {
   );
 };
 
+// Renders `:::details{title="…"}` container directives as a native, collapsed
+// <details>/<summary> block. The body stays ordinary markdown, so math, links, and
+// tooltips inside it render normally — letting a deep derivation sit behind a click
+// instead of burying the main line of argument (see content/CLAUDE.md and the
+// effectiveness-estimation skill). `:::details` is the only directive we wire up.
+const remarkCollapsibleDetails = () => (tree) => {
+  const transform = (node) => {
+    if (node.type === 'containerDirective' && node.name === 'details') {
+      const title = node.attributes?.title?.trim() || 'Details';
+      node.data = { ...node.data, hName: 'details', hProperties: { className: 'impact-details' } };
+      node.children.unshift({
+        type: 'paragraph',
+        data: { hName: 'summary', hProperties: { className: 'impact-details__summary' } },
+        children: [{ type: 'text', value: title }],
+      });
+    }
+    node.children?.forEach(transform);
+  };
+  transform(tree);
+};
+
 const MarkdownContent = ({ content, className = '', delay = 0.2 }) => {
   if (!content) {
     return null;
@@ -86,7 +108,11 @@ const MarkdownContent = ({ content, className = '', delay = 0.2 }) => {
       transition={{ duration: 0.4, delay }}
     >
       <div className="impact-markdown prose max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]} components={{ a: CustomLink }}>
+        <ReactMarkdown
+          remarkPlugins={[remarkMath, remarkDirective, remarkCollapsibleDetails]}
+          rehypePlugins={[rehypeKatex]}
+          components={{ a: CustomLink }}
+        >
           {content}
         </ReactMarkdown>
       </div>

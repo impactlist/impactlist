@@ -545,6 +545,24 @@
     line-height: 1.5rem;
   }
 
+  .prose.impact-markdown :where(details.impact-details):not(:where(.not-prose, .not-prose *)) {
+    margin: 1rem 0;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--bg-surface-alt) 58%, white 42%);
+  }
+
+  .prose.impact-markdown :where(details.impact-details > summary):not(:where(.not-prose, .not-prose *)) {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .prose.impact-markdown :where(details.impact-details[open] > summary):not(:where(.not-prose, .not-prose *)) {
+    margin-bottom: 0.5rem;
+  }
+
   .impact-loading {
     padding: 2rem 1rem;
     text-align: center;

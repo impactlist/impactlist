@@ -20,7 +20,7 @@ This effect captures human-health benefits from donations to top climate chariti
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$590 (\$60–\$7,400)
+- **Cost per QALY:** \$590 (\$40–\$15,000)
 - **Start time:** 5 years
 - **Duration:** 80 years
 
@@ -63,16 +63,14 @@ $$\text{Cost per QALY} = \dfrac{\$1}{0.001695} \approx \$590$$
 
 So the point estimate is **\$590/QALY**.
 
-The most judgment-sensitive parameter here is $E$, the expected tons averted per dollar. Climate-philanthropy CEAs are lumpy and heavily dependent on policy windows. Published numbers span roughly 1 tCO₂e/\$ as a general donor heuristic, around 2 tCO₂e/\$ in Giving Green's detailed Evergreen model, and roughly 6.9 tCO₂e/\$ when one backs out Founders Pledge's 2023 portfolio-wide figures. Using 1.5 tCO₂e/\$ as the central estimate puts the point estimate above the rough rule of thumb but well below the strongest published historical result.
-
-The other important judgment call is $L$, the QALYs lost per death. The older European evidence from Baccini suggests about 2.6 years lost per heat death after adjusting for harvesting, which is one reason not to push this number extremely high. But [Wilson et al. 2024](https://www.science.org/doi/10.1126/sciadv.adq3367) find that in Mexico, under-35s account for 75% of heat deaths and 87% of heat-related lost life years, plausibly due in part to outdoor work and other exposure patterns. That materially weakens the idea that climate deaths mostly fall on very old people. Because Wilson's lost-life-years measure is not directly a QALY estimate and is not harvesting-adjusted, we make only a modest update to **5 QALYs per death** rather than a much larger one.
+The result swings most on $E$ (tons averted per dollar) and, secondarily, $L$ (QALYs lost per death); $M$ is comparatively well-anchored. Published estimates of $E$ vary widely — roughly 1–7 tCO₂e/\$ across the sources in Assumption 1 — which is what drives the wide plausible range below.
 
 **Range:**
 
 - **Pessimistic:** 0.3 tCO₂e/\$ and 2 QALYs per death gives about \$7,400/QALY.
 - **Optimistic:** 7 tCO₂e/\$ and 10 QALYs per death gives about \$60/QALY.
 
-These two bounds hold $M$, the Bressler mortality figure, fixed at its central value; letting it vary too would widen things further. Accounting for that, our plausible range is roughly **\$40-\$15,000/QALY**.
+These two bounds sweep $E$ and $L$ but hold $M$ (the Bressler mortality figure) fixed, so they understate our true uncertainty — a plausible range is a best-judgment 80% interval, not a mechanical sweep, and should also absorb the uncertainty in $M$ itself and in the tCO₂e-to-CO₂ approximation of Assumption 4. Allowing for that, our plausible range is roughly **\$40-\$15,000/QALY**.
 
 [IPCC AR6](https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-3/) and [WHO 2025](https://www.who.int/publications/i/item/B09460) both emphasize that climate mitigation often creates large health gains from cleaner air, and that these gains typically arrive sooner than the avoided climate damages themselves. We mostly exclude those co-benefits from the headline number because they vary a lot by intervention mix and would be easy to overcount in a simple CO₂-based model.
 

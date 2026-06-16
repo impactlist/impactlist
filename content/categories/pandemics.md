@@ -24,9 +24,30 @@ That event definition lines up reasonably well with catastrophe-style biosecurit
 
 We intentionally model a catastrophe that is narrower than extinction. If you think catastrophic pandemics also carry substantial extinction risk or centuries-long civilizational-collapse risk, the true cost per microprobability would be lower than the estimate on this page.
 
+## What kinds of charities are we modeling?
+
+These estimates assume marginal donations go to **high-leverage pandemic-risk-reduction organizations** — biosecurity governance and synthesis screening, pathogen-agnostic surveillance, faster medical countermeasures, transmission-blocking infrastructure, and GCBR-focused policy and field-building — not the average public-health or medical charity.
+
+:::details{title="Representative activities, and what we exclude"}
+Representative activities include:
+
+- governance of high-risk biological research, synthesis screening, and other anti-proliferation safeguards
+- pathogen-agnostic early detection, biosurveillance, and rapid warning systems
+- platform technologies and institutions for faster medical countermeasures
+- transmission-blocking infrastructure such as pandemic-proof PPE and healthier indoor air
+- policy advocacy and field-building focused specifically on global catastrophic biological risks
+
+We are **not** modeling:
+
+- ordinary hospital charity or basic outbreak response
+- generic global-health delivery
+- broad medical research without a fairly direct route to catastrophic-pandemic risk reduction
+- charities mainly focused on routine endemic disease burden rather than worst-case pandemics
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per microprobability:** \$1 million (\$250,000–\$4 million)
+- **Cost per microprobability:** \$1 million (\$150,000–\$10 million)
 - **Population fraction affected:** 0.9 (0.75–1.0)
 - **QALY improvement per affected person per year:** 0.35 (0.2–0.6)
 - **Start time:** 10 years (~2036)
@@ -69,24 +90,22 @@ $$
 
 So the point estimate is **\$1 million per microprobability**.
 
-The load-bearing input here is Assumption 5. The dedicated assumption page argues that the historical field is probably large enough to be measured in the **mid hundreds of millions of dollars**, small enough to still be very neglected, and concrete enough to have plausibly bought a few basis points of risk reduction through policy work, technical public goods, and capacity building. That central estimate corresponds to a field that has helped a little, not a field that has already solved the problem.
+This is best read as a **historical field-average**. The load-bearing input is Assumption 5: that a mid-hundreds-of-millions field, still very neglected, has plausibly bought a few basis points of risk reduction through policy work, technical public goods, and capacity building — a field that has helped a little, not solved the problem. The marginal cost for a well-chosen donation to a top organization may be somewhat better, pulling the optimistic end well below the **\$1 million** field average, though diminishing returns are a live concern.
 
-As a rough micro-level sanity check, some targeted opportunities plausibly beat the field average by a wide margin. For example, if a **\$20 million** policy effort prevented roughly **10 high-risk lab-years**, and if the relevant catastrophic-pandemic risk were on the order of **3 × 10^-5 per lab-year**, that would buy about **300 microprobabilities** at roughly **\$67,000 each**. This BOTEC should not be taken literally, but it does suggest that unusually strong interventions can plausibly do much better than the historical field average, which makes a **\$1 million** central estimate for the field as a whole look reasonable rather than aggressive. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
+:::details{title="Micro-level sanity check, and what pulls the estimate up or down"}
+Some targeted opportunities plausibly beat the field average by a wide margin. For example, if a **\$20 million** policy effort prevented roughly **10 high-risk lab-years**, and if the relevant catastrophic-pandemic risk were on the order of **3 × 10^-5 per lab-year**, that would buy about **300 microprobabilities** at roughly **\$67,000 each**. This BOTEC should not be taken literally, but it suggests unusually strong interventions can do much better than the historical field average, which makes a **\$1 million** central estimate for the field as a whole look reasonable rather than aggressive. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
 
-This is best read as a **historical field-average** estimate. The marginal cost per microprobability for a well-chosen donation to a top organization may be somewhat better, which is one reason the low end of the range is **\$250,000** rather than **\$1 million**, though diminishing returns are also a live concern.
-
-Two considerations pull the estimate downward:
+Two considerations pull the estimate **downward**:
 
 1. Pandemic-risk work has some unusually concrete levers, including synthesis screening, surveillance, platform countermeasures, indoor-air defenses, and better PPE.
 2. CEPI's [100 Days Mission](https://cepi.net/100-days-mission) suggests that just one major preparedness capability could have saved **8.3 million lives** and nearly **\$1.4 trillion** in productivity losses in COVID-19.
 
-Several considerations pull the estimate upward:
+Several considerations pull it **upward**:
 
 1. Many grants are still field-building or agenda-setting rather than immediate risk reduction.
 2. The most important decisions still run through governments and international coordination.
 3. The hardest scenarios may be exactly the ones where existing medical-countermeasure plans fail.
-
-All things considered, **\$1 million per microprobability** still looks like a reasonable central estimate.
+:::
 
 **Range**
 
@@ -109,48 +128,38 @@ We stop short of **1.0** only because some remote communities and unusually resi
 
 ### QALY improvement per affected person per year
 
-The point estimate (0.35) and range (0.2–0.6) are derived by distributing total QALY losses across the affected population and duration.
+The point estimate (**0.35**, range 0.2–0.6) comes from distributing the catastrophe's total QALY losses across the affected population and the 15-year window. Deaths account for about **77%** of that loss, so the headline is not very sensitive to how the nonfatal survivor harms are split — but it would still be a mistake to model a >10%-death pandemic as "just deaths," since even far-milder COVID-19 caused enormous indirect mortality, care backlogs, and chronic illness.
 
-Using an average world population of **9.9 billion** over the modeled window and an affected fraction of **0.9**, the model implies about **8.9 billion affected people**.
+At the central estimate, averting one microprobability saves about **46,700 QALYs**, for an implied **~\$21/QALY** — extremely good by ordinary global-health standards, which is a general feature of catastrophe-risk models when the stakes are huge and tractability is nontrivial.
 
-One rough illustrative decomposition, rounded for clarity, is:
+:::details{title="QALY decomposition and the 0.35 derivation"}
+Using an average world population of **9.9 billion** over the modeled window and an affected fraction of **0.9**, the model implies about **8.9 billion affected people**. One rough illustrative decomposition, rounded for clarity:
 
 - **~1.0 billion deaths** × **36 QALYs** each = **36 billion QALYs** (using the floor of the ">10%" event definition)
 - **~2.4 billion severe survivors** × **2.5 QALYs** each = **6.0 billion QALYs**
 - **~5.5 billion moderately or indirectly affected people** × **0.8 QALYs** each = **4.4 billion QALYs**
 - **Total:** about **46.0 billion QALYs**
 
-These survivor buckets are not meant as precise epidemiological claims. They are only a way of showing that the total is not driven by deaths alone. Deaths still account for about **77%** of the modeled QALY loss, so the headline estimate is not very sensitive to how the nonfatal harms are split between "severe" and "moderate" survivors.
-
-Affected person-years over a 15-year window are:
+These survivor buckets are not precise epidemiological claims; they only show the total is not driven by deaths alone. Affected person-years over the 15-year window are:
 
 $$
 9.9 \text{B} \times 0.9 \times 15 \approx 134 \text{ billion affected person-years}
 $$
 
-So:
-
 $$
 \dfrac{46.0 \text{B QALYs}}{134 \text{B affected person-years}} \approx 0.34
 $$
 
-That floor-case decomposition gives about **0.34**. We use **0.35** as the point estimate because the category is defined as **more than 10%** dead rather than exactly 10%, so a typical catastrophe in this class is plausibly somewhat worse than the floor case above.
-
-The main driver is still death. But it would be a mistake to model a >10%-death pandemic as "just deaths." COVID-19, which was far milder than the catastrophe modeled here, still caused enormous indirect mortality, huge backlogs in care, large economic losses, and widespread chronic illness. In a much worse pandemic, a few QALYs lost among severe survivors and less than one QALY lost among the broader indirectly affected population look plausible.
-
-At the central estimate, averting one microprobability saves about:
+That floor-case decomposition gives about **0.34**; we use **0.35** because the category is defined as **more than 10%** dead rather than exactly 10%, so a typical catastrophe in this class is plausibly somewhat worse than the floor. The cost-effectiveness figure then follows:
 
 $$
 9.9 \text{B} \times 0.9 \times 0.35 \times 15 \times 10^{-6} \approx 46{,}700 \text{ QALYs}
 $$
 
-So the implied cost-effectiveness is about:
-
 $$
 \dfrac{\$1 \text{M}}{46{,}700} \approx \$21.4 / \text{QALY}
 $$
-
-That is extremely good by ordinary global-health standards, but that is a general feature of catastrophe-risk models when the stakes are huge and tractability is nontrivial.
+:::
 
 ### Start time
 
@@ -172,25 +181,6 @@ The 15-year duration is an equivalent-impact window that balances three things:
 3. **Survivor harms** such as chronic illness, damaged care systems, educational disruption, economic scarring, and institutional weakness plausibly persist for a long time.
 
 So 15 years should not be read as a literal forecast that recovery takes exactly 15 years. It is an accounting device that spreads a catastrophe's total welfare losses over a window long enough to reflect both the acute shock and the life-years destroyed by premature death.
-
-## What kinds of charities are we modeling?
-
-These estimates assume marginal donations go to **high-leverage pandemic-risk-reduction organizations**, not to the average public-health or medical charity.
-
-Representative activities include:
-
-- governance of high-risk biological research, synthesis screening, and other anti-proliferation safeguards
-- pathogen-agnostic early detection, biosurveillance, and rapid warning systems
-- platform technologies and institutions for faster medical countermeasures
-- transmission-blocking infrastructure such as pandemic-proof PPE and healthier indoor air
-- policy advocacy and field-building focused specifically on global catastrophic biological risks
-
-We are **not** modeling:
-
-- ordinary hospital charity or basic outbreak response
-- generic global-health delivery
-- broad medical research without a fairly direct route to catastrophic-pandemic risk reduction
-- charities mainly focused on routine endemic disease burden rather than worst-case pandemics
 
 ## Key uncertainties
 

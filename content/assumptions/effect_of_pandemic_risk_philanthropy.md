@@ -64,81 +64,40 @@ There is no clean empirical way to measure $X$ directly. So the right approach i
 
 ## 2. What scale of philanthropy are we talking about?
 
-The strongest public anchor is [Open Philanthropy's biosecurity and pandemic preparedness page](https://www.openphilanthropy.org/focus/biosecurity-pandemic-preparedness/), which as of 2026 reports:
+The most defensible order-of-magnitude estimate is that explicitly pandemic-risk-focused philanthropy to date is in the **mid hundreds of millions** — not tens of billions, and not the mere tens of millions. We therefore use **\$400 million over roughly 10 years** as a rough central anchor: a BOTEC for the field's size, not a precise figure.
 
-- **140+ grants**
-- **\$250+ million given**
-- work in the field since **2015**
+:::details{title="The funding anchors behind that figure"}
+The strongest public anchor is [Open Philanthropy's biosecurity and pandemic preparedness page](https://www.openphilanthropy.org/focus/biosecurity-pandemic-preparedness/), which as of 2026 reports **140+ grants**, **\$250+ million given**, and work in the field since **2015** — already most of the way to a mid-hundreds-of-millions estimate.
 
-That already gets us most of the way to a mid-hundreds-of-millions estimate.
-
-The [Founders Pledge GCBR report](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf) provides two important cross-checks:
-
-- It notes that, excluding direct response funding and HIV-related pandemic funding, relevant philanthropic funding still remains in the **tens of millions**
-- It says there were **no other funders working on the scale of Open Philanthropy as of mid-2023**
-- Its external review notes that **Effective Giving** was allocating **more than \$10 million per year** toward mitigating global catastrophic biological risks at the time ([Founders Pledge GCBR report](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf))
-
-Putting that together, the most defensible order-of-magnitude estimate is that explicitly pandemic-risk-focused philanthropy to date is in the **mid hundreds of millions**, not in the tens of billions and not in the mere tens of millions.
-
-We therefore use:
-
-$$
-\$400 \text{ million over roughly 10 years}
-$$
-
-as a rough central anchor.
-
-This is not meant to be precise. It is a BOTEC for the size of the field whose effect we are trying to estimate.
+The [Founders Pledge GCBR report](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf) adds cross-checks: excluding direct response and HIV-related funding, relevant philanthropic funding still remains in the **tens of millions**; there were **no other funders on Open Philanthropy's scale as of mid-2023**; and its external review notes **Effective Giving** was allocating **more than \$10 million per year** toward global catastrophic biological risks at the time.
+:::
 
 ---
 
 ## 3. Why think the problem is tractable at all?
 
-The case for nonzero tractability is much stronger than "pandemics are bad, so preparedness must help." There are several concrete levers.
+The case for nonzero tractability is much stronger than "pandemics are bad, so preparedness must help." There are several concrete levers — synthesis-screening policy, international pandemic governance, faster medical countermeasures, and transmission-blocking infrastructure — and recent history shows they can actually move. The problem is hard, but the solution space is not mystical: there are recognizable bottlenecks and candidate defenses.
 
-### 3.1 Policy and governance levers
+:::details{title="The concrete tractability levers"}
+**Policy and governance.** The U.S. government's [2024 OSTP Framework for Nucleic Acid Synthesis Screening](https://aspr.hhs.gov/S3/Pages/OSTP-Framework-for-Nucleic-Acid-Synthesis-Screening.aspx) requires, as a condition of receiving federal life-sciences funding, that synthetic nucleic acids and benchtop synthesis devices come from providers that comply with screening requirements; the related [2023 HHS guidance](https://aspr.hhs.gov/S3/Pages/Synthetic-Nucleic-Acid-Screening.aspx) broadens screening toward sequences of concern. This shows a canonical pandemic-risk policy idea is not merely hypothetical — screening policy exists, can be improved, and advocacy or technical work can shape it. At the international level, the [WHO Pandemic Agreement](https://www.who.int/health-topics/pandemic-agreement) was adopted on **20 May 2025**, showing pandemic-governance infrastructure can move materially even after pandemic fatigue set in.
 
-The U.S. government's [2024 OSTP Framework for Nucleic Acid Synthesis Screening](https://aspr.hhs.gov/S3/Pages/OSTP-Framework-for-Nucleic-Acid-Synthesis-Screening.aspx) requires, as a condition of receiving federal life-sciences funding, that synthetic nucleic acids and benchtop synthesis devices be procured from providers that comply with screening requirements. The related [2023 HHS guidance](https://aspr.hhs.gov/S3/Pages/Synthetic-Nucleic-Acid-Screening.aspx) explicitly broadens screening toward sequences of concern and recommends stronger customer and transfer verification.
-
-That matters because it shows that one of the canonical pandemic-risk policy ideas is not merely hypothetical. Screening policy exists, it can be improved, and advocacy or technical work can help shape it.
-
-At the international level, the [WHO Pandemic Agreement](https://www.who.int/health-topics/pandemic-agreement) was adopted on **20 May 2025**. That does not prove large risk reduction, but it does show that pandemic-governance infrastructure can move materially even after pandemic fatigue set in.
-
-### 3.2 Technical and public-goods levers
-
-The most vivid recent example is CEPI's [100 Days Mission](https://cepi.net/100-days-mission). CEPI cites modeling finding that if COVID vaccines had been available within 100 days of the viral genome release, the world could have averted about:
-
-- **8.3 million excess deaths**
-- nearly **\$1.4 trillion** in productivity losses
-- more than **\$63 billion** in hospitalization costs
-
-This does **not** directly tell us the probability reduction for a much worse pandemic. But it is strong evidence that preparedness investments can move outcomes by huge amounts even in a pandemic far smaller than the catastrophe modeled in the main category.
-
-Similarly, the [GCSP paper on catastrophic pandemics](https://www.gcsp.ch/sites/default/files/2024-12/securing-civilisation-against-catastrophic-pandemics-gp-31.pdf) argues that current measures are inadequate against severe "wildfire" and "stealth" scenarios, but also identifies concrete defences: pandemic-proof PPE, healthy buildings, pathogen-agnostic early warning, and rapid countermeasures.
-
-So the relevant solution space is not mystical. The problem is hard, but there are recognizable bottlenecks and candidate defenses.
+**Technical and public goods.** The most vivid example is CEPI's [100 Days Mission](https://cepi.net/100-days-mission): CEPI cites modeling that COVID vaccines available within 100 days of genome release could have averted about **8.3 million excess deaths**, nearly **\$1.4 trillion** in productivity losses, and more than **\$63 billion** in hospitalization costs. That is strong evidence preparedness can move outcomes by huge amounts, even in a pandemic far smaller than the modeled catastrophe. The [GCSP paper on catastrophic pandemics](https://www.gcsp.ch/sites/default/files/2024-12/securing-civilisation-against-catastrophic-pandemics-gp-31.pdf) argues current measures are inadequate against severe "wildfire" and "stealth" scenarios but identifies concrete defences: pandemic-proof PPE, healthy buildings, pathogen-agnostic early warning, and rapid countermeasures.
+:::
 
 ---
 
 ## 4. How large is the baseline risk?
 
-The [Existential Risk Persuasion Tournament](https://forecastingresearch.org/s/XPT.pdf) provides useful outside anchors. In postmortem medians for risk by **2100**:
+A defensible central view is about **0.5–1.5%** catastrophic-pandemic risk over the next **20 years**, anchored on the [Existential Risk Persuasion Tournament](https://forecastingresearch.org/s/XPT.pdf) and adjusted because the hazard is unlikely to be uniform through time. At that baseline, a reduction of **0.04 percentage points** is a relative risk reduction of only a **few percent** — not a claim that philanthropy has already solved the problem.
+
+:::details{title="The XPT baseline numbers"}
+In XPT postmortem medians for risk by **2100**:
 
 - **Engineered-pathogen catastrophe:** about **3%** for domain experts and **0.8%** for superforecasters
 - **Natural-pathogen catastrophe:** about **0.85%** for domain experts and **1%** for superforecasters
 
-So the total catastrophic-pandemic risk by 2100 looks roughly like:
-
-- **1.8%** if one leans toward superforecasters
-- **3.85%** if one leans toward domain experts
-
-The next **20 years** are not the whole century, but the hazard is also unlikely to be uniform through time. Risk may rise as synthetic biology, AI-enabled design, and synthesis capacity diffuse further. So a rough central view like:
-
-- about **0.5–1.5%** catastrophic-pandemic risk over the next **20 years**
-
-looks defensible.
-
-That means a reduction of **0.04 percentage points** corresponds to a relative risk reduction on the order of only a **few percent**, not a dramatic claim that philanthropy has already solved the problem.
+So total catastrophic-pandemic risk by 2100 is roughly **1.8%** leaning toward superforecasters or **3.85%** leaning toward domain experts. The next 20 years are only part of the century, but risk may rise as synthetic biology, AI-enabled design, and synthesis capacity diffuse further — which is why a **0.5–1.5%** 20-year view looks defensible.
+:::
 
 ---
 
@@ -201,33 +160,6 @@ This is clearly optimistic, which is why it is an upper bound rather than the po
 
 ## 7. Implied cost per basis point and per microprobability
 
-With the central estimate $X = 0.04$ percentage points:
-
-- 0.04 percentage points = **4 basis points**
-- \$400M / 4 bp = **\$100M per basis point**
-- 0.0004 / 10^-6 = **400 microprobabilities**
-- \$400M / 400 = **\$1M per microprobability**
-
-For the lower bound $Y = 0.01$ percentage points:
-
-- **100 microprobabilities**
-- **\$4 million per microprobability**
-
-For the upper bound $Z = 0.16$ percentage points:
-
-- **1,600 microprobabilities**
-- **\$250,000 per microprobability**
-
-So the plausible range is:
-
-- **\$250,000–\$4 million per microprobability**
-
----
-
-## 8. Summary
-
-- **Central estimate:** roughly **\$400 million** of pandemic-risk philanthropy has reduced 20-year catastrophic-pandemic risk by about **0.04 percentage points**
-- **Plausible range:** about **0.01–0.16 percentage points**
-- **Implied cost-effectiveness:** about **\$100M per basis point** or **\$1M per microprobability**
+With the central estimate $X = 0.04$ percentage points, \$400M buys **4 basis points** of risk reduction — about **\$100M per basis point**, or **400 microprobabilities** at **\$1M per microprobability**. The bounds ($Y = 0.01$, $Z = 0.16$ percentage points) give **100–1,600 microprobabilities**, a mechanical range of **\$250,000–\$4 million per microprobability**. The pandemics category page treats this sweep as narrower than the true uncertainty and publishes a wider **\$150,000–\$10 million** plausible range.
 
 {{CONTRIBUTION_NOTE}}

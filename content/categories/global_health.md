@@ -18,6 +18,22 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from donations to exceptionally cost-effective global-health charities, especially GiveWell-style programs that prevent child deaths from malaria, vitamin A deficiency, and vaccine-preventable disease. The estimate is meant to model the best currently donatable global-health opportunities, not the average global-health nonprofit. Because these programs mostly help very young children, the gains are dominated by many decades of additional life.
 
+## What kinds of charities are we modeling?
+
+These estimates are for **GiveWell-style child-survival philanthropy**: seasonal malaria chemoprevention, insecticide-treated bed nets, vitamin A supplementation, and vaccination incentives — not the average international health charity.
+
+:::details{title="What we exclude"}
+They are **not** estimates for:
+
+- the average international health charity
+- hospitals or clinics with broad service mixes
+- health-system-strengthening organizations with diffuse impact
+- biomedical R&D
+- humanitarian medical relief during wars or disasters
+
+Those causes can still be very valuable, but they are usually less tightly evidence-backed and less cost-effective than the narrow set of top child-survival opportunities modeled here.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$90 (\$30–\$150)
@@ -42,22 +58,19 @@ This effect captures welfare gains from donations to exceptionally cost-effectiv
 
 ### Cost per QALY
 
-The cleanest way to estimate this category is to answer two distinct questions:
+We anchor on two questions — what a current marginal GiveWell-style dollar buys, and whether that matches the historical top-charity record — and take the midpoint:
 
-1. **What does a current marginal GiveWell-style global-health dollar probably buy?**
-2. **Does that answer match the historical top-charity record we can see publicly?**
+- **Marginal funding-bar estimate:** about **\$100/QALY** (GiveWell's 8x funding bar, translated through its moral weights into QALYs).
+- **Historical top-charity average:** about **\$80/QALY** (GiveWell's 2022-2024 record of ~\$4,375 per life saved, at 55 QALYs per child death averted).
 
-Those two anchors point to slightly different numbers, and averaging them is the cleanest way to get a cause-area estimate.
+Taking the midpoint and rounding lightly gives **\$90/QALY**. Averaging beats either anchor alone: the strongest single published grant would overstate the average current opportunity, while the funding bar alone understates the fact that GiveWell's recent top-charity portfolio has averaged somewhat better than the bar. Non-mortality benefits (reduced illness, lower treatment costs, later-life income) are inside the QALY metric here — carried by the benchmark bridge rather than added separately.
 
-**Approach 1 — current marginal funding-bar estimate**
-
-GiveWell's public benchmark is about **0.003 units of value per dollar** (Assumption 1), and its current public funding bar is **8x** that benchmark (Assumption 2). So a bar-clearing marginal opportunity produces:
+:::details{title="The two anchor calculations"}
+**Approach 1 — current marginal funding-bar estimate.** GiveWell's benchmark is about **0.003 units of value per dollar** (Assumption 1) and its current funding bar is **8x** that (Assumption 2); Assumptions 3 and 4 translate the resulting units into QALYs:
 
 $$
 \text{Units per } \$ \approx 8 \times 0.003 = 0.024
 $$
-
-Using Assumptions 3 and 4 to translate those units into QALYs:
 
 $$
 \text{QALYs per } \$ \approx 0.024 \times \frac{55}{130} \approx 0.0102
@@ -67,45 +80,16 @@ $$
 \text{Cost per QALY} \approx \frac{1}{0.0102} \approx \$98
 $$
 
-So the funding-bar approach implies roughly **\$100/QALY**.
-
-This is the cleanest anchor for the *marginal* donor dollar today, because GiveWell funds opportunities until they are near its bar rather than until they all have equal average cost-effectiveness.
-
-**Approach 2 — historical top-charity average**
-
-GiveWell's donor-facing top-charity page says that in 2022-2024 it directed funding at about:
-
-- **\$4,000 per life saved** for Malaria Consortium
-- **\$5,500 per life saved** for AMF
-- **\$3,500 per life saved** for Helen Keller Intl
-- **\$4,500 per life saved** for New Incentives
-
-The simple average is:
+**Approach 2 — historical top-charity average.** GiveWell's 2022-2024 cost per life saved was about **\$4,000** (Malaria Consortium), **\$5,500** (AMF), **\$3,500** (Helen Keller Intl), and **\$4,500** (New Incentives):
 
 $$
 \frac{4000 + 5500 + 3500 + 4500}{4} = \$4{,}375 \text{ per life saved}
 $$
 
-Converting that using the central **55 QALYs per child death averted** from Assumption 4:
-
 $$
 \text{Cost per QALY} \approx \frac{\$4{,}375}{55} \approx \$80
 $$
-
-So the historical top-charity record implies roughly **\$80/QALY**.
-
-This is a useful cross-check, but it is probably somewhat optimistic for a new marginal donor dollar because it averages over past grants, some of which were clearly better than GiveWell's current funding bar.
-
-**Combined**
-
-The bar-based approach gives about **\$100/QALY**. The historical-average approach gives about **\$80/QALY**. Taking the midpoint and rounding lightly gives **\$90/QALY**, which is the point estimate we use.
-
-This is better than anchoring only on the strongest public grant or only on the current funding bar:
-
-- Using only the strongest published grant would overstate the average current opportunity set.
-- Using only the funding bar would understate the fact that GiveWell's actual top-charity portfolio has recently averaged somewhat better than that bar.
-
-The funding-bar approach already translates GiveWell's all-things-considered benchmark units into QALY-equivalents through the **55 QALYs / 130 GiveWell units** bridge. The historical cost-per-life-saved anchor is narrower, but useful because it is transparent, publicly visible, and close to the same answer. Non-mortality benefits should not be treated as outside the QALY metric; they are handled mainly through the benchmark approach and the uncertainty range rather than as a separate add-on.
+:::
 
 **Range**
 
@@ -131,20 +115,6 @@ So **1 year** is a reasonable round portfolio-average start time: slower than as
 We use a **60-year** duration because these programs mainly avert deaths among children under 5, so the benefits last for roughly the rest of those children's lives.
 
 The duration field measures **how long** the benefit lasts, while the cost-effectiveness calculation separately uses **55 QALYs per death averted** to account for less-than-perfect health. A 60-year window is therefore a reasonable round approximation for an under-five child-survival portfolio.
-
-## What kinds of charities are we modeling?
-
-These estimates are for **GiveWell-style child-survival philanthropy**: seasonal malaria chemoprevention, insecticide-treated bed nets, vitamin A supplementation, and vaccination incentives.
-
-They are **not** estimates for:
-
-- the average international health charity
-- hospitals or clinics with broad service mixes
-- health-system-strengthening organizations with diffuse impact
-- biomedical R&D
-- humanitarian medical relief during wars or disasters
-
-Those causes can still be very valuable, but they are usually less tightly evidence-backed and less cost-effective than the narrow set of top child-survival opportunities modeled here.
 
 ## Key uncertainties
 

@@ -18,6 +18,8 @@ The point of this page is to justify three judgment calls that are too important
 - the decision to use **\$100/QALY** for the direct channel and **\$150/QALY** for the broader channel
 - the decision to treat GiveWell's operating-leverage numbers as only a loose cross-check rather than the same kind of multiplier as GWWC or The Life You Can Save
 
+Together these imply about **\$21/QALY** for the category: a **40% / 60%** split of an **8x**-leveraged direct channel at **\$100/QALY** and a **4x**-leveraged broader channel at **\$150/QALY**. (The **8x** and **4x** leverage multipliers are inherited from the category page; this page justifies only the split and the two benchmarks.)
+
 ## 1. Why split the category into two channels?
 
 The public evidence is not all of one kind.
@@ -63,62 +65,35 @@ So the direct channel should stay close to the site's top global-health estimate
 
 ## 4. Why is the broader channel benchmark \$150/QALY?
 
-The broader career/worldview channel should not simply be assigned the same benchmark as the direct money-moving channel, but the reason is downstream portfolio mix, not that its effects are outside the metric.
+The broader career/worldview channel earns a different benchmark because of its downstream **portfolio mix**, not because its effects are outside the metric. It steers people across a very wide spread of destinations — from cheap cause areas like animal welfare (~\$2.3/QALY) and global priorities research (~\$5) up to expensive ones like institutions (~\$3,000), plus catastrophic-risk work the site doesn't express in \$/QALY terms at all.
 
-The right question is what kinds of downstream opportunities this channel tends to steer people toward, expressed in all-things-considered QALY-equivalent terms. Those downstream targets are broad:
+**\$150/QALY** is the compromise: a little worse than the direct channel's \$100 because the portfolio is more heterogeneous, but well below ordinary mixed philanthropy because many downstream wins still land in very strong cause areas (80,000 Hours in particular skews toward AGI and catastrophic-risk careers).
 
-- institution building
-- mixed cause portfolios
-- longtermist and catastrophic-risk work
-- talent pipelines whose eventual destination is uncertain
-- theory or worldview shifts that improve judgment and later allocation
+:::details{title="Bounding the broader-channel benchmark"}
+The full downstream spread under the site's current estimates: [Animal Welfare](/category/animal-welfare) ~\$2.3/QALY, [Global Priorities Research](/category/global-priorities) ~\$5, [Global Health](/category/global-health) ~\$90, [Global Development](/category/global-development) ~\$210, [Conflict Mitigation](/category/conflict-mitigation) ~\$333, [Improving Institutions](/category/institutions) ~\$3,000 — plus targets like longtermist and catastrophic-risk work, talent pipelines with uncertain destinations, and worldview shifts that improve later allocation. Some of that points into [AI Existential Risk](/category/ai-risk), [Pandemics](/category/pandemics), and [Nuclear](/category/nuclear), which don't use ordinary \$/QALY numbers, so the benchmark treats them as part of one all-things-considered QALY-equivalent portfolio. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/))
 
-Under the site's current cause estimates, that opportunity set spans a very wide range: [Animal Welfare](/category/animal-welfare) is about **\$2.3/QALY**, [Global Priorities Research](/category/global-priorities) about **\$5/QALY**, [Global Health](/category/global-health) about **\$90/QALY**, [Global Development](/category/global-development) about **\$210/QALY**, [Conflict Mitigation](/category/conflict-mitigation) about **\$333/QALY**, and [Improving Institutions](/category/institutions) about **\$3,000/QALY**. The broader meta channel plausibly sends people toward a mix across this spread, and 80,000 Hours' current public materials suggest a particularly strong focus on AGI-related careers and catastrophic-risk reduction rather than only near-term global health. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/))
-
-Some of that downstream mix likely points into [AI Existential Risk](/category/ai-risk), [Pandemics](/category/pandemics), and [Nuclear](/category/nuclear). Those pages do not currently use ordinary **\$/QALY** estimates, so they cannot simply be inserted into the weighted-average list above. The broader-channel benchmark therefore has to treat catastrophic-risk destinations as part of one all-things-considered QALY-equivalent portfolio rather than as directly observed on-site **\$/QALY** numbers.
-
-If we used something close to **\$90-\$100/QALY** for this broader channel too, we would be implicitly assuming that its downstream opportunity mix is nearly as targeted as direct evaluator or money-moving work. That seems too optimistic.
-
-If we used something like **\$300-\$1,000/QALY** centrally, we would be implicitly treating the broader channel as though its main downstream destinations were much weaker than top global health simply because they are broader, more strategic, or longer-run. That is not the right adjustment either.
-
-So **\$150/QALY** is a compromise:
-
-- at a slightly higher **\$/QALY** than the direct channel's **\$100/QALY** benchmark, because the downstream portfolio is more heterogeneous and includes both very strong and much weaker destinations
-- below ordinary mixed-portfolio philanthropy, because many downstream wins still point toward very strong cause areas
-- consistent with a world where some value runs through catastrophic-risk destinations that the site does not yet express in ordinary **\$/QALY** terms
+Using **\$90-\$100/QALY** would assume the mix is nearly as targeted as direct evaluator work — too optimistic. Using **\$300-\$1,000/QALY** would treat its destinations as much weaker than top global health just for being broader or longer-run — not the right adjustment either.
+:::
 
 ## 5. Why not treat GiveWell's ratio as the same kind of multiplier as GWWC's 6x?
 
-Because they are measuring different things.
+Because they measure different things. GWWC's figure is close to a true counterfactual giving multiplier (extra high-impact giving caused per dollar spent), whereas GiveWell's published metrics are **operational leverage** (dollars directed relative to operating expenses). The latter is strong evidence that evaluators can be highly leveraged, but it shouldn't be plugged mechanically into the same slot as GWWC's 6x — so we let it raise confidence in the direct channel without treating it as an identical multiplier.
 
-Giving What We Can's published figure is close to what people ordinarily mean by a giving multiplier: how much extra high-impact giving is caused by the organization relative to the resources spent.
-
-GiveWell's published metrics are more like **operational leverage**: dollars directed or influenced relative to operating expenses. That is still highly relevant evidence that evaluators can be very leveraged. But it is not the same as a counterfactual donation multiplier for several reasons:
+:::details{title="Why operational leverage isn't a counterfactual multiplier"}
+GiveWell's directed-dollars ratio differs from a counterfactual donation multiplier because:
 
 - some of the money comes from very large donors
 - some of those donors were already highly impact-motivated
 - the causal claim is "influenced" or "directed," not necessarily "newly caused"
 - marginal small-donor support for GiveWell operations is not guaranteed to scale in proportion to the average historical ratio
-
-So GiveWell should raise confidence that the direct channel can be very strong, but it should not be plugged mechanically into the same slot as GWWC's 6x.
+:::
 
 ## 6. What number does this model imply?
 
-Using the central assumptions from the category page:
-
-- direct share: **40%**
-- broader share: **60%**
-- direct channel: **8x** on **\$100/QALY**
-- broader channel: **4x** on **\$150/QALY**
-
-Then:
+Combining the channel shares and benchmarks above:
 
 $$
-\text{QALYs per } \$1 = 0.4 \times \frac{8}{100} + 0.6 \times \frac{4}{150}
-$$
-
-$$
-= 0.032 + 0.016 = 0.048
+\text{QALYs per } \$1 = 0.4 \times \frac{8}{100} + 0.6 \times \frac{4}{150} = 0.032 + 0.016 = 0.048
 $$
 
 $$

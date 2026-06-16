@@ -28,23 +28,23 @@ So 2047 is a stale upper bound, not a current best guess for cognitive AGI.
 
 ## 2. Capability trends point to fast, accelerating progress
 
-[METR's time-horizon work](https://metr.org/blog/2026-1-29-time-horizon-1-1/) measures the length of task (in human-expert time) that frontier models can complete autonomously at 50% reliability. Because these are cognitive, software-style tasks, it is a direct read on the bar we care about — and it is growing exponentially and accelerating:
+[METR's time-horizon work](https://metr.org/blog/2026-1-29-time-horizon-1-1/) measures the length of task (in human-expert time) that frontier models can complete autonomously at 50% reliability — a direct read on the cognitive bar we care about. It is growing exponentially **and accelerating**: as of early 2026 the best systems handle on the order of a **5-hour** task, and the doubling time has itself shrunk to roughly **89 days** for the most recent models. Extrapolating even the slower historical rate implies week- to month-long autonomous cognitive tasks within a few years; the recent rate implies it sooner.
 
-- the horizon has roughly **doubled every 196 days** across 2019–2025,
-- but every **131 days** when restricted to models released since 2023,
-- and every **89 days** for models since 2024.
-
-As of early 2026 the best measured systems handle on the order of a **5-hour** task at 50% reliability. Extrapolating even the slower historical doubling implies week- to month-long autonomous cognitive tasks within a few years; the post-2024 rate implies it sooner.
+:::details{title="The measured doubling rates"}
+The horizon has roughly doubled every **196 days** across 2019–2025, every **131 days** restricted to models released since 2023, and every **89 days** for models since 2024.
+:::
 
 ## 3. Forecasters and tournaments cluster in the early-to-mid 2030s
 
-Independent forecasting communities, asking AGI-style cognitive questions, have moved sharply earlier:
+Independent forecasting communities, asking AGI-style cognitive questions, have moved sharply earlier: Metaculus now centers on a 50% date around **2033**, the Forecasting Research Institute's 2026 LEAP round put expert medians around **2030** (superforecasters ~2028), and a February 2026 AI-safety survey clustered most respondents in **2030–2035**. We read these as bracketing the early-to-mid 2030s rather than pinning our exact milestone, since each uses a somewhat different bar.
 
+:::details{title="The individual forecaster anchors"}
 - **Metaculus.** Its aggregate AGI forecast now centers on a **50% date around 2033**, with roughly 25% by 2029 — down from a median of about 50 years away as recently as 2020, though it has ticked slightly *later* over the past year. ([80,000 Hours review](https://80000hours.org/2025/03/when-do-experts-expect-agi-to-arrive/))
 - **Forecasting tournaments.** In the Forecasting Research Institute's 2026 LEAP round, the median expert put **50% by 2030** on an AI matching expert humans at multi-hour (8+ hour) software tasks, and superforecasters were earlier still (~2028). ([LEAP wave 8](https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines))
 - **AI-safety researchers.** A February 2026 survey found 73% of respondents placing their 50% AGI date before 2035, clustered in 2030–2035. ([survey](https://forum.effectivealtruism.org/posts/LxuKuQd69Qx5FKhNZ/survey-of-ai-safety-leaders-on-x-risk-agi-timelines-and))
 
-These are useful but imperfect anchors, not clean matches for our bar: Metaculus's AGI question bundles in some physical/robotic criteria, and the LEAP forecast covers only multi-hour software work — much narrower than "every mental task." We read them as bracketing the early-to-mid 2030s rather than pinning our exact milestone.
+These are imperfect anchors, not clean matches for our bar: Metaculus's AGI question bundles in some physical/robotic criteria, and the LEAP forecast covers only multi-hour software work — much narrower than "every mental task."
+:::
 
 ## 4. Where our milestone sits
 

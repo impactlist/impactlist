@@ -45,7 +45,7 @@ This effect captures welfare gains from donations to the best current animal-wel
 
 ### Cost per QALY
 
-The point estimate uses a hen-QALY model because this is the cleanest current evidence chain from donor dollar to human-equivalent QALYs. The pessimistic end uses a pessimistic version of that same hen model. The optimistic end uses ACE's shrimp SAD model with the rough cross-walk from Assumption 11, because current best opportunities for the cause span both chicken and shrimp work.
+The point estimate uses a hen-QALY model because this is the cleanest current evidence chain from donor dollar to human-equivalent QALYs. The pessimistic end uses a pessimistic version of that same hen model. The optimistic end uses ACE's shrimp SAD model with the rough cross-walk from Assumption 10, because current best opportunities for the cause span both chicken and shrimp work.
 
 ### Central calculation
 
@@ -62,42 +62,31 @@ Here, the 11 hens-per-dollar figure is treated as the total marginal impact of a
 
 Assumption 6 is the most model-dependent part of this estimate, so it has its own page. In brief, it combines RP's chicken welfare range with a symmetry assumption around neutral welfare and a 25%-of-negative-range estimate for moving from conventional cages to aviaries. ([See detailed justification](/assumption/hen-cage-free-qaly-conversion))
 
-### Why we do not use the older 9-120 chicken-years/\$ model for the point estimate
+The central estimate uses a hens-only model, but two things shape the wide range: counterfactual and diminishing-returns uncertainty (THL's own retrospective implies ~2 hens/\$, not 11), and the broiler and shrimp opportunities the hen formula leaves out.
 
-RP's 2019 estimate that historical chicken corporate campaigns affected 9-120 chicken-years per dollar is still useful background evidence. For current marginal giving, ACE's current accountability benchmarks are more directly relevant.
+:::details{title="Counterfactuals, diminishing returns, and non-hen opportunities"}
+**Why not the older 9-120 chicken-years/\$ model.** RP's 2019 estimate that historical chicken corporate campaigns affected 9-120 chicken-years per dollar is still useful background, but for current marginal giving ACE's current accountability benchmarks are more directly relevant.
 
-### Counterfactuals and diminishing returns
+**Counterfactuals and diminishing returns.** The 11 hens-per-dollar figure is a current program estimate, not a law of constant returns. THL's lower 2 hens-per-dollar retrospective already embeds attribution uncertainty, some counterfactual deflection, mixed spending across acquisition and accountability, and the fact that later dollars tend to face harder targets — one reason the range is much wider than the central formula. This estimate describes current marginal giving to top opportunities rather than an average over the whole cause: ACE estimates THL can effectively absorb about \$28.7 million per year and SWP about \$3.6 million per year in 2026-2027, so additional dollars can still reach high-priority work. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/), [ACE Shrimp Welfare Project Review](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
 
-The 11 hens-per-dollar figure should be read as a current program estimate, not as a law of constant returns. THL's lower 2 hens-per-dollar retrospective is informative partly because it already embeds attribution uncertainty, some counterfactual deflection, mixed spending across acquisition and accountability, and the fact that later dollars tend to face harder targets. That is one reason the range is much wider than the central formula.
-
-At the same time, this estimate is meant to describe current marginal giving to top animal-welfare opportunities rather than an average over the entire cause. ACE currently estimates that THL can effectively absorb about \$28.7 million per year in 2026 and 2027, and that SWP can effectively absorb about \$3.6 million per year in 2026 and 2027. That makes it more plausible that additional dollars can still reach high-priority work rather than immediately spilling into much weaker opportunities. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/), [ACE Shrimp Welfare Project Review](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
-
-### Broilers and shrimp
-
-Broiler reforms and shrimp programs matter because the best current animal-welfare opportunities are not hens-only. WFI finds that BCC/slower-growing reforms avert large amounts of intense pain per bird, and ACE estimates THL's BCC accountability work helps about 46 broilers per dollar. ACE also estimates that Shrimp Welfare Project's humane slaughter and India water-quality programs avert about 48 and 729 SADs per dollar, respectively. Those interventions need species-specific welfare bridges rather than the hen-QALY formula used for the point estimate, but they do imply that a hens-only model does not capture the full uncertainty range for the cause as a whole.
+**Broilers and shrimp.** The best current opportunities are not hens-only. WFI finds BCC/slower-growing reforms avert large amounts of intense pain per bird, and ACE estimates THL's BCC accountability work helps about 46 broilers per dollar; ACE also estimates Shrimp Welfare Project's humane-slaughter and India water-quality programs avert about 48 and 729 SADs per dollar. These need species-specific welfare bridges rather than the hen-QALY formula used for the point estimate, but they imply a hens-only model does not capture the cause's full uncertainty range.
+:::
 
 ### Why the range
 
-The range is meant to reflect plausible current opportunities for top animal-welfare charities. The pessimistic end uses a hen-QALY model; the optimistic end uses a shrimp-SAD model. So the bounds are not just parameter variations on one formula; they reflect different high-impact intervention types inside the cause area.
+The range (**\$0.50–\$52/QALY**) reflects different high-impact intervention types, not just parameter variation on one formula: the pessimistic end is a pessimistic hen-QALY model (~**\$52**), and the optimistic end is ACE's shrimp-SAD program with a SAD-to-QALY cross-walk (~**\$0.50**). The shrimp case is less direct than the hen calculation, which is why it anchors only the optimistic edge rather than the point estimate.
 
-**Pessimistic end:**
-
-- 2 hens helped per dollar
-- 40 weeks affected per hen
-- 0.0125 QALYs per hen-year
+:::details{title="The pessimistic and optimistic calculations"}
+**Pessimistic end** — 2 hens/\$, 40 weeks/hen, 0.0125 QALYs/hen-year:
 
 $$\text{QALYs per } \$1 = 2 \times \dfrac{40}{52} \times 0.0125 \approx 0.019$$
 $$\text{Cost per QALY} = \dfrac{\$1}{0.019} \approx \$52$$
 
-**Optimistic end:**
-
-- ACE's estimate of 729 SADs averted per dollar for Shrimp Welfare Project's India water-quality program
-- A rough cross-walk of 365 SADs = 1 suffering-equivalent year
+**Optimistic end** — ACE's 729 SADs/\$ for Shrimp Welfare Project's India water-quality program, at a rough cross-walk of 365 SADs = 1 suffering-equivalent year:
 
 $$\text{QALY-equivalent years per } \$1 \approx \dfrac{729}{365} \approx 2.0$$
 $$\text{Cost per QALY-equivalent} \approx \dfrac{\$1}{2.0} = \$0.50$$
-
-This optimistic case uses ACE's own current shrimp estimate and an explicit SAD-to-QALY-equivalent cross-walk. It is less direct than the hen calculation, which is why it is used only for the optimistic edge of the range rather than for the point estimate.
+:::
 
 ### Start time
 

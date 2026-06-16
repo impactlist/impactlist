@@ -531,10 +531,11 @@
 
   .prose.impact-markdown :where(h1):not(:where(.not-prose, .not-prose *)) {
     margin-top: 0;
-    margin-bottom: 1.25rem;
-    font-size: 2rem;
+    margin-bottom: 1.45rem;
+    padding-bottom: 0.65rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.25;
     letter-spacing: 0;
     color: var(--text-strong);
   }
@@ -542,9 +543,9 @@
   .prose.impact-markdown :where(h2):not(:where(.not-prose, .not-prose *)) {
     margin-top: 2rem;
     margin-bottom: 0.85rem;
-    font-size: 1.45rem;
-    font-weight: 700;
-    line-height: 1.25;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.35;
     letter-spacing: 0;
     color: var(--text-strong);
   }
@@ -558,7 +559,7 @@
     font-weight: 700;
     line-height: 1.4;
     letter-spacing: 0;
-    color: color-mix(in srgb, var(--text-muted) 78%, white 22%);
+    color: color-mix(in srgb, var(--text-muted) 88%, white 12%);
   }
 
   .prose.impact-markdown :where(h4):not(:where(.not-prose, .not-prose *)) {
@@ -568,7 +569,7 @@
     font-weight: 600;
     line-height: 1.45;
     letter-spacing: 0;
-    color: color-mix(in srgb, var(--text-muted) 88%, white 12%);
+    color: color-mix(in srgb, var(--text-muted) 78%, white 22%);
   }
 
   .prose.impact-markdown :where(details.impact-details):not(:where(.not-prose, .not-prose *)) {

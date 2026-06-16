@@ -102,4 +102,41 @@ describe('MarkdownContent', () => {
     expect(details.querySelector('.katex-error')).toBeNull();
     expect(screen.getByRole('link', { name: 'GiveWell' })).toHaveAttribute('target', '_blank');
   });
+
+  it('renders display math and escaped dollars inside a :::details block', () => {
+    // Mirrors the heaviest math pattern the content pages put inside collapsibles:
+    // inline math, a mid-line `$$...$$` display span, and literal `\$` inside it.
+    render(
+      <MemoryRouter>
+        <MarkdownContent
+          content={[
+            'Headline claim stays visible.',
+            '',
+            ':::details{title="Worked calculation"}',
+            'Microprobabilities averted: $0.0016 / 10^{-6} = 1{,}600$.',
+            '',
+            'Cost per microprobability: $$\\$1\\text{B} / 1{,}600 \\approx \\$625{,}000$$',
+            ':::',
+            '',
+          ].join('\n')}
+          delay={0}
+        />
+      </MemoryRouter>
+    );
+
+    const details = screen.getByText('Worked calculation').closest('details');
+    expect(details).toBeInTheDocument();
+    // Both the inline and the display span render as KaTeX, with no error node...
+    expect(details.querySelectorAll('.katex').length).toBeGreaterThanOrEqual(2);
+    expect(details.querySelector('.katex-error')).toBeNull();
+    // ...and the `$$` delimiters were consumed, not left as literal text fragments.
+    expect(details.textContent).not.toContain('$$');
+
+    // A leaked escaped-dollar would surface as a literal `\$` in the visible text. KaTeX's
+    // hidden MathML annotation legitimately echoes the TeX source (which contains `\$`),
+    // so strip it before checking what the reader actually sees.
+    const visible = details.cloneNode(true);
+    visible.querySelectorAll('.katex-mathml').forEach((node) => node.remove());
+    expect(visible.textContent).not.toContain('\\$');
+  });
 });

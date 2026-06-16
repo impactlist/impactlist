@@ -12,15 +12,13 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 15th 2026 by GPT-5.4 and revised on June 10th 2026 by Claude Fable 5, with prompts from Impact List staff._
+_The following analysis was done on April 15th 2026 by GPT-5.4, revised on June 10th 2026 by Claude Fable 5, and again on June 16th 2026 by Claude Opus 4.8, with prompts from Impact List staff._
 
 Unlike a typical cause area, donations to AI existential-risk charities are best modeled as slightly reducing the probability of a catastrophe rather than directly buying QALYs. We therefore estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of an **AI-caused existential catastrophe**.
 
 ## Description of effect
 
-This effect captures welfare gains from reducing the probability that advanced AI causes an existential catastrophe: either **literal human extinction**, or a permanent global outcome such as **irreversible disempowerment** or **stable totalitarian lock-in** severe enough to permanently and drastically curtail humanity's future.
-
-This matches how existential risk is usually framed: not just everyone dying, but any outcome that irreversibly and drastically reduces humanity's welfare.
+This effect captures welfare gains from reducing the probability that advanced AI causes an existential catastrophe: either **literal human extinction**, or a permanent global outcome such as **irreversible disempowerment** or **stable totalitarian lock-in** severe enough to permanently and drastically curtail humanity's future. This is the usual framing of existential risk: not just everyone dying, but any outcome that irreversibly and drastically reduces humanity's welfare.
 
 ## What kinds of charities are we modeling?
 
@@ -58,16 +56,15 @@ The point estimate (\$625,000 per microprobability) and range (\$143,000–\$7.1
 - Microprobabilities averted: $0.0016 / 10^{-6} = 1{,}600$
 - Cost per microprobability: $$\$1\text{B} / 1{,}600 \approx \$625{,}000$$
 
-(The three significant figures are an artifact of the round 0.16 input, not real precision.)
+The same calculation with weaker or stronger assumed effects gives the range: 0.014 percentage points → about **\$7.1 million** per microprobability, and 0.70 percentage points → about **\$143,000**. (The three significant figures in \$625,000 are an artifact of the round 0.16 input, not real precision.)
 
-- Pessimistic case: 0.014 percentage points → about **\$7.1 million** per microprobability
-- Optimistic case: 0.70 percentage points → about **\$143,000** per microprobability
+The range is wide because the estimate rests on a **single line of evidence** — the realized field-level effect of past spending — rather than a convergence of independent methods, so it reflects uncertainty _within_ that one estimate.
 
+:::details{title="What this figure counts, and historical-average vs. marginal donations"}
 This estimate is already meant to be net of positive and negative effects, because the underlying assumption page explicitly tries to account for both. It also includes more than just extinction-prevention channels: the same technical, governance, and institutional work can bear on irreversible disempowerment and lock-in as well, though probably not quite as strongly as they bear on literal extinction.
 
-The field-level estimate is based on the historical average effect of AI safety spending to date, while this page is meant to model forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar, but that is at least partly offset by diminishing returns and by the field becoming larger and more crowded, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
-
-This rests on a single line of evidence — the realized field-level effect of past spending — rather than a convergence of independent methods, so the range reflects uncertainty _within_ that one estimate.
+The field-level estimate is based on the historical average effect of AI safety spending to date, while this page models forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar, but that is at least partly offset by diminishing returns and by the field becoming larger and more crowded, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
+:::
 
 ### Population fraction affected
 
@@ -79,23 +76,30 @@ This is a simplifying convention. In real lock-in or disempowerment scenarios th
 
 ### QALY improvement per affected person per year
 
-The baseline catastrophe class has an average welfare shortfall of about **0.77** QALY-equivalents per affected person per year — a weighted average of roughly **0.9** for extinction (close to a full loss of human life-years, which average about 0.9 QALY rather than a perfect 1.0) and **0.45** for permanent non-extinction catastrophes, using the 10% + 4% decomposition from Assumption 1:
+The point estimate is **0.80** QALY-equivalents lost per affected person per year — a weighted average of about **0.9** for literal extinction (a lost life-year averages about 0.9 QALY, not a perfect 1.0) and **0.45** for permanent non-extinction catastrophes, where people remain alive but humanity permanently loses the ability to choose and revise its own future.
+
+The **0.45** is the most contestable input, and how you value it drives the whole severity term. Irreversible disempowerment or stable lock-in is far worse than ordinary authoritarianism but less severe per year than extinction: weight the lost agency lightly and you approach the ~0.1–0.3 that present-day happiness gaps alone would justify; treat lost self-determination as near-extinction and you approach 0.9. The plausible range (**0.5–0.9**) for the overall class reflects that spread.
+
+:::details{title="How the 0.80 is derived, and the case for 0.45"}
+Across the whole baseline catastrophe class the average shortfall is about **0.77**, using the 10% + 4% extinction/non-extinction decomposition from Assumption 1:
 
 $$\text{Severity} = \frac{0.10 \times 0.9 + 0.04 \times 0.45}{0.14} \approx 0.77$$
 
-This is coupled to that decomposition: if the probability split changes, the weighted severity should be recomputed rather than left at 0.77.
-
-The contestable input is the **0.45** for non-extinction. Irreversible disempowerment or stable totalitarian lock-in is less severe per person-year — people remain alive, with relationships, projects, health, and some residual welfare — but far worse than ordinary authoritarianism, because humanity permanently loses the ability to choose and revise its own future. ([Bostrom 2002](https://nickbostrom.com/existential/risks); on concrete AI-driven disempowerment and lock-in pathways, [Dung 2025](https://link.springer.com/article/10.1007/s00146-024-01930-2), [Kulveit et al. 2025](https://arxiv.org/abs/2501.16946), [Feldstein 2019](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3314162), [Tokson 2025](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5182213)) The 0.45 is roughly a hedonic part plus a non-hedonic part: day-to-day wellbeing gaps between the freest and least-free societies today are only about 1–3 points on a 0–10 scale, so a purely hedonic reading would give ~0.1–0.3 ([World Happiness Report](https://worldhappiness.report/)); the remainder reflects the permanent loss of agency, autonomy, and self-determination that makes this *existential* rather than merely a bad regime. Weight those non-hedonic losses less and you should use a lower number; treat permanent loss of self-determination as near-extinction-equivalent and you should use a higher one.
-
-The point estimate used here (**0.80**) is slightly higher than the baseline 0.77 because a donation does not buy a proportional slice of the baseline risk. Per Assumption 6, safety spending is somewhat more effective against extinction than against the non-extinction channels, so the averted risk is about **77% extinction** rather than the baseline 71%:
+The point estimate is **0.80** rather than 0.77 because a donation does not buy a proportional slice of the baseline risk. Per Assumption 6, safety spending is somewhat more effective against extinction than against the non-extinction channels, so the averted risk is about **77% extinction** rather than the baseline 71%:
 
 $$S_{\text{averted}} = (0.769 \times 0.9) + (0.231 \times 0.45) \approx 0.80$$
 
-Readers who assume safety work reduces all channels proportionally should use 0.77 instead; the difference is about 4%. The plausible range (**0.5–0.9**) applies to the overall weighted class — 0.5 if non-extinction pathways dominate and preserve substantial everyday welfare, 0.9 if the relevant mass is mostly extinction or lock-in is treated as nearly extinction-equivalent.
+Readers who assume safety work reduces all channels proportionally should use 0.77 instead; the difference is about 4%. Both numbers are coupled to the probability split — if it changes, recompute rather than reusing 0.77 or 0.80.
+
+The **0.45** itself is roughly a hedonic part plus a non-hedonic part. Day-to-day wellbeing gaps between the freest and least-free societies today are only about 1–3 points on a 0–10 scale, so a purely hedonic reading would give ~0.1–0.3 ([World Happiness Report](https://worldhappiness.report/)); the remainder reflects the permanent loss of agency, autonomy, and self-determination that makes this *existential* rather than merely a bad regime. ([Bostrom 2002](https://nickbostrom.com/existential/risks); on concrete AI-driven disempowerment and lock-in pathways, [Dung 2025](https://link.springer.com/article/10.1007/s00146-024-01930-2), [Kulveit et al. 2025](https://arxiv.org/abs/2501.16946), [Feldstein 2019](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3314162), [Tokson 2025](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5182213))
+:::
 
 **How total QALYs scale with the time limit:**
 
-The figures below use the site's default global parameters (Assumption 3) and its actual population model, so they match what the site displays. The effect window always runs from year 10 to the time limit.
+A microprobability is worth more the longer the horizon you count over. At the **default 100-year time limit** it is worth about **1.07 million QALYs**, which puts the cost at roughly **\$0.58 per QALY — about \$47 per life**. Because the population keeps growing until it hits the default cap, the QALYs at stake rise faster than linearly with the time limit, so the implied cost falls accordingly: about **\$195 per life** at a 40-year limit and about **\$1 per life** at a 1,000-year limit.
+
+:::details{title="Worked examples at 40-, 100-, and 1,000-year time limits"}
+These use the site's default global parameters (Assumption 3) and its actual population model, so they match what the site displays. The effect window always runs from year 10 to the time limit.
 
 **Example 1 — Time limit = 40 years (30-year window)**
 
@@ -119,9 +123,10 @@ The figures below use the site's default global parameters (Assumption 3) and it
 - QALYs saved per microprobability: $57{,}000\text{B} \times 10^{-6} = 57 \text{ million}$
 - Cost per QALY: $$\$625{,}000 / 57\text{M} \approx \$0.011/\text{QALY}$$ (about \$1 per life)
 
-Because the default population curve grows at 1% per year until it hits the cap, the QALYs at stake scale faster than linearly with the time limit, and the long-horizon numbers are dominated by the population growth and cap parameters — both of which users can edit.
+Because the default population curve grows at 1% per year until it hits the cap, the long-horizon numbers are dominated by the population growth and cap parameters — both of which users can edit.
+:::
 
-These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is not unique to this page; it is a general feature of existential-risk expected-value models when you combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. The result is highly sensitive to a few contestable assumptions — the effectiveness of marginal safety work, the severity assigned to non-extinction catastrophes, and especially the time limit and discount rate. But within the modeled range the headline comparison is robust: at the default time limit, the cost per microprobability would have to exceed roughly \$67 million — about nine times the pessimistic end of our range — before this category looked worse than a \$5,000-per-life global-health benchmark. The decision-relevant cruxes are therefore whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
+These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks — a general feature of existential-risk expected-value models, which combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. Within the modeled range the headline comparison is robust: at the default time limit, the cost per microprobability would have to exceed roughly **\$67 million** — about nine times the pessimistic end of our range — before this category looked worse than a \$5,000-per-life global-health benchmark. The decision-relevant cruxes are therefore whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
 
 ### Start time
 

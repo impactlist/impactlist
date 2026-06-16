@@ -3,7 +3,7 @@ id: 'steven-spielberg'
 name: 'Steven Spielberg'
 birthDate: 1946-12-18
 netWorth: 7_100_000_000
-about: 'Steven Spielberg made his fortune as one of the most commercially successful film directors and producers, co-founding Amblin Entertainment and DreamWorks after hits from Jaws and E.T. Born in 1946 in Cincinnati, Ohio. through Jurassic Park and Schindler''s List. His philanthropy is strongly shaped by Jewish memory and anti-hate education: he used profits from Schindler''s List to found the Shoah Foundation, which preserves Holocaust and genocide testimony, and he and Kate Capshaw also fund Jewish culture, social justice, gun-safety advocacy, and racial and economic justice causes. [Wikipedia](https://en.wikipedia.org/wiki/Steven_Spielberg)'
+about: 'Steven Spielberg made his fortune as one of the most commercially successful film directors and producers, co-founding Amblin Entertainment and DreamWorks after hits from Jaws and E.T. through Jurassic Park and Schindler''s List. His philanthropy is strongly shaped by Jewish memory and anti-hate education: he used profits from Schindler''s List to found the Shoah Foundation, which preserves Holocaust and genocide testimony, and he and Kate Capshaw also fund Jewish culture, social justice, gun-safety advocacy, and racial and economic justice causes. Born in 1946 in Cincinnati, Ohio. [Wikipedia](https://en.wikipedia.org/wiki/Steven_Spielberg)'
 ---
 
 # Internal Notes

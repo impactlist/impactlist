@@ -3,7 +3,7 @@ id: 'lisbet-rausing'
 name: 'Lisbet Rausing'
 birthDate: 1960-06-09
 netWorth: 2_900_000_000
-about: 'Lisbet Rausing is a historian of science and Tetra Pak heiress who co-founded [Arcadia](https://arcadiafund.org.uk/) with Peter Baldwin. Born in 1960 in Lund, Sweden. Arcadia uses a family-philanthropy model with few, multi-year grants to record endangered cultural heritage, conserve and restore nature, and promote open access to knowledge; it has awarded about $1.3 billion globally, often through long-term partnerships and core support. [Wikipedia](https://en.wikipedia.org/wiki/Lisbet_Rausing)'
+about: 'Lisbet Rausing is a historian of science and Tetra Pak heiress who co-founded [Arcadia](https://arcadiafund.org.uk/) with Peter Baldwin. Arcadia uses a family-philanthropy model with few, multi-year grants to record endangered cultural heritage, conserve and restore nature, and promote open access to knowledge; it has awarded about $1.3 billion globally, often through long-term partnerships and core support. Born in 1960 in Lund, Sweden. [Wikipedia](https://en.wikipedia.org/wiki/Lisbet_Rausing)'
 ---
 
 # Internal Notes

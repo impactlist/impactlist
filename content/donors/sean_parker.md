@@ -3,7 +3,7 @@ id: 'sean-parker'
 name: 'Sean Parker'
 birthDate: 1979-12-03
 netWorth: 3_000_000_000
-about: 'Sean Parker made his fortune from early internet companies, including Napster, Plaxo, Facebook, Spotify-related investing, and Founders Fund. Born in 1979 in Herndon, Virginia. Through the Parker Foundation, launched with a large personal commitment in 2015, he focuses on life sciences, global public health, and civic engagement. His signature gift is the Parker Institute for Cancer Immunotherapy, a multi-institution research collaboration designed to move cancer immunology faster by aligning funding, data sharing, intellectual property, and clinical translation. [Wikipedia](https://en.wikipedia.org/wiki/Sean_Parker)'
+about: 'Sean Parker made his fortune from early internet companies, including Napster, Plaxo, Facebook, Spotify-related investing, and Founders Fund. Through the Parker Foundation, launched with a large personal commitment in 2015, he focuses on life sciences, global public health, and civic engagement. His signature gift is the Parker Institute for Cancer Immunotherapy, a multi-institution research collaboration designed to move cancer immunology faster by aligning funding, data sharing, intellectual property, and clinical translation. Born in 1979 in Herndon, Virginia. [Wikipedia](https://en.wikipedia.org/wiki/Sean_Parker)'
 ---
 
 # Internal Notes

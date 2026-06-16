@@ -3,7 +3,7 @@ id: 'li-ka-shing'
 name: 'Li Ka-shing'
 birthDate: 1928-07-29
 netWorth: 45_100_000_000
-about: 'Li Ka-shing built his fortune by turning a Hong Kong plastics business into Cheung Kong, CK Hutchison, and CK Asset, spanning property, ports, telecoms, retail, infrastructure, and energy. Born in 1928 in Chaozhou, China. He calls the [Li Ka Shing Foundation](https://www.lksf.org/) his "third son"; it has invested over HK$30 billion since 1980, mainly in education, medical services, charity, and anti-poverty work, with Shantou University as its cornerstone project. [Wikipedia](https://en.wikipedia.org/wiki/Li_Ka-shing)'
+about: 'Li Ka-shing built his fortune by turning a Hong Kong plastics business into Cheung Kong, CK Hutchison, and CK Asset, spanning property, ports, telecoms, retail, infrastructure, and energy. He calls the [Li Ka Shing Foundation](https://www.lksf.org/) his "third son"; it has invested over HK$30 billion since 1980, mainly in education, medical services, charity, and anti-poverty work, with Shantou University as its cornerstone project. Born in 1928 in Chaozhou, China. [Wikipedia](https://en.wikipedia.org/wiki/Li_Ka-shing)'
 ---
 
 # Internal Notes

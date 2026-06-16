@@ -3,7 +3,7 @@ id: 't-denny-sanford'
 name: 'T. Denny Sanford'
 birthDate: 1935-12-23
 netWorth: 2_443_500_000
-about: 'T. Denny Sanford made his fortune in banking and credit cards as founder of First Premier Bank and head of United National. Born in 1935 in Saint Paul, Minnesota. He has pledged to give away his fortune during his lifetime, often without a large permanent foundation, and has given heavily to health care, rural medicine, medical research, higher education, children''s programs, and South Dakota institutions, including Sanford Health, Sanford Underground Research Facility, UC San Diego stem-cell work, National University, and virtual care. His reputation also carries serious controversy: a child sexual-abuse-material investigation closed without charges, and the Giving Pledge removed him from its list after related records were unsealed in 2023. [Wikipedia](https://en.wikipedia.org/wiki/Denny_Sanford)'
+about: 'T. Denny Sanford made his fortune in banking and credit cards as founder of First Premier Bank and head of United National. He has pledged to give away his fortune during his lifetime, often without a large permanent foundation, and has given heavily to health care, rural medicine, medical research, higher education, children''s programs, and South Dakota institutions, including Sanford Health, Sanford Underground Research Facility, UC San Diego stem-cell work, National University, and virtual care. His reputation also carries serious controversy: a child sexual-abuse-material investigation closed without charges, and the Giving Pledge removed him from its list after related records were unsealed in 2023. Born in 1935 in Saint Paul, Minnesota. [Wikipedia](https://en.wikipedia.org/wiki/Denny_Sanford)'
 ---
 
 # Internal Notes

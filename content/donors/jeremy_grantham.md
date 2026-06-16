@@ -3,7 +3,7 @@ id: 'jeremy-grantham'
 name: 'Jeremy Grantham'
 birthDate: 1938-10-06
 netWorth: 1_000_000_000
-about: 'Jeremy Grantham made his fortune as a co-founder of GMO, the Boston investment firm known for long-horizon value investing and warnings about asset bubbles. Born in 1938 in Ware, Hertfordshire, England. With Hannelore Grantham, he created the Grantham Foundation for the Protection of the Environment and related vehicles that fund climate-change research, environmental advocacy, and university institutes at Imperial College London, the London School of Economics, and the University of Sheffield; his giving philosophy is explicitly climate-focused and aimed at buying time for better policy and technology. [Wikipedia](https://en.wikipedia.org/wiki/Jeremy_Grantham)'
+about: 'Jeremy Grantham made his fortune as a co-founder of GMO, the Boston investment firm known for long-horizon value investing and warnings about asset bubbles. With Hannelore Grantham, he created the Grantham Foundation for the Protection of the Environment and related vehicles that fund climate-change research, environmental advocacy, and university institutes at Imperial College London, the London School of Economics, and the University of Sheffield; his giving philosophy is explicitly climate-focused and aimed at buying time for better policy and technology. Born in 1938 in Ware, Hertfordshire, England. [Wikipedia](https://en.wikipedia.org/wiki/Jeremy_Grantham)'
 ---
 
 # Internal Notes

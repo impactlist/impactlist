@@ -3,7 +3,7 @@ id: 'michael-dell'
 name: 'Michael Dell'
 birthDate: 1965-02-23
 netWorth: 233_000_000_000
-about: 'Michael Dell built his fortune by founding Dell Computer from a University of Texas dorm room and later leading Dell Technologies and related investment vehicles. Born in 1965 in Houston, Texas. With Susan Dell, he founded the Michael & Susan Dell Foundation, which emphasizes practical, measurable pathways for children and families: quality schools, classroom tools, college success, jobs and livelihoods, financial services, health innovation, and strong communities in the U.S., India, South Africa, Israel, and Austin/Texas; the Dells also make large local health and university gifts. [Michael & Susan Dell Foundation](https://www.dell.org/), [Wikipedia](https://en.wikipedia.org/wiki/Michael_Dell)'
+about: 'Michael Dell built his fortune by founding Dell Computer from a University of Texas dorm room and later leading Dell Technologies and related investment vehicles. With Susan Dell, he founded the Michael & Susan Dell Foundation, which emphasizes practical, measurable pathways for children and families: quality schools, classroom tools, college success, jobs and livelihoods, financial services, health innovation, and strong communities in the U.S., India, South Africa, Israel, and Austin/Texas; the Dells also make large local health and university gifts. Born in 1965 in Houston, Texas. [Michael & Susan Dell Foundation](https://www.dell.org/), [Wikipedia](https://en.wikipedia.org/wiki/Michael_Dell)'
 ---
 
 # Internal Notes

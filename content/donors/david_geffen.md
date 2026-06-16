@@ -3,7 +3,7 @@ id: 'david-geffen'
 name: 'David Geffen'
 birthDate: 1943-02-21
 netWorth: 9_200_000_000
-about: 'David Geffen built his fortune in entertainment by founding Asylum Records and Geffen Records, co-founding DreamWorks SKG, and selling major music and media interests. Born in 1943 in Brooklyn, New York. His philanthropy is concentrated in medicine, arts, and education, including landmark gifts to UCLA''s medical school, Yale drama, Lincoln Center, Columbia, and cultural institutions; he has generally favored large institutional gifts, often unrestricted or tuition/access oriented, and is a Giving Pledge signatory. [Wikipedia](https://en.wikipedia.org/wiki/David_Geffen)'
+about: 'David Geffen built his fortune in entertainment by founding Asylum Records and Geffen Records, co-founding DreamWorks SKG, and selling major music and media interests. His philanthropy is concentrated in medicine, arts, and education, including landmark gifts to UCLA''s medical school, Yale drama, Lincoln Center, Columbia, and cultural institutions; he has generally favored large institutional gifts, often unrestricted or tuition/access oriented, and is a Giving Pledge signatory. Born in 1943 in Brooklyn, New York. [Wikipedia](https://en.wikipedia.org/wiki/David_Geffen)'
 ---
 
 # Internal Notes

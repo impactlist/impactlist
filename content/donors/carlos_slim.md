@@ -3,7 +3,7 @@ id: 'carlos-slim'
 name: 'Carlos Slim'
 birthDate: 1940-01-28
 netWorth: 125_000_000_000
-about: 'Carlos Slim made his fortune through telecommunications, especially Telmex and América Móvil, plus Grupo Carso industrial, retail, construction, and financial holdings. Born in 1940 in Mexico City. His giving runs mainly through Fundación Carlos Slim and related Mexican institutions, with broad programs in education, employment training, health, nutrition, economic development, migrants, road safety, sport, environment, justice, culture, disaster relief, research, and innovation; he often emphasizes capacity-building platforms and partnerships rather than signing Western billionaire pledge campaigns. [Fundación Carlos Slim](https://fundacioncarlosslim.org/english/) [Wikipedia](https://en.wikipedia.org/wiki/Carlos_Slim)'
+about: 'Carlos Slim made his fortune through telecommunications, especially Telmex and América Móvil, plus Grupo Carso industrial, retail, construction, and financial holdings. His giving runs mainly through Fundación Carlos Slim and related Mexican institutions, with broad programs in education, employment training, health, nutrition, economic development, migrants, road safety, sport, environment, justice, culture, disaster relief, research, and innovation; he often emphasizes capacity-building platforms and partnerships rather than signing Western billionaire pledge campaigns. Born in 1940 in Mexico City. [Fundación Carlos Slim](https://fundacioncarlosslim.org/english/) [Wikipedia](https://en.wikipedia.org/wiki/Carlos_Slim)'
 ---
 
 # Internal Notes

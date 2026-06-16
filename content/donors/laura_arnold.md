@@ -2,7 +2,7 @@
 id: 'laura-arnold'
 name: 'Laura Arnold'
 netWorth: 1_450_000_000
-about: 'Laura Arnold is a former mergers-and-acquisitions lawyer and energy executive who became a full-time philanthropist after co-founding Arnold Ventures with [John Arnold](/donor/john-arnold). Born in Puerto Rico. Through [Arnold Ventures](https://www.arnoldventures.org/about) and their [Giving Pledge](https://www.givingpledge.org/pledger/laura-and-john-arnold/), she emphasizes evidence-based, bipartisan policy reform in health, criminal justice, higher education, infrastructure, and public finance, with a willingness to make risky bets where philanthropy can unlock large public benefits. [Wikipedia](https://en.wikipedia.org/wiki/Laura_Arnold)'
+about: 'Laura Arnold is a former mergers-and-acquisitions lawyer and energy executive who became a full-time philanthropist after co-founding Arnold Ventures with [John Arnold](/donor/john-arnold). Through [Arnold Ventures](https://www.arnoldventures.org/about) and their [Giving Pledge](https://www.givingpledge.org/pledger/laura-and-john-arnold/), she emphasizes evidence-based, bipartisan policy reform in health, criminal justice, higher education, infrastructure, and public finance, with a willingness to make risky bets where philanthropy can unlock large public benefits. Born in Puerto Rico. [Wikipedia](https://en.wikipedia.org/wiki/Laura_Arnold)'
 ---
 
 # Internal Notes

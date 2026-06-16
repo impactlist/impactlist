@@ -3,7 +3,7 @@ id: 'george-lucas'
 name: 'George Lucas'
 birthDate: 1944-05-14
 netWorth: 5_100_000_000
-about: 'George Lucas made his fortune by creating Star Wars and Indiana Jones, founding Lucasfilm, Industrial Light & Magic, LucasArts, Skywalker Sound, and THX, and retaining valuable franchise rights before selling Lucasfilm to Disney in 2012. Born in 1944 in Modesto, California. His philanthropy is centered on education and the arts: he founded the George Lucas Educational Foundation/Edutopia, pledged to give most of his wealth away, and with Mellody Hobson has backed major education, film, and museum projects. [Wikipedia](https://en.wikipedia.org/wiki/George_Lucas)'
+about: 'George Lucas made his fortune by creating Star Wars and Indiana Jones, founding Lucasfilm, Industrial Light & Magic, LucasArts, Skywalker Sound, and THX, and retaining valuable franchise rights before selling Lucasfilm to Disney in 2012. His philanthropy is centered on education and the arts: he founded the George Lucas Educational Foundation/Edutopia, pledged to give most of his wealth away, and with Mellody Hobson has backed major education, film, and museum projects. Born in 1944 in Modesto, California. [Wikipedia](https://en.wikipedia.org/wiki/George_Lucas)'
 ---
 
 # Internal Notes

@@ -3,7 +3,7 @@ id: 'bill-ackman'
 name: 'Bill Ackman'
 birthDate: 1966-05-11
 netWorth: 8_000_000_000
-about: 'Bill Ackman made his fortune as a hedge fund manager and activist investor through Pershing Square Capital Management. Born in 1966 in Chappaqua, New York. He and Karen Ackman founded the Pershing Square Foundation in 2006; with Neri Oxman now involved, Pershing Square Philanthropies describes its model as risk capital for philanthropy and funds health, scientific research, education, economic development, human rights, arts and civic projects, and urban issues, with named initiatives in cancer and neuroscience prizes. Ackman has signed the Giving Pledge. [Pershing Square Philanthropies](https://pershingsquarephilanthropies.org) [Wikipedia](https://en.wikipedia.org/wiki/Bill_Ackman)'
+about: 'Bill Ackman made his fortune as a hedge fund manager and activist investor through Pershing Square Capital Management. He and Karen Ackman founded the Pershing Square Foundation in 2006; with Neri Oxman now involved, Pershing Square Philanthropies describes its model as risk capital for philanthropy and funds health, scientific research, education, economic development, human rights, arts and civic projects, and urban issues, with named initiatives in cancer and neuroscience prizes. Ackman has signed the Giving Pledge. Born in 1966 in Chappaqua, New York. [Pershing Square Philanthropies](https://pershingsquarephilanthropies.org) [Wikipedia](https://en.wikipedia.org/wiki/Bill_Ackman)'
 ---
 
 # Internal Notes

@@ -23,6 +23,14 @@ This effect captures health gains from strong health and medicine philanthropy i
 
 This estimate excludes global-health programs in poorer countries, pandemic-risk reduction, and longevity moonshots, which are modeled separately.
 
+## What kinds of charities are we modeling?
+
+This estimate models **strong marginal health / medicine philanthropy** in rich countries — evidence-based direct programs (prevention, treatment access, adherence, navigation, care delivery), disease-focused translational and clinical research, and catalytic field-building or data infrastructure that plausibly speeds useful medical progress. It is not a model of the average unrestricted donation to a hospital or medical school.
+
+:::details{title="What this is not a good model of"}
+This estimate is **not** a good model of generic hospital fundraising, prestige building projects, or low-additionality donations to already-rich academic medical centers. Those can easily be much worse than the category default and should ideally be estimated at the recipient level.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$15,000 (\$6,000-\$50,000)
@@ -46,27 +54,16 @@ This estimate excludes global-health programs in poorer countries, pandemic-risk
 
 ### Cost per QALY
 
-The cleanest way to model this category is as a two-bucket portfolio:
+We model the category as a two-bucket portfolio of marginal dollars — cheaper, faster **direct programs** and pricier, slower **research / translation** — and combine their cost-effectiveness:
 
 $$
 \text{Cost per QALY} = \dfrac{1}{\frac{w_d}{c_d} + \frac{w_r}{c_r}}
 $$
 
-Where:
+With the central inputs — a **50/50** dollar split (Assumption 6) between a direct bucket at **\$10,000/QALY** and a research bucket at **\$25,000/QALY** — this works out to about **\$14,300/QALY**, which we round to a point estimate of **\$15,000/QALY**. Because the cheaper direct bucket produces most of the QALYs, the blend sits well below the simple dollar-weighted average of the two buckets.
 
-- $w_d$ = share of dollars going to direct programs
-- $c_d$ = cost per QALY for direct programs
-- $w_r$ = share of dollars going to research / translation
-- $c_r$ = cost per QALY for research / translation
-
-Using the central assumptions:
-
-- $w_d$ = 0.5
-- $c_d$ = \$10,000
-- $w_r$ = 0.5
-- $c_r$ = \$25,000
-
-So:
+:::details{title="The portfolio calculation"}
+The variables are the dollar share ($w_d$, $w_r$) and cost per QALY ($c_d$, $c_r$) of each bucket. Using the central inputs $w_d = w_r = 0.5$, a direct-bucket cost $c_d$ of \$10,000, and a research-bucket cost $c_r$ of \$25,000:
 
 $$
 \text{QALYs per dollar} = \frac{0.5}{10000} + \frac{0.5}{25000} = 0.00007
@@ -75,12 +72,12 @@ $$
 $$
 \text{Cost per QALY} \approx \dfrac{1}{0.00007} \approx 14{,}300
 $$
+:::
 
-Rounded, that gives a point estimate of **\$15,000/QALY**.
+The two bucket values are the main drivers, and each combines concrete cost-effectiveness studies with a broader cross-check rather than resting on a single exemplar.
 
-#### Why \$10,000/QALY for the direct-program bucket?
-
-The direct-program bucket should not be set only by the very best case studies. A better approach is to combine the strongest concrete examples with a broader portfolio cross-check.
+:::details{title="Why 10,000 dollars per QALY for the direct-program bucket"}
+The direct-program bucket should not be set only by the very best case studies; it combines the strongest concrete examples with a broader portfolio cross-check (Assumptions 1-3).
 
 The main concrete anchors are:
 
@@ -95,25 +92,17 @@ Taken literally, these studies suggest that unusually strong direct programs can
 Owen & Fischer provide the broadest cross-check. Their median NICE public-health ICER is **£1,986/QALY**. Philanthropic marginal dollars should usually do several times worse than that benchmark because donors rarely control full uptake, patient selection, or system-wide implementation. A **4x-5x** haircut implies roughly **£8,000-£10,000/QALY**, or about **\$10,000-\$13,000/QALY**.
 
 Putting those two views together, **\$10,000/QALY** is a reasonable central estimate for strong direct health philanthropy in rich countries: above the best exemplars, below the middling or pessimistic cases, and close to the NICE-based cross-check after a substantial marginality discount.
+:::
 
-#### Why \$25,000/QALY for the research bucket?
-
-The most useful concrete anchor is the UK cancer-research returns paper. Very crudely:
-
-- total public / charitable cancer research spend: about **£15 billion**
-- total QALYs from prioritized interventions: about **5.9 million**
-- attribution to UK research: **17%**
-
-So attributed QALYs are approximately:
+:::details{title="Why 25,000 dollars per QALY for the research bucket"}
+The most useful concrete anchor is the UK cancer-research returns paper (Assumption 5). Very crudely, attributing **17%** of the **5.9 million** QALYs from prioritized interventions to the **£15 billion** of UK public / charitable cancer research spend:
 
 $$
-5.9 \text{ million} \times 0.17 \approx 1.0 \text{ million}
+5.9 \text{ million} \times 0.17 \approx 1.0 \text{ million attributed QALYs}
 $$
 
-And the crude research cost per attributable QALY is about **£15,000/QALY**:
-
 $$
-\dfrac{15 \text{ billion}}{1.0 \text{ million QALYs}} \approx 15{,}000
+\dfrac{£15 \text{ billion}}{1.0 \text{ million QALYs}} \approx £15{,}000 \text{ per QALY}
 $$
 
 That is approximately **\$19,000-\$20,000/QALY**. We then move somewhat upward to **\$25,000/QALY** for the category-level research bucket because:
@@ -121,52 +110,41 @@ That is approximately **\$19,000-\$20,000/QALY**. We then move somewhat upward t
 - the cancer estimate is historical and partly reflects unusually successful past research
 - some current medical philanthropy goes to more speculative areas than mature cancer or cardiovascular research
 - marginal philanthropic additionality in rich-country biomedical ecosystems is real, but not perfect
+:::
 
-#### Sensitivity to the direct/research mix
+The direct/research mix (Assumption 6) is the most judgment-sensitive input, but across a 40/60-to-60/40 band the category still lands in the mid-teens of thousands per QALY — roughly **\$13,200** to **\$15,600/QALY** — rather than near the upper end of rich-country payer thresholds.
 
-The direct/research split is one of the most judgment-sensitive assumptions, so it should be shown explicitly rather than treated as precise. Holding the direct bucket at **\$10,000/QALY** and the research bucket at **\$25,000/QALY**:
+:::details{title="Sensitivity to the direct/research mix"}
+Holding the direct bucket at **\$10,000/QALY** and the research bucket at **\$25,000/QALY**:
 
 - **60% direct / 40% research:** 1 / (0.6 / 10,000 + 0.4 / 25,000) ≈ **\$13,200/QALY**
 - **50% direct / 50% research:** 1 / (0.5 / 10,000 + 0.5 / 25,000) ≈ **\$14,300/QALY**
 - **40% direct / 60% research:** 1 / (0.4 / 10,000 + 0.6 / 25,000) = **\$15,625/QALY**
 
-And with a somewhat less optimistic direct bucket of **\$12,000/QALY** plus a **50/50** mix:
+A somewhat less optimistic direct bucket of **\$12,000/QALY** with a **50/50** mix shifts it only modestly:
 
 $$
 \dfrac{1}{0.5/12000 + 0.5/25000} \approx 16{,}200
 $$
+:::
 
-So the main takeaway is not that the mix is unimportant; it is that across a reasonable band, the category still lands in the mid-teens of thousands per QALY rather than near the upper end of rich-country payer-style thresholds.
+**Range**
 
-#### Range
+Our plausible range is **\$6,000-\$50,000/QALY**, kept wide because these models are rough. The bounds come from moving all three levers — both bucket values and the mix — together toward optimism or pessimism, so the range reflects joint uncertainty across them rather than any single parameter sweep.
 
-The stated range is our plausible range, kept wide because these models are rough.
-
-**Optimistic case**
-
-- direct bucket: **\$4,500/QALY**
-- research bucket: **\$12,000/QALY**
-- mix: **60% direct / 40% research**
-
-This gives:
+:::details{title="Optimistic and pessimistic bounds"}
+**Optimistic case** — direct bucket **\$4,500/QALY**, research bucket **\$12,000/QALY**, mix **60% direct / 40% research**:
 
 $$
 \dfrac{1}{0.6/4500 + 0.4/12000} = 6{,}000
 $$
 
-**Pessimistic case**
-
-- direct bucket: **\$20,000/QALY**
-- research bucket: **\$80,000/QALY**
-- mix: **20% direct / 80% research**
-
-This gives:
+**Pessimistic case** — direct bucket **\$20,000/QALY**, research bucket **\$80,000/QALY**, mix **20% direct / 80% research**:
 
 $$
 \dfrac{1}{0.2/20000 + 0.8/80000} = 50{,}000
 $$
-
-So the plausible range is **\$6,000-\$50,000/QALY**.
+:::
 
 ### Start time
 
@@ -181,18 +159,6 @@ A 40-year duration is a reasonable central estimate because:
 - successful prevention or chronic-disease-control programs can improve health over long remaining lifetimes
 - research-enabled interventions can keep benefiting new cohorts of patients for decades before being superseded
 - the site's 100-year time cap already truncates very long tails of benefit
-
-## What kinds of charities are we modeling?
-
-This estimate is best read as a model of **strong marginal health / medicine philanthropy** in rich countries, not the average unrestricted donation to any hospital or medical school.
-
-Representative fits include:
-
-- evidence-based direct programs that improve prevention, treatment access, adherence, navigation, or care delivery
-- disease-focused translational research and clinical research platforms
-- catalytic field-building or data / infrastructure work that plausibly speeds up useful medical progress
-
-This estimate is **not** a good model of generic hospital fundraising, prestige building projects, or low-additionality donations to already-rich academic medical centers. Those can easily be much worse than the category default and should ideally be estimated at the recipient level.
 
 ## Key uncertainties
 

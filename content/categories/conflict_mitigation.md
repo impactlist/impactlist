@@ -20,9 +20,29 @@ This effect captures human-welfare gains from donations to **top conflict-mitiga
 
 This estimate is mainly about preventing or shortening **serious civil-conflict episodes**. It is **not** meant to represent the average peacebuilding NGO, military aid, or generic humanitarian relief. The burden model is intended to be **all-things-considered**: it includes direct health losses plus displacement, healthcare disruption, food insecurity, lost income, governance deterioration, and long-run institutional damage after converting those harms into **QALY-equivalent** terms.
 
+## What kinds of charities are we modeling?
+
+These estimates assume marginal donations go to **high-leverage conflict-mitigation organizations** — mediation, quiet diplomacy, conflict analysis, early warning, and narrowly targeted de-escalation in major hot spots — not to the average organization working somewhere in the peacebuilding space.
+
+:::details{title="What we include and exclude"}
+Representative activities include:
+
+- mediation, quiet diplomacy, shuttle talks, and support for ceasefires or political settlements
+- conflict analysis, early warning, and briefing decision-makers who can still change outcomes
+- building channels of communication among governments, armed groups, regional organizations, and local intermediaries
+- narrowly targeted work that reduces escalation risk in major hot spots
+
+We are **not** modeling:
+
+- military support to one side of a conflict
+- generic humanitarian relief delivered after violence has already occurred
+- broad community programming with weak evidence of changing macro conflict outcomes
+- purely academic conflict research with no plausible route to near-term action
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$333 (\$20–\$6,700)
+- **Cost per QALY:** \$333 (\$10–\$15,000)
 - **Start time:** 0 years
 - **Duration:** 10 years
 
@@ -70,45 +90,43 @@ $$
 
 So the point estimate is **\$333/QALY**.
 
-Assumptions 1-3 turn a very heterogeneous global burden into one representative serious conflict-year. The health-only component is about **1 million QALYs**. The extra step is to treat lost income, governance deterioration, and institutional damage as real welfare losses that should be expressed in the same unit, rather than mentioned and then set to zero. The dedicated assumption page uses a **200%** broader-welfare uplift over the health component in the central case, which gives **3 million QALY-equivalents** in total, with a plausible range of **1–5 million**.
+Two inputs drive everything. The burden $B$ starts from a roughly **1 million QALY** health component (Assumptions 1-2) and applies a **200%** broader-welfare uplift for lost income, governance deterioration, and institutional damage, reaching **3 million QALY-equivalents** (Assumption 3). The tractability $p$ is the load-bearing and most contestable input: a best guess of **0.1%** that an extra \$1 million averts one representative conflict-year (Assumption 5). Because both are rough, the plausible range below is wide.
+
+:::details{title="How we reach 3 million QALY-equivalents of burden"}
+The health-only component is about **1 million QALYs**. The extra step is to treat lost income, governance deterioration, and institutional damage as real welfare losses expressed in the same unit, rather than mentioned and then set to zero. The dedicated assumption page uses a **200%** broader-welfare uplift over the health component in the central case, giving **3 million QALY-equivalents**, with a plausible range of **1–5 million**.
 
 Coefficient / Open Philanthropy's civil-conflict writeup says an average civil war's total value is about **20% DALYs** and **80% lost income**, which would imply a much larger non-health share if taken literally. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/)) The central estimate here keeps the representative-conflict-year model materially below that **4x** anchor, but still treats non-health harms as larger than the health component in light of the cited evidence on income losses and institutional damage.
 
-The burden input is also intentionally approximate. Conflict burden is extremely heterogeneous: a few wars account for a large share of total suffering, while many of the **61** active conflicts are much smaller. So the **3 million QALY-equivalent** figure is best read as a representative serious conflict-year for the sort of cases that top mediation organizations are trying to influence, not as a literal equal-weight average across all conflicts.
+The burden input is intentionally approximate. Conflict burden is extremely heterogeneous: a few wars account for a large share of total suffering, while many of the **61** active conflicts are much smaller. So the **3 million QALY-equivalent** figure is best read as a representative serious conflict-year for the sort of cases that top mediation organizations are trying to influence, not as a literal equal-weight average across all conflicts.
+:::
 
-The key input is $p$, the probability that an extra \$1 million of top-tier mediation / analysis / diplomacy work averts one serious conflict-year. The empirical literature supports the broad claim that third-party conflict management matters, but it does **not** tell us that one extra NGO dollar captures the average system-wide causal effect. A simple back-of-the-envelope is:
+The empirical literature supports the broad claim that third-party conflict management matters, but it does **not** tell us that one extra NGO dollar captures the average system-wide causal effect. The **0.1%** best guess comes from taking the whole system's effect, allocating a small philanthropic slice, and dividing by top-tier budgets.
+
+:::details{title="Deriving the 0.1% tractability estimate"}
+A simple back-of-the-envelope:
 
 - Clayton and Dorussen imply roughly **123 / 67 ≈ 1.8** conflict-years averted per year by the whole conflict-management system.
 - If the **top-tier philanthropic slice** of that system accounts for only about **2–8%** of the effect, that is about **0.04–0.15** conflict-years per year.
-- If the organizations being modeled have combined annual budgets on the order of **\$80–90 million**, that implies roughly **0.04–0.18%** conflict-years averted per **\$1 million**.
+- If the organizations being modeled have combined annual budgets on the order of **\$80–90 million**, that implies roughly **0.04–0.18%** conflict-years averted per **\$1 million**, supporting a best guess of **0.1%**.
 
-The **2–8%** top-tier philanthropic share assumption already embeds heavy attribution discounts for:
+The **2–8%** top-tier philanthropic share already embeds heavy attribution discounts for:
 
 - attribution to one organization rather than the whole mediation ecosystem
 - the fact that many peace processes depend on states or regional bodies
 - selection effects in observational studies
 - the possibility that extra money often improves coverage or readiness rather than directly causing a breakthrough
 
-**Cross-check against existing conflict-prioritization BOTECs**
-
-Coefficient / Open Philanthropy notes that HD's older budget was about **\$42 million per year** across **23 conflict zones**, or roughly **\$2 million per country-year**, and remarks that a marginal HD mediation-year would only need about a **0.52%** chance of ending a war one year sooner to clear a very high philanthropic-return bar. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/))
-
-That **0.52%** figure is a break-even condition in a different BOTEC, not a central tractability estimate. So it should be read only as a rough scale check, not as the main basis for the estimate here.
-
-The direct arithmetic on this page remains the main basis for the central tractability estimate: the system-level evidence, a **2–8%** philanthropic share, and **\$80–90 million** of top-tier budgets imply about **0.04–0.18%** per **\$1 million**, which supports a best guess of **0.1%**.
-
-Combining that tractability estimate with a **3 million QALY-equivalent** representative conflict-year gives a central estimate of about **\$333/QALY**.
+**Scale check.** Coefficient / Open Philanthropy notes that HD's older budget was about **\$42 million per year** across **23 conflict zones**, or roughly **\$2 million per country-year**, and remarks that a marginal HD mediation-year would only need about a **0.52%** chance of ending a war one year sooner to clear a very high philanthropic-return bar. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/)) That **0.52%** is a break-even condition in a different BOTEC, not a central tractability estimate, so it is only a rough scale check rather than the basis for the figure here.
+:::
 
 **Range**
 
-The parameter sweep is:
+Our plausible range is **\$10–\$15,000/QALY**. A three-parameter sweep gives a narrower span:
 
 - **Optimistic:** \$300k cost, 0.3% success probability, and 5M QALY-equivalents at stake -> **\$20/QALY**
 - **Pessimistic:** \$2M cost, 0.03% success probability, and 1M QALY-equivalents at stake -> about **\$6,700/QALY**
 
-Those bounds are tighter than our true uncertainty, so our plausible range is wider, roughly **\$10–\$15,000/QALY**.
-
-The pessimistic end is already quite demanding. It combines high cost, low tractability, and a low-end burden model close to the direct health component rather than the central all-things-considered burden.
+We widen beyond that sweep because it varies only the three headline parameters; the published range also absorbs structural uncertainty the sweep holds fixed — whether the modeled philanthropic slice deserves more or less than the **2–8%** share, and whether the causal story (mediation actually averting conflict-years rather than tracking processes that would have settled anyway) holds at all. The pessimistic end of the sweep is already demanding, combining high cost, low tractability, and a burden close to the direct health component rather than the all-things-considered figure.
 
 ### Start time
 
@@ -123,24 +141,6 @@ The 10-year duration reflects that preventing or shortening one serious conflict
 - some medium-run reduction in recurrence and retaliatory escalation
 
 Ten years should not be read as "peace lasts forever". It is a compromise between a narrow one-conflict-year model and the reality that successful de-escalation usually prevents harms that would otherwise spill over for years.
-
-## What kinds of charities are we modeling?
-
-These estimates assume marginal donations go to **high-leverage conflict-mitigation organizations**, not to the average organization that works somewhere in the peacebuilding space.
-
-Representative activities include:
-
-- mediation, quiet diplomacy, shuttle talks, and support for ceasefires or political settlements
-- conflict analysis, early warning, and briefing decision-makers who can still change outcomes
-- building channels of communication among governments, armed groups, regional organizations, and local intermediaries
-- narrowly targeted work that reduces escalation risk in major hot spots
-
-We are **not** modeling:
-
-- military support to one side of a conflict
-- generic humanitarian relief delivered after violence has already occurred
-- broad community programming with weak evidence of changing macro conflict outcomes
-- purely academic conflict research with no plausible route to near-term action
 
 ## Key uncertainties
 

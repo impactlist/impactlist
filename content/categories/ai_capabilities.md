@@ -39,6 +39,14 @@ That distinction matters. A marginal dollar here can have real ordinary benefits
 
 These are also **different notions of additionality**. Ordinary additionality asks how much extra welfare would fail to happen without the donation. Frontier-equivalent acceleration asks how much the donation pushes technical capability progress, even if similar consumer benefits would eventually have been produced by firms or rival labs anyway. A donation to an open model, a dataset, or a university lab can therefore have **low ordinary additionality but higher frontier impact**, because frontier actors can copy and absorb the output quickly.
 
+**Bottom line at default settings:** the two positive effects are small (about 9.6 and 30.3 QALYs per \$1 million donated) while the doom effect destroys about 7,200 QALYs per \$1 million, so the central model nets out around **-7,160 QALYs per \$1 million** — strongly negative. At ordinary time horizons the existential-risk downside dominates unless you substantially change the worldview assumptions (probability of doom, whether acceleration is net-good, whether the linear-risk model holds). The worked example near the end of this page carries the arithmetic.
+
+## What kinds of projects are we modeling?
+
+These estimates are for donations whose **main effect is to accelerate AI capabilities** — frontier and near-frontier model development, capability-relevant university AI research, open-weight models and the datasets, evaluations, and tooling that make powerful AI more available, and deployment projects that get capable AI used sooner and more widely. They are **not** estimates for AI safety and alignment work, governance work that mainly slows or constrains dangerous deployment, or generic science funding with only weak AI relevance.
+
+Recipient-level multipliers matter a lot here: a dollar to OpenAI, Anthropic, or a near-frontier university lab should not be treated as identical.
+
 ---
 
 ## Effect 1: standard-mundane
@@ -69,41 +77,19 @@ This effect captures non-transformative gains from AI as a general-purpose techn
 
 #### Cost per QALY
 
-We use a two-step model.
+A two-step model drives the **\$104,000/QALY** point estimate: each fully additional dollar of AI capability work generates about **\$12 of ordinary social value** (range \$6-25), but only about **8% of a philanthropic dollar here is additional** (Assumption 9), so each donated dollar produces only about **\$0.96** of ordinary social value (\$12 × 8%). At a \$100,000/QALY benchmark, that is about **\$104,000/QALY**.
 
-**Step 1 - Ordinary social value from fully additional AI capability work**
+:::details{title="The two steps: social value per dollar, and additionality"}
+**Step 1 — ordinary social value from fully additional AI capability work.** AI looks like a real general-purpose technology, not hype with zero substance: McKinsey, Penn Wharton, the St. Louis Fed, and field experiments all point to meaningful productivity and welfare gains. The **\$12** central estimate (range **\$6-25**) sits somewhat above Jones-Summers style central estimates for general R&D, because AI has unusually low marginal replication costs and unusually broad applicability, but well below more optimistic technology-specific estimates.
 
-AI looks like a real general-purpose technology, not hype with zero substance. McKinsey, Penn Wharton, the St. Louis Fed, and field experiments all point in the same direction: useful AI capability work creates meaningful productivity and welfare gains.
+**Step 2 — additionality.** Most capability work would happen anyway: private capital is enormous, frontier compute buildout is proceeding at extraordinary speed, and many apparently philanthropic dollars here mostly reshuffle who does the work rather than how much capability progress happens. As a stylized anchor, if capabilities-relevant philanthropy is only a few hundred million dollars per year while corporate AI investment already exceeds \$250 billion per year, the philanthropic funding share is well below 1%; even if philanthropic dollars are several times more additional than average because they target neglected niches, that still points to single-digit-percentage ordinary additionality, so we use **8%**.
 
-We therefore use **\$12 of ordinary social value per fully additional dollar** as a central estimate, with a rough range of **\$6-25**.
+Converting the resulting **\$0.96** of ordinary social value per donated dollar at the \$100,000/QALY benchmark:
 
-This sits somewhat above Jones-Summers style central estimates for general R&D because AI has unusually low marginal replication costs and unusually broad applicability, but well below more optimistic technology-specific estimates.
+$$\text{Cost per QALY} \approx \dfrac{\$100{,}000}{0.96} \approx \$104{,}000$$
+:::
 
-**Step 2 - Additionality**
-
-But most capability work would happen anyway. Private capital is enormous, frontier compute buildout is proceeding at extraordinary speed, and many apparently philanthropic dollars in this space mostly reshuffle who does the work rather than how much capability progress happens.
-
-We therefore use **8% ordinary additionality** as the central estimate.
-
-As a stylized anchor, if capabilities-relevant philanthropy is only on the order of a few hundred million dollars per year while corporate AI investment already exceeds \$250 billion per year, the philanthropic funding share is well below 1%. Even if philanthropic dollars are several times more additional than average because they target neglected niches, that still points to ordinary additionality in the single-digit percentage range.
-
-**Calculation:**
-
-$$
-\text{Ordinary welfare per donated dollar} \approx 12 \times 0.08 = 0.96
-$$
-
-Using a \$100,000/QALY conversion benchmark:
-
-$$
-\text{Cost per QALY} \approx \dfrac{\$100{,}000}{0.96} \approx \$104{,}000
-$$
-
-So we use **\$104,000/QALY** as the point estimate.
-
-That number should not be read as fully netting out every ordinary downside. Some measured economic gains show up as rents, convenience, or producer surplus rather than clean welfare gains, and AI also creates ordinary downsides we do not separately model here (job displacement, misinformation, surveillance, concentration of power). Those considerations are reasons to think the ordinary upside may be somewhat overstated, but we do not adjust the point estimate upward or downward without quantifying the adjustment.
-
-It is also worth noting that the \$100,000/QALY conversion benchmark is mainly a rich-country benchmark. To the extent that AI capability gains substantially improve the lives of lower-income populations, the true cost per QALY would be somewhat lower than this estimate suggests.
+This number does not fully net out every ordinary downside. Some measured economic gains are rents, convenience, or producer surplus rather than clean welfare, and AI also creates downsides we do not separately model (job displacement, misinformation, surveillance, concentration of power) — reasons the ordinary upside may be somewhat overstated, though we do not adjust the point estimate without quantifying the adjustment. Conversely, the \$100,000/QALY conversion is mainly a rich-country benchmark, so to the extent AI capability gains substantially improve lower-income lives the true cost per QALY would be somewhat lower.
 
 #### Start time
 
@@ -142,51 +128,28 @@ Importantly, this is **not** the probability that advanced AI is merely "on bala
 
 #### Cost per QALY
 
-We use a timing model:
+The **\$33,000/QALY** point estimate comes from a timing model: a donation buys a tiny fraction of frontier acceleration ($a_{\text{frontier}}/S_{\text{total}}$), which brings forward a very good world (probability $p_{\text{good}}$) worth $\Delta Q_{\text{year}}$ extra QALYs per year for the $T$ years it arrives early. With the central assumptions this is about $3 \times 10^{-5}$ QALYs per dollar, i.e. roughly **\$33,000/QALY**.
 
+:::details{title="The timing-model formula and parameter substitution"}
 $$
 \text{QALYs per \$} \approx p_{\text{good}} \times \dfrac{a_{\text{frontier}}}{S_{\text{total}}} \times T \times \Delta Q_{\text{year}}
 $$
 
-Where:
+Where $p_{\text{good}}$ is the probability of a genuinely very good outcome (Assumption 5), $a_{\text{frontier}}$ the frontier-equivalent acceleration per donated dollar (Assumption 4), $S_{\text{total}}$ cumulative frontier spending before transformative AI (Assumption 3), $T$ the years until transformative AI (Assumption 2), and $\Delta Q_{\text{year}}$ the annual QALY gain in the very good world relative to baseline (Assumption 6).
 
-- $p_{\text{good}}$ = probability of a genuinely very good transformative-AI outcome
-- $a_{\text{frontier}}$ = frontier-equivalent acceleration per donated dollar
-- $S_{\text{total}}$ = cumulative frontier spending before transformative AI
-- $T$ = years until transformative AI
-- $\Delta Q_{\text{year}}$ = annual QALY gain in the very good world relative to baseline
-
-Using the central assumptions:
-
-- $p_{\text{good}} = 0.10$
-- $a_{\text{frontier}} = 0.30$
-- $S_{\text{total}} = 5 \times 10^{12}$
-- $T = 10$
-- $\Delta Q_{\text{year}} = 5 \times 10^{8}$
-
-This gives:
+Using $p_{\text{good}} = 0.10$, $a_{\text{frontier}} = 0.30$, $S_{\text{total}} = 5 \times 10^{12}$, $T = 10$, and $\Delta Q_{\text{year}} = 5 \times 10^{8}$:
 
 $$
 \text{QALYs per \$} \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \times 10 \times 5 \times 10^{8}
 \approx 3 \times 10^{-5}
 $$
 
-So:
-
 $$
 \text{Cost per QALY} \approx \dfrac{1}{3 \times 10^{-5}} \approx \$33{,}300
 $$
+:::
 
-So we use **\$33,000/QALY** as the point estimate.
-
-Two points are worth emphasizing:
-
-1. This number is **very sensitive** to worldview assumptions. If you think very good transformative-AI futures are much less likely, or much farther away, this effect gets much smaller.
-2. This effect only captures the upside of earlier very good futures. It does **not** imply the overall cause is good, because the doom effect below is also material.
-
-Because this timing model multiplies several uncertain terms, different plausible parameter bundles can land in the same order of magnitude. Readers should not over-interpret the exact point estimate.
-
-As with the doom effect below, this timing model assumes that small marginal capability pushes translate roughly linearly into timeline acceleration. That assumption is obviously imperfect: real progress may involve thresholds, bottlenecks, and nonlinear race dynamics. We use linearity here as the cleanest tractable baseline.
+This number is **very sensitive** to worldview assumptions: if very good transformative-AI futures are much less likely or much farther away, this effect shrinks. Because the model multiplies several uncertain terms, different plausible parameter bundles land in the same order of magnitude, so the exact point estimate should not be over-interpreted. The effect only captures the upside of earlier very good futures; it does **not** imply the overall cause is good, because the doom effect below is also material. Like the doom effect, it assumes small marginal capability pushes translate roughly linearly into timeline acceleration — imperfect, since real progress may involve thresholds, bottlenecks, and race dynamics, but the cleanest tractable baseline.
 
 #### Start time
 
@@ -227,32 +190,19 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 
 #### Cost per microprobability
 
-We use the same frontier-acceleration model as in Effect 2, but now apply it to extinction risk instead of upside:
+The same frontier-acceleration model as Effect 2, applied to extinction risk, gives a marginal dollar about $6.0 \times 10^{-15}$ of extra doom probability — roughly **0.006 microprobabilities per \$1 million**, or **\$167 million per +1 microprobability**. This is strongly negative on any worldview that gives substantial weight to future generations.
 
+:::details{title="The acceleration formula and parameter substitution"}
 $$
 \Delta p_{\text{doom}} / \$ \approx p_{\text{doom}} \times \dfrac{a_{\text{frontier}}}{S_{\text{total}}}
 $$
 
-Using:
-
-- $p_{\text{doom}} = 0.10$
-- $a_{\text{frontier}} = 0.30$
-- $S_{\text{total}} = 5 \times 10^{12}$
-
-We get:
+Using $p_{\text{doom}} = 0.10$ (Assumption 1), $a_{\text{frontier}} = 0.30$ (Assumption 3), and $S_{\text{total}} = 5 \times 10^{12}$ (Assumption 2):
 
 $$
 \Delta p_{\text{doom}} / \$ \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \approx 6.0 \times 10^{-15}
 $$
-
-That is:
-
-- About **0.006 microprobabilities of extra extinction risk per \$1 million**
-- Or about **\$167 million per +1 microprobability**
-
-So we use **\$167 million** per +1 microprobability as the point estimate.
-
-This is strongly negative on any worldview that gives substantial weight to future generations.
+:::
 
 #### Population fraction affected
 
@@ -260,20 +210,14 @@ The point estimate is 1.0 because extinction kills everyone.
 
 #### QALY improvement per affected person per year
 
-The value is **-0.9** because this effect is harm, not benefit, and because the symmetric positive AI-risk category uses 0.9 QALYs per human life-year rather than 1.0.
+The value is **-0.9** because this effect is harm, not benefit, and because the symmetric positive AI-risk category uses 0.9 QALYs per human life-year rather than 1.0. Combining the doom probability per dollar with the QALYs at stake, at the central estimate **\$1 million** donated to AI capabilities increases expected losses by roughly $0.006 \times 1{,}200{,}000 \approx 7{,}200$ QALYs. This downside becomes much larger if you extend the time horizon beyond 100 years.
 
-With the default 100-year time limit and the site's population model (about 8.3 billion people today growing at 1%/year), the effect window runs from year 10 to year 100 — roughly **1,335 billion person-years** — and at about 0.9 QALYs per person-year:
+:::details{title="QALYs at stake per microprobability at the default 100-year horizon"}
+With the default 100-year time limit and the site's population model (about 8.3 billion people today growing at 1%/year), the effect window runs from year 10 to year 100 — roughly **1,335 billion person-years**. At about 0.9 QALYs per person-year:
 
 - Total QALYs destroyed: **about 1,200 billion**
 - QALYs destroyed per microprobability: **about 1,200,000**
-
-So at the central estimate, **\$1 million** donated to AI capabilities increases expected losses by roughly:
-
-$$
-0.006 \times 1{,}200{,}000 \approx 7{,}200 \text{ QALYs}
-$$
-
-This downside becomes much larger if you extend the time horizon beyond 100 years.
+:::
 
 #### Start time
 
@@ -301,26 +245,9 @@ $$
 9.6 + 30.3 - 7{,}200 \approx -7{,}160 \text{ QALYs}
 $$
 
-This is the single most important takeaway from the default model: at ordinary time horizons, the existential-risk downside dominates the positive terms unless the user substantially changes the underlying assumptions.
+At ordinary time horizons the existential-risk downside dominates the positive terms unless the underlying worldview assumptions change substantially.
 
 ---
-
-## What kinds of projects are we modeling?
-
-These estimates are meant for donations whose **main effect is to accelerate AI capabilities**, such as:
-
-- Frontier or near-frontier model development
-- University labs doing capability-relevant AI research
-- Open-weight model efforts, datasets, evaluations, and tooling that make powerful AI more available
-- Deployment and diffusion projects whose main effect is getting more capable AI used sooner and more widely
-
-We are **not** modeling:
-
-- AI safety and alignment work
-- Governance projects whose main effect is slowing or constraining dangerous deployment
-- Generic science funding with only weak AI relevance
-
-Recipient-level multipliers matter a lot here. A dollar to OpenAI, Anthropic, or a near-frontier university lab should not be treated as identical.
 
 ## Key uncertainties
 

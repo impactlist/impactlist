@@ -20,9 +20,33 @@ This effect captures welfare gains from **global priorities research (GPR)**: re
 
 The main pathway is indirect: a dollar to GPR is valuable when it improves much larger later resource flows. The clearest quantified channel is later philanthropy, but the central model also includes a second strategic channel for talent, institution-building, and policy effects expressed in QALY-equivalent terms.
 
+We estimate about **\$5/QALY**. The driver is leverage: a frontier GPR program of roughly **\$2 million** is modeled as improving how **\$200 million** of later philanthropy is allocated, raising the welfare output of that capital by about **40%**. The cruxes are all about that leverage chain — how much capital one research dollar really influences, how much better the resulting allocation is, what the counterfactual allocation would have achieved, and how large the broader talent/institution/policy channel is. The range is wide and skewed toward worse outcomes, since the point estimate is calibrated to unusually strong organizations rather than the median GPR dollar.
+
+## What kinds of charities are we modeling?
+
+These estimates assume marginal donations go to **high-quality, frontier-style GPR organizations** that advise large donors on cause or intervention selection, surface neglected but tractable problems, build cross-cause decision tools, or do foundational work that later reshapes how institutions, talent, and policy attention are allocated. Representative examples include Rethink Priorities' worldview and prioritization work, Coefficient Giving's cause-selection research, and academic cause-prioritization programs.
+
+:::details{title="What this category includes and excludes"}
+**Included** — work whose value runs through improving much larger later decisions:
+
+- directly advising large donors on cause or intervention selection
+- identifying neglected but tractable problems
+- building cross-cause cost-effectiveness models or decision tools
+- foundational work that later changes how institutions, talent, and policy attention are allocated
+
+**Not modeled here** — adjacent activities whose value runs through other pathways:
+
+- mass outreach to create more donors
+- career advice or broad movement building
+- direct service delivery
+- generic grant administration after priorities are already fixed
+
+Those effects are better handled elsewhere, especially under Meta and Theory.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$5 (\$0.30–\$300)
+- **Cost per QALY:** \$5 (\$0.20–\$600)
 - **Start time:** 5 years
 - **Duration:** 25 years
 
@@ -42,10 +66,10 @@ The main pathway is indirect: a dollar to GPR is valuable when it improves much 
 
 ### Cost per QALY
 
-The cleanest model is to treat GPR as producing value through two channels:
+The model treats GPR as producing value through two channels: a direct channel (better later philanthropic allocation) and a broader strategic channel (spillovers on talent, institutions, and policy). With the central assumptions, the direct channel produces about **200,000** QALYs and the strategic channel adds roughly the same again, so **\$2 million** of GPR buys about **400,000** QALYs — a point estimate of **\$5/QALY**.
 
-1. better later philanthropic allocation
-2. broader strategic spillovers on talent, institutions, and policy
+:::details{title="The two-channel model and worked calculation"}
+Cost per QALY is total cost divided by QALYs from both channels:
 
 $$
 \text{Cost per QALY} = \dfrac{C}{Q_d + Q_s}
@@ -69,25 +93,15 @@ Where:
 - $g$ = direct proportional increase in the welfare output of that capital
 - $B$ = counterfactual cost per QALY of that capital
 
-The broader strategic channel is modeled as:
+The broader strategic channel is modeled as a multiple of the direct channel:
 
 $$
 Q_s = k \times Q_d
 $$
 
-Where:
+Where $k$ is the size of the broader strategic channel relative to the direct philanthropic channel.
 
-- $k$ = the broader strategic channel relative to the direct philanthropic channel
-
-Using the central assumptions above:
-
-- $C$ = \$2,000,000
-- $I$ = \$200,000,000
-- $g$ = 40% = 0.4
-- $B$ = \$400/QALY
-- $k$ = 100% = 1.0
-
-So:
+Using the central assumptions above ($C$ = \$2,000,000, $I$ = \$200,000,000, $g$ = 0.4, $B$ = \$400/QALY, $k$ = 1.0):
 
 $$
 Q_d = \dfrac{200{,}000{,}000 \times 0.4}{400} = 200{,}000
@@ -98,16 +112,11 @@ Q_s = 1.0 \times 200{,}000 = 200{,}000
 $$
 
 $$
-\text{Total extra QALYs} = 200{,}000 + 200{,}000 = 400{,}000
+\text{Cost per QALY} = \dfrac{2{,}000{,}000}{200{,}000 + 200{,}000} = 5
 $$
+:::
 
-$$
-\text{Cost per QALY} = \dfrac{2{,}000{,}000}{400{,}000} = 5
-$$
-
-So the point estimate is **\$5/QALY**.
-
-The key question is whether those assumptions are realistic.
+Whether **\$5/QALY** is right turns on whether those assumptions hold.
 
 The main empirical crux is the **influenced-capital ratio**. The central case assumes a 100:1 ratio: **\$2 million** of GPR spending eventually changes how **\$200 million** is allocated. That should be read as a frontier-org assumption, not a median-org assumption. The public evidence here comes mostly from the organizations themselves and is therefore vulnerable to selection effects. RP's public materials show access to donors with budgets in the hundreds of millions and at least one disclosed **\$8 million** reallocation. Coefficient / Open Philanthropy shows that a prioritization institution can shape a multi-billion-dollar portfolio, but much of that evidence comes from one unusually large partnership with Good Ventures. So the right takeaway is not "typical GPR dollars get 100:1 leverage"; it is that top teams working with very large funders plausibly can.
 
@@ -117,16 +126,14 @@ The **\$400/QALY baseline** is the next-biggest judgment call. We are intentiona
 
 The **broader strategic channel** is meant to capture a further point: strong GPR often changes more than later grant ledgers. Better prioritization can also reshape where talented people work, which institutions get built, and which policy agendas get taken seriously. Those effects are harder to measure cleanly than later philanthropy, but they are still part of the welfare output of GPR. Treating them as their own channel, with a central value of the same order of magnitude as the direct channel, better reflects the full scope of frontier-style prioritization work than treating them as a small footnote.
 
-**Range:**
+**Why the range (\$0.20-\$600/QALY).** Jointly varying the assumptions gives a parameter sweep from about **\$330/QALY** (pessimistic) to **\$0.30/QALY** (optimistic); widening for a heavy upper tail gives roughly **\$0.20-\$600/QALY**. The range is asymmetric: relative to the **\$5/QALY** point estimate the downside is much larger than the upside, because public success stories likely overstate typical marginal impact, attribution can fail in many ways, and the point estimate is already calibrated to unusually strong organizations rather than the median GPR dollar. The optimistic tail is correspondingly demanding — it describes a rare frontier case where a small team materially improves very large later decisions and the talent/institution/policy effects run several times the later-philanthropy channel, not an ordinary good year.
 
+:::details{title="Pessimistic and optimistic parameter sweeps"}
 - **Pessimistic:** \$2.5M cost, \$50M influenced, 15% direct improvement, \$1,000/QALY baseline, and no broader strategic channel gives about **\$330/QALY**.
 - **Optimistic:** \$1.5M cost, \$300M influenced, 80% direct improvement, \$200/QALY baseline, and a broader strategic channel worth **300%** of the direct channel gives about **\$0.30/QALY**.
 
-Treating these as the bounds of our plausible range and allowing for a heavy upper tail gives roughly **\$0.20-\$600/QALY**: many GPR projects have little impact, while a few reshape very large funding decisions, which is what pulls the optimistic tail so low.
-
-The optimistic tail is intentionally demanding. It implies a rare case where a small research team materially improves very large later decisions and where the broader talent / institution / policy effects are several times larger than the later-philanthropy channel itself. That is not meant to describe an ordinary good year for GPR; it is meant to describe an unusually successful frontier case.
-
-The range is intentionally asymmetric. Relative to the **\$5/QALY** point estimate, the downside is much larger than the upside because public success stories likely overstate typical marginal impact, attribution can fail in many ways, and the point estimate is already calibrated to unusually strong GPR organizations rather than the median GPR dollar.
+These bounds come from the parameter sweep alone. The published **\$0.20-\$600/QALY** interval widens the sweep to reflect a heavy upper tail: many GPR projects have little impact, while a few reshape very large funding decisions, which is what pulls the optimistic tail so low.
+:::
 
 External discussions of GPR are broadly directionally consistent with this picture. For example, [80,000 Hours](https://80000hours.org/problem-profiles/global-priorities-research/) and [Giving What We Can](https://www.givingwhatwecan.org/effective-altruism-effective-giving/global-priorities) both describe GPR as highly neglected and potentially very high leverage. They are not direct **\$/QALY** estimates, but they fit the basic picture of GPR as a multiplier on very large later decisions.
 
@@ -145,26 +152,6 @@ The 25-year duration reflects how long major prioritization shifts can keep matt
 Coefficient's current portfolio still reflects cause-selection work that began in the early 2010s. Once a funder decides that an area deserves serious, long-run support, that decision can persist through repeated grants, spinouts, follow-on funds, and capacity building. LEAF is a good recent example: a prioritization process turned a previously tiny area into a coordinated fund with nine-figure commitments and a plan to attract additional external funders.
 
 At the same time, not every prioritization judgment remains live forever; some research becomes outdated as the world changes. A **25-year** window is therefore a compromise between short-lived applied reports and rarer, much longer-lived changes in worldviews or institutional strategy.
-
-## What kinds of charities are we modeling?
-
-These estimates assume marginal donations go to **high-quality, frontier-style GPR organizations** that do work such as:
-
-- directly advising large donors on cause or intervention selection
-- identifying neglected but tractable problems
-- building cross-cause cost-effectiveness models or decision tools
-- doing foundational work that later changes how institutions, talent, and policy attention are allocated
-
-Representative examples include Rethink Priorities' worldview and prioritization work, Coefficient Giving's cause-selection research, and academic cause-prioritization programs.
-
-We are **not** mainly modeling:
-
-- mass outreach to create more donors
-- career advice or broad movement building
-- direct service delivery
-- generic grant administration after priorities are already fixed
-
-Those effects are better handled elsewhere, especially under Meta and Theory.
 
 ## Key uncertainties
 

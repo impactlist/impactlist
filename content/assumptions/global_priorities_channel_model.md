@@ -48,9 +48,11 @@ Where:
 
 This page justifies three especially important judgment calls:
 
-- using **\$400/QALY** for the counterfactual cost-effectiveness of influenced capital
-- using **40%** for the direct improvement in that capital's all-things-considered welfare output
-- using a broader-strategic channel worth about **100%** of the direct philanthropic channel, with a {{PLAUSIBLE_RANGE}} of **0%-300%**
+- using **\$400/QALY** for the counterfactual cost-effectiveness of influenced capital ($B$)
+- using **40%** for the direct improvement in that capital's all-things-considered welfare output ($g$)
+- using a broader-strategic channel worth about **100%** of the direct philanthropic channel ($k$), with a {{PLAUSIBLE_RANGE}} of **0%-300%**
+
+Together with the scale inputs inherited from the category page — **\$2 million** of annual GPR cost ($C$) influencing **\$200 million** of later philanthropy ($I$) — these imply about **\$5/QALY**: an influenced \$200M improved 40% against a \$400/QALY baseline is 200,000 direct QALYs, and a strategic channel of equal size doubles that to 400,000 QALYs for \$2M of cost. (This page justifies only $B$, $g$, and $k$; $C$ and $I$ are inherited.)
 
 ## 1. Why use an all-things-considered QALY model?
 
@@ -62,26 +64,19 @@ So the right question is not whether GPR affects only direct health outcomes. Th
 
 ## 2. Why use \$400/QALY for the counterfactual influenced capital?
 
-This benchmark is not meant to represent ordinary untargeted philanthropy. It is meant to represent **impact-motivated but non-frontier** capital of the sort that a strong GPR organization can still improve.
+This benchmark ($B$) is not meant to represent ordinary untargeted philanthropy, nor a frontier funder's current best bar. It represents **impact-motivated but non-frontier** capital of the sort that a strong GPR organization can still improve. A central figure of **\$400/QALY** is a reasonable middle ground for capital that is already trying to do good but is still materially improvable by better prioritization, with a plausible range of **\$200-\$1,000/QALY** for donors respectively closer to or further from the frontier.
 
-The site's own category estimates already suggest that serious opportunities span a very wide range:
+That \$400 sits well inside the spread of serious opportunities — far worse than the frontier funders GPR competes with, but far better than untargeted giving.
 
-- [Animal Welfare](/category/animal-welfare): about **\$2.3/QALY**
-- [Meta and Theory](/category/meta-theory): about **\$21/QALY**
-- [Global Health](/category/global-health): about **\$90/QALY**
-- [Global Development](/category/global-development): about **\$210/QALY**
-- [Climate Change](/category/climate-change): about **\$590/QALY**
-- [Human Rights](/category/human-rights): about **\$310/QALY**
-- [Conflict Mitigation](/category/conflict-mitigation): about **\$333/QALY**
-- [Institutions](/category/institutions): about **\$3,000/QALY**
+:::details{title="Where the 400/QALY benchmark sits among serious opportunities"}
+The site's own category estimates already span a very wide range: [Animal Welfare](/category/animal-welfare) about **\$2.3/QALY**, [Meta and Theory](/category/meta-theory) about **\$21/QALY**, [Global Health](/category/global-health) about **\$90/QALY**, [Global Development](/category/global-development) about **\$210/QALY**, [Human Rights](/category/human-rights) about **\$310/QALY**, [Conflict Mitigation](/category/conflict-mitigation) about **\$333/QALY**, [Climate Change](/category/climate-change) about **\$590/QALY**, and [Institutions](/category/institutions) about **\$3,000/QALY**.
 
-Coefficient Giving's public bar is even stronger: it says its current minimum grantmaking bar is roughly equivalent to **one healthy life-year per \$50** spent. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/))
-
-That does **not** mean the counterfactual capital influenced by GPR is usually as weak as ordinary philanthropy or as strong as Coefficient's own current frontier. A central figure of **\$400/QALY** is a reasonable middle ground for capital that is already trying to do good, but is still materially improvable by better prioritization. A plausible range of **\$200-\$1,000/QALY** reflects donors who are respectively closer to or further from the frontier.
+Coefficient Giving's public bar is even stronger: it says its current minimum grantmaking bar is roughly equivalent to **one healthy life-year per \$50** spent. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/)) The counterfactual capital influenced by GPR is neither as weak as ordinary philanthropy nor as strong as Coefficient's own current frontier, which is why a middle figure is appropriate.
+:::
 
 ## 3. Why use 40% for the direct improvement factor?
 
-If the counterfactual portfolio is around **\$400/QALY**, and some frontier opportunities are in the **\$25-\$100/QALY** range, then a complete shift of all influenced capital toward the frontier would imply a much larger gain than **40%**.
+A direct improvement factor ($g$) of **40%**, with a plausible range of **15%-80%**, is a moderate central choice: the average influenced dollar gets materially better, but it is not pushed all the way to the frontier. A complete shift would imply far more than 40% — if the counterfactual portfolio is around **\$400/QALY** and some frontier opportunities are in the **\$25-\$100/QALY** range, moving all influenced capital to the frontier would multiply welfare output several-fold.
 
 But GPR should not be credited with anything like a complete shift:
 
@@ -90,53 +85,44 @@ But GPR should not be credited with anything like a complete shift:
 - some work improves intervention choice **within** a cause rather than changing the cause itself
 - some projects mostly improve judgment, grant selection, or sequencing rather than triggering a dramatic cause pivot
 
-So the central question is not whether a large improvement is possible in principle, but what is plausible **on average across all influenced capital**.
+So the central question is not whether a large improvement is possible in principle, but what is plausible **on average across all influenced capital** — and the public evidence supports a meaningful but not extreme figure.
 
-The public evidence supports a meaningful but not extreme central figure. Rethink Priorities says its GHD research supported major donors whose program budgets total **hundreds of millions of dollars**, and publicly reports one case where its research shifted **\$8 million** toward a more cost-effective lead intervention. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/), [RP impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/)) RP also describes cross-cause prioritization tools that compare very different downstream priorities rather than making only narrow within-cause tweaks. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) Coefficient Giving says it has helped Good Ventures give **over \$4 billion** historically and directed **over \$100 million** from non-Good-Ventures donors in 2024, with that number more than doubling in 2025 so far. ([Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
+:::details{title="Public evidence behind a material-but-partial improvement"}
+Rethink Priorities says its GHD research supported major donors whose program budgets total **hundreds of millions of dollars**, and publicly reports one case where its research shifted **\$8 million** toward a more cost-effective lead intervention. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/), [RP impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/)) RP also describes cross-cause prioritization tools that compare very different downstream priorities rather than making only narrow within-cause tweaks. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) Coefficient Giving says it has helped Good Ventures give **over \$4 billion** historically and directed **over \$100 million** from non-Good-Ventures donors in 2024, with that number more than doubling in 2025 so far. ([Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
 
-Taken together, that evidence supports a model where the average influenced dollar gets materially better, but not one where every influenced dollar is pushed all the way to the current best opportunity. A direct improvement factor of **40%**, with a plausible range of **15%-80%**, is therefore a moderate central choice.
+Taken together, that supports a model where the average influenced dollar gets materially better, but not one where every influenced dollar is pushed all the way to the current best opportunity.
+:::
 
 ## 4. Why model broader strategic spillovers as a separate channel?
 
-The direct philanthropic-allocation effect is the clearest measured channel, but it is not the whole story.
+The direct philanthropic-allocation effect is the clearest measured channel, but it is not the whole story. Strong GPR also reshapes which problems talented people work on, which fields get early institution-building support, which policy agendas look worth pursuing, and which conceptual tools later decision-makers inherit. These are not obviously tiny relative to later grant reallocation — for some of the strongest GPR, they may be a large part of the point — so the category models them as a separate strategic channel ($k$) worth about **100%** of the direct philanthropic channel in the central case, with a plausible range of **0%-300%**.
 
-Rethink Priorities says its Worldview Investigations team works on **cross-cause prioritization** and creates tools and insights that guide **funders and key stakeholders**. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) The same update highlights tools that compare movement-building strategies and work on digital minds and AI strategy that informs not only donors but also broader institutions. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) Coefficient Giving's public framework similarly treats indirect effects on housing, innovation, and other structural variables as convertible into common welfare units rather than as outside the metric. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/))
+The **100%** figure carries two qualifications:
 
-That suggests the non-donation effects of strong GPR should not be set to zero. Better prioritization can also affect:
+- It does **not** claim spillovers exactly equal later philanthropic effects. It is a rough claim that, for frontier-style GPR, the broader strategic effects are plausibly of the **same order of magnitude** as the later grant-allocation effects — not a 10% or 25% footnote, and not several multiples larger either.
+- It is meant **net of overlap** with the direct channel. There is real double-counting risk: a philanthropic reallocation may itself help create an institution that later attracts talent or shapes policy. So the multiple is a rough net addition after allowing for that overlap, not a fully independent effect stacked on top of every downstream grant. These spillovers are also harder to attribute cleanly than later grants, which is why the range runs all the way down to 0%.
 
-- which problems talented people work on
-- which fields get early institution-building support
-- which policy agendas and strategies look worth pursuing
-- which conceptual tools later decision-makers inherit
+:::details{title="Why the non-donation channel should not be set to zero"}
+Rethink Priorities says its Worldview Investigations team works on **cross-cause prioritization** and creates tools and insights that guide **funders and key stakeholders**, including tools that compare movement-building strategies and work on digital minds and AI strategy that informs not only donors but also broader institutions. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) Coefficient Giving's public framework similarly treats indirect effects on housing, innovation, and other structural variables as convertible into common welfare units rather than as outside the metric. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/))
 
-These are not obviously tiny effects relative to later grant reallocation. For some of the strongest GPR, they may be a large part of the point. A cause-prioritization report that changes which field a donor backs can also change who later enters that field, which institutions get built around it, and which policy ideas become live options.
-
-At the same time, these spillovers are harder to attribute cleanly than later grants, so they should not be treated as measured with the same confidence. The category therefore models them as a separate strategic channel worth about **100%** of the direct philanthropic channel in the central case, with a plausible range of **0%-300%**.
-
-That central figure should not be read as saying spillovers are exactly equal to later philanthropic effects. It is a rough claim that, for frontier-style GPR, the broader strategic effects are plausibly of the **same order of magnitude** as the later grant-allocation effects, not merely a 10% or 25% footnote.
-
-There is also some real **double-counting risk** between the two channels. For example, a philanthropic reallocation may itself help create an institution that later attracts talent or shapes policy. The cleanest way to read the model is therefore that the strategic-channel multiple **should be interpreted net of overlap** with the direct philanthropic channel, not as a fully independent extra effect on top of every downstream grant. The central **100%** figure is meant as a rough net addition after allowing for some overlap, not as a claim that the two channels are perfectly separable.
+A cause-prioritization report that changes which field a donor backs can also change who later enters that field, which institutions get built around it, and which policy ideas become live options — effects that are real even though they are harder to attribute than a later grant.
+:::
 
 ## 5. What number does this imply?
 
-Using the central assumptions from the category page:
+The central assumptions combine to about **\$5/QALY**. The two parameters justified above ($g$ = 40%, $B$ = \$400/QALY) set the direct channel; $k$ = 100% sets the strategic channel; the scale inputs ($C$ = \$2,000,000, $I$ = \$200,000,000) are inherited from the category page.
 
-- $C$ = \$2,000,000
-- $I$ = \$200,000,000
-- $g$ = 40% = 0.4
-- $B$ = \$400/QALY
-- $k$ = 100% = 1.0
-
-Then the direct philanthropic effect is:
+:::details{title="Worked calculation from the central parameters"}
+The direct philanthropic effect is:
 
 $$
-\dfrac{200{,}000{,}000 \times 0.4}{400} = 200{,}000 \text{ QALYs}
+Q_d = \dfrac{200{,}000{,}000 \times 0.4}{400} = 200{,}000 \text{ QALYs}
 $$
 
 The broader strategic channel is:
 
 $$
-1.0 \times 200{,}000 = 200{,}000 \text{ QALYs}
+Q_s = 1.0 \times 200{,}000 = 200{,}000 \text{ QALYs}
 $$
 
 So:
@@ -148,8 +134,7 @@ $$
 $$
 \text{Cost per QALY} = \dfrac{2{,}000{,}000}{400{,}000} = 5
 $$
-
-That implies a central estimate of about **\$5/QALY**.
+:::
 
 ## 6. Main uncertainties
 

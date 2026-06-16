@@ -14,17 +14,27 @@ _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
+The estimate is driven by an expected-value model of helping one modest first-generation gerotherapeutic cross translational bottlenecks. The cruxes are how much a strong donor portfolio shifts the probability of success ($\delta$, Assumption 9), how many people such a therapy reaches early (Assumption 8), and how big the per-person health gain is (Assumption 7). All three are judgment-heavy, which is why the range is wide.
+
 ## Description of effect
 
 This effect captures health gains from **translational geroscience philanthropy**: work that tries to turn aging biology into clinically useful interventions by funding biomarkers and endpoints, proof-of-concept trials, regulatory science, and other bottlenecks between lab science and real patients.
 
 Representative fits include [AFAR's TAME work](https://www.afar.org/tame-trial), [Impetus Grants](https://impetusgrants.org/), [LEV Foundation](https://www.levf.org/), biomarker-validation efforts, and other philanthropy that helps modest first-generation gerotherapeutics become testable, approvable, and adoptable.
 
-We do **not** model supplements, concierge longevity medicine, generic wellness advice, or very open-ended basic biology with no plausible medium-term path to human benefit.
+## What kinds of charities are we modeling?
+
+This estimate models **strong marginal longevity philanthropy** — the best serious translational opportunities — not the average donation to something branded as anti-aging. A recipient that mainly accumulates endowment or funds very indirect basic science should score below the category default.
+
+:::details{title="What counts as a good fit vs. a poor fit"}
+**Good fits:** translational geroscience grants; trial infrastructure and patient-recruitment platforms; biomarker and endpoint validation; regulatory-science work that makes aging-related indications easier to test; highly additional seed funding for neglected intervention classes.
+
+**Poor fits:** supplement marketing; rich-person longevity clinics; generic wellness or "biohacking"; prestige fundraising for already wealthy institutes; basic science with a very weak plausible translation path.
+:::
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$10,000 (\$2,000-\$100,000)
+- **Cost per QALY:** \$10,000 (\$1,000-\$250,000)
 - **Start time:** 10 years
 - **Duration:** 50 years
 
@@ -46,28 +56,15 @@ We do **not** model supplements, concierge longevity medicine, generic wellness 
 
 ### Cost per QALY
 
-The cleanest way to model this category is as expected value from helping a **modest first-generation gerotherapeutic** cross key translational bottlenecks:
+We model the category as expected value from helping a **modest first-generation gerotherapeutic** cross key translational bottlenecks:
 
 $$
 \text{Cost per QALY} = \dfrac{C}{\delta \times N \times q}
 $$
 
-Where:
+with $C$ = portfolio cost, $\delta$ = absolute increase in the probability of validation plus meaningful diffusion, $N$ = people treated in the first adoption wave, and $q$ = QALYs gained per treated person. The central inputs ($C$ = \$50M, $\delta$ = 0.1%, $N$ = 10M, $q$ = 0.5) give 5,000 expected QALYs and a point estimate of **\$10,000/QALY**.
 
-- $C$ = cost of a high-leverage philanthropic portfolio
-- $\delta$ = absolute increase in the probability of validation plus meaningful diffusion
-- $N$ = number of treated people in the first meaningful adoption wave
-- $q$ = QALYs gained per treated person
-
-Using the central assumptions:
-
-- $C$ = \$50,000,000
-- $\delta$ = 0.1% = 0.001
-- $N$ = 10,000,000
-- $q$ = 0.5
-
-So:
-
+:::details{title="Worked central calculation"}
 $$
 \mathbb{E}[\text{QALYs}] = 0.001 \times 10{,}000{,}000 \times 0.5 = 5{,}000
 $$
@@ -75,82 +72,37 @@ $$
 $$
 \text{Cost per QALY} = \dfrac{50{,}000{,}000}{5{,}000} = 10{,}000
 $$
+:::
 
-So the point estimate is **\$10,000/QALY**.
+This puts the cause area **above generic rich-world medical research** — because successful aging-targeting affects many diseases at once — but **not** at multi-order-of-magnitude superiority over GiveWell-style benchmarks: no intervention has yet clearly slowed human aging, the best human evidence is still small or mixed, the regulatory and biomarker path is hard, and the field now has far more money than a decade ago.
 
-#### Why this is not much lower
+:::details{title="Why each parameter takes the value it does"}
+**$q$ = 0.5 QALYs per treated person** (the most judgment-heavy parameter after $\delta$). The question is not what a mature anti-aging miracle would be worth, but what a *first* clinically validated gerotherapeutic might deliver. Goldman's delayed-aging scenario gives about 2.2 extra life-years, most of it in good health (Assumption 1); a first-generation success should be much weaker, so 0.5 credits only a fraction of that frontier — roughly, modestly delaying several morbidities or extending healthy survival a bit in selected older adults. Believing first-generation effects are smaller moves the category up; believing a platform quickly approaches a full healthy life-year moves it down.
 
-The upside of geroscience is enormous, but several things stop this estimate from falling into "obviously better than GiveWell by orders of magnitude" territory:
+**$N$ = 10 million treated people** is an early-meaningful-adoption figure, not eventual total reach. It is a small slice of the plausible older-adult population but assumes more than a niche pilot or concierge product: gradual uptake starting in richer health systems and higher-risk older adults.
 
-- no intervention has yet clearly shown that it slows human aging in the strong sense people usually mean
-- some of the most encouraging human evidence is still small, preliminary, or mixed
-- the regulatory and biomarker path is genuinely hard
-- the field now has far more money than it did a decade ago, so generic marginal dollars are less neglected
-
-That combination suggests a cause area that is probably **better than generic rich-world medical research**, because successful aging-targeting affects many diseases at once, but **not** one where we should casually assume multi-order-of-magnitude superiority.
-
-#### Why 0.5 QALYs per treated person?
-
-This is the most judgment-heavy parameter after $\delta$.
-
-The right way to think about it is not "how much would a fully mature anti-aging miracle be worth?" It is "what might a first clinically validated gerotherapeutic actually deliver?"
-
-Goldman's delayed-aging scenario gives about **2.2 extra life-years** with most of the gain in good health (Assumption 1). A first-generation success should be much weaker than that. A central estimate of **0.5 QALYs per treated person** therefore means we are crediting only a fraction of the full delayed-aging upside.
-
-That seems roughly right for interventions that might modestly delay multiple morbidities, reduce frailty, or extend healthy survival a bit in selected older adults. If readers think first-generation gerotherapeutics will be much weaker than that, this category should move upward; if they think a successful platform will quickly yield benefits closer to a full healthy life-year, it should move downward.
-
-#### Why 10 million treated people?
-
-This is meant to be an **early meaningful adoption** figure, not an estimate of eventual total reach. Ten million treated people is only a small slice of the plausible older-adult population, but it already assumes something more than a niche pilot or concierge product. The intended picture is gradual uptake starting in richer health systems and higher-risk older adults before any broader diffusion.
-
-#### Why only a 0.1 percentage-point probability increase?
-
-Because the marginal effect should be modeled skeptically. In a field with such large theoretical upside, it is easy to overestimate tractability. A better model is:
-
-- philanthropy can be pivotal for some bottlenecks
-- but the field is scientifically hard
-- the human evidence is not yet decisive
-- and large funders now exist
-
-So the relevant question is not whether philanthropy can "solve aging." It is whether a very strong donor portfolio can slightly increase the probability that one clinically meaningful intervention gets validated and diffuses. A **0.1 percentage-point** absolute increase is small enough to respect those difficulties, but not so small that it ignores obvious cases where donations really can move a program.
-
-TAME is the clearest illustration. If a multi-year, FDA-engaged trial around a cheap generic drug still needs philanthropy to happen at all, then donor dollars can sometimes be highly additional. But given the field's current size, it would be overconfident to assume that tens of millions of dollars shift the total probability of success by full percentage points.
+**$\delta$ = 0.1 percentage points** models the marginal effect skeptically. The relevant question is not whether philanthropy can "solve aging" but whether a very strong donor portfolio can slightly raise the probability that one clinically meaningful intervention gets validated and diffuses. TAME illustrates the upside — if a multi-year, FDA-engaged trial around a cheap generic drug still needs philanthropy to happen at all, donor dollars can be highly additional — but given the field's current size, assuming tens of millions of dollars shift total success probability by full percentage points would be overconfident.
+:::
 
 #### Range
 
-We build our plausible range from a parameter sweep, then widen it to capture the tails the sweep misses.
+A parameter sweep spans **\$2,000-\$100,000/QALY**. We widen this to a plausible range of **\$1,000-\$250,000/QALY** to capture tails the sweep misses: the extra width reflects model uncertainty the four-parameter sweep cannot — at the low end, geroscience biomarkers never becoming decision-useful, first-generation interventions barely working, or donor money mostly substituting for funding that would have happened anyway; at the high end, one or two bottlenecks proving much easier than they currently look.
 
-**Optimistic case**
-
-- $C$ = \$25 million
-- $\delta$ = 0.12%
-- $N$ = 15 million
-- $q$ = 0.8
-
-This gives:
+:::details{title="Optimistic and pessimistic sweep cases"}
+**Optimistic** ($C$ = \$25M, $\delta$ = 0.12%, $N$ = 15M, $q$ = 0.8):
 
 $$
 \dfrac{25{,}000{,}000}{0.0012 \times 15{,}000{,}000 \times 0.8} \approx 1{,}700
 $$
 
-Rounded, that is about **\$2,000/QALY**.
+Rounded, about \$2,000/QALY.
 
-**Pessimistic case**
-
-- $C$ = \$75 million
-- $\delta$ = 0.05%
-- $N$ = 5 million
-- $q$ = 0.25
-
-This gives:
+**Pessimistic** ($C$ = \$75M, $\delta$ = 0.05%, $N$ = 5M, $q$ = 0.25):
 
 $$
 \dfrac{75{,}000{,}000}{0.0005 \times 5{,}000{,}000 \times 0.25} = 120{,}000
 $$
-
-The sweep itself spans **\$2,000-\$100,000/QALY**.
-
-Widening for the tails the sweep misses gives a plausible range of roughly **\$1,000-\$250,000/QALY**. The downside reflects geroscience biomarkers never becoming decision-useful, first-generation interventions barely working, or donor money mostly substituting for funding that would have happened anyway; the upside reflects one or two bottlenecks proving much easier than they currently look.
+:::
 
 ### Start time
 
@@ -177,28 +129,6 @@ This should be longer than an ordinary one-off medical intervention because vali
 
 Fifty years is a reasonable compromise between "this matters for decades" and "do not assume indefinite persistence."
 
-## What kinds of charities are we modeling?
-
-This estimate is meant to model **strong marginal longevity philanthropy**, not the average donation to anything branded as anti-aging.
-
-Representative fits include:
-
-- translational geroscience grants
-- trial infrastructure and patient-recruitment platforms
-- biomarker and endpoint validation
-- regulatory-science work that makes aging-related indications easier to test
-- highly additional seed funding for neglected intervention classes
-
-Poor fits include:
-
-- supplement marketing
-- rich-person longevity clinics
-- generic wellness or "biohacking"
-- prestige fundraising for already wealthy institutes
-- basic science with very weak plausible translation path
-
-So this category should be read as the estimate for the **best serious translational opportunities**, not for the average thing a donor might find under the word "longevity."
-
 ## Key uncertainties
 
 1. **Whether first-generation gerotherapeutics really deliver meaningful health gains.** The field has plenty of biological promise and some encouraging human signals, but still no clean, widely accepted proof that a therapy meaningfully slows human aging in practice.
@@ -209,7 +139,7 @@ So this category should be read as the estimate for the **best serious translati
 
 4. **How broad uptake would be after a success.** Some interventions might stay niche, expensive, or concentrated in rich countries for a long time; others could diffuse quickly if they are generic, safe, and easy to prescribe.
 
-5. **How well this category matches actual recipients.** Some recipients tagged to longevity will be much closer to the modeled ideal than others. A recipient that mainly accumulates endowment or funds very indirect basic science should score below the category default.
+5. **How well this category matches actual recipients.** Some recipients tagged to longevity will be much closer to the modeled ideal than others, so individual recipients can diverge substantially from the category default.
 
 6. **Whether the right frame is "probability of success" or "years of acceleration."** Real philanthropy may accelerate the field rather than changing a clean binary success probability. The simple expected-value model here is still useful, but it compresses that complexity into a single tractability parameter.
 

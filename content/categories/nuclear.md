@@ -22,9 +22,30 @@ This effect captures welfare gains from reducing the probability of a **global c
 
 We intentionally model a catastrophe that is worse than a limited regional exchange but narrower than literal human extinction. If you think nuclear war also carries substantial extinction or centuries-long civilizational-collapse risk, the true cost per microprobability would be lower than the estimate on this page.
 
+## What kinds of charities are we modeling?
+
+These estimates assume marginal donations go to **high-leverage nuclear-risk-reduction organizations** — crisis-management, great-power-stability, arms-control, and nuclear-materials-security work — not to the average anti-war or peacebuilding organization.
+
+:::details{title="What is and is not modeled"}
+Representative activities include:
+
+- crisis communications, escalation management, and war-limitation work
+- policy research and advocacy on great-power nuclear stability, doctrine, and arms control
+- track-II dialogue and analytical work in major nuclear flashpoints
+- nonproliferation and nuclear-materials-security work that plausibly reduces catastrophic-use risk
+- forecasting, monitoring, and decision-support work that helps leaders avoid nuclear escalation under uncertainty
+
+We are **not** modeling:
+
+- generic pacifist advocacy with no plausible route to changing high-stakes nuclear decisions
+- ordinary post-conflict humanitarian relief
+- nuclear energy philanthropy
+- broad foreign-policy work with only weak relevance to catastrophic nuclear risk
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per microprobability:** \$2.4 million (\$0.5–\$12 million)
+- **Cost per microprobability:** \$2.4 million (\$0.3–\$30 million)
 - **Population fraction affected:** 0.9 (0.7–1.0)
 - **QALY improvement per affected person per year:** 0.75 (0.5–0.9)
 - **Start time:** 15 years (~2041)
@@ -47,36 +68,24 @@ We intentionally model a catastrophe that is worse than a limited regional excha
 
 ### Cost per microprobability
 
-The cleanest way to model this cause area is:
-
-$$
-\text{Cost per microprobability} = \dfrac{\text{cumulative field spending}}{\text{microprobabilities averted}}
-$$
-
-Using the central assumptions:
-
-- Cumulative spending: \$30M/year × 20 years = **\$600M**
-- Risk reduction achieved: **0.025 percentage points** = 0.00025
-- Microprobabilities averted: 0.00025 / 10^-6 = **250**
-
-So:
+We model this cause area as cumulative field spending divided by microprobabilities of catastrophe averted. At the central assumptions, roughly **\$600 million** of philanthropy (\$30M/year for 20 years, Assumption 4) buying a **0.025 percentage-point** risk reduction (Assumption 5) averts **250 microprobabilities**, giving **\$2.4 million per microprobability**.
 
 $$
 \text{Cost per microprobability} = \dfrac{\$600{,}000{,}000}{250} = \$2{,}400{,}000
 $$
 
-So the point estimate is **\$2.4 million per microprobability**.
+The load-bearing input is Assumption 5: that **0.025 percentage points over 20 years** is small enough to be plausible if philanthropy has real leverage, but not so small that the field's existence becomes irrelevant. The [dedicated assumption page](/assumption/effect-of-nuclear-risk-philanthropy) argues this corresponds to \$600 million buying only a small share of the best tractable policy bundle discussed by ONN, calibrated against historical cases where small philanthropic organizations appear to have catalyzed much larger governmental actions.
 
-The load-bearing input here is Assumption 5. The dedicated assumption page argues that this central estimate corresponds to roughly **\$600 million** of philanthropy buying only a **small share** of the total effect of the best tractable policy bundle discussed by ONN, and calibrates that claim against historical cases where small philanthropic organizations appear to have helped catalyze much larger governmental or institutional actions. The short version is that **0.025 percentage points over 20 years** is small enough to be plausible if philanthropy has real leverage, but not so small that the field's existence becomes irrelevant.
+The parameter sweep on Assumption 5 (0.005–0.12 percentage points) gives \$500,000–\$12 million, but our true uncertainty is wider: a plausible range of roughly **\$300,000–\$30 million per microprobability**. The wider tails reflect the scenarios the sweep holds fixed — if current philanthropy has almost no leverage over great-power nuclear risk the cost is much higher, while if it can occasionally unlock extremely leveraged crisis-management or doctrine wins it is lower.
 
-**Range**
+:::details{title="Worked sweep: pessimistic and optimistic bounds"}
+Holding \$600M cumulative spending fixed and sweeping the risk reduction:
 
 - **Pessimistic:** \$600M buys only **0.005 percentage points** = 50 microprobabilities -> **\$12 million** per microprobability
 - **Optimistic:** \$600M buys **0.12 percentage points** = 1,200 microprobabilities -> **\$500,000** per microprobability
+:::
 
-Those parameter-sweep bounds are tighter than our true uncertainty, so we widen them into a plausible range of roughly **\$300,000–\$30 million per microprobability**. The wider tails reflect the scenarios the sweep holds fixed: if current philanthropy has almost no leverage over great-power nuclear risk the cost is much higher, while if philanthropy can occasionally unlock extremely leveraged crisis-management or doctrine wins it is lower.
-
-One reason not to be more optimistic than this by default is that nuclear philanthropy is trying to influence outcomes that are highly path-dependent, politically constrained, and hard to measure. One reason not to be much more pessimistic is that the field is extremely neglected and some of the relevant levers really are high leverage. A single avoided escalation pathway can matter enormously.
+One reason not to be more optimistic by default is that nuclear philanthropy is trying to influence outcomes that are highly path-dependent, politically constrained, and hard to measure. One reason not to be much more pessimistic is that the field is extremely neglected and some of the relevant levers really are high leverage — a single avoided escalation pathway can matter enormously.
 
 ### Population fraction affected
 
@@ -90,48 +99,41 @@ So even people far from the detonations would often still face severe shortages 
 
 ### QALY improvement per affected person per year
 
-The point estimate (0.75) and range (0.5–0.9) are derived by distributing total QALY losses across the affected population and duration.
+The point estimate (0.75) and range (0.5–0.9) come from spreading total QALY losses across the affected population over the 30-year window: about **208 billion QALYs** lost across roughly **278 billion affected person-years** gives **0.75 QALYs per affected person per year**. Deaths dominate the total, so even cutting the survivor-loss term materially leaves the answer in the same broad range — losing billions of lives is already an enormous QALY loss.
 
-Using a world population of **10.3 billion** and an affected fraction of **0.9**, the model implies about **9.27 billion affected people**.
+:::details{title="QALY-loss decomposition (about 208 billion QALYs)"}
+Using a world population of **10.3 billion** and an affected fraction of **0.9**, the model implies about **9.27 billion affected people**. A simple stylized decomposition, rounded for clarity:
 
-A simple stylized decomposition, rounded for clarity, is:
-
-- **~5.0 billion deaths** × **36 QALYs** each = **180 billion QALYs**
-- **~4.0 billion severe survivors** × **7 QALYs** each = **28 billion QALYs**
+- **~5.0 billion deaths** × **36 QALYs** each (Assumption 7) = **180 billion QALYs**
+- **~4.0 billion severe survivors** × **7 QALYs** each (Assumption 8) = **28 billion QALYs**
 - **remaining affected people** are rounded away in this decomposition and do not materially change the total
 - **Total:** about **208 billion QALYs**
 
-Affected person-years over a 30-year window are:
+Affected person-years over a 30-year window, and the resulting per-person-year rate:
 
 $$
 10.3 \text{B} \times 0.9 \times 30 \approx 278 \text{ billion affected person-years}
 $$
 
-So:
-
 $$
 \dfrac{208 \text{B QALYs}}{278 \text{B affected person-years}} \approx 0.75
 $$
 
-So the point estimate is **0.75 QALYs per affected person per year**.
+The **7 QALYs per severe survivor** is a rough combined loss from shorter life expectancy plus much worse quality of life during a prolonged recovery; it does not imply exactly seven years in one specific health state.
+:::
 
-The **7 QALYs per severe survivor** should be read as a rough combined loss from shorter life expectancy plus much worse quality of life during a prolonged recovery period. It is not meant to imply exactly seven years in one specific health state.
+At the central estimate, averting one microprobability saves about **209,000 QALYs**, implying roughly **\$11.5 per QALY** — extremely good by ordinary global-health standards, but a general feature of catastrophe-risk models when both the stakes and tractability are nontrivial.
 
-Deaths dominate this calculation. Even if the survivor-loss term were cut materially, the answer would remain in the same broad range because losing billions of lives is already an enormous QALY loss.
-
-At the central estimate, averting one microprobability saves about:
+:::details{title="Implied cost-effectiveness: about 11.5 dollars per QALY"}
 
 $$
 10.3 \text{B} \times 0.9 \times 0.75 \times 30 \times 10^{-6} \approx 209{,}000 \text{ QALYs}
 $$
 
-So the implied cost-effectiveness is about:
-
 $$
 \dfrac{\$2.4 \text{M}}{209{,}000} \approx \$11.5 / \text{QALY}
 $$
-
-This is extremely good by ordinary global-health standards, but that is a general feature of catastrophe-risk models when both the stakes and tractability are nontrivial.
+:::
 
 ### Start time
 
@@ -153,25 +155,6 @@ The 30-year duration is an equivalent-impact window that balances three things:
 3. **Survivor harms** such as displacement, trauma, disease, and institutional collapse plausibly persist well beyond the peak famine years.
 
 So 30 years should not be read as a forecast that recovery takes exactly 30 years. It is an accounting device that spreads the catastrophe's total welfare losses over a period long enough to reflect both the acute shock and the life-years destroyed by premature death.
-
-## What kinds of charities are we modeling?
-
-These estimates assume marginal donations go to **high-leverage nuclear-risk-reduction organizations**, not to the average anti-war or peacebuilding organization.
-
-Representative activities include:
-
-- crisis communications, escalation management, and war-limitation work
-- policy research and advocacy on great-power nuclear stability, doctrine, and arms control
-- track-II dialogue and analytical work in major nuclear flashpoints
-- nonproliferation and nuclear-materials-security work that plausibly reduces catastrophic-use risk
-- forecasting, monitoring, and decision-support work that helps leaders avoid nuclear escalation under uncertainty
-
-We are **not** modeling:
-
-- generic pacifist advocacy with no plausible route to changing high-stakes nuclear decisions
-- ordinary post-conflict humanitarian relief
-- nuclear energy philanthropy
-- broad foreign-policy work with only weak relevance to catastrophic nuclear risk
 
 ## Key uncertainties
 

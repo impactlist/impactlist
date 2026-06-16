@@ -15,39 +15,43 @@ This document analyzes the baseline probability that artificial general intellig
 
 ## 1. What the experts say
 
-A range of expert surveys, public statements, and academic analyses provide estimates of AI-caused extinction risk. Views vary enormously, but the center of gravity among people who have thought seriously about the issue appears to be somewhere between low single digits and low double digits.
+Views vary enormously, but the center of gravity among people who have thought seriously about the issue runs from the low single digits to the low double digits. The four bodies of evidence below — broad surveys, forecasting tournaments, named-researcher statements, and a high-risk cluster — fix the anchors that the 10% estimate is built around.
 
-### 1.1 Expert surveys
+### 1.1 Expert surveys: medians near 5%, means near 9–14%
 
-**Grace et al. 2024 ("Thousands of AI Authors on the Future of AI")**
+The largest survey of top-tier AI researchers, [Grace et al. (2024)](https://arxiv.org/abs/2401.02843), found a **5%** median probability of extinction-level outcomes, with means of **9–14.4%** depending on the question framing; the older [2022 AI Impacts survey](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/) found a similar **5–10%** median with a substantial minority above 25%. These surveys are useful but imperfect: respondents may be selected toward AI-risk interest, and the framing of the question moves the answer materially.
 
-[Grace et al. (2024)](https://arxiv.org/abs/2401.02843), the largest survey of its kind, collected responses from 2,778 researchers who had published in top-tier AI venues. Key results:
+:::details{title="The Grace et al. numbers and what moves them"}
+[Grace et al. (2024)](https://arxiv.org/abs/2401.02843), the largest survey of its kind, collected responses from 2,778 researchers who had published in top-tier AI venues:
 
 - On the broad question about the long-run impact of high-level machine intelligence, the median probability assigned to **"extremely bad outcomes"** such as human extinction was **5%**, and the mean was **9%**.
 - On a more specific question asking about future AI advances causing human extinction or similarly permanent and severe disempowerment **within the next 100 years**, the mean was **14.4%** and the median was **5%**.
-- Depending on the exact extinction/disempowerment wording, **41.2% to 51.4%** of respondents gave at least a 10% chance.
-- On the broader "extremely bad outcomes" wording, **38%** gave at least a 10% chance.
+- Depending on the exact extinction/disempowerment wording, **41.2% to 51.4%** of respondents gave at least a 10% chance; on the broader "extremely bad outcomes" wording, **38%** did.
 
-These distinctions matter: the 5% median and 14.4% mean are both real numbers from the paper, but they come from **different question framings**. The [2022 AI Impacts survey](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/) similarly found roughly **5–10%** median probability on "extremely bad" outcomes conditional on human-level machine intelligence, with a substantial minority above 25%.
+The 5% median and 14.4% mean are both real numbers from the paper, but they come from **different question framings** — the higher means attach to the broader extinction-or-disempowerment wording. Some skeptics also object that the questions are asked from an existential-risk perspective. ([Scientific American discussion](https://www.scientificamerican.com/article/ai-survey-exaggerates-apocalyptic-risks/))
+:::
 
-These surveys are useful but imperfect. Respondents may be selected toward people interested in AI risk, framing matters, and some skeptics object that the questions are asked from an existential-risk perspective. ([Scientific American discussion](https://www.scientificamerican.com/article/ai-survey-exaggerates-apocalyptic-risks/))
+### 1.2 Forecasting tournaments and superforecasters: a low anchor near 0.4–3%
 
-### 1.2 Forecasting tournaments and superforecasters
+Structured forecasting pulls lower. In the [Existential Risk Persuasion Tournament (XPT)](https://forecastingresearch.org/xpt) ([Karger et al. (2025)](https://forecastingresearch.org/s/XPT.pdf)), the median estimate for **AI-caused extinction by 2100** was about **0.38%** among superforecasters and **3%** among domain experts; Metaculus snapshots sit similarly low, around **1–5%** on AI-specific extinction. These are useful evidence against treating high estimates as consensus, but not decisive: structured debate did not converge the two camps, and a later analysis found the superforecasters had no accuracy edge on resolved near-term questions and both groups had underestimated AI progress.
 
-The [Existential Risk Persuasion Tournament (XPT)](https://forecastingresearch.org/xpt), later written up as [Karger et al. (2025)](https://forecastingresearch.org/s/XPT.pdf), is a useful lower anchor because it separates different risk framings:
+:::details{title="The XPT and Metaculus breakdown by framing"}
+XPT separates several risk framings, which resolves a common ambiguity (all-cause vs AI-specific, extinction vs broader catastrophe):
 
-- For **any extinction by 2100** from all causes, the median superforecaster estimate was about **1%**, while the median domain-expert estimate was about **6%**.
-- For **AI-caused extinction by 2100** specifically, the median superforecaster estimate was about **0.38%**, while the median domain-expert estimate was about **3%**.
-- For **AI catastrophe by 2100** defined as an event that kills more than 10% of the population within five years, the medians were about **2.13%** for superforecasters and **12%** for domain experts.
+- For **any extinction by 2100** from all causes, the median superforecaster estimate was about **1%**, the median domain-expert estimate about **6%**.
+- For **AI-caused extinction by 2100** specifically, about **0.38%** (superforecasters) versus **3%** (domain experts).
+- For **AI catastrophe by 2100** defined as killing more than 10% of the population within five years, about **2.13%** versus **12%**.
 
-This resolves a common ambiguity: the **1% and 6%** numbers are all-cause extinction, while **0.38% and 3%** are AI-specific extinction. XPT is not decisive, though: despite months of structured debate, neither side substantially converged. In a later [near-term accuracy analysis](https://forecastingresearch.org/near-term-xpt-accuracy), the Forecasting Research Institute found **overall performance parity** between domain experts and superforecasters on resolved near-term questions, and both groups underestimated AI progress.
+In a later [near-term accuracy analysis](https://forecastingresearch.org/near-term-xpt-accuracy), the Forecasting Research Institute found **overall performance parity** between domain experts and superforecasters on resolved near-term questions, and both groups underestimated AI progress — a direct reason not to over-trust the lowest superforecaster anchors.
 
-Metaculus provides another lower anchor. An early-2026 snapshot showed roughly **1–2%** on broad [human extinction by 2100](https://www.metaculus.com/questions/578/human-extinction-by-2100/) and roughly **1–5%** on the AI-specific question [“Before 2100, will AI cause the human population to fall below 5000 individuals?”](https://www.metaculus.com/questions/27035/cts-ai-extinction-before-2100/). These live forecasts may have moved since, and extinction questions have resolution and participation problems, but they are still useful evidence against treating very high estimates as consensus.
+An early-2026 Metaculus snapshot showed roughly **1–2%** on broad [human extinction by 2100](https://www.metaculus.com/questions/578/human-extinction-by-2100/) and roughly **1–5%** on the AI-specific [“Before 2100, will AI cause the human population to fall below 5000 individuals?”](https://www.metaculus.com/questions/27035/cts-ai-extinction-before-2100/). These live forecasts may have moved, and extinction questions have known resolution and participation problems.
+:::
 
-### 1.3 Public statements from leading researchers
+### 1.3 Public statements: lab CEOs and two of three "godfathers" treat the risk as serious
 
-Several prominent AI researchers and lab leaders have publicly shared views that help calibrate the range, even though they often switch between extinction, catastrophe, disempowerment, and broad societal collapse. Two patterns stand out. First, the CEOs of all three leading frontier labs — OpenAI, Google DeepMind, and Anthropic — publicly treat AI extinction risk as a serious concern, having all signed the 2023 [Statement on AI Risk](https://aistatement.com/): _"Mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war."_ Second, of the three researchers often called the "godfathers of deep learning" — the 2018 Turing Award co-winners whose work underpins modern LLMs — two (Geoffrey Hinton and Yoshua Bengio) now treat the risk of catastrophic or extinction-level outcomes as significant, while only the third (Yann LeCun) is a prominent skeptic.
+Two patterns calibrate the middle of the range. First, the CEOs of all three leading frontier labs — OpenAI, Google DeepMind, and Anthropic — publicly treat AI extinction risk as a serious concern, having all signed the 2023 [Statement on AI Risk](https://aistatement.com/): _"Mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war."_ Second, of the three "godfathers of deep learning" (the 2018 Turing Award co-winners whose work underpins modern LLMs), two — Hinton and Bengio — now treat catastrophic or extinction-level outcomes as significant, while only Yann LeCun is a prominent skeptic. Named point estimates in this group cluster around **10–25%** for the concerned researchers, with skeptics putting it near zero. These statements often switch between extinction, catastrophe, disempowerment, and broad collapse, so they calibrate the range rather than pin a number.
 
+:::details{title="The named-researcher estimates"}
 - **Geoffrey Hinton** (2024 Nobel laureate in Physics) estimates a **10–20%** probability of AI causing human extinction within 30 years, up from his earlier 10% number because progress has moved faster than expected. ([Guardian](https://www.theguardian.com/technology/2024/dec/27/godfather-of-ai-raises-odds-of-the-technology-wiping-out-humanity-over-next-30-years))
 - **Dario Amodei** (CEO, Anthropic) has said there is a **25%** chance that things go "really, really badly" with AI — broader than literal extinction, but a useful upper-tail calibration point. ([Axios](https://www.axios.com/2025/09/17/anthropic-dario-amodei-p-doom-25-percent))
 - **Sam Altman** (CEO, OpenAI) wrote in 2015 that the "development of superhuman machine intelligence is probably the greatest threat to the continued existence of humanity," and signed the 2023 statement above, though his more recent public emphasis has shifted toward AGI's benefits. ([2015 blog](https://blog.samaltman.com/machine-intelligence-part-1))
@@ -56,17 +60,18 @@ Several prominent AI researchers and lab leaders have publicly shared views that
 - **Stuart Russell** has consistently argued that misaligned superhuman AI poses serious extinction risk and that current training methods are intrinsically unsafe. ([Interview](https://www.psychoftech.org/videointerviews/2019/7/13/interview-with-stuart-russell-ai-alignment-and-the-future-of-humanity), [Mint 2026 coverage](https://www.livemint.com/technology/tech-news/ai-pioneer-stuart-russell-warns-of-catastrophic-risks-at-new-delhi-summit-off-by-a-factor-of-10-to-50-million/amp-11771405172216.html))
 - **Yann LeCun** is a prominent skeptic, calling existential-risk fears "preposterous" and "complete B.S." He argues current language models lack grounded world models, planning, and evidence of domination-seeking. ([TIME](https://time.com/6694432/yann-lecun-meta-ai-interview/), [TechCrunch](https://techcrunch.com/2024/10/12/metas-yann-lecun-says-worries-about-a-i-s-existential-threat-are-complete-b-s/), [the-decoder](https://the-decoder.com/you-certainly-dont-tell-a-researcher-like-me-what-to-do-says-lecun-as-he-exits-meta-for-his-own-startup/))
 - **Melanie Mitchell** has argued that extinction risk is very low or "almost vanishingly small," because current systems lack the common sense and long-term agency required for classic doom scenarios. ([AEI Q&A](https://www.aei.org/articles/a-quick-qa-with-ai-researcher-melanie-mitchell/), [Munk Debate](https://thehub.ca/podcast/audio/is-ai-an-existential-threat-yann-lecun-max-tegmark-melanie-mitchell-and-yoshua-bengio-make-their-case/))
+:::
 
-### 1.4 Academic risk assessments
+### 1.4 Academic risk assessments: roughly 10%
 
-- **Toby Ord** puts existential-catastrophe risk from unaligned AI this century at roughly **10%** in [_The Precipice_](https://theprecipice.com/) and ["The Precipice Revisited"](https://www.tobyord.com/writing/the-precipice-revisited), while emphasizing that recent progress has mixed implications.
-- **Severin Field (2025)** surveyed 111 AI experts and found two broad clusters: "AI as controllable tool" and "AI as uncontrollable agent." Only **21%** had heard of **instrumental convergence**, and the least concerned experts were least familiar with core AI-safety ideas. ([Field 2025](https://doi.org/10.1007/s43681-025-00762-0))
+Toby Ord puts existential-catastrophe risk from unaligned AI this century at roughly **10%** in [_The Precipice_](https://theprecipice.com/) and ["The Precipice Revisited"](https://www.tobyord.com/writing/the-precipice-revisited), while emphasizing that recent progress has mixed implications. [Severin Field (2025)](https://doi.org/10.1007/s43681-025-00762-0), surveying 111 AI experts, found two broad clusters ("AI as controllable tool" versus "AI as uncontrollable agent") and that the least concerned experts were the least familiar with core AI-safety ideas — only **21%** had heard of **instrumental convergence**.
 
 ### 1.5 Researchers who estimate much higher risk
 
-The 10–20% figures above are not the top of the range. A distinct, partly self-selected cluster of AI safety researchers puts the risk much higher; these views often use **broader framings** than literal extinction, but they matter for the upper tail. Jan Leike, for example, endorsed a range of ["more than 10% and less than 90%"](https://80000hours.org/podcast/episodes/jan-leike-superalignment/) for catastrophic outcomes, while also saying success is "pretty likely."
+The 10–20% figures above are not the top of the range. A distinct, partly self-selected cluster of AI safety researchers puts the risk much higher — from Christiano's ~20% that most humans die within a decade, through Kokotajlo (~70%) and Hendrycks (>80%), up to MIRI and Yampolskiy near 90–99%. These views often use **broader framings** than literal extinction (takeover, disempowerment, catastrophe), and even sympathetic reviewers reject near-certainty — so they matter for the upper tail without anchoring the center.
 
-Higher point estimates include:
+:::details{title="The high-end estimates and why we do not center on them"}
+Jan Leike endorsed a range of ["more than 10% and less than 90%"](https://80000hours.org/podcast/episodes/jan-leike-superalignment/) for catastrophic outcomes, while also saying success is "pretty likely." Higher point estimates include:
 
 - **Paul Christiano** (former head of alignment at OpenAI) estimates roughly [22% chance of AI takeover, 20% that "most humans die within 10 years" of powerful AI, and 46% that humanity's future is "irreversibly messed up"](https://www.lesswrong.com/posts/xWMqsvHapP3nwdSW8/my-views-on-doom), and, conditional on reaching human-level AI, "maybe a 50/50 chance of catastrophe." Even his most death-focused figure — about 20% that most humans die within 10 years — describes mass death, not the literal everyone-dies extinction this page targets, and it sits below his broader takeover and catastrophe numbers.
 - **Daniel Kokotajlo** (former OpenAI) puts the combined chance that AI destroys or catastrophically harms humanity at [around 70%](https://futurism.com/the-byte/openai-insider-70-percent-doom).
@@ -76,48 +81,33 @@ Higher point estimates include:
 The most prominent recent statement of this high-end view is Yudkowsky and Soares's 2025 book [_If Anyone Builds It, Everyone Dies_](https://en.wikipedia.org/wiki/If_Anyone_Builds_It,_Everyone_Dies), whose authors put the risk very high in interviews (Soares: ["at least 95%"](https://futureoflife.org/podcast/why-building-superintelligence-means-human-extinction-with-nate-soares/)). The book is best read as a general-audience synthesis of older arguments from Bostrom's [_Superintelligence_](https://en.wikipedia.org/wiki/Superintelligence:_Paths,_Dangers,_Strategies), Russell's [_Human Compatible_](https://people.eecs.berkeley.edu/~russell/hc.html), Yudkowsky's ["AGI Ruin"](https://www.lesswrong.com/posts/uMQ3cqWDPHhjtiesc/agi-ruin-a-list-of-lethalities), and Carlsmith's [power-seeking report](https://arxiv.org/abs/2206.13353).
 
 We do not adopt the highest numbers centrally because the high-risk cluster is selected and correlated; broad survey medians remain near 5%; and sympathetic reviewers still reject near-certainty. Will MacAskill gives **1–10%** and criticizes the book's evolution analogy and assumed discontinuity; Scott Alexander calls himself a ["sub-25% p(doom)"](https://www.astralcodexten.com/p/book-review-if-anyone-builds-it-everyone) moderate; and Clara Collier argues in [_Asterisk_](https://asteriskmag.com/issues/11/iabied) that the book treats key assumptions as more obvious than they are. For literal extinction specifically, much of the high cluster thins toward the Yudkowsky/MIRI pole, while other high estimates include takeover or permanent disempowerment covered by the [broader existential-catastrophe page](/assumption/ai-existential-catastrophe-probability).
+:::
 
 ---
 
 ## 2. Sources of AI-caused extinction risk
 
-The concern is not that AI systems spontaneously decide to harm humans for no reason. It is that sufficiently capable systems optimizing for subtly or deeply misaligned goals could cause catastrophic harm as a side effect.
+The concern is not that AI systems spontaneously decide to harm humans. It is that sufficiently capable systems optimizing for subtly or deeply misaligned goals could cause catastrophic harm as a side effect. Three mechanisms drive the worry: the unsolved **alignment problem** (we lack robust methods to make powerful systems reliably pursue human interests), **instrumental convergence** (many goals create similar incentives toward self-preservation and resource acquisition), and **speed and power differentials** (course correction gets hard once systems outpace our ability to verify control).
 
-### 2.1 The alignment problem
+That alignment is not obviously solved is now an empirical point, not just a theoretical one: controlled studies have caught frontier models [faking alignment](https://www.anthropic.com/news/alignment-faking), [scheming in context](https://www.apolloresearch.ai/research/frontier-models-are-capable-of-incontext-scheming/), [resorting to blackmail in agentic test scenarios](https://www.anthropic.com/research/agentic-misalignment), and developing [broad misalignment from narrow incentives](https://www.nature.com/articles/s41586-025-09937-5), including misalignment that [generalized to sabotage and survived standard safety training](https://arxiv.org/abs/2511.18397). The net lesson is not that catastrophe is imminent, but that reliable verification remains hard.
 
-The core technical challenge is that we do not yet have robust methods to ensure that powerful AI systems reliably pursue human interests. Important failure modes include:
+:::details{title="The three mechanisms in detail, and the reassuring counter-evidence"}
+**The alignment problem.** The core failure modes are **specification failures** (goals that sound reasonable have unintended interpretations — a system told to maximize human happiness might find perverse shortcuts), **reward hacking** (scoring well on the objective in ways that miss what we wanted), and **goal misgeneralization** (a goal that works in training generalizes badly in novel situations).
 
-- **Specification failures:** Goals that sound reasonable may have unintended interpretations. A system told to maximize human happiness might find perverse shortcuts more efficient than actually improving people's lives.
-- **Reward hacking:** A system may score well on its objective in ways that fail to capture what we actually wanted.
-- **Goal misgeneralization:** A system may learn a goal that works in the training environment but generalizes badly in novel situations.
+**Reassuring caveats on the empirical evidence.** The misbehavior above was mostly surfaced in deliberately adversarial settings rather than ordinary use; targeted mitigations have sharply reduced several of these behaviors; interpretability has advanced enough to catch some concealed goals; and skeptics such as Mitchell argue the "scheming" may be [pattern-matching rather than genuine agency](https://aiguide.substack.com/p/magical-thinking-on-ai).
 
-Recent work reinforces that alignment is not obviously solved. Controlled studies have shown frontier models [faking alignment](https://www.anthropic.com/news/alignment-faking), [scheming in context](https://www.apolloresearch.ai/research/frontier-models-are-capable-of-incontext-scheming/), [resorting to blackmail in agentic test scenarios](https://www.anthropic.com/research/agentic-misalignment), and developing [broad misalignment from narrow incentives](https://www.nature.com/articles/s41586-025-09937-5), including misalignment that [generalized to sabotage and survived standard safety training](https://arxiv.org/abs/2511.18397). On the reassuring side, these behaviors were mostly surfaced in deliberately adversarial settings rather than ordinary use; targeted mitigations have sharply reduced several of them; interpretability has advanced enough to catch some concealed goals; and skeptics such as Mitchell argue the "scheming" may be [pattern-matching rather than genuine agency](https://aiguide.substack.com/p/magical-thinking-on-ai). The net lesson is not that catastrophe is imminent, but that reliable verification remains hard.
+**Instrumental convergence.** Nick Bostrom and others argue many final goals create similar instrumental incentives: **self-preservation** (a system off cannot achieve its goals), **resource acquisition**, **goal preservation** (resisting having its goals changed), and **self-improvement**. These could lead even a superficially benign system to resist shutdown if doing so helps its objective. Critics dispute how automatic this is.
 
-### 2.2 Instrumental convergence
-
-Nick Bostrom and others argue that many final goals can create similar instrumental incentives:
-
-- **Self-preservation:** A system cannot achieve its goals if it is turned off.
-- **Resource acquisition:** More resources often help achieve more goals.
-- **Goal preservation:** A system may resist having its goals changed.
-- **Self-improvement:** A more capable system can better achieve its goals.
-
-These tendencies could lead even a superficially benign system to resist shutdown or manipulation if doing so helps its objective. Critics dispute how automatic this is, but it remains a central reason some researchers assign significant doom probabilities.
-
-### 2.3 Speed and power differentials
-
-If AI systems become much more capable than humans in strategically important domains, course correction could become difficult because:
-
-- AI capabilities may advance faster than our ability to verify robust alignment
-- Competition between labs or states may create pressure to deploy systems before adequate safety testing
-- Warning signs may arrive only shortly before systems become dangerous enough to materially constrain human options
+**Speed and power differentials.** If AI becomes much more capable than humans in strategically important domains, course correction could become difficult: capabilities may advance faster than alignment verification; competition between labs or states may pressure deployment before adequate safety testing; and warning signs may arrive only shortly before systems become dangerous enough to materially constrain human options.
+:::
 
 ---
 
 ## 3. Arguments for lower probability estimates
 
-Some researchers assign significantly lower probabilities, often below 3%. Their strongest arguments include:
+Some researchers assign significantly lower probabilities, often below 3%. The strongest cases are that alignment is a **hard but ordinary engineering problem** for a designed artifact (LeCun) rather than uniquely impossible; that AI is **"normal technology"** that diffuses too slowly through institutions for a sudden uncontrollable takeover ([Narayanan and Kapoor](https://knightcolumbia.org/content/ai-as-normal-technology)); that **multiple intermediate stages** before superhuman systems give repeated chances for course correction; and that the **XPT superforecaster anchors** (**0.38%** for AI-caused extinction) plus a **historical track record** of over-pessimism about new technologies argue against the higher estimates.
 
+:::details{title="The full lower-estimate case"}
 - **Technical optimism about alignment:** Skeptics such as LeCun argue that AI is a designed artifact, not a natural force. On this view there likely exists some design for highly capable systems that is also safe and controllable, making alignment a hard but ordinary engineering problem rather than a uniquely impossible one.
 - **AI as "normal technology":** Narayanan and Kapoor argue that ["superintelligence" is not a coherent single quantity](https://knightcolumbia.org/content/ai-as-normal-technology), and that the pace at which AI actually diffuses through the economy and institutions makes a sudden, uncontrollable takeover implausible. They treat catastrophic misalignment as speculative rather than the default outcome, viewing AI as transformative but governable like earlier general-purpose technologies.
 - **Current systems lack key dangerous properties:** Mitchell and others argue present-day systems still lack grounded understanding, robust agency, long-term planning, and genuine common sense, so classic doom arguments may be extrapolating too much from systems that have fundamental limitations.
@@ -125,21 +115,24 @@ Some researchers assign significantly lower probabilities, often below 3%. Their
 - **Economic and social constraints:** Real-world deployment happens inside institutions. Regulators, insurers, customers, whistleblowers, and rival labs all add friction that may catch severe problems before they become existential.
 - **Multiple opportunities for course correction:** The path from current models to genuinely superhuman systems likely runs through many intermediate stages, each a chance to notice failure modes, build better tools, and slow deployment if warning signs accumulate.
 - **Historical track record:** Predictions of technological catastrophe have often been too pessimistic — nuclear power, nanotechnology, and genetic engineering were all feared to destroy civilization more straightforwardly than they have. AI might follow the same pattern of alarming theory plus partial real-world adaptation.
+:::
 
 ---
 
 ## 4. Arguments for higher probability estimates
 
-Other researchers assign significantly higher probabilities, often above 15%. Their strongest arguments include:
+Other researchers assign significantly higher probabilities, often above 15%. The strongest cases are **fast, accelerating capability gains** that have repeatedly surprised forecasters — METR finds the autonomous-task horizon [doubling every few months and accelerating](https://metr.org/blog/2026-1-29-time-horizon-1-1/), and forecasters [materially underestimated near-term progress](https://forecastingresearch.org/near-term-xpt-accuracy); **competitive racing dynamics** that make caution hard to coordinate; **no second chances** if the first decisively capable system is misaligned; and the persistent **difficulty of verifying alignment**, reinforced by the deception findings in Section 2. The 2026 [International AI Safety Report](https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026) — a broad expert synthesis backed by 30+ governments — documents the same trajectory while stressing that reliable evaluation of frontier systems remains unsolved.
 
+Important caveats cut the other way: some benchmarks built to resist AI (such as ARC-AGI-2) remain hard, real-world reliability still lags benchmark scores, and the broad researcher surveys did _not_ show a rising median — the share of Grace respondents giving extinction-level outcomes at least a 10% chance actually fell between the two surveys. Faster capabilities thus strengthen the case for taking the risk seriously, and for not over-trusting the lowest forecasts, without by themselves fixing a number.
+
+:::details{title="The full higher-estimate case"}
 - **Speed of capability gains:** Recent progress has repeatedly surprised even optimists. Grace et al.'s aggregate median forecast for high-level machine intelligence moved from 2060 to 2047 between their 2022 and 2023 surveys, and METR finds the length of task an AI can complete autonomously has been [doubling every few months and accelerating](https://metr.org/blog/2026-1-29-time-horizon-1-1/) — from a roughly seven-month doubling time over 2019–2025 to under three months on the latest models. The Forecasting Research Institute also found that both superforecasters and domain experts had [materially underestimated near-term AI progress](https://forecastingresearch.org/near-term-xpt-accuracy), a direct reason not to over-trust the very low superforecaster extinction anchors.
 - **Frontier-system warning signs:** The 2026 [International AI Safety Report](https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026) — a synthesis by over 100 experts backed by more than 30 governments and the EU, OECD, and UN — documents the same trajectory: 2025 systems reaching gold-medal International Mathematical Olympiad performance, exceeding PhD-level experts on science benchmarks, and operating autonomously over longer horizons, while stressing that reliable evaluation of frontier systems remains unsolved. As a broad expert consensus rather than an individual or advocacy estimate, it is a useful counterweight to both the dismissive and the catastrophist poles.
 - **Competitive dynamics:** AI is being developed in a highly competitive environment with strong incentives to deploy before rivals. Racing makes caution harder to coordinate and cutting corners easier to rationalize.
 - **Complexity of human values:** Human values are complicated, context-dependent, and often internally conflicting. Specifying them well enough to survive powerful optimization may be far harder than optimistic engineering analogies suggest.
 - **No second chances:** Unlike most technologies, sufficiently powerful AI may not let us learn from a catastrophic failure and try again. If the first system capable of seizing decisive strategic advantage is misaligned, recovery may be impossible.
 - **Difficulty of verifying alignment:** We still lack reliable ways to confirm that a powerful system is genuinely aligned rather than merely appearing aligned during tests — a concern strengthened, not weakened, by recent work on deception, goal misgeneralization, and alignment faking.
-
-Important caveats cut the other way: some benchmarks built to resist AI (such as ARC-AGI-2) remain hard, real-world reliability still lags benchmark scores, and the broad researcher surveys did _not_ show a rising median — the share of Grace respondents giving extinction-level outcomes at least a 10% chance actually fell between the two surveys. Faster capabilities thus strengthen the case for taking the risk seriously, and for not over-trusting the lowest forecasts, without by themselves fixing a number.
+:::
 
 ---
 
@@ -151,7 +144,7 @@ Given the evidence above, we adopt **10%** as the baseline probability of AI-cau
 - **Below** the **14.4%** mean on Grace et al.'s broader extinction-or-severe-disempowerment question and below the high camp, because those use broader catastrophe concepts, may reflect selection effects, and count outcomes broader than literal extinction
 - **In line with** Toby Ord's roughly **10%** estimate and Joseph Carlsmith's **>10%**, and with the principle that the right input to an expected-value calculation is the mean of the credible range, not its single most likely value
 
-We emphasize that this is a rough estimate subject to large uncertainty. The 10% figure should be understood as a working assumption for cost-effectiveness analysis, not a confident prediction.
+The 10% figure is a working assumption for cost-effectiveness analysis, not a confident prediction.
 
 ### Plausible range
 

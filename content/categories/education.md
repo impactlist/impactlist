@@ -77,25 +77,43 @@ field at the top of this page and enter your own values.*
 
 ### Cost per QALY
 
-The right way to model this category is **not** to start from the claim that "education is good"
-and then assume a generic education dollar inherits that value. The strongest evidence is narrower:
-some education interventions create large, measurable gains in wellbeing, but many others do not.
-The cleanest anchors are therefore interventions where we either have direct QALY evidence or
-unusually strong long-run causal evidence on attainment and earnings.
+The point estimate rests on a convergence: the two strongest education literatures — comprehensive
+degree-completion programs and direct schoolwide wellbeing programs — independently land in the
+low-to-mid five-figure \$/QALY range, even though one infers QALYs from later-life earnings and the
+other often measures them directly.
 
-**Pathway 1 — Degree-completion programs**
+- **Degree completion / college support:** roughly \$25,000/QALY centrally, with a plausible range
+  from the mid-teens to the low \$50,000s depending on how persistent the completion effect is.
+- **School wellbeing / anti-bullying:** roughly \$15,000-\$25,000/QALY in the better direct
+  studies, with some weaker programs looking less attractive.
 
-The strongest attainment anchor is now CUNY ACE. In Table 1 of the 2024 policy brief and the
-corresponding midpoint scenario in the 2025 NBER working paper, the program generates
-current-generation lifetime earnings gains of **\$51,986** per participant against direct
-expenditures of **\$12,374** (Assumption 2).
+That convergence is why the point estimate is **\$25,000/QALY**. It is below what a mortality-only
+framing would suggest, because that framing misses much of what education philanthropy actually
+buys, but above the most optimistic benefit-cost interpretations, because we want a category-level
+estimate that generalizes across strong education charities rather than assuming every marginal
+dollar finds an ACE- or KiVa-level opportunity. We do **not** start from "education is good" and
+assume a generic education dollar inherits that value; the anchors below are interventions with
+either direct QALY evidence or unusually strong long-run causal evidence on attainment and earnings.
 
-Using the rich-country conversion benchmark in Assumption 3:
+The range **\$15,000-\$60,000/QALY** is kept deliberately wide because these models are rough. The
+low end corresponds to unusually strong, persistent attainment effects or the better direct
+school-wellbeing programs; the high end to cases where attainment programs mainly accelerate
+completion rather than permanently raise it, or where implementation quality is good but not
+exceptional.
 
-This step uses a wellbeing-economics bridge rather than a pure health-state QALY measure. The
-underlying idea is that higher lifetime earnings create real welfare gains, and the WELLBY
-literature provides a standard way to convert those gains into QALY-equivalent units for
-non-health interventions.
+**Pathway 1 — Degree-completion programs.** The strongest attainment anchor is CUNY ACE: lifetime
+earnings gains of **\$51,986** per participant against direct expenditures of **\$12,374**
+(Assumption 2) imply roughly **\$24,000-\$27,000/QALY** centrally, widening to about
+**\$15,000-\$55,000/QALY** across the paper's persistence scenarios. ASAP-style supports have now
+replicated outside CUNY — Ohio showed a 15 percentage point degree-receipt gain after eight years
+(Assumption 4) — so this is not a fragile one-off.
+
+:::details{title="ACE per-QALY derivation and persistence scenarios"}
+The figures come from Table 1 of the 2024 policy brief and the midpoint scenario in the 2025 NBER
+working paper. Converting earnings to QALY-equivalents uses a wellbeing-economics bridge rather than
+a pure health-state QALY: higher lifetime earnings create real welfare gains, and the WELLBY
+literature provides a standard way to convert non-health gains into QALY-equivalent units, here the
+rich-country benchmark of \$100,000-\$115,000 per QALY-equivalent (Assumption 3).
 
 $$
 \text{QALYs from current-generation earnings} \approx \dfrac{\$51{,}986}{\$100{,}000\text{–}\$115{,}000}
@@ -107,71 +125,40 @@ $$
 \approx \$24{,}000\text{–}\$27{,}000
 $$
 
-That calculation is not a full all-things-considered welfare accounting: the ACE authors explicitly do **not** include
-several plausibly real current-generation benefits such as health, longevity, and reduced crime,
-and also exclude child-generation benefits from the headline current-generation calculation.
-
-The same paper's alternative persistence scenarios imply roughly:
+This is not full welfare accounting: the ACE authors deliberately exclude several plausibly real
+current-generation benefits (health, longevity, reduced crime) and the child-generation benefits,
+so the true value is likely better than this. The paper's alternative persistence scenarios bracket
+the estimate:
 
 - **Optimistic / permanent completion effect:** about \$15,000-\$17,000 per QALY
 - **Pessimistic / acceleration-only:** about \$47,000-\$54,000 per QALY
 
-So a reasonable plausible range for the attainment pathway is roughly **\$15,000-\$55,000/QALY**.
+The Ohio replication (Assumption 4) adds a **\$3,337** year-8 earnings increase against a direct
+program cost of \$5,521 per participant; it does not deliver a full lifetime QALY estimate on its
+own, but it materially raises confidence that the ACE-based calculation generalizes.
+:::
 
-This is not just one lucky program. ASAP-style comprehensive supports have now replicated across
-settings. In Ohio, MDRC finds a **15 percentage point** increase in degree receipt after eight
-years and a **\$3,337** earnings increase in year 8 alone (Assumption 4). That does not by itself
-deliver a full lifetime QALY estimate, but it materially increases confidence that the ACE-based
-calculation is not a fragile one-off.
+**Pathway 2 — Direct school-wellbeing programs.** Here QALYs are sometimes measured directly rather
+than inferred from earnings. The KiVa anti-bullying program was estimated at **€13,823/QALY**
+(Assumption 5), and a 2024 systematic review of universal primary-school social-emotional and
+mental-health interventions found almost all comparable evaluations cost-effective, from cost-saving
+to **Int\$25,463/QALY** (Assumption 6). The clean takeaway is not that every SEL or anti-bullying
+curriculum is a home run, but that **the better schoolwide wellbeing programs land in roughly the
+same low-to-mid five-figure \$/QALY range as the best degree-completion programs**.
 
-**Pathway 2 — Direct school-wellbeing programs**
+:::details{title="Why some school-wellbeing programs look weaker"}
+The 2024 review shows why caution is warranted: results vary across programs, outcomes, costing
+methods, and time horizons. The PATHS trial is the clearest example — about £16,800/QALY in its base
+case, but no longer cost-effective once teacher salary costs were treated as incremental
+(Assumption 7). The favorable central anchors therefore reflect the better programs, not a guarantee
+that any given curriculum will clear the bar.
+:::
 
-For school-climate and mental-health programs, the evidence is even cleaner in one sense because it
-sometimes measures QALYs directly rather than inferring them from later-life earnings. The KiVa
-anti-bullying program was estimated at **€13,823/QALY** (Assumption 5), which is a strong direct
-anchor in the low-to-mid five figures.
-
-The broader 2024 systematic review of universal primary-school social-emotional and mental-health
-interventions is consistent with that anchor rather than contradicting it. The review finds that
-almost all comparable full economic evaluations judged the interventions cost-effective, with
-QALY/DALY results ranging from cost-saving to **Int\$25,463/QALY** (Assumption 6). But the review
-also shows why some caution is warranted: results vary across programs, outcomes, costing methods,
-and time horizons. The PATHS trial is a useful example because it landed in the same broad range in
-its base case while becoming much less compelling under less favorable costing assumptions
-(Assumption 7).
-
-So the clean takeaway from this literature is not that every SEL or antibullying curriculum is a
-home run. It is that **the better schoolwide wellbeing programs appear to land in roughly the same
-low-to-mid five-figure \$/QALY range as the best degree-completion programs**.
-
-**Combined estimate**
-
-The two strongest literatures converge surprisingly well:
-
-- **Degree completion / college support:** roughly \$25,000/QALY centrally, with a plausible range
-  from the mid-teens to the low \$50,000s depending on how persistent the completion effect is.
-- **School wellbeing / anti-bullying:** roughly \$15,000-\$25,000/QALY in the better direct
-  studies, with some weaker programs looking less attractive.
-
-That convergence is the main reason the point estimate is **\$25,000/QALY** rather than something
-much higher or lower. It is below what a mortality-only framing would suggest, because that
-framing misses much of what education philanthropy actually buys. But it is also above the most
-optimistic benefit-cost interpretations, because we want a category-level estimate that generalizes
-across strong education charities rather than assuming every marginal dollar finds an ACE- or
-KiVa-level opportunity.
-
-The range **\$15,000-\$60,000/QALY** is kept deliberately wide because these models are rough. The low end corresponds to unusually strong, persistent attainment effects or
-the better direct school-wellbeing programs. The high end corresponds to cases where attainment
-programs mainly accelerate completion rather than permanently raise it, or where implementation
-quality is good but not exceptional.
-
-We treat the education-health and education-mortality literature mainly as background context
-rather than as the main quantitative engine. That literature matters, and it is one reason the
-true value of education may be somewhat higher than a pure earnings-based estimate suggests. But
-because the causal evidence is mixed (Assumption 8), it is better used as qualitative support than
-as the core calculation. The 2024 Lancet Public Health meta-analysis is useful here: it suggests
-that more education is associated with lower adult mortality, but the quasi-experimental evidence
-is not solid enough to let that association carry the headline estimate on its own.
+We treat the education-health and education-mortality literature as background context rather than
+the main quantitative engine. It is one reason the true value of education may exceed a pure
+earnings-based estimate — the 2024 Lancet Public Health meta-analysis associates more education with
+lower adult mortality — but because the quasi-experimental causal evidence is mixed (Assumption 8),
+it is better used as qualitative support than as the core calculation.
 
 ### Start time
 

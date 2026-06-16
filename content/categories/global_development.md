@@ -41,13 +41,16 @@ This effect captures welfare gains from donations to unusually effective chariti
 
 ### Cost per QALY
 
-The cleanest way to estimate this category is to start from GiveWell's latest cash-transfer benchmark rather than from an ad hoc mix of programs. GiveWell's November 2025 benchmark is about **0.003 units of value per dollar** (Assumption 2), and its 2024 reevaluation puts GiveDirectly's flagship poverty-relief program at roughly **3-4x** that benchmark. Taking the arithmetic midpoint, **3.5x**, gives:
+We anchor the category to GiveWell's latest cash-transfer benchmark rather than to an ad hoc mix of programs. The chain is short: GiveWell's November 2025 benchmark is about **0.003 units of value per dollar** (Assumption 2), its 2024 reevaluation puts GiveDirectly's flagship program at roughly **3-4x** that benchmark (midpoint **3.5x**), and Assumption 4 converts GiveWell units into QALYs at $\frac{60}{134} \approx 0.45$. Multiplying through gives about **0.0047 QALYs per dollar**, or **\$210/QALY**.
+
+:::details{title="Worked derivation, and the pessimistic and optimistic cases"}
+Starting from the benchmark and the 3.5x midpoint:
 
 $$
 \text{Units per } \$1 \approx 0.003 \times 3.5 = 0.0105
 $$
 
-Using Assumption 4 to convert those units into QALYs:
+Converting units into QALYs via Assumption 4:
 
 $$
 \text{QALYs per } \$1 \approx 0.0105 \times \frac{60}{134} \approx 0.0047
@@ -57,26 +60,20 @@ $$
 \text{Cost per QALY} \approx \frac{1}{0.0047} \approx \$210
 $$
 
-So the point estimate is **\$210/QALY**.
+The two endpoints of the range come from sweeping the two levers together. A pessimistic case using roughly **1.5x benchmark** and **0.4 QALYs per unit** gives about **\$560/QALY**; an optimistic case using roughly **5x benchmark** and **0.55 QALYs per unit** gives about **\$120/QALY**. The stated upper bound is rounded out to **\$600** to reflect model uncertainty beyond the two swept parameters.
+:::
 
-We use this method for three reasons.
+The plausible range is **\$120–\$600/QALY**, kept wide because these models are rough. The two biggest levers are how many multiples of GiveWell's benchmark the best marginal poverty program really achieves, and how much QALY-equivalent value we assign to one GiveWell consumption unit. The second lever is not purely empirical: the $\frac{60}{134} \approx 0.45$ conversion inherits GiveWell's moral judgment about how a consumption-doubling year compares to averting a young child's death, so a reader who weights consumption differently would get a different headline estimate.
 
-First, it is directly anchored to the best public charity-specific cost-effectiveness work available for poverty-focused giving. GiveWell's 2024 reevaluation explicitly incorporates transfer size, targeting, overhead, recipient consumption gains, spillovers to non-recipients, mortality effects, morbidity effects, and negative adjustments such as fraud or psychological spillovers. It is therefore already much closer to an all-things-considered estimate than a back-of-the-envelope cash-transfer calculation.
+:::details{title="Why anchor to GiveWell cash transfers, not graduation or deworming"}
+**Best charity-specific data.** GiveWell's 2024 reevaluation already incorporates transfer size, targeting, overhead, recipient consumption gains, spillovers to non-recipients, mortality effects, morbidity effects, and negative adjustments such as fraud or psychological spillovers, so it is much closer to an all-things-considered estimate than a back-of-the-envelope cash calculation.
 
-Second, it handles recent evidence better. In particular, [Walker et al. 2025](https://www.nber.org/papers/w34152) is a genuine positive update for cash transfers: in a very large Kenya experiment, one-time \$1,000 transfers led to **48% fewer infant deaths** and **45% fewer under-five deaths**. That makes the mortality channel more credible than when GiveWell was relying only on preliminary results. But the paper also finds that these mortality gains are highly timing-sensitive, concentrated near birth, and partly distinct from the main consumption channel. So this is a reason to move somewhat upward on cash transfers, not a reason to reclassify generic poverty giving as primarily a mortality intervention.
+**Recent mortality evidence handled, not over-weighted.** [Walker et al. 2025](https://www.nber.org/papers/w34152) is a genuine positive update: in a very large Kenya experiment, one-time \$1,000 transfers led to **48% fewer infant deaths** and **45% fewer under-five deaths**. But those gains are highly timing-sensitive, concentrated near birth, and partly distinct from the consumption channel, so this nudges cash transfers upward without making poverty giving primarily a mortality intervention.
 
-Third, it avoids overstating the case for graduation programs. The graduation literature is impressive. [Banerjee, Duflo, and Sharma 2021](https://www.aeaweb.org/articles?id=10.1257/aeri.20200667&page=549) find positive effects on consumption, food security, income, and health still present **10 years** later in India, and [Balboni et al. 2022](https://academic.oup.com/qje/article/137/2/785/6455333) provide unusually strong evidence for genuine poverty traps in Bangladesh. But those programs are more complex, harder to scale well, and more sensitive to local implementation quality than plain cash. For a generic category estimate aimed at strong marginal donations, GiveDirectly-style transfers are the safer central anchor, while graduation evidence supports the view that durable gains are possible.
+**Graduation as upside, not anchor.** [Banerjee, Duflo, and Sharma 2021](https://www.aeaweb.org/articles?id=10.1257/aeri.20200667&page=549) find positive effects on consumption, food security, income, and health still present **10 years** later in India, and [Balboni et al. 2022](https://academic.oup.com/qje/article/137/2/785/6455333) give unusually strong evidence for genuine poverty traps in Bangladesh. But graduation programs are more complex, harder to scale, and more implementation-sensitive than plain cash, so GiveDirectly-style transfers are the safer central anchor while graduation supports the view that durable gains are possible.
 
-The range **(\$120-\$600/QALY)** is our plausible range, kept wide because these models are rough. The biggest levers are:
-
-- how many multiples of GiveWell's benchmark the best marginal poverty program really achieves
-- how much QALY-equivalent value we should assign to one GiveWell consumption unit
-
-That second lever is not a purely empirical parameter. It inherits GiveWell's moral judgment about how valuable a consumption-doubling year is relative to averting the death of a young child. Someone who puts more or less value on consumption relative to life-saving would get a different conversion than **60/134 ≈ 0.45**, and therefore a different headline estimate.
-
-For a pessimistic case, using roughly **1.5x benchmark** and **0.4 QALYs per unit** gives about **\$560/QALY**. For an optimistic case, using roughly **5x benchmark** and **0.55 QALYs per unit** gives about **\$120/QALY**. That is the basis for the stated range.
-
-We intentionally do **not** use deworming as a core anchor for this page. Deworming may have long-run income effects, but its main identity is still a health intervention, and counting it here would blur the line between this category and Global Health.
+**Deworming excluded.** Deworming may have long-run income effects, but its main identity is a health intervention, and counting it here would blur the line with Global Health.
+:::
 
 ### Start time
 

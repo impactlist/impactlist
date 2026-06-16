@@ -140,18 +140,9 @@ The duration is controlled by the global "time limit" parameter, which defaults 
 
 Because the modeled catastrophe is permanent by construction, the value of this cause area is highly sensitive to how much weight you place on future people.
 
-### Adjusting these numbers
-
-If you disagree with an input, the propagation is straightforward:
-
-- **Baseline catastrophe probability** does not enter the QALY arithmetic directly — a microprobability is worth the same number of expected QALYs either way — but the achievable risk reduction plausibly scales with how much risk exists. If you think the risk is a third of our 14%, multiplying the cost per microprobability by roughly 3 is a reasonable first-order adjustment.
-- **Effectiveness of safety spending** scales the cost per microprobability inversely; our stated range already spans a factor of 50.
-- **Severity** scales the QALYs at stake linearly: using 0.5 instead of 0.80 makes the cost per QALY about 1.6x higher.
-- **Net-negative views** are representable too: if you think marginal safety work accelerates capabilities enough to be net-harmful, enter a negative cost per microprobability. The stated range deliberately covers only net-positive views, but the underlying assumption pages acknowledge real probability mass on zero or negative effect.
-
 ## Key uncertainties
 
-1. **How high the underlying catastrophe risk really is.** The baseline probability constrains tractability rather than entering the QALY arithmetic directly: if AI existential catastrophe risk is closer to 3% than 14%, there is roughly a fifth as much risk to remove, and the achievable reduction per dollar plausibly scales down with it (see "Adjusting These Numbers" above).
+1. **How high the underlying catastrophe risk really is.** The baseline probability constrains tractability rather than entering the QALY arithmetic directly: if AI existential catastrophe risk is closer to 3% than 14%, there is roughly a fifth as much risk to remove, and the achievable reduction per dollar plausibly scales down with it.
 
 2. **How effective current interventions are at the margin.** This is the biggest empirical uncertainty. The best current interventions may be much better than the average dollar spent so far, or they may hit severe diminishing returns.
 

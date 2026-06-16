@@ -10,6 +10,7 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import EntityStatistics from '../components/entity/EntityStatistics';
+import { CATEGORY_LIVES_SAVED_TOOLTIP, CATEGORY_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
 import SampleDonationCalculator from '../components/shared/SampleDonationCalculator';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import { donations } from '../data/generatedData';
@@ -94,6 +95,8 @@ const CategoryDetail = () => {
             totalReceived: categoryInfo.totalDonated,
           }}
           entityType="recipient" // Reuse recipient styling
+          livesSavedTooltip={CATEGORY_LIVES_SAVED_TOOLTIP}
+          costPerLifeTooltip={CATEGORY_COST_PER_LIFE_TOOLTIP}
           costPerLifeAction={
             <button
               type="button"

@@ -50,7 +50,15 @@ const getAgeFromBirthDate = (birthDate, today = new Date()) => {
 /**
  * Displays key statistics for donors or recipients with consistent styling.
  */
-const EntityStatistics = ({ stats, entityType, className = '', costPerLifeAction = null, photoComponent = null }) => {
+const EntityStatistics = ({
+  stats,
+  entityType,
+  className = '',
+  costPerLifeAction = null,
+  photoComponent = null,
+  livesSavedTooltip = null,
+  costPerLifeTooltip = null,
+}) => {
   const isDonor = entityType === 'donor';
   const hasPhoto = photoComponent !== null;
   const renderMetricSubtext = (label, value) => (
@@ -87,6 +95,7 @@ const EntityStatistics = ({ stats, entityType, className = '', costPerLifeAction
   const livesSavedCard = (
     <StatisticsCard
       label="Lives Saved"
+      labelTooltip={livesSavedTooltip}
       value={formatRoundedLives(stats.totalLivesSaved)}
       valueClassName={stats.totalLivesSaved < 0 ? 'text-danger' : 'text-success'}
     />
@@ -95,6 +104,7 @@ const EntityStatistics = ({ stats, entityType, className = '', costPerLifeAction
   const costPerLifeCard = (
     <StatisticsCard
       label="Cost Per Life"
+      labelTooltip={costPerLifeTooltip}
       value={formattedCostPerLife}
       valueClassName={stats.costPerLife < 0 ? 'text-danger' : 'text-strong'}
       valueAction={costPerLifeAction}
@@ -217,6 +227,8 @@ EntityStatistics.propTypes = {
   className: PropTypes.string,
   costPerLifeAction: PropTypes.node,
   photoComponent: PropTypes.node,
+  livesSavedTooltip: PropTypes.node,
+  costPerLifeTooltip: PropTypes.node,
 };
 
 export default React.memo(EntityStatistics);

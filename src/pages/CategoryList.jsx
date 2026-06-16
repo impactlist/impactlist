@@ -12,6 +12,7 @@ import { buildCausePath } from '../utils/causeRoutes';
 import AssumptionsSelector from '../components/shared/AssumptionsSelector';
 import ListPageShell from '../components/shared/ListPageShell';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
+import { CATEGORY_LIVES_SAVED_TOOLTIP, CATEGORY_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const buildCategoryStats = (combinedAssumptions) => {
@@ -80,23 +81,13 @@ const categoryColumns = [
   {
     key: 'actualCostPerLife',
     label: 'Cost/Life',
-    tooltip: (
-      <div>
-        Cost/Life comes from our cost-effectiveness estimates for this cause. It is the estimated donation needed to
-        save the equivalent of one life in this area.
-      </div>
-    ),
+    tooltip: CATEGORY_COST_PER_LIFE_TOOLTIP,
     render: (category) => <ImpactValueCell kind="currency" value={category.actualCostPerLife} />,
   },
   {
     key: 'totalLivesSaved',
     label: 'Lives Saved',
-    tooltip: (
-      <div>
-        Expected lives saved from donations to this cause, computed for each donation year and recipient/cause
-        assumptions.
-      </div>
-    ),
+    tooltip: CATEGORY_LIVES_SAVED_TOOLTIP,
     render: (category) => <ImpactValueCell kind="lives" value={category.totalLivesSaved} />,
   },
   {

@@ -18,6 +18,7 @@ import { buildCausePath } from '../utils/causeRoutes';
 import ListSearchControls from '../components/shared/ListSearchControls';
 import ListPageShell from '../components/shared/ListPageShell';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
+import { RECIPIENT_LIVES_SAVED_TOOLTIP, RECIPIENT_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import useNameSearch from '../hooks/useNameSearch';
 
@@ -98,23 +99,13 @@ const recipientColumns = [
   {
     key: 'totalLivesSaved',
     label: 'Lives Saved',
-    tooltip: (
-      <div>
-        Expected lives saved from donations to this organization, using our effectiveness estimates from the cost/life
-        column together with the total amount given.
-      </div>
-    ),
+    tooltip: RECIPIENT_LIVES_SAVED_TOOLTIP,
     render: (recipient) => <ImpactValueCell kind="lives" value={recipient.totalLivesSaved} />,
   },
   {
     key: 'costPerLife',
     label: 'Cost/Life',
-    tooltip: (
-      <div>
-        Cost/Life comes from our cost-effectiveness estimates for this organization. It is the estimated amount one
-        would need to donate to this organization to save the equivalent of one life.
-      </div>
-    ),
+    tooltip: RECIPIENT_COST_PER_LIFE_TOOLTIP,
     render: (recipient) => <ImpactValueCell kind="currency" value={recipient.costPerLife} />,
   },
   {

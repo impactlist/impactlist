@@ -18,6 +18,7 @@ import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import EntityStatistics from '../components/entity/EntityStatistics';
+import { DONOR_LIVES_SAVED_TOOLTIP, DONOR_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
 import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
@@ -154,6 +155,8 @@ const DonorDetail = () => {
         <EntityStatistics
           stats={donorStats}
           entityType="donor"
+          livesSavedTooltip={DONOR_LIVES_SAVED_TOOLTIP}
+          costPerLifeTooltip={DONOR_COST_PER_LIFE_TOOLTIP}
           photoComponent={<DonorPhoto donorId={donorId} donorName={donorStats.name} size="large" />}
         />
 

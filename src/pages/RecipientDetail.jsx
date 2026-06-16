@@ -17,6 +17,7 @@ import {
 import { ImpactChartToggle } from '../components/charts/ImpactBarChart';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import EntityStatistics from '../components/entity/EntityStatistics';
+import { RECIPIENT_LIVES_SAVED_TOOLTIP, RECIPIENT_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
 import EntityChartSection from '../components/entity/EntityChartSection';
 import EntityDonationTable from '../components/entity/EntityDonationTable';
 import MarkdownContent from '../components/shared/MarkdownContent';
@@ -129,6 +130,8 @@ const RecipientDetail = () => {
             categoryBreakdown: recipientInfo.categoryBreakdown,
           }}
           entityType="recipient"
+          livesSavedTooltip={RECIPIENT_LIVES_SAVED_TOOLTIP}
+          costPerLifeTooltip={RECIPIENT_COST_PER_LIFE_TOOLTIP}
           costPerLifeAction={
             <button
               type="button"

@@ -9,6 +9,7 @@ import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import ListSearchControls from '../components/shared/ListSearchControls';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
+import { DONOR_LIVES_SAVED_TOOLTIP, DONOR_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import useNameSearch from '../hooks/useNameSearch';
 
@@ -41,16 +42,7 @@ const donorColumns = [
   {
     key: 'totalLivesSaved',
     label: 'Lives Saved',
-    tooltip: (
-      <div>
-        We first calculate the expected lives saved for each donation a person has made, based on our cost effectiveness
-        estimates for every charity. We then sum these values across all the donations a person has made to get their
-        total expected lives saved.
-        <br />
-        <br />
-        See the FAQ for more details.
-      </div>
-    ),
+    tooltip: DONOR_LIVES_SAVED_TOOLTIP,
     render: (donor) => <ImpactValueCell kind="lives" value={donor.totalLivesSaved} positiveTone="success" />,
   },
   {
@@ -61,12 +53,7 @@ const donorColumns = [
   {
     key: 'costPerLife',
     label: 'Cost/Life',
-    tooltip: (
-      <div>
-        Cost/Life is the amount donated divided by the lives saved. For every dollar amount shown here, the equivalent
-        of one life is expected to be saved.
-      </div>
-    ),
+    tooltip: DONOR_COST_PER_LIFE_TOOLTIP,
     render: (donor) => <ImpactValueCell kind="currency" value={donor.costPerLife} />,
   },
   {

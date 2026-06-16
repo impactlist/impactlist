@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FormattedScientificValue from './FormattedScientificValue';
+import InfoTooltipIcon from './InfoTooltipIcon';
 
 /**
  * A reusable card component for displaying statistics with consistent styling.
@@ -14,10 +15,14 @@ const StatisticsCard = ({
   icon = null,
   valueAction = null,
   valueTestId = undefined,
+  labelTooltip = null,
 }) => {
   return (
     <div className={`impact-stat-card flex flex-col items-center p-4 ${className}`}>
-      <span className="text-sm font-semibold uppercase text-muted">{label}</span>
+      <span className="inline-flex items-center gap-1 text-sm font-semibold uppercase text-muted">
+        {label}
+        {labelTooltip && <InfoTooltipIcon content={labelTooltip} iconClassName="h-3.5 w-3.5 text-muted" />}
+      </span>
       <div className="flex items-center mt-1 space-x-2">
         {icon && <span>{icon}</span>}
         <span data-testid={valueTestId} className={`text-3xl font-bold ${valueClassName}`}>
@@ -43,6 +48,7 @@ StatisticsCard.propTypes = {
   icon: PropTypes.node,
   valueAction: PropTypes.node,
   valueTestId: PropTypes.string,
+  labelTooltip: PropTypes.node,
 };
 
 export default React.memo(StatisticsCard);

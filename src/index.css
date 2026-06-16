@@ -520,29 +520,55 @@
     color: var(--text-muted);
   }
 
-  .prose.impact-markdown :where(strong, h1, h2, h3, h4, th):not(:where(.not-prose, .not-prose *)) {
+  .prose.impact-markdown :where(strong):not(:where(.not-prose, .not-prose *)) {
+    color: inherit;
+    font-weight: 700;
+  }
+
+  .prose.impact-markdown :where(th):not(:where(.not-prose, .not-prose *)) {
     color: var(--text-strong);
   }
 
   .prose.impact-markdown :where(h1):not(:where(.not-prose, .not-prose *)) {
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.75rem;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0;
+    color: var(--text-strong);
   }
 
   .prose.impact-markdown :where(h2):not(:where(.not-prose, .not-prose *)) {
-    margin-bottom: 0.75rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    line-height: 1.75rem;
+    margin-top: 2rem;
+    margin-bottom: 0.85rem;
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: var(--text-strong);
   }
 
   .prose.impact-markdown :where(h3):not(:where(.not-prose, .not-prose *)) {
-    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    margin-bottom: 0.45rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid color-mix(in srgb, var(--border-subtle) 72%, white 28%);
+    font-size: 1.16rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: color-mix(in srgb, var(--text-muted) 78%, white 22%);
+  }
+
+  .prose.impact-markdown :where(h4):not(:where(.not-prose, .not-prose *)) {
+    margin-top: 1.1rem;
+    margin-bottom: 0.35rem;
     font-size: 1rem;
     font-weight: 600;
-    line-height: 1.5rem;
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: color-mix(in srgb, var(--text-muted) 88%, white 12%);
   }
 
   .prose.impact-markdown :where(details.impact-details):not(:where(.not-prose, .not-prose *)) {
@@ -556,7 +582,7 @@
   .prose.impact-markdown :where(details.impact-details > summary):not(:where(.not-prose, .not-prose *)) {
     cursor: pointer;
     font-weight: 600;
-    color: var(--text-strong);
+    color: var(--text-muted);
   }
 
   .prose.impact-markdown :where(details.impact-details[open] > summary):not(:where(.not-prose, .not-prose *)) {

@@ -27,12 +27,10 @@ jobs:
 
       - name: Check .agents/skills mirror is in sync with .claude/skills
         run: |
-          npm run sync-skills
-          if [ -n "$(git status --porcelain --untracked-files=all -- .agents/skills)" ]; then
-            echo "::error::.agents/skills is out of sync with .claude/skills — run 'npm run sync-skills' and commit the result."
-            git status --porcelain --untracked-files=all -- .agents/skills
+          npm run sync-skills -- --check || {
+            echo "::error::.agents/skills is out of sync with .claude/skills. Move intended edits to .claude/skills, run 'npm run sync-skills', and commit the generated .agents/skills mirror."
             exit 1
-          fi
+          }
 
       - name: Unit and integration tests (gated on coverage thresholds)
         run: npm run test:coverage

@@ -21,9 +21,9 @@ Let:
 A reasonable summary is:
 
 - **Best-guess:** $X \approx 0.04$ percentage points
-- **Plausible range:** $Y \approx 0.01$ percentage points, $Z \approx 0.16$ percentage points
+- **Plausible range:** $Y \approx 0.004$ percentage points, $Z \approx 0.27$ percentage points
 
-That is, roughly **\$400 million** of pandemic-risk philanthropy plausibly reduced 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a plausible range of about **0.01–0.16 percentage points**.
+That is, roughly **\$400 million** of pandemic-risk philanthropy plausibly reduced 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a plausible range of about **0.004–0.27 percentage points**.
 
 This corresponds to about:
 
@@ -132,34 +132,24 @@ The claim is therefore modest. It is **not** that philanthropy has made catastro
 
 ---
 
-## 6. Why use 0.01–0.16 percentage points as the plausible range?
+## 6. Why use 0.004–0.27 percentage points as the plausible range?
 
-### Lower bound: 0.01 percentage points
+The biggest uncertainty here is not how to split a few scenario parameters — it is whether a small philanthropic field has any real counterfactual leverage over catastrophic-pandemic probability at all, and whether crediting it with a slice of government- and institution-led outcomes is even the right model. That structural uncertainty is what makes the range span almost two orders of magnitude.
 
-This lower bound corresponds to a world where:
+### Lower bound: 0.004 percentage points
 
-- the underlying catastrophe risk is closer to the low end of the plausible range
-- many philanthropic grants mostly built capacity rather than changed outcomes yet
-- public institutions remained the main bottleneck
-- some technically promising interventions did not translate into durable policy or deployment wins
+The dominant downside scenario is that philanthropy's counterfactual leverage is close to zero: the field mostly built capacity and produced research that has not yet changed any decision, public institutions remained the binding constraint, and the most technically promising interventions never translated into durable policy or deployment. In that world philanthropy bought only a few parts in a hundred thousand off the risk — far less than the few-percent-of-the-bundle slice the central estimate assumes.
 
-That still gives philanthropy **some** credit, but only limited credit.
+### Upper bound: 0.27 percentage points
 
-### Upper bound: 0.16 percentage points
+The dominant upside scenario is that engineered-risk pathways matter a lot, philanthropy-backed policy, field-building, and technical work have already meaningfully improved preparedness, early investments helped catalyze much larger public or multilateral actions, and some of the best pandemic-risk opportunities really are as leveraged as biosecurity advocates claim. That would put the field's contribution at roughly a tenth to a half of the full plausible defense bundle from section 5 — demanding, but not impossible for a neglected field shaping high-leverage public goods.
 
-This upper bound corresponds to a world where:
-
-- engineered-risk pathways matter a lot
-- philanthropy-backed policy, field-building, and technical work have already meaningfully improved preparedness
-- early investments helped catalyze larger public or multilateral actions
-- some of the best pandemic-risk opportunities really are as leveraged as biosecurity advocates claim
-
-This is clearly optimistic, which is why it is an upper bound rather than the point estimate.
+Both tails are about whether the causal model holds, not about tuning a parameter inside it, which is why the interval is wide and slightly skewed toward the low-leverage (high-cost) side.
 
 ---
 
 ## 7. Implied cost per basis point and per microprobability
 
-With the central estimate $X = 0.04$ percentage points, \$400M buys **4 basis points** of risk reduction — about **\$100M per basis point**, or **400 microprobabilities** at **\$1M per microprobability**. The bounds ($Y = 0.01$, $Z = 0.16$ percentage points) give **100–1,600 microprobabilities**, a mechanical range of **\$250,000–\$4 million per microprobability**. The pandemics category page treats this sweep as narrower than the true uncertainty and publishes a wider **\$150,000–\$10 million** plausible range.
+With the central estimate $X = 0.04$ percentage points, \$400M buys **4 basis points** of risk reduction — about **\$100M per basis point**, or **400 microprobabilities** at **\$1M per microprobability**. The plausible bounds ($Y = 0.004$, $Z = 0.27$ percentage points) correspond to **40–2,700 microprobabilities**, a cost-per-microprobability range of roughly **\$150,000–\$10 million**. The pandemics category page carries that same range.
 
 {{CONTRIBUTION_NOTE}}

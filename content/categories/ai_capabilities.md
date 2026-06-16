@@ -91,6 +91,8 @@ $$\text{Cost per QALY} \approx \dfrac{\$100{,}000}{0.96} \approx \$104{,}000$$
 
 This number does not fully net out every ordinary downside. Some measured economic gains are rents, convenience, or producer surplus rather than clean welfare, and AI also creates downsides we do not separately model (job displacement, misinformation, surveillance, concentration of power) — reasons the ordinary upside may be somewhat overstated, though we do not adjust the point estimate without quantifying the adjustment. Conversely, the \$100,000/QALY conversion is mainly a rich-country benchmark, so to the extent AI capability gains substantially improve lower-income lives the true cost per QALY would be somewhat lower.
 
+The plausible range (**\$40,000–\$800,000/QALY**) is deliberately asymmetric. The two main inputs — social value per additional dollar (\$6–25) and ordinary additionality (2–25%) — are roughly independent, so their unfavorable extremes rarely coincide; but we run the expensive end out to about \$800,000 (the low-value, low-additionality combination) rather than pulling it in, because the unmodeled downsides above are one-directional — they make the true cost per QALY higher, not lower. The cheap end (\$40,000) stays closer to the central figure than the favorable combination of the inputs alone would suggest, for the same reason: the corrections that would make this intervention look unusually good are weaker and fewer than the ones that would make it look worse.
+
 #### Start time
 
 We use a 3-year start time because AI deployment is already happening, but philanthropic funding still usually needs time to turn into tools, products, model releases, adoption, and diffusion.
@@ -109,7 +111,7 @@ Importantly, this is **not** the probability that advanced AI is merely "on bala
 
 ### Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$33,000 (\$10,000–\$300,000)
+- **Cost per QALY:** \$33,000 (\$10,000–\$1,000,000)
 - **Start time:** 10 years
 - **Duration:** 5 years
 
@@ -149,7 +151,16 @@ $$
 $$
 :::
 
-This number is **very sensitive** to worldview assumptions: if very good transformative-AI futures are much less likely or much farther away, this effect shrinks. Because the model multiplies several uncertain terms, different plausible parameter bundles land in the same order of magnitude, so the exact point estimate should not be over-interpreted. The effect only captures the upside of earlier very good futures; it does **not** imply the overall cause is good, because the doom effect below is also material. Like the doom effect, it assumes small marginal capability pushes translate roughly linearly into timeline acceleration — imperfect, since real progress may involve thresholds, bottlenecks, and race dynamics, but the cleanest tractable baseline.
+This number is **very sensitive** to worldview assumptions: if very good transformative-AI futures are much less likely or much farther away, this effect shrinks. The effect only captures the upside of earlier very good futures; it does **not** imply the overall cause is good, because the doom effect below is also material. Like the doom effect, it assumes small marginal capability pushes translate roughly linearly into timeline acceleration — imperfect, since real progress may involve thresholds, bottlenecks, and race dynamics, but the cleanest tractable baseline.
+
+The plausible range (**\$10,000–\$1,000,000/QALY**) is wide and skewed toward the expensive (weak-effect) end. It is *narrower* than what pushing all five terms to one edge at once would give, because some of the terms — the frontier-equivalent share, the spending denominator, and the timeline — are roughly independent, so they rarely all land at their favorable (or unfavorable) extreme together. But the weak-effect end still runs far out, because the largest uncertainties — whether very good futures are at all likely, how big the welfare gain would be, and whether a marginal dollar accelerates the timeline at all — are worldview judgments that move together, and the possibility that this effect is essentially negligible lives *outside* any tidy combination of the parameters.
+
+:::details{title="What the bounds represent"}
+The point estimate multiplies five uncertain terms. Three carry their own plausible ranges — the frontier-equivalent share (0.12–0.55), the spending denominator (\$2–20 trillion), and the years to transformative AI (roughly 4–24) — while the very-good-future probability and the annual welfare gain are worldview judgments without published bounds. Pushing all five to their favorable edges together (high very-good probability, strong acceleration, low denominator, long timeline, large annual gain) implies a cost of a few hundred dollars per QALY; pushing all five to their unfavorable edges implies well over \$10 million/QALY. That all-edges span is far wider than an 80% interval — with several roughly independent inputs, all of them hitting the same extreme together is closer to a 1-in-100 outcome than a 1-in-10 one.
+
+- **\$10,000** is a coherently optimistic bundle: very good futures are somewhat more likely than the 10% central figure, acceleration is toward the high end, and the timeline is long enough for the early-arrival window to compound — but not every term at its limit.
+- **\$1,000,000** carries the genuinely skeptical worldview, in which very good futures are rare, the annual gain is modest, and small capability pushes barely move the timeline. We run this end well beyond the roughly independent combination of the parameter ranges, because a correlated skeptical worldview and the chance that the linear-acceleration model simply does not hold both push this effect toward negligible — a tail the parameters alone understate.
+:::
 
 #### Start time
 
@@ -169,7 +180,7 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 
 ### Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per microprobability (increase):** \$167 million (\$30 million–\$2 billion)
+- **Cost per microprobability (increase):** \$167 million (\$25 million–\$5 billion)
 - **Population fraction affected:** 1.0
 - **QALY improvement per affected person per year:** -0.9
 - **Start time:** 10 years
@@ -204,7 +215,14 @@ $$
 $$
 :::
 
-#### Population fraction affected
+The plausible range (**\$25 million–\$5 billion per microprobability**) is wide and skewed toward the cheap (strong-harm) end being closer in than the expensive (weak-harm) end. The three inputs are roughly independent, so they rarely all reach their unfavorable extremes together; but the weak-harm end runs far out, because the chance that this effect is essentially negligible — markets would have bought the capability anyway, or marginal acceleration barely moves extinction risk — lives *outside* the parameters and stretches the expensive, weak-harm tail well past what they alone would imply.
+
+:::details{title="What the bounds represent"}
+The estimate multiplies the extinction probability (3–30%), the frontier-equivalent share (0.12–0.55), and the spending denominator (\$2–20 trillion). Pushing all three to the strong-harm edge at once (high probability, high acceleration, low denominator) implies about **\$12 million** per microprobability; pushing all three to the weak-harm edge at once implies about **\$5.6 billion**. That all-edges span is wider than an 80% interval, since three roughly independent inputs seldom hit the same extreme together.
+
+- **\$25 million** carries a worried but not extreme worldview — extinction risk and acceleration toward the high end, denominator toward the low end, but not every term at its limit.
+- **\$5 billion** is near the weak-harm edge of the parameters, and we publish out to it rather than pulling in, because the structural possibility that frontier acceleration barely changes extinction risk — through crowd-out or through the linear model failing — pushes this effect toward harmless, a tail the parameter ranges understate.
+:::
 
 The point estimate is 1.0 because extinction kills everyone.
 

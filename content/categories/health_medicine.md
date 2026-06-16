@@ -33,7 +33,7 @@ This estimate is **not** a good model of generic hospital fundraising, prestige 
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$15,000 (\$6,000-\$50,000)
+- **Cost per QALY:** \$15,000 (\$7,000-\$35,000)
 - **Start time:** 7 years
 - **Duration:** 40 years
 
@@ -130,16 +130,20 @@ $$
 
 **Range**
 
-Our plausible range is **\$6,000-\$50,000/QALY**, kept wide because these models are rough. The bounds come from moving all three levers — both bucket values and the mix — together toward optimism or pessimism, so the range reflects joint uncertainty across them rather than any single parameter sweep.
+Our plausible range is **\$7,000-\$35,000/QALY**. The three levers — both bucket values and the mix — largely capture where the real uncertainty lives, because this category rests on RCT-backed interventions and a health-native QALY metric rather than a contested causal story or a strained unit conversion. The range is therefore narrower than what you get by pushing every lever to its favorable or unfavorable edge at once, since those edges are unlikely to all land together. It stays this wide rather than narrower because the two bucket values are correlated — a worldview in which rich-country health philanthropy is generally weak (or strong) moves both at once — and because some of the recipient universe tagged here is plainly worse than the strong-philanthropy case we model.
 
-:::details{title="Optimistic and pessimistic bounds"}
-**Optimistic case** — direct bucket **\$4,500/QALY**, research bucket **\$12,000/QALY**, mix **60% direct / 40% research**:
+:::details{title="What it takes to reach the edges"}
+Each bound is reachable from a strong-but-plausible scenario in which roughly two of the three levers move toward the same edge while the third stays moderate — for example a \$5,000-\$6,000 direct bucket with a \$14,000-\$15,000 research bucket and a modestly direct-tilted mix lands near the low end, and an \$18,000 direct bucket with a \$60,000 research bucket and a 30/70 mix lands near the high end.
+
+Pushing all three levers to their extremes simultaneously is much less likely and produces a wider span than an 80% interval should:
+
+**All-favorable** — direct bucket **\$4,500/QALY**, research bucket **\$12,000/QALY**, mix **60% direct / 40% research**:
 
 $$
 \dfrac{1}{0.6/4500 + 0.4/12000} = 6{,}000
 $$
 
-**Pessimistic case** — direct bucket **\$20,000/QALY**, research bucket **\$80,000/QALY**, mix **20% direct / 80% research**:
+**All-unfavorable** — direct bucket **\$20,000/QALY**, research bucket **\$80,000/QALY**, mix **20% direct / 80% research**:
 
 $$
 \dfrac{1}{0.2/20000 + 0.8/80000} = 50{,}000

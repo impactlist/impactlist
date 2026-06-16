@@ -27,6 +27,28 @@ That structure is more transparent than treating the entire category as one undi
 
 This category excludes more technical **Global Priorities Research**, which is treated separately.
 
+We estimate about **\$21/QALY**. The driver is leverage on cheap downstream opportunities: a meta dollar buys roughly an **8x** multiplier on direct money-moving (whose downstream giving lands near **\$100/QALY**) and a **4x** multiplier on career/worldview work (downstream near **\$150/QALY**), blended **40% / 60%**. The direct channel does most of the work because it has the cleanest evidence and the cheapest downstream destinations. The cruxes are the channel mix and how much to credit the noisier career/worldview channel; the range (**\$6-\$100/QALY**) is wide mainly because the marginal opportunity's channel mix and downstream targets vary a lot across plausible donations.
+
+## What kinds of charities are we modeling?
+
+These estimates assume marginal donations go to **high-quality, high-leverage meta organizations** — effective-giving evaluators, grantmaking research, career and talent shaping, and idea/worldview work that later changes how money, talent, and strategic attention are allocated — not generic networking, pathway-free theory, or technical global-priorities research.
+
+:::details{title="What this category includes and excludes"}
+**Included** — high-leverage meta work that does things such as:
+
+- help donors find and fund more effective opportunities
+- produce high-quality evaluator or grantmaking research for impact-focused donors
+- help talented people enter more impactful careers, including catastrophic-risk and other frontier paths
+- spread ideas or frameworks that later change how money, talent, and strategic attention are allocated
+
+**Not modeled here:**
+
+- generic networking or community events with weak evidence of downstream leverage
+- theory or philosophy work with no plausible pathway to changing real decisions
+- ordinary nonprofit support services that do not substantially improve allocation
+- technical global-priorities research, which is treated under Global Priorities Research
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$21 (\$6-\$100)
@@ -49,8 +71,9 @@ This category excludes more technical **Global Priorities Research**, which is t
 
 ### Cost per QALY
 
-The cleanest model for this category is:
+We model each channel as a multiplier on the cost per QALY of the giving it redirects, then blend the two by their portfolio shares: a **40%** direct channel at **8x** leverage on **\$100/QALY** downstream, plus a **60%** career/worldview channel at **4x** leverage on **\$150/QALY** downstream. That comes to about **0.048** QALYs per dollar, or **about \$21/QALY**. Keeping the two channels separate, rather than using one blended multiplier and benchmark, makes the main empirical judgment calls explicit.
 
+:::details{title="Worked calculation of the per-QALY figure"}
 $$
 \text{QALYs per } \$1 = w_d \times \frac{M_d}{B_d} + w_c \times \frac{M_c}{B_c}
 $$
@@ -84,14 +107,12 @@ $$
 $$
 \text{Cost per QALY} = \frac{1}{0.048} \approx \$20.8
 $$
+:::
 
-So the point estimate is **about \$21/QALY**.
+The **8x** direct multiplier is the strongest empirical anchor in the category, drawn from published giving multipliers; the **4x** career/worldview multiplier is a lower, noisier best guess that still uses an all-things-considered downstream benchmark because the channel steers people across a wide mix of cause areas, not just near-term global health.
 
-This model is more legible than using one blended multiplier and one blended downstream benchmark, because it makes the main empirical judgment calls explicit.
-
-**Channel 1: direct money-moving and evaluator work**
-
-This is the strongest empirical anchor in the whole category.
+:::details{title="How the two channel multipliers are anchored"}
+**Direct money-moving and evaluator work.** This is the cleanest channel to quantify:
 
 - Giving What We Can reports a **6x** average giving multiplier for 2023-2024 and says the average 10% pledger ultimately donates about **\$100,000**, of which about **\$15,000** is counterfactual high-impact giving attributable to GWWC and partners.
 - The Life You Can Save reports a **10:1** three-year leverage ratio for 2022-2024 and says this is conservative because some influenced giving is not tracked.
@@ -99,34 +120,25 @@ This is the strongest empirical anchor in the whole category.
 
 That is why the direct channel uses **8x** rather than simply reading off GiveWell's operating-leverage ratio.
 
-**Channel 2: career, movement-building, and worldview work**
+**Career, movement-building, and worldview work.** This channel is harder to measure cleanly but likely matters significantly. 80,000 Hours provides the best public evidence: large value per plan change and substantial current pipeline activity. But this evidence is noisier than the direct money-moving evidence, because many career or worldview changes operate through longer chains of causation and broader target sets than a direct donation event — which is why this channel uses a lower central multiplier (**4x**).
 
-This channel is harder to measure cleanly, but likely matters significantly.
+The downstream benchmark should still be all-things-considered. Many of the opportunities this channel points people toward are not near-term global-health charities; they include animal welfare, catastrophic-risk reduction, global priorities, institution building, and mixed strategic portfolios. Some of that mix likely runs through [AI Existential Risk](/category/ai-risk), [Pandemics](/category/pandemics), and [Nuclear](/category/nuclear), but those pages currently use catastrophe-probability models rather than ordinary **\$/QALY** figures. So the **\$150/QALY** benchmark captures the average all-things-considered downstream value of the broader opportunity set, including those catastrophic-risk destinations, rather than reading every part of the mix directly off on-site **\$/QALY** benchmarks.
+:::
 
-80,000 Hours provides the best public evidence here. Its materials point to large value per plan change and substantial current pipeline activity. But this evidence is noisier than the direct money-moving evidence, because many career or worldview changes operate through longer chains of causation and broader target sets than a direct donation event.
+Pushing all four multipliers and benchmarks to their favorable or unfavorable edges at once (with the **40% / 60%** split held fixed) spans about **\$6-\$69/QALY**: the category looks extremely strong if the broader channel really does send many people toward very high-value downstream paths, and fairly weak if both channels disappoint. The headline range is wider still — **\$6-\$100/QALY** — because the channel split itself can vary across plausible marginal opportunities, which that all-edges figure holds fixed, and because the deepest uncertainty here is structural rather than parametric: whether the modeled leverage is mostly real or mostly an artifact of optimistic attribution. We do not narrow the all-edges figure toward a narrower independent-combination range, because the inputs are not independent — an optimistic-about-meta worldview pushes both multipliers up and both downstream benchmarks down together, and a pessimistic one moves them together the other way — so the edges behave more like a genuine joint tail than like simultaneous coincidences.
 
-That is why this channel uses a lower central multiplier (**4x**) than the direct money-moving channel. But the downstream benchmark should still be all-things-considered. Many of the opportunities this channel points people toward are not near-term global-health charities; they include animal welfare, catastrophic-risk reduction, global priorities, institution building, and mixed strategic portfolios. Some of that downstream mix likely runs through [AI Existential Risk](/category/ai-risk), [Pandemics](/category/pandemics), and [Nuclear](/category/nuclear), but those pages currently use catastrophe-probability models rather than ordinary **\$/QALY** figures. So the **\$150/QALY** benchmark is meant to capture the average all-things-considered downstream value of the broader opportunity set, including those catastrophic-risk destinations, rather than reading every part of the mix directly off on-site **\$/QALY** benchmarks.
-
-**Sensitivity**
-
-Holding the **40% / 60%** channel split fixed:
-
+:::details{title="Pushing every input to its favorable or unfavorable edge at once (split held at 40% / 60%)"}
 - **Optimistic direct, optimistic career/worldview:** 12x on \$80/QALY and 8x on \$50/QALY -> about **\$6/QALY**
 - **Optimistic direct, pessimistic career/worldview:** 12x on \$80/QALY and 1x on \$500/QALY -> about **\$16/QALY**
 - **Pessimistic direct, optimistic career/worldview:** 5x on \$150/QALY and 8x on \$50/QALY -> about **\$9/QALY**
 - **Pessimistic direct, pessimistic career/worldview:** 5x on \$150/QALY and 1x on \$500/QALY -> about **\$69/QALY**
 
-Those four corners show that the category can look extremely strong if the broader channel really does send many people toward very high-value downstream paths. But the evidence for that channel is still much noisier than for direct money-moving, which is why the headline point estimate stays well above the optimistic edge.
-
-The headline range is wider than this simple table: **\$6-\$100/QALY**. The main reason is that the table holds the channel split fixed, while in reality the mix can vary substantially across plausible marginal opportunities. A more theory-heavy or movement-building-heavy portfolio can be meaningfully worse than the central case, while an unusually evaluator-heavy or high-talent-placement-heavy portfolio can be somewhat better.
+The evidence for the broader channel is still much noisier than for direct money-moving, which is why the headline point estimate stays well above the optimistic edge. The headline range extends past this table mainly because the table holds the channel split fixed: a more theory-heavy or movement-building-heavy portfolio can be meaningfully worse than the central case, while an unusually evaluator-heavy or high-talent-placement-heavy portfolio can be somewhat better. The upper edge near **\$100/QALY** corresponds to the unfavorable-input case combined with a more worldview-heavy split (around a 25-30% direct share), and a genuine structural-pessimist case — attribution turning out weaker than even the 5x and 1x multiplier floors — would push past it.
+:::
 
 ### Start time
 
-The **5-year** start time reflects a blend of faster and slower pathways.
-
-Some effective-giving organizations can move money almost immediately, but the largest effects often come from habits and relationships that build over a few years. Career changes are slower still: someone may first encounter the ideas, spend time exploring them, retrain or build career capital, and only later enter a substantially more impactful role. Worldview and theory effects can take even longer.
-
-Because this category includes all three pathways, **5 years** is a reasonable portfolio average.
+The **5-year** start time reflects a blend of faster and slower pathways. Some effective-giving organizations can move money almost immediately, but the largest effects often come from habits and relationships that build over a few years. Career changes are slower still: someone may first encounter the ideas, spend time exploring them, retrain or build career capital, and only later enter a substantially more impactful role. Worldview and theory effects can take even longer. Across all three pathways, **5 years** is a reasonable portfolio average.
 
 ### Duration
 
@@ -135,22 +147,6 @@ The **25-year** duration reflects that many of the downstream changes in this ca
 A donor who changes their giving philosophy may give more effectively for decades. A career change can alter how someone spends the next 20-30 working years. An institution or fund that is created because of meta work can continue influencing later decisions long after the original intervention.
 
 We do not use a longer duration than 25 years because some effects decay: donors lapse, careers drift, ideas get outdated, and institutions lose focus. So **25 years** is a compromise between short-lived outreach wins and rarer worldview changes that last much longer.
-
-## What kinds of charities are we modeling?
-
-These estimates assume marginal donations go to **high-quality, high-leverage meta organizations** that do things such as:
-
-- help donors find and fund more effective opportunities
-- produce high-quality evaluator or grantmaking research for impact-focused donors
-- help talented people enter more impactful careers, including catastrophic-risk and other frontier paths
-- spread ideas or frameworks that later change how money, talent, and strategic attention are allocated
-
-We are **not** mainly modeling:
-
-- generic networking or community events with weak evidence of downstream leverage
-- theory or philosophy work with no plausible pathway to changing real decisions
-- ordinary nonprofit support services that do not substantially improve allocation
-- technical global-priorities research, which is treated under Global Priorities Research
 
 ## Key uncertainties
 

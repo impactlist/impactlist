@@ -27,11 +27,42 @@ dignity, social functioning, and freedom from exploitation after converting thos
 terms. It does **not** try to model the average human-rights NGO, nor use broad expressive advocacy or litigation to
 anchor the headline estimate when the public evidence is still too thin.
 
+## What kinds of charities are we modeling?
+
+These estimates are mainly for **high-impact human-rights charities with relatively direct welfare effects** — community-based programs that reduce violence against women and girls, school-based programs that reduce sexual assault risk for girls, and anti-bonded-labour/anti-trafficking organizations. They are **not** estimates for the average general-purpose human-rights NGO, broad culture-war or expressive advocacy, high-level litigation, or generic rich-country criminal-justice reform.
+
+:::details{title="Specific inclusions and exclusions"}
+Included:
+
+- Community-based programs that reduce violence against women and girls
+- School-based programs that reduce sexual assault risk for girls
+- Anti-bonded-labour and anti-trafficking organizations that combine community organising, legal support, survivor
+  assistance, and pressure on employers or local authorities
+
+Not included:
+
+- The average general-purpose human-rights NGO
+- Broad culture-war or expressive advocacy projects
+- High-level litigation or legal reform work whose public causal evidence is still too thin to anchor the headline
+  estimate
+- Generic criminal-justice reform philanthropy in rich countries
+
+Those efforts may still matter a great deal. They are just not the best-evidenced anchors for the category's current
+point estimate.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$310 (\$100–\$4,000)
+- **Cost per QALY:** \$310 (\$130–\$1,500)
 - **Start time:** 2 years
 - **Duration:** 20 years
+
+The estimate is driven by a blend of two measurable anchors: top-tier VAWG prevention at about \$266/QALY-equivalent
+(70% of the portfolio) and promising anti-bonded-labour work at about \$504/QALY-equivalent (30%). Both start from
+trial-based dollars-per-DALY or dollars-per-person figures, then apply two cruxes — how much broader welfare a measured
+DALY (or a person freed from bondage) really represents, and how much to discount the strongest evidence for marginal
+category-level giving. The range is wide (\$130–\$1,500) because four conversion and discount parameters move together
+under an optimistic or pessimistic reading, and because the anti-slavery evidence is not randomised.
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of
 this page and enter your own values.*
@@ -40,9 +71,8 @@ this page and enter your own values.*
 
 1. The strongest direct cost-effectiveness evidence in this category comes from VAWG prevention. In a six-country
    trial-based cost-effectiveness analysis, the best research-setting intervention achieved about **\$222 per DALY
-   averted**, while the broad cross-intervention range ran from **\$222** to **\$17,548**; for the particularly strong
-   Ghana community intervention, the paper also reports about **\$52 per DALY for women only** and **\$360 per DALY**
-   when both women and men are included. ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827))
+   averted**, while the broad cross-intervention range ran from **\$222** to **\$17,548**. We anchor the headline on the
+   strongest broadly stated figure (\$222). ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827))
 2. Those measured VAWG DALYs likely understate full welfare gains. A reasonable central conversion is that **1 DALY
    averted** in this literature corresponds to about **2.5 QALY-equivalent welfare gains** in total, with a practical
    range of about **1–4**, once omitted mortality risk, post-intervention persistence, safety, autonomy, dignity, and
@@ -78,12 +108,15 @@ This anchor is narrower than "all human rights philanthropy" because the public 
 broader legal and advocacy work may still be extremely important, but the public evidence base is not yet strong
 enough to let it drive the point estimate.
 
-**Approach 1 — VAWG prevention**
+**Approach 1 — VAWG prevention: about \$266/QALY-equivalent.** Starting from the strongest broadly stated research-setting
+result in Ferrari et al. (\$222 per DALY averted), applying the 2.5x DALY-to-QALY welfare conversion (Assumption 2) and a
+3x marginal external-validity discount (Assumption 3) gives $$\$222 \times \frac{3}{2.5} \approx \$266$$ per
+QALY-equivalent.
 
+:::details{title="VAWG derivation and external-validity check"}
 Ferrari et al. is the best public quantitative anchor we found for this category. The strongest scale-ready
 interventions in that paper are community- or school-based prevention programs in low- and middle-income countries,
-with the strongest general headline figure at about **\$222 per DALY averted** and one especially strong Ghana estimate
-at **\$52 per DALY for women only**.
+with the strongest general headline figure at about **\$222 per DALY averted**.
 
 Ferrari et al. explicitly notes that the DALY analysis uses a **1-year horizon**, includes only a **subset of health
 consequences**, assumes **no mortality impact**, and separately reports broader social and economic effects in impact
@@ -107,9 +140,14 @@ As an external validity check, this is directionally consistent with the broader
 SASA!, a well-known community mobilisation intervention in Kampala, reduced continuation and onset of multiple forms of
 abuse in a cluster randomised trial, supporting the idea that this class of intervention can produce real and durable
 changes rather than being driven only by one-off measurement noise. ([Abramsky et al. 2016](https://pubmed.ncbi.nlm.nih.gov/26873948/))
+:::
 
-**Approach 2 — bonded labour and trafficking**
+**Approach 2 — bonded labour and trafficking: about \$500/QALY-equivalent.** Freedom Fund's India hotspots imply roughly
+\$126 per person freed from bondage; at about 1.0 QALY-equivalent per person (Assumption 5) that is \$126/QALY-equivalent,
+and a 4x marginal discount (Assumption 6) for attribution, substitution, and durability gives $$\$126 \times 4 = \$504$$
+per QALY-equivalent.
 
+:::details{title="Anti-bonded-labour derivation"}
 The anti-slavery evidence base is weaker, but not empty. The most useful public anchor is the Freedom Fund India
 hotspot work summarised by external evaluations. If roughly **\$15.8 million** led to about **125,000 fewer people in
 bonded labour**, then the implied cost is about:
@@ -139,11 +177,10 @@ $$
 
 So **about \$500/QALY-equivalent** is a reasonable all-things-considered central figure for promising anti-bonded-labour
 work.
+:::
 
-**Combined**
-
-Modeling the category as roughly **70% VAWG prevention** at **\$266/QALY** and **30% anti-slavery work** at
-**\$504/QALY** gives:
+**Combined: about \$310/QALY.** Modeling the category as roughly **70% VAWG prevention** at **\$266/QALY** and **30%
+anti-slavery work** at **\$504/QALY** (Assumption 7) gives:
 
 $$
 \text{QALYs per } \$1 = \frac{0.7}{266} + \frac{0.3}{504} \approx 0.00322
@@ -153,18 +190,29 @@ $$
 \text{Cost per QALY} \approx \frac{1}{0.00322} \approx \$310
 $$
 
-That gives a point estimate of about **\$310/QALY**.
+**Range: \$130–\$1,500/QALY.** Four parameters drive the spread: the VAWG welfare uplift (Assumption 2), the VAWG
+external-validity markup (Assumption 3), the bonded-labour welfare gain per person (Assumption 5), and the anti-slavery
+marginal discount (Assumption 6). The interval is wider than a sweep of any single one because these four move together
+under an optimistic or pessimistic reading of how much real welfare these interventions deliver, and the high end is
+stretched further to absorb structural uncertainty the four parameters do not capture — chiefly that the anti-slavery
+hotspot evidence is not randomised and that a real portfolio may lean toward weaker direct-welfare rights work than the
+category is trying to model.
 
-**Range**
+:::details{title="From the all-extremes bound to the published range"}
+Pushing all four parameters to their favorable extremes together (Assumption 2 at 4, Assumption 3 at 1.5x, Assumption 5
+at 2.0, Assumption 6 at 2x) gives about **\$93/QALY**; pushing all four to their unfavorable extremes (1, 5x, 0.4, 8x)
+gives about **\$1,300/QALY**. That \$93–\$1,300 corner is the 1st/99th-percentile box, not an 80% interval: for four
+independent parameters the chance that all four land near the same extreme at once is far below 10% per side. Treating
+them as independent shrinks the 80% interval to roughly **\$170–\$640** (each corner multiplier raised to the power
+$$\tfrac{1}{\sqrt{4}} = 0.5$$).
 
-The low end is around **\$100/QALY** if a donor accesses unusually strong VAWG opportunities near the best published
-results and anti-slavery work near the optimistic end of the hotspot interpretation.
-
-The high end is around **\$4,000/QALY** if the donor funds weaker implementations, if anti-slavery effects are much
-less durable or less attributable than they first appear, or if the portfolio leans toward weaker direct-welfare
-rights work than the category is trying to model.
-
-So **\$100-\$4,000/QALY** is best read as our plausible range, kept wide because these models are rough.
+The published \$130–\$1,500 sits between those two. We widen the independent baseline back out because the four
+parameters are positively correlated rather than independent — the same worldview that reads the welfare uplift as large
+also tends to read the marginal discounts as small — and we add extra headroom on the high side, past the parameter
+corner, for the non-randomised anti-slavery evidence and possible scope drift toward weaker direct-welfare work. The
+portfolio split (Assumption 7) is left out of the sweep because it has little leverage: moving it from 50/50 to 90/10
+shifts the central figure only between about \$350 and \$280.
+:::
 
 ### Start time
 
@@ -184,26 +232,6 @@ So 20 years is a compromise:
 
 - Long enough to reflect that these are not just one-year benefits
 - Short enough to avoid assuming universal permanent gains or perfectly persistent institutional change
-
-## What kinds of charities are we modeling?
-
-These estimates are mainly for **high-impact human-rights charities with relatively direct welfare effects**, such as:
-
-- Community-based programs that reduce violence against women and girls
-- School-based programs that reduce sexual assault risk for girls
-- Anti-bonded-labour and anti-trafficking organizations that combine community organising, legal support, survivor
-  assistance, and pressure on employers or local authorities
-
-They are **not** estimates for:
-
-- The average general-purpose human-rights NGO
-- Broad culture-war or expressive advocacy projects
-- High-level litigation or legal reform work whose public causal evidence is still too thin to anchor the headline
-  estimate
-- Generic criminal-justice reform philanthropy in rich countries
-
-Those efforts may still matter a great deal. They are just not the best-evidenced anchors for the category's current
-point estimate.
 
 ## Key uncertainties
 

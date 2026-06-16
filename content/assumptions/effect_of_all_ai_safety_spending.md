@@ -30,9 +30,9 @@ The goal is to estimate:
 A reasonable summary is:
 
 - **Best-guess:** $X \approx 0.125$ percentage points
-- **Plausible range:** $Y \approx 0.01$ percentage points, $Z \approx 0.5$ percentage points
+- **Plausible range:** $Y \approx 0.005$ percentage points, $Z \approx 0.5$ percentage points
 
-That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.125 percentage points** (for example, from about 10.13% to 10.0%), with a wide range of **0.01–0.5 percentage points**.
+That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.125 percentage points** (for example, from about 10.13% to 10.0%), with a wide range of **0.005–0.5 percentage points**. The range is wider at the bottom than the literature's effectiveness tiers alone would suggest, because the offsetting channels below (capabilities spillovers, safetywashing, safety teams that also make labs more durable race competitors) leave real mass on a net effect near zero — or, in the worst case, below it.
 
 This corresponds to about:
 
@@ -62,7 +62,7 @@ Existing cost-effectiveness work clusters into three tiers:
 - **Good or very good x-risk opportunities:** about **10–30 bp per \$1B**
 - **Exceptional upper-tail cases:** tens to hundreds of bp per \$1B
 
-So if historical AI safety spending achieved only **0.01 percentage points per \$1B** (1 bp) or less, it was relatively weak by longtermist standards; if it achieved **0.5+ percentage points per \$1B** (50+ bp), it was unusually strong. That brackets the plausible range we adopt below.
+So if historical AI safety spending achieved only **0.01 percentage points per \$1B** (1 bp) or less, it was relatively weak by longtermist standards; if it achieved **0.5+ percentage points per \$1B** (50+ bp), it was unusually strong. Those tiers anchor the body of the plausible range we adopt below; the published lower bound sits below this "weak" tier because the offsetting channels in Section 3 leave a real chance the net effect was close to zero.
 
 :::details{title="The source-by-source benchmarks behind the three tiers"}
 **Rethink Priorities' CURVE modeling (generic anchor).** Rethink models x-risk interventions in basis points of risk reduction per \$1B in its [Laura Duffy 2023 analysis](https://rethinkpriorities.org/research-area/is-x-risk-the-most-cost-effective-if-we-count-only-the-next-few-generations/) and [2024 Portfolio Builder](https://rethinkpriorities.org/research-area/key-cases-with-the-portfolio-builder/). The rough derived range for generic x-risk work is about **0.2–7 bp per \$1B** (0.002–0.07 percentage points), with **1.5–7.2 bp per \$1B** already enough to compete with strong animal-welfare or health programs. This is a useful lower anchor but not an AI-specific verdict: it is for generic work, not the best AI opportunities, and does not capture AI-specific channels like frontier-lab governance and eval norms.
@@ -92,18 +92,18 @@ That second point comes from Charles I. Jones, [“The AI Dilemma: Growth versus
 
 ## 4. Converting the evidence into values for $X$, $Y$, and $Z$
 
-For roughly \$1B of spending we place the central rate at about **12.5 bp per \$1B** = **0.125 percentage points** ($X$), with bounds of **1 bp per \$1B** ($Y = 0.01$ percentage points) at the low end of plausible views and **50 bp per \$1B** ($Z = 0.5$ percentage points) at the upper end of clearly non-extreme views. The central figure sits just above the EA "good bet" bar for three reasons:
+For roughly \$1B of spending we place the central rate at about **12.5 bp per \$1B** = **0.125 percentage points** ($X$), with bounds of **0.5 bp per \$1B** ($Y = 0.005$ percentage points) at the low end — a near-break-even world where offsetting channels nearly cancel the gains — and **50 bp per \$1B** ($Z = 0.5$ percentage points) at the upper end of clearly non-extreme views. The lower bound is below the literature's weakest generic tier because the dominant uncertainty here is not which positive tier applies but whether the net effect was positive at all (caveat 2 below). The central figure sits just above the EA "good bet" bar for three reasons:
 
 - **Higher than generic Rethink-style anchors:** AI safety is a particularly central and time-sensitive x-risk area, and some historical spending really did reach unusually leveraged labs, policy institutions, and training programs.
 - **Lower than the most optimistic bars:** historical spending includes field-building, mixed-effect work, and dollars that were not all cherry-picked home runs.
 - **Modestly better than the "good bet" bar:** at about \$80M per bp this is a bit stronger than Linch Zhang's \$100M-per-bp benchmark, appropriate for an unusually leveraged area and consistent with a higher (~10%) baseline leaving more absolute risk for a given relative improvement to remove.
 
-At $X = 0.125$ percentage points the central estimate buys about **\$80M per basis point** and **\$800k per microprobability** — modestly better than the "good bet" bar and generic Rethink-style modeling, but worse than the super-PPE benchmark and far below extreme AGI-safety upper-tail assumptions. The bounds span **\$200k–\$10M per microprobability**.
+At $X = 0.125$ percentage points the central estimate buys about **\$80M per basis point** and **\$800k per microprobability** — modestly better than the "good bet" bar and generic Rethink-style modeling, but worse than the super-PPE benchmark and far below extreme AGI-safety upper-tail assumptions. The bounds span **\$200k–\$20M per microprobability**.
 
 :::details{title="Per-bound arithmetic and relative-reduction check"}
 **Central ($X = 0.125$ percentage points = 12.5 bp).** $$\$1\text{B} / 12.5\text{ bp} = \$80\text{M per bp}$$; $0.00125 / 10^{-6} = 1{,}250$ microprobabilities, so $$\$1\text{B} / 1{,}250 = \$800\text{k per microprobability}$$. Under $p_{\text{with}} = 10\%$ this means $p_{\text{without}} \approx 10.125\%$ — a relative risk reduction of $0.125 / 10.125 \approx 1.2\%$, i.e. a bit over one percent in relative terms (for example, from roughly 10.13% to 10.0%).
 
-**Lower bound ($Y = 0.01$ percentage points = 1 bp).** \$1B per bp; **\$10M per microprobability**.
+**Lower bound ($Y = 0.005$ percentage points = 0.5 bp).** \$2B per bp; $0.00005 / 10^{-6} = 50$ microprobabilities, so **\$20M per microprobability**.
 
 **Upper bound ($Z = 0.5$ percentage points = 50 bp).** $$\$1\text{B} / 50\text{ bp} = \$20\text{M per bp}$$; **\$200k per microprobability**.
 

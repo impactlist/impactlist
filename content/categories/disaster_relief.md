@@ -18,11 +18,26 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from **acute humanitarian response** after disasters, outbreaks, and sudden displacement crises: emergency health care, treatment of acute malnutrition, outbreak control, emergency WASH (water, sanitation, and hygiene), cash/basic-needs assistance, and related rapid relief for displaced or crisis-affected populations. It does **not** include long-run reconstruction, disaster-risk reduction, or anticipatory action.
 
+## What kinds of charities are we modeling?
+
+These estimates represent **strong acute-response charities** that can move resources quickly in emergencies — organizations focused on emergency health, nutrition, WASH, cash/basic-needs support, or coordinated field response. They are not meant to represent the very best disease-specific emergency-health opportunity, nor the average dollar spent across the whole humanitarian system.
+
+:::details{title="What we exclude"}
+We are **not** modeling:
+
+- long-run reconstruction or resilience-building,
+- disaster preparedness or anticipatory action,
+- conflict prevention or peacebuilding,
+- ordinary development aid delivered outside an acute crisis.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$4,000 (\$800–\$20,000)
+- **Cost per QALY:** \$4,000 (\$400–\$40,000)
 - **Start time:** 0 years
 - **Duration:** 20 years
+
+This category is best modeled as a **portfolio of emergency-response activities**, not a single intervention. A few emergency-health niches (acute-malnutrition treatment, reactive cholera vaccination in severe outbreaks) are excellent, but a real charity also spends on WASH, cash, primary care, logistics, and coordination, where the evidence is thinner and per-QALY costs are higher. The central estimate is the **geometric midpoint** of a plausibly optimistic \$800/QALY portfolio and a plausibly pessimistic \$20,000/QALY portfolio, $\sqrt{800 \times 20{,}000} = 4{,}000$ (Assumptions 10–11). The plausible range runs **wider** than those two anchors — down to \$400 and up to \$40,000 — because the humanitarian evidence base is unusually thin (Assumption 1) and the dominant uncertainties are structural, not parameter noise: marginal money could land on a much more tightly focused emergency-health charity than the optimistic anchor assumes, or on a much worse-timed portfolio than the pessimistic anchor — one whose dollars arrive late, into a lower-risk setting, or into an already-saturated, highly salient crisis (Assumption 9). The biggest swing factors are the **portfolio mix** (how much marginal money buys highly targeted health work versus broader assistance) and **crisis selection and timing**.
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
@@ -44,17 +59,10 @@ This effect captures welfare gains from **acute humanitarian response** after di
 
 ### Cost per QALY
 
-This category is best modeled as a **portfolio of emergency-response activities**, not as a single intervention.
-
-The main published cost-effectiveness studies use **cost per DALY averted** rather than **cost per QALY gained**. For this estimate, that is acceptable: the anchors we rely on are mostly mortality-heavy interventions such as acute malnutrition treatment and outbreak control, where the difference between DALYs averted and QALYs gained is small relative to the much larger uncertainty about targeting, timing, and portfolio mix (Assumption 8).
-
-Some parts of disaster relief look excellent on a strict health basis:
+The published evidence ranges over two orders of magnitude depending on the activity, which is why we anchor to a portfolio rather than a single number. On a strict health basis, some parts of disaster relief look excellent and others look much worse:
 
 - Acute-malnutrition treatment in crisis settings can be around **\$50-\$200 per DALY** (Assumption 2).
 - Reactive cholera vaccination in a severe outbreak can be around **\$400-\$700 per DALY** (Assumption 3).
-
-Other parts look much worse:
-
 - Pre-emptive cholera vaccination in a lower-incidence refugee-camp setting came out at **\$15,666-\$69,892 per DALY** (Assumption 4).
 - International urban search-and-rescue is expensive and often arrives too late to drive most live rescues (Assumption 5).
 
@@ -62,12 +70,13 @@ The hard part is everything in the middle: emergency WASH, cash/basic-needs assi
 
 There is also an important gap between **intervention-level** and **marginal donor-level** cost-effectiveness. WHO's 2026 emergency appeal describes a system under severe funding pressure, so the right claim is **not** that humanitarian response is universally flush with money. But marginal philanthropy still faces unusually strong timing and allocation frictions: some life-saving response has to begin within **24-72 hours**, logistics and coordination are binding constraints, and charitable giving is highly concentrated in a small number of salient disasters (Assumption 9). That pushes a charity-level estimate materially above the best published program-level CEAs.
 
-So we use **practical portfolio anchors**:
+We therefore anchor the central estimate to two **plausible portfolio scenarios** — an optimistic **\$800/QALY** and a pessimistic **\$20,000/QALY** — and take their geometric midpoint, $\sqrt{800 \times 20{,}000} = 4{,}000$, because uncertainty this wide is multiplicative rather than additive. The published plausible range is wider than these two anchors (\$400–\$40,000); the anchors locate the center, while the tails capture charities better-focused or worse-timed than either anchor assumes.
 
+:::details{title="The two portfolio scenarios and the geometric midpoint"}
 - **Optimistic portfolio:** about **\$800/QALY**. This already assumes an unusually strong charity concentrated toward the best emergency-health opportunities, but it is still several times worse than the very best program-level CEAs (Assumption 10).
-- **Pessimistic portfolio:** about **\$20,000/QALY**. This is much better than the worst single published disaster-response components, but plausible for a broad or poorly timed relief portfolio where a lot of spending goes to less directly life-saving assistance or to hard logistics.
+- **Pessimistic portfolio:** about **\$20,000/QALY**. This is much better than the worst single published disaster-response components, but plausible for a broad or poorly timed relief portfolio where a lot of spending goes to less directly life-saving assistance or to hard logistics (Assumption 11).
 
-Because the uncertainty spans orders of magnitude and is multiplicative rather than additive, the most sensible central estimate is the **geometric midpoint** of those practical bounds:
+Because the uncertainty spans orders of magnitude and is multiplicative rather than additive, the most sensible central estimate is the **geometric midpoint** of those two scenarios:
 
 $$
 \sqrt{800 \times 20{,}000} = 4{,}000
@@ -75,8 +84,14 @@ $$
 
 So the portfolio-anchor method gives **\$4,000/QALY**.
 
-**Cross-check using a stylized component blend:**
+The published plausible range, \$400–\$40,000, extends a factor of two beyond each anchor (keeping \$4,000 as its geometric center, $\sqrt{400 \times 40{,}000} = 4{,}000$). The extra width is not a sweep of independent parameters but room for the structural tails: a near-best charity that puts most marginal money into acute-malnutrition treatment or reactive cholera vaccination could approach the better end of the program-level evidence even after frictions (the \$50–\$700/DALY range in Assumptions 2–3 sits below \$400/QALY), while a portfolio whose dollars arrive late, into a lower-risk setting, or into an already-saturated salient crisis could exceed \$20,000 — individual components such as pre-emptive cholera vaccination (\$69,892/DALY, Assumption 4) and international search-and-rescue (Assumption 5) already run far higher.
 
+These anchors rely mostly on studies reporting **cost per DALY averted** rather than **cost per QALY gained**. That is acceptable here: the anchors are mostly mortality-heavy interventions such as acute-malnutrition treatment and outbreak control, where the difference between DALYs averted and QALYs gained is small relative to the much larger uncertainty about targeting, timing, and portfolio mix (Assumption 8).
+:::
+
+A stylized component blend lands at about **\$3,900/QALY**, very close to the anchor estimate.
+
+:::details{title="The component-blend cross-check"}
 As a rough check, suppose a strong general disaster-relief charity looks like this:
 
 - **Roughly 10%** of spending in very strong emergency health/nutrition niches at **\$800/QALY**
@@ -91,8 +106,7 @@ $$
 $$
 
 This is the weighted harmonic mean: we convert each component to QALYs per dollar, add them, and then invert, because cost-per-QALY ratios do not average linearly. This cross-check is only illustrative; the spending shares are not measured budget shares from a single organization. But it lands very close to the **\$4,000/QALY** anchor estimate, which is reassuring.
-
-This should be read as an estimate for donations to **strong general disaster-relief charities**, not for the very best disease-specific emergency-health opportunity and not for the average dollar spent across the whole humanitarian system.
+:::
 
 ### Start time
 
@@ -101,17 +115,6 @@ The 0-year start time reflects that good disaster relief works immediately or no
 ### Duration
 
 The 20-year duration is a compromise for a mixed portfolio. Some benefits are very short-run improvements in health and living conditions, while others are deaths averted among children and adults with decades of life ahead of them. A 20-year window is a reasonable middle ground for discounting purposes without pretending that all benefits either vanish within months or last a full child lifetime.
-
-## What kinds of charities are we modeling?
-
-These estimates are meant to represent **strong acute-response charities** that can actually move resources quickly in emergencies, such as organizations focused on emergency health, nutrition, WASH, cash/basic-needs support, or coordinated field response.
-
-We are **not** modeling:
-
-- long-run reconstruction or resilience-building,
-- disaster preparedness or anticipatory action,
-- conflict prevention or peacebuilding,
-- ordinary development aid delivered outside an acute crisis.
 
 ## Key uncertainties
 

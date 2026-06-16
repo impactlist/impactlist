@@ -20,9 +20,23 @@ This effect captures welfare gains from **nonpartisan efforts to improve the rul
 
 This is an upstream and somewhat hits-based category. The strongest cases here are not vague "institution building" in the abstract, but interventions that either remove a major bottleneck or make a large public system materially easier to use. The weakest cases are generic thought leadership, purely ideological institution-building, or work with no clear route to concrete institutional change.
 
+## What kinds of charities are we modeling?
+
+We model nonpartisan organizations working to make important public systems work better: housing/abundance, civic-tech and public-service delivery, and election-administration, legal, or institutional-design work. This is roughly the ecosystem historically funded through Open Philanthropy's housing-policy-reform work and now continued within Coefficient Giving's Abundance & Growth fund. ([Coefficient Giving](https://coefficientgiving.org/funds/abundance-and-growth/))
+
+:::details{title="Included and excluded organizations"}
+These estimates are aimed at organizations like:
+
+- housing-policy and abundance organizations that remove major legal bottlenecks to building
+- civic-tech and public-service organizations that make tax, benefits, permitting, or related systems easier to use
+- election-administration, legal, or institutional-design organizations that make important public systems more competent, trustworthy, or workable
+
+We are **not** modeling partisan campaign spending, generic journalism, pure forecasting and evidence-synthesis work, or direct service programs whose main effect is better modeled in another category.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$3,000 (\$500–\$60,000)
+- **Cost per QALY:** \$3,000 (\$800–\$35,000)
 - **Start time:** 3 years
 - **Duration:** 25 years
 
@@ -46,8 +60,11 @@ This is an upstream and somewhat hits-based category. The strongest cases here a
 
 ### Cost per QALY
 
-Because this category spans several intervention types and has a fat-tailed return distribution, the cleanest model is a scenario-weighted expected-value calculation rather than a single-intervention formula:
+Because this category spans several intervention types and has a fat-tailed return distribution, the cleanest model is a scenario-weighted expected-value calculation rather than a single-intervention formula. A \$10 million push has a 50% chance of a \$30M (limited) win, 40% chance of a \$300M (moderate) win, and 10% chance of a \$2B (major) win, for an expected \$335 million of welfare-equivalent value, which at \$100,000 per QALY is 3,350 QALYs and a point estimate of **\$3,000/QALY**.
 
+By **welfare-equivalent value**, we mean the total improvement in outcomes, whether health, income, time, administrative burden, or other quality-of-life effects, expressed in dollar terms so it can be converted into QALYs using the \$100,000-per-QALY assumption.
+
+:::details{title="Full scenario-weighted derivation"}
 $$\text{Expected welfare value} = p_L \cdot V_L + p_M \cdot V_M + p_H \cdot V_H$$
 
 $$\text{Expected QALYs} = \dfrac{\text{Expected welfare value}}{v}$$
@@ -60,8 +77,6 @@ Where:
 - $p_L, p_M, p_H$ = probabilities of the limited-impact, moderate-impact, and major-win scenarios
 - $V_L, V_M, V_H$ = total welfare-equivalent value created in each scenario
 - $v$ = money-metric value per QALY
-
-By **welfare-equivalent value**, we mean the total improvement in outcomes, whether health, income, time, administrative burden, or other quality-of-life effects, expressed in dollar terms so it can be converted into QALYs using the \$100,000-per-QALY assumption.
 
 Using the central assumptions above:
 
@@ -78,29 +93,30 @@ $$\text{Expected welfare value} = 0.50 \times 30{,}000{,}000 + 0.40 \times 300{,
 $$\text{Expected QALYs} = \dfrac{335{,}000{,}000}{100{,}000} = 3{,}350$$
 
 $$\text{Cost per QALY} = \dfrac{10{,}000{,}000}{3{,}350} \approx 2{,}985$$
-
-So the point estimate is **\$3,000/QALY**.
+:::
 
 ### Anchoring the scenario values
 
-The three scenario values are meant to be read as follows:
+The central split is hits-based: the major-win scenario contributes \$200 million of the \$335 million expected welfare value, or about **60%** of the total, which is one of the main reasons the estimate is uncertain. The three scenario values are anchored to realized and projected results in the category — limited wins to Code for America's tax-benefits work, moderate wins to its Medicaid-renewal and integrated-benefits work, and major wins to Treasury's \$1.4-\$3.0 billion in digital-transformation savings and the larger welfare stakes in the housing literature.
 
+:::details{title="How each scenario value is anchored"}
 - **Limited impact: \$30 million.** This is not a moonshot. It is the scale of a meaningful but bounded win: improving one public workflow, reducing administrative burden for a large user group, or getting one local legal or procedural change over the line. Code for America's realized tax-benefits work and Direct File's early fee savings make clear that tens of millions of value can be created without needing a once-in-a-generation reform.
 - **Moderate impact: \$300 million.** This is the scale of a durable state-level or multi-jurisdiction institutional improvement. Code for America's recent Medicaid-renewal and integrated-benefits work suggests how quickly gains can accumulate once an intervention meaningfully changes a large system used by hundreds of thousands of people.
 - **Major win: \$2 billion.** This is large, but still small relative to the stakes of major institutional bottlenecks. Treasury's own digital-transformation work points to \$1.4-\$3.0 billion in government-wide savings opportunities, and the housing literature makes clear that land-use rules can affect welfare on a much larger scale than that even if one takes a cautious view about the most aggressive macro estimates.
-
-The central split is still hits-based: the **major-win** scenario contributes \$200 million of the \$335 million expected welfare value, or about **60%** of the total. That is a smaller concentration than before, but it remains one of the main reasons the estimate is uncertain.
+:::
 
 ### Range
 
-Our plausible range is wide because this category is both heterogeneous and fat-tailed.
+Our plausible range is **\$800-\$35,000/QALY**, wide because this category is both heterogeneous and fat-tailed. Three things drive the width: the **cost** of a serious push (Assumption 5), the whole **scenario structure** of probabilities and values (Assumptions 7-9, which we move together as a single optimistic-or-pessimistic worldview), and the **value of a QALY** (Assumption 6), whose \$100,000-\$150,000 range we hold at the low end in the central case but which can only push the estimate higher. The single most sensitive lever is the **major-win probability**: holding the scenario values and \$10 million cost fixed, moving it from **5%** to **25%** changes the estimate from roughly **\$4,200/QALY** to roughly **\$1,600/QALY**.
 
-- **Pessimistic:** \$15 million cost, 75% / 20% / 5% scenario weights, and scenario values of \$5M / \$50M / \$250M gives about **\$57,000/QALY**.
-- **Optimistic:** \$6 million cost, 35% / 40% / 25% scenario weights, and scenario values of \$50M / \$400M / \$4B gives about **\$500/QALY**.
+The range is narrower than a sweep that pushes every parameter to its unfavorable extreme at once — far less likely than any single parameter being extreme. We start from the independent-parameter combination of these levers (roughly \$900-\$24,000) and widen it back out toward that all-extremes bound to reflect that an optimistic or pessimistic worldview tends to move cost, probabilities, and values together, plus structural uncertainty the sweep omits: how fat-tailed the distribution really is, how often philanthropy is genuinely causal, and the omitted QALY-value range. The slightly wider top end reflects the fat-tailed downside — if major wins are rarer than 10%, the estimate worsens fast.
 
-So our plausible range is **\$500-\$60,000/QALY**.
+:::details{title="Every input at its best or worst edge at once"}
+Pushing every parameter to one extreme simultaneously gives the outer corner, which is wider than the 80% interval above:
 
-The single most important parameter is the **major-win probability**. Holding the scenario values and \$10 million cost fixed, moving the major-win probability from **5%** to **25%** changes the estimate from roughly **\$4,200/QALY** to roughly **\$1,600/QALY**. The wider \$500-\$60,000 range comes from varying costs and scenario values as well, not just that one probability.
+- **Pessimistic corner:** \$15 million cost, 75% / 20% / 5% scenario weights, and scenario values of \$5M / \$50M / \$250M gives about **\$57,000/QALY**.
+- **Optimistic corner:** \$6 million cost, 35% / 40% / 25% scenario weights, and scenario values of \$50M / \$400M / \$4B gives about **\$500/QALY**.
+:::
 
 ### Start time
 
@@ -109,18 +125,6 @@ The 3-year start time reflects that these interventions usually matter faster th
 ### Duration
 
 The 25-year duration is a compromise across very different pathways. Some institutional wins, especially software, workflow, and administrative-process improvements, may decay within 5-10 years as systems change. But the category's strongest legal, regulatory, and governance reforms can persist for decades. Twenty-five years is therefore an expected-value middle ground between shorter-lived administrative wins and genuinely durable institutional reforms.
-
-## What kinds of charities are we modeling?
-
-These estimates are aimed at organizations like:
-
-- housing-policy and abundance organizations that remove major legal bottlenecks to building
-- civic-tech and public-service organizations that make tax, benefits, permitting, or related systems easier to use
-- election-administration, legal, or institutional-design organizations that make important public systems more competent, trustworthy, or workable
-
-This is also roughly the ecosystem historically funded through Open Philanthropy's housing-policy-reform work and now continued within Coefficient Giving's Abundance & Growth fund. ([Coefficient Giving](https://coefficientgiving.org/funds/abundance-and-growth/))
-
-We are **not** modeling partisan campaign spending, generic journalism, pure forecasting and evidence-synthesis work, or direct service programs whose main effect is better modeled in another category.
 
 ## Key uncertainties
 

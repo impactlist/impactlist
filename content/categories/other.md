@@ -18,7 +18,7 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This is a fallback bucket for donations that cannot yet be classified more precisely: donor-advised funds, prize awards to individuals, mixed-purpose foundations, civic or journalism organizations with diffuse benefits, local charities that do not fit the main categories cleanly, and genuinely unknown recipients.
 
-The goal is to estimate the expected value of giving to this actual bucket of miscellaneous philanthropy.
+The goal is to estimate the expected value of giving to this actual bucket of miscellaneous philanthropy. We model it as a three-bucket portfolio — **direct but uncategorized organizations**, **indirect vehicles / mixed foundations / prize-awardees**, and **unknown / opaque recipients** — which gives a central estimate of **\$75,000/QALY**. The two cruxes are the dollar split across those buckets and how much worse than known direct giving the indirect and unknown slices really are.
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
@@ -41,20 +41,15 @@ The goal is to estimate the expected value of giving to this actual bucket of mi
 
 ### Cost per QALY
 
-We model `Other` as a three-bucket portfolio:
+We model `Other` as a three-bucket portfolio whose cost per QALY is the reciprocal of the dollar-weighted QALYs per dollar:
 
 $$
 \text{Cost per QALY} = \dfrac{1}{\frac{d}{D} + \frac{v}{V} + \frac{u}{U}}
 $$
 
-Using the central assumptions:
+Using the central assumptions ($d$ = 0.35, $D$ = \$40,000; $v$ = 0.45, $V$ = \$120,000; $u$ = 0.20, $U$ = \$250,000), this gives a point estimate of **\$75,000/QALY**.
 
-- $d$ = 0.35 and $D$ = \$40,000
-- $v$ = 0.45 and $V$ = \$120,000
-- $u$ = 0.20 and $U$ = \$250,000
-
-So:
-
+:::details{title="Working the portfolio arithmetic"}
 $$
 \text{QALYs per dollar} = \frac{0.35}{40{,}000} + \frac{0.45}{120{,}000} + \frac{0.20}{250{,}000}
 $$
@@ -66,23 +61,39 @@ $$
 $$
 \text{Cost per QALY} \approx \dfrac{1}{0.0000133} \approx \$75{,}000
 $$
-
-That gives a point estimate of **\$75,000/QALY**.
+:::
 
 ### Why the buckets look like this
 
+The direct bucket is anchored on [Local Community](/category/local-community) at **\$29,000/QALY** and worsened modestly to **\$40,000/QALY**; each later bucket is a multiple of the previous one (**3x** to the indirect bucket, then **2x** to the unknown bucket) reflecting an extra intermediary step and then sheer opacity.
+
+:::details{title="Bucket-by-bucket reasoning"}
 - **Direct organizations: \$40,000/QALY.** This is anchored on [Local Community](/category/local-community) at **\$29,000/QALY** and moved upward modestly. The idea is that `Other` direct recipients are often broader and less health-targeted than the local-community portfolio, but they are still real operating organizations doing concrete work.
 - **Indirect vehicles and mixed foundations: \$120,000/QALY.** This is roughly **3x** the direct bucket. That is a reasonable central haircut for an extra intermediary step, slower deployment, and broader downstream allocation. The NPT payout rate is a useful check against going much lower: DAFs are diluted and slower, but not dormant.
 - **Unknown recipients: \$250,000/QALY.** This is roughly **2x** the indirect bucket. The logic is simply that if a recipient is still too opaque to classify at all, expected value should usually be materially worse than for a known vehicle or mixed foundation whose mission and mechanism are at least partly visible.
+:::
 
 This estimate also passes a useful outside-view sanity check: **\$75,000/QALY** sits comfortably inside the broad **\$20,000-\$150,000/QALY** band often used by rich-country institutions such as NICE and ICER when evaluating interventions that are worthwhile but far from frontier global-health opportunities. ([NICE](https://www.nice.org.uk/news/blogs/should-nice-s-cost-effectiveness-thresholds-change-), [ICER](https://icer.org/our-approach/methods-process/))
 
 ### Range
 
-The range is our plausible range, kept wide because these models are rough.
+The plausible range of **\$35,000-\$300,000/QALY** is wide, and most of that width comes from a single correlated worry rather than three independent ones: if "indirect and opaque giving is worse than it looks" is true, it pushes the vehicle bucket, the unknown bucket, and the dollar split toward the unfavorable side together. So we set the bounds by moving every input to its favorable or unfavorable edge at once rather than treating the inputs as independent and shrinking the range — the dominant uncertainty is structural (whether the three-bucket model and its QALY conversions are even right), and that uncertainty lives largely outside the parameters.
 
-- **Optimistic:** stronger direct recipients, better downstream allocation, and fewer unknowns gives about **\$35,000/QALY**.
-- **Pessimistic:** weaker direct recipients, more dilution through vehicles, and more opaque recipients gives about **\$300,000/QALY**.
+The portfolio structure itself bounds the downside, which is why **\$300,000/QALY** sits near the pessimistic edge rather than far beyond it: because direct and indirect dollars keep producing QALYs, the cost per QALY stays near **\$260,000** even if the opaque bucket is treated as essentially worthless, so reaching **\$300,000** requires all three buckets to be pessimistic at once.
+
+:::details{title="Optimistic and pessimistic bound calculations"}
+**Optimistic** — direct **\$25,000/QALY**, indirect **\$60,000/QALY**, unknown **\$120,000/QALY**, mix **50% / 40% / 10%**:
+
+$$
+\dfrac{1}{0.50/25{,}000 + 0.40/60{,}000 + 0.10/120{,}000} \approx \$36{,}000
+$$
+
+**Pessimistic** — direct **\$90,000/QALY**, indirect **\$300,000/QALY**, and the opaque bucket treated as nearly worthless (about **\$2,400,000/QALY**), mix **15% / 45% / 40%**:
+
+$$
+\dfrac{1}{0.15/90{,}000 + 0.45/300{,}000 + 0.40/2{,}400{,}000} \approx \$300{,}000
+$$
+:::
 
 ### Start time
 

@@ -63,14 +63,18 @@ $$\text{Cost per QALY} = \dfrac{\$1}{0.001695} \approx \$590$$
 
 So the point estimate is **\$590/QALY**.
 
-The result swings most on $E$ (tons averted per dollar) and, secondarily, $L$ (QALYs lost per death); $M$ is comparatively well-anchored. Published estimates of $E$ vary widely — roughly 1–7 tCO₂e/\$ across the sources in Assumption 1 — which is what drives the wide plausible range below.
+The result swings most on $E$ (tons averted per dollar) and, secondarily, $L$ (QALYs lost per death); $M$ is comparatively well-anchored. Published estimates of $E$ vary widely — roughly 1–7 tCO₂e/\$ across the sources in Assumption 1 — which is what drives our wide plausible range of roughly **\$40-\$15,000/QALY**.
 
-**Range:**
+We publish a range that is *wider* than what swinging the headline parameters produces, because the largest uncertainties here sit partly outside those parameters. Pushing $E$ and $L$ to their favorable and unfavorable edges together gives only about \$60-\$7,400/QALY, but that holds $M$ (the mortality cost of carbon) fixed even though the underlying social-cost-of-carbon literature disagrees substantially, ignores the rough tCO₂e-to-CO₂ approximation of Assumption 4, and — most importantly on the expensive side — assumes the systems-change mechanism works roughly as modeled. If much of the averted emissions would have happened anyway (a weak funding counterfactual), effective $E$ falls well below 0.3 and the cost per QALY climbs past the parameter sweep, which is why the upper bound sits at \$15,000 rather than \$7,400.
 
-- **Pessimistic:** 0.3 tCO₂e/\$ and 2 QALYs per death gives about \$7,400/QALY.
+:::details{title="Input sweep vs. the published range"}
+Sweeping the two headline inputs to their favorable extremes together, then their unfavorable extremes together, holding $M$ at the central Bressler figure:
+
 - **Optimistic:** 7 tCO₂e/\$ and 10 QALYs per death gives about \$60/QALY.
+- **Pessimistic:** 0.3 tCO₂e/\$ and 2 QALYs per death gives about \$7,400/QALY.
 
-These two bounds sweep $E$ and $L$ but hold $M$ (the Bressler mortality figure) fixed, so they understate our true uncertainty — a plausible range is a best-judgment 80% interval, not a mechanical sweep, and should also absorb the uncertainty in $M$ itself and in the tCO₂e-to-CO₂ approximation of Assumption 4. Allowing for that, our plausible range is roughly **\$40-\$15,000/QALY**.
+For two roughly independent inputs this \$60-\$7,400 span would, on its own, overstate an 80% interval — hitting both extremes at once is rarer than the ~10% tail an 80% bound marks. But we widen rather than narrow, because the uncertainties the sweep leaves out are large and asymmetric: $M$ itself is contested in the mortality literature, the unit approximation of Assumption 4 adds error in both directions, and a weak counterfactual could push effective tons-per-dollar far below 0.3, fattening the expensive tail. Folding those in gives a published range of about **\$40-\$15,000/QALY**.
+:::
 
 [IPCC AR6](https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-3/) and [WHO 2025](https://www.who.int/publications/i/item/B09460) both emphasize that climate mitigation often creates large health gains from cleaner air, and that these gains typically arrive sooner than the avoided climate damages themselves. We mostly exclude those co-benefits from the headline number because they vary a lot by intervention mix and would be easy to overcount in a simple CO₂-based model.
 

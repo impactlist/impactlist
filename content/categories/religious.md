@@ -22,9 +22,30 @@ The central question is not whether religion is true, nor whether religion has a
 
 The main benefits here appear to come from community, meaning, social support, lower substance abuse, and modest improvements in mental health and possibly mortality. We do **not** give separate central credit for the direct food-bank, housing, disaster-relief, or medical work done by some religious organizations, because those outputs are better modeled in other categories and ordinary congregations spend only a small share of their budgets directly on social services.
 
+## What kinds of charities are we modeling?
+
+This estimate represents charities whose main output is **organized religious participation itself** — local congregations, parish support, campus and youth ministries, and organizations funding worship, pastoral care, small groups, or spiritual community for willing participants. It is **not** a good model of religious direct-service charities (food, housing, healthcare, disaster relief), religious schools, political organizations, or coercive groups.
+
+:::details{title="What is and isn't included"}
+This estimate is meant to represent charities whose main output is **organized religious participation itself**:
+
+- local congregations and parish support funds
+- campus ministries, youth ministries, and fellowship organizations
+- ministries that fund worship, pastoral care, small groups, or spiritual community for willing participants
+
+This estimate is **not** a good model of:
+
+- direct-service religious charities whose main output is food aid, housing, healthcare, or disaster relief
+- religious schools or universities, which are better modeled under education
+- explicitly political or culture-war organizations
+- coercive, abusive, or highly exclusionary groups
+
+If a religiously affiliated recipient is mainly providing a standard social service, the relevant social-service category is usually the better estimate.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$130,000 (\$40,000–\$600,000)
+- **Cost per QALY:** \$130,000 (\$25,000–\$1,200,000)
 - **Start time:** 1 year
 - **Duration:** 10 years
 
@@ -64,9 +85,14 @@ $$
 
 Rounded, that gives a point estimate of about **\$130,000/QALY**.
 
-#### Why the participant-year benefit is only 0.015 QALYs
+The two inputs are derived below: the **0.015 QALYs** benefit is roughly **10%** of an observational upper bound, after a large haircut for selection bias, and the **\$2,000** effective donor cost adds an additionality penalty on top of raw budget-per-participant.
 
-If one took the strongest observational mortality studies at face value, organized religion would look dramatically better than this. [Li et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27183175/) found that women attending services more than once per week had about **33% lower mortality** than non-attenders over 16 years, and [Chen, Kim & VanderWeele 2020](https://academic.oup.com/ije/article/49/6/2030/5734641) found similarly favorable patterns across three large cohorts for mortality, smoking, heavy drinking, social integration, purpose in life, and other wellbeing outcomes.
+#### The participant-year benefit is 0.015 QALYs: ~10% of an observational upper bound
+
+If one took the strongest observational mortality studies at face value, organized religion would look dramatically better than this. [Li et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27183175/) found that women attending services more than once per week had about **33% lower mortality** than non-attenders over 16 years, and [Chen, Kim & VanderWeele 2020](https://academic.oup.com/ije/article/49/6/2030/5734641) found similarly favorable patterns across three large cohorts. But the better-identified literature points to a much smaller causal effect, so we take an observational upper bound of about **0.12-0.15 QALYs/year** and apply a roughly **90% haircut**, landing at **0.015 QALYs per participant-year** (about **5.5 full-health-equivalent days per year**). The plausible range runs from **0.005** (mostly selection) to **0.03-0.04** (much of the literature genuinely causal, charities reaching isolated or at-risk people).
+
+:::details{title="Deriving the 0.015 QALY benefit and its range"}
+The strongest observational studies look dramatically more favorable than 0.015. [Chen, Kim & VanderWeele 2020](https://academic.oup.com/ije/article/49/6/2030/5734641) found favorable patterns across three large cohorts for mortality, smoking, heavy drinking, social integration, purpose in life, and other wellbeing outcomes.
 
 But it would be a mistake to read those estimates literally as the causal effect of donor-funded religion. People who attend services regularly differ from non-attenders in many ways that are hard to control away completely: family stability, conscientiousness, existing social support, and baseline health among them. The better quasi-experimental and family-based literature points to a real effect, but a noticeably smaller one:
 
@@ -91,60 +117,39 @@ $$
 0.15 \times 0.10 = 0.015
 $$
 
-This is a large discount, but it is the right direction given the attenuation in sibling and within-person designs, the mixed European evidence, and the fact that the strongest positive results come from U.S. Christian samples. So the central estimate is much smaller than the headline observational mortality literature, but not zero. A value of **0.015 QALYs per participant-year** corresponds to about **5.5 full-health-equivalent days per year**. This is a reasonable order of magnitude for a real but moderate benefit from extra community, meaning, and behavioral protection, especially when the evidence is strongest in U.S. Christian settings and weaker elsewhere.
+This is a large discount, but it is the right direction given the attenuation in sibling and within-person designs, the mixed European evidence, and the fact that the strongest positive results come from U.S. Christian samples. A value of **0.015 QALYs per participant-year** corresponds to about **5.5 full-health-equivalent days per year** — a reasonable order of magnitude for a real but moderate benefit from extra community, meaning, and behavioral protection.
 
 The plausible range is wide:
 
 - **Optimistic:** **0.03-0.04 QALYs/year** if a meaningful share of the observational mortality and depression literature is genuinely causal, and if the relevant charities mostly help people who are isolated or at elevated risk.
 - **Pessimistic:** **0.005 QALYs/year** if most of the apparent benefit is selection and only a small residual effect remains after better identification.
+:::
 
-#### Why the effective donor cost is \$2,000 per participant-year
+#### The effective donor cost is \$2,000 per participant-year: raw budget plus an additionality penalty
 
-The National Congregations Study gives a useful raw cost anchor. In 2018-19:
+U.S. congregational budgets imply raw spending of about **\$1,250-\$1,430 per regular participant-year** (median congregation: **70** participants, **\$100,000** budget; the average attendee's congregation: **360** participants, **\$450,000** budget). Because congregations are mostly self-financed by members, many gifts support people who would have attended anyway, and congregations rarely close outright (roughly **1%** annually in older U.S. data, [Duke Today summary of Anderson & Chaves 2008](https://www.today.duke.edu/2008/06/religious_congregation.html)), we apply a moderate additionality haircut and use **\$2,000 per effective participant-year** — a meaningful penalty for partial crowdout and substitution, short of buying participation one-for-one.
 
-- the **median congregation** had **70 regular participants** and a **\$100,000** annual budget
-- the **average attendee** worshipped in a congregation with **360 regular participants** and a **\$450,000** annual budget
+#### Range: \$25,000-\$1,200,000/QALY
 
-Those imply raw spending of about **\$1,250-\$1,430 per regular participant-year**.
+Cost per QALY is driven by just two uncertain inputs — the participant-year benefit (**0.005-0.04**, Assumption 4) and the effective donor cost (**\$1,000-\$6,000**, Assumption 6). Our published plausible range is about **\$25,000-\$1,200,000/QALY** — essentially the full span those two inputs can produce. Its width is dominated by the benefit: how much of the observational mortality and mental-health literature is genuinely causal is by far the largest source of uncertainty (Key uncertainty 1), and that question moves the two inputs together — a reading on which religion's marginal value is high tends to pair a high benefit with more-additional dollars, and a skeptical reading pairs a low benefit with more crowdout. We keep the range at the full input span rather than narrowing it, because that causal question is structural — it sits outside the parameters and is large enough that the full span is a reasonable 80% interval rather than an extreme one.
 
-But raw budget per participant-year is still too optimistic for the marginal donor:
+That **\$25,000-\$1,200,000** is the full corner of the two parameter ranges, both at their joint best and then their joint worst. For two independent inputs the corner would overstate an 80% interval, but here we publish close to it, for the correlation and structural reasons above.
 
-- congregational life is mostly financed by the people already inside it
-- some people would keep attending even if one donor gave less
-- some participants would substitute toward another congregation rather than disappear from organized religion altogether
-- congregations are unusually persistent institutions, with roughly **1%** annual closure in older U.S. data, so marginal gifts often change quality or resilience more than outright survival ([Duke Today summary of Anderson & Chaves 2008](https://www.today.duke.edu/2008/06/religious_congregation.html))
-
-So we apply a moderate additionality haircut and use **\$2,000 per effective participant-year** rather than the raw **\$1,250-\$1,430** figure.
-
-That is already a meaningful penalty for partial crowdout and substitution. It says the marginal donor dollar is helping, but not buying participation one-for-one.
-
-#### Range
-
-The stated range is kept deliberately wide because these models are rough.
-
-**Optimistic case**
-
-- effective donor cost per participant-year: **\$1,200**
-- participant-year benefit: **0.03**
-
-So:
+:::details{title="Mechanical sweep: pairing both inputs at their extremes"}
+**Optimistic corner** — low cost paired with high benefit:
 
 $$
-\dfrac{1200}{0.03} = 40{,}000
+\dfrac{1000}{0.04} = 25{,}000
 $$
 
-**Pessimistic case**
-
-- effective donor cost per participant-year: **\$4,800**
-- participant-year benefit: **0.008**
-
-So:
+**Pessimistic corner** — high cost paired with low benefit:
 
 $$
-\dfrac{4800}{0.008} = 600{,}000
+\dfrac{6000}{0.005} = 1{,}200{,}000
 $$
 
-That gives a plausible range of about **\$40,000-\$600,000/QALY**.
+This \$25,000-\$1,200,000 spread is the full corner of the two parameter ranges. Treating the two inputs as independent and combining their uncertainties (rather than forcing both to an extreme at once) would instead give roughly \$40,000-\$615,000 — but we do **not** use that narrower interval, because the inputs are positively correlated through one's overall read of religion's causal value and because the model carries structural uncertainty (the causal haircut, the additionality penalty, and generalizability beyond U.S. Christianity) beyond what the two parameters capture. The published **\$25,000-\$1,200,000** range therefore tracks the full corner.
+:::
 
 ### Start time
 
@@ -159,23 +164,6 @@ The **10-year** duration reflects a mixed picture:
 - but some effects on social ties, habits, identity, and continued attendance can last for years
 
 So a 10-year window is a reasonable middle ground between treating the donation as purely one-year support and treating it as if it permanently changed a life course.
-
-## What kinds of charities are we modeling?
-
-This estimate is meant to represent charities whose main output is **organized religious participation itself**:
-
-- local congregations and parish support funds
-- campus ministries, youth ministries, and fellowship organizations
-- ministries that fund worship, pastoral care, small groups, or spiritual community for willing participants
-
-This estimate is **not** a good model of:
-
-- direct-service religious charities whose main output is food aid, housing, healthcare, or disaster relief
-- religious schools or universities, which are better modeled under education
-- explicitly political or culture-war organizations
-- coercive, abusive, or highly exclusionary groups
-
-If a religiously affiliated recipient is mainly providing a standard social service, the relevant social-service category is usually the better estimate.
 
 ## Key uncertainties
 

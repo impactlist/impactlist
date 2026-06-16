@@ -29,7 +29,7 @@ estimate the best marginal education philanthropy, not average education expendi
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$25,000 (\$15,000–\$60,000)
+- **Cost per QALY:** \$25,000 (\$15,000–\$90,000)
 - **Start time:** 2 years
 - **Duration:** 40 years
 
@@ -95,11 +95,15 @@ dollar finds an ACE- or KiVa-level opportunity. We do **not** start from "educat
 assume a generic education dollar inherits that value; the anchors below are interventions with
 either direct QALY evidence or unusually strong long-run causal evidence on attainment and earnings.
 
-The range **\$15,000-\$60,000/QALY** is kept deliberately wide because these models are rough. The
-low end corresponds to unusually strong, persistent attainment effects or the better direct
-school-wellbeing programs; the high end to cases where attainment programs mainly accelerate
-completion rather than permanently raise it, or where implementation quality is good but not
-exceptional.
+The range **\$15,000-\$90,000/QALY** is kept deliberately wide because these models are rough, and it
+skews high because the ways this category can disappoint stack on each other. The low end corresponds
+to unusually strong, persistent attainment effects or the better direct school-wellbeing programs.
+The high end reflects three pessimistic factors that can compound: attainment programs that mainly
+accelerate completion rather than permanently raise it, marginal dollars landing on charities weaker
+than the ACE/KiVa anchors, and a tougher view of the earnings-to-QALY bridge (Assumption 3) than the
+\$100,000-\$115,000 benchmark we use centrally. Any one of these alone keeps the estimate near the
+mid-\$50,000s; together they push it well above that, which is why the upper bound sits where it does
+rather than at the edge of a single pathway's sweep.
 
 **Pathway 1 — Degree-completion programs.** The strongest attainment anchor is CUNY ACE: lifetime
 earnings gains of **\$51,986** per participant against direct expenditures of **\$12,374**

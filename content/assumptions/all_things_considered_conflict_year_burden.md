@@ -14,81 +14,50 @@ The [Conflict Mitigation](/category/conflict-mitigation) page uses:
 A reasonable summary is:
 
 - **Best-guess:** about **3,000,000 QALY-equivalents**
-- **{{PLAUSIBLE_RANGE_CAP}}:** about **1,000,000-5,000,000 QALY-equivalents**
+- **{{PLAUSIBLE_RANGE_CAP}}:** about **700,000-6,500,000 QALY-equivalents**
 
-This is meant to capture the main welfare losses of civil conflict in one common unit. It includes direct deaths and injuries, displacement, disrupted healthcare, hunger, mental illness, lost income, governance deterioration, and long-run institutional damage, expressed in QALY-equivalent terms.
+This captures the main welfare losses of civil conflict in one common unit: direct deaths and injuries, displacement, disrupted healthcare, hunger, mental illness, lost income, governance deterioration, and long-run institutional damage, all expressed in QALY-equivalent terms. It is built as a health component times a broader-welfare uplift, $B = H \times (1 + m)$, with $H \approx$ **1,000,000** health QALYs and a central uplift of $m =$ **200%**. The uplift — converting income, governance, and institutional harms into QALY-equivalents — is what carries the estimate from health-only to all-things-considered, and its size is the main crux.
 
-## 1. Start with the health component
+## The health component is about 1,000,000 QALYs
 
+Mapping the world's annual conflict health burden of about **30-40 million QALYs per year** onto roughly **30-60 serious conflict settings** implies about **0.5-1.3 million health QALYs** per representative serious conflict-year; we use **1 million** as the central health component. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/), [UNHCR Global Trends 2024](https://www.unhcr.org/global-trends-report-2024), [PRIO / UCDP 2025](https://www.prio.org/publications/14453), [The Lancet 2019](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736%2819%2930934-1/fulltext))
+
+:::details{title="From the global conflict health burden to one conflict-year"}
 The category already has a health-burden model:
 
 - direct conflict and terrorism burden is about **10 million DALYs per year**
 - once indirect deaths, displacement, healthcare disruption, food insecurity, and mental illness are included, total health burden is plausibly closer to **30-40 million QALYs per year**
 - **2024** had **61 active state-based conflicts across 36 countries**, though many were small
 
-If that annual health burden is mapped onto roughly **30-60 serious conflict settings**, the implied burden is about **0.5-1.3 million health QALYs** per representative serious conflict-year. The category uses **1 million** as the central health component. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/), [UNHCR Global Trends 2024](https://www.unhcr.org/global-trends-report-2024), [PRIO / UCDP 2025](https://www.prio.org/publications/14453), [The Lancet 2019](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736%2819%2930934-1/fulltext))
+If that annual health burden is mapped onto roughly **30-60 serious conflict settings**, the implied burden is about **0.5-1.3 million health QALYs** per representative serious conflict-year, and the category uses **1 million** as the central health component.
+:::
 
-That is already a meaningful burden. The question is whether the estimate should stop there.
+## Non-health harms are larger than the health component
 
-## 2. Why add a broader-welfare uplift?
+Health is only part of the welfare effect, and the cited evidence points to the rest being the larger part. Coefficient / Open Philanthropy's civil-conflict BOTEC says preventing an average civil war has roughly **20%** of its value from **DALYs** and **80%** from **lost income**. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/)) The World Bank finds high-intensity conflicts are typically followed by a cumulative drop of about **20% in GDP per capita after five years**, relative to pre-conflict projections. ([World Bank 2025](https://www.worldbank.org/en/research/publication/fragile-and-conflict-affected-situations-vulnerabilities)) A recent NBER paper finds conflict onset causes a large and persistent decline in democracy through channels such as **media censorship, judicial purges, curtailed civil liberties, irregular leadership turnover, and constitutional suspensions**. ([NBER 2026](https://www.nber.org/papers/w34734)) If the model can express health harms in QALYs, it should express these income, governance, and institutional harms in QALY-equivalent terms too, rather than treating them as outside the estimate.
 
-It should not stop there. Civil conflict obviously destroys far more than direct and indirect health.
+## The central uplift is 200%, with a plausible range of 0%-400%
 
-Coefficient / Open Philanthropy's civil-conflict BOTEC explicitly says that preventing an average civil war has roughly **20%** of its value from **DALYs** and **80%** from **lost income**. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/)) The World Bank likewise says high-intensity conflicts are typically followed by a cumulative drop of about **20% in GDP per capita after five years**, relative to pre-conflict projections. ([World Bank 2025](https://www.worldbank.org/en/research/publication/fragile-and-conflict-affected-situations-vulnerabilities)) And a recent NBER paper finds that conflict onset causes a large and persistent decline in democracy through channels such as **media censorship, judicial purges, curtailed civil liberties, irregular leadership turnover, and constitutional suspensions**. ([NBER 2026](https://www.nber.org/papers/w34734))
-
-Those are not side notes. They are part of the welfare effect. If the model can express health harms in QALYs, it should also express income, governance, and institutional harms in QALY-equivalent terms rather than treating them as outside the estimate.
-
-## 3. Why use a 200% uplift in the central case?
-
-The evidence that non-health harms are large is strong. The evidence for an exact conversion is not.
-
-So a reasonable way to handle this is:
+The evidence that non-health harms are large is strong; the evidence for an exact conversion is not. We therefore apply a broader-welfare uplift $m$ to the health component $H$:
 
 $$
 B = H \times (1 + m)
 $$
 
-Where:
+With $H = 1{,}000{,}000$ and a central $m =$ **200%** — meaning the broader-welfare component is about twice the health burden — the central burden is **3,000,000 QALY-equivalents**.
 
-- $H$ = health component of one representative serious conflict-year
-- $m$ = broader-welfare uplift for lost income, governance deterioration, and institutional damage
+Our plausible range on the burden is **700,000-6,500,000 QALY-equivalents** — close to the full span the two inputs produce at their joint low and joint high: the health component $H$ (**0.5-1.3 million**, from mapping the global conflict health burden onto serious conflict settings) and the uplift $m$ (**0%-400%**). We keep it near that span rather than narrowing it, because $H$ and $m$ are positively correlated (a reading of conflicts as larger and more total-war raises both at once) and because the central crux — whether income, governance, and institutional harms convert to QALY-equivalents at the assumed rate at all — is a structural uncertainty the two parameters do not capture.
 
-Using:
-
-- $H = 1{,}000{,}000$
-- $m = 200\%$ in the central case
-- plausible range for $m$ of **0%-400%**
-
-gives:
+:::details{title="Why 200% in the center, and how the range combines both inputs"}
+The central arithmetic:
 
 $$
 B = 1{,}000{,}000 \times (1 + 2.0) = 3{,}000{,}000
 $$
 
-with a plausible range from:
+**From the all-extremes bound to the published range.** Pushing both inputs to the same extreme gives a bound of $500{,}000 \times 1.0 = 500{,}000$ at the low end and $1{,}300{,}000 \times 5.0 = 6{,}500{,}000$ at the high end. We publish **700,000-6,500,000**, essentially that bound: $H$ and $m$ are positively correlated (a reading of conflicts as larger and more total-war raises both at once), and the QALY-equivalence conversion carries structural uncertainty beyond the two parameters. The high end tracks it because one published BOTEC already implies a roughly **4x** non-health multiple; the low end sits a little above the bare extreme because a near-zero broader-welfare uplift is less plausible than a genuine 10% tail.
 
-$$
-1{,}000{,}000 \times (1 + 0) = 1{,}000{,}000
-$$
+**Why 400% at the top of the uplift.** Coefficient / Open Philanthropy's own BOTEC suggests a case where non-DALY harms are about **4x** the DALY component. So the upper end is not inventing a new order of magnitude; it allows the broader-welfare component to be as large as one already-published conflict BOTEC suggests.
 
-to:
-
-$$
-1{,}000{,}000 \times (1 + 4.0) = 5{,}000{,}000
-$$
-
-Why use **400%** as the top of the plausible range? Because Coefficient / Open Philanthropy's own BOTEC suggests a case where non-DALY harms are about **4x** the DALY component. So the upper end here is not inventing a new order of magnitude; it is allowing the broader-welfare component to be as large as one already-published conflict BOTEC suggests.
-
-Why use **200%** rather than **400%** in the center? The **400%** figure comes from one broader BOTEC for an average civil war, and it likely reflects a mix of larger wars, very large income losses, and a stronger total-war framing than the category's representative serious conflict-year model. But the cited evidence still points clearly toward non-health harms being larger than the health component, not merely equal to it. A **200%** uplift says the broader-welfare component is about twice the health burden. That keeps the central estimate materially below the **4x** anchor while still treating lost income, governance deterioration, and institutional damage as the larger share of total welfare loss.
-
-## 4. Bottom line
-
-The cleanest summary is:
-
-- health component: about **1,000,000 QALYs**
-- broader-welfare uplift: about **200%**
-- total representative conflict-year burden: about **3,000,000 QALY-equivalents**
-
-with a plausible range of about **1,000,000-5,000,000**.
-
-This is not a precise number. But it is more faithful to an all-things-considered welfare estimate than stopping at health harms alone.
+**Why 200% rather than 400% in the center.** The **400%** figure comes from one broader BOTEC for an average civil war, and it likely reflects a mix of larger wars, very large income losses, and a stronger total-war framing than the category's representative serious conflict-year model. But the cited evidence still points clearly toward non-health harms being larger than the health component, not merely equal to it. A **200%** uplift keeps the central estimate materially below the **4x** anchor while still treating lost income, governance deterioration, and institutional damage as the larger share of total welfare loss.
+:::

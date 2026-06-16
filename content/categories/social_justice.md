@@ -24,9 +24,30 @@ This effect captures welfare gains from **domestic social-justice philanthropy i
 
 This is a messy, upstream category. The strongest opportunities here can be genuinely valuable because a successful rights expansion can improve the lives of many people at once for years. But a large share of real-world "social justice" philanthropy is several steps removed from outcomes, and some common activities, especially generic workplace DEI programming, have weak durable evidence. So the right model is **not** "the best measured civil-rights win," but a portfolio average across the kinds of social-justice work that strong charities in this category actually fund.
 
+We model the category as a **three-bucket portfolio**: direct rights-expanding policy and litigation (about \$7,800/QALY), broader movement infrastructure (about \$120,000/QALY), and corporate/workplace reform (about \$400,000/QALY). At a central dollar mix of roughly 35% / 50% / 15%, that blends to a point estimate of **\$20,000/QALY**. The estimate is driven mostly by the rights bucket and the share of dollars reaching it; the widest cruxes are how much of the category really funds front-line rights work versus diffuse movement maintenance, and how large the true welfare gain from a rights win is.
+
+## What kinds of charities are we modeling?
+
+These estimates are mainly for **strong social-justice charities in rich democracies** that defend or expand civil and reproductive rights, build durable movement capacity for historically marginalized groups, or push institutions toward more inclusive practices when there is a credible path to real behavior change. They are **not** estimates for generic culture-war donations, purely expressive activism, or average DEI consulting.
+
+:::details{title="What is and isn't included"}
+Included:
+
+- defend or expand civil rights and reproductive rights through litigation, ballot campaigns, or policy advocacy
+- build durable movement capacity for women, LGBTQ people, racial minorities, immigrants, or other historically marginalized groups
+- push institutions or large employers toward more inclusive practices when there is a credible path to real behavior change
+
+Not included:
+
+- generic culture-war donations
+- purely expressive activism with little plausible policy or institutional effect
+- average DEI consulting or generic one-off workplace trainings
+- direct service programs whose effects are better captured under another category such as [Health / Medicine](/category/health-medicine), [Human Rights and Justice](/category/human-rights), [Political](/category/political), or [Local Community](/category/local-community)
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$20,000 (\$8,000–\$200,000)
+- **Cost per QALY:** \$20,000 (\$9,000–\$90,000)
 - **Start time:** 2 years
 - **Duration:** 15 years
 
@@ -50,8 +71,9 @@ This is a messy, upstream category. The strongest opportunities here can be genu
 
 ### Cost per QALY
 
-The cleanest way to model this category is as a three-bucket portfolio:
+We model the category as a three-bucket portfolio, blending the rights bucket (\$7,800/QALY), the movement bucket (\$120,000/QALY), and the corporate bucket (\$400,000/QALY) at the central 35% / 50% / 15% dollar mix. That gives about **\$20,300/QALY**, which we round to a point estimate of **\$20,000/QALY**.
 
+:::details{title="Three-bucket blend, worked out"}
 $$
 \text{Cost per QALY} = \dfrac{1}{\frac{r}{R} + \frac{m}{M} + \frac{c}{C}}
 $$
@@ -87,15 +109,13 @@ $$
 $$
 \text{Cost per QALY} \approx \dfrac{1}{0.0000494} \approx 20{,}300
 $$
-
-Rounded to one significant digit, that gives a point estimate of **\$20,000/QALY**.
+:::
 
 ### Why the rights bucket is about \$7,800/QALY
 
-The strongest measurable part of this category is the direct policy and litigation bucket: civil-rights and reproductive-rights wins that clearly change the lived environment of a large group of people.
+The strongest measurable part of this category is the direct policy and litigation bucket: civil-rights and reproductive-rights wins that clearly change the lived environment of a large group of people. The central model takes a **\$15 million** push with a **30%** success chance helping **100,000** people by **0.01 QALY** each per year for **8 years**, with a **20%** haircut for backlash and imperfect additionality. That yields 1,920 expected QALYs, or about **\$7,800/QALY**.
 
-The simplest central model is:
-
+:::details{title="Rights-bucket calculation"}
 $$
 \text{Expected QALYs} = \text{success probability} \times \text{people helped} \times \text{QALY gain per person-year} \times \text{years} \times \text{net retention}
 $$
@@ -118,9 +138,11 @@ $$
 $$
 \text{Cost per QALY} = \dfrac{15{,}000{,}000}{1{,}920} \approx 7{,}800
 $$
+:::
 
-That gives about **\$7,800/QALY**.
+Every input is deliberately conservative, and the **0.01 QALY per person-year** is meant to bundle the full set of welfare channels a rights win plausibly changes, not just a mental-health effect.
 
+:::details{title="Why these inputs are conservative"}
 The central case is bounded in several ways:
 
 - **100,000 materially affected people** is small relative to the population touched by many state-level rights wins.
@@ -128,9 +150,8 @@ The central case is bounded in several ways:
 - **8 years** is shorter than the real legal lifespan of many successful rights wins and should be read as a campaign-attribution window rather than a claim that the win itself usually disappears after one or two election cycles.
 - the model already includes a **20% penalty** for backlash, reversal, and imperfect additionality.
 
-The key point is that the **0.01** figure is not meant to be read as "just the mental-health effect." It is meant to bundle the main welfare channels that a meaningful rights win plausibly changes for the people most directly affected: lower distress and suicide risk, better insurance and household investment, reduced financial distress, greater safety from violent partners, more control over family formation, and the dignitary value of having one's relationships or bodily autonomy legally respected.
-
-At the same time, it avoids the common mistake of assigning large benefits to everyone in a jurisdiction. Most residents of a state may experience only weak expressive effects from a policy win; the model is meant to capture the smaller group whose wellbeing actually moves a lot.
+The **0.01** figure bundles the main welfare channels that a meaningful rights win plausibly changes for the people most directly affected: lower distress and suicide risk, better insurance and household investment, reduced financial distress, greater safety from violent partners, more control over family formation, and the dignitary value of having one's relationships or bodily autonomy legally respected. At the same time, it avoids the common mistake of assigning large benefits to everyone in a jurisdiction. Most residents of a state may experience only weak expressive effects from a policy win; the model is meant to capture the smaller group whose wellbeing actually moves a lot.
+:::
 
 ### Why the movement bucket is \$120,000/QALY
 
@@ -158,7 +179,12 @@ So this bucket should not be treated as zero. But it also should not be allowed 
 
 ### Range
 
-The stated range is our plausible range, kept wide because these models are rough.
+The plausible range is **\$9,000-\$90,000/QALY**. Its width is driven mainly by two things: the cost-effectiveness of the **rights bucket** (which alone accounts for roughly 90% of the blend's QALYs per dollar, and is itself a product of the success rate, people helped, per-person welfare gain, duration, and backlash haircut), and the **share of dollars** that actually reaches front-line rights work rather than diffuse movement maintenance. The movement and corporate bucket costs move the blend only slightly, so they widen the range little on their own. The interval is asymmetric and skews high because the only way to reach a poor blended figure is for the dominant rights bucket to be expensive *and* the mix to be movement-heavy at the same time.
+
+The bounds are wider than a mechanical sweep of any single parameter but noticeably narrower than the full optimistic/pessimistic corner below, because that corner pushes every parameter to its favorable or unfavorable extreme at once — an outcome far less likely than 80% even for correlated, worldview-driven inputs. We then widen back out from the pure-independence figure to absorb that correlation (an optimist tends to believe the rights bucket is cheap, the mix rights-heavy, and the welfare gain large all together) plus structural uncertainty the listed parameters do not capture: the three-bucket framing itself, the QALY-equivalent bridge for a rights win (Assumption 4), and the 8-year attribution window.
+
+:::details{title="Every input at its best, then worst, edge"}
+This sweep pushes all three bucket costs and the dollar mix toward optimism (better, more rights-heavy) for the lower bound and toward pessimism (worse, more movement- and corporate-heavy) for the upper bound. Because it moves every parameter to an extreme simultaneously, it is wider than an 80% interval — closer to a 1st-/99th-percentile span — and the published range above sits inside it.
 
 **Optimistic case**
 
@@ -166,8 +192,6 @@ The stated range is our plausible range, kept wide because these models are roug
 - movement bucket: **\$40,000/QALY**
 - corporate bucket: **\$120,000/QALY**
 - mix: **45% / 40% / 15%**
-
-This gives:
 
 $$
 \dfrac{1}{0.45/4000 + 0.40/40000 + 0.15/120000} \approx 8{,}100
@@ -182,15 +206,12 @@ Rounded, that is about **\$8,000/QALY**.
 - corporate bucket: **\$1.5 million/QALY**
 - mix: **20% / 60% / 20%**
 
-This gives:
-
 $$
 \dfrac{1}{0.20/60000 + 0.60/300000 + 0.20/1500000} \approx 183{,}000
 $$
 
 Rounded, that gives an upper bound near **\$200,000/QALY**.
-
-So the plausible range is **\$8,000-\$200,000/QALY**.
+:::
 
 ### Start time
 
@@ -205,21 +226,6 @@ The **15-year** duration is a compromise across very different pathways:
 - some norm and movement gains persist much longer than the original campaign
 
 So 15 years is best read as an expected-value average across a mixed portfolio rather than as the literal lifespan of any one reform.
-
-## What kinds of charities are we modeling?
-
-These estimates are mainly for **strong social-justice charities in rich democracies** that do things like:
-
-- defend or expand civil rights and reproductive rights through litigation, ballot campaigns, or policy advocacy
-- build durable movement capacity for women, LGBTQ people, racial minorities, immigrants, or other historically marginalized groups
-- push institutions or large employers toward more inclusive practices when there is a credible path to real behavior change
-
-They are **not** estimates for:
-
-- generic culture-war donations
-- purely expressive activism with little plausible policy or institutional effect
-- average DEI consulting or generic one-off workplace trainings
-- direct service programs whose effects are better captured under another category such as [Health / Medicine](/category/health-medicine), [Human Rights and Justice](/category/human-rights), [Political](/category/political), or [Local Community](/category/local-community)
 
 ## Key uncertainties
 

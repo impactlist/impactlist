@@ -86,16 +86,14 @@ This puts the cause area **above generic rich-world medical research** — becau
 
 #### Range
 
-A parameter sweep spans **\$2,000-\$100,000/QALY**. We widen this to a plausible range of **\$1,000-\$250,000/QALY** to capture tails the sweep misses: the extra width reflects model uncertainty the four-parameter sweep cannot — at the low end, geroscience biomarkers never becoming decision-useful, first-generation interventions barely working, or donor money mostly substituting for funding that would have happened anyway; at the high end, one or two bottlenecks proving much easier than they currently look.
+Our plausible range is **\$1,000-\$250,000/QALY**. The sweep below pushes cost, reach, and quality to their edges but holds $\delta$ in a central **0.05–0.12%** band — narrower than its full **0.01–0.3%** plausible range — giving about \$1,700 at best and \$120,000 at worst. We publish *wider* than that, because the dominant uncertainty here is not how the four parameters jitter independently. It is whether the mechanism works at all: a skeptical worldview moves $\delta$, $N$, and $q$ down together, and the most important tail — donor money mostly substituting for capital that would have arrived anyway, geroscience biomarkers never becoming decision-useful, or first-generation interventions barely working — pushes $\delta$ below the sweep's band toward its **0.01%** floor and beyond, toward zero. That correlated, structural tail lives outside the sweep, so the honest 80% interval extends past it on the high-cost side; the low end likewise allows one or two bottlenecks proving much easier than they currently look.
 
-:::details{title="Optimistic and pessimistic sweep cases"}
+:::details{title="Illustrative sweep (the effect size held in a central band)"}
 **Optimistic** ($C$ = \$25M, $\delta$ = 0.12%, $N$ = 15M, $q$ = 0.8):
 
 $$
 \dfrac{25{,}000{,}000}{0.0012 \times 15{,}000{,}000 \times 0.8} \approx 1{,}700
 $$
-
-Rounded, about \$2,000/QALY.
 
 **Pessimistic** ($C$ = \$75M, $\delta$ = 0.05%, $N$ = 5M, $q$ = 0.25):
 

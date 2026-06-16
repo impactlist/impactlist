@@ -14,13 +14,35 @@ _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts fro
 
 We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
 
+The estimate divides a central cost of about \$45,000 per additional wanted birth (Assumptions 2-4) by the QALYs that birth produces, which we put at 75: 73 from the added person's own life (Assumption 5) plus modest allowances for parental wellbeing and broader spillovers (Assumptions 6-7). That gives \$600/QALY, driven overwhelmingly by the added life. The cruxes are whether population ethics counts an extra good life as a large welfare gain, whether research and advocacy organizations can really cause births at the cost the policy and fertility-care evidence implies, and how large the secondary effects are.
+
 ## Description of effect
 
-This effect captures welfare gains from charities that increase the number of wanted births in rich countries through noncoercive means, such as family-policy research and advocacy, fertility-care access, and related policy work. Most of the value comes from the added person's own lifetime wellbeing. Smaller but still real benefits likely also accrue to parents who achieve their desired family size, and there are probably some positive broader spillovers from additional people in aging rich societies. The estimate therefore treats the added person's own life as the main driver while also including a modest explicit allowance for secondary effects.
+This effect captures welfare gains from charities that increase the number of wanted births in rich countries through noncoercive means, such as family-policy research and advocacy, fertility-care access, and related policy work. Most of the value comes from the added person's own lifetime wellbeing. Smaller but still real benefits likely also accrue to parents who achieve their desired family size, and there are probably some positive broader spillovers from additional people in aging rich societies.
+
+## What kinds of charities are we modeling?
+
+This category is meant for charities that plausibly increase wanted births through autonomy-respecting means — family-policy research and advocacy, fertility-care access and IVF affordability work, population-wellbeing research, and targeted work on barriers like housing or work-family balance when there is a clear causal path to more wanted births. It is **not** for coercive pronatalism, work that reduces reproductive autonomy, generic demography with no path to changing births, or ordinary child-welfare charities better modeled elsewhere.
+
+:::details{title="Good fits vs. what is excluded"}
+**Good fits:**
+
+- research and advocacy on family policies that reduce barriers to desired childbearing
+- fertility-care access, insurance coverage, or IVF affordability work
+- population-wellbeing research centers that improve the evidence base for pronatal policy
+- targeted work on housing, work-family balance, or similar constraints when there is a clear causal path to more wanted births
+
+**Excluded:**
+
+- coercive pronatalism
+- efforts that reduce reproductive autonomy
+- generic demography or academic work with no plausible path to changing births
+- ordinary child welfare or family service charities whose main effects are better modeled in other categories
+:::
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$600 (\$240-\$2,000)
+- **Cost per QALY:** \$600 (\$300-\$1,800)
 - **Start time:** 2 years
 - **Duration:** 80 years
 
@@ -54,7 +76,7 @@ This should be interpreted as the cost of actually causing one more wanted birth
 
 ### 5. The added person's own life is worth about 73 QALYs on average
 
-In high-income countries, life expectancy is about **81 years**. If those years are valued at about 0.9 QALYs each on average, that gives roughly **73 QALYs** for the added person's own life. That is the core moral driver of this estimate.
+In high-income countries, life expectancy is about **81 years**. If those years are valued at about 0.9 QALYs each on average, that gives roughly **73 QALYs** for the added person's own life, with a plausible range of about **50-80** spanning lower quality-of-life weights or shorter realized lifespans up to near-full valuation of a long life. That is the core moral driver of this estimate.
 
 This assumption is philosophically loaded, but it is also the cleanest way to model the category. If creating an additional person with a good life is usually beneficial, then population charities can be quite cost-effective. If that premise is rejected, the category will look much worse. Impact List already uses QALY-equivalent reasoning across categories, so treating an additional good life as a large positive welfare gain is the most internally coherent approach. ([OECD 2024 life expectancy](https://www.oecd.org/en/publications/society-at-a-glance-2024_918d8db3-en/full-report/life-expectancy_37a61588.html))
 
@@ -72,30 +94,32 @@ In aging rich countries, an additional wanted child likely creates some net fisc
 
 ### Cost per QALY
 
-The model is:
+The model divides the cost of one more wanted birth by the QALYs it produces:
 
 $$
 \text{Cost per QALY} = \frac{\text{Cost per additional wanted birth}}{\text{QALYs from the added person's life} + \text{Parental wellbeing} + \text{Broader spillovers}}
 $$
 
-Using the central assumptions:
+The central inputs are \$45,000 per birth (Assumption 4) over $73 + 1.5 + 0.5 = 75$ QALYs (Assumptions 5-7), which gives a headline estimate of **\$600/QALY**, with **73 of the 75 QALYs** coming from the added person's own life.
 
+:::details{title="Worked central calculation"}
 $$
 \frac{\$45{,}000}{73 + 1.5 + 0.5} = \frac{\$45{,}000}{75 \text{ QALYs}} = \$600 \text{ per QALY}
 $$
+:::
 
-Rounded, that gives a headline estimate of **\$600/QALY**.
+This is a category-level number for strong opportunities, not a field average. A research or advocacy organization is less direct than handing out baby bonuses or paying for IVF cycles, so anchoring on only the very best direct-policy result would be too aggressive; but if those organizations successfully influence public policy or coverage, their leverage can exceed direct-service economics. The **\$45,000** anchor is a middle ground between those cases. Including modest positive allowances for parental wellbeing and broader spillovers, rather than setting them to zero, is more accurate even though they are much smaller than the main effect.
 
-This estimate should be read as a category-level number for strong opportunities, not as a field average. A research or advocacy organization is less direct than handing out baby bonuses or paying for IVF cycles, so it would be too aggressive to anchor on only the very best direct-policy result. At the same time, if those organizations successfully influence public policy or coverage, their leverage can exceed direct-service economics. Using **\$45,000 per additional wanted birth** is a middle-ground way to capture that.
+Our plausible range is **\$300-\$1,800/QALY**. Only two inputs really drive it: the cost per additional birth (\$20,000-\$100,000, Assumption 4) and the added person's own-life QALYs (50-80, Assumption 5), which together move the estimate by roughly a factor of 2 down and 2 up. The two secondary QALY terms (Assumptions 6-7) are too small a share of the 75-QALY denominator to shift the result much, so the genuine width comes from those two main inputs rather than from sweeping all four at once.
 
-The estimate is still driven overwhelmingly by the added person's own life: **73 of the central 75 QALYs** come from that channel. But it is more accurate to include a modest allowance for parental wellbeing and broader spillovers than to set those terms to zero. Those secondary effects are likely positive on net, especially parental wellbeing from achieving desired family size, even if they are much smaller than the main effect.
+We set the range wider than treating those two inputs as independent would imply, for two reasons. They are positively correlated: a worldview pessimistic about pronatal philanthropy tends to pair a high cost per birth with a lower QALY valuation of the added life, and an optimistic worldview pairs the favorable ends, which pulls the interval outward. And large structural uncertainties sit outside both parameters — above all whether research and advocacy organizations can cause births at policy-benchmark cost at all, and the population-ethics premise that creating a good life is a large welfare gain (a reader who rejects it would assign a far worse number than any value in the QALY sweep). We widen the upper (worse) bound more than the lower because both of those structural risks push in the same pessimistic direction.
 
-The range comes from:
+:::details{title="Every input at its best, then worst, edge"}
+Pushing all four inputs to their favorable extremes together, and then to their unfavorable extremes together, brackets a wider mechanical corner of about \$240-\$2,000/QALY. A corner is far wider than an 80% interval when the inputs vary independently, which is why the published range sits inside it.
 
 - **Optimistic:** \$20,000 per additional birth, 80 QALYs for the added person, 3 parental QALYs, and 1 broader-spillover QALY gives about **\$240/QALY**
 - **Pessimistic:** \$100,000 per additional birth, 50 QALYs for the added person, 0.5 parental QALYs, and 0 broader-spillover QALYs gives about **\$2,000/QALY**
-
-So our plausible range is **\$240-\$2,000/QALY**.
+:::
 
 ### Start time
 
@@ -104,22 +128,6 @@ The **2-year** start time reflects delay from research or advocacy to uptake, fr
 ### Duration
 
 The **80-year** duration is meant to capture the added person's lifetime stream of wellbeing, not an annualized policy effect. It is a rough proxy for the period over which the main welfare gains from an additional wanted life accrue.
-
-## What kinds of charities are we modeling?
-
-This category is meant for charities that plausibly increase wanted births through autonomy-respecting means, such as:
-
-- research and advocacy on family policies that reduce barriers to desired childbearing
-- fertility-care access, insurance coverage, or IVF affordability work
-- population-wellbeing research centers that improve the evidence base for pronatal policy
-- targeted work on housing, work-family balance, or similar constraints when there is a clear causal path to more wanted births
-
-It is **not** meant for:
-
-- coercive pronatalism
-- efforts that reduce reproductive autonomy
-- generic demography or academic work with no plausible path to changing births
-- ordinary child welfare or family service charities whose main effects are better modeled in other categories
 
 ## Key uncertainties
 

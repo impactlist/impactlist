@@ -22,7 +22,30 @@ This category is necessarily broader and messier than categories such as [Homele
 
 The estimate is meant to be **all-things-considered**. It counts hardship relief, stress reduction, caregiver respite, social-role functioning, social connection, and local safety in **QALY-equivalent** terms. The hard question is how much of that welfare strong local charities buy per dollar, not whether those effects sit outside the metric.
 
+## What kinds of charities are we modeling?
+
+This category is best read as a model of **strong local mixed-service charities in wealthy countries** — food banks and community action agencies, local harm-reduction and community-health organizations, caregiver and family-support groups, and mixed-service nonprofits that combine basic needs, referrals, and prevention — not the average unrestricted donation to any community institution.
+
+:::details{title="Good fits vs. poor fits"}
+Representative fits include:
+
+- food banks and community action agencies that materially reduce hardship
+- local harm-reduction, violence-response, or community-health organizations
+- caregiver and family-support organizations
+- mixed-service local nonprofits that combine basic needs, referrals, and prevention work
+
+This estimate is **not** a good model of:
+
+- generic local prestige philanthropy
+- low-additionality community foundations that mainly regrant to ordinary local causes
+- pure housing charities, which should usually be modeled under [Homelessness and Housing](/category/housing)
+- pure health charities, which should usually be modeled under [Health / Medicine](/category/health-medicine)
+- arts, religious, or political organizations, which belong in their own categories
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
+
+The category models a **three-bucket portfolio** of good local programs, with a central cost of about **\$29,000/QALY**. The number is driven mainly by the broader community-support bucket (the largest dollar share that is also the least cost-effective) and by the dollar split across buckets; the plausible range is wide because both the bucket centrals and the real recipient mix are uncertain.
 
 - **Cost per QALY:** \$29,000 (\$10,000–\$185,000)
 - **Start time:** 1 year
@@ -44,6 +67,9 @@ The estimate is meant to be **all-things-considered**. It counts hardship relief
 
 ### Cost per QALY
 
+Combining the three buckets by their dollar shares gives about **\$28,600/QALY**, which we round to a point estimate of **\$29,000/QALY**.
+
+:::details{title="The three-bucket portfolio formula and worked arithmetic"}
 The cleanest model for this category is a three-bucket portfolio:
 
 $$  
@@ -81,50 +107,31 @@ $$
 $$
 \text{Cost per QALY} \approx \dfrac{1}{0.0000350} \approx 28{,}600
 $$
+:::
 
-That gives a point estimate of about **\$29,000/QALY**.
+Each bucket central is set as a substantial haircut from the best published exemplars, because ordinary local philanthropy has weaker targeting, broader beneficiary pools, and more spending on coordination than the trials that produce those exemplars.
 
-#### Why the targeted health/safety bucket central is \$12,000/QALY
+:::details{title="Why each bucket central sits well above its best exemplars"}
+**Targeted health/safety — \$12,000/QALY.** The best concrete exemplars are much cheaper: smoking-cessation outreach at about **\$905/QALY** is especially strong, and IRIS may be cost-saving. But the bucket also needs to cover more ordinary local harm-reduction, violence-response, and fall-prevention work, where targeting is less sharp than in published trials, referral pathways and take-up are imperfect, local nonprofits may lack the implementation quality of large health-system pilots, and some programs are valuable mainly because they reach hard-to-serve populations, which tends to worsen measured cost-effectiveness. So **\$12,000/QALY** is a substantial haircut from the very best interventions, not the average of the published best cases. That haircut is why this bucket can still plausibly beat the broader [Health / Medicine](/category/health-medicine) average: it is a selected sub-bucket of especially tractable local interventions rather than a model of generic health philanthropy.
 
-The best concrete exemplars are much cheaper than this. Smoking-cessation outreach at about **\$905/QALY** is especially strong, and IRIS may be cost-saving. But it would be a mistake to benchmark this whole bucket to those unusually strong cases.
+**Basic-needs and nutrition — \$30,000/QALY.** The best food-as-medicine evidence is extremely encouraging, and Hanmer et al. shows food insecurity is associated with large preference-based quality-of-life losses (adjusted utility differences of about **0.11-0.21**, with the biggest domain hit in ability to participate in social roles), so basic-needs support should not be read as producing only biomarker or hospitalization effects. But many local-community recipients are food banks, pantries, emergency-assistance programs, or community action organizations rather than clinically targeted nutrition programs for high-risk patients — broader beneficiary mixes, lighter-touch delivery, and weaker medical integration — so the right category-level number is still materially worse than the best produce-prescription estimates, and **\$30,000/QALY** is a reasonable compromise. ([Hanmer et al. 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8175545/))
 
-The bucket also needs to cover more ordinary local harm-reduction, violence-response, and fall-prevention work, where:
+**Broader community support — \$80,000/QALY.** This is the main reason the category is not close to [Health / Medicine](/category/health-medicine). The better published exemplars mostly land well below **\$80,000/QALY**, and the loneliness / social-isolation utility evidence is a reminder that belonging, connection, and stress reduction belong inside the welfare total. But the actual recipient universe also includes community centers, civic institutions, caregiver organizations, municipalities, and other mixed-purpose local institutions with weaker targeting, smaller effects per participant, and more spending on coordination and convening than the better trials, so a number above the focused exemplars is warranted and **\$80,000/QALY** is a better central compromise than a harsher haircut that would treat these broader welfare gains as second-class. ([König and Hajek 2024](https://pubmed.ncbi.nlm.nih.gov/39707414/))
+:::
 
-- targeting is often less sharp than in published trials
-- referral pathways and take-up are imperfect
-- local nonprofits may lack the implementation quality of large health-system pilots
-- some programs are valuable mainly because they reach hard-to-serve populations, which tends to worsen measured cost-effectiveness
+The portfolio mix matters a lot: holding the bucket centrals fixed, shifting weight toward the cheaper health/safety and basic-needs buckets pulls the category to about **\$23,800/QALY**, while a community-support-heavy mix pushes it to about **\$38,700/QALY**. This is appropriate — a city-focused charity that mostly does food security and targeted support can be much better than a community foundation or civic umbrella that funds many diffuse projects.
 
-So **\$12,000/QALY** is best read as a substantial haircut from the very best interventions, not as the average of the published best cases.
-
-That is also why this bucket can plausibly beat the broader [Health / Medicine](/category/health-medicine) category average: it is a selected sub-bucket of especially tractable local interventions rather than a model of generic health philanthropy.
-
-#### Why the basic-needs bucket is \$30,000/QALY
-
-The best food-as-medicine evidence is extremely encouraging. Hanmer et al. also shows that food insecurity is associated with large preference-based quality-of-life losses, including adjusted utility differences of about **0.11-0.21** and the biggest domain hit in **ability to participate in social roles**. So basic-needs support should not be read as producing only biomarker or hospitalization effects.
-
-But many local-community recipients are food banks, pantries, emergency-assistance programs, or community action organizations rather than clinically targeted nutrition programs for especially high-risk patients. That means broader beneficiary mixes, lighter-touch service delivery, and weaker medical integration. So the right category-level number is still materially worse than the best produce-prescription estimates, and **\$30,000/QALY** is a reasonable compromise. ([Hanmer et al. 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8175545/))
-
-#### Why the broader community-support bucket is \$80,000/QALY
-
-This is still the main reason the category is not close to [Health / Medicine](/category/health-medicine). The better published exemplars mostly land well below **\$80,000/QALY**, and the loneliness / social-isolation utility paper is a useful reminder that belonging, connection, and stress reduction belong inside the welfare total rather than outside it.
-
-At the same time, the actual recipient universe here also includes community centers, civic institutions, caregiver organizations, municipalities, and other mixed-purpose local institutions. Those are likely to have weaker targeting, smaller effects per participant, and more spending on coordination and convening than the better trials. So a category-level number above the focused exemplars is still warranted, but **\$80,000/QALY** is a better central compromise than a harsher haircut that effectively treats these broader welfare gains as second-class. ([König and Hajek 2024](https://pubmed.ncbi.nlm.nih.gov/39707414/))
-
-#### Sensitivity to the portfolio mix
-
+:::details{title="Sensitivity to the portfolio mix"}
 Holding the bucket-level estimates fixed at **\$12,000/QALY**, **\$30,000/QALY**, and **\$80,000/QALY**:
 
 - **30% / 40% / 30%** across health/safety, basic-needs, and broader community support gives about **\$23,800/QALY**
 - **20% / 40% / 40%** gives about **\$28,600/QALY**
 - **10% / 30% / 60%** gives about **\$38,700/QALY**
+:::
 
-So the portfolio mix matters a lot. This is appropriate: a city-focused charity that mostly does food security and targeted support can be much better than a community foundation or civic umbrella that funds many diffuse projects.
+The plausible range of about **\$10,000-\$185,000/QALY** is kept deliberately wide, and we publish it about the case where every input is pushed to its favorable or unfavorable edge at once. For roughly independent inputs that all-edges move would overstate an 80% interval, but here it is about right because the inputs are correlated and the biggest uncertainties sit outside them: a single "how much worse is ordinary local philanthropy than the best trials" worldview moves all three bucket centrals together, and the dominant uncertainties — how broad the real recipient mix is, and how much local charities add on top of what government and insurers would have funded anyway — are not captured by the four parameters at all, so the true tails plausibly run past these bounds rather than inside them.
 
-#### Range
-
-The stated range is kept deliberately wide because these models are rough.
-
+:::details{title="Optimistic and pessimistic bound calculations"}
 **Optimistic case**
 
 - health/safety bucket: **\$5,000/QALY**
@@ -152,6 +159,7 @@ $$
 $$
 
 Rounded, that gives a plausible range of about **\$10,000-\$185,000/QALY**.
+:::
 
 ### Start time
 
@@ -166,25 +174,6 @@ The **10-year** duration reflects the fact that this is a mixed-service category
 - some can last much longer, such as smoking cessation or avoided serious injury from violence or falls
 
 So although a minority of the portfolio has very long downstream tails, much of it does not. A 10-year window is therefore a better central approximation for a mixed local-community portfolio than a duration anchored mainly on the longest-lived interventions.
-
-## What kinds of charities are we modeling?
-
-This category is best read as a model of **strong local mixed-service charities in wealthy countries**, not the average unrestricted donation to any community institution.
-
-Representative fits include:
-
-- food banks and community action agencies that materially reduce hardship
-- local harm-reduction, violence-response, or community-health organizations
-- caregiver and family-support organizations
-- mixed-service local nonprofits that combine basic needs, referrals, and prevention work
-
-This estimate is **not** a good model of:
-
-- generic local prestige philanthropy
-- low-additionality community foundations that mainly regrant to ordinary local causes
-- pure housing charities, which should usually be modeled under [Homelessness and Housing](/category/housing)
-- pure health charities, which should usually be modeled under [Health / Medicine](/category/health-medicine)
-- arts, religious, or political organizations, which belong in their own categories
 
 ## Key uncertainties
 

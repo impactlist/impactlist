@@ -27,9 +27,30 @@ The main benefit is not that housing restores recipients to perfect health. It i
 
 This does not cover broad housing-supply reform, zoning reform, or generic affordable-housing construction.
 
+## What kinds of charities are we modeling?
+
+This estimate is best read as a model of **strong direct-service homelessness / housing philanthropy** in high-income settings: eviction prevention, rapid rehousing, well-targeted permanent supportive housing, hospital-discharge / step-down teams, and housing aimed at high-risk medical subgroups. Generic affordable-housing development, unrestricted nonprofit fundraising, zoning reform, and temporary-relief shelters are poor fits.
+
+:::details{title="Good fits vs. poor fits"}
+Good fits include:
+
+- eviction prevention and emergency financial assistance
+- rapid rehousing programs
+- permanent supportive housing with strong service targeting
+- hospital-discharge teams or step-down housing for homeless patients
+- housing interventions aimed at especially high-risk medical subgroups
+
+Poor fits include:
+
+- generic affordable-housing development projects with weak evidence on health gains
+- unrestricted fundraising for large housing nonprofits without a strong evidence base
+- broad land-use or zoning reform, which should usually be modeled as an institutional-reform bet instead
+- shelters or service providers that mainly offer temporary relief without much durable housing placement
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$30,000 (\$15,000-\$80,000)
+- **Cost per QALY:** \$30,000 (\$15,000-\$110,000)
 - **Start time:** 0 years
 - **Duration:** 2 years
 
@@ -52,15 +73,16 @@ This does not cover broad housing-supply reform, zoning reform, or generic affor
 
 ### Cost per QALY
 
-The cleanest estimate here uses **two anchors**:
+The estimate rests on **two anchors** that converge on **mid-tens-of-thousands per QALY**:
 
-1. direct cost-utility studies of specific housing interventions
-2. an independent conversion from "cost per additional day housed" into QALYs using a realistic housed-vs-unhoused utility gap
+1. direct cost-utility studies of specific housing interventions, which mostly land in the **\$19,000-\$62,500/QALY** range (Assumptions 1, 2, 6, 7)
+2. an independent conversion from "cost per additional day housed" into QALYs, which puts the Housing First trials at roughly **\$27,000-\$48,000/QALY** once we stop equating "housed" with perfect health
 
-That second anchor matters because some published housing CEAs become materially more favorable when they implicitly assume that a stably housed person has utility **1.0**.
+The second anchor matters because some published housing CEAs become materially more favorable when they implicitly assume a stably housed person has utility **1.0**, and the day-housed conversion exposes that bias.
 
-**Anchor 1 - direct cost-utility evidence**
+We model the category as a portfolio rather than the single strongest rapid-rehousing paper: a **60% / 40%** split between a short-term / strongly targeted bucket around **\$25,000/QALY** and a broader supportive-housing bucket around **\$45,000/QALY**, which works out to a point estimate of **\$30,000/QALY** ($\approx$ \$30,400 before rounding).
 
+:::details{title="Anchor 1 — direct cost-utility evidence"}
 The best direct CUA evidence is not all over the place. Most of it lands in the **tens of thousands of dollars per QALY**:
 
 - SSVF temporary financial assistance / rapid rehousing / prevention: about **\$19,000-\$30,000/QALY** (Assumption 1)
@@ -69,9 +91,9 @@ The best direct CUA evidence is not all over the place. Most of it lands in the 
 - HIV-specific housing support: about **\$62,500/QALY** (Assumption 7)
 
 So the direct literature suggests that strong housing interventions are usually well below common high-income-country payer thresholds like \$100,000/QALY, but still mostly in the mid- or high-tens-of-thousands-per-QALY range.
+:::
 
-**Anchor 2 - convert observed housing gains into QALYs**
-
+:::details{title="Anchor 2 — convert observed housing gains into QALYs"}
 The Housing First ACT and ICM trials give results in **cost per extra day of stable housing** rather than cost per QALY. That is useful because we can combine those data with a homelessness utility estimate.
 
 Using:
@@ -99,19 +121,17 @@ Applying that to the Canadian trials, using approximate USD conversions:
 This is an important cross-check. It suggests that once we stop equating "housed" with "perfect health," the broader Housing First / supportive-housing literature is better described as **mid-tens-of-thousands per QALY**.
 
 The same logic also suggests some upward bias in the SSVF ICERs, because that study likewise assigns utility **1.0** to stable housing. Re-expressing its extra stable-housing days with a more realistic utility gap moves the implied cost per QALY upward, even though the intervention still looks strong.
+:::
 
-**Combined portfolio estimate**
+:::details{title="Combined portfolio estimate"}
+The two buckets are anchored as follows:
 
-The category should not be modeled on the single strongest rapid-rehousing paper. A better category-level model is a mix of:
+- the **short-term / strongly targeted bucket** around **\$25,000/QALY** is anchored by SSVF, OUD-targeted housing, and the better hospital-discharge models
+- the **broader supportive-housing bucket** around **\$45,000/QALY** is anchored by the Housing First day-housed conversions, the HIV housing estimate, and the fact that recent mortality evidence does **not** support assuming large mortality gains for every supportive-housing program
 
-- a **short-term / strongly targeted bucket** around **\$25,000/QALY**
-- a **broader supportive-housing bucket** around **\$45,000/QALY**
+The **60% / 40%** tilt toward the first bucket is a judgment call, but a reasonable one (Assumption 10). The strongest marginal opportunities are more likely to be prevention, temporary assistance, rapid rehousing, or targeted discharge support than large numbers of new permanent supportive-housing slots, because the former are usually cheaper, faster to deploy, and less bottlenecked by local housing supply.
 
-The first bucket is anchored by SSVF, OUD-targeted housing, and the better hospital-discharge models. The second bucket is anchored by the Housing First day-housed conversions, the HIV housing estimate, and the fact that recent mortality evidence does **not** support assuming large mortality gains for every supportive-housing program.
-
-The **60% / 40%** tilt toward the first bucket is a judgment call, but a reasonable one. The strongest marginal opportunities are more likely to be prevention, temporary assistance, rapid rehousing, or targeted discharge support than large numbers of new permanent supportive-housing slots, because the former are usually cheaper, faster to deploy, and less bottlenecked by local housing supply.
-
-If we use that **60% / 40%** split, then:
+Applying the split:
 
 $$
 \text{QALYs per dollar} = \frac{0.6}{25{,}000} + \frac{0.4}{45{,}000} \approx 0.0000329
@@ -122,14 +142,15 @@ $$
 $$
 
 Rounded, that gives a point estimate of **\$30,000/QALY**.
+:::
 
 **Range**
 
-The stated **\$15,000-\$80,000/QALY** range is our plausible range, kept wide because these models are rough.
+The stated **\$15,000-\$110,000/QALY** range is our plausible range, kept wide and skewed upward because the biggest uncertainties are not in the cost-utility numbers themselves but in whether the modeled benefit is fully real at the margin.
 
-The low end corresponds to unusually strong targeting: rapid-rehousing / prevention programs, especially good hospital-discharge models, or other interventions that mostly buy cheap housing stability for very high-risk clients.
+The low end corresponds to unusually strong targeting: rapid-rehousing / prevention programs, especially good hospital-discharge models, or other interventions that mostly buy cheap housing stability for very high-risk clients. It sits a little below the cheapest direct cost-utility anchors (around \$19,000/QALY for SSVF rapid rehousing) because a portfolio dominated by the best marginal opportunities, combined with a favorable housed-vs-unhoused utility gap, could do somewhat better than any single published program.
 
-The high end corresponds to a mix tilted toward more intensive supportive-housing programs, weaker health spillovers, lower persistence after services end, or more capital-heavy / medically complex service models.
+The high end is well above the most expensive direct anchor on this page (about \$62,500/QALY for HIV-specific housing) because the dominant downside risk lives outside the cost-utility parameters: if marginal dollars mostly reshuffle access to scarce units rather than adding net housing stability (Key uncertainty 5), if gains decay quickly after short interventions, or if the real marginal mix is tilted toward capital-heavy permanent-supportive-housing slots with weak health spillovers, the realized cost per QALY can rise well past what any program-level study reports.
 
 ### Start time
 
@@ -146,25 +167,6 @@ We use a **2-year** duration because that is where the direct evidence base is s
 - some discharge-service evaluations focus on about **1 year**
 
 Some specific interventions may have longer tails than 2 years, and the OUD model uses a lifetime horizon. But category-level estimates should be anchored to directly observed persistence, not to the most optimistic extrapolation. The Community Guide also notes that long-run health effects remain under-studied, which supports a 2-year default duration.
-
-## What kinds of charities are we modeling?
-
-This estimate is best read as a model of **strong direct-service homelessness / housing philanthropy** in high-income settings.
-
-Good fits include:
-
-- eviction prevention and emergency financial assistance
-- rapid rehousing programs
-- permanent supportive housing with strong service targeting
-- hospital-discharge teams or step-down housing for homeless patients
-- housing interventions aimed at especially high-risk medical subgroups
-
-Poor fits include:
-
-- generic affordable-housing development projects with weak evidence on health gains
-- unrestricted fundraising for large housing nonprofits without a strong evidence base
-- broad land-use or zoning reform, which should usually be modeled as an institutional-reform bet instead
-- shelters or service providers that mainly offer temporary relief without much durable housing placement
 
 ## Key uncertainties
 

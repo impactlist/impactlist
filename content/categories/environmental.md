@@ -18,9 +18,23 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from donations to the best current **non-climate environmental** charities, especially those that reduce toxic exposure or air pollution: lead-source elimination, toxic-site remediation, and clean-air policy/data/advocacy. The current quantitative anchors are pollution-focused. The estimate does not separately model biodiversity, ecosystem existence value, or scenic/amenity value, but that is a scope and evidence decision, not because those benefits are outside QALY-equivalent welfare.
 
+## What kinds of charities are we modeling?
+
+We model **non-climate environmental work whose main benefit is lower human exposure to pollution** — primarily lead-source reduction, toxic-site cleanup, and clean-air advocacy.
+
+:::details{title="What is and is not modeled"}
+Representative activities include:
+
+- Lead paint, spices, cookware, battery recycling, and other source-reduction efforts aimed at lowering human lead exposure
+- Toxic-site cleanup and industrial contamination remediation where human welfare is the main benefit
+- Clean-air data, advocacy, litigation, and policy work where the main pathway is lower human exposure to pollution
+
+We are **not** modeling climate mitigation, or biodiversity/scenic/amenity value, unless a recipient-level model can translate those outcomes into QALY-equivalent welfare.
+:::
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$50 (\$15–\$30,000)
+- **Cost per QALY:** \$50 (\$15–\$60,000)
 - **Start time:** 2 years
 - **Duration:** 40 years
 
@@ -41,9 +55,10 @@ This effect captures welfare gains from donations to the best current **non-clim
 
 ### Cost per QALY
 
-The cleanest quantitative anchor in this cause area is **lead elimination**. LEEP's headline **\$4.49 per DALY-equivalent** combines direct health gains with monetized lifetime-income gains converted into common welfare units. Those income gains should not be treated as outside the QALY framework. They are real welfare gains that can be expressed in QALY-equivalent terms.
+The cleanest quantitative anchor in this cause area is **lead elimination**. In LEEP's own model the best current lead-paint-elimination opportunities cost roughly **\$4-5 per QALY-equivalent** (its headline **\$4.49 per DALY-equivalent**, Assumption 3). We then apply a large **10x penalty** when moving from that program-specific estimate to a broader cause-area estimate, giving a point estimate of **\$50/QALY**.
 
-As a modeling convention, this page treats **DALYs averted** and **QALYs gained** as roughly interchangeable. That is not because the metrics are identical in theory, but because both are healthy-life-year measures and the uncertainty in the intervention evidence is much larger than the difference between the two metrics for our purposes.
+:::details{title="From LEEP's headline figure to the point estimate"}
+LEEP's headline **\$4.49 per DALY-equivalent** combines direct health gains with monetized lifetime-income gains converted into common welfare units. Those income gains should not be treated as outside the QALY framework; they are real welfare gains expressible in QALY-equivalent terms. As a modeling convention this page treats **DALYs averted** and **QALYs gained** as roughly interchangeable (Assumption 1), because both are healthy-life-year measures and the uncertainty in the intervention evidence dwarfs the difference between the two metrics for our purposes.
 
 Using LEEP's reported total modeled cost and all modeled DALY-equivalents:
 
@@ -51,27 +66,28 @@ $$
 \text{All-things-considered cost per DALY-equivalent} = \dfrac{\$4{,}000{,}000}{900{,}000} \approx \$4.4
 $$
 
-So the best current lead-paint-elimination opportunities appear to be roughly **\$4-5 per QALY-equivalent** in LEEP's own model.
-
-That is extremely strong, but it would be too optimistic to use directly for the whole cause area. LEEP itself emphasizes that the model is **mostly predictive**, narrow to its 13 paint programs, and does not account for the counterfactual impact of alternative uses of funding (Assumption 4). More broadly, this category is wider than lead paint alone: some environmental opportunities are weaker than lead-source elimination, and LEEP's lifetime-income conversion adds an extra layer of modeling uncertainty.
-
-We therefore apply a large **10x penalty** when moving from LEEP's program-specific all-things-considered estimate to a broader cause-area estimate:
+Applying the 10x penalty:
 
 $$
 \$4.49 \times 10 \approx \$45
 $$
 
 Rounded, this gives a point estimate of **\$50/QALY**.
+:::
 
-This 10x penalty is a judgment call, not a number stated directly in the sources. The case for using a penalty this large is that it simultaneously accounts for:
+The penalty is large because LEEP's model is **mostly predictive**, narrow to its 13 paint programs, and ignores the counterfactual impact of alternative funding (Assumption 4), while the category as a whole is wider than lead paint and the lifetime-income conversion adds extra modeling uncertainty. This 10x is a judgment call, not a number from the sources.
+
+:::details{title="What the 10x penalty is accounting for"}
+The case for a penalty this large is that it simultaneously accounts for:
 
 - the predictive rather than retrospective nature of LEEP's model
 - model-structure risk and counterfactual-funding concerns
 - the extra uncertainty in translating lifetime-income gains into DALY-equivalent welfare
 - the fact that the category includes opportunities weaker than lead paint elimination
 - the mismatch between "best current environmental-health opportunities" and the many broad environmental nonprofits that are not tightly health-focused
+:::
 
-An independent cross-check comes from toxic-site remediation. The geometric midpoint of the **\$392-\$3,238 per DALY** remediation range is about **\$1,130 per DALY**. That is about **23x worse** than our **\$50/QALY** point estimate and about **250x worse** than raw LEEP all-things-considered cost-effectiveness. This pattern is directionally sensible: downstream cleanup of severe hotspots should be much less cost-effective than preventing exposure at the source, and the raw LEEP model should not be treated as a generic environmental-charity benchmark.
+An independent cross-check comes from toxic-site remediation: the geometric midpoint of the **\$392-\$3,238 per DALY** remediation range (Assumption 5) is about **\$1,130 per DALY** — about **23x worse** than our **\$50/QALY** point estimate and about **250x worse** than raw LEEP cost-effectiveness. This is directionally sensible: downstream cleanup of severe hotspots should be much less cost-effective than preventing exposure at the source, and the raw LEEP model should not be treated as a generic environmental-charity benchmark.
 
 Why does lead still dominate the estimate even after this penalty? Because lead is both a huge and unusually tractable environmental-health problem. WHO reports more than **33 million DALYs** from lead exposure in 2021.
 
@@ -81,12 +97,10 @@ The weaker end of the cause area consists of environmental projects where attrib
 
 **Range:**
 
-- **Optimistic:** about **\$15/QALY**, corresponding to a very strong lead-source-elimination opportunity where most of the central-case skepticism penalties do not apply, but some model error and external-validity discount still remain.
-- **Pessimistic:** about **\$30,000/QALY**, corresponding to environmental projects where attributable welfare benefits are diffuse, secondary, or poorly measured.
+- **Optimistic:** about **\$15/QALY**, corresponding to a very strong lead-source-elimination opportunity where most of the central-case skepticism penalties do not apply, but some model error and external-validity discount still remain. The lower bound stays close to LEEP's raw \$4-5/QALY because that anchor caps how cost-effective the category plausibly gets.
+- **Pessimistic:** about **\$60,000/QALY**. The single greenspace cost-effectiveness study we found sits near \$23,000/DALY (Assumption 8), but the upper tail is set wider than that, because the dominant uncertainty here is not a single parameter — it is whether LEEP's predictive, externally-unvalidated model overstates the cause area, whether its lifetime-income component (about 84% of modeled impact) converts to welfare as assumed, and how much of a marginal dollar to "general environmental" charities actually funds diffuse conservation or greenspace work with very thin dollar-to-QALY evidence rather than tractable lead reduction.
 
-So our plausible range is **\$15-\$30,000/QALY**.
-
-This interval covers the pollution-focused channels the category model is anchored on. Biodiversity, ecosystem existence value, and nonhuman-animal welfare could in principle be converted into QALY-equivalent welfare too. We do not add a separate term for them here because the current category model is anchored on pollution-focused recipients and the public dollar-to-outcome evidence for those broader environmental channels is much thinner. If the recipient mix shifts toward conservation or ecosystem protection, this page should either split the category or add a dedicated welfare-conversion model.
+So our plausible range is **\$15-\$60,000/QALY** — narrow on the optimistic side because the raw lead anchor bounds it, and wide on the pessimistic side because of correlated model and channel-mix uncertainty that lives outside the single-anchor calculation. This interval covers the pollution-focused channels the model is anchored on; it adds no separate term for biodiversity, ecosystem existence value, or nonhuman-animal welfare, which could in principle be converted into QALY-equivalent welfare but have much thinner public dollar-to-outcome evidence (Key uncertainties 4-5).
 
 ### Start time
 
@@ -95,13 +109,6 @@ The 2-year start time reflects the lag between funding and realized benefits. Le
 ### Duration
 
 The 40-year duration reflects the long-lived nature of successful pollution-control wins. Lead paint bans, cleaner manufacturing standards, contaminated-site remediation, and cleaner-air governance can reduce exposures for many future birth cohorts, not just the people reached in the first year or two after implementation. As rough anchors for persistence, the U.S. banned consumer lead-based paint in **1978** and completed the phaseout of leaded gasoline in **1996**, and those changes have remained in force for decades. ([EPA on lead paint](https://www.epa.gov/lead/protect-your-family-sources-lead), [EPA on leaded gasoline](https://www.epa.gov/archive/epa/aboutepa/epa-takes-final-step-phaseout-leaded-gasoline.html))
-
-## What kinds of charities are we modeling?
-
-- Lead paint, spices, cookware, battery recycling, and other source-reduction efforts aimed at lowering human lead exposure
-- Toxic-site cleanup and industrial contamination remediation where human welfare is the main benefit
-- Clean-air data, advocacy, litigation, and policy work where the main pathway is lower human exposure to pollution
-- Not climate mitigation, and not biodiversity/scenic/amenity value unless a recipient-level model can translate those outcomes into QALY-equivalent welfare
 
 ## Key uncertainties
 

@@ -20,53 +20,39 @@ Let:
 A reasonable summary is:
 
 - **Best guess:** $X \approx 0.1$ percentage points
-- **{{PLAUSIBLE_RANGE_CAP}}:** about **0.03-0.3** percentage points
+- **{{PLAUSIBLE_RANGE_CAP}}:** about **0.01-0.3** percentage points
 
 That is: a strong \$50 million longevity-philanthropy portfolio plausibly raises the chance of a meaningful first-generation gerotherapeutic by about **one tenth of a percentage point**, with a wide range around that value.
 
-This is a judgment-heavy estimate. There is no clean empirical dataset that directly measures this parameter.
+The estimate is driven by treating philanthropy as nudging one modest intervention across a few funding-constrained bottlenecks rather than as "buying the cure for aging." The range is wide and skewed toward the low end because the two cruxes pull in opposite directions: real funding-constrained bottlenecks (TAME-style trials, biomarkers) argue for a nonzero effect, while a scientifically hard field with serious new funders — and the live possibility that donor money largely substitutes for capital that would have arrived anyway — argues the true effect could be far smaller than the central guess, or near zero. There is no clean empirical dataset that directly measures this parameter, so this is a judgment-heavy estimate.
 
 ---
 
 ## 1. Why the effect is probably positive
 
-Several features of the field make it plausible that philanthropy can move the needle at the margin.
+Three features of the field make a nonzero marginal effect hard to dismiss: translational bottlenecks (endpoints, biomarkers) really are funding-constrained, some high-value work (the TAME trial) has weak commercial incentives and so leans on philanthropy, and modest pools like Impetus Grants visibly activate new aging research. Taken together these make it hard to believe the true effect is literally zero.
 
-### 1.1 Important translational bottlenecks are real
+:::details{title="The three reasons the effect is probably positive"}
+**Translational bottlenecks are real.** Geroscience still lacks broadly accepted surrogate endpoints for "slowing aging," which makes trials long, slow, and expensive. Biomarker and endpoint work therefore has unusually high leverage relative to many more mature disease areas. ([Cummings et al. 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9632660/), [Biomarkers of Aging Consortium](https://www.agingconsortium.org/))
 
-Geroscience still lacks broadly accepted surrogate endpoints for "slowing aging," which makes trials long, slow, and expensive. Biomarker and endpoint work therefore has unusually high leverage relative to many more mature disease areas. ([Cummings et al. 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9632660/), [Biomarkers of Aging Consortium](https://www.agingconsortium.org/))
+**Some high-value work has weak commercial incentives.** The clearest public example is [AFAR's TAME trial](https://www.afar.org/tame-trial): a 3,000-participant, 6-year trial built around a cheap generic drug. Precisely because the intervention is inexpensive and hard to appropriate privately, philanthropy has been unusually important to getting the project toward reality — strong evidence that at least some important geroscience projects are bottlenecked by mission-driven capital rather than by scientific merit alone.
 
-### 1.2 Some high-value work has weak commercial incentives
-
-The clearest public example is [AFAR's TAME trial](https://www.afar.org/tame-trial): a 3,000-participant, 6-year trial built around a cheap generic drug. Precisely because the intervention is inexpensive and hard to appropriate privately, philanthropy has been unusually important to getting the project toward reality.
-
-This is strong evidence that at least some important geroscience projects are bottlenecked by mission-driven capital rather than by scientific merit alone.
-
-### 1.3 Small-to-medium philanthropy can fund many concrete projects
-
-[Impetus Grants](https://impetusgrants.org/news-and-updates/round-3-projects-funded) reported funding 34 projects for about \$10 million in Round 3 alone, with many funded labs either new to aging research or not previously focused on it. That is not direct proof of large downstream clinical effect, but it is evidence that relatively modest philanthropic pools can activate a meaningful amount of new work.
-
-Taken together, these facts make it hard to believe the true effect is literally zero.
+**Small-to-medium philanthropy can fund many concrete projects.** [Impetus Grants](https://impetusgrants.org/news-and-updates/round-3-projects-funded) reported funding 34 projects for about \$10 million in Round 3 alone, with many funded labs either new to aging research or not previously focused on it. That is not direct proof of large downstream clinical effect, but it is evidence that relatively modest philanthropic pools can activate a meaningful amount of new work.
+:::
 
 ---
 
 ## 2. Why the effect is probably not huge
 
-The stronger mistake in this space is usually not underrating the upside; it is overstating tractability.
+The stronger mistake in this space is usually overstating tractability, and three considerations cap the upside: human evidence is still thin, the science is hard even with generous funding, and the field is no longer nearly empty now that funders like Hevolution operate at the billion-dollar scale. Together these make full-percentage-point effects from a \$50 million portfolio look too aggressive.
 
-### 2.1 Human evidence is still thin
+:::details{title="The three reasons the effect is probably not huge"}
+**Human evidence is still thin.** There are encouraging signals from mTOR inhibition and some early senolytic work, but no intervention has yet clearly demonstrated that it meaningfully slows human aging in the strong sense that would settle the field. Flagship programs have also had failures, including the RTB101 phase 3 trial. ([Mannick et al. 2018](https://pubmed.ncbi.nlm.nih.gov/29997249/), [Justice et al. 2019](https://pubmed.ncbi.nlm.nih.gov/30616998/), [Mannick et al. 2021](https://pubmed.ncbi.nlm.nih.gov/33977284/))
 
-There are encouraging signals from mTOR inhibition and some early senolytic work, but no intervention has yet clearly demonstrated that it meaningfully slows human aging in the strong sense that would settle the field. Flagship programs have also had failures, including the RTB101 phase 3 trial. ([Mannick et al. 2018](https://pubmed.ncbi.nlm.nih.gov/29997249/), [Justice et al. 2019](https://pubmed.ncbi.nlm.nih.gov/30616998/), [Mannick et al. 2021](https://pubmed.ncbi.nlm.nih.gov/33977284/))
+**The field is scientifically hard even if better funded.** The challenge is not just "find more money." It is also "solve endpoints, trial design, biological heterogeneity, safety, and regulatory acceptance." Even generous funding does not guarantee fast progress when the scientific object itself is difficult.
 
-### 2.2 The field is scientifically hard even if better funded
-
-The challenge is not just "find more money." It is also "solve endpoints, trial design, biological heterogeneity, safety, and regulatory acceptance." Even generous funding does not guarantee fast progress when the scientific object itself is difficult.
-
-### 2.3 Longevity is no longer a nearly empty field
-
-Hevolution says it plans to deploy up to \$1 billion annually for healthspan science. That does not mean marginal philanthropy is unimportant, but it does mean that new donations should generally be modeled as helping with specific bottlenecks rather than determining whether the field exists at all. ([Hevolution](https://www.hevolution.com/en/web/guest/w/igniting-a-new-era-in-global-health-hevolution-foundation-announces))
-
-These considerations make full-percentage-point effects from a \$50 million portfolio look too aggressive.
+**Longevity is no longer a nearly empty field.** Hevolution says it plans to deploy up to \$1 billion annually for healthspan science. That does not mean marginal philanthropy is unimportant, but it does mean that new donations should generally be modeled as helping with specific bottlenecks rather than determining whether the field exists at all. ([Hevolution](https://www.hevolution.com/en/web/guest/w/igniting-a-new-era-in-global-health-hevolution-foundation-announces))
+:::
 
 ---
 
@@ -74,18 +60,18 @@ These considerations make full-percentage-point effects from a \$50 million port
 
 The right mental model is not "donors buy the cure for aging." It is "donors slightly increase the chance that one modest first-generation intervention gets across a few crucial bottlenecks."
 
-That suggests:
+That suggests an interval centered near 0.1 percentage points but with a long lower tail:
 
-- **Above 0.01 percentage points** is plausible because individual bottlenecks really can be funding-constrained, and a \$50 million portfolio is large enough to matter for trials, biomarkers, and targeted translational grants.
-- **Below 0.5 percentage points** is more plausible than above it because the field remains scientifically uncertain, the human evidence is not decisive, and there are now other serious funders in the space.
+- The **low end (~0.01 percentage points)** is where additionality starts to look genuinely doubtful — but it is not a floor. Below it sits the remaining ~10% of our belief: serious new funders like Hevolution mean a real chance that donor money largely substitutes for capital that would have arrived anyway, and a scientifically intractable field could leave even well-targeted dollars with effectively zero counterfactual impact. We put roughly a tenth of our probability below 0.01, shading down toward zero (and, per the caveats below, occasionally negative).
+- The **high end (~0.3 percentage points)** is where a strongly leveraged story — biomarkers and trial infrastructure proving pivotal — has thinned to about a 10% residual. We do not rule out more (0.5 and up remains conceivable), but multi-percentage-point leverage from tens of millions of dollars would be overconfident.
 
-A best guess of **0.1 percentage points** sits in the middle of that picture:
+A best guess of **0.1 percentage points** sits between those, nearer the high end than the low one because the lower tail runs further:
 
 - large enough to reflect real additionality in bottlenecked projects
 - small enough to respect field difficulty and crowding
 - consistent with viewing philanthropy as moving one or a few pivotal constraints rather than causing the whole field to succeed
 
-Another way to see the scale is that **0.1 percentage points** is an extremely small absolute shift. It means changing the success probability by about **one part in a thousand**. For a field with large upside but major scientific uncertainty, that feels much more defensible than assuming either near-zero influence or multi-percentage-point leverage from tens of millions of dollars.
+That is an extremely small absolute shift — changing the success probability by about **one part in a thousand** — which is far more defensible than assuming either near-zero influence or the kind of multi-point leverage ruled out above.
 
 ---
 
@@ -102,20 +88,5 @@ Another way to see the scale is that **0.1 percentage points** is an extremely s
 
 4. **Recipient quality matters a lot.**  
    TAME-style infrastructure, biomarker validation, and unusually additional translational grants may outperform the category average. Weakly focused basic science, endowment accumulation, or speculative prestige projects may underperform it.
-
----
-
-## 5. Summary
-
-Putting everything together:
-
-- a reasonable best guess is that **\$50 million of top longevity philanthropy** raises the probability of a meaningful first-generation gerotherapeutic by about **0.1 percentage points**
-- a plausible range is about **0.03-0.3 percentage points**
-
-This estimate is:
-
-- more optimistic than saying philanthropy barely matters at all
-- much more skeptical than assuming a modest donor pool can straightforwardly "solve aging"
-- best understood as a working judgment about translational bottlenecks rather than as an empirical measurement
 
 {{CONTRIBUTION_NOTE}}

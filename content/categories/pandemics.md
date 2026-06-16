@@ -61,7 +61,7 @@ We are **not** modeling:
 2. In postmortem medians for risk by **2100**, the XPT found about **3%** catastrophic risk from engineered pathogens and **0.85%** from natural pathogens among domain experts, versus **0.8%** and **1%** among superforecasters. ([Forecasting Research Institute](https://forecastingresearch.org/s/XPT.pdf))
 3. Worst-case engineered pandemics could kill hundreds of millions or billions, and ordinary pandemic defenses are not reliable against severe "wildfire" or "stealth" scenarios. ([Founders Pledge GCBR report](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf), [GCSP catastrophic-pandemics paper](https://www.gcsp.ch/sites/default/files/2024-12/securing-civilisation-against-catastrophic-pandemics-gp-31.pdf))
 4. Pandemic-risk philanthropy remains small relative to the stakes. Open Philanthropy alone reports **140+ grants** and **\$250+ million** since 2015, while Founders Pledge argues that relevant philanthropic funding outside direct response still remains in the **tens of millions** and that there were no other funders on Open Philanthropy's scale as of mid-2023. ([Open Philanthropy](https://www.openphilanthropy.org/focus/biosecurity-pandemic-preparedness/), [Founders Pledge](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf))
-5. A mature but still small pandemic-risk philanthropy field spending roughly **\$400 million over about 10 years** plausibly reduces 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a plausible range around **0.01–0.16 percentage points**. ([See detailed justification](/assumption/effect-of-pandemic-risk-philanthropy))
+5. A mature but still small pandemic-risk philanthropy field spending roughly **\$400 million over about 10 years** plausibly reduces 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a plausible range around **0.004–0.27 percentage points**. ([See detailed justification](/assumption/effect-of-pandemic-risk-philanthropy))
 6. Average world population over the modeled **2036-2051** window is about **9.9 billion** under the site's default population assumptions. This is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf).
 7. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing about **40 years** of otherwise expected life cost around **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 8. Severe survivors of a global catastrophic pandemic lose a few QALYs on average through some combination of long post-viral illness, organ damage, lost access to healthcare, bereavement, and years of lower quality of life.
@@ -109,10 +109,12 @@ Several considerations pull it **upward**:
 
 **Range**
 
-- **Pessimistic:** \$400M buys only **0.01 percentage points** = 100 microprobabilities -> **\$4 million** per microprobability
-- **Optimistic:** \$400M buys **0.16 percentage points** = 1,600 microprobabilities -> **\$250,000** per microprobability
+The plausible range comes straight from Assumption 5's risk-reduction range, holding \$400M cumulative spending fixed:
 
-Those parameter-sweep bounds are tighter than our true uncertainty, so we widen them into a plausible range of roughly **\$150,000–\$10 million per microprobability**. The wider tails reflect the scenarios the sweep holds fixed: if philanthropy has almost no leverage over catastrophic-pandemic risk the cost is much higher, while if the best current interventions are unusually high-leverage and past field-building has already unlocked substantial public action it is lower.
+- **Pessimistic:** \$400M buys only **0.004 percentage points** = 40 microprobabilities -> **\$10 million** per microprobability
+- **Optimistic:** \$400M buys **0.27 percentage points** = 2,700 microprobabilities -> about **\$150,000** per microprobability
+
+That gives a plausible range of roughly **\$150,000–\$10 million per microprobability**. It is wide and skewed toward the high-cost end because the dominant uncertainty is structural rather than a single parameter: if philanthropy has almost no counterfactual leverage over catastrophic-pandemic risk the cost is much higher, while if the best current interventions are unusually high-leverage and past field-building has already unlocked substantial public action it is much lower.
 
 ### Population fraction affected
 

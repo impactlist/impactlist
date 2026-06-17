@@ -3,7 +3,7 @@ id: cumulative-frontier-ai-spending-before-transformative-ai
 name: 'Cumulative frontier AI spending before transformative AI'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5 and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
 ## How much frontier AI spending happens before transformative AI arrives?
 
@@ -11,7 +11,7 @@ This document asks:
 
 > Before transformative AI arrives, how much total **frontier or near-frontier capability spending** will the world plausibly do?
 
-**Summary:** We use **\$5 trillion** as a central estimate, with a {{PLAUSIBLE_RANGE}} of **\$2–20 trillion**. The estimate is essentially one product — roughly **\$500 billion/year** of frontier-relevant spending, averaged over the **~10 years** until transformative AI ([timelines estimate](/assumption/timelines-to-agi)). Both factors are deeply uncertain, which is why the range is wide: a slower ramp or a sooner arrival points lower, a sustained capex boom and longer timelines point higher.
+**Summary:** We use **\$5 trillion** as a central estimate, with a {{PLAUSIBLE_RANGE}} of **\$2–20 trillion**. The estimate is essentially one product — roughly **\$500 billion/year** of frontier-relevant spending, averaged over the **~10 years** until transformative AI ([timelines estimate](/assumption/timelines-to-agi)). Both factors are deeply uncertain, which is why the range is wide: a slower ramp or a sooner arrival points lower, a sustained capex boom and longer timelines point higher. The capex examples below are an **early-2026 snapshot** and should be refreshed periodically.
 
 **What counts:** frontier and near-frontier capability spending — model training, frontier-lab R&D, and the compute, chip, and energy buildout that pushes the frontier — **not** all spending on "AI" in the broadest sense. Most enterprise software adoption, routine automation, and downstream app work is excluded.
 
@@ -83,7 +83,7 @@ $$
 
 as our central estimate of total frontier or near-frontier capability spending before transformative AI.
 
-The estimate has just two uncertain inputs, and we treat each as an 80% range:
+The estimate has just two uncertain inputs, and we treat each as a plausible range:
 
 - **Average annual frontier-relevant spend:** central **\$500 billion/year**, plausible range **\$250 billion–\$1 trillion/year**. The low end is a world where only a fairly narrow slice of AI capex is truly frontier-relevant; the high end is a sustained capex boom averaging near \$1 trillion/year as today's hundreds-of-billions ramp continues.
 - **Years to transformative AI:** central **~10 years**, plausible range **~4–24 years** (2030–2050), taken directly from the [timelines estimate](/assumption/timelines-to-agi).
@@ -91,9 +91,9 @@ The estimate has just two uncertain inputs, and we treat each as an 80% range:
 Our published plausible range is **\$2–20 trillion** — wide because both inputs are deeply uncertain, and skewed upward because the two move together: a longer timeline is also the world in which the capex boom has more years to compound, so the high tail (long timeline _and_ a sustained boom) stretches further than a soonish, narrow-frontier low tail. The width reflects those two parameters plus structural uncertainty about where the "frontier-relevant" boundary really falls.
 
 :::details{title="Both inputs at the same extreme, and why our range is narrower"}
-Multiplying the extremes of the two ranges gives a mechanical corner of about **\$1 trillion** (4 years at \$250 billion/year) to **\$24 trillion** (24 years at \$1 trillion/year). That corner is wider than 80%: with only two independent inputs, pushing both to the same extreme together lands near the 1st/99th percentile, not the 10th/90th.
+Multiplying the extremes of the two ranges gives a mechanical corner of about **\$1 trillion** (4 years at \$250 billion/year) to **\$24 trillion** (24 years at \$1 trillion/year). That corner is wider than the plausible range: with only two independent inputs, pushing both to the same extreme together represents a more extreme joint case than either input's own range endpoint.
 
-Treating the two as independent, the 80% interval is roughly the corner's log-width divided by $\sqrt{2}$, which gives about **\$1.6–15 trillion**. We then widen back toward the corner on the high side, because the inputs are positively correlated (long timelines and a sustained boom tend to arrive together) and because the frontier-relevant boundary adds structural uncertainty the two parameters do not capture. On the low side we hold the floor near \$2 trillion rather than \$1 trillion: a soon-arriving transformative AI means the window is dominated by today's already-large and rising capex (Stargate alone is ≈\$125 billion/year), so a very short horizon and a very low average rate cannot both hold at once. The result is our published **\$2–20 trillion**.
+Treating the two as independent, the plausible range would be roughly the corner's log-width divided by $\sqrt{2}$, which gives about **\$1.6–15 trillion**. We then widen back toward the corner on the high side, because the inputs are positively correlated (long timelines and a sustained boom tend to arrive together) and because the frontier-relevant boundary adds structural uncertainty the two parameters do not capture. On the low side we hold the floor near \$2 trillion rather than \$1 trillion: a soon-arriving transformative AI means the window is dominated by today's already-large and rising capex (Stargate alone is ≈\$125 billion/year), so a very short horizon and a very low average rate cannot both hold at once. The result is our published **\$2–20 trillion**.
 :::
 
 - **\$2 trillion** if transformative AI arrives relatively soon, or if only a fairly narrow slice of future AI capex turns out to be truly frontier-relevant.
@@ -117,4 +117,4 @@ Users who think timelines are longer, or that much future spending will be downs
 
 The \$5T central estimate now reflects a roughly \$500B/year average over a ~10-year horizon (see [timelines to AGI](/assumption/timelines-to-agi)). It could drift upward if frontier capex keeps rising — Stargate alone implies ~\$125B/year, and sustained hyperscaler spending could push the average annual rate well above \$500B — though the current \$2–20T range still covers that.
 
-The \$2–20T published range is a best-judgment 80% interval, not the mechanical corner. Inputs: average annual frontier-relevant spend \$250B–\$1T (80%) and years to transformative AI 4–24 (80%, from the timelines page's 2030–2050). The two-input corner is ~\$1–24T; the independent-baseline 80% interval (corner log-width / sqrt(2)) is ~\$1.6–15T; we widen the high side toward the corner for positive correlation between long timelines and sustained capex plus frontier-boundary structural uncertainty, and hold the low floor near \$2T because a short horizon locks in today's already-large capex. The years range here (4–24) is intentionally the full timelines 80% range, wider than the ~6–17 years a narrower central-window sweep would use. The \$5T central is unchanged; [ai-capabilities](/cause/ai-capabilities) consumes only that point estimate (Effect 2 Assumption 3 and Effect 3 Assumption 2), so this range change does not cascade.
+The \$2–20T published range is a best-judgment plausible range, not the mechanical corner. Inputs: average annual frontier-relevant spend \$250B–\$1T and years to transformative AI 4–24 (from the timelines page's 2030–2050). The two-input corner is ~\$1–24T; the independent-baseline plausible range (corner log-width / sqrt(2)) is ~\$1.6–15T; we widen the high side toward the corner for positive correlation between long timelines and sustained capex plus frontier-boundary structural uncertainty, and hold the low floor near \$2T because a short horizon locks in today's already-large capex. The years range here (4–24) is intentionally the full timelines plausible range, wider than the ~6–17 years a narrower central-window sweep would use. The \$5T central is unchanged; [ai-capabilities](/cause/ai-capabilities) consumes only that point estimate (Effect 2 Assumption 3 and Effect 3 Assumption 2), so this range change does not cascade.

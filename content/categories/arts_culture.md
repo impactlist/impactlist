@@ -20,6 +20,12 @@ This effect captures charities that improve health and wellbeing by increasing d
 
 We do **not** model preservation, elite arts production, or broad subsidy to cultural institutions unless they clearly translate into direct, attributable participation gains. The evidence for those broader pathways is much weaker from a donor-effectiveness perspective.
 
+## What kinds of charities are we modeling?
+
+These estimates are for **direct participation programs**: arts-on-prescription, facilitated museum or heritage engagement, community choirs, dance and creative workshops, and similar targeted access programs for people with elevated need.
+
+They are **not** meant for generic museums, opera companies, theaters, preservation projects, elite arts production, or capital campaigns unless a recipient-level model shows that the marginal gift buys comparable direct participation gains.
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$15,000 (\$5,000–\$60,000)
@@ -60,7 +66,7 @@ Pushing both inputs to their favorable extremes together, then to their unfavora
 - **Optimistic:** \$75 / 0.02 = \$3,750/QALY
 - **Pessimistic:** \$600 / 0.01 = \$60,000/QALY
 
-For two independent inputs this span would overstate an 80% interval: hitting both favorable extremes at once is rarer than the ~10% tail an 80% bound marks. We therefore do not publish the full optimistic corner. But we keep the pessimistic end near the corner, because the structural uncertainties above — the funding counterfactual, the thin literature, and the single RCT — are not captured by the two parameters at all and mostly push the estimate worse. Rounded, that gives a published range of about **\$5,000-\$60,000/QALY**.
+For two independent inputs this span would overstate a plausible range: hitting both favorable extremes at once is a demanding joint scenario. We therefore do not publish the full optimistic corner. But we keep the pessimistic end near the corner, because the structural uncertainties above — the funding counterfactual, the thin literature, and the single RCT — are not captured by the two parameters at all and mostly push the estimate worse. Rounded, that gives a published range of about **\$5,000-\$60,000/QALY**.
 :::
 
 We deliberately do **not** start from "arts are good for people" and assume any arts donation inherits that benefit; the estimate is built around charities that buy actual participation — artist-led group sessions, museum programmes, community choirs, and arts-on-prescription courses — for groups with strong evidence of benefit, especially older adults and people with low baseline wellbeing.

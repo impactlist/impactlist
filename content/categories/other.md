@@ -20,6 +20,10 @@ This is a fallback bucket for donations that cannot yet be classified more preci
 
 The goal is to estimate the expected value of giving to this actual bucket of miscellaneous philanthropy. We model it as a three-bucket portfolio — **direct but uncategorized organizations**, **indirect vehicles / mixed foundations / prize-awardees**, and **unknown / opaque recipients** — which gives a central estimate of **\$75,000/QALY**. The two cruxes are the dollar split across those buckets and how much worse than known direct giving the indirect and unknown slices really are.
 
+## What kinds of recipients are we modeling?
+
+This category is a fallback, not a recommendation. It is appropriate for recipients whose purpose is genuinely mixed, unknown, or mediated through another decision-maker, such as donor-advised funds, broad family foundations, prize-award vehicles, and named recipients where the final charitable use is not disclosed. When a recipient has a clear substantive purpose, it should be moved to the relevant category or given a recipient-specific override rather than left here.
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$75,000 (\$35,000-\$300,000)
@@ -66,6 +70,8 @@ $$
 ### Why the buckets look like this
 
 The direct bucket is anchored on [Local Community](/cause/local-community) at **\$29,000/QALY** and worsened modestly to **\$40,000/QALY**; each later bucket is a multiple of the previous one (**3x** to the indirect bucket, then **2x** to the unknown bucket) reflecting an extra intermediary step and then sheer opacity.
+
+The central 35% / 45% / 20% split comes from a rough launch audit of the current recipient set: many entries are vehicles, broad foundations, or prize-award patterns; a smaller but still meaningful group are direct organizations that did not fit another category cleanly; and a residual group is opaque enough that the final use is not publicly visible. This is not a stable empirical fact about philanthropy in general, so it should be revisited as recipient coverage changes.
 
 :::details{title="Bucket-by-bucket reasoning"}
 - **Direct organizations: \$40,000/QALY.** This is anchored on [Local Community](/cause/local-community) at **\$29,000/QALY** and moved upward modestly. The idea is that `Other` direct recipients are often broader and less health-targeted than the local-community portfolio, but they are still real operating organizations doing concrete work.

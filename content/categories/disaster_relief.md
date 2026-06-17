@@ -29,6 +29,8 @@ We are **not** modeling:
 - disaster preparedness or anticipatory action,
 - conflict prevention or peacebuilding,
 - ordinary development aid delivered outside an acute crisis.
+
+Recipients focused mainly on preparedness, resilience, or reconstruction should receive separate recipient-level modeling rather than inheriting this acute-response default.
 :::
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}

@@ -38,6 +38,8 @@ We are **not** modeling:
 - generic humanitarian relief delivered after violence has already occurred
 - broad community programming with weak evidence of changing macro conflict outcomes
 - purely academic conflict research with no plausible route to near-term action
+
+Recipients whose main work is direct military support, weapons procurement, or battlefield logistics should not inherit this default estimate; they need recipient-specific modeling.
 :::
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
@@ -54,7 +56,7 @@ We are **not** modeling:
 2. The world is currently experiencing an unusually high level of organized violence: **2024 had 61 active state-based conflicts across 36 countries**, the highest number since 1946. Mapping the **30–40 million** annual health burden onto roughly **30–60 serious conflict settings** implies about **0.5–1.3 million health QALYs** lost per representative serious conflict-year. We use **1 million health QALYs** as the central value. ([PRIO / UCDP 2025](https://www.prio.org/publications/14453))
 3. Once lost income, governance deterioration, and long-run institutional damage are also converted into QALY-equivalent terms, a representative serious conflict-year plausibly destroys about **3 million QALY-equivalents** in total, with a plausible range of **0.7–6.5 million**. ([See detailed justification](/assumption/all-things-considered-conflict-year-burden))
 4. Top mediation and conflict-analysis organizations operate with budgets in the **tens of millions of dollars**. HD reported **50 million Swiss francs (about \$56 million)** in contribution income in 2023 and **70+ peacemaking projects**; ICG reported **\$23.5 million** in revenue in 2024. This suggests average project-year costs somewhat below **\$1 million**. A round **\$1 million** central cost is a reasonable best guess for one additional fully loaded high-quality engagement-year once somewhat weaker-than-average marginal opportunities are taken into account, with a plausible range of **\$0.3–2 million**. ([HD Annual Report 2023](https://hdcentre.org/wp-content/uploads/2024/07/Annual-report-2023_English-Final_Web.pdf), [ProPublica 2024](https://projects.propublica.org/nonprofits/organizations/525170039))
-5. **\$1 million** of additional top-tier conflict-mitigation spending plausibly has about a **0.1%** chance of averting one representative serious conflict-year, with a plausible range of **0.03–0.3%**. This is derived by starting from Clayton and Dorussen's estimate of **123 additional conflict-years** without conflict management between 1946 and 2013, then allocating only a small share of that system-level effect to top-tier philanthropy and dividing by the budgets of organizations like HD and ICG. ([See detailed justification](/assumption/effect-of-top-conflict-mitigation-spending))
+5. **\$1 million** of additional top-tier conflict-mitigation spending plausibly has about a **0.1%** chance of averting one representative serious conflict-year, with a plausible range of **0.03–0.3%**. This is derived by starting from Clayton and Dorussen's estimate of **123 additional conflict-years** without conflict management between 1946 and 2013, assigning only about **2-8%** of that system-level effect to the top-tier philanthropic slice, and then dividing by the budgets of organizations like HD and ICG. ([See detailed justification](/assumption/effect-of-top-conflict-mitigation-spending))
 
 ## Details
 

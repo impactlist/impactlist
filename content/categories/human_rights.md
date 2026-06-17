@@ -202,15 +202,13 @@ category is trying to model.
 :::details{title="From the all-extremes bound to the published range"}
 Pushing all four parameters to their favorable extremes together (Assumption 2 at 4, Assumption 3 at 1.5x, Assumption 5
 at 2.0, Assumption 6 at 2x) gives about **\$93/QALY**; pushing all four to their unfavorable extremes (1, 5x, 0.4, 8x)
-gives about **\$1,300/QALY**. That \$93–\$1,300 corner is the 1st/99th-percentile box, not an 80% interval: for four
-independent parameters the chance that all four land near the same extreme at once is far below 10% per side. Treating
-them as independent shrinks the 80% interval to roughly **\$170–\$640** (each corner multiplier raised to the power
-$$\tfrac{1}{\sqrt{4}} = 0.5$$).
+gives about **\$1,300/QALY**. That \$93–\$1,300 corner is an illustrative all-extremes sweep, not the published range:
+it assumes every conversion and discount parameter moves to the same edge at once. A narrower combination would be
+appropriate if the parameters were independent, but they are not: the same worldview that reads the welfare uplift as
+large also tends to read the marginal discounts as small.
 
-The published \$130–\$1,500 sits between those two. We widen the independent baseline back out because the four
-parameters are positively correlated rather than independent — the same worldview that reads the welfare uplift as large
-also tends to read the marginal discounts as small — and we add extra headroom on the high side, past the parameter
-corner, for the non-randomised anti-slavery evidence and possible scope drift toward weaker direct-welfare work. The
+The published \$130–\$1,500 sits near that sweep but adds extra headroom on the high side for the non-randomised
+anti-slavery evidence and possible scope drift toward weaker direct-welfare work. The
 portfolio split (Assumption 7) is left out of the sweep because it has little leverage: moving it from 50/50 to 90/10
 shifts the central figure only between about \$350 and \$280.
 :::

@@ -51,6 +51,7 @@ We are **not** modeling generic journalism, generic civic engagement, or direct 
 9. A money-metric value of a QALY in high-income policy settings is approximately \$100,000, near the lower end of ICER's current \$100,000–\$150,000 benchmark range. ([ICER 2023 Value Assessment Framework](https://icer.org/wp-content/uploads/2023/10/ICER_2023_2026_VAF_For-Publication_110425.pdf))
 10. It takes roughly 2 years for these capabilities to mature and enter real decision cycles.
 11. Benefits persist for around 10 years on average: many individual outputs fade faster, but embedded decision routines can last much longer. E.O. 12866 has structured U.S. regulatory review since 1993, the What Works Network has operated since 2013, and Good Judgment's forecasting infrastructure traces to the IARPA tournament launched in 2011. ([GW Regulatory Studies Center](https://regulatorystudies.columbian.gwu.edu/looking-back-30-years-executive-order-12866-0), [GOV.UK](https://www.gov.uk/government/publications/the-what-works-network-strategy), [Good Judgment](https://goodjudgment.com/about/))
+12. The scenario probabilities and values are calibrated judgment calls, not directly observed frequencies. The range check uses a pessimistic case of **\$8 million** cost, **80% / 18% / 2%** scenario weights, and **\$1M / \$15M / \$100M** scenario values, and an optimistic case of **\$3 million** cost, **40% / 40% / 20%** weights, and **\$20M / \$150M / \$1.2B** values.
 
 ## Details
 
@@ -113,7 +114,7 @@ These are large numbers, but still small relative to mature public evidence inst
 
 ### Range
 
-Our plausible range is **\$800-\$300,000/QALY**, kept wide because this category is very uncertainty-heavy. A joint sweep — moving cost, the scenario weights, and the scenario values together toward optimism or pessimism rather than one parameter at a time — gives a narrower **\$1,000-\$150,000/QALY**; the true distribution is fatter-tailed than that, so we widen to the \$800-\$300,000 best-judgment 80% interval, the extra width reflecting model uncertainty beyond the three levers.
+Our plausible range is **\$800-\$300,000/QALY**, kept wide because this category is very uncertainty-heavy. A joint sweep — moving cost, the scenario weights, and the scenario values together toward optimism or pessimism rather than one parameter at a time — gives a narrower **\$1,000-\$150,000/QALY**; the true distribution is fatter-tailed than that, so we widen to the \$800-\$300,000 best-judgment range, with the extra width reflecting model uncertainty beyond the three levers.
 
 :::details{title="Optimistic and pessimistic bounds"}
 - **Pessimistic:** \$8 million cost, 80% / 18% / 2% scenario weights, and scenario values of \$1M / \$15M / \$100M gives about **\$150,000/QALY**.

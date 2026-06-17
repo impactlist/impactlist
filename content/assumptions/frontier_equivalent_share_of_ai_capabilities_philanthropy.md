@@ -3,7 +3,7 @@ id: frontier-equivalent-share-of-ai-capabilities-philanthropy
 name: 'Frontier-equivalent share of AI capabilities philanthropy'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5 and edited by Impact List staff for clarity._
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
 ## How much does a dollar to AI capabilities philanthropy accelerate the frontier?
 
@@ -11,7 +11,7 @@ This document asks:
 
 > After accounting for crowd-out, public-interest work, and spillovers, how much of a marginal dollar in the **AGI Development / AI capabilities** cause should be modeled as if it were extra frontier-capabilities spending?
 
-This quantity is not directly observable. It is an **inference** that combines evidence about where frontier progress happens, how much capital is already in the field, and what kinds of projects philanthropy in this area actually funds.
+This quantity is not directly observable. It is an **inference** that combines evidence about where frontier progress happens, how much capital is already in the field, and what kinds of projects philanthropy in this area actually funds. The funding examples below are a **2025-early 2026 snapshot**; the frontier-lab and public-interest AI funding landscape changes quickly.
 
 **Summary:** We use **30 cents of frontier-equivalent acceleration per donated dollar** as our point estimate, with a {{PLAUSIBLE_RANGE}} of **12–55 cents**.
 
@@ -66,7 +66,7 @@ The bounds are tighter than the two extreme scenarios because those scenarios pu
 - **0.10** if the marginal dollar mainly funds public-interest deployment, broad education, or research that is only loosely tied to the frontier — and little of even that work is absorbed by frontier actors.
 - **0.60** if the marginal dollar goes to an open-model effort, a near-frontier university lab, or a recipient whose work is quickly incorporated into frontier systems.
 
-Treating those two end-members as a single 80% interval would overstate our confidence in the extremes: it would require both the destination of the dollar and the crowd-out/absorption rate to land at their favorable (or unfavorable) limits together. Pulling each end partway in from its scenario limit — while still widening well beyond what fully independent axes would give, because the two axes are positively correlated and the whole quantity carries heavy structural uncertainty — gives **0.12–0.55**.
+Treating those two end-members as the published plausible range would overstate our confidence in the extremes: it would require both the destination of the dollar and the crowd-out/absorption rate to land at their favorable (or unfavorable) limits together. Pulling each end partway in from its scenario limit — while still widening well beyond what fully independent axes would give, because the two axes are positively correlated and the whole quantity carries heavy structural uncertainty — gives **0.12–0.55**.
 :::
 
 ---

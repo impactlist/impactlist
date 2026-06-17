@@ -5,7 +5,7 @@ effects:
   - effectId: population
     startTime: 15
     windowLength: 30
-    costPerMicroprobability: 2_400_000
+    costPerMicroprobability: 9_600_000
     populationFractionAffected: 0.9
     qalyImprovementPerYear: 0.75
 ---
@@ -45,7 +45,7 @@ We are **not** modeling:
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per microprobability:** \$2.4 million (\$0.3–\$30 million)
+- **Cost per microprobability:** \$9.6 million (\$1.2–\$120 million)
 - **Population fraction affected:** 0.9 (0.7–1.0)
 - **QALY improvement per affected person per year:** 0.75 (0.5–0.9)
 - **Start time:** 15 years (~2041)
@@ -59,30 +59,47 @@ We are **not** modeling:
 2. Direct blast and radiation deaths from a US-Russia exchange are likely on the order of **tens of millions**; Rethink Priorities' central estimate is about **51 million** direct deaths. ([Rodriguez 2019](https://rethinkpriorities.org/research-area/how-many-people-would-be-killed-as-a-direct-result-of-a-us-russia-nuclear-exchange/))
 3. Current nuclear risk is elevated. Open Nuclear Network's 2024 survey found median forecasts of **5%** from experts and **1%** from superforecasters for a >10 million-death nuclear catastrophe by **2045**, while SIPRI reports that all nine nuclear-armed states continued modernizing their arsenals in 2024 and that the expiry of **New START on February 5, 2026** raises the prospect of an unregulated arms buildup. ([ONN 2024](https://opennuclear.org/en/open-nuclear-network/publication/can-humanity-achieve-century-nuclear-peace), [SIPRI 2025 world nuclear forces](https://www.sipri.org/yearbook/2025/06), [SIPRI 2025 arms control](https://www.sipri.org/yearbook/2025/08))
 4. Philanthropic funding specifically focused on nuclear risk reduction is only about **\$30 million per year** after the MacArthur Foundation's exit. ([Founders Pledge 2023](https://www.founderspledge.com/research/global-catastrophic-nuclear-risk-a-guide-for-philanthropists))
-5. A mature but still tiny nuclear-philanthropy field spending roughly **\$600 million over 20 years** plausibly reduces 20-year catastrophe risk by about **0.025 percentage points**, with a plausible range of about **0.002–0.2 percentage points**. ([See detailed justification](/assumption/effect-of-nuclear-risk-philanthropy))
-6. World population at the relevant horizon is about **10.3 billion**. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
-7. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing roughly **40 years** of otherwise expected life cost on the order of **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-8. Severe survivors of a global catastrophic nuclear war lose roughly **7 QALYs** on average through some combination of shortened life expectancy from famine, disease, and infrastructure collapse, plus years of much lower quality of life during recovery.
+5. A mature but still tiny nuclear-philanthropy field spending roughly **\$600 million over 20 years** plausibly reduces broad >10-million-death nuclear-catastrophe risk by about **0.025 percentage points**, with a plausible range of about **0.002–0.2 percentage points**. ([See detailed justification](/assumption/effect-of-nuclear-risk-philanthropy))
+6. The category model is more severe than that broad >10-million-death endpoint: it values a large nuclear-winter catastrophe, not every smaller nuclear catastrophe in the ONN-style risk forecast. We therefore convert broad risk reduction into large-nuclear-winter-equivalent risk reduction using an **expected-severity bridge**. The central bridge treats broad catastrophes as a mix of limited/regional or direct-casualty events, serious great-power or limited-winter events, and severe nuclear-winter events; the weighted average is about **25%** as severe as the large-winter scenario modeled here, so roughly four broad catastrophe microprobabilities count as one large-nuclear-winter-equivalent microprobability.
+7. World population at the relevant horizon is about **10.3 billion**. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
+8. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing roughly **40 years** of otherwise expected life cost on the order of **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
+9. Severe survivors of a global catastrophic nuclear war lose roughly **7 QALYs** on average through some combination of shortened life expectancy from famine, disease, and infrastructure collapse, plus years of much lower quality of life during recovery.
 
 ## Details
 
 ### Cost per microprobability
 
-We model this cause area as cumulative field spending divided by microprobabilities of catastrophe averted. At the central assumptions, roughly **\$600 million** of philanthropy (\$30M/year for 20 years, Assumption 4) buying a **0.025 percentage-point** risk reduction (Assumption 5) averts **250 microprobabilities**, giving **\$2.4 million per microprobability**.
+We model this cause area as cumulative field spending divided by microprobabilities of catastrophe averted, with an extra severity adjustment because the risk-reduction evidence is for a broad >10-million-death nuclear catastrophe while this page values a much larger nuclear-winter event. At the central assumptions, roughly **\$600 million** of philanthropy (\$30M/year for 20 years, Assumption 4) buying a **0.025 percentage-point** broad risk reduction (Assumption 5) averts **250 broad microprobabilities**. Applying the **25% large-nuclear-winter-equivalent severity bridge** in Assumption 6 gives about **62.5 modeled microprobabilities**, or **\$9.6 million per modeled microprobability**.
 
 $$
-\text{Cost per microprobability} = \dfrac{\$600{,}000{,}000}{250} = \$2{,}400{,}000
+\text{Cost per microprobability} = \dfrac{\$600{,}000{,}000}{250 \times 0.25} = \$9{,}600{,}000
 $$
 
-The load-bearing input is Assumption 5: that **0.025 percentage points over 20 years** is small enough to be plausible if philanthropy has real leverage, but not so small that the field's existence becomes irrelevant. The [dedicated assumption page](/assumption/effect-of-nuclear-risk-philanthropy) argues this corresponds to \$600 million buying only a small share of the best tractable policy bundle discussed by ONN, calibrated against historical cases where small philanthropic organizations appear to have catalyzed much larger governmental actions.
+The load-bearing inputs are Assumption 5 and the severity bridge in Assumption 6. The [dedicated assumption page](/assumption/effect-of-nuclear-risk-philanthropy) argues that **0.025 percentage points over 20 years** is small enough to be plausible if philanthropy has real leverage, but not so small that the field's existence becomes irrelevant. Assumption 6 then prevents that broad >10-million-death endpoint from being valued as if every averted microprobability were a 5-billion-death nuclear-winter scenario.
 
-The two-parameter bridge sweep on the risk reduction (0.005–0.12 percentage points) gives \$500,000–\$12 million, but Assumption 5's plausible range is wider — **0.002–0.2 percentage points** — giving a cost-per-microprobability range of roughly **\$300,000–\$30 million**. The wider tails reflect the scenarios the bridge sweep holds fixed — if current philanthropy has almost no counterfactual leverage over great-power nuclear risk the cost is much higher, while if it can occasionally unlock extremely leveraged crisis-management or doctrine wins it is lower.
+The **25%** bridge is a compact expected-severity model, not an extra empirical measurement. A central decomposition is: about half of broad averted events look like limited/regional or mostly direct-casualty catastrophes worth roughly **5%** of the modeled winter scenario; about a third look like serious great-power or limited-winter events worth roughly **25%**; and about a sixth look like severe nuclear-winter events worth roughly **90%**. That gives $0.50 \times 0.05 + 0.35 \times 0.25 + 0.15 \times 0.90 \approx 0.25$.
 
-:::details{title="Worked sweep: pessimistic and optimistic bounds"}
-Holding \$600M cumulative spending fixed and sweeping the risk reduction:
+The published **\$1.2–\$120 million** plausible range reflects uncertainty in both the broad risk reduction and this severity bridge. The full all-edges sweep is wider — roughly **\$600,000–\$300 million** if broad risk reduction and bridge severity are both pushed to favorable or unfavorable endpoints — but that would require several uncertain inputs to move to the same edge together. The published range stays inside that mechanical corner while still extending far beyond the central calculation.
 
-- **Pessimistic:** \$600M buys only **0.005 percentage points** = 50 microprobabilities -> **\$12 million** per microprobability
-- **Optimistic:** \$600M buys **0.12 percentage points** = 1,200 microprobabilities -> **\$500,000** per microprobability
+:::details{title="Severity bridge and sensitivity"}
+Central severity bridge:
+
+- **Limited/regional or mostly direct-casualty catastrophe:** 50% of the broad endpoint x 5% severity = **2.5%** contribution
+- **Serious great-power or limited-winter catastrophe:** 35% x 25% severity = **8.75%** contribution
+- **Severe nuclear-winter catastrophe:** 15% x 90% severity = **13.5%** contribution
+
+Total: about **25%** large-winter-equivalent severity.
+
+Holding the central broad risk reduction fixed at **0.025 percentage points**:
+
+- **50% bridge:** \$600M / (250 x 0.50) = **\$4.8 million** per modeled microprobability
+- **25% bridge:** \$600M / (250 x 0.25) = **\$9.6 million**
+- **10% bridge:** \$600M / (250 x 0.10) = **\$24 million**
+
+Combining broad-risk and bridge uncertainty mechanically:
+
+- **Favorable all-edges:** \$600M buys **0.2 percentage points** = 2,000 broad microprobabilities, with a **50%** bridge -> **\$600,000** per modeled microprobability
+- **Unfavorable all-edges:** \$600M buys **0.002 percentage points** = 20 broad microprobabilities, with a **10%** bridge -> **\$300 million** per modeled microprobability
 :::
 
 One reason not to be more optimistic by default is that nuclear philanthropy is trying to influence outcomes that are highly path-dependent, politically constrained, and hard to measure. One reason not to be much more pessimistic is that the field is extremely neglected and some of the relevant levers really are high leverage — a single avoided escalation pathway can matter enormously.
@@ -104,8 +121,8 @@ The point estimate (0.75) and range (0.5–0.9) come from spreading total QALY l
 :::details{title="QALY-loss decomposition (about 208 billion QALYs)"}
 Using a world population of **10.3 billion** and an affected fraction of **0.9**, the model implies about **9.27 billion affected people**. A simple stylized decomposition, rounded for clarity:
 
-- **~5.0 billion deaths** × **36 QALYs** each (Assumption 7) = **180 billion QALYs**
-- **~4.0 billion severe survivors** × **7 QALYs** each (Assumption 8) = **28 billion QALYs**
+- **~5.0 billion deaths** × **36 QALYs** each (Assumption 8) = **180 billion QALYs**
+- **~4.0 billion severe survivors** × **7 QALYs** each (Assumption 9) = **28 billion QALYs**
 - **remaining affected people** are rounded away in this decomposition and do not materially change the total
 - **Total:** about **208 billion QALYs**
 
@@ -122,16 +139,16 @@ $$
 The **7 QALYs per severe survivor** is a rough combined loss from shorter life expectancy plus much worse quality of life during a prolonged recovery; it does not imply exactly seven years in one specific health state.
 :::
 
-At the central estimate, averting one microprobability saves about **209,000 QALYs**, implying roughly **\$11.5 per QALY** — extremely good by ordinary global-health standards, but a general feature of catastrophe-risk models when both the stakes and tractability are nontrivial.
+At the central estimate, averting one modeled microprobability saves about **209,000 QALYs**, implying roughly **\$46 per QALY** — extremely good by ordinary global-health standards, but a general feature of catastrophe-risk models when both the stakes and tractability are nontrivial.
 
-:::details{title="Implied cost-effectiveness: about 11.5 dollars per QALY"}
+:::details{title="Implied cost-effectiveness: about 46 dollars per QALY"}
 
 $$
 10.3 \text{B} \times 0.9 \times 0.75 \times 30 \times 10^{-6} \approx 209{,}000 \text{ QALYs}
 $$
 
 $$
-\dfrac{\$2.4 \text{M}}{209{,}000} \approx \$11.5 / \text{QALY}
+\dfrac{\$9.6 \text{M}}{209{,}000} \approx \$46 / \text{QALY}
 $$
 :::
 
@@ -172,4 +189,4 @@ So 30 years should not be read as a forecast that recovery takes exactly 30 year
 
 # Internal Notes
 
-- The key update here is replacing the previous benchmark-style microprobability estimate with a more explicit field-level BOTEC and a dedicated assumption page.
+- The central field-level BOTEC and the dedicated assumption page need to stay aligned, especially on the endpoint distinction between broad nuclear catastrophe and severe nuclear winter.

@@ -33,7 +33,7 @@ The estimate is driven by treating philanthropy as nudging one modest interventi
 Three features of the field make a nonzero marginal effect hard to dismiss: translational bottlenecks (endpoints, biomarkers) really are funding-constrained, some high-value work (the TAME trial) has weak commercial incentives and so leans on philanthropy, and modest pools like Impetus Grants visibly activate new aging research. Taken together these make it hard to believe the true effect is literally zero.
 
 :::details{title="The three reasons the effect is probably positive"}
-**Translational bottlenecks are real.** Geroscience still lacks broadly accepted surrogate endpoints for "slowing aging," which makes trials long, slow, and expensive. Biomarker and endpoint work therefore has unusually high leverage relative to many more mature disease areas. ([Cummings et al. 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9632660/), [Biomarkers of Aging Consortium](https://www.agingconsortium.org/))
+**Translational bottlenecks are real.** Geroscience still lacks broadly accepted surrogate endpoints for "slowing aging," which makes trials long, slow, and expensive. Biomarker and endpoint work therefore has unusually high leverage relative to many more mature disease areas. ([Cummings et al. 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9768060/), [Biomarkers of Aging Consortium](https://www.agingconsortium.org/))
 
 **Some high-value work has weak commercial incentives.** The clearest public example is [AFAR's TAME trial](https://www.afar.org/tame-trial): a 3,000-participant, 6-year trial built around a cheap generic drug. Precisely because the intervention is inexpensive and hard to appropriate privately, philanthropy has been unusually important to getting the project toward reality — strong evidence that at least some important geroscience projects are bottlenecked by mission-driven capital rather than by scientific merit alone.
 
@@ -62,7 +62,7 @@ The right mental model is not "donors buy the cure for aging." It is "donors sli
 
 That suggests an interval centered near 0.1 percentage points but with a long lower tail:
 
-- The **low end (~0.01 percentage points)** is where additionality starts to look genuinely doubtful — but it is not a floor. Below it sits the remaining ~10% of our belief: serious new funders like Hevolution mean a real chance that donor money largely substitutes for capital that would have arrived anyway, and a scientifically intractable field could leave even well-targeted dollars with effectively zero counterfactual impact. We put roughly a tenth of our probability below 0.01, shading down toward zero (and, per the caveats below, occasionally negative).
+- The **low end (~0.01 percentage points)** is where additionality starts to look genuinely doubtful — but it is not a floor. Below it sits the remaining ~10% of our belief: serious new funders like Hevolution mean a real chance that donor money largely substitutes for capital that would have arrived anyway, and a scientifically intractable field could leave even well-targeted dollars with effectively zero counterfactual impact. We put roughly a tenth of our probability below 0.01, shading down toward zero, with a small part of that lower tail negative for poorly chosen or hype-accelerating work.
 - The **high end (~0.3 percentage points)** is where a strongly leveraged story — biomarkers and trial infrastructure proving pivotal — has thinned to about a 10% residual. We do not rule out more (0.5 and up remains conceivable), but multi-percentage-point leverage from tens of millions of dollars would be overconfident.
 
 A best guess of **0.1 percentage points** sits between those, nearer the high end than the low one because the lower tail runs further:
@@ -81,7 +81,7 @@ That is an extremely small absolute shift — changing the success probability b
    We do not have randomized evidence on counterfactual field-level success probabilities in geroscience philanthropy.
 
 2. **The effect could be negative in some cases.**  
-   A donor could fund flashy but low-value work, duplicate existing capital, or accelerate hype more than real progress. So even though the best-guess estimate is positive, a full uncertainty distribution should probably include some probability mass at or below zero.
+   A donor could fund flashy but low-value work, duplicate existing capital, or accelerate hype more than real progress. That possibility belongs in the lower tail below the published plausible range, not in the positive cost-effectiveness calculation itself.
 
 3. **Acceleration and probability-change are being compressed into one variable.**  
    In reality, philanthropy may matter partly by speeding progress rather than by changing a clean binary probability of success. The simple $X$ framing is still useful for cost-effectiveness analysis, but it is an approximation.

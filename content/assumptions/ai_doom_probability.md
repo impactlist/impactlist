@@ -148,7 +148,7 @@ The 10% figure is a working assumption for cost-effectiveness analysis, not a co
 
 ### Plausible range
 
-We suggest a plausible range of **3–30%**, defined as an **80% credence interval** around the most defensible all-things-considered estimate. The interval is asymmetric because uncertainty about probabilities is multiplicative and the upper tail is long.
+We suggest a plausible range of **3–30%** around the most defensible all-things-considered estimate. The range is asymmetric because uncertainty about probabilities is multiplicative and the upper tail is long.
 
 - **3%** (the lower, 10th-percentile bound) is where the estimate lands if the superforecaster anchors and the "AI as normal technology" view are largely right, and if literal extinction is only a small slice of the broader takeover and catastrophe scenarios
 - **30%** (the upper, 90th-percentile bound) is where it lands if the harder control arguments and racing dynamics dominate and the high camp is substantially right for extinction specifically. It sits above the most alarmed _moderate_ estimates because our posterior puts real weight on the high-risk cluster described in Section 1.5 — where a credentialed minority places the risk far above this, up to near-certainty — not because most experts are there.

@@ -1,7 +1,7 @@
 ---
 id: animal-welfarist
 name: 'Animal Welfarist + AI X-Risk Skeptic'
-description: 'Treats animal welfare gains as equal in moral weight to human welfare and disables AI x-risk adjustments.'
+description: 'Combines human-equal animal welfare weights with AI x-risk skepticism.'
 sortOrder: 20
 assumptions:
   categories:
@@ -19,7 +19,7 @@ assumptions:
           costPerQALY: 0.75
 ---
 
-This assumptions set removes the default chicken discount used in the
+This combined assumptions set removes the default chicken discount used in the
 [Animal Welfare](/cause/animal-welfare) cause and also applies the same
 AI X-risk skepticism as the AI X-Risk Skeptic assumptions set.
 
@@ -29,3 +29,5 @@ That makes the default `costPerQALY` about 3x worse than a human-equal weighting
 This assumptions set turns the cause into that human-equal version while also disabling
 [AI Existential Risk](/cause/ai-risk) and the `population-doom` effect in
 [AGI Development](/cause/ai-capabilities).
+
+Those are two independent worldview changes. Users who want only the animal-welfare moral-weight change should treat the AI-risk disabling as a separate bundled choice rather than part of the animal-welfare calculation itself.

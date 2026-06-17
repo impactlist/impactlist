@@ -20,7 +20,7 @@ categories:
 
 # Justification of Astera Institute category mix and AI-risk multiplier
 
-_The following analysis was done on December 18th 2025, written by Claude Opus 4.5 and edited by Impact List staff for clarity._
+_The following analysis was done on December 18th 2025 by Claude Opus 4.5, with prompts from Impact List staff._
 
 We model Astera Institute as a multi-cause foundation with a small AI-risk slice. The category allocation handles most of the dilution: 45% longevity, 35% science and technology, 10% other, 5% AI capabilities, and 5% AI risk. We additionally apply a **10x cost-per-microprobability multiplier** to the AI-risk slice, meaning that the AI-risk portion is modeled as about **0.1x as effective** as a donation to the default [AI Existential Risk](/cause/ai-risk) category.
 
@@ -37,9 +37,9 @@ This effect captures two things. First, an unrestricted donation to Astera is sp
 
 ## Assumptions
 
-1. **Low Payout Rate:** Astera deploys approximately 1.4% of assets annually, compared to the 5% legal minimum for private foundations. This means donations sit in an endowment rather than funding immediate work.
-2. **Low External Grant Rate:** Of funds actually spent, only ~19% (2023) flows to external organizations. The remainder funds internal operations and salaries.
-3. **Capabilities vs. Safety:** Astera's AI program (Obelisk) pursues "neuroscience-informed AGI development"—this is capabilities research with safety-conscious framing, not dedicated alignment work. Only one researcher (Steve Byrnes) appears to do traditional AI safety research.
+1. **Low Payout Rate:** Astera deploys approximately 1.4% of assets annually, compared to the 5% legal minimum for private foundations. This means donations sit in an endowment rather than funding immediate work. ([Astera ProPublica filing page](https://projects.propublica.org/nonprofits/organizations/845162617))
+2. **Low External Grant Rate:** Of funds actually spent, only ~19% (2023) flows to external organizations. The remainder funds internal operations and salaries. We track this number as a warning sign about deployment, but do not apply it as a separate multiplier to the AI-risk slice because Astera's relevant AI work is mostly internal research rather than external grantmaking. ([Astera ProPublica filing page](https://projects.propublica.org/nonprofits/organizations/845162617))
+3. **Capabilities vs. Safety:** Astera's AI program (Obelisk) pursues neuroscience-informed AGI development; this is capabilities research with safety-conscious framing, not dedicated alignment work. Steven Byrnes appears to be the clearest dedicated AI-safety researcher in the program. ([Astera Obelisk](https://astera.org/obelisk/), [Steve Byrnes](https://astera.org/team/steve-byrnes/))
 4. **Cause Area Dilution:** The frontmatter already models Astera as mostly not AI risk: 45% longevity, 35% science and technology, 10% other, 5% AI capabilities, and 5% AI risk. The multiplier below applies only to the AI-risk slice.
 
 ## Details
@@ -89,6 +89,8 @@ The raw calculation gives **0.042x** effectiveness for the AI-risk slice. We use
 - gives partial credit for potential future deployment of endowment
 - acknowledges some indirect safety value from neuroscience-informed or safety-conscious work
 - avoids over-penalizing Astera when public budget allocations are incomplete
+
+We do **not** multiply by $D_{external}$ in the final AI-risk-slice estimate. That factor is useful for understanding Astera as a foundation, but it is not independent of the AI-risk question: if the relevant AI work is internal Obelisk research, then a low external-grant share does not by itself mean the AI-risk slice is less deployed. Applying it on top of the payout and safety-focus discounts would likely double-count deployment uncertainty. The longevity and science-tech slices also receive no recipient-specific payout multiplier here because their category defaults already include broad marginality and additionality discounts; the extra recipient-specific adjustment is reserved for the AI-risk slice's unusual mix of endowment delay and capabilities-oriented AI work.
 
 {{CONTRIBUTION_NOTE}}
 

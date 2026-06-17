@@ -31,6 +31,8 @@ This corresponds to about:
 - about **4.2 basis points per \$1 billion**
 - about **\$2.4 million per microprobability**
 
+The [Nuclear](/cause/nuclear) category does not plug this broad endpoint directly into its severe-nuclear-winter model. It applies an expected-severity bridge, treating roughly four broad >10-million-death catastrophe microprobabilities as one large-nuclear-winter-equivalent microprobability. That bridge is a category-level valuation step, not part of this assumption's risk-reduction estimate.
+
 This is one of the most uncertain assumptions in the category. The evidence base is thin, the causal chains run through governments rather than direct service delivery, and historical successes are hard to translate into clean probability units.
 
 ---
@@ -133,7 +135,7 @@ That **1–5%** share seems plausible for three reasons:
 
 ## 6. Why use 0.002–0.2 percentage points as the plausible range?
 
-Our published plausible range is about **0.002–0.2 percentage points**. The two bridge parameters — the **baseline catastrophe risk** (which sets how much the policy bundle is worth) and **philanthropy's share** of that bundle effect — span only **0.005–0.12** even at their joint extremes. We publish a *wider* range than that, because the largest uncertainties are structural and sit outside those two parameters: whether philanthropy has essentially no counterfactual leverage (a share below the bridge's **1%** floor, pushing the effect toward zero), whether the fixed "halving" calibration holds, and whether crediting a tiny field with a slice of government-led outcomes is the right model at all. Those tails — especially the near-zero-leverage one — widen the honest 80% interval beyond even the two-parameter corner.
+Our published plausible range is about **0.002–0.2 percentage points**. The two bridge parameters — the **baseline catastrophe risk** (which sets how much the policy bundle is worth) and **philanthropy's share** of that bundle effect — span only **0.005–0.12** even at their joint extremes. We publish a *wider* range than that, because the largest uncertainties are structural and sit outside those two parameters: whether philanthropy has essentially no counterfactual leverage (a share below the bridge's **1%** floor, pushing the effect toward zero), whether the fixed "halving" calibration holds, and whether crediting a tiny field with a slice of government-led outcomes is the right model at all. Those tails — especially the near-zero-leverage one — widen the plausible range beyond even the two-parameter corner.
 
 :::details{title="Bridge sweep of the two parameters, and why the published range is wider"}
 The mechanical bounds come from sweeping both parameters to their favorable and unfavorable extremes together. The full policy bundle is worth **0.5 percentage points** at a **1%** baseline, **1.5 percentage points** at a blended **3%**, and **2.5 percentage points** at a **5%** baseline; philanthropy's share runs from about **1%** to about **5%**.
@@ -142,7 +144,7 @@ The mechanical bounds come from sweeping both parameters to their favorable and 
 
 **Optimistic corner: 0.12 percentage points.** The risk is near the experts' **5%** (bundle worth **2.5 percentage points**) and philanthropy captures about a **4.8%** share by occasionally helping produce unusually leveraged doctrine, crisis-management, or institutional wins. That is 4.8% of 2.5 percentage points.
 
-That **0.005–0.12** corner is a roughly 20x spread, and for two independent parameters it would *overstate* an 80% interval — a worldview unusually pessimistic about how dangerous the world is need not also be pessimistic about philanthropy's leverage, and treating the two as independent would shrink the spread to roughly **0.008–0.08 percentage points**. But the published range is **wider** than the corner, not narrower, because the dominant uncertainties are not these two parameters at all: there is a real tail in which philanthropy's counterfactual share sits below the **1%** bridge floor and the effect is near zero (cost per microprobability far above the sweep), and a thinner tail in which it occasionally captures unusually leveraged wins. Carrying those structural tails gives a best-judgment 80% interval of about **0.002–0.2 percentage points**, centered on the same **0.025**.
+That **0.005–0.12** corner is a roughly 20x spread, and for two independent parameters it would *overstate* the input-driven plausible range — a worldview unusually pessimistic about how dangerous the world is need not also be pessimistic about philanthropy's leverage, and treating the two as independent would shrink the spread to roughly **0.008–0.08 percentage points**. But the published range is **wider** than the corner, not narrower, because the dominant uncertainties are not these two parameters at all: there is a real tail in which philanthropy's counterfactual share sits below the **1%** bridge floor and the effect is near zero (cost per microprobability far above the sweep), and a thinner tail in which it occasionally captures unusually leveraged wins. Carrying those structural tails gives a best-judgment plausible range of about **0.002–0.2 percentage points**, centered on the same **0.025**.
 :::
 
 ---

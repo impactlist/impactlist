@@ -20,7 +20,7 @@ This effect captures welfare gains from donations to the best current **non-clim
 
 ## What kinds of charities are we modeling?
 
-We model **non-climate environmental work whose main benefit is lower human exposure to pollution** — primarily lead-source reduction, toxic-site cleanup, and clean-air advocacy.
+We model **non-climate environmental work whose main benefit is lower human exposure to pollution** — primarily lead-source reduction, toxic-site cleanup, and clean-air advocacy. General conservation, parks, reefs, and biodiversity work should not inherit this default unless a recipient-level model translates their benefits into QALY-equivalent welfare.
 
 :::details{title="What is and is not modeled"}
 Representative activities include:
@@ -29,7 +29,7 @@ Representative activities include:
 - Toxic-site cleanup and industrial contamination remediation where human welfare is the main benefit
 - Clean-air data, advocacy, litigation, and policy work where the main pathway is lower human exposure to pollution
 
-We are **not** modeling climate mitigation, or biodiversity/scenic/amenity value, unless a recipient-level model can translate those outcomes into QALY-equivalent welfare.
+We are **not** modeling climate mitigation, biodiversity/scenic/amenity value, or conservation capital projects unless a recipient-level model can translate those outcomes into QALY-equivalent welfare.
 :::
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
@@ -58,7 +58,7 @@ We are **not** modeling climate mitigation, or biodiversity/scenic/amenity value
 The cleanest quantitative anchor in this cause area is **lead elimination**. In LEEP's own model the best current lead-paint-elimination opportunities cost roughly **\$4-5 per QALY-equivalent** (its headline **\$4.49 per DALY-equivalent**, Assumption 3). We round that program-specific anchor to **\$5/QALY-equivalent** before applying a large **10x penalty** when moving to a broader cause-area estimate, giving a point estimate of **\$50/QALY**.
 
 :::details{title="From LEEP's headline figure to the point estimate"}
-LEEP's headline **\$4.49 per DALY-equivalent** combines direct health gains with monetized lifetime-income gains converted into common welfare units. Those income gains should not be treated as outside the QALY framework; they are real welfare gains expressible in QALY-equivalent terms. As a modeling convention this page treats **DALYs averted** and **QALYs gained** as roughly interchangeable (Assumption 1), because both are healthy-life-year measures and the uncertainty in the intervention evidence dwarfs the difference between the two metrics for our purposes.
+LEEP's headline **\$4.49 per DALY-equivalent** combines direct health gains with monetized lifetime-income gains converted into common welfare units. Only about **145,000** of the modeled 900,000 DALY-equivalents are direct health DALYs; the rest are lifetime-income equivalents. The health-only cross-check is still very strong — about **\$28 per direct-health DALY** using LEEP's \$4M / 145k figures — but it is meaningfully weaker than the all-things-considered headline. We use the all-things-considered figure because the income gains are real welfare gains expressible in QALY-equivalent terms, while the 10x penalty below is meant to absorb the extra uncertainty in that bridge. As a modeling convention this page treats **DALYs averted** and **QALYs gained** as roughly interchangeable (Assumption 1), because both are healthy-life-year measures and the uncertainty in the intervention evidence dwarfs the difference between the two metrics for our purposes.
 
 Using LEEP's reported total modeled cost and all modeled DALY-equivalents:
 

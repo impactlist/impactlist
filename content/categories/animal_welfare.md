@@ -18,6 +18,12 @@ We arrive at the cost per life by estimating the cost per [QALY (quality adjuste
 
 This effect captures welfare gains from donations to the best current animal-welfare charities. In practice, the clearest evidence base still comes from farmed-chicken corporate campaigns and accountability work, especially cage-free reforms for laying hens and Better Chicken Commitment (BCC) reforms for broilers. There are also increasingly promising aquatic-animal opportunities, especially shrimp welfare, but the cross-species conversion into human-equivalent QALYs is less mature there.
 
+## What kinds of charities are we modeling?
+
+These estimates are for **top farmed-animal and aquatic-animal welfare opportunities**: corporate campaigns, accountability work, humane-slaughter work, and other interventions with a direct path to reducing large amounts of animal suffering per dollar.
+
+They are **not** meant for zoos, companion-animal shelters, wildlife conservation, or broad animal charities unless a recipient-specific model shows similar marginal welfare gains.
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$2.3 (\$0.50–\$87)
@@ -37,7 +43,7 @@ This effect captures welfare gains from donations to the best current animal-wel
 7. Corporate commitments are not merely symbolic. Rethink Priorities' 2023 cross-country analysis found that one additional cage-free commitment increases the cage-free share of hen housing by 0.035 percentage points on average. ([RP Corporate Social Responsibility Paper](https://rethinkpriorities.org/research-area/corporate-social-responsibility/))
 8. Broiler reforms likely add substantial value on top of the hen-based baseline. Welfare Footprint Institute finds that BCC/slower-growing reforms avert at least 33 hours of disabling pain and 79 hours of hurtful pain per broiler, and likely understate the total gains because several harms are omitted. ([Welfare Footprint Institute](https://welfarefootprint.org/broilers/))
 9. ACE's 2025 review estimates that Shrimp Welfare Project's humane slaughter program averts about 48 SADs per dollar and its India water-quality program averts about 729 SADs per dollar. These are morally weighted welfare-time estimates rather than QALY estimates, so we use them only in the optimistic edge of the range rather than in the point estimate. ([ACE Shrimp Welfare Project Review](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
-10. ACE defines one SAD as one day of disabling pain for one human, after adjustments for pain intensity, sentience probability, and welfare range. We therefore use a rough cross-walk of 365 SADs = 1 suffering-equivalent human year, while noting that this is not a literal QALY conversion: disabling pain does not necessarily imply a full QALY-day lost, and SADs capture suffering averted rather than total welfare change. ([ACE Evaluation Criteria](https://animalcharityevaluators.org/charity-reviews/evaluating-charities/2024-evaluation-criteria/))
+10. ACE defines one SAD as one day of disabling pain for one human, after adjustments for pain intensity, sentience probability, and welfare range. We therefore use a rough cross-walk of 365 SADs = 1 suffering-equivalent human year only as an optimistic-edge check, while noting that this is not a literal QALY conversion: disabling pain does not necessarily imply a full QALY-day lost, and SADs capture suffering averted rather than total welfare change. ([ACE Evaluation Criteria](https://animalcharityevaluators.org/charity-reviews/evaluating-charities/2024-evaluation-criteria/))
 11. Benefits begin about one year after donation because firms need time to change sourcing, facilities, and compliance systems. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/))
 12. Reforms persist for around 15 years. Older RP corporate-campaign models used 4-36 years as the plausible range for mean years of impact, and more recent fulfillment data suggest that many commitments do in fact stick once implemented. ([Rethink Priorities 2019](https://rethinkpriorities.org/research-area/corporate-campaigns-affect-9-to-120-years-of-chicken-life-per-dollar-spent/), [THL 2025 Fulfillment Report](https://thehumaneleague.org/article/2025-cage-free-fulfillment-report))
 

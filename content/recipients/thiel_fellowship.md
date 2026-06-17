@@ -4,17 +4,13 @@ name: 'Thiel Fellowship'
 categories:
   - id: education
     fraction: 1.0
-    effects:
-      - effectId: standard
-        overrides:
-          costPerQALY: 10000
 ---
 
 # Justification of cost per life
 
-_The following analysis was done on December 19th 2025, written by Google Gemini 3 Pro and edited by Impact List staff for clarity._
+_The following analysis was done on December 19th 2025 by Google Gemini 3 Pro, with prompts from Impact List staff._
 
-We assign the Thiel Fellowship a **cost per QALY of \$10,000**. The case for a low number rests on the Fellowship's "hits-based" strategy of accelerating unusually high-upside talent rather than improving average educational outcomes, but most of the raw value created by successful fellows should still be attributed to selection and the fellows themselves.
+The Thiel Fellowship inherits the [Education](/cause/education) category default. The case for a lower recipient-specific estimate rests on the Fellowship's "hits-based" strategy of accelerating unusually high-upside talent rather than improving average educational outcomes, but most of the raw value created by successful fellows should still be attributed to selection and the fellows themselves. At the current \$200,000-\$250,000 cost per fellow, the evidence is not strong enough to justify a below-default override.
 
 ## Description of effect
 
@@ -22,7 +18,7 @@ This effect captures the welfare gains from the **Thiel Fellowship**, which pays
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$10,000 (\$2,500-\$100,000)
+- **Cost per QALY:** inherits the Education default, with a judgmental recipient-specific uncertainty range of roughly \$5,000-\$200,000/QALY
 
 *If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
@@ -35,27 +31,27 @@ This effect captures the welfare gains from the **Thiel Fellowship**, which pays
 
 ## Details
 
-### Deriving the \$10,000/QALY estimate
+### Why we use the category default
 
-We benchmark the Thiel Fellowship against the current baseline education estimate of **\$25,000/QALY**. The key comparison is between the expected value of a marginal Fellowship slot ($EV_{TF}$) and what the same philanthropic budget would buy through standard effective education charities ($EV_{Base}$).
+We benchmark the Thiel Fellowship against the education category estimate of **\$25,000/QALY**. The key comparison is between the expected value of a marginal Fellowship slot ($EV_{TF}$) and what the same philanthropic budget would buy through standard effective education charities ($EV_{Base}$).
 
 $$\text{Relative effectiveness} = \dfrac{EV_{TF}}{EV_{Base}}$$
 
-We analyze the expected value of a normalized \$100,000 investment in both scenarios, then apply the same relative-effectiveness ratio to the education baseline.
+The 2026 class receives **\$250,000 over two years**, and recent donation rows also use \$200,000-\$250,000 per fellow. At that cost, the hits-based model does not clearly beat the education default.
 
 ### 1. Baseline: standard scholarship (EV_Base)
 
-Investing \$100,000 in a standard US university scholarship.
+Investing **\$250,000** in standard US university scholarships.
 
-- **Outcome:** Enables ~1 student to complete a degree without debt.
-- **Economic Value:** The present value of the "college premium" (lifetime earnings increase) is estimated at roughly **\$500,000**.
+- **Outcome:** Enables roughly 2-3 students to complete degrees with less debt.
+- **Economic Value:** The present value of the "college premium" (lifetime earnings increase) is estimated at roughly **\$500,000** per successful student.
 - **Probability:** High (80%+ graduation rate).
 
-$$EV_{Base} \approx \$400{,}000$$
+$$EV_{Base} \approx 2.5 \times \$500{,}000 \times 80\% \approx \$1{,}000{,}000$$
 
 ### 2. Intervention: Thiel Fellowship (EV_TF)
 
-Investing \$100,000 of normalized philanthropic cost in the Fellowship.
+Investing **\$250,000** of current philanthropic cost in the Fellowship.
 
 - **Probability of a very large outcome:** Based on historical cohorts (Ethereum, Figma, Luminar, OYO), we use a deliberately conservative **2%** rate for outcomes large enough, attributable enough, and independent enough to enter this calculation.
 - **Value of Outcome:** The average "Unicorn" creates ~\$5B in value.
@@ -68,24 +64,22 @@ $$EV_{TF} = 0.02 \times 500{,}000{,}000 \times 0.01 = \$100{,}000$$
 
 That deliberately narrow calculation alone would make the Fellowship less effective than the baseline education benchmark. The reason not to stop there is that it excludes much of the hits-based case: rarer much-larger outcomes, earlier entry into frontier fields, network effects among fellows, and the signaling effect on non-fellows.
 
-We treat those omitted channels as real but highly uncertain. Centrally, we add a judgmental **\$900,000** upside-and-signaling allowance to the explicit **\$100,000** large-outcome calculation, giving about **\$1 million of adjusted attributable surplus per \$100,000 of normalized Fellowship spending**. This still credits the Fellowship with only a very small fraction of the value generated by its highest-outcome alumni, but avoids assuming that broad hits-based upside automatically justifies a much larger multiplier.
+We treat those omitted channels as real but highly uncertain. Centrally, we add a judgmental **\$900,000** upside-and-signaling allowance to the explicit **\$100,000** large-outcome calculation, giving about **\$1 million of adjusted attributable surplus per current Fellowship slot**. This still credits the Fellowship with only a very small fraction of the value generated by its highest-outcome alumni, but avoids assuming that broad hits-based upside automatically justifies a much larger multiplier.
 
 ### 3. Final cost-per-QALY calculation
 
 Comparing the adjusted Expected Values:
 
-$$\text{Relative Effectiveness} = \dfrac{EV_{TF}}{EV_{Base}} = \dfrac{\$1{,}000{,}000}{\$400{,}000} = 2.5$$
+$$\text{Relative Effectiveness} = \dfrac{EV_{TF}}{EV_{Base}} = \dfrac{\$1{,}000{,}000}{\$1{,}000{,}000} = 1.0$$
 
-This implies the Thiel Fellowship could be more effective than standard education funding due to the power law of innovation, while still leaving most alumni success attributed to selection and the fellows themselves.
+This implies the Thiel Fellowship may be comparable to standard education funding under the central model. It could still be much better if the Fellowship is genuinely causal for one or more unusually large successes, but it could also be worse if most fellow outcomes would have happened anyway.
 
-Applying that comparison to the baseline:
+That comparison supports using the Education category default rather than a recipient-specific lower override.
 
-$$\text{Cost per QALY}_{TF} = \dfrac{\$25{,}000}{2.5} = \$10{,}000$$
-
-The plausible range is **\$2,500-\$100,000/QALY**. The low end corresponds to the Fellowship being genuinely causal for one or more very large successes or for a broader talent-allocation shift. The high end corresponds to the skeptical view that most fellow outcomes would have happened anyway and that the credentialism signal has little durable social value. The range is wide because the estimate is dominated by rare outcomes and attribution, not by the size of the stipend.
+The plausible recipient-specific range is roughly **\$5,000-\$200,000/QALY**. The low end corresponds to the Fellowship being genuinely causal for one or more very large successes or for a broader talent-allocation shift. The high end corresponds to the skeptical view that most fellow outcomes would have happened anyway and that the credentialism signal has little durable social value. The range is wide because the estimate is dominated by rare outcomes and attribution, not by the stipend alone.
 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
 
-The estimate is highly sensitive to the **Attribution** variable. If you believe Vitalik Buterin would have built Ethereum exactly as fast without Peter Thiel's money, the case for a very low \$ / QALY estimate weakens sharply. However, if you credit the Fellowship with even a modest "tipping point" effect on the crypto or hard-tech ecosystems, the ROI can still beat standard education interventions. The \$10,000/QALY estimate acknowledges the massive "hits" while heavily discounting for selection bias.
+The estimate is highly sensitive to the **Attribution** variable. If you believe Vitalik Buterin would have built Ethereum exactly as fast without Peter Thiel's money, the case for a very low \$ / QALY estimate weakens sharply. However, if you credit the Fellowship with even a modest "tipping point" effect on the crypto or hard-tech ecosystems, the ROI can still beat standard education interventions. A below-default override would need stronger source support for the hits-based attribution case.

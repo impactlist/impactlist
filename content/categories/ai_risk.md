@@ -12,7 +12,7 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 15th 2026 by GPT-5.4, revised on June 10th 2026 by Claude Fable 5, and again on June 16th 2026 by Claude Opus 4.8, with prompts from Impact List staff._
+_The following analysis was done on April 15th 2026 by GPT-5.4 and Claude Opus 4.8, with prompts from Impact List staff._
 
 Unlike a typical cause area, donations to AI existential-risk charities are best modeled as slightly reducing the probability of a catastrophe rather than directly buying QALYs. We therefore estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of an **AI-caused existential catastrophe**.
 
@@ -28,9 +28,9 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per microprobability:** \$625,000 (\$143,000–\$14.3 million)
+- **Cost per microprobability:** \$625,000 (\$154,000–\$14.3 million)
 - **Population fraction affected:** 1.0 (the modeled event is global by construction)
-- **QALY improvement per affected person per year:** 0.80 (0.5–0.9)
+- **QALY improvement per affected person per year:** 0.80 (0.65–0.9)
 - **Start time:** 10 years (~2036)
 - **Duration:** From the start time to the global time limit parameter (default 100 years, so a 90-year window by default), capped at a trillion years
 
@@ -42,8 +42,8 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 2. AGI — machines that can do any mental task better and more cheaply than humans — most likely arrives around 2036, with a plausible range of roughly 2030–2050. That is roughly when catastrophic AI risk becomes pressing. ([See detailed justification](/assumption/timelines-to-agi))
 3. The QALYs at stake are computed from the site's global population parameters: about 8.3 billion people today, growing at 1% per year, capped at 10x today's population, with no discounting by default (all user-adjustable). For reference, the UN projects world population to peak around 10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
 4. The welfare shortfall per affected person-year is about 0.9 QALY-equivalents for literal extinction and about 0.45 for permanent non-extinction catastrophes — irreversible disempowerment or stable totalitarian lock-in, which are less severe per year than extinction (people remain alive) but still globally catastrophic. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-5. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions; frontier-lab internal safety work is counted only at a conservative few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Open Philanthropy](https://www.openphilanthropy.org/focus/potential-risks-advanced-ai/))
-6. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.007–0.70 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
+5. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions; frontier-lab internal safety work is counted only at a conservative few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Coefficient Giving](https://coefficientgiving.org/funds/navigating-transformative-ai))
+6. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.007–0.65 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
 
 How these fit together: Assumptions 5 and 6 set the cost per microprobability. Assumptions 3 and 4 set the QALYs at stake per microprobability. Assumption 2 informs the start time. Assumption 1 mainly constrains how much risk there is to reduce — the QALY value of a microprobability does not itself depend on the baseline probability (see Key Uncertainties).
 
@@ -51,12 +51,12 @@ How these fit together: Assumptions 5 and 6 set the cost per microprobability. A
 
 ### Cost per microprobability
 
-The point estimate (\$625,000 per microprobability) and range (\$143,000–\$14.3 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 5 and 6, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.16 percentage points**:
+The point estimate (\$625,000 per microprobability) and range (\$154,000–\$14.3 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 5 and 6, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.16 percentage points**:
 
 - Microprobabilities averted: $0.0016 / 10^{-6} = 1{,}600$
 - Cost per microprobability: $$\$1\text{B} / 1{,}600 \approx \$625{,}000$$
 
-The same calculation with weaker or stronger assumed effects gives the range: 0.007 percentage points → about **\$14.3 million** per microprobability, and 0.70 percentage points → about **\$143,000**. (The three significant figures in \$625,000 are an artifact of the round 0.16 input, not real precision.)
+The same calculation with weaker or stronger assumed effects gives the range: 0.007 percentage points → about **\$14.3 million** per microprobability, and 0.65 percentage points → about **\$154,000**. (The three significant figures in \$625,000 are an artifact of the round 0.16 input, not real precision.)
 
 The range is wide because the estimate rests on a **single line of evidence** — the realized field-level effect of past spending — rather than a convergence of independent methods, so it reflects uncertainty _within_ that one estimate.
 
@@ -64,6 +64,8 @@ The range is wide because the estimate rests on a **single line of evidence** �
 This estimate is already meant to be net of positive and negative effects, because the underlying assumption page explicitly tries to account for both. It also includes more than just extinction-prevention channels: the same technical, governance, and institutional work can bear on irreversible disempowerment and lock-in as well, though probably not quite as strongly as they bear on literal extinction.
 
 The field-level estimate is based on the historical average effect of AI safety spending to date, while this page models forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar, but that is at least partly offset by diminishing returns and by the field becoming larger and more crowded, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
+
+The positive range should also be read as conditional on safety spending being net helpful. The linked assumption page still assigns some lower-tail probability to near-zero or negative net impact from capabilities spillovers, safetywashing, or deployment acceleration; users who put substantial weight on that tail should weaken or disable this category.
 :::
 
 ### Population fraction affected
@@ -78,7 +80,7 @@ This is a simplifying convention. In real lock-in or disempowerment scenarios th
 
 The point estimate is **0.80** QALY-equivalents lost per affected person per year — a weighted average of about **0.9** for literal extinction (a lost life-year averages about 0.9 QALY, not a perfect 1.0) and **0.45** for permanent non-extinction catastrophes, where people remain alive but humanity permanently loses the ability to choose and revise its own future.
 
-The **0.45** is the most contestable input, and how you value it drives the whole severity term. Irreversible disempowerment or stable lock-in is far worse than ordinary authoritarianism but less severe per year than extinction: weight the lost agency lightly and you approach the ~0.1–0.3 that present-day happiness gaps alone would justify; treat lost self-determination as near-extinction and you approach 0.9. The plausible range (**0.5–0.9**) for the overall class reflects that spread.
+The **0.45** is the most contestable input, and how you value it drives the whole severity term. Irreversible disempowerment or stable lock-in is far worse than ordinary authoritarianism but less severe per year than extinction: weight the lost agency lightly and you approach the ~0.1–0.3 that present-day happiness gaps alone would justify; treat lost self-determination as near-extinction and you approach 0.9. Given the extinction/non-extinction mix in Assumption 1, the plausible range for the overall event class is about **0.65–0.9**.
 
 :::details{title="How the 0.80 is derived, and the case for 0.45"}
 Across the whole baseline catastrophe class the average shortfall is about **0.77**, using the 10% + 4% extinction/non-extinction decomposition from Assumption 1:

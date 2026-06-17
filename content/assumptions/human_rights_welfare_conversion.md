@@ -54,3 +54,5 @@ The 0.5 annual loss is a shorthand for a bundle of harms — mental illness and 
 ## 3. Why add an uplift at all?
 
 Both conversions are uncertain, but adding an uplift is more faithful to an all-things-considered welfare estimate than treating autonomy, dignity, fear, and post-intervention persistence as real but effectively zero in the headline calculation.
+
+{{CONTRIBUTION_NOTE}}

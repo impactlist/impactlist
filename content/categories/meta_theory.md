@@ -27,7 +27,7 @@ That structure is more transparent than treating the entire category as one undi
 
 This category excludes more technical **Global Priorities Research**, which is treated separately.
 
-We estimate about **\$21/QALY**. The driver is leverage on cheap downstream opportunities: a meta dollar buys roughly an **8x** multiplier on direct money-moving (whose downstream giving lands near **\$100/QALY**) and a **4x** multiplier on career/worldview work (downstream near **\$150/QALY**), blended **40% / 60%**. The direct channel does most of the work because it has the cleanest evidence and the cheapest downstream destinations. The cruxes are the channel mix and how much to credit the noisier career/worldview channel; the range (**\$6-\$100/QALY**) is wide mainly because the marginal opportunity's channel mix and downstream targets vary a lot across plausible donations.
+We estimate about **\$21/QALY**. The driver is leverage on cheap downstream opportunities: a meta dollar buys roughly an **8x** multiplier on direct money-moving (whose downstream giving lands near **\$100/QALY**) and a **4x** multiplier on career/worldview work (downstream near **\$150/QALY**), blended **40% / 60%**. The direct channel does most of the work because it has the cleanest evidence and the cheapest downstream destinations. The cruxes are the channel mix and how much to credit the noisier career/worldview channel; the range (**\$6-\$300/QALY**) is wide because the marginal opportunity's channel mix, downstream targets, and attribution strength vary a lot across plausible donations.
 
 ## What kinds of charities are we modeling?
 
@@ -51,7 +51,7 @@ These estimates assume marginal donations go to **high-quality, high-leverage me
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$21 (\$6-\$100)
+- **Cost per QALY:** \$21 (\$6-\$300)
 - **Start time:** 5 years
 - **Duration:** 25 years
 
@@ -125,7 +125,7 @@ That is why the direct channel uses **8x** rather than simply reading off GiveWe
 The downstream benchmark should still be all-things-considered. Many of the opportunities this channel points people toward are not near-term global-health charities; they include animal welfare, catastrophic-risk reduction, global priorities, institution building, and mixed strategic portfolios. Some of that mix likely runs through [AI Existential Risk](/cause/ai-risk), [Pandemics](/cause/pandemics), and [Nuclear](/cause/nuclear), but those pages currently use catastrophe-probability models rather than ordinary **\$/QALY** figures. So the **\$150/QALY** benchmark captures the average all-things-considered downstream value of the broader opportunity set, including those catastrophic-risk destinations, rather than reading every part of the mix directly off on-site **\$/QALY** benchmarks.
 :::
 
-Pushing all four multipliers and benchmarks to their favorable or unfavorable edges at once (with the **40% / 60%** split held fixed) spans about **\$6-\$69/QALY**: the category looks extremely strong if the broader channel really does send many people toward very high-value downstream paths, and fairly weak if both channels disappoint. The headline range is wider still — **\$6-\$100/QALY** — because the channel split itself can vary across plausible marginal opportunities, which that all-edges figure holds fixed, and because the deepest uncertainty here is structural rather than parametric: whether the modeled leverage is mostly real or mostly an artifact of optimistic attribution. We do not narrow the all-edges figure toward a narrower independent-combination range, because the inputs are not independent — an optimistic-about-meta worldview pushes both multipliers up and both downstream benchmarks down together, and a pessimistic one moves them together the other way — so the edges behave more like a genuine joint tail than like simultaneous coincidences.
+Pushing all four multipliers and benchmarks to their favorable or unfavorable edges at once (with the **40% / 60%** split held fixed) spans about **\$6-\$69/QALY**: the category looks extremely strong if the broader channel really does send many people toward very high-value downstream paths, and fairly weak if both channels disappoint. The headline range is wider still — **\$6-\$300/QALY** — because the channel split itself can vary across plausible marginal opportunities, which that all-edges figure holds fixed, and because the deepest uncertainty here is structural rather than parametric: whether the modeled leverage is mostly real or mostly an artifact of optimistic attribution. We do not narrow the all-edges figure toward a narrower independent-combination range, because the inputs are not independent — an optimistic-about-meta worldview pushes both multipliers up and both downstream benchmarks down together, and a pessimistic one moves them together the other way — so the edges behave more like a genuine joint tail than like simultaneous coincidences.
 
 :::details{title="Pushing every input to its favorable or unfavorable edge at once (split held at 40% / 60%)"}
 - **Optimistic direct, optimistic career/worldview:** 12x on \$80/QALY and 8x on \$50/QALY -> about **\$6/QALY**
@@ -133,7 +133,7 @@ Pushing all four multipliers and benchmarks to their favorable or unfavorable ed
 - **Pessimistic direct, optimistic career/worldview:** 5x on \$150/QALY and 8x on \$50/QALY -> about **\$9/QALY**
 - **Pessimistic direct, pessimistic career/worldview:** 5x on \$150/QALY and 1x on \$500/QALY -> about **\$69/QALY**
 
-The evidence for the broader channel is still much noisier than for direct money-moving, which is why the headline point estimate stays well above the optimistic edge. The headline range extends past this table mainly because the table holds the channel split fixed: a more theory-heavy or movement-building-heavy portfolio can be meaningfully worse than the central case, while an unusually evaluator-heavy or high-talent-placement-heavy portfolio can be somewhat better. The upper edge near **\$100/QALY** corresponds to the unfavorable-input case combined with a more worldview-heavy split (around a 25-30% direct share), and a genuine structural-pessimist case — attribution turning out weaker than even the 5x and 1x multiplier floors — would push past it.
+The evidence for the broader channel is still much noisier than for direct money-moving, which is why the headline point estimate stays well above the optimistic edge. The headline range extends past this table mainly because the table holds the channel split fixed: a more theory-heavy or movement-building-heavy portfolio can be meaningfully worse than the central case, while an unusually evaluator-heavy or high-talent-placement-heavy portfolio can be somewhat better. The upper edge near **\$300/QALY** corresponds to an unfavorable-input case combined with a much more worldview-heavy split and weaker attribution than the direct multiplier evidence supports.
 :::
 
 ### Start time
@@ -160,6 +160,6 @@ We do not use a longer duration than 25 years because some effects decay: donors
 
 # Internal Notes
 
-- This version fixes the transparency problem in the earlier blended model by making the channel weights and downstream benchmarks explicit.
+- The main transparency crux is keeping the channel weights and downstream benchmarks explicit, because small changes to those assumptions can move the estimate by orders of magnitude.
 - The most important future levers are: direct-channel multiplier, career/worldview multiplier, channel mix, and the downstream `$/QALY` benchmark for the broader career/worldview bucket.
 - If future editors want to change this estimate substantially, they should probably update the dedicated assumption page rather than trying to tweak a sentence or two in the category page.

@@ -31,7 +31,7 @@ They are **not** estimates for:
 - biomedical R&D
 - humanitarian medical relief during wars or disasters
 
-Those causes can still be very valuable, but they are usually less tightly evidence-backed and less cost-effective than the narrow set of top child-survival opportunities modeled here.
+Those causes can still be very valuable, but they are usually less tightly evidence-backed and less cost-effective than the narrow set of top child-survival opportunities modeled here. Broad global-health recipients should therefore get recipient-level overrides rather than inheriting this default.
 :::
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
@@ -63,7 +63,7 @@ We anchor on two questions — what a current marginal GiveWell-style dollar buy
 - **Marginal funding-bar estimate:** about **\$130/QALY** (GiveWell's 6x funding bar, translated through its moral weights into QALYs).
 - **Historical top-charity average:** about **\$80/QALY** (GiveWell's 2022-2024 record of ~\$4,375 per life saved, at 55 QALYs per child death averted).
 
-Taking the midpoint gives about **\$105/QALY**. Averaging beats either anchor alone: the strongest single published grant would overstate the average current opportunity, while the funding bar alone understates the fact that GiveWell's recent top-charity portfolio has averaged somewhat better than the bar. Non-mortality benefits (reduced illness, lower treatment costs, later-life income) are inside the QALY metric here — carried by the benchmark bridge rather than added separately.
+Taking the midpoint gives about **\$105/QALY**. Averaging beats either anchor alone: the strongest single published grant would overstate the average current opportunity, while the funding bar alone understates the fact that GiveWell's recent top-charity portfolio has averaged somewhat better than the bar. The historical average is an unweighted cross-check across the four top charities, not a claim about GiveWell-directed funding weights; the funding-bar estimate is the cleaner marginal anchor. Non-mortality benefits (reduced illness, lower treatment costs, later-life income) are inside the QALY metric here — carried by the benchmark bridge rather than added separately.
 
 :::details{title="The two anchor calculations"}
 **Approach 1 — current marginal funding-bar estimate.** GiveWell's benchmark is about **0.003 units of value per dollar** (Assumption 1) and its current funding bar is **6x** that (Assumption 2); Assumptions 3 and 4 translate the resulting units into QALYs:

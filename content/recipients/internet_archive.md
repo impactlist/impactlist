@@ -7,14 +7,14 @@ categories:
     effects:
       - effectId: standard
         overrides:
-          costPerQALY: 3000
+          costPerQALY: 6000
 ---
 
 # Justification of cost per life
 
-_The following analysis was done on December 16th 2025, written by GPT-5 and edited by Impact List staff for clarity._
+_The following analysis was done on December 16th 2025 by GPT-5, with prompts from Impact List staff._
 
-We assign the Internet Archive a **cost per QALY of \$3,000**. The core idea is that preserving valuable knowledge can be much cheaper than creating it from scratch, which makes it look substantially better than the baseline [Science and Tech](/cause/science-tech) estimate.
+We assign the Internet Archive a **cost per QALY of \$6,000**. The core idea is that preserving valuable knowledge can be much cheaper than creating it from scratch, which makes it look substantially better than the baseline [Science and Tech](/cause/science-tech) estimate, but the launch estimate now includes an explicit marginal-funding haircut because the Internet Archive already has a substantial contribution base.
 
 ## Description of effect
 
@@ -22,20 +22,21 @@ This effect captures the welfare gains from the universal preservation of digita
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$3,000 (\$1,000-\$30,000)
+- **Cost per QALY:** \$6,000 (\$2,000-\$60,000)
 
 _If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values._
 
 ## Assumptions
 
-1.  **The Maintenance Arbitrage:** It is orders of magnitude cheaper to store a terabyte of existing data than to conduct the R&D required to generate a terabyte of new, high-value scientific insight. We model preservation as about 20x cheaper than discovery per unit of useful information.
+1.  **The Maintenance Arbitrage:** It is orders of magnitude cheaper to store existing digital records than to generate new high-value scientific or technical knowledge. We model preservation as about 20x cheaper than discovery per unit of useful information.
 2.  **The "Link Rot" Counterfactual:** Without the Internet Archive, the digital record is extremely fragile. Pew Research Center found that 38% of webpages that existed in 2013 were inaccessible a decade later, 23% of news webpages sampled in 2023 contained at least one broken link, and 54% of Wikipedia pages contained at least one broken reference link. ([Pew Research Center 2024](https://www.pewresearch.org/data-labs/2024/05/17/when-online-content-disappears/))
-3.  **Universal Utility:** Unlike a specific R&D project (e.g., developing a new polymer), the Internet Archive is a "general-purpose input" for journalists, courts, historians, and scientists globally. Its utility scales with the size of the entire web.
+3.  **Value Ratio:** The average preserved webpage or book scan is much less valuable than an average successful new scientific discovery, so we value a unit of preserved information at about **0.5x** a unit of newly created high-value knowledge. This is a judgment call and the main reason the range remains wide.
 4.  **Epistemic Security:** In an era of AI-generated misinformation and political revisionism, the "Wayback Machine" provides a verified "source of truth," generating significant (though hard to quantify) democracy and stability benefits. We model the Internet Archive's uniqueness and counterfactual leverage as a 2x boost.
+5.  **Funding Additionality:** Internet Archive's recent Form 990 shows a substantial existing contribution base, so we apply a **0.5x marginal-funding haircut** rather than treating every new dollar as fully additional to preservation. ([ProPublica](https://projects.propublica.org/nonprofits/organizations/943242767))
 
 ## Details
 
-### Deriving the \$3,000/QALY estimate
+### Deriving the \$6,000/QALY estimate
 
 We benchmark the Internet Archive against the baseline science-and-tech estimate of **\$60,000/QALY**. The comparison is between the value-preservation efficiency of the Internet Archive ($Eff_{IA}$) and the value-creation efficiency of baseline R&D ($Eff_{Base}$).
 
@@ -57,22 +58,26 @@ New discoveries have high marginal value (new cures, new tech). Old data has low
 
 If one lab fails to invent a drug, another often will (concurrent invention). But if the Internet Archive misses a snapshot of a deleted government page, that record is likely gone forever. IA has higher counterfactual leverage. We assign a **2x** boost for this uniqueness.
 
-### 4. Final cost-per-QALY calculation
+### 4. Funding additionality
+
+Because the Internet Archive already raises much of its budget from contributions, we apply a **0.5x** marginal-funding haircut. This is separate from uniqueness: a snapshot can be irreplaceable while a marginal donor dollar is still partly replacing other support.
+
+### 5. Final cost-per-QALY calculation
 
 Combining the factors:
 
-$$\text{Relative Effectiveness} = \frac{V_{ratio} \times U}{C_{ratio}} = \frac{0.5 \times 2}{0.05} = 20$$
+$$\text{Relative Effectiveness} = \frac{V_{ratio} \times U \times A}{C_{ratio}} = \frac{0.5 \times 2 \times 0.5}{0.05} = 10$$
 
-This implies the Internet Archive could be substantially more effective than general R&D funding because it secures the existing knowledge base for a small cost relative to the creation of that knowledge.
+This implies the Internet Archive could be substantially more effective than general R&D funding because it secures existing knowledge for a small cost relative to the creation of that knowledge.
 
 Applying that comparison to the baseline:
 
-$$\text{Cost per QALY}_{IA} = \frac{\$60{,}000}{20} = \$3{,}000$$
+$$\text{Cost per QALY}_{IA} = \frac{\$60{,}000}{10} = \$6{,}000$$
 
-The plausible range is **\$1,000-\$30,000/QALY**. The low end corresponds to the Internet Archive preserving unusually important records that would otherwise disappear and be costly or impossible to reconstruct. The high end corresponds to a world where much of the archive's marginal crawl is low-value, duplicated elsewhere, or useful mostly to a small set of users. The estimate remains below the science-and-tech baseline because preservation is unusually cheap, but the range is wide because "value per preserved page" is hard to measure.
+The plausible range is **\$2,000-\$60,000/QALY**. The low end corresponds to the Internet Archive preserving unusually important records that would otherwise disappear and be costly or impossible to reconstruct. The high end corresponds to a world where much of the archive's marginal crawl is low-value, duplicated elsewhere, useful mostly to a small set of users, or funded by donors who would have replaced the marginal gift. The estimate remains below the science-and-tech baseline because preservation is unusually cheap, but the range is wide because "value per preserved page" and marginal funding additionality are both hard to measure.
 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
 
-The \$3,000/QALY estimate positions the Internet Archive as an exceptionally high-leverage "Meta-Science" intervention. It reflects the "commodity storage" thesis: that preserving the entire corpus of human knowledge is a low-cost, high-yield prerequisite for all other intellectual progress.
+The \$6,000/QALY estimate positions the Internet Archive as a high-leverage public-interest knowledge infrastructure intervention while adding a launch-safe marginal-funding haircut.

@@ -48,9 +48,9 @@ Where:
 
 This page justifies three especially important judgment calls:
 
-- using **\$400/QALY** for the counterfactual cost-effectiveness of influenced capital ($B$)
-- using **40%** for the direct improvement in that capital's all-things-considered welfare output ($g$)
-- using a broader-strategic channel worth about **100%** of the direct philanthropic channel ($k$), with a {{PLAUSIBLE_RANGE}} of **0%-300%**
+- using **\$400/QALY** for the counterfactual cost-effectiveness of influenced capital ($B$), with a {{PLAUSIBLE_RANGE}} of **\$200-\$1,000/QALY**
+- using **40%** for the direct improvement in that capital's all-things-considered welfare output ($g$), with a plausible range of **15%-80%**
+- using a broader-strategic channel worth about **100%** of the direct philanthropic channel ($k$), with a plausible range of **0%-300%**
 
 Together with the scale inputs inherited from the category page — **\$2 million** of annual GPR cost ($C$) influencing **\$200 million** of later philanthropy ($I$) — these imply about **\$5/QALY**: an influenced \$200M improved 40% against a \$400/QALY baseline is 200,000 direct QALYs, and a strategic channel of equal size doubles that to 400,000 QALYs for \$2M of cost. (This page justifies only $B$, $g$, and $k$; $C$ and $I$ are inherited.)
 
@@ -66,10 +66,10 @@ So the right question is not whether GPR affects only direct health outcomes. Th
 
 This benchmark ($B$) is not meant to represent ordinary untargeted philanthropy, nor a frontier funder's current best bar. It represents **impact-motivated but non-frontier** capital of the sort that a strong GPR organization can still improve. A central figure of **\$400/QALY** is a reasonable middle ground for capital that is already trying to do good but is still materially improvable by better prioritization, with a plausible range of **\$200-\$1,000/QALY** for donors respectively closer to or further from the frontier.
 
-That \$400 sits well inside the spread of serious opportunities — far worse than the frontier funders GPR competes with, but far better than untargeted giving.
+That \$400 sits well inside the spread of serious opportunities — far worse than the frontier funders GPR competes with, but far better than untargeted giving. The site estimates below are calibration examples rather than independent evidence; the independent support is the broader fact that serious impact-focused funders already use common-unit frameworks and that very strong opportunities can sit around \$100/DALY-equivalent while broader but still impact-motivated portfolios are weaker.
 
 :::details{title="Where the 400/QALY benchmark sits among serious opportunities"}
-The site's own category estimates already span a very wide range: [Animal Welfare](/cause/animal-welfare) about **\$2.3/QALY**, [Meta and Theory](/cause/meta-theory) about **\$21/QALY**, [Global Health](/cause/global-health) about **\$105/QALY**, [Global Development](/cause/global-development) about **\$210/QALY**, [Human Rights](/cause/human-rights) about **\$310/QALY**, [Conflict Mitigation](/cause/conflict-mitigation) about **\$333/QALY**, [Climate Change](/cause/climate-change) about **\$590/QALY**, and [Institutions](/cause/institutions) about **\$3,000/QALY**.
+As calibration examples, the site's own category estimates already span a very wide range: [Animal Welfare](/cause/animal-welfare) about **\$2.3/QALY**, [Meta and Theory](/cause/meta-theory) about **\$21/QALY**, [Global Health](/cause/global-health) about **\$105/QALY**, [Global Development](/cause/global-development) about **\$210/QALY**, [Human Rights](/cause/human-rights) about **\$310/QALY**, [Conflict Mitigation](/cause/conflict-mitigation) about **\$333/QALY**, [Climate Change](/cause/climate-change) about **\$590/QALY**, and [Institutions](/cause/institutions) about **\$3,000/QALY**. These are not independent evidence for the \$400 benchmark; they are a consistency check that the benchmark sits in the intended region.
 
 Coefficient's 2021 framework update values a DALY at about **\$100,000**, so its 1000x bar corresponds to roughly **one healthy life-year per \$100** spent. ([Coefficient framework update](https://coefficientgiving.org/research/technical-updates-to-our-global-health-and-wellbeing-cause-prioritization-framework/)) The counterfactual capital influenced by GPR is neither as weak as ordinary philanthropy nor as strong as Coefficient's own current frontier, which is why a middle figure is appropriate.
 :::

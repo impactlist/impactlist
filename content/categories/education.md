@@ -27,6 +27,12 @@ students' quality of life. We do **not** assume that generic school spending, el
 endowments, or marginal gifts to already-rich institutions are equally effective. The goal is to
 estimate the best marginal education philanthropy, not average education expenditure.
 
+## What kinds of charities are we modeling?
+
+These estimates are for **effective education interventions with a clear causal route to student welfare**: comprehensive college-completion support for lower-income students, schoolwide wellbeing and anti-bullying programs, and similarly evidence-backed delivery charities.
+
+They are **not** meant for elite-university endowments, generic scholarships at already-rich institutions, athletics, buildings, or broad academic prestige projects unless a recipient-level model shows a comparable welfare path.
+
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
 - **Cost per QALY:** \$25,000 (\$15,000–\$90,000)
@@ -42,8 +48,9 @@ field at the top of this page and enter your own values.*
    points in a randomized evaluation. ([CUNY](https://www.cuny.edu/about/administration/offices/student-success-initiatives/asap/evaluation/))
 2. In Table 1 of the ACE policy brief's midpoint persistence scenario, ACE has approximately
    \$12,374 in direct expenditures per participant and current-generation lifetime earnings gains of
-   approximately \$51,986 in present value, yielding \$42,955 in net social benefits even before
-   intergenerational effects.
+   approximately \$51,986 in present value. Subtracting direct expenditures from those earnings gains
+   gives about \$39,600 before any intergenerational benefits; the cost-effectiveness calculation
+   below uses the gross earnings gain as the welfare benefit and the direct expenditure as the cost.
    ([Scott-Clayton et al. 2025](https://www.nber.org/papers/w33956), [Columbia brief 2024](https://povertycenter.columbia.edu/sites/default/files/content/Publications/Net-Benefits-of-Raising-Bachelor-Degree-Completion-CPSP-BRIEF-2024.pdf))
 3. A reasonable money-metric conversion in rich countries is roughly \$100,000-\$115,000 per
    QALY-equivalent. This is a wellbeing-based conversion: it maps non-health gains such as income
@@ -106,7 +113,7 @@ mid-\$50,000s; together they push it well above that, which is why the upper bou
 rather than at the edge of a single pathway's sweep.
 
 **Pathway 1 — Degree-completion programs.** The strongest attainment anchor is CUNY ACE: lifetime
-earnings gains of **\$51,986** per participant against direct expenditures of **\$12,374**
+earnings gains of **\$51,986** per participant against direct program expenditures of **\$12,374**
 (Assumption 2) imply roughly **\$24,000-\$27,000/QALY** centrally, widening to about
 **\$15,000-\$55,000/QALY** across the paper's persistence scenarios. ASAP-style supports have now
 replicated outside CUNY — Ohio showed a 15 percentage point degree-receipt gain after eight years
@@ -129,10 +136,7 @@ $$
 \approx \$24{,}000\text{–}\$27{,}000
 $$
 
-This is not full welfare accounting: the ACE authors deliberately exclude several plausibly real
-current-generation benefits (health, longevity, reduced crime) and the child-generation benefits,
-so the true value is likely better than this. The paper's alternative persistence scenarios bracket
-the estimate:
+This uses direct program expenditures in the denominator and current-generation lifetime earnings in the numerator. The ACE authors' net-social-benefit table subtracts costs from benefits when reporting social surplus; the per-QALY calculation here instead divides the philanthropic or program cost by gross welfare-equivalent benefits, which is the relevant cost-effectiveness perspective. It is still not full welfare accounting: the ACE authors deliberately exclude several plausibly real current-generation benefits (health, longevity, reduced crime) and the child-generation benefits, so the true value is likely better than this. The paper's alternative persistence scenarios bracket the estimate:
 
 - **Optimistic / permanent completion effect:** about \$15,000-\$17,000 per QALY
 - **Pessimistic / acceleration-only:** about \$47,000-\$54,000 per QALY

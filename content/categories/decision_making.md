@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from donations to charities that improve how high-stakes institutions form beliefs and choose actions: probabilistic forecasting, prediction markets, evidence synthesis, collective intelligence, structured analytic techniques such as premortems and red-team reviews, decision audits, and related tools for governments and other consequential organizations.
@@ -39,6 +37,8 @@ We are **not** modeling generic journalism, generic civic engagement, or direct 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. Forecasting tournaments and related methods can materially improve predictive accuracy relative to ordinary expert judgment. In the IARPA forecasting program, training, teaming, and aggregation substantially improved performance, and in corporate settings prediction markets beat expert forecasts by up to 25% lower mean-squared error. ([Mellers et al. 2014](https://pubmed.ncbi.nlm.nih.gov/24659192/), [Cowgill & Zitzewitz 2015](https://academic.oup.com/restud/article/82/4/1309/2607345))
 2. Better forecast scores do not automatically translate into better decisions. Evidence summaries often make research easier to understand, but systematic reviews find unclear or limited evidence that summaries alone increase policymakers' use of evidence, and organizational change typically requires dedicated roles, processes, and leadership support. ([Petkovic et al. 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC8428003/), [Clark et al. 2024](https://pmc.ncbi.nlm.nih.gov/articles/PMC10983660/))

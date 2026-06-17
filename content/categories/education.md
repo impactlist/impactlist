@@ -12,11 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per
-[QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and
-multiplying this by our hardcoded value for how many years make up a life (80 at the time of this
-writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures wellbeing gains from **effective education charities in high-income
@@ -43,6 +38,8 @@ They are **not** meant for elite-university endowments, generic scholarships at 
 field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. CUNY's ACE program increased five-year bachelor's-degree completion by about 11.7 percentage
    points in a randomized evaluation. ([CUNY](https://www.cuny.edu/about/administration/offices/student-success-initiatives/asap/evaluation/))

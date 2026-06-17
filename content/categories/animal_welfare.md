@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing; check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from donations to the best current animal-welfare charities. In practice, the clearest evidence base still comes from farmed-chicken corporate campaigns and accountability work, especially cage-free reforms for laying hens and Better Chicken Commitment (BCC) reforms for broilers. There are also increasingly promising aquatic-animal opportunities, especially shrimp welfare, but the cross-species conversion into human-equivalent QALYs is less mature there.
@@ -33,6 +31,8 @@ They are **not** meant for zoos, companion-animal shelters, wildlife conservatio
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The best current animal-welfare giving opportunities are concentrated in farmed-animal advocacy, especially chicken corporate campaigns/accountability, with aquatic-animal work as an important additional source of uncertainty and potential impact. ([Animal Charity Evaluators](https://animalcharityevaluators.org/charity-review/the-humane-league/), [Animal Charity Evaluators](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
 2. ACE's 2025 review estimates that The Humane League's cage-free accountability work helps roughly 11 hens per dollar, its BCC accountability work helps about 46 broilers per dollar, and THL's overall scope is about 12 animals helped per dollar. We use the 11 hens per dollar figure as the baseline because it is current and has the cleanest path into QALYs. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/))

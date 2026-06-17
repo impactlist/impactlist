@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from donations to exceptionally cost-effective global-health charities, especially GiveWell-style programs that prevent child deaths from malaria, vitamin A deficiency, and vaccine-preventable disease. The estimate is meant to model the best currently donatable global-health opportunities, not the average global-health nonprofit. Because these programs mostly help very young children, the gains are dominated by many decades of additional life.
@@ -43,6 +41,8 @@ Those causes can still be very valuable, but they are usually less tightly evide
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. GiveWell's current benchmark is still approximately **0.003 units of value per dollar**. ([GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models))
 2. GiveWell's current public funding bar is **6x benchmark** as of its May 2026 cost-effectiveness update. That is the cleanest public anchor for what a current marginal top-charity opportunity has to clear. ([GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models))

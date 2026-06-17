@@ -63,6 +63,8 @@ This effect captures non-transformative gains from AI as a general-purpose techn
 
 ### Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1. Generative AI could add the equivalent of \$2.6-4.4 trillion annually across the 63 use cases McKinsey analyzed. ([McKinsey 2023](https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier))
 2. Penn Wharton estimates AI will raise productivity and GDP by about 1.5% by 2035, nearly 3% by 2055, and 3.7% by 2075. ([Penn Wharton 2025](https://budgetmodel.wharton.upenn.edu/issues/2025/9/8/projected-impact-of-generative-ai-on-future-productivity-growth))
 3. In the best-known field experiment, AI assistance raised customer-support productivity by 14% on average and by roughly 34% for the least experienced workers. ([Brynjolfsson, Li, and Raymond 2025](https://academic.oup.com/qje/article/140/2/889/7990658))
@@ -118,6 +120,8 @@ Importantly, this is **not** the probability that advanced AI is merely "on bala
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ### Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. AGI — machines that can do any mental task better and more cheaply than humans — most likely arrives around 2036 (the broader physical-task HLMI bar is later). The 2023 AI Impacts survey put a 50% chance on HLMI by 2047, but that survey is dated and more recent aggregates are substantially shorter. ([Grace et al. 2024](https://aiimpacts.org/wp-content/uploads/2023/04/Thousands_of_AI_authors_on_the_future_of_AI.pdf), [timelines to AGI](/assumption/timelines-to-agi))
 2. We use a baseline of about **10 years to transformative AI** (mid-2030s, ≈ the AGI date above), consistent with the [timelines estimate](/assumption/timelines-to-agi). The cumulative-spending denominator below is kept at \$5 trillion: the shorter horizon is offset by a higher average annual frontier-spend rate, reflecting the current capex ramp.
@@ -192,12 +196,13 @@ Note: The QALY improvement per year is **-0.9** (negative), indicating this is a
 
 ### Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1. The baseline probability of AI-caused extinction this century is about **10%**. ([See detailed justification](/assumption/ai-doom-probability))
 2. Total cumulative frontier or near-frontier AI spending before transformative AI is roughly **\$5 trillion**. ([See detailed justification](/assumption/cumulative-frontier-ai-spending-before-transformative-ai))
 3. A marginal philanthropic dollar in this cause is best modeled as about **30 cents of frontier-equivalent capability acceleration**. ([See detailed justification](/assumption/frontier-equivalent-share-of-ai-capabilities-philanthropy))
 4. As a first-pass model, small marginal accelerations of frontier capability progress increase extinction risk roughly in proportion to how much they speed up the race. This linearity assumption is obviously imperfect, but it is the cleanest tractable baseline.
-5. The QALYs at stake are computed from the site's global population parameters: about **8.3 billion** people today, growing at **1%** per year, capped at **10x** today's population, and counted over the user's selected time horizon. For reference, the UN projects world population to peak around **10.3 billion** in the 2080s. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
-6. Average human quality of life is roughly **0.9 QALYs per year**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
+5. Average human quality of life is roughly **0.9 QALYs per year**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
 
 ### Details
 

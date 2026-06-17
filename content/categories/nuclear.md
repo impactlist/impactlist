@@ -55,15 +55,16 @@ We are **not** modeling:
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1. A large US-Russia nuclear war could kill on the order of **5 billion** people, mostly through famine rather than blast effects, and soot injections above **5 Tg** would already produce mass food shortages in almost all countries. ([Xia et al. 2022](https://www.nature.com/articles/s43016-022-00573-0))
 2. Direct blast and radiation deaths from a US-Russia exchange are likely on the order of **tens of millions**; Rethink Priorities' central estimate is about **51 million** direct deaths. ([Rodriguez 2019](https://rethinkpriorities.org/research-area/how-many-people-would-be-killed-as-a-direct-result-of-a-us-russia-nuclear-exchange/))
 3. Current nuclear risk is elevated. Open Nuclear Network's 2024 survey found median forecasts of **5%** from experts and **1%** from superforecasters for a >10 million-death nuclear catastrophe by **2045**, while SIPRI reports that all nine nuclear-armed states continued modernizing their arsenals in 2024 and that the expiry of **New START on February 5, 2026** raises the prospect of an unregulated arms buildup. ([ONN 2024](https://opennuclear.org/en/open-nuclear-network/publication/can-humanity-achieve-century-nuclear-peace), [SIPRI 2025 world nuclear forces](https://www.sipri.org/yearbook/2025/06), [SIPRI 2025 arms control](https://www.sipri.org/yearbook/2025/08))
 4. Philanthropic funding specifically focused on nuclear risk reduction is only about **\$30 million per year** after the MacArthur Foundation's exit. ([Founders Pledge 2023](https://www.founderspledge.com/research/global-catastrophic-nuclear-risk-a-guide-for-philanthropists))
 5. A mature but still tiny nuclear-philanthropy field spending roughly **\$600 million over 20 years** plausibly reduces broad >10-million-death nuclear-catastrophe risk by about **0.025 percentage points**, with a plausible range of about **0.002–0.2 percentage points**. ([See detailed justification](/assumption/effect-of-nuclear-risk-philanthropy))
 6. The category model is more severe than that broad >10-million-death endpoint: it values a large nuclear-winter catastrophe, not every smaller nuclear catastrophe in the ONN-style risk forecast. We therefore convert broad risk reduction into large-nuclear-winter-equivalent risk reduction using an **expected-severity bridge**. The central bridge treats broad catastrophes as a mix of limited/regional or direct-casualty events, serious great-power or limited-winter events, and severe nuclear-winter events; the weighted average is about **25%** as severe as the large-winter scenario modeled here, so roughly four broad catastrophe microprobabilities count as one large-nuclear-winter-equivalent microprobability.
-7. World population at the relevant horizon is about **10.3 billion**. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
-8. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing roughly **40 years** of otherwise expected life cost on the order of **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-9. Severe survivors of a global catastrophic nuclear war lose roughly **7 QALYs** on average through some combination of shortened life expectancy from famine, disease, and infrastructure collapse, plus years of much lower quality of life during recovery.
+7. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing roughly **40 years** of otherwise expected life cost on the order of **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
+8. Severe survivors of a global catastrophic nuclear war lose roughly **7 QALYs** on average through some combination of shortened life expectancy from famine, disease, and infrastructure collapse, plus years of much lower quality of life during recovery.
 
 ## Details
 
@@ -119,10 +120,10 @@ So even people far from the detonations would often still face severe shortages 
 The point estimate (0.75) and range (0.5–0.9) come from spreading total QALY losses across the affected population over the 30-year window: about **208 billion QALYs** lost across roughly **278 billion affected person-years** gives **0.75 QALYs per affected person per year**. Deaths dominate the total, so even cutting the survivor-loss term materially leaves the answer in the same broad range — losing billions of lives is already an enormous QALY loss.
 
 :::details{title="QALY-loss decomposition (about 208 billion QALYs)"}
-Using a world population of **10.3 billion** and an affected fraction of **0.9**, the model implies about **9.27 billion affected people**. A simple stylized decomposition, rounded for clarity:
+Using a world population of **10.3 billion** and an affected fraction of **0.9**, the model implies about **9.27 billion affected people**. The population figure is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf). A simple stylized decomposition, rounded for clarity:
 
-- **~5.0 billion deaths** × **36 QALYs** each (Assumption 8) = **180 billion QALYs**
-- **~4.0 billion severe survivors** × **7 QALYs** each (Assumption 9) = **28 billion QALYs**
+- **~5.0 billion deaths** × **36 QALYs** each (Assumption 7) = **180 billion QALYs**
+- **~4.0 billion severe survivors** × **7 QALYs** each (Assumption 8) = **28 billion QALYs**
 - **remaining affected people** are rounded away in this decomposition and do not materially change the total
 - **Total:** about **208 billion QALYs**
 

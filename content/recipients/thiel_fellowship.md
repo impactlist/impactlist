@@ -24,6 +24,8 @@ This effect captures the welfare gains from the **Thiel Fellowship**, which pays
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1.  **Power Law Distribution:** The economic impact of the most successful Thiel Fellows (e.g., Vitalik Buterin, Dylan Field, Austin Russell) follows a Pareto distribution, whereas the impact of standard scholarship recipients follows a normal distribution. A single outlier success can generate more economic surplus than thousands of standard degrees.
 2.  **The Acceleration Counterfactual:** We assume the Fellowship does not _create_ genius, but accelerates it. The value comes from moving large outcomes forward by 2-3 years and preventing high-potential talent from getting trapped in low-leverage career paths due to debt, signaling pressure, or institutional default paths.
 3.  **Attribution Discount:** We apply a very large discount to the raw output of fellows, attributing the vast majority of their success to selection and innate ability. The Fellowship gets credit only for the delta of time saved, risk taken, network access, and cultural permission.

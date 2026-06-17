@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from donations to unusually effective charities that help people in extreme poverty become materially better off, especially through large unconditional cash transfers and related "big push" livelihood interventions. The main benefits are higher consumption, greater asset ownership, better food security, improved psychological wellbeing, and in some cases lower child mortality. We mostly leave interventions whose main value comes from preventing disease or death to the Global Health category, and we do not try to model broad economy-wide growth effects here.
@@ -33,6 +31,8 @@ They are not meant for microfinance, broad foundations, education-adjacent progr
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. For directly donatable poverty programs today, the cleanest anchor is GiveDirectly's flagship Africa poverty-relief program: roughly \$1,000 one-off transfers to households living around or below the World Bank extreme-poverty line in Kenya, Malawi, Mozambique, Rwanda, and Uganda. ([GiveDirectly](https://www.givedirectly.org/programs/), [GiveWell GiveDirectly report](https://www.givewell.org/international/technical/programs/givedirectly-cash-for-poverty-relief-program-november-2024-version))
 2. GiveWell's November 2025 benchmark is approximately 0.003 units of value per dollar, where 1 unit is defined as doubling one person's consumption for one year at the \$2.15/day 2017 PPP poverty line. GiveWell explicitly says this newer benchmark remains similar in value to its previous "cash" benchmark, preserving comparability, and now describes GiveDirectly's flagship program as roughly 3-4x the new benchmark. ([GiveWell cost-effectiveness analyses](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models), [GiveWell GiveDirectly report](https://www.givewell.org/international/technical/programs/givedirectly-cash-for-poverty-relief-program-november-2024-version))

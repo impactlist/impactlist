@@ -28,6 +28,8 @@ This effect captures the welfare gains from CCI's research, advocacy, technical 
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1.  **The Valuation Arbitrage:** The primary driver is the difference in the marginal utility of income. A dollar of economic growth in CCI's target regions (e.g., Zambia, Nigeria) can generate much more wellbeing than in the baseline's target regions (US/UK) under logarithmic utility of income. We use a **20x** valuation ratio to leave room for migration, distribution, public-finance leakage, and the fact that not every benefit of a charter-city project accrues to the poorest residents.
 2.  **The Probability Discount:** Establishing a new city is significantly riskier than the typical institutions intervention. We assume CCI projects are roughly 4x less likely to produce a major durable win than the baseline category's scenario-weighted mix, because CCI depends on third-party city projects, governments, investors, and residents all coordinating successfully.
 3.  **Execution Friction and Attribution:** We apply a further **0.4x** haircut for the difficulty of translating research and technical assistance into durable, politically accepted, welfare-improving city governance, and for the fact that CCI is usually one contributor among many.

@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from **strong marginal science and technology philanthropy in wealthy countries**: research institutes, scientific fellowships, translational labs, research tools and infrastructure, and some open-knowledge or public-interest technology work. The core mechanism is that donations help create, preserve, or accelerate useful knowledge and capabilities that later improve human welfare.
@@ -52,6 +50,8 @@ Poor fits include:
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. Historical public and charitable **medical research** in the UK appears to have earned about **7%-10% per year** in health gains plus about **15%-18% per year** in GDP spillovers, for a total around **25% per year**. ([Grant & Buxton 2018](https://bmjopen.bmj.com/content/8/9/e022131))
 2. Broader R&D evidence often points to even higher gross social returns. [Bloom, Schankerman, and Van Reenen](https://www.nber.org/papers/w13060) find that technology spillovers dominate business-stealing effects and imply social returns roughly twice private returns, while [Jones & Summers 2020](https://www.nber.org/system/files/working_papers/w27863/w27863.pdf) argue that even after several downside adjustments innovation efforts produce benefits that are many multiples of their costs. We therefore use a **6.25x total present-value gross welfare return per donated dollar** as the central category-level estimate, with a plausible range of roughly **2.25x-16x**. This is calibrated from the annual-return literature but should not be read as literally paying a fresh 25% return every year independent of the duration assumption.

@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from **strong local-community philanthropy in wealthy countries**: local organizations that improve life in a particular city, county, or metro area through a mix of basic-needs support, targeted community health and safety services, caregiver and family support, and other neighborhood-level programs.
@@ -54,6 +52,8 @@ The category models a **three-bucket portfolio** of good local programs, with a 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The **targeted local health and safety** bucket has a central cost-effectiveness of roughly **\$12,000/QALY**, with a plausible range of about **\$2,000–\$50,000/QALY**. This is much worse than the very best examples, but still quite good by rich-country standards. Concrete anchors include proactive smoking-cessation outreach at about **\$905/QALY**, community naloxone distribution at roughly **\$111–\$58,738/QALY**, domestic-violence identification and referral through the IRIS model as likely cost-effective and possibly cost-saving, and home-assessment fall-prevention programs commonly below **\$40,000/QALY**. ([Mundt et al. 2024](https://pmc.ncbi.nlm.nih.gov/articles/PMC10922402/), [Cherrier et al. 2021](https://doi.org/10.1007/s41669-021-00309-z), [Devine et al. 2012](https://bmjopen.bmj.com/content/bmjopen/2/3/e001008), [Barbosa et al. 2018](https://bmjopen.bmj.com/content/bmjopen/8/8/e021256), [Olij et al. 2018](https://pubmed.ncbi.nlm.nih.gov/30325013/))
 2. The **basic-needs and nutrition-support** bucket has a central cost-effectiveness of roughly **\$30,000/QALY**, with a plausible range of about **\$10,000–\$100,000/QALY**. The strongest "food is medicine" programs appear much better than this: a national produce-prescription model for U.S. adults with diabetes and food insecurity estimated roughly **\$18,100/QALY**, and a more recent state-level model found the intervention cost-saving in most states from the healthcare perspective. Separate utility evidence also suggests food insecurity is associated with large preference-based quality-of-life losses, with adjusted differences of roughly **0.11–0.21** and especially large hits to social-role functioning. So basic-needs support should not be modeled as creating only narrow medical effects. But ordinary local food-bank, pantry, and emergency-assistance philanthropy is usually broader, less medically integrated, and less tightly targeted than produce-prescription programs; the **\$30,000/QALY** central therefore deliberately worsens the best food-as-medicine anchors to approximate ordinary basic-needs charities rather than copying those stronger clinical programs. ([Wang et al. 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10492976/), [Wang et al. 2025](https://pmc.ncbi.nlm.nih.gov/articles/PMC12451850/), [Hanmer et al. 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8175545/))

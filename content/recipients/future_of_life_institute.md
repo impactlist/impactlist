@@ -20,6 +20,8 @@ The reason for the multiplier is deployment uncertainty, not a claim that FLI's 
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1. FLI is genuinely focused on AI-risk-relevant policy and public advocacy, so a donation should remain in the [AI Existential Risk](/cause/ai-risk) category rather than being moved to generic advocacy or "other."
 2. Deployment speed is the main discount. A fast-moving AI-risk window makes delayed or affiliate-routed funds less valuable than immediately deployed grants to a top current AI-risk organization.
 3. A simple deployment-mix model is that roughly half of marginal value is equivalent to default AI-risk spending, while the other half is delayed or hard to verify and worth only about 0.2x-0.4x as much. On cost-multiplier terms, that implies roughly $1 / (0.5/1 + 0.5/3) \approx 1.5$ to $1 / (0.5/1 + 0.5/5) \approx 1.7$, which we round pessimistically to a **2x** central cost multiplier.

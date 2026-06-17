@@ -57,14 +57,15 @@ We are **not** modeling:
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1. COVID-19 caused about **14.9 million excess deaths** in 2020 and 2021, showing that even a far-below-catastrophic pandemic can kill at enormous scale and seriously damage health systems and societies. ([WHO](https://www.who.int/news/item/05-05-2022-14.9-million-excess-deaths-were-associated-with-the-covid-19-pandemic-in-2020-and-2021))
 2. In postmortem medians for risk by **2100**, the XPT found about **3%** catastrophic risk from engineered pathogens and **0.85%** from natural pathogens among domain experts, versus **0.8%** and **1%** among superforecasters. ([Forecasting Research Institute](https://forecastingresearch.org/s/XPT.pdf))
 3. Worst-case engineered pandemics could kill hundreds of millions or billions, and ordinary pandemic defenses are not reliable against severe "wildfire" or "stealth" scenarios. ([Founders Pledge GCBR report](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf), [GCSP catastrophic-pandemics paper](https://www.gcsp.ch/sites/default/files/2024-12/securing-civilisation-against-catastrophic-pandemics-gp-31.pdf))
 4. Pandemic-risk philanthropy remains small relative to the stakes. Coefficient Giving reports **140+ grants** and **\$250+ million** since 2015, while Founders Pledge argues that relevant philanthropic funding outside direct response still remains in the **tens of millions** and that there were no other funders on Open Philanthropy's scale as of mid-2023. ([Coefficient Giving](https://coefficientgiving.org/funds/biosecurity-pandemic-preparedness/), [Founders Pledge](https://dkqj4hmn5mktp.cloudfront.net/GCBR_Report_Founders_Pledge_7505b1ebe0.pdf))
 5. A mature but still small pandemic-risk philanthropy field spending roughly **\$400 million over about 10 years** plausibly reduces 20-year catastrophic-pandemic risk by about **0.04 percentage points**, with a plausible range around **0.004–0.27 percentage points**. ([See detailed justification](/assumption/effect-of-pandemic-risk-philanthropy))
-6. Average world population over the modeled **2036-2051** window is about **9.9 billion** under the site's default population assumptions. This is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf).
-7. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing about **40 years** of otherwise expected life cost around **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-8. Severe survivors of a global catastrophic pandemic lose a few QALYs on average through some combination of long post-viral illness, organ damage, lost access to healthcare, bereavement, and years of lower quality of life.
+6. Average human life-years are worth roughly **0.9 QALYs**, so catastrophe deaths removing about **40 years** of otherwise expected life cost around **36 QALYs each**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
+7. Severe survivors of a global catastrophic pandemic lose a few QALYs on average through some combination of long post-viral illness, organ damage, lost access to healthcare, bereavement, and years of lower quality of life.
 
 ## Details
 
@@ -135,7 +136,7 @@ The point estimate (**0.35**, range 0.2–0.6) comes from distributing the catas
 At the central estimate, averting one microprobability saves about **46,700 QALYs**, for an implied **~\$21/QALY** — extremely good by ordinary global-health standards, which is a general feature of catastrophe-risk models when the stakes are huge and tractability is nontrivial.
 
 :::details{title="QALY decomposition and the 0.35 derivation"}
-Using an average world population of **9.9 billion** over the modeled window and an affected fraction of **0.9**, the model implies about **8.9 billion affected people**. One rough illustrative decomposition, rounded for clarity:
+Using an average world population of **9.9 billion** over the modeled 2036–2051 window and an affected fraction of **0.9**, the model implies about **8.9 billion affected people**. The population figure comes from the site's default population model and is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf). One rough illustrative decomposition, rounded for clarity:
 
 - **~1.0 billion deaths** × **36 QALYs** each = **36 billion QALYs** (using the floor of the ">10%" event definition)
 - **~2.4 billion severe survivors** × **2.5 QALYs** each = **6.0 billion QALYs**

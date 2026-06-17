@@ -28,6 +28,8 @@ _If you disagree with this estimate after reading this page, click 'Edit' near t
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1.  **Low Marginal Cost (The Software Arbitrage):** The primary driver is the cost structure. The baseline relies on human labor (advisors/teachers), costing ~\$5,000-\$15,000 per successful outcome. Khan Academy supports very large numbers of learners on a software platform, so a reasonable all-in delivery cost is about **\$5 per active learner**. This is order-of-magnitude, not exact: Khan Academy's recent filing reports expenses in the high tens of millions, while its annual report describes well over 100 million learners. ([ProPublica](https://projects.propublica.org/nonprofits/organizations/261544963), [Khan Academy annual report](https://www.annualreport.khanacademy.org/))
 2.  **Intensity Discount:** Watching videos is a weaker intervention than 1-on-1 coaching. We assume roughly 1 in 400 active Khan Academy users achieves a counterfactual life outcome comparable to the baseline intervention, versus about 1 in 4 for intensive advising. That is a 1% relative success-probability ratio.
 3.  **Global South Premium:** Unlike the baseline (US/UK focus), Khan Academy reaches a global user base, including significant usage in LMICs. Income gains in these regions convert to QALYs at a higher rate under logarithmic utility, so we apply a conservative 2x valuation boost.

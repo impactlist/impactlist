@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 The estimate is driven by an expected-value model of helping one modest first-generation gerotherapeutic cross translational bottlenecks. The cruxes are how much a strong donor portfolio shifts the probability of success ($\delta$, Assumption 9), how many people such a therapy reaches early (Assumption 8), and how big the per-person health gain is (Assumption 7). All three are judgment-heavy, which is why the range is wide.
 
 ## Description of effect
@@ -41,6 +39,8 @@ This estimate models **strong marginal longevity philanthropy** — the best ser
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. Targeting aging could generate unusually large health gains because it can delay multiple age-related diseases at once rather than treating them one by one. In Goldman's delayed-aging model, life expectancy at age 51 rises by about 2.2 years and most of that gain is spent in good health; Scott et al. estimate that slowing aging enough to raise life expectancy by 1 year would be worth about \$38 trillion in the United States alone. ([Goldman et al. 2013](https://pubmed.ncbi.nlm.nih.gov/24101058/), [Scott et al. 2021](https://www.nature.com/articles/s43587-021-00080-0))
 2. There is a strong biological case for geroscience as a cause area because aging is a major upstream driver of many chronic diseases, frailty, and multimorbidity. ([Campisi et al. 2019](https://www.nature.com/articles/s41586-019-1365-2))

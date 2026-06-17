@@ -28,6 +28,8 @@ _If you disagree with this estimate after reading this page, click 'Edit' near t
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1.  **The Maintenance Arbitrage:** It is orders of magnitude cheaper to store existing digital records than to generate new high-value scientific or technical knowledge. We model preservation as about 20x cheaper than discovery per unit of useful information.
 2.  **The "Link Rot" Counterfactual:** Without the Internet Archive, the digital record is extremely fragile. Pew Research Center found that 38% of webpages that existed in 2013 were inaccessible a decade later, 23% of news webpages sampled in 2023 contained at least one broken link, and 54% of Wikipedia pages contained at least one broken reference link. ([Pew Research Center 2024](https://www.pewresearch.org/data-labs/2024/05/17/when-online-content-disappears/))
 3.  **Value Ratio:** The average preserved webpage or book scan is much less valuable than an average successful new scientific discovery, so we value a unit of preserved information at about **0.5x** a unit of newly created high-value knowledge. This is a judgment call and the main reason the range remains wide.

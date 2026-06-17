@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures health gains from strong health and medicine philanthropy in high-income countries. The two main buckets are:
@@ -40,6 +38,8 @@ This estimate is **not** a good model of generic hospital fundraising, prestige 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. Strong direct health programs in high-income countries often land around \$4,000-\$20,000 per QALY, with especially strong examples around \$4,000-\$7,000/QALY. Recent anchors include team-based hypertension care with nonphysician titration at about \$4,400/QALY, 12-week varenicline monotherapy for smoking cessation at about \$4,579/QALY, and Diabetes Prevention Program-style lifestyle interventions with a median ICER of about \$6,212/QALY. ([Bryant et al. 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10987007/), [JAMA Network Open 2024](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2817927), [Zhou et al. 2020](https://pubmed.ncbi.nlm.nih.gov/33534726/))
 2. Not all direct-service opportunities are that cheap; reasonable high-income-country anchors also extend into the teens or low tens of thousands per QALY. Examples include long-term collaborative care for depression at about £13,069-£16,123 per QALY and cataract surgery at about \$38,288/QALY even in a relatively low-expected-benefit subgroup. ([Bower et al. 2018](https://pubmed.ncbi.nlm.nih.gov/29761751/), [Salisbury et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27855101/), [Busbee et al. 2006](https://pubmed.ncbi.nlm.nih.gov/17063129/))

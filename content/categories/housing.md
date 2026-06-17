@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures health gains from strong **direct homelessness and housing interventions in wealthy countries**, especially:
@@ -57,6 +55,8 @@ Poor fits include:
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. In the VA Supportive Services for Veteran Families study, temporary financial assistance / rapid rehousing / homelessness prevention cost about **\$22,676/QALY overall**, with **\$19,114/QALY** for rapid rehousing and **\$29,751/QALY** for prevention over a 2-year horizon. That study also found about **90 extra days in stable housing** over 2 years, but it treated stable housing as utility **1.0**, which likely makes its QALY estimate somewhat optimistic. ([JAMA Network Open 2024](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2825636))
 2. A recent model of stable housing for homeless adults with opioid use disorder found cost-effectiveness around **\$26,800-\$28,500/QALY** in its main scenarios and **\$27,300/QALY** in a conservative scenario. ([JAMA Network Open 2025](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2835706))

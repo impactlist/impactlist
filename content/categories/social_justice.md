@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from **domestic social-justice philanthropy in rich democracies**, especially:
@@ -54,6 +52,8 @@ Not included:
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. A serious state-level social-justice campaign or litigation push can easily absorb **low- to mid-eight figures**. Human Rights Campaign Foundation reported about **\$28.6 million** of revenue for the fiscal year ending March 2025, the related 501(c)(4) Human Rights Campaign Inc. reported about **\$50.1 million** in the same filing year, Planned Parenthood Action Fund reported about **\$40.5 million** in 2024, and the Center for Reproductive Rights reported about **\$65.4 million** in 2024. Ballot-measure and rights-defense campaigns also commonly raise or spend amounts in the **high seven to low eight figures**. So modeling one substantial push as roughly **\$15 million** is reasonable. ([Human Rights Campaign Foundation via ProPublica](https://projects.propublica.org/nonprofits/organizations/521481896), [Human Rights Campaign Inc. via ProPublica](https://projects.propublica.org/nonprofits/organizations/521243457), [Planned Parenthood Action Fund via ProPublica](https://projects.propublica.org/nonprofits/organizations/133539048), [Center for Reproductive Rights via ProPublica](https://projects.propublica.org/nonprofits/organizations/133669731), [HRC 2012 marriage-ballot spending](https://www.hrc.org/press-releases/hrc-commits-additional-1-million-to-state-marriage-ballot-measures))
 2. Rights-expanding policy wins can improve welfare through multiple channels, not just mental health. Same-sex marriage legalization was associated with a **0.6 percentage point reduction in suicide attempts among all high-school students** and a **4.0 percentage point reduction among sexual-minority students**. Other evidence finds that same-sex marriage legalization improved the mental health of sexual minorities, increased marriage take-up, improved health insurance and access to care for men in same-sex households, and increased home ownership and relationship investment for same-sex couples. ([Raifman et al. 2017](https://jamanetwork.com/journals/jamapediatrics/fullarticle/2604258), [Chen & van Ours 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9293432/), [Carpenter et al. 2018](https://www.nber.org/papers/w24651), [Hamermesh & Delhommer 2020](https://www.nber.org/papers/w26875))

@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 The estimate divides a central cost of about \$45,000 per additional wanted birth (Assumptions 2-4) by the QALYs that birth produces, which we put at 75: 73 from the added person's own life (Assumption 5) plus modest allowances for parental wellbeing and broader spillovers (Assumptions 6-7). That gives \$600/QALY, driven overwhelmingly by the added life. The cruxes are whether population ethics counts an extra good life as a large welfare gain, whether research and advocacy organizations can really cause births at the cost the policy and fertility-care evidence implies, and how large the secondary effects are.
 
 ## Description of effect
@@ -49,6 +47,8 @@ This category is meant for charities that plausibly increase wanted births throu
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 ### 1. The relevant interventions are ones that increase completed fertility, not just birth timing
 

@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 We estimate **\$20,000/QALY** for strong political giving. The driver is a four-link chain — a well-targeted gift nudges win probability, the contest is sometimes pivotal for a welfare-relevant policy wedge, and that wedge converts to QALYs at a rate far worse than direct giving. The cruxes are all four parameters, especially the size of the policy wedge and how often a contest is genuinely pivotal; because each can move a lot and they tend to move together with one's overall view of political leverage, the plausible range is wide (\$5,000–\$120,000/QALY).
@@ -59,6 +57,8 @@ Those activities may still matter, but they should either be modeled much worse 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The average persuasive effect of campaign contact in general elections is very small and may often be near zero, especially in high-salience national races. That is an important reason not to treat every political dollar as highly effective by default. ([Kalla & Broockman 2018](https://www.cambridge.org/core/journals/american-political-science-review/article/minimal-persuasive-effects-of-campaign-contact-in-general-elections-evidence-from-49-field-experiments/753665A313C4AB433DBF7110299B7433))
 2. Turnout mobilization effects are more robust than persuasion effects. A large review of field experiments finds average complier effects around **2.54 percentage points** for door-to-door canvassing, about **0.98 percentage points** for live commercial phone calls, and about **0.16 percentage points per conventional mailing**, while social-pressure mail can do much more. Newer meta-analysis finds that these tactics still work in high-salience elections but are attenuated relative to low-salience contests. ([Green, McGrath & Aronow 2013](https://cpb-us-e1.wpmucdn.com/sites.northwestern.edu/dist/b/3288/files/2019/10/2013-GMA-Field-Experiments-Turnout.pdf), [Mann & Haenschen 2024](https://research.voteamerica.org/a-meta-analysis-of-voter-mobilization-tactics-by-electoral-salience/))

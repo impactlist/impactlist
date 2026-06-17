@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from donations to the best current **non-climate environmental** charities, especially those that reduce toxic exposure or air pollution: lead-source elimination, toxic-site remediation, and clean-air policy/data/advocacy. The current quantitative anchors are pollution-focused. The estimate does not separately model biodiversity, ecosystem existence value, or scenic/amenity value, but that is a scope and evidence decision, not because those benefits are outside QALY-equivalent welfare.
@@ -41,6 +39,8 @@ We are **not** modeling climate mitigation, biodiversity/scenic/amenity value, o
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. For the purpose of this page, one DALY averted is treated as roughly one QALY gained, since both metrics are trying to capture healthy life-years and the source estimates here are not precise enough to justify a finer conversion.
 2. WHO's current lead fact sheet reports that lead exposure was attributed to more than **3.5 million deaths** and more than **71.5 million DALYs** globally in 2023, primarily through cardiovascular effects, and only 48% of countries had legally binding controls on lead paint as of January 2024. ([WHO lead fact sheet](https://www.who.int/news-room/fact-sheets/detail/lead-poisoning-and-health))

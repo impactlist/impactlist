@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This is a fallback bucket for donations that cannot yet be classified more precisely: donor-advised funds, prize awards to individuals, mixed-purpose foundations, civic or journalism organizations with diffuse benefits, local charities that do not fit the main categories cleanly, and genuinely unknown recipients.
@@ -33,6 +31,8 @@ This category is a fallback, not a recommendation. It is appropriate for recipie
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The current `Other` bucket is mostly a mix of three things: **direct but hard-to-classify organizations**, **indirect vehicles / mixed foundations / prize-awardees**, and **genuinely opaque or unknown recipients**.
 2. The **direct but uncategorized** bucket has a central cost-effectiveness of roughly **\$40,000/QALY**. A reasonable proxy is that these recipients are somewhat worse than [Local Community](/cause/local-community) at **\$29,000/QALY**, because they are often broader and less tightly tied to direct welfare gains. So we apply a modest worsening rather than a dramatic one.

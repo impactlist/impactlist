@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures charities that improve health and wellbeing by increasing direct participation in arts, culture, and heritage activities: arts-on-prescription programmes, community choirs, dance and creative workshops, and structured museum or heritage engagement. We model charities that pay for access, facilitation, and outreach to people with elevated loneliness, mild-to-moderate mental-health burden, or older age.
@@ -35,6 +33,8 @@ They are **not** meant for generic museums, opera companies, theaters, preservat
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The strongest causal evidence is for structured participatory programmes and targeted access programmes, not for broad arts subsidy or heritage preservation in the abstract. ([WHO scoping review](https://www.ncch.org.uk/uploads/WHO-Scoping-Review-Arts-and-Health.pdf), [DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf), [Jensen et al. 2024](https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2024.1412306/full))
 2. A community singing RCT in older adults found that the intervention group gained 0.015 more QALYs over 6 months than controls. The authors concluded that the programme was marginally more cost-effective than usual activities, with a 64% probability of being cost-effective at a £30,000/QALY threshold. ([Coulton et al. 2015](https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/effectiveness-and-costeffectiveness-of-community-singing-on-mental-healthrelated-quality-of-life-of-older-people-randomised-controlled-trial/516558F0DDD7D4DD0197FDDEAD30ED85))

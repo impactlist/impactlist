@@ -12,11 +12,6 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per
-[QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying
-this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global
-assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from donations to unusually effective, relatively non-ideological human-rights
@@ -68,6 +63,8 @@ under an optimistic or pessimistic reading, and because the anti-slavery evidenc
 this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The strongest direct cost-effectiveness evidence in this category comes from VAWG prevention. In a six-country
    trial-based cost-effectiveness analysis, the strongest research-setting intervention achieved about **\$222 per DALY

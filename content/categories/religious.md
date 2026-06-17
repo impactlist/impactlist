@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from charities that support **organized religious participation**: congregations, ministries, and similar institutions whose main product is worship, fellowship, pastoral support, and religious community life.
@@ -52,6 +50,8 @@ If a religiously affiliated recipient is mainly providing a standard social serv
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. For ordinary congregational giving, the main thing the donor is buying is **religious participation itself**, not direct charitable service delivery. In the 2018-19 National Congregations Study, 79.6% of congregations reported doing some social-service activity, but the median congregation spent only **\$2,640** directly on such work, about **2%** of the median budget. ([National Congregations Study 2021 report](https://www.nationalcongregationsstudy.org/s/NCSIV-report.pdf))
 2. The best observational literature suggests that regular religious-service attendance is associated with materially better outcomes, including roughly **26-33% lower mortality** and lower subsequent depression, smoking, and heavy drinking. But those estimates are not fully causal and likely overstate the true effect. ([Li et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27183175/), [Chen, Kim & VanderWeele 2020](https://academic.oup.com/ije/article/49/6/2030/5734641), [Li et al. 2016 depression study](https://pubmed.ncbi.nlm.nih.gov/27439076/))

@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from organizations that multiply the impact of other cause areas by improving how people **give, think, and work**. Representative examples include effective-giving organizations and evaluators (such as GiveWell, Giving What We Can, and The Life You Can Save), career and talent-shaping organizations (such as 80,000 Hours), and broader public-intellectual or worldview work that changes how resources, careers, and strategic attention are allocated, including toward catastrophic-risk reduction.
@@ -58,6 +56,8 @@ These estimates assume marginal donations go to **high-quality, high-leverage me
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. In the **direct money-moving and evaluator channel**, a strong organization plausibly creates about an **8x donation-equivalent multiplier**, with a rough plausible range of **5x-12x**. The closest public anchors are Giving What We Can's **6x** 2023-2024 giving multiplier and The Life You Can Save's **10:1** three-year leverage ratio. GiveWell's roughly **\$397 million** directed in 2024 on around **\$21 million** in operating expenses, plus another **\$45 million** it believes its research influenced, is best read as a looser operational-leverage cross-check rather than the same kind of multiplier, because it measures dollars directed relative to operating cost rather than counterfactual small-donor giving caused. ([Giving What We Can impact](https://www.givingwhatwecan.org/impact), [Giving What We Can 2023-2024 evaluation](https://www.givingwhatwecan.org/impact/2023-2024-impact-evaluation), [The Life You Can Save 2024 Annual Report](https://www.thelifeyoucansave.org/2024-annual-report/), [GiveWell Metrics 2024](https://files.givewell.org/files/metrics/GiveWell_Metrics_Report_2024.pdf))
 2. In the **career, movement-building, and worldview channel**, a strong organization plausibly creates about a **4x donation-equivalent multiplier**, with a rough plausible range of **1x-8x**. 80,000 Hours says an average plan change is worth **hundreds of thousands of dollars** of value over a lifetime, had tracked **604** plan changes by end-2022 while estimating the true total closer to **2,000**, and in 2024 had over **1,400** one-on-one calls plus **165** headhunts. Older Open Philanthropy discussion of impact-adjusted plan changes points in the same direction. The evidence is noisy and attribution is hard, but the category also includes broader worldview and movement work with weaker direct metrics than 80,000 Hours itself, so **4x** is a reasonable portfolio-average best guess. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/), [Open Philanthropy 2017 grant writeup](https://www.openphilanthropy.org/grants/80000-hours-general-support/))

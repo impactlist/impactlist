@@ -37,6 +37,8 @@ This effect captures two things. First, an unrestricted donation to Astera is sp
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1. **Low Payout Rate:** Astera deploys approximately 1.4% of assets annually, compared to the 5% legal minimum for private foundations. This means donations sit in an endowment rather than funding immediate work. ([Astera ProPublica filing page](https://projects.propublica.org/nonprofits/organizations/845162617))
 2. **Low External Grant Rate:** Of funds actually spent, only ~19% (2023) flows to external organizations. The remainder funds internal operations and salaries. We track this number as a warning sign about deployment, but do not apply it as a separate multiplier to the AI-risk slice because Astera's relevant AI work is mostly internal research rather than external grantmaking. ([Astera ProPublica filing page](https://projects.propublica.org/nonprofits/organizations/845162617))
 3. **Capabilities vs. Safety:** Astera's AI program (Obelisk) pursues neuroscience-informed AGI development; this is capabilities research with safety-conscious framing, not dedicated alignment work. Steven Byrnes appears to be the clearest dedicated AI-safety researcher in the program. ([Astera Obelisk](https://astera.org/obelisk/), [Steve Byrnes](https://astera.org/team/steve-byrnes/))

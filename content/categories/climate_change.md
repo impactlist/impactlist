@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures human-health benefits from donations to top climate charities that reduce greenhouse gas emissions through policy advocacy, innovation policy, market shaping, and related systems change. We measure those reductions in **tCO₂e**: metric tons of **carbon-dioxide equivalent**, a standard unit that converts different greenhouse gases such as methane into a common warming-based scale. The core estimate models avoided climate mortality from reduced emissions. It largely excludes air-pollution co-benefits and most non-fatal climate harms, so it should be read as a partial health estimate for strong mitigation philanthropy rather than a full accounting of climate damages.
@@ -27,6 +25,8 @@ This effect captures human-health benefits from donations to top climate chariti
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. Donations to high-impact climate nonprofits avert roughly 1.5 tCO₂e per \$1 in expectation, with a plausible range of roughly 0.3–7 tCO₂e/\$. Here tCO₂e means "tons of carbon-dioxide equivalent": one shared unit for warming impact across gases such as CO₂ and methane. Giving Green's current rule of thumb is ~1 tCO₂e/\$, Giving Green's detailed Evergreen model produced ~1.9 tCO₂e/\$ in its realistic case and ~2.4 tCO₂e/\$ at the median, and Founders Pledge's 2023 high-impact climate grants imply roughly 6.9 tCO₂e/\$ (derived from their reported 47.9 MtCO₂e averted on \$6.9M granted). Because climate-philanthropy results depend heavily on policy windows and tractable opportunities, we use 1.5 tCO₂e/\$ as a middle-of-the-road portfolio estimate rather than anchoring to either the roughest rule of thumb or the strongest historical year. ([Giving Green 2025](https://www.givinggreen.earth/post/eager-to-measure-the-impact-of-your-climate-donation-forget-offset-math-focus-on-systems-change), [Giving Green Evergreen CEA](https://www.givinggreen.earth/research/evergreen-collaborative-top-climate-nonprofit-evaluation), [Founders Pledge 2023 Impact](https://impact.founderspledge.com/2023/climate-change))
 2. Each additional ton of CO₂ emitted today causes approximately 2.26 × 10⁻⁴ expected deaths between 2020 and 2100, i.e. one expected death per ~4,425 tons. This estimate is stated per ton of **CO₂ itself**, not per tCO₂e, which is why Assumption 4 has to explain how we translate from a mixed greenhouse-gas portfolio into this mortality estimate. ([Bressler 2021](https://www.nature.com/articles/s41467-021-24487-w), [Carleton et al. 2022](https://academic.oup.com/qje/article/137/4/2037/6571943))

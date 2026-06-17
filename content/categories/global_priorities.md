@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from **global priorities research (GPR)**: research and decision tools that help major donors, institutions, and sometimes policymakers decide which problems, interventions, and strategies are most worth funding or staffing. Representative work includes cross-cause prioritization, identifying neglected but tractable problems, comparing interventions within a cause, building philanthropic decision tools, and foundational work that later changes how money, talent, institutional attention, and policy effort are allocated.
@@ -53,6 +51,8 @@ Those effects are better handled elsewhere, especially under Meta and Theory.
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. A strong marginal GPR team can productively use around **\$2 million** for one additional serious program-year, with a rough plausible range of **\$1-3 million**. Recent public funding-need figures from Rethink Priorities put its Worldview Investigations team at **\$2 million** of room for more funding in 2026 and its Global Health & Development team at **\$1.785 million**. We use **\$2 million** as a representative annual tranche for a serious but still fairly small GPR program, not as a permanent total cost. ([Rethink Priorities 2025 Results / 2026 Plans](https://rethinkpriorities.org/2025-results/))
 2. A frontier GPR team serving major funders can plausibly influence around **\$200 million** of later philanthropic allocation decisions, with a plausible range of about **\$50 million-\$300 million**. This is meant to describe unusually strong organizations with access to major funders, not the median GPR dollar, and it should be read as **counterfactually credited influenced capital** after a large attribution discount rather than the full budget touched by the research. RP says its research supported donors whose program budgets total **hundreds of millions of dollars** and publicly reports one case where **\$8 million** was shifted toward a more cost-effective lead intervention. Coefficient Giving says it has helped Good Ventures give **over \$4 billion** historically and directed **over \$100 million** from non-Good-Ventures donors in 2024, with that figure more than doubling in 2025 so far. ([Rethink Priorities 2025 Results / 2026 Plans](https://rethinkpriorities.org/2025-results/), [Rethink Priorities impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/), [Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))

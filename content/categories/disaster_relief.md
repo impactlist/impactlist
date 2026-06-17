@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from **acute humanitarian response** after disasters, outbreaks, and sudden displacement crises: emergency health care, treatment of acute malnutrition, outbreak control, emergency WASH (water, sanitation, and hygiene), cash/basic-needs assistance, and related rapid relief for displaced or crisis-affected populations. It does **not** include long-run reconstruction, disaster-risk reduction, or anticipatory action.
@@ -44,6 +42,8 @@ This category is best modeled as a **portfolio of emergency-response activities*
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The evidence base for humanitarian cost-effectiveness is unusually thin. A 2020 systematic review found only 11 full economic evaluations of health-related humanitarian programmes in LMIC crises, and a 2017 review found 345 studies on public-health interventions in humanitarian crises but major quality gaps. ([Makhani et al. 2020](https://pubmed.ncbi.nlm.nih.gov/31697373/), [Blanchet et al. 2017](https://research.vu.nl/en/publications/evidence-on-public-health-interventions-in-humanitarian-crises))
 2. Some targeted emergency health and nutrition interventions are very cost-effective. In conflict-affected northern Mali, decentralized acute-malnutrition treatment cost about \$53-\$60 per DALY averted, versus \$173 per DALY for facility-only care. ([Cichon et al. 2025](https://bmcpublichealth.biomedcentral.com/articles/10.1186/s12889-025-21411-5))

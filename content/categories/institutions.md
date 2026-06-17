@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures welfare gains from **nonpartisan efforts to improve the rules, capacity, and administrative competence of important institutions**, especially governments and closely related public-interest institutions in high-income settings. Representative pathways include land-use reform, benefits and tax administration, election administration, legal and regulatory reform, civic technology, and other institutional-design work that makes large systems work better for many people at once.
@@ -43,6 +41,8 @@ We are **not** modeling partisan campaign spending, generic journalism, pure for
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. Some institutional bottlenecks clearly sit on very large welfare stakes. Housing-supply constraints in productive places push demand into prices rather than additional housing and population, and the macro stakes of relaxing such constraints are large even though the exact magnitude is disputed. ([Baum-Snow 2023](https://www.aeaweb.org/articles?id=10.1257/jep.37.2.53), [Hsieh & Moretti 2019](https://www.aeaweb.org/articles?id=10.1257%2Fmac.20170388), [Greaney comment](https://www.aeaweb.org/articles?id=10.1257%2Fmac.20230141))
 2. Institutional reforms can measurably change real outcomes, but the evidence is mixed and context-dependent. Auckland's large upzoning reform increased housing construction, while evidence on Minneapolis 2040 remains harder to disentangle from simultaneous demand shocks and later policy changes. ([Auckland / Greenaway-McGrevy & Phillips 2023](https://economics.yale.edu/research/cfp-1863-impact-upzoning-housing-construction-auckland), [Minneapolis Fed 2025](https://www.minneapolisfed.org/article/2025/unpacking-supply-and-demand-in-rent-trends-since-the-minneapolis-2040-plan))

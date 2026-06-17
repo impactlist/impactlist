@@ -12,8 +12,6 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
-We arrive at the cost per life by estimating the cost per [QALY (quality adjusted life-year)](https://en.wikipedia.org/wiki/Quality-adjusted_life_year) and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the global assumptions for this and other relevant parameters).
-
 ## Description of effect
 
 This effect captures human-welfare gains from donations to **top conflict-mitigation organizations** that reduce the probability, duration, or intensity of organized armed conflict through mediation, quiet diplomacy, conflict analysis, early warning, and support for political settlements. Representative organizations include the Centre for Humanitarian Dialogue (HD) and the International Crisis Group (ICG).
@@ -51,6 +49,8 @@ Recipients whose main work is direct military support, weapons procurement, or b
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
 ## Assumptions
+
+{{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. The direct health burden of conflict and terrorism is on the order of **10 million DALYs per year** globally, and the total health burden is plausibly closer to **30–40 million QALYs per year** once indirect deaths, displacement, healthcare disruption, food insecurity, and mental illness are included. As an illustrative sanity check, **123.2 million** forcibly displaced people losing only **0.03–0.05 QALYs each** would already imply roughly **3.7–6.2 million QALYs**. That decrement is deliberately modest for a heterogeneous population and is below GBD disability weights for moderate anxiety or moderate depression. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/), [UNHCR Global Trends 2024](https://www.unhcr.org/global-trends-report-2024), [The Lancet 2019](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736%2819%2930934-1/fulltext), [WHO methods and data sources for DALYs 2000-2019](https://www.who.int/docs/default-source/gho-documents/global-health-estimates/ghe2019_daly-methods.pdf?sfvrsn=31b250097))
 2. The world is currently experiencing an unusually high level of organized violence: **2024 had 61 active state-based conflicts across 36 countries**, the highest number since 1946. Mapping the **30–40 million** annual health burden onto roughly **30–60 serious conflict settings** implies about **0.5–1.3 million health QALYs** lost per representative serious conflict-year. We use **1 million health QALYs** as the central value. ([PRIO / UCDP 2025](https://www.prio.org/publications/14453))

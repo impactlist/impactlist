@@ -38,20 +38,21 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 
 ## Assumptions
 
+{{GLOBAL_ASSUMPTIONS_NOTE}}
+
 1. The baseline probability of AI-caused existential catastrophe this century is approximately 14%, with a plausible range around 3–35%. A useful decomposition is about 10% extinction risk plus about 4 percentage points of additional irreversible-disempowerment or lock-in risk. ([See detailed justification](/assumption/ai-existential-catastrophe-probability))
 2. AGI — machines that can do any mental task better and more cheaply than humans — most likely arrives around 2036, with a plausible range of roughly 2030–2050. That is roughly when catastrophic AI risk becomes pressing. ([See detailed justification](/assumption/timelines-to-agi))
-3. The QALYs at stake are computed from the site's global population parameters: about 8.3 billion people today, growing at 1% per year, capped at 10x today's population, with no discounting by default (all user-adjustable). For reference, the UN projects world population to peak around 10.3 billion in the 2080s. ([UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf))
-4. The welfare shortfall per affected person-year is about 0.9 QALY-equivalents for literal extinction and about 0.45 for permanent non-extinction catastrophes — irreversible disempowerment or stable totalitarian lock-in, which are less severe per year than extinction (people remain alive) but still globally catastrophic. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-5. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions; frontier-lab internal safety work is counted only at a conservative few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Coefficient Giving](https://coefficientgiving.org/funds/navigating-transformative-ai))
-6. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.007–0.65 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
+3. The welfare shortfall per affected person-year is about 0.9 QALY-equivalents for literal extinction and about 0.45 for permanent non-extinction catastrophes — irreversible disempowerment or stable totalitarian lock-in, which are less severe per year than extinction (people remain alive) but still globally catastrophic. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
+4. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions; frontier-lab internal safety work is counted only at a conservative few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Coefficient Giving](https://coefficientgiving.org/funds/navigating-transformative-ai))
+5. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.007–0.65 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
 
-How these fit together: Assumptions 5 and 6 set the cost per microprobability. Assumptions 3 and 4 set the QALYs at stake per microprobability. Assumption 2 informs the start time. Assumption 1 mainly constrains how much risk there is to reduce — the QALY value of a microprobability does not itself depend on the baseline probability (see Key Uncertainties).
+How these fit together: Assumptions 4 and 5 set the cost per microprobability. The global parameters and Assumption 3 set the QALYs at stake per microprobability. Assumption 2 informs the start time. Assumption 1 mainly constrains how much risk there is to reduce — the QALY value of a microprobability does not itself depend on the baseline probability (see Key Uncertainties).
 
 ## Details
 
 ### Cost per microprobability
 
-The point estimate (\$625,000 per microprobability) and range (\$154,000–\$14.3 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 5 and 6, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.16 percentage points**:
+The point estimate (\$625,000 per microprobability) and range (\$154,000–\$14.3 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 4 and 5, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.16 percentage points**:
 
 - Microprobabilities averted: $0.0016 / 10^{-6} = 1{,}600$
 - Cost per microprobability: $$\$1\text{B} / 1{,}600 \approx \$625{,}000$$
@@ -87,7 +88,7 @@ Across the whole baseline catastrophe class the average shortfall is about **0.7
 
 $$\text{Severity} = \frac{0.10 \times 0.9 + 0.04 \times 0.45}{0.14} \approx 0.77$$
 
-The point estimate is **0.80** rather than 0.77 because a donation does not buy a proportional slice of the baseline risk. Per Assumption 6, safety spending is somewhat more effective against extinction than against the non-extinction channels, so the averted risk is about **77% extinction** rather than the baseline 71%:
+The point estimate is **0.80** rather than 0.77 because a donation does not buy a proportional slice of the baseline risk. Per Assumption 5, safety spending is somewhat more effective against extinction than against the non-extinction channels, so the averted risk is about **77% extinction** rather than the baseline 71%:
 
 $$S_{\text{averted}} = (0.769 \times 0.9) + (0.231 \times 0.45) \approx 0.80$$
 
@@ -101,7 +102,7 @@ The **0.45** itself is roughly a hedonic part plus a non-hedonic part. Day-to-da
 A microprobability is worth more the longer the horizon you count over. At the **default 100-year time limit** it is worth about **1.07 million QALYs**, which puts the cost at roughly **\$0.58 per QALY — about \$47 per life**. Because the population keeps growing until it hits the default cap, the QALYs at stake rise faster than linearly with the time limit, so the implied cost falls accordingly: about **\$195 per life** at a 40-year limit and about **\$1 per life** at a 1,000-year limit.
 
 :::details{title="Worked examples at 40-, 100-, and 1,000-year time limits"}
-These use the site's default global parameters (Assumption 3) and its actual population model, so they match what the site displays. The effect window always runs from year 10 to the time limit.
+These use the site's default global parameters and its actual population model, so they match what the site displays. The effect window always runs from year 10 to the time limit.
 
 **Example 1 — Time limit = 40 years (30-year window)**
 

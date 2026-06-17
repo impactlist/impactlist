@@ -7,7 +7,7 @@ _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts fro
 
 ## How should Global Priorities Research be modeled?
 
-The [Global Priorities Research](/category/global-priorities) page uses a two-channel model:
+The [Global Priorities Research](/cause/global-priorities) page uses a two-channel model:
 
 1. **Direct philanthropic reallocation**
 2. **Broader strategic spillovers**
@@ -69,9 +69,9 @@ This benchmark ($B$) is not meant to represent ordinary untargeted philanthropy,
 That \$400 sits well inside the spread of serious opportunities — far worse than the frontier funders GPR competes with, but far better than untargeted giving.
 
 :::details{title="Where the 400/QALY benchmark sits among serious opportunities"}
-The site's own category estimates already span a very wide range: [Animal Welfare](/category/animal-welfare) about **\$2.3/QALY**, [Meta and Theory](/category/meta-theory) about **\$21/QALY**, [Global Health](/category/global-health) about **\$90/QALY**, [Global Development](/category/global-development) about **\$210/QALY**, [Human Rights](/category/human-rights) about **\$310/QALY**, [Conflict Mitigation](/category/conflict-mitigation) about **\$333/QALY**, [Climate Change](/category/climate-change) about **\$590/QALY**, and [Institutions](/category/institutions) about **\$3,000/QALY**.
+The site's own category estimates already span a very wide range: [Animal Welfare](/cause/animal-welfare) about **\$2.3/QALY**, [Meta and Theory](/cause/meta-theory) about **\$21/QALY**, [Global Health](/cause/global-health) about **\$105/QALY**, [Global Development](/cause/global-development) about **\$210/QALY**, [Human Rights](/cause/human-rights) about **\$310/QALY**, [Conflict Mitigation](/cause/conflict-mitigation) about **\$333/QALY**, [Climate Change](/cause/climate-change) about **\$590/QALY**, and [Institutions](/cause/institutions) about **\$3,000/QALY**.
 
-Coefficient Giving's public bar is even stronger: it says its current minimum grantmaking bar is roughly equivalent to **one healthy life-year per \$50** spent. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/)) The counterfactual capital influenced by GPR is neither as weak as ordinary philanthropy nor as strong as Coefficient's own current frontier, which is why a middle figure is appropriate.
+Coefficient's 2021 framework update values a DALY at about **\$100,000**, so its 1000x bar corresponds to roughly **one healthy life-year per \$100** spent. ([Coefficient framework update](https://coefficientgiving.org/research/technical-updates-to-our-global-health-and-wellbeing-cause-prioritization-framework/)) The counterfactual capital influenced by GPR is neither as weak as ordinary philanthropy nor as strong as Coefficient's own current frontier, which is why a middle figure is appropriate.
 :::
 
 ## 3. Why use 40% for the direct improvement factor?

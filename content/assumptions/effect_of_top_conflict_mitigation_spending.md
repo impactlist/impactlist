@@ -72,20 +72,20 @@ A skeptic could argue for something more like **0.5–2%** if governments and th
 
 ## 3. What budget should we divide by?
 
-We divide by combined annual budgets on the order of **\$80–90 million**, anchored on HD and ICG as a pair of organizations close to the intended target of this category. That is not the whole philanthropic peacebuilding space; it is the especially strong and clearly relevant slice the category is trying to model.
+We divide by combined annual budgets of about **\$80 million**, anchored on HD and ICG as a pair of organizations close to the intended target of this category. That is not the whole philanthropic peacebuilding space; it is the especially strong and clearly relevant slice the category is trying to model.
 
 :::details{title="The HD and ICG budget anchors"}
-- HD reported **50 million Swiss francs (about \$62.5 million)** in contribution income in 2023 and more than **70 peacemaking projects**. ([HD Annual Report 2023](https://hdcentre.org/wp-content/uploads/2024/07/Annual-report-2023_English-Final_Web.pdf))
+- HD reported **50 million Swiss francs (about \$56 million)** in contribution income in 2023 and more than **70 peacemaking projects**. ([HD Annual Report 2023](https://hdcentre.org/wp-content/uploads/2024/07/Annual-report-2023_English-Final_Web.pdf))
 - ICG reported **\$23.5 million** in revenue in 2024. ([ProPublica 2024](https://projects.propublica.org/nonprofits/organizations/525170039))
 
-Taken together, those imply combined annual budgets on the order of **\$80–90 million**.
+Taken together, those imply combined annual budgets of about **\$80 million**.
 :::
 
 ---
 
 ## 4. Implied effect per \$1 million
 
-Combining the three inputs — **1.84 conflict-years/year** system-wide, a **2–8%** top-tier share, and an **\$80–90 million** budget denominator — gives about **0.04% at the lower end** and **0.18% at the upper end** per **\$1 million**, with a central BOTEC of about **0.11%**. That central neighborhood is why the category uses a rounded **0.1%** as the point estimate.
+Combining the three inputs — **1.84 conflict-years/year** system-wide, a **2–8%** top-tier share, and an **\$80 million** budget denominator — gives about **0.05% at the lower end** and **0.18% at the upper end** per **\$1 million**, with a central BOTEC of about **0.12%**. That central neighborhood is why the category uses a rounded **0.1%** as the point estimate.
 
 :::details{title="The per-million-dollar arithmetic"}
 The implied effect attributable to top-tier philanthropy is:
@@ -103,7 +103,7 @@ $$
 conflict-years averted per year across the relevant top-tier philanthropic portfolio. Dividing by annual budgets gives:
 
 $$
-\frac{0.037}{90} \approx 0.00041
+\frac{0.037}{80} \approx 0.00046
 $$
 
 to
@@ -112,13 +112,13 @@ $$
 \frac{0.147}{80} \approx 0.00184
 $$
 
-conflict-years averted per **\$1 million** — about **0.04%** at the lower end and **0.18%** at the upper end. The central BOTEC is:
+conflict-years averted per **\$1 million** — about **0.05%** at the lower end and **0.18%** at the upper end. The central BOTEC is:
 
 $$
-\frac{1.84 \times 0.05}{85} \approx 0.00108
+\frac{1.84 \times 0.05}{80} \approx 0.00115
 $$
 
-or about **0.11%** per **\$1 million**.
+or about **0.12%** per **\$1 million**.
 
 This arithmetic also implicitly assumes the conflicts these organizations engage with are of roughly **representative serious-conflict-year** size. If top mediation organizations disproportionately work on very high-burden conflicts, the estimate could understate their effect; if they often work on lower-burden or earlier-stage conflicts, it could overstate it.
 :::
@@ -127,7 +127,7 @@ This arithmetic also implicitly assumes the conflicts these organizations engage
 
 ## 5. Why widen the plausible range to 0.03–0.3%?
 
-The direct BOTEC gives **0.04–0.18%**, but that span only sweeps the headline share and budget parameters. We widen to **0.03–0.3%** to absorb structural uncertainty the arithmetic holds fixed:
+The direct BOTEC gives **0.05–0.18%**, but that span only sweeps the headline share and budget parameters. We widen to **0.03–0.3%** to absorb structural uncertainty the arithmetic holds fixed:
 
 - the NGO share of system-level effect could be below **2%** if governments and regional actors do more of the real causal work, or above **8%** if top mediation NGOs are much more leveraged per dollar than average peacekeeping or state spending
 - the budget denominator is a mix of averages, while marginal dollars may go to better or worse opportunities than the portfolio mean
@@ -142,7 +142,7 @@ Coefficient Giving / Open Philanthropy's HD BOTEC argues that a marginal HD medi
 :::details{title="The OpenPhil break-even setup, and what does drive our estimate"}
 Their BOTEC notes that HD's annual budget was about **\$42 million** across **23 conflict zones**, or about **\$2 million per country-year**, and uses that to derive the **0.52%** break-even chance.
 
-The main basis for the central tractability estimate on this page is instead the direct arithmetic above: **1.84** system-level conflict-years avoided per year, a **2–8%** top-tier philanthropic share, and **\$80–90 million** of relevant budgets imply about **0.04–0.18%** per **\$1 million**, supporting a rounded best guess of **0.1%**.
+The main basis for the central tractability estimate on this page is instead the direct arithmetic above: **1.84** system-level conflict-years avoided per year, a **2–8%** top-tier philanthropic share, and about **\$80 million** of relevant budgets imply about **0.05–0.18%** per **\$1 million**, supporting a rounded best guess of **0.1%**.
 :::
 
 ---

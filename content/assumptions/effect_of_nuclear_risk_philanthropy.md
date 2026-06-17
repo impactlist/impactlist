@@ -149,7 +149,7 @@ That **0.005–0.12** corner is a roughly 20x spread, and for two independent pa
 
 ## 7. A simple calibration check
 
-As a sanity check, the central estimate of **0.025 percentage points** is **250 microprobabilities** spread over about **20 years**, or only about **12.5 microprobabilities per year** across the whole field. The claim is not that philanthropy makes nuclear catastrophe dramatically less likely — only that a small field operating at the level of policy, doctrine, analysis, and institutions might shave roughly **one part in eighty million per year** off catastrophe probability. For a field explicitly aimed at influencing the behavior of a few nuclear-armed states in a few very high-stakes situations, that does not look obviously extreme.
+As a sanity check, the central estimate of **0.025 percentage points** is **250 microprobabilities** spread over about **20 years**, or only about **12.5 microprobabilities per year** across the whole field. The claim is not that philanthropy makes nuclear catastrophe dramatically less likely — only that a small field operating at the level of policy, doctrine, analysis, and institutions might shave roughly **one part in eighty thousand per year** off catastrophe probability. For a field explicitly aimed at influencing the behavior of a few nuclear-armed states in a few very high-stakes situations, that does not look obviously extreme.
 
 ---
 

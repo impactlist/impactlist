@@ -32,7 +32,7 @@ A reasonable summary is:
 - **Best-guess:** $X \approx 0.125$ percentage points
 - **Plausible range:** $Y \approx 0.005$ percentage points, $Z \approx 0.5$ percentage points
 
-That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.125 percentage points** (for example, from about 10.13% to 10.0%), with a wide range of **0.005–0.5 percentage points**. The range is wider at the bottom than the literature's effectiveness tiers alone would suggest, because the offsetting channels below (capabilities spillovers, safetywashing, safety teams that also make labs more durable race competitors) leave real mass on a net effect near zero — or, in the worst case, below it.
+That is, cumulative AI safety-related spending to date has plausibly reduced AI-caused extinction risk this century by about **0.125 percentage points** (for example, from about 10.13% to 10.0%), with an 80% range of **0.005–0.5 percentage points**. The published range remains positive, but the offsetting channels below (capabilities spillovers, safetywashing, safety teams that also make labs more durable race competitors) leave real mass just outside that range on a net effect near zero — or, in wider tails, below it.
 
 This corresponds to about:
 
@@ -118,7 +118,7 @@ Four caveats matter most:
 
 1. **These are model-based estimates, not empirical measurements.** $X$, $Y$, and $Z$ are inferred by combining formal cost-effectiveness models, community heuristics, and qualitative judgment about what the historical portfolio accomplished.
 
-2. **Net impact may be near zero or negative.** Because safety work interacts with capabilities, investment, and regulation in complicated ways, a full probabilistic model should assign **nontrivial probability mass to $X \leq 0$**, even if the **mean** estimate is positive.
+2. **Net impact may be near zero or negative outside the published 80% range.** Because safety work interacts with capabilities, investment, and regulation in complicated ways, a full probabilistic model should assign **nontrivial probability mass to $X \leq 0$**, even though the current **80% interval** and **mean** estimate are positive.
 
 3. **Much of the benefit may be delayed.** A large share of past spending went into field-building, training, and institution-building, whose main payoff may arrive later than the spending itself.
 

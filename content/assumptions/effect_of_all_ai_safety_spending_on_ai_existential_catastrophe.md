@@ -104,10 +104,10 @@ The multiplier is a judgment call, but moving it within a plausible band changes
 
 ### Plausible range: 0.007–0.70 percentage points
 
-We keep a wide range — from **0.007** to **0.70 percentage points** — because the evidence is indirect: there is no clean experiment telling us what the world would look like without AI safety spending. The estimate is a synthesis of historical spending totals, x-risk cost-effectiveness bars, and judgment about how much technical and governance work has mattered in practice. The lower bound sits near the break-even point rather than at the bottom of the positive-effectiveness tiers, because the offsetting channels (capabilities spillovers, safetywashing, safety teams that also make labs more durable race competitors) leave real mass on a net effect close to zero — caveat 2 below.
+We keep a wide 80% range — from **0.007** to **0.70 percentage points** — because the evidence is indirect: there is no clean experiment telling us what the world would look like without AI safety spending. The estimate is a synthesis of historical spending totals, x-risk cost-effectiveness bars, and judgment about how much technical and governance work has mattered in practice. The published range remains positive, but the lower bound sits near the break-even point because the offsetting channels (capabilities spillovers, safetywashing, safety teams that also make labs more durable race competitors) leave real mass just outside that interval on a net effect close to zero — caveat 2 below.
 
 :::details{title="What the lower and upper bounds represent"}
-- **0.007 percentage points** corresponds to a near-break-even view where the field's gains were largely offset by its negative channels, helping only a little. (Some mass sits below this, on a net effect at or below zero; the cost-per-microprobability framing applies only to the positive part of the range.)
+- **0.007 percentage points** corresponds to a near-break-even view where the field's gains were largely offset by its negative channels, helping only a little. (Some mass sits below this, on a net effect at or below zero, but outside the published 80% interval; the cost-per-microprobability framing applies only to the positive part of the distribution.)
 - **0.70 percentage points** corresponds to a strong view where the best historical spending had unusually high leverage on frontier-lab norms, preparedness, and governance.
 :::
 
@@ -144,8 +144,8 @@ Several caveats matter:
 1. **This is not a direct measurement.**  
    It is an inference from cost-effectiveness modeling, historical funding totals, and qualitative evidence about what the field has achieved.
 
-2. **Some probability mass should still sit at zero or below.**  
-   Some safety work may have accelerated capabilities, increased deployment legitimacy, or mainly reshuffled people across roles. So a full probabilistic model should still assign some chance that net impact was minimal or negative.
+2. **Some probability mass should still sit at zero or below outside the published 80% range.**
+   Some safety work may have accelerated capabilities, increased deployment legitimacy, or mainly reshuffled people across roles. So a full probabilistic model should still assign some chance that net impact was minimal or negative, even though the current 80% interval is positive.
 
 3. **The best future dollar is not necessarily the historical average dollar.**  
    The category page uses this estimate as a baseline anchor for marginal giving, not as proof that every additional donation buys the same amount of risk reduction.

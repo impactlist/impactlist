@@ -7,37 +7,37 @@ categories:
     effects:
       - effectId: standard
         overrides:
-          costPerQALY: 2000
+          costPerQALY: 1600
 ---
 
 # Justification of cost per life
 
 _The following analysis was done on December 16th 2025, written by Gemini 3 Pro and edited by Impact List staff for clarity._
 
-We assign Khan Academy a **cost per QALY of \$2,000**. The main reason it comes in below the baseline [Education](/cause/education) estimate is Khan Academy's unusually low cost of reaching learners at scale.
+We assign Khan Academy a **cost per QALY of \$1,600**. The main reason it comes in below the baseline [Education](/cause/education) estimate is Khan Academy's unusually low cost of reaching learners at scale.
 
 ## Description of effect
 
 This effect captures the welfare gains from free, globally accessible digital education. While the baseline "Education" cause focuses on high-touch, high-cost interventions in rich countries (e.g., intensive student advising or anti-bullying programs costing thousands per student), Khan Academy operates as a software platform. We model this as a "volume play": while the probability of a life-changing outcome per user is lower than intensive mentoring, the cost per user is orders of magnitude lower, and the reach extends into high-impact regions (Global South).
 
-## Point estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$2,000
+- **Cost per QALY:** \$1,600 (\$500-\$25,000)
 
 _If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values._
 
 ## Assumptions
 
-1.  **Zero Marginal Cost (The Software Arbitrage):** The primary driver is the cost structure. The baseline relies on human labor (advisors/teachers), costing ~\$5,000–\$15,000 per successful outcome. Khan Academy supports ~150M registered users with a budget of ~\$100M, resulting in a cost per active learner of less than \$10.
-2.  **Intensity Discount:** Watching videos is a weaker intervention than 1-on-1 coaching. We assume the probability of a "life trajectory change" (success) per Khan Academy user is roughly 50-100x lower than for a student receiving intensive multi-year advising (Baseline).
-3.  **Global South Premium:** Unlike the baseline (US/UK focus), ~40–50% of Khan Academy’s traffic originates internationally, including significant usage in LMICs (India, Brazil). Income gains in these regions convert to QALYs at a much higher rate (logarithmic utility).
-4.  **Attribution:** We heavily discount attribution (to ~5-10%) to account for the fact that Khan Academy is often a supplement to, rather than a replacement for, schooling.
+1.  **Zero Marginal Cost (The Software Arbitrage):** The primary driver is the cost structure. The baseline relies on human labor (advisors/teachers), costing ~\$5,000-\$15,000 per successful outcome. Khan Academy supports large numbers of learners on a software platform, so a reasonable all-in delivery cost is about \$5 per active learner.
+2.  **Intensity Discount:** Watching videos is a weaker intervention than 1-on-1 coaching. We assume roughly 1 in 400 active Khan Academy users achieves a counterfactual life outcome comparable to the baseline intervention, versus about 1 in 4 for intensive advising. That is a 1% relative success-probability ratio.
+3.  **Global South Premium:** Unlike the baseline (US/UK focus), Khan Academy reaches a global user base, including significant usage in LMICs. Income gains in these regions convert to QALYs at a higher rate under logarithmic utility, so we apply a conservative 2x valuation boost.
+4.  **Attribution and Substitution:** We apply a modest 0.8x adjustment for substitution and attribution risk. The adjustment is not larger because the 1-in-400 success assumption already absorbs most of the low-dosage, low-compliance, and user-churn concern.
 
 ## Details
 
-### Deriving the \$2,000/QALY estimate
+### Deriving the \$1,600/QALY estimate
 
-We benchmark Khan Academy against the baseline education estimate of **\$40,000/QALY** and compare it to a portfolio of high-touch education interventions.
+We benchmark Khan Academy against the current baseline education estimate of **\$25,000/QALY** and compare it to a portfolio of high-touch education interventions.
 
 $$\text{Relative effectiveness} = \frac{Eff_{KA}}{Eff_{Base}}$$
 
@@ -51,9 +51,9 @@ $$C_{ratio} = \frac{C_{KA}}{C_{Base}} = \frac{5}{5000} = 0.001$$
 
 ### 2. Probability/intensity ratio
 
-The baseline has high compliance and high impact (e.g., ~25% success rate for intensive advising). Khan Academy has low compliance and variable impact—we assume only 1 in ~400 active users achieves a counterfactual life outcome equivalent to the baseline intervention. This makes Khan Academy 400x less reliable per user:
+The baseline has high compliance and high impact (e.g., ~25% success rate for intensive advising). Khan Academy has low compliance and variable impact: we assume only 1 in ~400 active users achieves a counterfactual life outcome equivalent to the baseline intervention. Relative to a 25% baseline success rate, that is a 1% success-probability ratio:
 
-$$P_{ratio} = \frac{P_{KA}}{P_{Base}} \approx 0.0025$$
+$$P_{ratio} = \frac{P_{KA}}{P_{Base}} = \frac{0.25\%}{25\%} = 0.01$$
 
 ### 3. Valuation ratio
 
@@ -63,16 +63,20 @@ The baseline targets rich country students, while Khan Academy reaches a mix of 
 
 Combining the factors:
 
-$$\text{Relative Efficiency} = \frac{P_{ratio} \times V_{ratio}}{C_{ratio}} = \frac{0.0025 \times 2}{0.001} = \frac{0.005}{0.001} = 5$$
+where $A = 0.8$ is the attribution and substitution adjustment. This is a further haircut for cases where Khan Academy supplements or displaces learning that would have happened anyway; it is deliberately modest because the probability/intensity ratio already carries most of the discount for low engagement.
+
+$$\text{Relative Efficiency} = \frac{P_{ratio} \times V_{ratio} \times A}{C_{ratio}} = \frac{0.01 \times 2 \times 0.8}{0.001} = 16$$
 
 This simple model suggests Khan Academy outperforms the baseline because the software cost structure can overwhelm the lower success rate.
 
-However, this stylized model likely understates the upside from global reach, repeated use over time, and the fact that the baseline already includes some relatively expensive rich-world interventions. Taking those factors seriously still requires a large discount for user churn, substitution effects, and attribution difficulties, but it supports assigning Khan Academy a direct estimate of roughly **\$2,000/QALY**.
+Applying the 16x relative-efficiency estimate to the current education baseline gives:
 
-$$\text{Cost per QALY}_{KA} \approx \$2{,}000$$
+$$\text{Cost per QALY}_{KA} = \frac{\$25{,}000}{16} \approx \$1{,}600$$
+
+The plausible range is **\$500-\$25,000/QALY**. Khan looks much better than the point estimate if self-directed use produces counterfactual career or learning gains for more than 1 in 400 active users, especially in lower-income settings. It looks much worse if most usage is low-intensity, quickly abandoned, or replaces learning that would have happened anyway. That is why the top of the range reaches the general education baseline rather than treating scale alone as decisive.
 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
 
-This estimate is highly sensitive to the "Intensity Discount." If one believes that digital education _never_ causes a counterfactual life change (0% success), the true cost per QALY would be effectively infinite. If one believes it works even 1% as well as a human tutor, the cost advantage (1000x cheaper) makes it an incredibly efficient intervention. The \$2,000/QALY estimate is a middle ground that credits the scale while acknowledging the low "dosage" of the intervention.
+This estimate is highly sensitive to the "Intensity Discount." If one believes that digital education _never_ causes a counterfactual life change (0% success), the true cost per QALY would be effectively infinite. If one believes it works even 1% as well as a human tutor, the cost advantage (1000x cheaper) makes it an incredibly efficient intervention. The \$1,600/QALY estimate is a middle ground that credits the scale while acknowledging the low "dosage" of the intervention.

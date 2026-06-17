@@ -18,7 +18,7 @@ The point of this page is to justify three judgment calls that are too important
 - the decision to use **\$100/QALY** for the direct channel and **\$150/QALY** for the broader channel
 - the decision to treat GiveWell's operating-leverage numbers as only a loose cross-check rather than the same kind of multiplier as GWWC or The Life You Can Save
 
-Together these imply about **\$21/QALY** for the category: a **40% / 60%** split of an **8x**-leveraged direct channel at **\$100/QALY** and a **4x**-leveraged broader channel at **\$150/QALY**. (The **8x** and **4x** leverage multipliers are inherited from the category page; this page justifies only the split and the two benchmarks.)
+Together these imply about **\$21/QALY** for the category, with a {{PLAUSIBLE_RANGE}} of roughly **\$6-\$100/QALY**: a **40% / 60%** split of an **8x**-leveraged direct channel at **\$100/QALY** and a **4x**-leveraged broader channel at **\$150/QALY**. The category page supplies the leverage ranges (**5x-12x** for the direct channel and **1x-8x** for the broader channel); this page justifies the split and the two downstream benchmarks, including the direct-channel range of **\$80-\$150/QALY** and broader-channel range of **\$50-\$500/QALY**.
 
 ## 1. Why split the category into two channels?
 
@@ -53,9 +53,9 @@ So **40% direct / 60% broader** is meant as a middle position:
 
 ## 3. Why is the direct channel benchmark \$100/QALY?
 
-The site's own [Global Health](/category/global-health) page uses **\$90/QALY** as its point estimate for top GiveWell-style opportunities.
+The site's own [Global Health](/cause/global-health) page uses **\$105/QALY** as its point estimate for top GiveWell-style opportunities.
 
-The direct channel here is only slightly worse: **\$100/QALY**. That small downgrade reflects three things:
+The direct channel here is close to that benchmark: **\$100/QALY**, with a plausible range of **\$80-\$150/QALY**. The small difference from the Global Health point estimate is not meant to be precise; it reflects three things:
 
 1. not all influenced giving will land in the single best GiveWell-style opportunities
 2. some money will go to slightly broader but still highly effective portfolios
@@ -70,9 +70,9 @@ The broader career/worldview channel earns a different benchmark because of its 
 **\$150/QALY** is the compromise: a little worse than the direct channel's \$100 because the portfolio is more heterogeneous, but well below ordinary mixed philanthropy because many downstream wins still land in very strong cause areas (80,000 Hours in particular skews toward AGI and catastrophic-risk careers).
 
 :::details{title="Bounding the broader-channel benchmark"}
-The full downstream spread under the site's current estimates: [Animal Welfare](/category/animal-welfare) ~\$2.3/QALY, [Global Priorities Research](/category/global-priorities) ~\$5, [Global Health](/category/global-health) ~\$90, [Global Development](/category/global-development) ~\$210, [Conflict Mitigation](/category/conflict-mitigation) ~\$333, [Improving Institutions](/category/institutions) ~\$3,000 — plus targets like longtermist and catastrophic-risk work, talent pipelines with uncertain destinations, and worldview shifts that improve later allocation. Some of that points into [AI Existential Risk](/category/ai-risk), [Pandemics](/category/pandemics), and [Nuclear](/category/nuclear), which don't use ordinary \$/QALY numbers, so the benchmark treats them as part of one all-things-considered QALY-equivalent portfolio. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/))
+The full downstream spread under the site's current estimates: [Animal Welfare](/cause/animal-welfare) ~\$2.3/QALY, [Global Priorities Research](/cause/global-priorities) ~\$5, [Global Health](/cause/global-health) ~\$105, [Global Development](/cause/global-development) ~\$210, [Conflict Mitigation](/cause/conflict-mitigation) ~\$333, [Improving Institutions](/cause/institutions) ~\$3,000 — plus targets like longtermist and catastrophic-risk work, talent pipelines with uncertain destinations, and worldview shifts that improve later allocation. Some of that points into [AI Existential Risk](/cause/ai-risk), [Pandemics](/cause/pandemics), and [Nuclear](/cause/nuclear), which don't use ordinary \$/QALY numbers, so the benchmark treats them as part of one all-things-considered QALY-equivalent portfolio. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/))
 
-Using **\$90-\$100/QALY** would assume the mix is nearly as targeted as direct evaluator work — too optimistic. Using **\$300-\$1,000/QALY** would treat its destinations as much weaker than top global health just for being broader or longer-run — not the right adjustment either.
+Using **\$90-\$100/QALY as the central benchmark** would assume the mix is nearly as targeted as direct evaluator work — too optimistic. Using **\$300-\$1,000/QALY** would treat its destinations as much weaker than top global health just for being broader or longer-run — not the right adjustment either. We therefore use **\$150/QALY** centrally, with a plausible range of **\$50-\$500/QALY**.
 :::
 
 ## 5. Why not treat GiveWell's ratio as the same kind of multiplier as GWWC's 6x?
@@ -110,4 +110,4 @@ The biggest uncertainty is not the arithmetic. It is whether the broader career/
 - treated as closer to **\$50/QALY** or closer to **\$500/QALY**
 - assigned a multiplier much above or below **4x**
 
-Those are the judgments most likely to move the category estimate materially.
+Those are the judgments most likely to move the category estimate materially. Combining the category page's leverage ranges with the benchmark ranges here gives the published category range of about **\$6-\$100/QALY**; the high-cost side extends beyond the fixed-split parameter table because a marginal opportunity can be more worldview-heavy than the central 40% / 60% split.

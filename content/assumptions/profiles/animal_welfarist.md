@@ -16,7 +16,7 @@ assumptions:
     animal-welfare:
       effects:
         - effectId: standard
-          costPerQALY: 0.7
+          costPerQALY: 0.75
 ---
 
 This assumptions set removes the default chicken discount used in the

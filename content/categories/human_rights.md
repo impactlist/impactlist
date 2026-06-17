@@ -70,9 +70,10 @@ this page and enter your own values.*
 ## Assumptions
 
 1. The strongest direct cost-effectiveness evidence in this category comes from VAWG prevention. In a six-country
-   trial-based cost-effectiveness analysis, the best research-setting intervention achieved about **\$222 per DALY
-   averted**, while the broad cross-intervention range ran from **\$222** to **\$17,548**. We anchor the headline on the
-   strongest broadly stated figure (\$222). ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827))
+   trial-based cost-effectiveness analysis, the strongest research-setting intervention achieved about **\$222 per DALY
+   averted**, while the broad cross-intervention range ran from **\$222** to **\$17,548**. We anchor the VAWG component on
+   that strongest research-setting figure, then apply an external-validity markup before blending it with the
+   anti-slavery component. ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827))
 2. Those measured VAWG DALYs likely understate full welfare gains. A reasonable central conversion is that **1 DALY
    averted** in this literature corresponds to about **2.5 QALY-equivalent welfare gains** in total, with a practical
    range of about **1–4**, once omitted mortality risk, post-intervention persistence, safety, autonomy, dignity, and
@@ -83,7 +84,7 @@ this page and enter your own values.*
 4. Community-based anti-bonded-labour programs in Freedom Fund's India hotspots appear promising but are supported by
    weaker evidence than the VAWG literature. A Freedom Fund evidence paper summarising external evaluations reports
    roughly **125,000 fewer individuals in bonded labour** across target villages after about **\$15.8 million** in
-   spending across two India hotspots, implying roughly **\$126** per fewer person in bondage. ([Freedom Fund 2024 evidence paper](https://www.freedomfund.org/app/uploads/2024/03/Freedom-Fund-Evidence-in-Practice-Paper-Unlocking-what-works.pdf))
+   spending across two India hotspots, implying roughly **\$126** per fewer person in bondage. ([Freedom Fund evidence paper](https://www.freedomfund.org/our-reports/unlocking-what-works-how-community-based-interventions-are-ending-bonded-labour-in-india/))
 5. A typical person avoiding bonded labour or similar labour trafficking plausibly gains about **1.0 QALY-equivalent**
    in total, with a plausible range of about **0.4–2.0**. This combines health-related quality-of-life loss,
    exploitation duration, fear, shame, worthlessness, restricted agency, and impaired daily functioning into one
@@ -108,7 +109,7 @@ This anchor is narrower than "all human rights philanthropy" because the public 
 broader legal and advocacy work may still be extremely important, but the public evidence base is not yet strong
 enough to let it drive the point estimate.
 
-**Approach 1 — VAWG prevention: about \$266/QALY-equivalent.** Starting from the strongest broadly stated research-setting
+**Approach 1 — VAWG prevention: about \$266/QALY-equivalent.** Starting from the strongest research-setting
 result in Ferrari et al. (\$222 per DALY averted), applying the 2.5x DALY-to-QALY welfare conversion (Assumption 2) and a
 3x marginal external-validity discount (Assumption 3) gives $$\$222 \times \frac{3}{2.5} \approx \$266$$ per
 QALY-equivalent.
@@ -116,7 +117,7 @@ QALY-equivalent.
 :::details{title="VAWG derivation and external-validity check"}
 Ferrari et al. is the best public quantitative anchor we found for this category. The strongest scale-ready
 interventions in that paper are community- or school-based prevention programs in low- and middle-income countries,
-with the strongest general headline figure at about **\$222 per DALY averted**.
+with the strongest reported figure at about **\$222 per DALY averted**.
 
 Ferrari et al. explicitly notes that the DALY analysis uses a **1-year horizon**, includes only a **subset of health
 consequences**, assumes **no mortality impact**, and separately reports broader social and economic effects in impact
@@ -128,7 +129,7 @@ For a category page, simply copying the best trial result into the headline numb
 value of a marginal donor dollar. A donor today is not buying the average dollar inside a tightly studied RCT. To
 adjust for transportability, scaling, and publication-bias risk, we multiply the stronger VAWG figures by about **3x**.
 
-Using the strongest broadly stated research-setting result:
+Using the strongest research-setting result:
 
 $$
 \$222 \times \frac{3}{2.5} \approx \$266

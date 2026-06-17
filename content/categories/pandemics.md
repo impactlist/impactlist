@@ -80,7 +80,7 @@ Using the central assumptions:
 
 - Cumulative spending: **\$400M**
 - Risk reduction achieved: **0.04 percentage points** = 0.0004
-- Microprobabilities averted: 0.0004 / 10^-6 = **400**
+- Microprobabilities averted: $0.0004 / 10^{-6}$ = **400**
 
 So:
 
@@ -93,7 +93,7 @@ So the point estimate is **\$1 million per microprobability**.
 This is best read as a **historical field-average**. The load-bearing input is Assumption 5: that a mid-hundreds-of-millions field, still very neglected, has plausibly bought a few basis points of risk reduction through policy work, technical public goods, and capacity building — a field that has helped a little, not solved the problem. The marginal cost for a well-chosen donation to a top organization may be somewhat better, pulling the optimistic end well below the **\$1 million** field average, though diminishing returns are a live concern.
 
 :::details{title="Micro-level sanity check, and what pulls the estimate up or down"}
-Some targeted opportunities plausibly beat the field average by a wide margin. For example, if a **\$20 million** policy effort prevented roughly **10 high-risk lab-years**, and if the relevant catastrophic-pandemic risk were on the order of **3 × 10^-5 per lab-year**, that would buy about **300 microprobabilities** at roughly **\$67,000 each**. This BOTEC should not be taken literally, but it suggests unusually strong interventions can do much better than the historical field average, which makes a **\$1 million** central estimate for the field as a whole look reasonable rather than aggressive. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
+Some targeted opportunities plausibly beat the field average by a wide margin. For example, if a **\$20 million** policy effort prevented roughly **10 high-risk lab-years**, and if the relevant catastrophic-pandemic risk were on the order of $3 \times 10^{-5}$ per lab-year, that would buy about **300 microprobabilities** at roughly **\$67,000 each**. This BOTEC should not be taken literally, but it suggests unusually strong interventions can do much better than the historical field average, which makes a **\$1 million** central estimate for the field as a whole look reasonable rather than aggressive. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
 
 Two considerations pull the estimate **downward**:
 
@@ -140,7 +140,7 @@ Using an average world population of **9.9 billion** over the modeled window and
 - **~1.0 billion deaths** × **36 QALYs** each = **36 billion QALYs** (using the floor of the ">10%" event definition)
 - **~2.4 billion severe survivors** × **2.5 QALYs** each = **6.0 billion QALYs**
 - **~5.5 billion moderately or indirectly affected people** × **0.8 QALYs** each = **4.4 billion QALYs**
-- **Total:** about **46.0 billion QALYs**
+- **Total:** about **46.4 billion QALYs**
 
 These survivor buckets are not precise epidemiological claims; they only show the total is not driven by deaths alone. Affected person-years over the 15-year window are:
 
@@ -149,10 +149,10 @@ $$
 $$
 
 $$
-\dfrac{46.0 \text{B QALYs}}{134 \text{B affected person-years}} \approx 0.34
+\dfrac{46.4 \text{B QALYs}}{134 \text{B affected person-years}} \approx 0.35
 $$
 
-That floor-case decomposition gives about **0.34**; we use **0.35** because the category is defined as **more than 10%** dead rather than exactly 10%, so a typical catastrophe in this class is plausibly somewhat worse than the floor. The cost-effectiveness figure then follows:
+That floor-case decomposition gives about **0.35**; this matches the model input while still being best read as a rounded severity parameter rather than a precise epidemiological forecast. The cost-effectiveness figure then follows:
 
 $$
 9.9 \text{B} \times 0.9 \times 0.35 \times 15 \times 10^{-6} \approx 46{,}700 \text{ QALYs}

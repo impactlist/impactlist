@@ -7,7 +7,7 @@ _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts fro
 
 ## How many QALY-equivalents are lost in a representative serious conflict-year?
 
-The [Conflict Mitigation](/category/conflict-mitigation) page uses:
+The [Conflict Mitigation](/cause/conflict-mitigation) page uses:
 
 - $B$ = total all-things-considered QALY-equivalent loss from one representative serious conflict-year
 

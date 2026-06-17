@@ -19,7 +19,7 @@ Views vary enormously, but the center of gravity among people who have thought s
 
 ### 1.1 Expert surveys: medians near 5%, means near 9–14%
 
-The largest survey of top-tier AI researchers, [Grace et al. (2024)](https://arxiv.org/abs/2401.02843), found a **5%** median probability of extinction-level outcomes, with means of **9–14.4%** depending on the question framing; the older [2022 AI Impacts survey](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/) found a similar **5–10%** median with a substantial minority above 25%. These surveys are useful but imperfect: respondents may be selected toward AI-risk interest, and the framing of the question moves the answer materially.
+The largest survey of top-tier AI researchers, [Grace et al. (2024)](https://arxiv.org/abs/2401.02843), found a **5%** median on both the "extremely bad outcomes" question and the broader extinction-or-severe-disempowerment question; the corresponding means were **9%** and **14.4%**, respectively. For this page, the 14.4% figure is an upper-tail calibration point rather than a literal-extinction estimate. The older [2022 AI Impacts survey](https://aiimpacts.org/2022-expert-survey-on-progress-in-ai/) found a similar **5–10%** median with a substantial minority above 25%. These surveys are useful but imperfect: respondents may be selected toward AI-risk interest, and the framing of the question moves the answer materially.
 
 :::details{title="The Grace et al. numbers and what moves them"}
 [Grace et al. (2024)](https://arxiv.org/abs/2401.02843), the largest survey of its kind, collected responses from 2,778 researchers who had published in top-tier AI venues:

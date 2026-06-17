@@ -24,7 +24,7 @@ The most uncertain component is the final one: how much of a hen's negative welf
 Rethink Priorities' Moral Weight Project estimated chickens' sentience-adjusted welfare range at **0.332** of a human's at the median, and we use that as the central value. For varying this term we use **0.1-0.46**, spanning a more skeptical lower bound up to RP's later, less-sentience-adjusted default. ([RP Welfare Range Estimates](https://rethinkpriorities.org/research-area/welfare-range-estimates/), [RP Farmed Animal Recipients Tool](https://rethinkpriorities.org/research-area/distributing-resources-across-farmed-animal-recipients/))
 
 :::details{title="Why 0.332 rather than RP's 0.46 default"}
-RP's later farmed-animal allocation tool uses **0.46** as a practical default when sentience is handled separately rather than folded into a single all-things-considered multiplier. For the animal-welfare category, the cleanest single-number central estimate is **0.332**, because the model here is not separately representing sentience probability and experience intensity. The **0.46** figure sits at the top of the sensitivity range rather than at the center.
+RP's later farmed-animal allocation tool uses **0.46** as a practical default when sentience is handled separately rather than folded into a single all-things-considered multiplier. For the animal-welfare category, the cleanest single-number central estimate is **0.332**, because the model here is not separately representing sentience probability and experience intensity. The **0.46** figure sits near the top of the plausible range rather than at the center.
 :::
 
 ### 2. Why use 0.5 for the negative share of the welfare range?
@@ -47,7 +47,7 @@ Welfare Footprint Institute's laying-hen analysis shows aviaries are a large imp
 
 Putting the central terms together gives the headline figure, $0.332 \times 0.5 \times 0.25 = 0.0415$ human-equivalent QALYs per hen-year. Two of the three terms are genuinely uncertain and comparably important — the chicken welfare range (**0.1-0.46**) and the cage-to-aviary bridge (**15%-35%**) each move the conversion by a similar amount on their own. The published plausible range, **0.0075-0.08**, comes from varying both together rather than holding either fixed, and is wide enough to also absorb residual uncertainty in the framework itself (the symmetry convention and the welfare-range methodology).
 
-:::details{title="Sensitivity sweeps for the two uncertain terms"}
+:::details{title="Parameter checks for the two uncertain terms"}
 Varying the chicken welfare-range term alone (bridge held at 25%):
 
 $$0.1 \times 0.5 \times 0.25 = 0.0125$$

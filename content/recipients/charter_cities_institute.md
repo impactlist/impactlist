@@ -20,9 +20,9 @@ We assign the Charter Cities Institute (CCI) a **cost per QALY of \$400**. The m
 
 This effect captures the welfare gains from creating "Charter Cities": new urban jurisdictions in the Global South with special governance rights. While the baseline "Improving Institutions" cause focuses on legislative reform in high-income nations (e.g., zoning in the US), CCI attempts to replicate the "Singapore effect" in Low-to-Middle Income Countries (LMICs). We model this as a high-variance, high-reward arbitrage: accepting a lower probability of success in exchange for vastly higher marginal utility of income.
 
-## Point estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$400
+- **Cost per QALY:** \$400 (\$100-\$5,000)
 
 *If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
@@ -30,14 +30,15 @@ This effect captures the welfare gains from creating "Charter Cities": new urban
 
 1.  **The Valuation Arbitrage:** The primary driver is the difference in the marginal utility of income. A dollar of economic growth in CCI's target regions (e.g., Zambia, Nigeria) generates roughly 50x more wellbeing (QALYs) than in the baseline's target regions (US/UK) due to the logarithmic utility of income.
 2.  **The Probability Discount:** Establishing a new city is significantly riskier than passing a zoning law. We assume CCI projects are roughly 4x less likely to succeed than the baseline intervention (3% vs 12%).
-3.  **Catch-up Growth:** Successful charter cities in LMICs have higher potential growth rates (7-10%) compared to rich-country cities (2-3%), which partially offsets the lower probability of success.
-4.  **Attribution Similarity:** We assume the attribution rate for philanthropic ecosystem building (CCI) is roughly similar to policy advocacy (Baseline).
+3.  **Execution Friction:** We apply a further 0.6x haircut for the difficulty of translating institutional-design work into durable, politically accepted, welfare-improving city governance.
+4.  **Catch-up Growth:** Successful charter cities in LMICs have higher potential growth rates (7-10%) compared to rich-country cities (2-3%), which partially offsets the lower probability of success.
+5.  **Attribution Similarity:** We assume the attribution rate for philanthropic ecosystem building (CCI) is roughly similar to policy advocacy (Baseline).
 
 ## Details
 
 ### Deriving the \$400/QALY estimate
 
-We benchmark CCI against the baseline institutions estimate of **\$4,000/QALY**. The core comparison is between the expected value of the Charter Cities Institute ($EV_{CCI}$) and the expected value of the baseline ($EV_{Base}$):
+We benchmark CCI against the current baseline institutions estimate of **\$3,000/QALY**. The core comparison is between the expected value of the Charter Cities Institute ($EV_{CCI}$) and the expected value of the baseline ($EV_{Base}$):
 
 $$\text{Relative effectiveness} = \frac{EV_{CCI}}{EV_{Base}}$$
 
@@ -64,13 +65,13 @@ $$V_{ratio} = \frac{V_{LMIC}}{V_{Rich}} \approx 50$$
 
 Combining the factors:
 
-$$\text{Relative Effectiveness} = P_{ratio} \times V_{ratio} = 0.25 \times 50 = 12.5$$
+$$\text{Relative Effectiveness} = P_{ratio} \times V_{ratio} \times F_{execution} = 0.25 \times 50 \times 0.6 = 7.5$$
 
 This implies CCI could be much more effective than the baseline institutions estimate. Converting that comparison into a cost per QALY:
 
-$$\text{Cost per QALY}_{CCI} = \frac{\$4{,}000}{12.5} \approx \$320$$
+$$\text{Cost per QALY}_{CCI} = \frac{\$3{,}000}{7.5} = \$400$$
 
-We round this **up** to **\$400/QALY** to account for higher execution friction and "unknown unknowns" in frontier markets.
+The plausible range is **\$100-\$5,000/QALY**. The low end corresponds to a real charter-city success in a low-income setting where CCI was materially causal; the high end corresponds to the more common case where advocacy, convening, or policy design absorbs funding without producing a durable institutional improvement. The estimate is therefore best read as a hits-based override, not as a claim that the average charter-city project reliably clears this bar.
 
 {{CONTRIBUTION_NOTE}}
 

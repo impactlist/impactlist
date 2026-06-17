@@ -6,6 +6,10 @@ categories:
     fraction: 0.05
   - id: ai-risk
     fraction: 0.05
+    effects:
+      - effectId: population
+        multipliers:
+          costPerMicroprobability: 10
   - id: longevity
     fraction: 0.45
   - id: science-tech
@@ -14,19 +18,20 @@ categories:
     fraction: 0.10
 ---
 
-# Justification of cost per life for the AI Existential Risk cause
+# Justification of Astera Institute category mix and AI-risk multiplier
 
 _The following analysis was done on December 18th 2025, written by Claude Opus 4.5 and edited by Impact List staff for clarity._
 
-We arrive at the cost per life multiplier by analyzing the effective deployment rate of donations to Astera Institute for AI existential risk reduction specifically.
+We model Astera Institute as a multi-cause foundation with a small AI-risk slice. The category allocation handles most of the dilution: 45% longevity, 35% science and technology, 10% other, 5% AI capabilities, and 5% AI risk. We additionally apply a **10x cost-per-microprobability multiplier** to the AI-risk slice, meaning that the AI-risk portion is modeled as about **0.1x as effective** as a donation to the default [AI Existential Risk](/cause/ai-risk) category.
 
 ## Description of effect
 
-This effect captures the discount applied to donations intended for AI x-risk reduction when routed through the Astera Institute. Unlike dedicated AI safety organizations (e.g., MIRI, ARC, Redwood Research), Astera operates as a multi-cause private foundation with significant endowment accumulation, low payout rates, and an AI research program (Obelisk) that primarily pursues AGI capabilities rather than traditional alignment work.
+This effect captures two things. First, an unrestricted donation to Astera is spread across several cause areas rather than going mainly to AI risk. Second, even the AI-risk slice appears less directly targeted than a dedicated AI-safety organization: Astera operates as a multi-cause private foundation with significant endowment accumulation, low payout rates, and an AI research program (Obelisk) that appears closer to neuroscience-informed AGI research than to pure alignment or governance work.
 
-## Point estimates
+## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY multiplier:** 0.1x (relative to baseline AI safety organization)
+- **AI-risk cost-per-microprobability multiplier:** 10x (3x-50x)
+- **Equivalent AI-risk effectiveness multiplier:** 0.1x relative to the default AI-risk category
 
 *If you disagree with this estimate after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
@@ -35,13 +40,13 @@ This effect captures the discount applied to donations intended for AI x-risk re
 1. **Low Payout Rate:** Astera deploys approximately 1.4% of assets annually, compared to the 5% legal minimum for private foundations. This means donations sit in an endowment rather than funding immediate work.
 2. **Low External Grant Rate:** Of funds actually spent, only ~19% (2023) flows to external organizations. The remainder funds internal operations and salaries.
 3. **Capabilities vs. Safety:** Astera's AI program (Obelisk) pursues "neuroscience-informed AGI development"—this is capabilities research with safety-conscious framing, not dedicated alignment work. Only one researcher (Steve Byrnes) appears to do traditional AI safety research.
-4. **Cause Area Dilution:** AI/AGI represents only ~25-35% of Astera's portfolio, with longevity research (~40%) and metascience (~20%) comprising the remainder.
+4. **Cause Area Dilution:** The frontmatter already models Astera as mostly not AI risk: 45% longevity, 35% science and technology, 10% other, 5% AI capabilities, and 5% AI risk. The multiplier below applies only to the AI-risk slice.
 
 ## Details
 
-### Derivation of the multiplier (0.1x)
+### Derivation of the AI-risk multiplier
 
-We calculate the effective deployment multiplier ($M$) by combining four discount factors that capture how donations are diluted before reaching AI x-risk work.
+We calculate an effective AI-risk deployment multiplier ($M$) by combining the discount factors that capture how donations are diluted before reaching direct AI x-risk work. Because the calculator expresses AI-risk effectiveness as a cost per microprobability, an effectiveness multiplier of **0.1x** is encoded as a **10x cost-per-microprobability multiplier**.
 
 ### 1. Payout rate discount
 
@@ -71,7 +76,7 @@ $$D_{cause} = \frac{\text{AI Budget}}{\text{Total Budget}} \approx 0.30$$
 
 ### 5. Final multiplier calculation
 
-For donations earmarked for AI x-risk, we apply the payout and safety discounts:
+For the AI-risk slice, we apply the payout and safety discounts:
 
 $$M = D_{payout} \times D_{safety} = 0.28 \times 0.15 = 0.042$$
 
@@ -79,11 +84,11 @@ For unrestricted donations, we additionally apply cause allocation:
 
 $$M_{unrestricted} = D_{payout} \times D_{cause} \times D_{safety} = 0.28 \times 0.30 \times 0.15 = 0.013$$
 
-We use **0.1** as a rounded, conservative estimate that:
+The raw calculation gives **0.042x** effectiveness for the AI-risk slice. We use **0.1x** as a rounded estimate that:
 
-- Gives partial credit for potential future deployment of endowment
-- Acknowledges some indirect safety value from Byrnes' neuroscience-informed approach
-- Accounts for uncertainty in internal budget allocations
+- gives partial credit for potential future deployment of endowment
+- acknowledges some indirect safety value from neuroscience-informed or safety-conscious work
+- avoids over-penalizing Astera when public budget allocations are incomplete
 
 {{CONTRIBUTION_NOTE}}
 
@@ -91,4 +96,4 @@ We use **0.1** as a rounded, conservative estimate that:
 
 The core argument rests on the combination of (1) endowment hoarding and (2) the Obelisk program being primarily capabilities research. If Astera dramatically increased its payout rate or pivoted Obelisk toward pure alignment work, the multiplier would improve substantially. However, current trends show declining grant percentages (from 68% in 2021 to 19% in 2023), suggesting the multiplier may worsen over time.
 
-Comparison point: A donation to Anthropic's safety team, MIRI, or ARC would have an effective multiplier of 0.8-1.0x for AI x-risk work, making them 8-10x more efficient vehicles for this cause area.
+Comparison point: A donation to a dedicated AI-risk organization would usually have an effective multiplier much closer to 1x for the AI-risk category, making it roughly an order of magnitude more direct than Astera's modeled AI-risk slice.

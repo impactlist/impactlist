@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This is a fallback bucket for donations that cannot yet be classified more precisely: donor-advised funds, prize awards to individuals, mixed-purpose foundations, civic or journalism organizations with diffuse benefits, local charities that do not fit the main categories cleanly, and genuinely unknown recipients.

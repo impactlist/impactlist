@@ -60,6 +60,27 @@ describe('MarkdownContent', () => {
     expect(screen.getByText(CONTENT_TOOLTIPS['plausible-range'])).toBeInTheDocument();
   });
 
+  it('renders a normal link with a tooltip title as a link plus info-icon tooltip', () => {
+    render(
+      <MemoryRouter>
+        <MarkdownContent
+          content='We estimate cost per [QALY](https://en.wikipedia.org/wiki/Quality-adjusted_life_year "tooltip:qaly").'
+          delay={0}
+        />
+      </MemoryRouter>
+    );
+
+    const link = screen.getByRole('link', { name: 'QALY' });
+    expect(link).toHaveAttribute('href', 'https://en.wikipedia.org/wiki/Quality-adjusted_life_year');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).not.toHaveAttribute('title');
+
+    const trigger = screen.getByRole('button', { name: /QALY definition/i });
+    expect(screen.queryByText(CONTENT_TOOLTIPS.qaly)).toBeNull();
+    fireEvent.focus(trigger);
+    expect(screen.getByText(CONTENT_TOOLTIPS.qaly)).toBeInTheDocument();
+  });
+
   it('renders an unknown tooltip key as plain text rather than a broken link', () => {
     render(
       <MemoryRouter>

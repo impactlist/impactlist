@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from donations to exceptionally cost-effective global-health charities, especially GiveWell-style programs that prevent child deaths from malaria, vitamin A deficiency, and vaccine-preventable disease. The estimate is meant to model the best currently donatable global-health opportunities, not the average global-health nonprofit. Because these programs mostly help very young children, the gains are dominated by many decades of additional life.

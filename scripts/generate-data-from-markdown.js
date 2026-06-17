@@ -25,10 +25,16 @@ const globalParametersFile = path.join(__dirname, '../content/globalParameters.m
 const assumptionProfilesDir = path.join(__dirname, '../content/assumptions/profiles');
 const outputFile = path.join(__dirname, '../src/data/generatedData.js');
 
+const QALY_LINK_WITH_TOOLTIP = `[QALY](https://en.wikipedia.org/wiki/Quality-adjusted_life_year "tooltip:qaly")`;
+const QALYS_LINK_WITH_TOOLTIP = `[QALYs](https://en.wikipedia.org/wiki/Quality-adjusted_life_year "tooltip:qaly")`;
+
 // Shared text variables for markdown substitution
 const MARKDOWN_VARIABLES = {
   CONTRIBUTION_NOTE: `_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
   GLOBAL_ASSUMPTIONS_NOTE: `_All estimates rely on global assumptions, such as years per life, discounting, population growth, and how far into the future we care about. You can view or edit these on the [Assumptions page](/assumptions). Additional assumptions specific to this estimate follow._`,
+  QALY: QALY_LINK_WITH_TOOLTIP,
+  QALYS: QALYS_LINK_WITH_TOOLTIP,
+  STANDARD_QALY_METHOD_NOTE: `We arrive at the cost per life by estimating the cost per ${QALY_LINK_WITH_TOOLTIP} and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the [Assumptions page](/assumptions) for this and other parameters).`,
   RECIPIENT_DEFAULT_JUSTIFICATION: `The cost per life of this recipient is assumed to be the same as for the baseline for each of its cause areas.
 You can see how these cost per life values were calculated by going to the pages of its associated cause areas (see above).`,
   // Inline definition tooltip for the term "plausible range". Use at the FIRST mention of

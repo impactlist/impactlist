@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from organizations that multiply the impact of other cause areas by improving how people **give, think, and work**. Representative examples include effective-giving organizations and evaluators (such as GiveWell, Giving What We Can, and The Life You Can Save), career and talent-shaping organizations (such as 80,000 Hours), and broader public-intellectual or worldview work that changes how resources, careers, and strategic attention are allocated, including toward catastrophic-risk reduction.

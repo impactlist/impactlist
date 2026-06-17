@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from donations to the best current **non-climate environmental** charities, especially those that reduce toxic exposure or air pollution: lead-source elimination, toxic-site remediation, and clean-air policy/data/advocacy. The current quantitative anchors are pollution-focused. The estimate does not separately model biodiversity, ecosystem existence value, or scenic/amenity value, but that is a scope and evidence decision, not because those benefits are outside QALY-equivalent welfare.

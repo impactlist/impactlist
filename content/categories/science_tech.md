@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from **strong marginal science and technology philanthropy in wealthy countries**: research institutes, scientific fellowships, translational labs, research tools and infrastructure, and some open-knowledge or public-interest technology work. The core mechanism is that donations help create, preserve, or accelerate useful knowledge and capabilities that later improve human welfare.

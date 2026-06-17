@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from donations to charities that improve how high-stakes institutions form beliefs and choose actions: probabilistic forecasting, prediction markets, evidence synthesis, collective intelligence, structured analytic techniques such as premortems and red-team reviews, decision audits, and related tools for governments and other consequential organizations.

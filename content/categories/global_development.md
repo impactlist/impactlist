@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from donations to unusually effective charities that help people in extreme poverty become materially better off, especially through large unconditional cash transfers and related "big push" livelihood interventions. The main benefits are higher consumption, greater asset ownership, better food security, improved psychological wellbeing, and in some cases lower child mortality. We mostly leave interventions whose main value comes from preventing disease or death to the Global Health category, and we do not try to model broad economy-wide growth effects here.

@@ -13,6 +13,26 @@ import { CONTENT_TOOLTIPS } from '../../constants/contentTooltips';
 // custom `tooltip:` protocol would be stripped). The text after the prefix is a key
 // into CONTENT_TOOLTIPS. Authored via the {{PLAUSIBLE_RANGE}} generator variable.
 const TOOLTIP_HREF_PREFIX = '#tooltip:';
+const TOOLTIP_TITLE_PREFIX = 'tooltip:';
+
+const getTooltipTerm = (children) =>
+  typeof children === 'string'
+    ? children
+    : Array.isArray(children)
+      ? children.filter((child) => typeof child === 'string').join('')
+      : '';
+
+const InlineTooltip = ({ children, content, term }) => (
+  <span className="impact-glossary">
+    {children}
+    <InfoTooltipIcon
+      content={content}
+      className="impact-glossary__info"
+      iconClassName="h-3 w-3"
+      ariaLabel={term ? `${term} definition` : 'Definition'}
+    />
+  </span>
+);
 
 // Custom link component that opens external links in a new tab and styles all links blue
 // eslint-disable-next-line no-unused-vars
@@ -21,28 +41,20 @@ const CustomLink = ({ node, href, title, children }) => {
   const isExternal = href && (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'));
   const isInternalRoute = href && href.startsWith('/') && !href.startsWith('//');
   const linkClass = 'impact-link';
+  const titleTooltipKey = title?.startsWith(TOOLTIP_TITLE_PREFIX) ? title.slice(TOOLTIP_TITLE_PREFIX.length) : null;
+  const titleTooltipContent = titleTooltipKey ? CONTENT_TOOLTIPS[titleTooltipKey] : null;
+  const linkTitle = titleTooltipKey ? undefined : title;
+  const term = getTooltipTerm(children);
 
   if (href && href.startsWith(TOOLTIP_HREF_PREFIX)) {
     const content = CONTENT_TOOLTIPS[href.slice(TOOLTIP_HREF_PREFIX.length)];
     if (content) {
-      const term =
-        typeof children === 'string'
-          ? children
-          : Array.isArray(children)
-            ? children.filter((child) => typeof child === 'string').join('')
-            : '';
       // `nowrap` keeps the info icon glued to the end of the phrase rather than
       // orphaning onto the next line.
       return (
-        <span className="impact-glossary">
+        <InlineTooltip content={content} term={term}>
           {children}
-          <InfoTooltipIcon
-            content={content}
-            className="impact-glossary__info"
-            iconClassName="h-3 w-3"
-            ariaLabel={term ? `${term} definition` : 'Definition'}
-          />
-        </span>
+        </InlineTooltip>
       );
     }
     // Unknown key: render the phrase as plain text. The authoring token guarantees a
@@ -52,25 +64,49 @@ const CustomLink = ({ node, href, title, children }) => {
   }
 
   if (isExternal) {
-    return (
-      <a href={href} title={title} target="_blank" rel="noopener noreferrer" className={linkClass}>
+    const link = (
+      <a href={href} title={linkTitle} target="_blank" rel="noopener noreferrer" className={linkClass}>
         {children}
       </a>
+    );
+
+    return titleTooltipContent ? (
+      <InlineTooltip content={titleTooltipContent} term={term}>
+        {link}
+      </InlineTooltip>
+    ) : (
+      link
     );
   }
 
   if (isInternalRoute && isInRouterContext) {
-    return (
-      <Link to={href} title={title} className={linkClass}>
+    const link = (
+      <Link to={href} title={linkTitle} className={linkClass}>
         {children}
       </Link>
     );
+
+    return titleTooltipContent ? (
+      <InlineTooltip content={titleTooltipContent} term={term}>
+        {link}
+      </InlineTooltip>
+    ) : (
+      link
+    );
   }
 
-  return (
-    <a href={href} title={title} className={linkClass}>
+  const link = (
+    <a href={href} title={linkTitle} className={linkClass}>
       {children}
     </a>
+  );
+
+  return titleTooltipContent ? (
+    <InlineTooltip content={titleTooltipContent} term={term}>
+      {link}
+    </InlineTooltip>
+  ) : (
+    link
   );
 };
 

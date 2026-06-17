@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from donations to unusually effective, relatively non-ideological human-rights

@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from donations to the best current animal-welfare charities. In practice, the clearest evidence base still comes from farmed-chicken corporate campaigns and accountability work, especially cage-free reforms for laying hens and Better Chicken Commitment (BCC) reforms for broilers. There are also increasingly promising aquatic-animal opportunities, especially shrimp welfare, but the cross-species conversion into human-equivalent QALYs is less mature there.

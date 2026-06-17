@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures human-welfare gains from donations to **top conflict-mitigation organizations** that reduce the probability, duration, or intensity of organized armed conflict through mediation, quiet diplomacy, conflict analysis, early warning, and support for political settlements. Representative organizations include the Centre for Humanitarian Dialogue (HD) and the International Crisis Group (ICG).

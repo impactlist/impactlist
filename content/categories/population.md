@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 The estimate divides a central cost of about \$45,000 per additional wanted birth (Assumptions 2-4) by the QALYs that birth produces, which we put at 75: 73 from the added person's own life (Assumption 5) plus modest allowances for parental wellbeing and broader spillovers (Assumptions 6-7). That gives \$600/QALY, driven overwhelmingly by the added life. The cruxes are whether population ethics counts an extra good life as a large welfare gain, whether research and advocacy organizations can really cause births at the cost the policy and fertility-care evidence implies, and how large the secondary effects are.
 
 ## Description of effect

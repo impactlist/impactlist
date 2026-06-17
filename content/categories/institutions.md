@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from **nonpartisan efforts to improve the rules, capacity, and administrative competence of important institutions**, especially governments and closely related public-interest institutions in high-income settings. Representative pathways include land-use reform, benefits and tax administration, election administration, legal and regulatory reform, civic technology, and other institutional-design work that makes large systems work better for many people at once.

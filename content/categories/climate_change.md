@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures human-health benefits from donations to top climate charities that reduce greenhouse gas emissions through policy advocacy, innovation policy, market shaping, and related systems change. We measure those reductions in **tCO₂e**: metric tons of **carbon-dioxide equivalent**, a standard unit that converts different greenhouse gases such as methane into a common warming-based scale. The core estimate models avoided climate mortality from reduced emissions. It largely excludes air-pollution co-benefits and most non-fatal climate harms, so it should be read as a partial health estimate for strong mitigation philanthropy rather than a full accounting of climate damages.

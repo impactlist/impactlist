@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 We estimate **\$20,000/QALY** for strong political giving. The driver is a four-link chain — a well-targeted gift nudges win probability, the contest is sometimes pivotal for a welfare-relevant policy wedge, and that wedge converts to QALYs at a rate far worse than direct giving. The cruxes are all four parameters, especially the size of the policy wedge and how often a contest is genuinely pivotal; because each can move a lot and they tend to move together with one's overall view of political leverage, the plausible range is wide (\$5,000–\$120,000/QALY).

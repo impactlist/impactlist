@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from **strong local-community philanthropy in wealthy countries**: local organizations that improve life in a particular city, county, or metro area through a mix of basic-needs support, targeted community health and safety services, caregiver and family support, and other neighborhood-level programs.

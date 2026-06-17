@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 The estimate is driven by an expected-value model of helping one modest first-generation gerotherapeutic cross translational bottlenecks. The cruxes are how much a strong donor portfolio shifts the probability of success ($\delta$, Assumption 9), how many people such a therapy reaches early (Assumption 8), and how big the per-person health gain is (Assumption 7). All three are judgment-heavy, which is why the range is wide.
 
 ## Description of effect

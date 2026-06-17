@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures charities that improve health and wellbeing by increasing direct participation in arts, culture, and heritage activities: arts-on-prescription programmes, community choirs, dance and creative workshops, and structured museum or heritage engagement. We model charities that pay for access, facilitation, and outreach to people with elevated loneliness, mild-to-moderate mental-health burden, or older age.

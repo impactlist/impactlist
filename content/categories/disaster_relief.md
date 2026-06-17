@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from **acute humanitarian response** after disasters, outbreaks, and sudden displacement crises: emergency health care, treatment of acute malnutrition, outbreak control, emergency WASH (water, sanitation, and hygiene), cash/basic-needs assistance, and related rapid relief for displaced or crisis-affected populations. It does **not** include long-run reconstruction, disaster-risk reduction, or anticipatory action.

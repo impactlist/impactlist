@@ -9,4 +9,5 @@
 export const CONTENT_TOOLTIPS = {
   'plausible-range':
     "Our ranges represent 80% credence intervals: we're about 80% confident the true value lies inside it, with roughly a 10% chance it's lower and a 10% chance it's higher.",
+  qaly: 'A quality-adjusted life year (QALY) is defined to be equal to one year of human life in full health.',
 };

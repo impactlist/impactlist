@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from **global priorities research (GPR)**: research and decision tools that help major donors, institutions, and sometimes policymakers decide which problems, interventions, and strategies are most worth funding or staffing. Representative work includes cross-cause prioritization, identifying neglected but tractable problems, comparing interventions within a cause, building philanthropic decision tools, and foundational work that later changes how money, talent, institutional attention, and policy effort are allocated.

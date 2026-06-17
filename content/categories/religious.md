@@ -12,6 +12,8 @@ effects:
 
 _The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
 
+{{STANDARD_QALY_METHOD_NOTE}}
+
 ## Description of effect
 
 This effect captures welfare gains from charities that support **organized religious participation**: congregations, ministries, and similar institutions whose main product is worship, fellowship, pastoral support, and religious community life.

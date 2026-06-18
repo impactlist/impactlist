@@ -13,9 +13,9 @@ effects:
   - effectId: population-doom
     startTime: 10
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 167_000_000
+    costPerMicroprobability: 120_000_000
     populationFractionAffected: 1.0
-    qalyImprovementPerYear: -0.9
+    qalyImprovementPerYear: -0.77
 ---
 
 # Justification of cost per life
@@ -30,7 +30,7 @@ The three distinct effects are:
 
 1. **standard-mundane**: ordinary welfare gains from better AI tools, higher productivity, and better products and services.
 2. **standard-utopia**: gains from bringing forward a genuinely very good transformative-AI world.
-3. **population-doom**: harm from slightly increasing the probability of AI-caused human extinction.
+3. **population-doom**: harm from slightly increasing the probability of AI-caused existential catastrophe.
 
 ## What kinds of projects are we modeling?
 
@@ -157,7 +157,7 @@ The point estimate multiplies five uncertain terms. Each carries a rough plausib
 
 - **\$10,000** is a coherently optimistic bundle: very good futures are somewhat more likely than the 10% central figure, acceleration is toward the high end, and the timeline is long enough for the early-arrival window to compound — but not every term at its limit.
 - **\$1,000,000** carries the genuinely skeptical worldview, in which very good futures are rare, the annual gain is modest, and small capability pushes barely move the timeline. We run this end well beyond the roughly independent combination of the parameter ranges, because a correlated skeptical worldview and the chance that the linear-acceleration model simply does not hold both push this effect toward negligible — a tail the parameters alone understate.
-  :::
+:::
 
 #### Start time
 
@@ -171,17 +171,15 @@ We use a 5-year duration because this effect is about the window between "AI arr
 
 ## Effect 3: population-doom
 
-This effect captures the harm from AI capability work slightly increasing the probability of AI-caused human extinction.
+This effect captures the harm from AI capability work slightly increasing the probability of AI-caused existential catastrophe: literal human extinction, irreversible human disempowerment, stable totalitarian lock-in, or another global outcome that permanently and drastically curtails humanity's future.
 
-It intentionally models literal extinction rather than every severe AI catastrophe. That keeps this category from double-counting the broader non-extinction catastrophe channels modeled under [AI Existential Risk](/cause/ai-risk), but it also means the AI-capabilities page is probably too favorable if capability acceleration materially raises the risk of irreversible disempowerment, lock-in, or other non-extinction catastrophes.
-
-Note: The QALY improvement per year is **-0.9** (negative), indicating this is a harmful effect.
+Note: The QALY improvement per year is **-0.77** (negative), indicating this is a harmful effect.
 
 ### Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per microprobability (increase):** \$167 million (\$25 million–\$5 billion)
+- **Cost per microprobability (increase):** \$120 million (\$20 million–\$5 billion)
 - **Population fraction affected:** 1.0
-- **QALY improvement per affected person per year:** -0.9
+- **QALY improvement per affected person per year:** -0.77
 - **Start time:** 10 years
 - **Duration:** Defined by the global time limit parameter (default is 100 years)
 
@@ -191,53 +189,53 @@ _If you disagree with these estimates after reading this page, click 'Edit' near
 
 {{GLOBAL_ASSUMPTIONS_NOTE}}
 
-1. The baseline probability of AI-caused extinction this century is about **10%**. ([See detailed justification](/assumption/ai-doom-probability))
+1. The baseline probability of AI-caused existential catastrophe this century is about **14%**: roughly 10% extinction risk plus about 4 percentage points of additional irreversible-disempowerment or lock-in risk. ([See detailed justification](/assumption/ai-existential-catastrophe-probability))
 2. Total cumulative frontier or near-frontier AI spending before transformative AI is roughly **\$5 trillion**. ([See detailed justification](/assumption/cumulative-frontier-ai-spending-before-transformative-ai))
 3. A marginal philanthropic dollar in this cause is best modeled as about **30 cents of frontier-equivalent capability acceleration**. ([See detailed justification](/assumption/frontier-equivalent-share-of-ai-capabilities-philanthropy))
-4. As a first-pass model, small marginal accelerations of frontier capability progress increase extinction risk roughly in proportion to how much they speed up the race. This linearity assumption is obviously imperfect, but it is the cleanest tractable baseline.
-5. Average human quality of life is roughly **0.9 QALYs per year**. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
+4. As a first-pass model, small marginal accelerations of frontier capability progress increase existential-catastrophe risk roughly in proportion to how much they speed up the race. This linearity assumption is obviously imperfect, but it is the cleanest tractable baseline.
+5. The average welfare shortfall across the AI-caused existential-catastrophe class is about **0.77 QALY-equivalents per affected person-year**, blending literal extinction with severe non-extinction catastrophes. ([See detailed justification](/cause/ai-risk))
 
 ### Details
 
 #### Cost per microprobability
 
-The same frontier-acceleration model as Effect 2, applied to extinction risk, gives a marginal dollar about $6.0 \times 10^{-15}$ of extra doom probability — roughly **0.006 microprobabilities per \$1 million**, or **\$167 million per +1 microprobability**. This is strongly negative on any worldview that gives substantial weight to future generations.
+The same frontier-acceleration model as Effect 2, applied to AI existential-catastrophe risk, gives a marginal dollar about $8.4 \times 10^{-15}$ of extra catastrophe probability — roughly **0.0084 microprobabilities per \$1 million**, or **\$120 million per +1 microprobability**. This is strongly negative on any worldview that gives substantial weight to future generations.
 
 :::details{title="The acceleration formula and parameter substitution"}
 
 $$
-\Delta p_{\text{doom}} / \$ \approx p_{\text{doom}} \times \dfrac{a_{\text{frontier}}}{S_{\text{total}}}
+\Delta p_{\text{catastrophe}} / \$ \approx p_{\text{catastrophe}} \times \dfrac{a_{\text{frontier}}}{S_{\text{total}}}
 $$
 
-Using $p_{\text{doom}} = 0.10$ (Assumption 1), $a_{\text{frontier}} = 0.30$ (Assumption 3), and $S_{\text{total}} = 5 \times 10^{12}$ (Assumption 2):
+Using $p_{\text{catastrophe}} = 0.14$ (Assumption 1), $a_{\text{frontier}} = 0.30$ (Assumption 3), and $S_{\text{total}} = 5 \times 10^{12}$ (Assumption 2):
 
 $$
-\Delta p_{\text{doom}} / \$ \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \approx 6.0 \times 10^{-15}
+\Delta p_{\text{catastrophe}} / \$ \approx 0.14 \times \dfrac{0.30}{5 \times 10^{12}} \approx 8.4 \times 10^{-15}
 $$
 
 :::
 
-The plausible range (**\$25 million–\$5 billion per microprobability**) is wide and skewed toward the cheap (strong-harm) end being closer in than the expensive (weak-harm) end. The three inputs are roughly independent, so they rarely all reach their unfavorable extremes together; but the weak-harm end runs far out, because the chance that this effect is essentially negligible — markets would have bought the capability anyway, or marginal acceleration barely moves extinction risk — lives _outside_ the parameters and stretches the expensive, weak-harm tail well past what they alone would imply.
+The plausible range (**\$20 million–\$5 billion per microprobability**) is wide and skewed toward the cheap (strong-harm) end being closer in than the expensive (weak-harm) end. The three inputs are roughly independent, so they rarely all reach their unfavorable extremes together; but the weak-harm end runs far out, because the chance that this effect is essentially negligible — markets would have bought the capability anyway, or marginal acceleration barely moves existential-catastrophe risk — lives _outside_ the parameters and stretches the expensive, weak-harm tail well past what they alone would imply.
 
 :::details{title="What the bounds represent"}
-The estimate multiplies the extinction probability (3–30%), the frontier-equivalent share (0.12–0.55), and the spending denominator (\$2–20 trillion). Pushing all three to the strong-harm edge at once (high probability, high acceleration, low denominator) implies about **\$12 million** per microprobability; pushing all three to the weak-harm edge at once implies about **\$5.6 billion**. That all-edges span is wider than the published plausible range, since three roughly independent inputs seldom hit the same extreme together.
+The estimate multiplies the existential-catastrophe probability (3–35%), the frontier-equivalent share (0.12–0.55), and the spending denominator (\$2–20 trillion). Pushing all three to the strong-harm edge at once (high probability, high acceleration, low denominator) implies about **\$10 million** per microprobability; pushing all three to the weak-harm edge at once implies about **\$5.6 billion**. That all-edges span is wider than the published plausible range, since three roughly independent inputs seldom hit the same extreme together.
 
-- **\$25 million** carries a worried but not extreme worldview — extinction risk and acceleration toward the high end, denominator toward the low end, but not every term at its limit.
-- **\$5 billion** is near the weak-harm edge of the parameters, and we publish out to it rather than pulling in, because the structural possibility that frontier acceleration barely changes extinction risk — through crowd-out or through the linear model failing — pushes this effect toward harmless, a tail the parameter ranges understate.
-  :::
+- **\$20 million** carries a worried but not extreme worldview — existential-catastrophe risk and acceleration toward the high end, denominator toward the low end, but not every term at its limit.
+- **\$5 billion** is near the weak-harm edge of the parameters, because the structural possibility that frontier acceleration barely changes existential-catastrophe risk — through crowd-out or through the linear model failing — pushes this effect toward harmless, a tail the parameter ranges understate.
+:::
 
-The population fraction affected is 1.0 because extinction kills everyone.
+The population fraction affected is 1.0 because the modeled catastrophe is global by construction.
 
 #### QALY improvement per affected person per year
 
-The value is **-0.9** because this effect is harm, not benefit, and because a lost ordinary human life-year is modeled as about 0.9 QALYs rather than 1.0. Combining the doom probability per dollar with the QALYs at stake, at the central estimate **\$1 million** donated to AI capabilities increases expected losses by roughly $0.006 \times 1{,}200{,}000 \approx 7{,}200$ QALYs. This downside becomes much larger if you extend the time horizon beyond 100 years.
+The value is **-0.77** because this effect is harm, not benefit. It blends literal extinction (about 0.9 QALYs lost per person-year) with permanent non-extinction catastrophes (about 0.45), weighted by the roughly 10%/4% extinction/non-extinction split from Assumption 1: $(0.10 \times 0.9 + 0.04 \times 0.45)/0.14 \approx 0.77$. (The [AI existential risk page](/cause/ai-risk) uses a slightly higher **0.80** because safety spending differentially averts extinction; here, marginal capability acceleration is modeled as raising the whole catastrophe class proportionally per Assumption 4, so the added risk carries the baseline mix.) Combining the catastrophe probability per dollar with the QALYs at stake, at the central estimate **\$1 million** donated to AI capabilities increases expected losses by roughly $0.0084 \times 1{,}030{,}000 \approx 8{,}650$ QALYs. This downside becomes much larger if you extend the time horizon beyond 100 years.
 
 :::details{title="QALYs at stake per microprobability at the default 100-year horizon"}
-With the default 100-year time limit and the site's population model (about 8.3 billion people today growing at 1%/year), the effect window runs from year 10 to year 100 — roughly **1,335 billion person-years**. At about 0.9 QALYs per person-year:
+With the default 100-year time limit and the site's population model (about 8.3 billion people today growing at 1%/year), the effect window runs from year 10 to year 100 — roughly **1,335 billion person-years**. At about 0.77 QALYs per person-year:
 
-- Total QALYs destroyed: **about 1,200 billion**
-- QALYs destroyed per microprobability: **about 1,200,000**
-  :::
+- Total QALYs destroyed: **about 1,030 billion**
+- QALYs destroyed per microprobability: **about 1,030,000**
+:::
 
 #### Start time
 
@@ -247,7 +245,7 @@ We use a 10-year start time for the same reason as in Effect 2: the relevant ris
 
 The very large `windowLength` in the YAML frontmatter is just a ceiling so the calculator can accommodate long horizons; in practice the effect is clamped by the user's chosen global time-limit parameter.
 
-The duration is controlled by the global time limit parameter. Extinction has especially large long-run consequences, so users with longtermist views will see much larger harms than users who count only currently alive people or the next few generations.
+The duration is controlled by the global time limit parameter. AI existential catastrophe has especially large long-run consequences, so users with longtermist views will see much larger harms than users who count only currently alive people or the next few generations.
 
 ---
 
@@ -257,12 +255,12 @@ At the default 100-year time horizon and default 0% discount rate, the central e
 
 - **standard-mundane:** about **9.6 QALYs gained** (\$1,000,000 / \$104,000)
 - **standard-utopia:** about **30.3 QALYs gained** (\$1,000,000 / \$33,000)
-- **population-doom:** about **7,200 QALYs destroyed** (0.006 microprobabilities times about 1,200,000 QALYs per microprobability)
+- **population-doom:** about **8,650 QALYs destroyed** (0.0084 microprobabilities times about 1,030,000 QALYs per microprobability)
 
 So at the default settings, the net effect is roughly:
 
 $$
-9.6 + 30.3 - 7{,}200 \approx -7{,}160 \text{ QALYs}
+9.6 + 30.3 - 8{,}650 \approx -8{,}610 \text{ QALYs}
 $$
 
 At ordinary time horizons the existential-risk downside dominates the positive terms unless the underlying worldview assumptions change substantially.
@@ -277,7 +275,7 @@ These numbers are rough order-of-magnitude judgments. The biggest uncertainties 
 2. **How much capability acceleration markets would already have bought.** This is the central reason the ordinary-benefit estimate is weaker than it first appears.
 3. **Whether transformative-AI acceleration is mostly good or mostly bad.** The upside and downside terms both depend heavily on worldview assumptions, and the upside and downside terms are partly correlated rather than fully independent.
 4. **Whether marginal risk scales linearly.** Real systems may have thresholds, bottlenecks, or race dynamics that make the doom effect either much smaller or much larger than this simple model.
-5. **Bad but non-extinction outcomes.** We do not separately model scenarios like authoritarian lock-in, severe inequality, AI-enabled bioweapons, or large nonhuman-animal effects. On balance, omitting these probably makes the category look somewhat too positive.
+5. **Boundary around the catastrophe.** We now model extinction, irreversible disempowerment, and stable lock-in, but not every serious AI harm. Severe inequality, AI-enabled biosecurity damage below the existential threshold, or large nonhuman-animal effects could still make the category look too positive if capability acceleration materially worsens them.
 
 {{CONTRIBUTION_NOTE}}
 

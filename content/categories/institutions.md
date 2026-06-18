@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -145,6 +143,8 @@ The 25-year duration is a compromise across very different pathways. Some instit
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - This version is intentionally broader than a housing-only model because the current category mapping includes civic-tech, election-administration, legal, and other institutional recipients that do not fit a single land-use formula.
 - The duration is intentionally longer than a pure civic-tech baseline because much of the category's upside comes from durable legal and governance changes rather than software alone.

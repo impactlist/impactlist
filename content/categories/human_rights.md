@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -248,6 +246,8 @@ So 20 years is a compromise:
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The biggest modeling choices are now: the **VAWG welfare uplift**, the **bonded-labour QALY-equivalent loss**, and
   the **70/30 portfolio split**.

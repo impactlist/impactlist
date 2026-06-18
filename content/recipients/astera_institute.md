@@ -20,8 +20,6 @@ categories:
 
 # Justification of Astera Institute category mix and AI-risk multiplier
 
-_The following analysis was done on December 18th 2025 by Claude Opus 4.5, with prompts from Impact List staff._
-
 We model Astera Institute as a multi-cause foundation with a small AI-risk slice. The category allocation handles most of the dilution: 45% longevity, 35% science and technology, 10% other, 5% AI capabilities, and 5% AI risk. We additionally apply a **10x cost-per-microprobability multiplier** to the AI-risk slice, meaning that the AI-risk portion is modeled as about **0.1x as effective** as a donation to the default [AI Existential Risk](/cause/ai-risk) category.
 
 ## Description of effect
@@ -97,6 +95,8 @@ We do **not** multiply by $D_{external}$ in the final AI-risk-slice estimate. Th
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on December 18th 2025 by Claude Opus 4.5, with prompts from Impact List staff._
 
 The core argument rests on the combination of (1) endowment hoarding and (2) the Obelisk program being primarily capabilities research. If Astera dramatically increased its payout rate or pivoted Obelisk toward pure alignment work, the multiplier would improve substantially. However, current trends show declining grant percentages (from 68% in 2021 to 19% in 2023), suggesting the multiplier may worsen over time.
 

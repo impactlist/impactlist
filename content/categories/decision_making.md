@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -142,6 +140,8 @@ Assumption 11 gives the main durability anchors. We use 10 years rather than som
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - This version intentionally uses a scenario model because a single "all-in percentage improvement" parameter obscures the actual cruxes.
 - If future editors can find stronger evidence on how often forecasting/evidence products change concrete decisions, that would be the single biggest lever for improving this estimate.

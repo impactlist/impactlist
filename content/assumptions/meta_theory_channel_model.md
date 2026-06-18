@@ -3,8 +3,6 @@ id: meta-theory-channel-model
 name: 'Meta and Theory channel model'
 ---
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How should Meta and Theory be modeled?
 
 The category page for Meta and Theory uses a two-channel model:
@@ -111,3 +109,7 @@ The biggest uncertainty is not the arithmetic. It is whether the broader career/
 - assigned a multiplier much above or below **4x**
 
 Those are the judgments most likely to move the category estimate materially. Combining the category page's leverage ranges with the benchmark ranges here gives the published category range of about **\$6-\$300/QALY**; the high-cost side extends beyond the fixed-split parameter table because a marginal opportunity can be more worldview-heavy than the central 40% / 60% split and because attribution can be weaker than the central model assumes.
+
+# Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._

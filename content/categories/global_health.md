@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -128,6 +126,8 @@ The duration field measures **how long** the benefit lasts, while the cost-effec
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
 - The point estimate is deliberately anchored to two things: GiveWell's current marginal funding bar and GiveWell's recent public cost-per-life-saved history. Using both is clearer than relying on either one alone.
 - The most important future levers are: (1) GiveWell's benchmark and funding bar, (2) the QALY conversion for an under-five death averted, and (3) whether the top-opportunity set changes materially beyond the current malaria / VAS / vaccination mix.

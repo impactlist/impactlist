@@ -3,8 +3,6 @@ id: effect-of-all-ai-safety-spending-on-ai-existential-catastrophe
 name: 'Effect of all previous AI safety spending on AI existential catastrophe'
 ---
 
-_The following analysis was done on April 15th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How much has existing AI safety spending reduced AI existential-catastrophe risk?
 
 This document estimates the net effect of roughly **\$1 billion** of cumulative AI safety-related spending through 2025 on the probability of **AI-caused existential catastrophe** this century.
@@ -154,3 +152,7 @@ Several caveats matter:
    The roughly \$1 billion total counts frontier-lab internal safety work only at a conservative few tens of millions of dollars per year, while some of the clearest achievements in the positive-channels story (responsible-scaling policies, preparedness frameworks, frontier eval norms) were substantially produced by lab-internal investment beyond that. To the extent that is true, the per-dollar effect of the counted spending is overstated; including all lab-internal safety investment in the denominator would raise the cost per microprobability roughly proportionally.
 
 {{CONTRIBUTION_NOTE}}
+
+# Internal Notes
+
+_The following analysis was done on April 15th 2026 by GPT-5.4, with prompts from Impact List staff._

@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -93,6 +91,8 @@ This duration leaves out some longer-run effects: CO₂ persists in the atmosphe
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
 - [Wilson et al. 2024](https://www.science.org/doi/10.1126/sciadv.adq3367) is the main reason `L` moved from 4 to 5: it shows much younger heat mortality than the older European anchor suggests.
 - For future editors: [Bressler's 2024 draft abstract](https://www.sipa.columbia.edu/sites/default/files/2024-10/The-Distributional-Mortality-and-Social-Cost-of-Carbon_Bressler_JMP_Abstract.pdf) reports a higher mortality-cost-of-carbon figure and stronger concentration of deaths in Southern/Central Asia and Sub-Saharan Africa, but it is still draft/JMP material and should not be used as a public citation without checking the final paper.

@@ -12,8 +12,6 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 16th 2025 by Google Gemini 3 Pro, with prompts from Impact List staff._
-
 We assign the Charter Cities Institute (CCI) a **cost per QALY of \$1,500**. The main reason it comes in below the baseline [Improving Institutions](/cause/institutions) estimate is that successful institutional improvements in lower-income countries can generate much larger welfare gains per dollar. The estimate still carries a large attribution discount because CCI is a research, technical-assistance, and convening organization rather than the direct builder of charter cities.
 
 ## Description of effect
@@ -78,5 +76,7 @@ The plausible range is **\$400-\$60,000/QALY**. The low end corresponds to a rea
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on December 16th 2025 by Google Gemini 3 Pro, with prompts from Impact List staff._
 
 The core argument rests on both $V_{ratio}$ and attribution. If CCI is rarely causal for durable governance improvements, the true cost per QALY could be much worse than the point estimate. If a project succeeds in a low-income setting and CCI is materially causal, the estimate could be much better.

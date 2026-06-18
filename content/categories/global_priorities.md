@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -166,6 +164,8 @@ At the same time, not every prioritization judgment remains live forever; some r
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - If future editors want to move this estimate a lot, the most important levers are: (1) influenced capital per research dollar, (2) the direct improvement factor, and (3) the size of the broader strategic channel relative to the direct one.
 - The dedicated assumption page currently covers the broad-benchmark / improvement / second-channel logic, but the influenced-capital ratio is still the single most decision-relevant empirical crux.

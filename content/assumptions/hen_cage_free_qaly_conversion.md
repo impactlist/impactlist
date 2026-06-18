@@ -3,8 +3,6 @@ id: hen-cage-free-qaly-conversion
 name: 'QALY-equivalent hen welfare gain from cage-free reforms'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
-
 ## How many human-equivalent QALYs does moving a laying hen from conventional cages to aviaries create per hen-year?
 
 We estimate that moving a laying hen from conventional cages to aviaries creates about **0.0415 human-equivalent QALYs per hen-year**, with a {{PLAUSIBLE_RANGE}} of about **0.0075-0.08**.
@@ -65,3 +63,7 @@ $$0.46 \times 0.5 \times 0.35 \approx 0.08$$
 :::
 
 {{CONTRIBUTION_NOTE}}
+
+# Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._

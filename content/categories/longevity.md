@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 The estimate is driven by an expected-value model of helping one modest first-generation gerotherapeutic cross translational bottlenecks. The cruxes are how much a strong donor portfolio shifts the probability of success ($\delta$, Assumption 9), how many people such a therapy reaches early (Assumption 8), and how big the per-person health gain is (Assumption 7). All three are judgment-heavy, which is why the range is wide.
@@ -146,6 +144,8 @@ Fifty years is a reasonable compromise between "this matters for decades" and "d
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The main change in this rewrite was to make the outside view much more explicit: aging-targeting has huge upside, but the central estimate should pay a serious discount for mixed human evidence, endpoint problems, and the fact that the field is now meaningfully funded.
 - If future editors want to improve this further, the most useful dedicated assumption page would probably be on the tractability parameter $\delta$: how much a marginal philanthropic portfolio really changes the probability or timing of clinically meaningful geroscience success.

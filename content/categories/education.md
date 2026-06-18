@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -185,6 +183,8 @@ effects through reduced victimization, better mental health, and better school p
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - This file now intentionally models **effective high-income education philanthropy**, not generic
   education spending. If we later want a separate category for ordinary university gifts or general

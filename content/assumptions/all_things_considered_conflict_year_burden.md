@@ -3,8 +3,6 @@ id: all-things-considered-conflict-year-burden
 name: 'All-things-considered burden of a representative conflict-year'
 ---
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How many QALY-equivalents are lost in a representative serious conflict-year?
 
 The [Conflict Mitigation](/cause/conflict-mitigation) page uses:
@@ -61,3 +59,7 @@ $$
 
 **Why 200% rather than 400% in the center.** The **400%** figure comes from one broader BOTEC for an average civil war, and it likely reflects a mix of larger wars, very large income losses, and a stronger total-war framing than the category's representative serious conflict-year model. But the cited evidence still points clearly toward non-health harms being larger than the health component, not merely equal to it. A **200%** uplift keeps the central estimate materially below the **4x** anchor while still treating lost income, governance deterioration, and institutional damage as the larger share of total welfare loss.
 :::
+
+# Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._

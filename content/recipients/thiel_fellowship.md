@@ -8,8 +8,6 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 19th 2025 by Google Gemini 3 Pro, with prompts from Impact List staff._
-
 The Thiel Fellowship inherits the [Education](/cause/education) category default. The case for a lower recipient-specific estimate rests on the Fellowship's "hits-based" strategy of accelerating unusually high-upside talent rather than improving average educational outcomes, but most of the raw value created by successful fellows should still be attributed to selection and the fellows themselves. At the current \$200,000-\$250,000 cost per fellow, the evidence is not strong enough to justify a below-default override.
 
 ## Description of effect
@@ -83,5 +81,7 @@ The plausible recipient-specific range is roughly **\$5,000-\$200,000/QALY**. Th
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on December 19th 2025 by Google Gemini 3 Pro, with prompts from Impact List staff._
 
 The estimate is highly sensitive to the **Attribution** variable. If you believe Vitalik Buterin would have built Ethereum exactly as fast without Peter Thiel's money, the case for a very low \$ / QALY estimate weakens sharply. However, if you credit the Fellowship with even a modest "tipping point" effect on the crypto or hard-tech ecosystems, the ROI can still beat standard education interventions. A below-default override would need stronger source support for the hits-based attribution case.

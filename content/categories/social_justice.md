@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -246,6 +244,8 @@ So 15 years is best read as an expected-value average across a mixed portfolio r
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The biggest conceptual change here is that `social-justice` is now treated as a **mixed upstream portfolio** rather than as a rough \$1M toy model with body cameras and bias training doing most of the work.
 - The current estimate is intentionally anchored to the **best publicly measurable substream**: rights-expanding policy and litigation. The broader movement and corporate buckets are included because the recipient mix clearly includes them, but they are heavily marked down.

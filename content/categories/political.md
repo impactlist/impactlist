@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -220,6 +218,8 @@ The **4-year** duration reflects one governing term. Some policy gains last long
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - This version intentionally models only the **narrower, more defensible election-to-policy pathway**. It does not try to capture all value from politics.
 - This estimate anchors campaign effectiveness directly in the empirical literature and anchors policy stakes in **actual appropriations differences** rather than a vague "hundreds of millions" intuition.

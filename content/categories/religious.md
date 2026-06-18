@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -192,6 +190,8 @@ So a 10-year window is a reasonable middle ground between treating the donation 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
 
 - The main change here is conceptual: the file now models **organized religious participation as the output**, rather than taking large observational mortality correlations at face value and then applying an arbitrary large marginal-attribution penalty.
 - The National Congregations Study is doing a lot of work in this version. It helps justify excluding most direct social-service credit and gives a cleaner cost anchor than generic church-giving blog posts.

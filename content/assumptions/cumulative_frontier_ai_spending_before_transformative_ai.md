@@ -3,8 +3,6 @@ id: cumulative-frontier-ai-spending-before-transformative-ai
 name: 'Cumulative frontier AI spending before transformative AI'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
-
 ## How much frontier AI spending happens before transformative AI arrives?
 
 This document asks:
@@ -114,6 +112,8 @@ Users who think timelines are longer, or that much future spending will be downs
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
 The \$5T central estimate now reflects a roughly \$500B/year average over a ~10-year horizon (see [timelines to AGI](/assumption/timelines-to-agi)). It could drift upward if frontier capex keeps rising — Stargate alone implies ~\$125B/year, and sustained hyperscaler spending could push the average annual rate well above \$500B — though the current \$2–20T range still covers that.
 

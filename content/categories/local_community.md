@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -192,6 +190,8 @@ So although a minority of the portfolio has very long downstream tails, much of 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The broadest modeling judgment is still the **community-support bucket**. It should be read as an all-things-considered QALY-equivalent benchmark, not as a health-only figure.
 - Future editors should strongly consider recipient-level overrides for broad community foundations and civic umbrellas. Their effectiveness can vary by orders of magnitude depending on what they actually fund.

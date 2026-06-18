@@ -3,8 +3,6 @@ id: effect-of-top-longevity-philanthropy
 name: 'Effect of top longevity philanthropy'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How much can \$50 million of top longevity philanthropy increase the probability that a first-generation gerotherapeutic is validated and meaningfully diffuses?
 
 This document analyzes the question:
@@ -90,3 +88,7 @@ That is an extremely small absolute shift — changing the success probability b
    TAME-style infrastructure, biomarker validation, and unusually additional translational grants may outperform the category average. Weakly focused basic science, endowment accumulation, or speculative prestige projects may underperform it.
 
 {{CONTRIBUTION_NOTE}}
+
+# Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._

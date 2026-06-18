@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -181,6 +179,8 @@ Some specific interventions may have longer tails than 2 years, and the OUD mode
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The key update here is methodological, not just numerical: the page now treats "days stably housed" plus a realistic utility gap as a serious cross-check on published ICERs.
 - If this category gets more recipient-level overrides, a dedicated assumption page on the housed-vs-unhoused utility gap could become worthwhile.

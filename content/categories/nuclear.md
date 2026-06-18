@@ -12,8 +12,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 Unlike a typical cause area, donations to nuclear-risk charities are best modeled as slightly reducing the probability of a catastrophe rather than directly buying {{QALYS}}. We therefore estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of a global catastrophic nuclear war.
 
 ## Description of effect
@@ -189,5 +187,7 @@ So 30 years should not be read as a forecast that recovery takes exactly 30 year
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The central field-level BOTEC and the dedicated assumption page need to stay aligned, especially on the endpoint distinction between broad nuclear catastrophe and severe nuclear winter.

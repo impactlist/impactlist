@@ -3,8 +3,6 @@ id: ai-doom-probability
 name: 'Probability of AI-caused extinction'
 ---
 
-_The following analysis was done on June 15th 2026 by Claude Opus 4.8, with prompts from Impact List staff._
-
 ## What is the probability of AI-caused human extinction this century?
 
 This document analyzes the baseline probability that artificial general intelligence (AGI) or artificial superintelligence (ASI) will cause **literal human extinction** before 2100. This probability is commonly referred to as "p(doom)" in AI safety discussions.
@@ -192,6 +190,8 @@ The evidence does not show either expert consensus on tiny risk or expert consen
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on June 15th 2026 by Claude Opus 4.8, with prompts from Impact List staff._
 
 Verification flags for future editors (do not propagate without checking primaries):
 

@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -96,6 +94,8 @@ The graduation literature is one reason not to go much shorter than 10 years, be
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
 - Using a literal midpoint of 3.5x together with the 60/134 conversion yields about \$210/QALY.
 - The structural approach here is deliberate: cash transfers are the explicit central anchor because they have the cleanest per-dollar cost-effectiveness data, graduation is treated as an upside cross-check because it is costlier and more implementation-sensitive, and deworming is excluded because it belongs in Global Health.

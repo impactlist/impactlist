@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -161,6 +159,8 @@ We do not use a longer duration than 25 years because some effects decay: donors
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The main transparency crux is keeping the channel weights and downstream benchmarks explicit, because small changes to those assumptions can move the estimate by orders of magnitude.
 - The most important future levers are: direct-channel multiplier, career/worldview multiplier, channel mix, and the downstream `$/QALY` benchmark for the broader career/worldview bucket.

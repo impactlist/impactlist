@@ -3,8 +3,6 @@ id: effect-of-top-conflict-mitigation-spending
 name: 'Effect of top conflict-mitigation spending'
 ---
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How much conflict does top-tier conflict-mitigation spending avert?
 
 This document analyzes the question:
@@ -156,3 +154,7 @@ The budget numbers above are **average** portfolio budgets, while a new donation
 ## Bottom line
 
 The **0.1%** best guess (plausible range **0.03–0.3%**) is uncertain but not arbitrary: it comes from a concrete chain of reasoning that starts with the best available system-level evidence, heavily discounts for attribution, and then divides by the budgets of the kinds of organizations the category is actually trying to model.
+
+# Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._

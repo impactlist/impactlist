@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -123,6 +121,8 @@ The 40-year duration reflects the long-lived nature of successful pollution-cont
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
 - LEEP's \$4.49 figure should be explained as an all-things-considered DALY-equivalent estimate, not a direct-health-only estimate. About 84% of the modeled impact is income-equivalent rather than direct health DALYs.
 - The core arithmetic from LEEP's public page is \$4M / 900k DALY-equivalents = about \$4.4 per DALY-equivalent.

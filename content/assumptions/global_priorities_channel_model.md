@@ -3,8 +3,6 @@ id: global-priorities-channel-model
 name: 'Global Priorities channel model'
 ---
 
-_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How should Global Priorities Research be modeled?
 
 The [Global Priorities Research](/cause/global-priorities) page uses a two-channel model:
@@ -145,3 +143,7 @@ The most important uncertainties are:
 3. whether the broader strategic channel is closer to **0%**, **100%**, or **300%** of the direct philanthropic channel
 4. how much overlap there really is between later philanthropic reallocation and the broader strategic channel
 5. whether the public historical evidence overstates marginal future impact because it comes disproportionately from unusually successful cases
+
+# Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._

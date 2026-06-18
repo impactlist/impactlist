@@ -3,8 +3,6 @@ id: effect-of-nuclear-risk-philanthropy
 name: 'Effect of all previous nuclear-risk philanthropy'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How much has existing nuclear-risk philanthropy reduced catastrophic nuclear-war risk?
 
 This document analyzes the question:
@@ -174,3 +172,7 @@ Reasons not to go **much lower** by default:
 - there are multiple concrete historical examples of philanthropic organizations helping to catalyze much larger institutional or governmental actions
 - ONN and Founders Pledge both point toward tractable policy levers rather than total helplessness
 :::
+
+# Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._

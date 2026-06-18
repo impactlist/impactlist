@@ -20,8 +20,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
-
 We model the AI Capabilities cause as having three independent effects on the world, which we calculate separately and then combine into a single overall cost per life.
 
 For the first two effects, which we call "standard effects", we arrive at the cost per life by estimating the cost per {{QALY}} and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the [Assumptions page](/assumptions) for this and other parameters).
@@ -284,3 +282,5 @@ These numbers are rough order-of-magnitude judgments. The biggest uncertainties 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._

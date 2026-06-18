@@ -12,8 +12,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 Unlike a typical cause area, donations to pandemic-risk charities are best modeled as slightly reducing the probability of a catastrophe rather than directly buying {{QALYS}}. We therefore estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of a **global catastrophic pandemic**.
 
 ## Description of effect
@@ -202,6 +200,8 @@ So 15 years should not be read as a literal forecast that recovery takes exactly
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - Assumption 5 is the most decision-relevant input. If better public estimates of cumulative pandemic-risk philanthropy or its realized effects appear, update [effect_of_pandemic_risk_philanthropy.md](/Users/elliot/work/github/impactlist/content/assumptions/effect_of_pandemic_risk_philanthropy.md) first.
 - The next dedicated assumption page, if needed, is probably the baseline probability of a catastrophic pandemic this century or over the next 20 years.

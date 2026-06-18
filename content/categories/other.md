@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -114,6 +112,8 @@ The **10-year** duration reflects that this is a mixed bucket. Some effects are 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
 - This category should stay an **actual expected-value estimate for miscellaneous philanthropy**.
 - If recurring `Other` clusters become common enough, they should probably get dedicated categories or recipient-level overrides.

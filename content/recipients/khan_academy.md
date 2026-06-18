@@ -12,8 +12,6 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 16th 2025 by Gemini 3 Pro, with prompts from Impact List staff._
-
 We assign Khan Academy a **cost per QALY of \$1,600**. The main reason it comes in below the baseline [Education](/cause/education) estimate is Khan Academy's unusually low cost of reaching learners at scale.
 
 ## Description of effect
@@ -80,5 +78,7 @@ The plausible range is **\$500-\$50,000/QALY**. Khan looks much better than the 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on December 16th 2025 by Gemini 3 Pro, with prompts from Impact List staff._
 
 This estimate is highly sensitive to the "Intensity Discount." If one believes that digital education _never_ causes a counterfactual life change (0% success), the true cost per QALY would be effectively infinite. If one believes it works even 1% as well as a human tutor, the cost advantage (1000x cheaper) makes it an incredibly efficient intervention. The \$1,600/QALY estimate is a middle ground that credits the scale while acknowledging the low "dosage" of the intervention.

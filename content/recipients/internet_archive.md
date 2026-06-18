@@ -12,8 +12,6 @@ categories:
 
 # Justification of cost per life
 
-_The following analysis was done on December 16th 2025 by GPT-5, with prompts from Impact List staff._
-
 We assign the Internet Archive a **cost per QALY of \$6,000**. The core idea is that preserving valuable knowledge can be much cheaper than creating it from scratch, which makes it look substantially better than the baseline [Science and Tech](/cause/science-tech) estimate, but the launch estimate now includes an explicit marginal-funding haircut because the Internet Archive already has a substantial contribution base.
 
 ## Description of effect
@@ -81,5 +79,7 @@ The plausible range is **\$2,000-\$60,000/QALY**. The low end corresponds to the
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on December 16th 2025 by GPT-5, with prompts from Impact List staff._
 
 The \$6,000/QALY estimate positions the Internet Archive as a high-leverage public-interest knowledge infrastructure intervention while adding a launch-safe marginal-funding haircut.

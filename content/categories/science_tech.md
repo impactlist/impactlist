@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -168,6 +166,8 @@ Twenty-five years is a reasonable compromise between "innovation has long tails"
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
 
 - The main conceptual constraint is to keep the return model separate from diffusion timing, so `costPerQALY` does not implicitly discount the same delays that `startTime` is meant to represent.
 - A future dedicated assumption page on **science-philanthropy additionality** could be useful if more recipient-specific overrides are added in this category.

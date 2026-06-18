@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -129,6 +127,8 @@ The 20-year duration is a compromise for a mixed portfolio. Some benefits are ve
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
 
 - The category as currently used in the repo covers a broader set of acute humanitarian-response recipients than the phrase "disaster relief" suggests, including outbreak and conflict-displacement response. The public description now reflects that broader usage.
 - If the site later splits this into separate categories like `acute-humanitarian-health` and `general-disaster-relief`, the former would probably deserve a materially lower cost-per-QALY than this blended estimate.

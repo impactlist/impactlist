@@ -3,8 +3,6 @@ id: effect-of-pandemic-risk-philanthropy
 name: 'Effect of previous pandemic-risk philanthropy'
 ---
 
-_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How much has existing pandemic-risk philanthropy reduced global catastrophic pandemic risk?
 
 This document analyzes the question:
@@ -153,3 +151,7 @@ Both tails are about whether the causal model holds, not about tuning a paramete
 With the central estimate $X = 0.04$ percentage points, \$400M buys **4 basis points** of risk reduction — about **\$100M per basis point**, or **400 microprobabilities** at **\$1M per microprobability**. The plausible bounds ($Y = 0.004$, $Z = 0.27$ percentage points) correspond to **40–2,700 microprobabilities**, a cost-per-microprobability range of roughly **\$150,000–\$10 million**. The pandemics category page carries that same range.
 
 {{CONTRIBUTION_NOTE}}
+
+# Internal Notes
+
+_The following analysis was done on April 10th 2026 by GPT-5.4, with prompts from Impact List staff._

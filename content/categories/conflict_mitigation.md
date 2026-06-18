@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -163,6 +161,8 @@ Ten years should not be read as "peace lasts forever". It is a compromise betwee
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - The key judgment call is Assumption 5, the **0.1%** probability that \$1 million of top-tier spending averts one representative conflict-year.
 - The next most important judgment call is Assumption 3: whether the broader-welfare uplift over the health component should be closer to **0%**, **200%**, or **400%**.

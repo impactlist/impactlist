@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -122,6 +120,8 @@ We only give heritage funding credit here when it changes participation or acces
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
 
 - This category should be read as a model of the **best-supported participation charities in arts/culture**, not of generic arts philanthropy.
 - The biggest uncertainties are real-world per-participant cost, the size of counterfactual participation gains from donor funding, and how fast benefits decay after the programme ends.

@@ -3,8 +3,6 @@ id: timelines-to-agi
 name: 'Timelines to AGI'
 ---
 
-_The following analysis was done on June 15th 2026 by Claude Opus 4.8, with prompts from Impact List staff._
-
 ## When will AGI arrive?
 
 This document estimates when **artificial general intelligence (AGI)** will arrive, defined here as the point at which **unaided machines can accomplish any cognitive (mental) task better and more cheaply than human workers** — reasoning, research, software, analysis, planning, and the like. It does **not** require physical embodiment or robotics: a system that matches or beats humans on every *mental* task counts even if humans still do manual labor.
@@ -84,6 +82,8 @@ This milestone is what the site's AI models key off, because it is roughly the p
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on June 15th 2026 by Claude Opus 4.8, with prompts from Impact List staff._
 
 - The central estimate (2036) and range (2030–2050) are an all-things-considered judgment, not a mechanical aggregate; the inputs use different definitions (cognitive AGI vs benchmark-AGI vs multi-hour software task vs full HLMI) that are not directly comparable.
 - Term choice: we label the milestone "AGI." The definition (beats all humans on every *mental* task, more cheaply, no embodiment) is at the strong end of AGI usage; some would call it a mild ASI. We avoid "HLMI" because that standardly includes physical-task automation, which would push the date out several years.

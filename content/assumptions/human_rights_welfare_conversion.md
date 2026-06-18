@@ -3,8 +3,6 @@ id: human-rights-welfare-conversion
 name: 'Human rights welfare conversion model'
 ---
 
-_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## How should the Human Rights category convert rights harms into QALY-equivalent welfare?
 
 The [Human Rights and Justice](/cause/human-rights) page uses two especially important conversion assumptions:
@@ -56,3 +54,7 @@ The 0.5 annual loss is a shorthand for a bundle of harms — mental illness and 
 Both conversions are uncertain, but adding an uplift is more faithful to an all-things-considered welfare estimate than treating autonomy, dignity, fear, and post-intervention persistence as real but effectively zero in the headline calculation.
 
 {{CONTRIBUTION_NOTE}}
+
+# Internal Notes
+
+_The following analysis was done on April 14th 2026 by GPT-5.4, with prompts from Impact List staff._

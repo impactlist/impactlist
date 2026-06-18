@@ -3,8 +3,6 @@ id: frontier-equivalent-share-of-ai-capabilities-philanthropy
 name: 'Frontier-equivalent share of AI capabilities philanthropy'
 ---
 
-_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._
-
 ## How much does a dollar to AI capabilities philanthropy accelerate the frontier?
 
 This document asks:
@@ -82,3 +80,7 @@ Users who think this cause is basically direct frontier acceleration should rais
 Users who think the relevant charities are mostly public-interest AI, with weak frontier spillovers, should lower it.
 
 {{CONTRIBUTION_NOTE}}
+
+# Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5, with prompts from Impact List staff._

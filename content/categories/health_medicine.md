@@ -10,8 +10,6 @@ effects:
 
 # Justification of cost per life
 
-_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 {{STANDARD_QALY_METHOD_NOTE}}
 
 ## Description of effect
@@ -178,6 +176,8 @@ A 40-year duration is a reasonable central estimate because:
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
+
+_The following analysis was done on April 6th 2026 by GPT-5.4, with prompts from Impact List staff._
 
 - Owen & Fischer is doing two jobs here: showing that many high-income public-health interventions are far below payer thresholds, and providing a quantitative cross-check for the direct bucket after a substantial marginality haircut.
 - A future dedicated assumption page on medical-research returns or on the direct/research mix could be useful if more recipient-specific overrides are added in this category.

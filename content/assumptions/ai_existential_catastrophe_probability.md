@@ -3,8 +3,6 @@ id: ai-existential-catastrophe-probability
 name: 'Probability of AI-caused existential catastrophe'
 ---
 
-_The following analysis was done on April 15th 2026 by GPT-5.4, with prompts from Impact List staff._
-
 ## What is the probability of AI-caused existential catastrophe this century?
 
 This document estimates the baseline probability that advanced AI will cause an **existential catastrophe** before 2100. Following Bostrom's standard framing, that means an outcome that either annihilates Earth-originating intelligent life or permanently and drastically curtails its potential. ([Bostrom 2002](https://nickbostrom.com/existential/risks))
@@ -113,3 +111,7 @@ The range is wide because the disagreement is not about arithmetic but about dee
 The decomposition into roughly **10%** extinction risk plus **4 percentage points** of non-extinction existential risk is not exact, but it is the clearest way to see why the broader **14%** estimate exceeds extinction-only p(doom).
 
 {{CONTRIBUTION_NOTE}}
+
+# Internal Notes
+
+_The following analysis was done on April 15th 2026 by GPT-5.4, with prompts from Impact List staff._

@@ -32,7 +32,7 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 - **Start time:** 10 years (~2036)
 - **Duration:** From the start time to the global time limit parameter (default 100 years, so a 90-year window by default), capped at a trillion years
 
-*If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
+_If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values._
 
 ## Assumptions
 
@@ -41,7 +41,7 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 1. The baseline probability of AI-caused existential catastrophe this century is approximately 14%, with a plausible range around 3–35%. A useful decomposition is about 10% extinction risk plus about 4 percentage points of additional irreversible-disempowerment or lock-in risk. ([See detailed justification](/assumption/ai-existential-catastrophe-probability))
 2. AGI — machines that can do any mental task better and more cheaply than humans — most likely arrives around 2036, with a plausible range of roughly 2030–2050. That is roughly when catastrophic AI risk becomes pressing. ([See detailed justification](/assumption/timelines-to-agi))
 3. The welfare shortfall per affected person-year is about 0.9 QALY-equivalents for literal extinction and about 0.45 for permanent non-extinction catastrophes — irreversible disempowerment or stable totalitarian lock-in, which are less severe per year than extinction (people remain alive) but still globally catastrophic. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-4. Cumulative AI safety spending through 2025 is roughly \$1 billion, probably in the high hundreds of millions to low single-digit billions; frontier-lab internal safety work is counted only at a conservative few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Coefficient Giving](https://coefficientgiving.org/funds/navigating-transformative-ai))
+4. Cumulative AI safety spending through 2025 is roughly \$1 billion; frontier-lab internal safety work is counted only at a few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Coefficient Giving](https://coefficientgiving.org/funds/navigating-transformative-ai))
 5. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.007–0.65 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
 
 How these fit together: Assumptions 4 and 5 set the cost per microprobability. The global parameters and Assumption 3 set the QALYs at stake per microprobability. Assumption 2 informs the start time. Assumption 1 mainly constrains how much risk there is to reduce — the QALY value of a microprobability does not itself depend on the baseline probability (see Key Uncertainties).
@@ -55,7 +55,7 @@ The point estimate (\$625,000 per microprobability) and range (\$154,000–\$14.
 - Microprobabilities averted: $0.0016 / 10^{-6} = 1{,}600$
 - Cost per microprobability: $$\$1\text{B} / 1{,}600 \approx \$625{,}000$$
 
-The same calculation with weaker or stronger assumed effects gives the range: 0.007 percentage points → about **\$14.3 million** per microprobability, and 0.65 percentage points → about **\$154,000**. (The three significant figures in \$625,000 are an artifact of the round 0.16 input, not real precision.)
+The same calculation with weaker or stronger assumed effects gives the range: 0.007 percentage points → about **\$14.3 million** per microprobability, and 0.65 percentage points → about **\$154,000**.
 
 The range is wide because the estimate rests on a **single line of evidence** — the realized field-level effect of past spending — rather than a convergence of independent methods, so it reflects uncertainty _within_ that one estimate.
 
@@ -64,7 +64,7 @@ This estimate is already meant to be net of positive and negative effects, becau
 
 The field-level estimate is based on the historical average effect of AI safety spending to date, while this page models forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar, but that is at least partly offset by diminishing returns and by the field becoming larger and more crowded, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
 
-The positive range should also be read as conditional on safety spending being net helpful. The linked assumption page still assigns some lower-tail probability to near-zero or negative net impact from capabilities spillovers, safetywashing, or deployment acceleration; users who put substantial weight on that tail should weaken or disable this category.
+The linked assumption page still assigns some lower-tail probability to near-zero or negative net impact from capabilities spillovers, safetywashing, or deployment acceleration; users who put substantial weight on that tail should weaken or disable this category.
 :::
 
 ### Population fraction affected
@@ -92,7 +92,7 @@ $$S_{\text{averted}} = (0.769 \times 0.9) + (0.231 \times 0.45) \approx 0.80$$
 
 Readers who assume safety work reduces all channels proportionally should use 0.77 instead; the difference is about 4%. Both numbers are coupled to the probability split — if it changes, recompute rather than reusing 0.77 or 0.80.
 
-The **0.45** itself is roughly a hedonic part plus a non-hedonic part. Day-to-day wellbeing gaps between the freest and least-free societies today are only about 1–3 points on a 0–10 scale, so a purely hedonic reading would give ~0.1–0.3 ([World Happiness Report](https://worldhappiness.report/)); the remainder reflects the permanent loss of agency, autonomy, and self-determination that makes this *existential* rather than merely a bad regime. ([Bostrom 2002](https://nickbostrom.com/existential/risks); on concrete AI-driven disempowerment and lock-in pathways, [Dung 2025](https://link.springer.com/article/10.1007/s00146-024-01930-2), [Kulveit et al. 2025](https://arxiv.org/abs/2501.16946), [Feldstein 2019](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3314162), [Tokson 2025](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5182213))
+The **0.45** itself is roughly a hedonic part plus a non-hedonic part. Day-to-day wellbeing gaps between the freest and least-free societies today are only about 1–3 points on a 0–10 scale, so a purely hedonic reading would give ~0.1–0.3 ([World Happiness Report](https://worldhappiness.report/)); the remainder reflects the permanent loss of agency, autonomy, and self-determination that makes this _existential_ rather than merely a bad regime. ([Bostrom 2002](https://nickbostrom.com/existential/risks); on concrete AI-driven disempowerment and lock-in pathways, [Dung 2025](https://link.springer.com/article/10.1007/s00146-024-01930-2), [Kulveit et al. 2025](https://arxiv.org/abs/2501.16946), [Feldstein 2019](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3314162), [Tokson 2025](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5182213))
 :::
 
 **How total QALYs scale with the time limit:**

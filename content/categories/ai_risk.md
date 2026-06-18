@@ -5,7 +5,7 @@ effects:
   - effectId: population
     startTime: 10
     windowLength: 1_000_000_000_000
-    costPerMicroprobability: 625_000
+    costPerMicroprobability: 1_000_000
     populationFractionAffected: 1.0
     qalyImprovementPerYear: 0.80
 ---
@@ -26,7 +26,7 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per microprobability:** \$625,000 (\$154,000–\$14.3 million)
+- **Cost per microprobability:** \$1.0 million (\$200,000–\$32 million)
 - **Population fraction affected:** 1.0 (the modeled event is global by construction)
 - **QALY improvement per affected person per year:** 0.80 (0.65–0.9)
 - **Start time:** 10 years (~2036)
@@ -41,8 +41,8 @@ _If you disagree with these estimates after reading this page, click 'Edit' near
 1. The baseline probability of AI-caused existential catastrophe this century is approximately 14%, with a plausible range around 3–35%. A useful decomposition is about 10% extinction risk plus about 4 percentage points of additional irreversible-disempowerment or lock-in risk. ([See detailed justification](/assumption/ai-existential-catastrophe-probability))
 2. AGI — machines that can do any mental task better and more cheaply than humans — most likely arrives around 2036, with a plausible range of roughly 2030–2050. That is roughly when catastrophic AI risk becomes pressing. ([See detailed justification](/assumption/timelines-to-agi))
 3. The welfare shortfall per affected person-year is about 0.9 QALY-equivalents for literal extinction and about 0.45 for permanent non-extinction catastrophes — irreversible disempowerment or stable totalitarian lock-in, which are less severe per year than extinction (people remain alive) but still globally catastrophic. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [Our World in Data](https://ourworldindata.org/life-expectancy))
-4. Cumulative AI safety spending through 2025 is roughly \$1 billion; frontier-lab internal safety work is counted only at a few tens of millions of dollars per year. ([McAleese 2025 update](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Coefficient Giving](https://coefficientgiving.org/funds/navigating-transformative-ai))
-5. Roughly \$1 billion of historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.007–0.65 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
+4. Raw cumulative AI safety spending through 2025 is roughly \$2.6 billion (~\$1.2 billion non-lab — philanthropy, government safety institutes, academia — plus ~\$1.4 billion of frontier-lab internal safety-labeled work). Because a frontier-lab safety dollar is less effective than a serious non-lab dollar, we weight the lab pool at about 0.3, giving roughly \$1.6 billion of non-lab-equivalent spending — the relevant denominator for marginal donations. ([McAleese](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), [Coefficient Giving](https://coefficientgiving.org/research/ai-safety-and-security-need-more-funders/))
+5. Historical AI safety spending has probably reduced AI-caused existential-catastrophe risk by about 0.16 percentage points, with a plausible range around 0.007–0.65 percentage points. ([See detailed justification](/assumption/effect-of-all-ai-safety-spending-on-ai-existential-catastrophe))
 
 How these fit together: Assumptions 4 and 5 set the cost per microprobability. The global parameters and Assumption 3 set the QALYs at stake per microprobability. Assumption 2 informs the start time. Assumption 1 mainly constrains how much risk there is to reduce — the QALY value of a microprobability does not itself depend on the baseline probability (see Key Uncertainties).
 
@@ -50,12 +50,12 @@ How these fit together: Assumptions 4 and 5 set the cost per microprobability. T
 
 ### Cost per microprobability
 
-The point estimate (\$625,000 per microprobability) and range (\$154,000–\$14.3 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 4 and 5, roughly \$1 billion of spending has probably reduced AI-caused existential-catastrophe risk by about **0.16 percentage points**:
+The point estimate (\$1.0 million per microprobability) and range (\$200,000–\$32 million) come from a field-level estimate of what historical AI safety spending has already achieved. Per Assumptions 4 and 5, about \$1.6 billion of effective spending has probably reduced AI-caused existential-catastrophe risk by about **0.16 percentage points**:
 
 - Microprobabilities averted: $0.0016 / 10^{-6} = 1{,}600$
-- Cost per microprobability: $$\$1\text{B} / 1{,}600 \approx \$625{,}000$$
+- Cost per microprobability: $$\$1.6\text{B} / 1{,}600 \approx \$1.0 \text{ million}$$
 
-The same calculation with weaker or stronger assumed effects gives the range: 0.007 percentage points → about **\$14.3 million** per microprobability, and 0.65 percentage points → about **\$154,000**.
+The same calculation with weaker or stronger assumed effects, together with the uncertainty in the spending denominator, gives the plausible range of about **\$200,000 to \$32 million** per microprobability.
 
 The range is wide because the estimate rests on a **single line of evidence** — the realized field-level effect of past spending — rather than a convergence of independent methods, so it reflects uncertainty _within_ that one estimate.
 
@@ -97,7 +97,7 @@ The **0.45** itself is roughly a hedonic part plus a non-hedonic part. Day-to-da
 
 **How total QALYs scale with the time limit:**
 
-A microprobability is worth more the longer the horizon you count over. At the **default 100-year time limit** it is worth about **1.07 million QALYs**, which puts the cost at roughly **\$0.58 per QALY — about \$47 per life**. Because the population keeps growing until it hits the default cap, the QALYs at stake rise faster than linearly with the time limit, so the implied cost falls accordingly: about **\$195 per life** at a 40-year limit and about **\$1 per life** at a 1,000-year limit.
+A microprobability is worth more the longer the horizon you count over. At the **default 100-year time limit** it is worth about **1.07 million QALYs**, which puts the cost at roughly **\$0.93 per QALY — about \$75 per life**. Because the population keeps growing until it hits the default cap, the QALYs at stake rise faster than linearly with the time limit, so the implied cost falls accordingly: about **\$311 per life** at a 40-year limit and about **\$1.40 per life** at a 1,000-year limit.
 
 :::details{title="Worked examples at 40-, 100-, and 1,000-year time limits"}
 These use the site's default global parameters and its actual population model, so they match what the site displays. The effect window always runs from year 10 to the time limit.
@@ -107,14 +107,14 @@ These use the site's default global parameters and its actual population model, 
 - Person-years in the window: about 321 billion
 - QALYs at stake: $321\text{B} \times 0.80 \approx 257 \text{ billion}$
 - QALYs saved per microprobability: $257\text{B} \times 10^{-6} = 257{,}000$
-- Cost per QALY: $$\$625{,}000 / 257{,}000 \approx \$2.4/\text{QALY}$$ (about \$195 per life of 80 QALYs)
+- Cost per QALY: $$\$1{,}000{,}000 / 257{,}000 \approx \$3.9/\text{QALY}$$ (about \$311 per life of 80 QALYs)
 
 **Example 2 — Time limit = 100 years (the default; 90-year window)**
 
 - Person-years in the window: about 1,335 billion
 - QALYs at stake: $1{,}335\text{B} \times 0.80 \approx 1{,}070 \text{ billion}$
 - QALYs saved per microprobability: $1{,}070\text{B} \times 10^{-6} = 1{,}070{,}000$
-- Cost per QALY: $$\$625{,}000 / 1{,}070{,}000 \approx \$0.58/\text{QALY}$$ (about \$47 per life)
+- Cost per QALY: $$\$1{,}000{,}000 / 1{,}070{,}000 \approx \$0.93/\text{QALY}$$ (about \$75 per life)
 
 **Example 3 — Time limit = 1,000 years (990-year window)**
 
@@ -122,12 +122,12 @@ These use the site's default global parameters and its actual population model, 
 - Person-years in the window: about 71,000 billion
 - QALYs at stake: $71{,}000\text{B} \times 0.80 \approx 57{,}000 \text{ billion}$
 - QALYs saved per microprobability: $57{,}000\text{B} \times 10^{-6} = 57 \text{ million}$
-- Cost per QALY: $$\$625{,}000 / 57\text{M} \approx \$0.011/\text{QALY}$$ (about \$1 per life)
+- Cost per QALY: $$\$1{,}000{,}000 / 57\text{M} \approx \$0.018/\text{QALY}$$ (about \$1.40 per life)
 
 Because the default population curve grows at 1% per year until it hits the cap, the long-horizon numbers are dominated by the population growth and cap parameters — both of which users can edit.
 :::
 
-These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks — a general feature of existential-risk expected-value models, which combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. Within the modeled range the headline comparison is robust: at the default time limit, the cost per microprobability would have to exceed roughly **\$67 million** — about five times the pessimistic end of our range — before this category looked worse than a \$5,000-per-life global-health benchmark. The decision-relevant cruxes are therefore whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
+These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks — a general feature of existential-risk expected-value models, which combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. Within the modeled range the headline comparison still holds: at the default time limit, the cost per microprobability would have to exceed roughly **\$67 million** — about twice the pessimistic end of our range — before this category looked worse than a \$5,000-per-life global-health benchmark. The decision-relevant cruxes are therefore whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
 
 ### Start time
 

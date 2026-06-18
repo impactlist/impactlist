@@ -137,7 +137,7 @@ Conceptually, the start time stands in for the expected date at which welfare lo
 
 ### Duration
 
-The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Combined with the 10-year start time, the default window covers years 10 through 100 — a 90-year window. The large `windowLength` in the frontmatter is only a ceiling; the effect is clamped by the global time-limit parameter.
+The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Combined with the 10-year start time, the default window covers years 10 through 100 — a 90-year window. This cause area sets no practical horizon of its own — its built-in ceiling is a trillion years — so in practice the time limit is what determines how far into the future the benefit is counted.
 
 Because the modeled catastrophe is permanent by construction, the value of this cause area is highly sensitive to how much weight you place on future people.
 

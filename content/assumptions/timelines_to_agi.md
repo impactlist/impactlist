@@ -37,11 +37,11 @@ The horizon has roughly doubled every **196 days** across 2019–2025, every **1
 Independent forecasting communities, asking AGI-style cognitive questions, have moved sharply earlier: an early-2026 Metaculus snapshot cited by 80,000 Hours centered on a 50% date around **2033**, the Forecasting Research Institute's 2026 LEAP round put expert medians around **2030** (superforecasters ~2028), and a February 2026 AI-safety survey clustered most respondents in **2030–2035**. We read these as bracketing the early-to-mid 2030s rather than pinning our exact milestone, since each uses a somewhat different bar.
 
 :::details{title="The individual forecaster anchors"}
-- **Metaculus.** In the early-2026 snapshot cited by 80,000 Hours, its aggregate AGI forecast centered on a **50% date around 2033**, with roughly 25% by 2029 — down from a median of about 50 years away as recently as 2020, though it had ticked slightly *later* over the preceding year. ([80,000 Hours review](https://80000hours.org/2025/03/when-do-experts-expect-agi-to-arrive/))
-- **Forecasting tournaments.** In the Forecasting Research Institute's 2026 LEAP round, the median expert put **50% by 2030** on an AI matching expert humans at multi-hour (8+ hour) software tasks, and superforecasters were earlier still (~2028). ([LEAP wave 8](https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines))
-- **AI-safety researchers.** A February 2026 survey found 73% of respondents placing their 50% AGI date before 2035, clustered in 2030–2035. ([survey](https://forum.effectivealtruism.org/posts/LxuKuQd69Qx5FKhNZ/survey-of-ai-safety-leaders-on-x-risk-agi-timelines-and))
+The three anchors don't measure quite the same thing, so each is an imperfect match for our bar:
 
-These are imperfect anchors, not clean matches for our bar: Metaculus's AGI question bundles in some physical/robotic criteria, and the LEAP forecast covers only multi-hour software work — much narrower than "every mental task."
+- **Metaculus.** Beyond the ~2033 midpoint, the early-2026 snapshot put roughly **25% by 2029**, down from an aggregate median about 50 years out as recently as 2020 — though it ticked slightly *later* over the past year. Its AGI question also bundles in some physical/robotic criteria. ([80,000 Hours review](https://80000hours.org/2025/03/when-do-experts-expect-agi-to-arrive/))
+- **Forecasting tournaments.** The LEAP median is for an AI matching expert humans at **multi-hour (8+ hour) software tasks** — much narrower than "every mental task." ([LEAP wave 8](https://forecastingresearch.substack.com/p/leap-wave-8-ai-timelines))
+- **AI-safety researchers.** In the February 2026 survey, **73%** put their 50% date before 2035. ([survey](https://forum.effectivealtruism.org/posts/LxuKuQd69Qx5FKhNZ/survey-of-ai-safety-leaders-on-x-risk-agi-timelines-and))
 :::
 
 ## 4. Where our milestone sits

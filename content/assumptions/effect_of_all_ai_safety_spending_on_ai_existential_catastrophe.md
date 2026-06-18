@@ -15,11 +15,7 @@ Here "AI-caused existential catastrophe" includes:
 
 **Summary:** A reasonable best guess is that roughly \$1 billion of AI safety spending has reduced this broader catastrophe risk by about **0.16 percentage points**, with a {{PLAUSIBLE_RANGE}} of **0.007–0.65 percentage points**.
 
-That corresponds to about:
-
-- **16 basis points per \$1 billion**
-- **\$62.5 million per basis point**
-- **\$625,000 per microprobability**
+That corresponds to about **\$625,000 per microprobability**.
 
 ---
 
@@ -28,7 +24,7 @@ That corresponds to about:
 Cumulative AI safety-related spending through 2025 is on the order of **\$1 billion**, probably in the high hundreds of millions to low single-digit billions.
 
 :::details{title="Sources and what the money funded"}
-The best public aggregation we found remains Stephen McAleese's [overview of the AI safety funding situation](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), together with [Coefficient Giving's Navigating Transformative AI fund page](https://coefficientgiving.org/funds/navigating-transformative-ai). Both support a \$1 billion order of magnitude.
+The best public aggregation we found remains Stephen McAleese's [overview of the AI safety funding situation](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation), together with [Coefficient Giving's Navigating Transformative AI fund page](https://coefficientgiving.org/funds/navigating-transformative-ai). Both support approximately \$1 billion in spending.
 
 Very roughly, that money has funded:
 
@@ -37,7 +33,7 @@ Very roughly, that money has funded:
 - field-building and training
 - safety institutes, standards, and preparedness work
 - internal frontier-lab safety and risk-governance efforts
-:::
+  :::
 
 ---
 
@@ -95,19 +91,21 @@ Applying the **1.3x** partial-overlap uplift to the extinction-only anchor of ab
 The multiplier is a judgment call, but moving it within a plausible band changes the estimate by only about 10% and does not change the order of magnitude.
 
 :::details{title="Estimate at 1.2x, 1.3x, and 1.4x uplift"}
+
 - 1.2x: 0.15 percentage points → about **\$667,000 per microprobability**
 - 1.3x: 0.16 percentage points → about **\$625,000 per microprobability**
 - 1.4x: 0.175 percentage points → about **\$571,000 per microprobability**
-:::
+  :::
 
 ### Plausible range: 0.007–0.65 percentage points
 
-We keep a wide plausible range — from **0.007** to **0.65 percentage points** — because the evidence is indirect: there is no clean experiment telling us what the world would look like without AI safety spending. The estimate is a synthesis of historical spending totals, x-risk cost-effectiveness bars, and judgment about how much technical and governance work has mattered in practice. The range applies the same partial-overlap logic as the central estimate to the extinction-only positive-impact range, rather than using the full 1.4x event-size multiplier. The published range remains positive because it describes the positive-impact portion of the distribution; the lower bound sits near the break-even point because the offsetting channels (capabilities spillovers, safetywashing, safety teams that also make labs more durable race competitors) leave a material lower-tail possibility that the net effect was close to zero or negative — caveat 2 below.
+We keep a wide plausible range — from **0.007** to **0.65 percentage points** — because the evidence is indirect: there is no clean experiment telling us what the world would look like without AI safety spending. The estimate is a synthesis of historical spending totals, x-risk cost-effectiveness bars, and judgment about how much technical and governance work has mattered in practice. We derive this range the same way as the central estimate: by scaling the extinction-only version's range (about 0.005–0.5 percentage points) by the same partial-overlap multiplier — roughly 1.3x — rather than the full 1.4x event-size multiplier. Both endpoints are positive because the range is the middle 80% (10th–90th percentile) of our full net-effect distribution, and even the 10th-percentile estimate — 0.007 percentage points, a near-break-even outcome — is still slightly above zero. The genuine possibility that the net effect was near zero or negative hasn't gone away: it sits in the roughly 10% of the distribution below the published range, and we treat it as caveat 2 (capabilities spillovers, safetywashing, and safety teams that also make labs more durable race competitors).
 
 :::details{title="What the lower and upper bounds represent"}
-- **0.007 percentage points** corresponds to a near-break-even view where the field's gains were largely offset by its negative channels, helping only a little. Some mass sits below this, on a net effect at or below zero; the cost-per-microprobability framing applies only to the positive part of the distribution.
+
+- **0.007 percentage points** corresponds to a near-break-even view where the field's gains were largely offset by its negative channels, helping only a little. Some mass sits below this, on a net effect at or below zero.
 - **0.65 percentage points** corresponds to a strong view where the best historical spending had unusually high leverage on frontier-lab norms, preparedness, and governance.
-:::
+  :::
 
 ---
 
@@ -131,7 +129,7 @@ At the upper end of the range:
 
 - $0.65 \text{ percentage points} = 6{,}500 \text{ microprobabilities}$
 - $$\$1\text{B} / 6{,}500 \approx \$154{,}000 \text{ per microprobability}$$
-:::
+  :::
 
 ---
 

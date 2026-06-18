@@ -28,24 +28,11 @@ For the first two effects, which we call "standard effects", we arrive at the co
 
 The third effect, which we call a "population effect", is modeled as slightly increasing the probability of a catastrophe rather than directly buying QALYs. We therefore estimate the cost of adding one microprobability: a one-in-a-million absolute increase in the probability of an AI-caused existential catastrophe.
 
-This cause covers philanthropic funding that makes frontier or near-frontier AI systems more capable, more widely available, or more widely deployed, without being primarily focused on safety or alignment. It includes entities like frontier labs, university AI labs, open-model efforts, and other projects whose main effect is to accelerate capabilities rather than reduce risk.
-
-The **three distinct effects** we model are:
+The three distinct effects are:
 
 1. **standard-mundane**: ordinary welfare gains from better AI tools, higher productivity, and better products and services.
 2. **standard-utopia**: gains from bringing forward a genuinely very good transformative-AI world.
 3. **population-doom**: harm from slightly increasing the probability of AI-caused human extinction.
-
-The key structural judgment in this writeup is that these effects operate through **different channels**:
-
-- The mundane effect applies to the broad economic usefulness of AI capability work.
-- The utopia and doom effects apply only to the share of donations that is best modeled as **frontier-equivalent acceleration**.
-
-That distinction matters. A marginal dollar here can have real ordinary benefits while still pushing the frontier forward in ways that increase existential risk.
-
-These are also **different notions of additionality**. Ordinary additionality asks how much extra welfare would fail to happen without the donation. Frontier-equivalent acceleration asks how much the donation pushes technical capability progress, even if similar consumer benefits would eventually have been produced by firms or rival labs anyway. A donation to an open model, a dataset, or a university lab can therefore have **low ordinary additionality but higher frontier impact**, because frontier actors can copy and absorb the output quickly.
-
-**Bottom line at default settings:** the two positive effects are small (about 9.6 and 30.3 QALYs per \$1 million donated) while the doom effect destroys about 7,200 QALYs per \$1 million, so the central model nets out around **-7,160 QALYs per \$1 million** — strongly negative. At ordinary time horizons the existential-risk downside dominates unless you substantially change the worldview assumptions (probability of doom, whether acceleration is net-good, whether the linear-risk model holds). The worked example near the end of this page carries the arithmetic.
 
 ## What kinds of projects are we modeling?
 

@@ -1,6 +1,6 @@
 ---
-id: effect-of-all-ai-safety-spending
-name: 'Effect of all previous AI safety spending'
+id: effect-of-all-ai-safety-spending-on-ai-extinction
+name: 'Effect of all previous AI safety spending on AI extinction'
 ---
 
 ## How much has existing AI safety spending reduced AI extinction risk?

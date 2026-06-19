@@ -4,7 +4,7 @@ name: 'Good Ventures'
 categories:
   - id: climate-change
     fraction: 0.03
-  - id: political
+  - id: civic-policy-advocacy
     fraction: 0.03
   - id: institutions
     fraction: 0.02

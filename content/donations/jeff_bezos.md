@@ -14,13 +14,6 @@ donations:
       jeff-bezos: 1.0
     source: 'https://www.princeton.edu/news/2011/12/13/jeff-and-mackenzie-bezos-donate-15-million-create-center-princeton-neuroscience'
 
-  - date: 2012-07-28
-    recipient: washington-united-for-marriage-referendum-74-campaign
-    amount: 2_500_000
-    credit:
-      jeff-bezos: 1.0
-    source: 'https://www.reuters.com/article/lifestyle/amazons-jeff-bezos-wife-make-25-million-donation-for-gay-marriage-idUSBRE86R014/'
-
   - date: 2017-05-23
     recipient: reporters-committee-for-freedom-of-the-press
     amount: 1_000_000
@@ -34,13 +27,6 @@ donations:
     credit:
       jeff-bezos: 1.0
     source: 'https://www.reuters.com/article/world/us/jeff-bezos-contributes-33-million-to-dreamers-scholarship-program-idUSKBN1F124Z/'
-
-  - date: 2018-09-05
-    recipient: with-honor-fund
-    amount: 10_000_000
-    credit:
-      jeff-bezos: 1.0
-    source: 'https://www.geekwire.com/2018/amazon-ceo-jeff-bezos-donates-10m-honors-effort-elect-veterans-congress/'
 
   - date: 2018-09-13
     recipient: bezos-day-one-fund
@@ -182,3 +168,25 @@ donations:
     source: 'https://www.businesswire.com/news/home/20251217472999/en/National-Math-Stars-Ilana-Walder-Biesanz-Recognized-with-Bezos-Courage-Civility-Award'
     notes: '2025 Bezos Courage & Civility Award (Ilana Walder-Biesanz, National Math Stars). A 5th unnamed honoree (~$5M) is not yet recorded.'
 ---
+
+# Internal Notes
+
+Excluded non-charitable political/campaign donations:
+
+```yaml
+- date: 2012-07-28
+  recipient: washington-united-for-marriage-referendum-74-campaign
+  amount: 2_500_000
+  credit:
+    jeff-bezos: 1.0
+  source: 'https://www.reuters.com/article/lifestyle/amazons-jeff-bezos-wife-make-25-million-donation-for-gay-marriage-idUSBRE86R014/'
+  notes: 'Excluded from active donations because this appears to be referendum campaign giving rather than tax-deductible charitable giving.'
+
+- date: 2018-09-05
+  recipient: with-honor-fund
+  amount: 10_000_000
+  credit:
+    jeff-bezos: 1.0
+  source: 'https://www.geekwire.com/2018/amazon-ceo-jeff-bezos-donates-10m-honors-effort-elect-veterans-congress/'
+  notes: 'Excluded from active donations because the reported purpose was electing candidates to Congress, outside the tax-deductible civic and policy advocacy scope.'
+```

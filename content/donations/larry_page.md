@@ -1,27 +1,5 @@
 ---
 donations:
-  - date: 2006-11-01
-    recipient: californians-for-clean-alternative-energy
-    amount: 1_000_000
-    credit:
-      larry-page: 1.0
-    source: 'https://www.influencewatch.org/person/larry-page/'
-
-  - date: 2008-11-01
-    recipient: no-on-proposition-8-campaign
-    amount: 400_000
-    credit:
-      larry-page: 1.0
-    source: 'https://www.influencewatch.org/person/larry-page/'
-
-  # Commented out: political candidate donation - unclear whether positive or negative effect
-  # - date: 2008-12-31
-  #   recipient: president-barack-obama-inaugural-committee
-  #   amount: 25_000
-  #   credit:
-  #     larry-page: 1.0
-  #   source: 'https://www.influencewatch.org/person/larry-page/'
-
   - date: 2014-11-10
     recipient: ebola-relief-efforts
     amount: 15_000_000
@@ -296,3 +274,33 @@ donations:
       larry-page: 1.0
     source: 'https://projects.propublica.org/nonprofits/organizations/201922957/202513189349105506/full'
 ---
+
+# Internal Notes
+
+Excluded non-charitable political/campaign donations:
+
+```yaml
+- date: 2006-11-01
+  recipient: californians-for-clean-alternative-energy
+  amount: 1_000_000
+  credit:
+    larry-page: 1.0
+  source: 'https://www.influencewatch.org/person/larry-page/'
+  notes: 'Excluded from active donations because this appears to be ballot-initiative campaign giving rather than tax-deductible charitable giving.'
+
+- date: 2008-11-01
+  recipient: no-on-proposition-8-campaign
+  amount: 400_000
+  credit:
+    larry-page: 1.0
+  source: 'https://www.influencewatch.org/person/larry-page/'
+  notes: 'Excluded from active donations because this appears to be ballot-initiative campaign giving rather than tax-deductible charitable giving.'
+
+- date: 2008-12-31
+  recipient: president-barack-obama-inaugural-committee
+  amount: 25_000
+  credit:
+    larry-page: 1.0
+  source: 'https://www.influencewatch.org/person/larry-page/'
+  notes: 'Previously commented out in the active YAML. Kept here because inaugural-committee giving is outside the tax-deductible civic and policy advocacy scope.'
+```

@@ -8,7 +8,7 @@ categories:
     fraction: 0.2
   - id: health-medicine
     fraction: 0.2
-  - id: political
+  - id: civic-policy-advocacy
     fraction: 0.1
 ---
 

@@ -38,7 +38,7 @@ This estimate is **not** a good model of:
 - low-additionality community foundations that mainly regrant to ordinary local causes
 - pure housing charities, which should usually be modeled under [Homelessness and Housing](/cause/housing)
 - pure health charities, which should usually be modeled under [Health / Medicine](/cause/health-medicine)
-- arts, religious, or political organizations, which belong in their own categories
+- arts, religious, or civic/policy-advocacy organizations, which belong in their own categories
 :::
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}

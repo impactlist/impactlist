@@ -18,8 +18,9 @@
 # The Benioffs intentionally do NOT operate through a private foundation, giving directly
 # to causes. They signed the Giving Pledge in 2016.
 #
-# TOTAL VERIFIED DONATIONS: 24 entries
-# TOTAL AMOUNT: $903,600,000 (plus $2M political campaign contribution)
+# TOTAL VERIFIED ACTIVE DONATIONS: 23 entries
+# TOTAL ACTIVE AMOUNT: $873,600,000
+# EXCLUDED BELOW INTERNAL NOTES: $3M political/campaign contributions
 
 donations:
   - date: 2010-06-17
@@ -57,26 +58,12 @@ donations:
       marc-benioff: 1.0
     source: 'https://today.usc.edu/the-benioffs-believe-in-research/'
 
-  - date: 2018-03-12
-    recipient: march-for-our-lives
-    amount: 1_000_000
-    credit:
-      marc-benioff: 1.0
-    source: 'https://www.sfgate.com/nation/article/celebs-donating-march-for-lives-benioff-kushner-12750373.php'
-
   - date: 2018-05-22
     recipient: hamilton-families-heading-home-campaign
     amount: 11_500_000
     credit:
       marc-benioff: 1.0
     source: 'https://www.salesforce.com/news/press-releases/2018/05/22/salesforce-celebrates-grand-opening-of-salesforce-tower-with-3-million-in-commitments-from-salesforce-org-and-marc-and-lynne-benioff-to-help-end-family-homelessness-in-san-francisco/'
-
-  - date: 2018-11-01
-    recipient: proposition-c-yes-on-c-campaign
-    amount: 2_000_000
-    credit:
-      marc-benioff: 1.0
-    source: 'https://www.ucsf.edu/news/2019/05/414316/ucsf-launches-new-benioff-homelessness-and-housing-initiative-30m-gift'
 
   - date: 2018-11-29
     recipient: tenderloin-housing-clinic-bristol-hotel
@@ -198,3 +185,25 @@ donations:
     source: 'https://www.salesforce.com/news/stories/marc-lynne-benioff-philanthropy-2026/'
     notes: 'Marc and Lynne Benioff "gave more than $37 million in 2025" to charities including the American Cancer Society, DonorsChoose, and the Jane Goodall Legacy Foundation (plus possible unnamed others — the source says "including"), per the Salesforce newsroom (corroborated by the Chronicle of Philanthropy Philanthropy 50, where the Benioffs ranked 21st). Personal giving (not Salesforce corporate), confirmed as given ("gave"), and distinct from the 2025 UCSF ($100M) and SFPD ($1M) gifts already in this file. No per-organization breakdown is published, so rather than asserting per-org amounts, the recipient''s categories split the gift evenly across the three named orgs'' cause areas (health-medicine / education / environmental). Date normalized to calendar-year-end 2025; amount is the stated floor ("more than $37M"). Credited to marc-benioff per file convention (the gift is jointly Marc & Lynne).'
 ---
+
+# Internal Notes
+
+Excluded non-charitable political/campaign donations:
+
+```yaml
+- date: 2018-03-12
+  recipient: march-for-our-lives
+  amount: 1_000_000
+  credit:
+    marc-benioff: 1.0
+  source: 'https://www.sfgate.com/nation/article/celebs-donating-march-for-lives-benioff-kushner-12750373.php'
+  notes: 'Excluded from active donations because the source describes funding the March for Our Lives march/rally. That is not clearly a tax-deductible charitable gift under the new Civic and Policy Advocacy boundary.'
+
+- date: 2018-11-01
+  recipient: proposition-c-yes-on-c-campaign
+  amount: 2_000_000
+  credit:
+    marc-benioff: 1.0
+  source: 'https://www.ucsf.edu/news/2019/05/414316/ucsf-launches-new-benioff-homelessness-and-housing-initiative-30m-gift'
+  notes: 'Excluded from active donations because this appears to be ballot-measure campaign giving rather than tax-deductible charitable giving.'
+```

@@ -12,7 +12,7 @@ categories:
     fraction: 0.25
   - id: institutions
     fraction: 0.1
-  - id: political
+  - id: civic-policy-advocacy
     fraction: 0.1
   - id: climate-change
     fraction: 0.05

@@ -32,15 +32,6 @@ donations:
       cari-tuna: 0.5
     source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 
-  # Commented out: political party donation - unclear whether positive or negative effect
-  # - date: 2016-09-08
-  #   recipient: democratic-political-organizations
-  #   amount: 20_000_000
-  #   credit:
-  #     dustin-moskovitz: 0.5
-  #     cari-tuna: 0.5
-  #   source: 'https://medium.com/@moskov/compelled-to-act-1413930041ee'
-
   - date: 2017-06-30
     recipient: good-ventures
     amount: 279_174_388
@@ -105,3 +96,18 @@ donations:
       cari-tuna: 0.5
     source: 'https://projects.propublica.org/nonprofits/organizations/461008520'
 ---
+
+# Internal Notes
+
+Excluded non-charitable political/campaign donations:
+
+```yaml
+- date: 2016-09-08
+  recipient: democratic-political-organizations
+  amount: 20_000_000
+  credit:
+    dustin-moskovitz: 0.5
+    cari-tuna: 0.5
+  source: 'https://medium.com/@moskov/compelled-to-act-1413930041ee'
+  notes: 'Previously commented out in the active YAML. Kept here because donations to Democratic political organizations are partisan electoral giving outside the tax-deductible civic and policy advocacy scope.'
+```

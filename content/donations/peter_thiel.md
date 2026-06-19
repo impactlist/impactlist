@@ -94,14 +94,6 @@ donations:
     source: 'https://www.fightaging.org/archives/2015/03/a-look-at-peter-thiels-biotechnology-investments/'
     notes: 'CUMULATIVE 2012-2024. First batch announced April 2012. By 2015 had given $7M to ~24 companies. Portfolio companies raised $1B+ in follow-on funding. Typical grants $350K per company. Internal Thiel Foundation program for early-stage scientific research.'
 
-  - date: 2012-10-01
-    recipient: minnesotans-united-for-all-families
-    amount: 10_000
-    credit:
-      peter-thiel: 1.0
-    source: 'https://en.wikipedia.org/wiki/Peter_Thiel'
-    notes: 'PERSONAL DONATION. Campaign to fight Minnesota Amendment 1 proposing to ban same-sex marriage. Thiel is openly gay and supported marriage equality causes.'
-
   - date: 2012-12-31
     recipient: american-foundation-for-equal-rights
     amount: 100_000
@@ -109,14 +101,6 @@ donations:
       peter-thiel: 1.0
     source: 'https://www.influencewatch.org/person/peter-thiel/'
     notes: 'PERSONAL DONATION. Organization that challenged Proposition 8 in court. Thiel identified as supporter. Amount estimated based on major donor patterns.'
-
-  - date: 2012-12-31
-    recipient: goproud
-    amount: 50_000
-    credit:
-      peter-thiel: 1.0
-    source: 'https://www.famous-entrepreneurs.com/peter-thiel'
-    notes: 'PERSONAL DONATION. Organization for gay Republicans. Amount estimated based on reported support.'
 
   - date: 2013-12-31
     recipient: imitatio-project
@@ -190,3 +174,25 @@ donations:
     source: 'https://www.businesswire.com/news/home/20260420984007/en/Thiel-Foundation-Announces-2026-Class-of-Thiel-Fellows'
     notes: '2026 class: 12 fellows at $250K each over two years. Same convention as the 2025 entry (full two-year award booked on the announcement date).'
 ---
+
+# Internal Notes
+
+Excluded non-charitable political/campaign donations:
+
+```yaml
+- date: 2012-10-01
+  recipient: minnesotans-united-for-all-families
+  amount: 10_000
+  credit:
+    peter-thiel: 1.0
+  source: 'https://en.wikipedia.org/wiki/Peter_Thiel'
+  notes: 'PERSONAL DONATION. Campaign to fight Minnesota Amendment 1 proposing to ban same-sex marriage. Excluded from active donations because this appears to be ballot-measure campaign giving rather than tax-deductible charitable giving.'
+
+- date: 2012-12-31
+  recipient: goproud
+  amount: 50_000
+  credit:
+    peter-thiel: 1.0
+  source: 'https://www.famous-entrepreneurs.com/peter-thiel'
+  notes: 'PERSONAL DONATION. Organization for gay Republicans. Excluded from active donations because this is partisan/ideological political giving outside the tax-deductible civic and policy advocacy scope.'
+```

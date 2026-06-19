@@ -191,7 +191,7 @@ We use a **10-year** duration. Some institutional reforms last longer. Some work
 
 1. **Whether the marginal dollar funds concrete reform or expressive work.** This is the biggest crux. Concrete institutional reform can plausibly do good. Expressive activism can be weakly positive, close to zero, or harmful.
 
-2. **Whether Social Justice is being used too broadly.** Some recipients tagged here may belong under [Human Rights and Justice](/cause/human-rights), [Civic and Policy Advocacy](/cause/political), [Institutions](/cause/institutions), or [Local Community](/cause/local-community). If many recipients move out of the category, the Social Justice mix should be revisited.
+2. **Whether Social Justice is being used too broadly.** Some recipients tagged here may belong under [Human Rights and Justice](/cause/human-rights), [Civic and Policy Advocacy](/cause/civic-policy-advocacy), [Institutions](/cause/institutions), or [Local Community](/cause/local-community). If many recipients move out of the category, the Social Justice mix should be revisited.
 
 3. **Backlash and polarization.** Some work shifts norms and protects vulnerable people. Some work hardens opposition, fuels resentment, or makes future policy worse.
 

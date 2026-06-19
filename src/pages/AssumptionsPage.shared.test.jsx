@@ -179,7 +179,7 @@ describe('Global shared assumptions import flow', () => {
 
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
     const summary = getActiveAssumptionsSummary();
-    expect(within(summary).getByText('Longtermist')).toBeInTheDocument();
+    expect(within(summary).getByText('Longtermist (10 billion years)')).toBeInTheDocument();
   });
 
   it('prompts before loading curated assumptions over existing custom assumptions', async () => {

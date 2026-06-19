@@ -486,7 +486,7 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
 
     const { menu } = await openAssumptionsLibraryMenu(user);
-    const longtermistRow = getAssumptionsLibraryRow(menu, 'Longtermist');
+    const longtermistRow = getAssumptionsLibraryRow(menu, 'Longtermist (10 billion years)');
     expect(within(longtermistRow).getByText('Curated')).toBeInTheDocument();
     expect(within(longtermistRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(longtermistRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
@@ -507,10 +507,12 @@ describe('AssumptionsPage routing integration', () => {
 
     const activeRow = getAssumptionsLibrarySummary();
     expect(activeRow).toHaveAttribute('data-active', 'true');
-    expect(within(activeRow).getByText('Longtermist')).toBeInTheDocument();
+    expect(within(activeRow).getByText('Longtermist (10 billion years)')).toBeInTheDocument();
 
     await user.click(within(activeRow).getByRole('button', { name: 'View description' }));
-    const descriptionModal = screen.getByRole('heading', { name: 'Longtermist' }).closest('.impact-modal');
+    const descriptionModal = screen
+      .getByRole('heading', { name: 'Longtermist (10 billion years)' })
+      .closest('.impact-modal');
     expect(within(descriptionModal).getByRole('region', { name: 'Description:' })).toHaveTextContent(
       '10 billion years'
     );
@@ -522,7 +524,7 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
 
     const { menu } = await openAssumptionsLibraryMenu(user);
-    const row = getAssumptionsLibraryRow(menu, 'Longtermist');
+    const row = getAssumptionsLibraryRow(menu, 'Longtermist (10 billion years)');
     await user.click(row.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
@@ -1244,7 +1246,7 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
 
     const { menu } = await openAssumptionsLibraryMenu(user);
-    const defaultRow = getAssumptionsLibraryRow(menu, 'Default');
+    const defaultRow = getAssumptionsLibraryRow(menu, 'Default (100 years)');
     await user.click(defaultRow.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
@@ -1258,7 +1260,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const activeDefaultRow = getAssumptionsLibrarySummary();
     expect(activeDefaultRow).toHaveAttribute('data-active', 'true');
-    expect(within(activeDefaultRow).getByText('Default')).toBeInTheDocument();
+    expect(within(activeDefaultRow).getByText('Default (100 years)')).toBeInTheDocument();
   });
 
   it('lets users load default assumptions when a non-default entry is active but edits match the default state', async () => {
@@ -1304,7 +1306,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(within(customRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
 
     const { menu } = await openAssumptionsLibraryMenu(user);
-    const defaultRow = getAssumptionsLibraryRow(menu, 'Default');
+    const defaultRow = getAssumptionsLibraryRow(menu, 'Default (100 years)');
     await user.click(defaultRow.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
@@ -1315,7 +1317,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryByText('Default assumptions are already loaded.')).not.toBeInTheDocument();
     const summaryRow = getAssumptionsLibrarySummary();
     expect(summaryRow).toHaveAttribute('data-active', 'true');
-    expect(within(summaryRow).getByText('Default')).toBeInTheDocument();
+    expect(within(summaryRow).getByText('Default (100 years)')).toBeInTheDocument();
   });
 
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
@@ -1505,13 +1507,13 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
 
     const summaryRow = getAssumptionsLibrarySummary();
-    expect(within(summaryRow).getByText('Default')).toBeInTheDocument();
+    expect(within(summaryRow).getByText('Default (100 years)')).toBeInTheDocument();
     expect(within(summaryRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
 
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
-    expect(await screen.findByRole('heading', { name: 'Default' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Default (100 years)' })).toBeInTheDocument();
   });
 
   it('does not prefill the save description when saving custom unsaved assumptions', async () => {
@@ -1701,7 +1703,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(within(row).getByRole('button', { name: 'Rename' }));
     const input = within(row).getByDisplayValue('Rename Me');
     await user.clear(input);
-    await user.type(input, 'Longtermist');
+    await user.type(input, 'Longtermist (10 billion years)');
     await user.keyboard('{Enter}');
 
     expect(
@@ -1766,7 +1768,7 @@ describe('AssumptionsPage routing integration', () => {
 
     const labelInput = await screen.findByLabelText('Label');
     await user.clear(labelInput);
-    await user.type(labelInput, 'Longtermist');
+    await user.type(labelInput, 'Longtermist (10 billion years)');
 
     const saveButtons = screen.getAllByRole('button', { name: 'Save to Library' });
     await user.click(saveButtons[saveButtons.length - 1]);

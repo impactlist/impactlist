@@ -1,6 +1,6 @@
 ---
 id: longtermist
-name: 'Longtermist'
+name: 'Longtermist (10 billion years)'
 description: 'Extends the global time horizon to 10 billion years.'
 sortOrder: 30
 assumptions:

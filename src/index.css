@@ -153,6 +153,15 @@
     color: var(--text-muted);
   }
 
+  .assumptions-selector-bar__edit-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
   .assumptions-selector-bar__display-line {
     display: flex;
     align-items: center;
@@ -369,6 +378,10 @@
     }
 
     .assumptions-selector-bar__display-text {
+      font-size: 0.68rem;
+    }
+
+    .assumptions-selector-bar__edit-link {
       font-size: 0.68rem;
     }
 

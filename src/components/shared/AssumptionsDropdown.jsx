@@ -13,7 +13,7 @@ const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges }) => {
   const isCustomEntry = entry.id === CURRENT_CUSTOM_ENTRY_ID;
   const isActive = activeId === entry.id;
   const isEditing = !isDefaultEntry && !isCustomEntry && editingId === entry.id;
-  const isCurated = !isDefaultEntry && !isCustomEntry && entry.source === 'curated';
+  const isCurated = isDefaultEntry || (!isCustomEntry && entry.source === 'curated');
   const isRemote = !isDefaultEntry && !isCustomEntry && Boolean(entry.reference);
   const isLoadDisabled = isActive && !hasUnsavedChanges;
   const shouldShowDescriptionAction = isCustomEntry
@@ -114,6 +114,7 @@ const AssumptionsDropdown = ({
   activeId = null,
   hasUnsavedChanges = false,
   inlineLabel = null,
+  inlineLabelText = null,
   className = '',
   menuAriaLabel = 'Assumptions options',
   showCurrentSaveAction = false,
@@ -144,7 +145,6 @@ const AssumptionsDropdown = ({
   }, [editingId, editingSurface]);
   const [editLabel, setEditLabel] = useState('');
   const [renameError, setRenameError] = useState('');
-  const labelId = useId();
   const buttonId = useId();
   const menuId = useId();
   const currentSelectionId = hasUnsavedChanges ? CURRENT_CUSTOM_ENTRY_ID : activeId;
@@ -327,6 +327,9 @@ const AssumptionsDropdown = ({
     () => getEntryUiState(selectedEntry, { activeId: currentSelectionId, editingId, hasUnsavedChanges }),
     [currentSelectionId, editingId, hasUnsavedChanges, selectedEntry]
   );
+  const summaryTriggerAriaLabel = `${
+    inlineLabel && inlineLabelText ? inlineLabelText : 'Select assumptions set'
+  }. Current selection: ${selectedEntry.label}`;
 
   const renderEntryActions = useCallback(
     (entry, entryUiState, mode = 'menu') => {
@@ -479,16 +482,13 @@ const AssumptionsDropdown = ({
                 onKeyDown={handleTriggerKeyDown}
                 aria-expanded={menuOpen}
                 aria-controls={menuOpen ? menuId : undefined}
-                aria-label={
-                  inlineLabel ? undefined : `Select assumptions set. Current selection: ${selectedEntry.label}`
-                }
-                aria-labelledby={inlineLabel ? `${labelId} ${buttonId}` : undefined}
+                aria-label={summaryTriggerAriaLabel}
               >
                 <span className="saved-assumption-row__identity">
                   <EntryLabel
                     entry={selectedEntry}
                     uiState={selectedEntryUiState}
-                    showPill={!selectedEntryUiState.isDefaultEntry && !selectedEntryUiState.isCustomEntry}
+                    showPill={!selectedEntryUiState.isCustomEntry}
                   />
                 </span>
               </button>
@@ -556,7 +556,7 @@ const AssumptionsDropdown = ({
                           className="saved-assumption-row__load-target"
                           data-selected={entryUiState.isActive}
                         >
-                          <EntryLabel entry={entry} uiState={entryUiState} showPill={!entryUiState.isDefaultEntry} />
+                          <EntryLabel entry={entry} uiState={entryUiState} showPill={!entryUiState.isCustomEntry} />
                         </button>
                         {renderEntryActions(entry, entryUiState)}
                       </>
@@ -580,9 +580,7 @@ const AssumptionsDropdown = ({
 
   return (
     <div className={`assumptions-selector-bar assumptions-selector-bar--inline ${className}`.trim()}>
-      <div id={labelId} className="assumptions-selector-bar__label">
-        {inlineLabel}
-      </div>
+      <div className="assumptions-selector-bar__label">{inlineLabel}</div>
       <div className="assumptions-selector-bar__control assumptions-selector-bar__control--rich">{dropdownMarkup}</div>
     </div>
   );
@@ -603,6 +601,7 @@ AssumptionsDropdown.propTypes = {
   activeId: PropTypes.string,
   hasUnsavedChanges: PropTypes.bool,
   inlineLabel: PropTypes.node,
+  inlineLabelText: PropTypes.string,
   className: PropTypes.string,
   menuAriaLabel: PropTypes.string,
   showCurrentSaveAction: PropTypes.bool,

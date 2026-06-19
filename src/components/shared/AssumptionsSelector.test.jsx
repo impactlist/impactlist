@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import AssumptionsSelector from './AssumptionsSelector';
 
 const mockSetAllUserAssumptions = vi.fn();
@@ -18,7 +19,7 @@ const mockSavedAssumptionsState = {
 
 const curatedEntry = {
   id: 'curated:longtermist',
-  label: 'Longtermist',
+  label: 'Longtermist (10 billion years)',
   source: 'curated',
   description: 'Looks far into the future.',
   assumptions: { globalParameters: { timeLimit: 1000000 } },
@@ -70,8 +71,16 @@ vi.mock('../../utils/savedAssumptionsStore', () => ({
 }));
 
 describe('AssumptionsSelector', () => {
+  const renderSelector = (props) => {
+    return render(
+      <MemoryRouter>
+        <AssumptionsSelector {...props} />
+      </MemoryRouter>
+    );
+  };
+
   const openMenu = async (user) => {
-    await user.click(screen.getByRole('button', { name: /Active assumptions:/ }));
+    await user.click(screen.getByRole('button', { name: /Active assumptions/ }));
     return screen.getByRole('group', { name: 'Assumptions options' });
   };
 
@@ -96,26 +105,38 @@ describe('AssumptionsSelector', () => {
   });
 
   it('renders the assumptions trigger', () => {
-    render(<AssumptionsSelector />);
+    renderSelector();
 
-    expect(screen.getByRole('button', { name: /Active assumptions:/ })).toBeInTheDocument();
+    const trigger = screen.getByRole('button', { name: /Active assumptions/ });
+
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveAccessibleName('Active assumptions. Current selection: Default (100 years)');
+    expect(trigger).not.toHaveAccessibleName(/view \/ edit/);
+    expect(trigger).not.toHaveAccessibleName(/more information/i);
+  });
+
+  it('links to the assumptions page from the interactive selector label', () => {
+    renderSelector();
+
+    expect(screen.getByRole('link', { name: 'view / edit' })).toHaveAttribute('href', '/assumptions');
   });
 
   it('renders a display label without the dropdown when interactive is false', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
 
-    render(<AssumptionsSelector interactive={false} />);
+    renderSelector({ interactive: false });
 
     expect(document.querySelector('.assumptions-selector-bar__display-text')).toHaveTextContent(
       'Active assumptions: My Saved Assumptions'
     );
-    expect(screen.queryByRole('button', { name: /Active assumptions:/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'view / edit' })).toHaveAttribute('href', '/assumptions');
+    expect(screen.queryByRole('button', { name: /Active assumptions/ })).not.toBeInTheDocument();
   });
 
   it('shows an explanatory tooltip next to the active assumptions label', async () => {
     const user = userEvent.setup();
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     await user.hover(screen.getByRole('button', { name: 'More information' }));
 
@@ -131,10 +152,14 @@ describe('AssumptionsSelector', () => {
 
   it('applies curated assumptions when selected', async () => {
     const user = userEvent.setup();
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
-    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('button', { name: /Longtermist/ }));
+    await user.click(
+      within(getMenuRow(menu, 'Longtermist (10 billion years)')).getByRole('button', {
+        name: /Longtermist \(10 billion years\)/,
+      })
+    );
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);
     expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
@@ -143,7 +168,7 @@ describe('AssumptionsSelector', () => {
 
   it('marks saved assumptions as loaded when a saved entry is selected', async () => {
     const user = userEvent.setup();
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
     await user.click(
@@ -157,10 +182,10 @@ describe('AssumptionsSelector', () => {
 
   it('loads an entry when clicking anywhere on its visible menu row', async () => {
     const user = userEvent.setup();
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
-    await user.click(getMenuRow(menu, 'Longtermist'));
+    await user.click(getMenuRow(menu, 'Longtermist (10 billion years)'));
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);
     expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
@@ -168,27 +193,27 @@ describe('AssumptionsSelector', () => {
 
   it('opens the description modal when the description icon is clicked', async () => {
     const user = userEvent.setup();
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
-    const longtermistRow = getMenuRow(menu, 'Longtermist');
+    const longtermistRow = getMenuRow(menu, 'Longtermist (10 billion years)');
     await user.click(within(longtermistRow).getByRole('button', { name: 'View description' }));
 
-    expect(screen.getByRole('heading', { name: 'Longtermist' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Longtermist (10 billion years)' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent('Looks far into the future.');
     expect(mockSetAllUserAssumptions).not.toHaveBeenCalled();
   });
 
   it('shows a description for the default assumptions entry', async () => {
     const user = userEvent.setup();
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
 
-    expect(screen.getByRole('heading', { name: 'Default' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Default (100 years)' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
       'These assumptions reflect a blend of the best estimates of the creators of Impact List, and the best estimates given by frontier LLMs from Anthropic, OpenAI, and Google (prompted by Impact List staff).'
     );
@@ -199,6 +224,7 @@ describe('AssumptionsSelector', () => {
       'You can create and share your own assumptions on the Assumptions page.'
     );
     expect(screen.queryByRole('link', { name: 'Assumptions page' })).not.toBeInTheDocument();
+    expect(within(summaryRow).getByText('Curated')).toBeInTheDocument();
   });
 
   it('shows only the description action for the default row inside the menu', async () => {
@@ -206,11 +232,12 @@ describe('AssumptionsSelector', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
 
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
-    const defaultRow = getMenuRow(menu, 'Default');
+    const defaultRow = getMenuRow(menu, 'Default (100 years)');
 
+    expect(within(defaultRow).getByText('Curated')).toBeInTheDocument();
     expect(within(defaultRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
     expect(within(defaultRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(defaultRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
@@ -224,9 +251,9 @@ describe('AssumptionsSelector', () => {
       globalParameters: { timeLimit: 800 },
     };
 
-    render(<AssumptionsSelector />);
+    renderSelector();
 
-    expect(screen.getByRole('button', { name: /Active assumptions:/ })).toHaveTextContent('Custom (unsaved)');
+    expect(screen.getByRole('button', { name: /Active assumptions/ })).toHaveTextContent('Custom (unsaved)');
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
 
@@ -243,7 +270,7 @@ describe('AssumptionsSelector', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
 
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
@@ -260,10 +287,14 @@ describe('AssumptionsSelector', () => {
       globalParameters: { timeLimit: 800 },
     };
 
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
-    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('button', { name: /Longtermist/ }));
+    await user.click(
+      within(getMenuRow(menu, 'Longtermist (10 billion years)')).getByRole('button', {
+        name: /Longtermist \(10 billion years\)/,
+      })
+    );
 
     expect(screen.getByRole('heading', { name: 'Overwrite your unsaved assumptions?' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
@@ -281,10 +312,14 @@ describe('AssumptionsSelector', () => {
       globalParameters: { timeLimit: 800 },
     };
 
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
-    await user.click(within(getMenuRow(menu, 'Longtermist')).getByRole('button', { name: /Longtermist/ }));
+    await user.click(
+      within(getMenuRow(menu, 'Longtermist (10 billion years)')).getByRole('button', {
+        name: /Longtermist \(10 billion years\)/,
+      })
+    );
     await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
 
     expect(mockSetAllUserAssumptions).toHaveBeenCalledWith(curatedEntry.assumptions);
@@ -297,7 +332,7 @@ describe('AssumptionsSelector', () => {
     savedEntry.reference = 'saved-link';
     savedEntry.shareUrl = 'http://localhost:3000/?shared=saved-link';
 
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
@@ -311,7 +346,7 @@ describe('AssumptionsSelector', () => {
     mockMarkSavedAssumptionsLoaded.mockReturnValueOnce({ ok: false });
 
     const user = userEvent.setup();
-    render(<AssumptionsSelector />);
+    renderSelector();
 
     const menu = await openMenu(user);
     await user.click(

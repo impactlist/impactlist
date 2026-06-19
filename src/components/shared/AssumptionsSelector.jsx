@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import useAssumptionsLibrary from '../../hooks/useAssumptionsLibrary';
 import useAssumptionsSelectorPreference from '../../hooks/useAssumptionsSelectorPreference';
 import { OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL } from '../../utils/assumptionsLoadHelpers';
@@ -39,9 +40,15 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
     setPendingDescriptionEntry(null);
   }, []);
 
+  const editLink = (
+    <Link to="/assumptions" className="assumptions-selector-bar__edit-link impact-link">
+      view / edit
+    </Link>
+  );
+
   const inlineLabel = (
     <>
-      <span>Active assumptions:</span>
+      <span>Active assumptions</span>
       <InfoTooltipIcon
         className="assumptions-selector-bar__label-tooltip"
         iconClassName="h-4 w-4 text-muted"
@@ -55,6 +62,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
           </>
         }
       />
+      {editLink}
     </>
   );
   const displayLabel = (
@@ -70,6 +78,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
           </>
         }
       />
+      {editLink}
     </>
   );
 
@@ -86,6 +95,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
       <AssumptionsDropdown
         className={className}
         inlineLabel={inlineLabel}
+        inlineLabelText="Active assumptions"
         entries={libraryEntries}
         activeId={activeSavedAssumptionsId}
         hasUnsavedChanges={hasUnsavedChanges}

@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+    --font-display: 'Source Serif 4', 'Iowan Old Style', 'Palatino Linotype', serif;
     --font-ui: 'IBM Plex Sans', 'Avenir Next', 'Segoe UI', sans-serif;
 
     --bg-canvas: #f5efe3;

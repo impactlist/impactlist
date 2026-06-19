@@ -16,7 +16,7 @@ effects:
 
 This effect captures human-welfare gains from donations to **top conflict-mitigation organizations** that reduce the probability, duration, or intensity of organized armed conflict through mediation, quiet diplomacy, conflict analysis, early warning, and support for political settlements. Representative organizations include the Centre for Humanitarian Dialogue (HD) and the International Crisis Group (ICG).
 
-This estimate is mainly about preventing or shortening **serious civil-conflict episodes**. It is **not** meant to represent the average peacebuilding NGO, military aid, or generic humanitarian relief. The burden model is intended to be **all-things-considered**: it includes direct health losses plus displacement, healthcare disruption, food insecurity, lost income, governance deterioration, and long-run institutional damage after converting those harms into **QALY-equivalent** terms.
+This estimate is mainly about preventing or shortening **serious civil-conflict episodes**. It is **not** meant to represent the average peacebuilding NGO, military aid, or generic humanitarian relief. The burden model is **all-things-considered**. It counts direct health losses plus displacement, healthcare disruption, food insecurity, lost income, governance deterioration, and long-run institutional damage, all converted into **QALY-equivalent** terms.
 
 ## What kinds of charities are we modeling?
 
@@ -62,7 +62,7 @@ Recipients whose main work is direct military support, weapons procurement, or b
 
 ### Cost per QALY
 
-The cleanest way to model this cause area is:
+We model this cause area as:
 
 $$
 \text{Cost per QALY} = \dfrac{C}{p \times B}
@@ -92,7 +92,7 @@ $$
 
 So the point estimate is **\$333/QALY**.
 
-Two inputs drive everything. The burden $B$ starts from a roughly **1 million QALY** health component (Assumptions 1-2) and applies a **200%** broader-welfare uplift for lost income, governance deterioration, and institutional damage, reaching **3 million QALY-equivalents** (Assumption 3). The tractability $p$ is the load-bearing and most contestable input: a best guess of **0.1%** that an extra \$1 million averts one representative conflict-year (Assumption 5). Because both are rough, the plausible range below is wide.
+Two inputs drive everything. The burden $B$ starts from a roughly **1 million QALY** health component (Assumptions 1-2). We then add a **200%** broader-welfare uplift for lost income, governance deterioration, and institutional damage, reaching **3 million QALY-equivalents** (Assumption 3). The tractability $p$ is the most contestable input, and it carries the most weight: a best guess of **0.1%** that an extra \$1 million averts one representative conflict-year (Assumption 5). Because both are rough, the plausible range below is wide.
 
 :::details{title="How we reach 3 million QALY-equivalents of burden"}
 The health-only component is about **1 million QALYs**. The extra step is to treat lost income, governance deterioration, and institutional damage as real welfare losses expressed in the same unit, rather than mentioned and then set to zero. The dedicated assumption page uses a **200%** broader-welfare uplift over the health component in the central case, giving **3 million QALY-equivalents**, with a plausible range of **0.7–6.5 million**.
@@ -118,7 +118,7 @@ The **2–8%** top-tier philanthropic share already embeds heavy attribution dis
 - selection effects in observational studies
 - the possibility that extra money often improves coverage or readiness rather than directly causing a breakthrough
 
-**Scale check.** Coefficient / Open Philanthropy notes that HD's older budget was about **\$42 million per year** across **23 conflict zones**, or roughly **\$2 million per country-year**, and remarks that a marginal HD mediation-year would only need about a **0.52%** chance of ending a war one year sooner to clear a very high philanthropic-return bar. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/)) That **0.52%** is a break-even condition in a different BOTEC, not a central tractability estimate, so it is only a rough scale check rather than the basis for the figure here.
+**Scale check.** Coefficient / Open Philanthropy notes that HD's older budget was about **\$42 million per year** across **23 conflict zones**, or roughly **\$2 million per country-year**, and remarks that a marginal HD mediation-year would only need about a **0.52%** chance of ending a war one year sooner to clear a very high philanthropic-return bar. ([Coefficient Giving / Open Philanthropy 2022](https://coefficientgiving.org/research/civil-conflict-reduction/)) That **0.52%** is a break-even condition in a different calculation, not a central tractability estimate, so it is only a rough scale check rather than the basis for the figure here.
 :::
 
 **Range**
@@ -128,7 +128,7 @@ Our plausible range is **\$10–\$15,000/QALY**. A three-parameter sweep gives a
 - **Optimistic:** \$300k cost, 0.3% success probability, and 6.5M QALY-equivalents at stake -> **\$15/QALY**
 - **Pessimistic:** \$2M cost, 0.03% success probability, and 0.7M QALY-equivalents at stake -> about **\$9,500/QALY**
 
-We widen beyond that sweep because it varies only the three headline parameters; the published range also absorbs structural uncertainty the sweep holds fixed — whether the modeled philanthropic slice deserves more or less than the **2–8%** share, and whether the causal story (mediation actually averting conflict-years rather than tracking processes that would have settled anyway) holds at all. The pessimistic end of the sweep is already demanding, combining high cost, low tractability, and a burden at the bottom of the all-things-considered range.
+We widen beyond that sweep because it varies only the three headline parameters. The published range also folds in structural uncertainty the sweep holds fixed. Two questions matter most: whether the modeled philanthropic slice deserves more or less than the **2–8%** share, and whether the causal story holds at all — does mediation actually avert conflict-years, or does it just track processes that would have settled anyway? The pessimistic end of the sweep is already demanding. It combines high cost, low tractability, and a burden at the bottom of the all-things-considered range.
 
 ### Start time
 

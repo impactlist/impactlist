@@ -5,7 +5,7 @@ name: 'Effect of all previous AI safety spending on AI existential catastrophe'
 
 ## How much has existing AI safety spending reduced AI existential-catastrophe risk?
 
-This document estimates the net effect of cumulative AI safety-related spending through 2025 on the probability of **AI-caused existential catastrophe** this century.
+This page estimates how much cumulative AI safety-related spending through 2025 has changed the probability of **AI-caused existential catastrophe** this century.
 
 Here "AI-caused existential catastrophe" includes:
 
@@ -15,7 +15,9 @@ Here "AI-caused existential catastrophe" includes:
 
 **Summary:** A reasonable best guess is that cumulative AI safety spending has reduced this broader catastrophe risk by about **0.13 percentage points**, with a {{PLAUSIBLE_RANGE}} of **-0.04 to 0.5 percentage points**.
 
-That corresponds to about **\$1.2 million per microprobability** (the spending behind it is detailed in Section 1). Conditional on the net effect being positive, the plausible cost range is roughly **\$200,000–\$70 million per microprobability**; the full distribution also includes net-harm cases.
+That corresponds to about **\$1.2 million per microprobability** (the spending behind it is detailed in Section 1). Conditional on the net effect being positive, the plausible cost range is roughly **\$200,000–\$70 million per microprobability**. The full distribution also includes net-harm cases.
+
+This estimate depends heavily on the [extinction-only calculation](/assumption/effect-of-all-ai-safety-spending-on-ai-extinction). We start from its estimate of about **0.10 percentage points** of extinction-risk reduction, then adjust upward for irreversible disempowerment and lock-in pathways.
 
 ---
 
@@ -27,11 +29,11 @@ Two broad pools of money fund AI safety work, and they are not equally effective
 
 **Frontier-lab internal safety spending** — the safety-labeled work inside OpenAI, Anthropic, Google DeepMind, and others (alignment, interpretability, evals, control, preparedness, safety systems, and RLHF-type work), plus the compute it uses — is roughly **\$1.4 billion** cumulatively (plausible range **\$0.8–2.5 billion**), on the order of **\$500 million per year** recently. So raw safety spending across all pools is about **\$2.6 billion**.
 
-But a frontier-lab safety dollar buys **less** existential-risk reduction than a serious non-lab dollar — our best guess is about **0.3 as much** (plausible range 0.1–0.6) — because lab work is constrained by commercial and race incentives, is heavily entangled with capabilities and product/deployment, and includes a meaningful amount of safetywashing. Because this page exists to value **marginal donations to non-lab safety organizations**, we weight lab spending by that effectiveness factor:
+But a frontier-lab safety dollar buys **less** existential-risk reduction than a serious non-lab dollar. Our best guess is about **0.3 as much** (plausible range 0.1–0.6). Lab work is constrained by commercial and race incentives, is heavily entangled with capabilities and product/deployment, and includes a meaningful amount of safetywashing. This page exists to value **marginal donations to non-lab safety organizations**, so we weight lab spending by that effectiveness factor:
 
 $$\text{effective spending} = \$1.2\text{B} + 0.3 \times \$1.4\text{B} \approx \$1.6\text{B}$$
 
-This **~\$1.6 billion of non-lab-equivalent spending** is the denominator behind the headline cost. For reference, the **raw historical average** — all \$2.6B divided by the reduction, counting every dollar equally — is about **\$2.0 million per microprobability**; the lower marginal figure below reflects that a serious non-lab dollar outperforms the washing-laden average. The \$1.2B non-lab figure, the \$1.4B lab figure, and the 0.3 weight are all uncertain judgments; their combined effect is carried in the plausible range and in caveat 4.
+This **~\$1.6 billion of non-lab-equivalent spending** is the denominator behind the headline cost. For reference, the **raw historical average** counts every dollar equally: all \$2.6B divided by the reduction is about **\$2.0 million per microprobability**. The lower marginal figure below reflects that a serious non-lab dollar outperforms the washing-laden average. The \$1.2B non-lab figure, the \$1.4B lab figure, and the 0.3 weight are all uncertain judgments. The plausible range and caveat 4 carry their combined effect.
 
 :::details{title="How the spending estimates are built"}
 **Non-lab (~\$1.2B).** Catastrophic-risk philanthropy is the core: Open Philanthropy / Coefficient Giving has directed [over \$330M to AI existential-risk work](https://forum.effectivealtruism.org/posts/XdhwXppfqrpPL2YDX/an-overview-of-the-ai-safety-funding-situation) and itself estimates total AI-catastrophic-risk philanthropy at **under \$200M/year** ([Coefficient Giving](https://coefficientgiving.org/research/ai-safety-and-security-need-more-funders/)), with the Survival and Flourishing Fund, the Long-Term Future Fund, the former FTX Future Fund, and others bringing the cumulative to roughly \$0.8B. Government **safety institutes** are a newer, growing bucket (UK AISI ~£100M/\$127M, plus US, EU, and others), ~\$0.3B, and academic/other work ~\$0.1B.
@@ -46,14 +48,14 @@ Frontier-lab safety work is genuinely valuable — mechanistic interpretability,
 - **Capabilities and product entanglement:** much "safety" work (RLHF, robustness, deployment evals, content safety) doubles as product improvement rather than x-risk reduction.
 - **Safetywashing:** some lab-internal work functions as regulatory or reputational cover — witness OpenAI's undelivered Superalignment compute pledge and dissolved team ([Fortune](https://fortune.com/2024/05/21/openai-superalignment-20-compute-commitment-never-fulfilled-sutskever-leike-altman-brockman-murati/)), and the voluntary, largely unenforced status of responsible-scaling and preparedness frameworks.
 
-Weighting the lab pool at about 0.3 (range 0.1–0.6) discounts this broad safety-labeled spending to its serious, x-risk-relevant equivalent. This is **not** a second penalty on top of the net-of-offsetting-channels reduction estimate (Sections 2–3): it is simply how the field's net achievement is attributed across pools of different productivity, so we can recover the non-lab figure.
+Weighting the lab pool at about 0.3 (range 0.1–0.6) discounts this broad safety-labeled spending to its serious, x-risk-relevant equivalent. This is **not** a second penalty on top of the net-of-offsetting-channels reduction estimate (Sections 2–3). It simply splits the field's net achievement across pools of different productivity, so we can recover the non-lab figure.
 :::
 
 ---
 
 ## 2. Why the broader event should be somewhat more tractable than extinction alone
 
-The extinction-only version of this question puts the risk reduction from historical safety spending at about **0.10 percentage points**. ([See the extinction-only version](/assumption/effect-of-all-ai-safety-spending-on-ai-extinction)) Broadening the modeled event to include **irreversible disempowerment** and **stable lock-in** makes it about 1.4x larger (14% versus 10% on the category page), so the impact of safety work should rise — but **less than proportionally**, because the portfolio is somewhat less relevant to the extra pathways than to extinction. A simple relative-relevance model puts the uplift at about **1.3x**, and nearby multipliers stay live (see the sensitivity table in section 3).
+The extinction-only version of this question puts the risk reduction from historical safety spending at about **0.10 percentage points**. ([See the extinction-only calculation](/assumption/effect-of-all-ai-safety-spending-on-ai-extinction)) Broadening the modeled event to include **irreversible disempowerment** and **stable lock-in** makes it about 1.4x larger (14% versus 10% on the category page). So the impact of safety work should rise — but **less than proportionally**, because the portfolio is somewhat less relevant to the extra pathways than to extinction. A simple relative-relevance model puts the uplift at about **1.3x**, and nearby multipliers stay live (see the sensitivity table in section 3).
 
 The uplift is material rather than tiny because the extra risk mass is mainly irreversible loss of human control — with AI-enabled political lock-in a smaller but important component — and much of the historical AI safety portfolio bears on those pathways too.
 
@@ -73,7 +75,7 @@ Recent work makes these channels more concrete:
 
 Those papers do not prove that historical AI safety funding has already bought large amounts of lock-in prevention, but they strengthen the case that governance, preparedness, and institutional work can reduce broader existential-catastrophe pathways, not just literal extinction.
 
-**The arithmetic.** The percentages below are informed judgments, not empirical measurements; the model is meant to make the structure transparent and locate the multiplier in the right region, not to pin down a precise value. A reasonable decomposition of the extra 4 percentage points is:
+**The arithmetic.** The percentages below are informed judgments, not empirical measurements. The model locates the multiplier in the right region; it does not pin down a precise value. A reasonable decomposition of the extra 4 percentage points is:
 
 - about **3 percentage points** from irreversible AI disempowerment or loss of human control
 - about **1 percentage point** from stable AI-enabled totalitarian lock-in or comparable permanent political closure
@@ -98,7 +100,7 @@ Rounded, this supports an uplift of about **1.3x**.
 
 ## 3. Converting that into numbers
 
-Applying the **1.3x** partial-overlap uplift to the extinction-only anchor of about **0.10 percentage points** gives a broader existential-catastrophe estimate of about **0.13 percentage points** — a reasonable best guess. A full 1.4x uplift (matching the event-size increase) would be too high unless the historical portfolio were equally effective against extinction and non-extinction channels; the overlap is real but incomplete, so the uplift is material without matching the full increase.
+Applying the **1.3x** partial-overlap uplift to the extinction-only anchor of about **0.10 percentage points** gives a broader existential-catastrophe estimate of about **0.13 percentage points** — a reasonable best guess. A full 1.4x uplift (matching the event-size increase) would be too high unless the historical portfolio were equally effective against extinction and non-extinction channels. The overlap is real but incomplete, so the uplift is material without matching the full increase.
 
 ### Sensitivity to the uplift
 
@@ -109,17 +111,17 @@ The multiplier is a judgment call, but moving it within a plausible band changes
 - 1.2x: 0.12 percentage points → about **\$1.3 million per microprobability**
 - 1.3x: 0.13 percentage points → about **\$1.2 million per microprobability**
 - 1.4x: 0.14 percentage points → about **\$1.1 million per microprobability**
-:::
+  :::
 
 ### Plausible range: -0.04 to 0.5 percentage points
 
-We keep a wide plausible range — from **-0.04** to **0.5 percentage points** — because the evidence is indirect: there is no clean experiment telling us what the world would look like without AI safety spending. The estimate is a synthesis of historical spending totals, x-risk cost-effectiveness benchmarks, and judgment about how much technical and governance work has mattered in practice. We derive this range the same way as the central estimate: by scaling the revised extinction-only range (about -0.03 to 0.4 percentage points) by the same partial-overlap multiplier — roughly 1.3x — rather than the full 1.4x event-size multiplier. The lower endpoint is negative because the offsetting channels — capabilities spillovers, safetywashing, deployment acceleration, and lab safety work that also strengthens race competitors — could plausibly have outweighed the gains.
+We keep a wide plausible range — from **-0.04** to **0.5 percentage points** — because the evidence is indirect. There is no clean experiment telling us what the world would look like without AI safety spending. The estimate is a synthesis of historical spending totals, x-risk cost-effectiveness benchmarks, and judgment about how much technical and governance work has mattered in practice. We derive this range the same way as the central estimate. We scale the revised extinction-only range (about -0.03 to 0.4 percentage points) by the same partial-overlap multiplier — roughly 1.3x — rather than the full 1.4x event-size multiplier. The lower endpoint is negative because the offsetting channels — capabilities spillovers, safetywashing, deployment acceleration, and lab safety work that also strengthens race competitors — could plausibly have outweighed the gains.
 
 :::details{title="What the lower and upper bounds represent"}
 
 - **-0.04 percentage points** corresponds to a net-harm view where the field's gains were outweighed by negative channels.
 - **0.5 percentage points** corresponds to a strong view where the best historical spending had unusually high leverage on frontier-lab norms, preparedness, and governance.
-:::
+  :::
 
 ---
 

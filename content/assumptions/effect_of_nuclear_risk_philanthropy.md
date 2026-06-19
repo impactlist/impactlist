@@ -5,7 +5,7 @@ name: 'Effect of all previous nuclear-risk philanthropy'
 
 ## How much has existing nuclear-risk philanthropy reduced catastrophic nuclear-war risk?
 
-This document analyzes the question:
+This document analyzes one question:
 
 > By how many percentage points has roughly **\$600 million** of nuclear-risk philanthropy over about **20 years** reduced the probability of a **>10 million-death nuclear catastrophe** over the next roughly **20 years**?
 
@@ -53,7 +53,7 @@ $$
 
 This may sound tiny, but the whole point of the category is that tiny changes in the probability of an extremely bad event can have very large expected value.
 
-Unlike in some near-term cause areas, we do not have a clean randomized or quasi-experimental literature on this question. So the right approach is to combine:
+Unlike in some near-term cause areas, we have no clean randomized or quasi-experimental literature on this question. So we combine four things:
 
 1. evidence about the size of the relevant philanthropic field
 2. evidence about the kinds of levers philanthropy can realistically move
@@ -64,7 +64,7 @@ Unlike in some near-term cause areas, we do not have a clean randomized or quasi
 
 ## 2. What scale of philanthropy are we talking about?
 
-[Founders Pledge's 2023 nuclear-risk guide](https://www.founderspledge.com/research/global-catastrophic-nuclear-risk-a-guide-for-philanthropists) says that after the MacArthur Foundation's exit, total philanthropic funding in the field fell to about **\$30 million per year**, which over **20 years** implies cumulative spending of roughly **\$600 million** — a reasonable order-of-magnitude anchor for the field whose effect we are trying to estimate.
+Roughly **\$600 million** over **20 years**. [Founders Pledge's 2023 nuclear-risk guide](https://www.founderspledge.com/research/global-catastrophic-nuclear-risk-a-guide-for-philanthropists) says that after the MacArthur Foundation's exit, total philanthropic funding in the field fell to about **\$30 million per year**. Run that for **20 years** and you get roughly **\$600 million** — a reasonable order-of-magnitude anchor for the field whose effect we are trying to estimate.
 
 :::details{title="Why $600M is a defensible order-of-magnitude anchor"}
 $$
@@ -80,7 +80,7 @@ The anchor does not rest on a single number, though. Older Open Philanthropy / G
 
 ## 3. What kinds of things can philanthropy plausibly accomplish here?
 
-This field is not mainly about buying direct risk reduction the way bednets buy fewer malaria deaths. The route is leverage: the relevant question is not "can philanthropy itself halve nuclear risk?" (clearly not) but whether a small field can sometimes generate better policy options, shift elite beliefs, build institutional capacity, and pressure governments toward specific risk-reduction measures. That leverage is hard to measure, but it is not fanciful — it is how most serious nuclear-policy philanthropy is already trying to work.
+This field is not mainly about buying direct risk reduction the way bednets buy fewer malaria deaths. The route is leverage. The question is not "can philanthropy itself halve nuclear risk?" (clearly not). It is whether a small field can sometimes generate better policy options, shift elite beliefs, build institutional capacity, and pressure governments toward specific risk-reduction measures. That leverage is hard to measure, but it is not fanciful — it is how most serious nuclear-policy philanthropy is already trying to work.
 
 :::details{title="The leverage mechanisms philanthropy is trying to move"}
 Founders Pledge argues that philanthropy can multiply its impact by:
@@ -97,7 +97,7 @@ So the specific channels through which a tiny field can matter are: generating o
 
 ## 4. Evidence that philanthropy can sometimes shape major nuclear institutions or policy
 
-The strongest direct evidence is historical and case-based rather than statistical: there are multiple concrete instances of small nongovernmental organizations helping to create institutions, reviews, and government actions far larger than their own budgets. These are self-described or interview-based attributions, not clean estimates of probability reduction, but they show the causal story "small philanthropic investments can sometimes help produce large government-led risk-reduction outcomes" is historically plausible rather than fanciful.
+The strongest direct evidence is historical and case-based rather than statistical. Small nongovernmental organizations have repeatedly helped create institutions, reviews, and government actions far larger than their own budgets. These are self-described or interview-based attributions, not clean estimates of probability reduction. But they show the causal story is historically plausible rather than fanciful: small philanthropic investments can sometimes help produce large government-led risk-reduction outcomes.
 
 :::details{title="The historical cases: NTI, Nunn-Lugar, New START, and foundational research"}
 **NTI's track record.** NTI's public impact page claims a 25-year record that includes helping remove highly enriched uranium from a Serbian reactor and then catalyzing a **\$3+ billion** U.S. government program to remove or safeguard vulnerable HEU and plutonium globally; persuading the U.S. government to undertake an independent **fail-safe review** of the U.S. nuclear arsenal with emphasis on cyber vulnerabilities; establishing the world's first **low-enriched uranium bank**; and helping create the **World Institute for Nuclear Security (WINS)**. ([NTI Impact](https://www.nti.org/impact/)) These are self-described organizational achievements, so they are evidence about the **kind** of leverage small philanthropic institutions can have, not precise probability reductions.
@@ -111,13 +111,15 @@ The strongest direct evidence is historical and case-based rather than statistic
 
 ## 5. Bridging from ONN's policy bundle to philanthropy's share of effect
 
-The most useful recent outside anchor is ONN's 2024 expert-forecasting report, which found a median **5%** catastrophe probability by **2045** among domain experts, a median **1%** among superforecasters, and a belief that a **bundle of six tractable policies** could together **halve** the risk of a nuclear catastrophe. ([ONN 2024](https://opennuclear.org/en/open-nuclear-network/publication/can-humanity-achieve-century-nuclear-peace)) The central bridge is this: for the central estimate of **0.025 percentage points** to hold, a **\$600 million field over 20 years** needs to be responsible for only about **1–5%** of the effect of that best tractable policy bundle — not to implement the bundle itself, just to be partly responsible for a small but nontrivial slice of the risk reduction better policy could achieve.
+For our central estimate of **0.025 percentage points** to hold, a **\$600 million field over 20 years** needs to be responsible for only about **1–5%** of the effect of the best tractable policy bundle. It does not have to implement the bundle itself. It just has to be partly responsible for a small but nontrivial slice of the risk reduction better policy could achieve.
+
+Our outside anchor for that bundle is ONN's 2024 expert-forecasting report. It found a median **5%** catastrophe probability by **2045** among domain experts, a median **1%** among superforecasters, and a belief that a **bundle of six tractable policies** could together **halve** the risk of a nuclear catastrophe. ([ONN 2024](https://opennuclear.org/en/open-nuclear-network/publication/can-humanity-achieve-century-nuclear-peace))
 
 :::details{title="The bridge arithmetic and why 1–5% of the bundle is plausible"}
 Halving the risk means the full policy bundle is worth:
 
 - **0.5 percentage points** if the true baseline risk is **1%**
-- **1.5 percentage points** if one uses a rough blended anchor of **3%**
+- **1.5 percentage points** using a rough blended anchor of **3%**
 - **2.5 percentage points** if the true baseline risk is **5%**
 
 Against those, the central estimate of $X = 0.025$ percentage points implies philanthropy buys only about **5%** of the full bundle effect at the **1%** baseline, about **1.7%** at **3%**, and **1%** at **5%**. This is our inference from the sources, not something directly measured in the ONN report.
@@ -133,7 +135,7 @@ That **1–5%** share seems plausible for three reasons:
 
 ## 6. Why use 0.002–0.2 percentage points as the plausible range?
 
-Our published plausible range is about **0.002–0.2 percentage points**. The two bridge parameters — the **baseline catastrophe risk** (which sets how much the policy bundle is worth) and **philanthropy's share** of that bundle effect — span only **0.005–0.12** even at their joint extremes. We publish a *wider* range than that, because the largest uncertainties are structural and sit outside those two parameters: whether philanthropy has essentially no counterfactual leverage (a share below the bridge's **1%** floor, pushing the effect toward zero), whether the fixed "halving" calibration holds, and whether crediting a tiny field with a slice of government-led outcomes is the right model at all. Those tails — especially the near-zero-leverage one — widen the plausible range beyond even the two-parameter corner.
+Our published plausible range is about **0.002–0.2 percentage points**. The two bridge parameters — the **baseline catastrophe risk** (which sets how much the policy bundle is worth) and **philanthropy's share** of that bundle effect — span only **0.005–0.12** even at their joint extremes. We publish a *wider* range than that, because the largest uncertainties are structural and sit outside those two parameters. Maybe philanthropy has essentially no counterfactual leverage — a share below the bridge's **1%** floor, pushing the effect toward zero. Maybe the fixed "halving" calibration does not hold. Maybe crediting a tiny field with a slice of government-led outcomes is the wrong model entirely. Those tails — especially the near-zero-leverage one — widen the plausible range beyond even the two-parameter corner.
 
 :::details{title="Bridge sweep of the two parameters, and why the published range is wider"}
 The mechanical bounds come from sweeping both parameters to their favorable and unfavorable extremes together. The full policy bundle is worth **0.5 percentage points** at a **1%** baseline, **1.5 percentage points** at a blended **3%**, and **2.5 percentage points** at a **5%** baseline; philanthropy's share runs from about **1%** to about **5%**.
@@ -155,7 +157,7 @@ As a sanity check, the central estimate of **0.025 percentage points** is **250 
 
 ## 8. Why not go much higher or much lower?
 
-The central **0.025 percentage-point** estimate is best read as a middle ground between the very low and very high tractability views: historical success stories are hard to attribute cleanly and governments do most of the direct decision-making, but the field is tiny relative to the stakes and targeted at unusually high-leverage mechanisms, with multiple concrete cases of small organizations catalyzing much larger governmental actions.
+The central **0.025 percentage-point** estimate is a middle ground between the very low and very high tractability views. On the low side, historical success stories are hard to attribute cleanly, and governments do most of the direct decision-making. On the high side, the field is tiny relative to the stakes, it is targeted at unusually high-leverage mechanisms, and multiple concrete cases show small organizations catalyzing much larger governmental actions.
 
 :::details{title="The full case against each tail"}
 Reasons not to go **much higher** by default:

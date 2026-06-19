@@ -62,9 +62,9 @@ The range is wide because the estimate rests on a **single line of evidence** �
 :::details{title="What this figure counts, and historical-average vs. marginal donations"}
 This estimate is already meant to be net of positive and negative effects, because the underlying assumption page explicitly tries to account for both. It also includes more than just extinction-prevention channels: the same technical, governance, and institutional work can bear on irreversible disempowerment and lock-in as well, though probably not quite as strongly as they bear on literal extinction.
 
-The field-level estimate is based on the historical average effect of AI safety spending to date, while this page models forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar, but that is at least partly offset by diminishing returns and by the field becoming larger and more crowded, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
+The field-level estimate is based on the historical average effect of AI safety spending to date, while this page models forward-looking marginal donations to strong charities. The best marginal opportunities may be better than the historical average dollar. But diminishing returns and a larger, more crowded field at least partly offset that, so we treat the historical estimate as a reasonable starting point rather than automatically adjusting it upward.
 
-The linked assumption page includes a lower tail where net impact is negative because of capabilities spillovers, safetywashing, or deployment acceleration; users who put substantial weight on that tail should weaken or disable this category.
+The linked assumption page includes a lower tail where net impact is negative because of capabilities spillovers, safetywashing, or deployment acceleration. If you put substantial weight on that tail, weaken or disable this category.
 :::
 
 ### Population fraction affected
@@ -73,7 +73,7 @@ The point estimate (1.0) reflects that the modeled event is global by constructi
 
 In literal extinction, everyone dies. In irreversible disempowerment or stable lock-in, people may remain alive, but the catastrophe still affects the whole population. We therefore model the difference between extinction and non-extinction catastrophes through the **severity per person-year**, not by shrinking the affected population.
 
-This is a simplifying convention. In real lock-in or disempowerment scenarios the intensity of harm could be uneven across people, but the model absorbs that heterogeneity into the severity term rather than trying to split the world into fully affected and partially affected sub-populations.
+In real lock-in or disempowerment scenarios the harm could fall unevenly across people. We fold that unevenness into the severity term rather than splitting the world into fully affected and partially affected sub-populations.
 
 ### QALY improvement per affected person per year
 
@@ -90,7 +90,7 @@ The point estimate is **0.80** rather than 0.77 because a donation does not buy 
 
 $$S_{\text{averted}} = (0.769 \times 0.9) + (0.231 \times 0.45) \approx 0.80$$
 
-Readers who assume safety work reduces all channels proportionally should use 0.77 instead; the difference is about 4%. Both numbers are coupled to the probability split — if it changes, recompute rather than reusing 0.77 or 0.80.
+If you assume safety work reduces all channels proportionally, use 0.77 instead; the difference is about 4%. Both numbers are coupled to the probability split — if it changes, recompute rather than reusing 0.77 or 0.80.
 
 The **0.45** itself is roughly a hedonic part plus a non-hedonic part. Day-to-day wellbeing gaps between the freest and least-free societies today are only about 1–3 points on a 0–10 scale, so a purely hedonic reading would give ~0.1–0.3 ([World Happiness Report](https://worldhappiness.report/)); the remainder reflects the permanent loss of agency, autonomy, and self-determination that makes this _existential_ rather than merely a bad regime. ([Bostrom 2002](https://nickbostrom.com/existential/risks); on concrete AI-driven disempowerment and lock-in pathways, [Dung 2025](https://link.springer.com/article/10.1007/s00146-024-01930-2), [Kulveit et al. 2025](https://arxiv.org/abs/2501.16946), [Feldstein 2019](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3314162), [Tokson 2025](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5182213))
 :::
@@ -124,16 +124,16 @@ These use the site's default global parameters and its actual population model, 
 - QALYs saved per microprobability: $57{,}000\text{B} \times 10^{-6} = 57 \text{ million}$
 - Cost per QALY: $$\$1.2\text{M} / 57\text{M} \approx \$0.021/\text{QALY}$$ (about \$1.70 per life)
 
-Because the default population curve grows at 1% per year until it hits the cap, the long-horizon numbers are dominated by the population growth and cap parameters — both of which users can edit.
+Because the default population curve grows at 1% per year until it hits the cap, the long-horizon numbers are dominated by the population growth and cap parameters — both of which you can edit.
 :::
 
-These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks — a general feature of existential-risk expected-value models, which combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. At the default time limit, the cost per microprobability would have to exceed roughly **\$67 million** before this category looked worse than a \$5,000-per-life global-health benchmark, so the weak-but-positive end of the range is roughly near that line. The decision-relevant cruxes are whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
+These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is a general feature of existential-risk expected-value models, which combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. At the default time limit, the cost per microprobability would have to exceed roughly **\$67 million** before this category looked worse than a \$5,000-per-life global-health benchmark, so the weak-but-positive end of the range is roughly near that line. The decision-relevant cruxes are whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
 
 ### Start time
 
 The 10-year start time means the main risk arrives around **2036**, which is our central [AGI estimate](/assumption/timelines-to-agi) — the point at which machines can outperform humans on any mental task and catastrophic risks become pressing. The window opens around when highly capable systems plausibly become strategically decisive.
 
-Conceptually, the start time stands in for the expected date at which welfare losses would begin conditional on the catastrophe occurring — a single number approximating a distribution over arrival times. It is a second-order input: shifting it by a decade changes the QALYs at stake by roughly 8% at the default time limit, far less than the cost and severity assumptions move the result. Users who hold shorter or longer timelines should adjust it.
+Conceptually, the start time stands in for the expected date at which welfare losses would begin conditional on the catastrophe occurring — a single number approximating a distribution over arrival times. It is a second-order input: shifting it by a decade changes the QALYs at stake by roughly 8% at the default time limit, far less than the cost and severity assumptions move the result. If you hold shorter or longer timelines, adjust it.
 
 ### Duration
 
@@ -157,7 +157,7 @@ Because the modeled catastrophe is permanent by construction, the value of this 
 
 7. **Where to draw the boundary around the modeled event.** AI can worsen surveillance, repression, and concentration of power by many degrees. The hard question is which of those pathways are merely very bad and which are global, effectively irreversible, and severe enough to count as permanent curtailment of humanity's future.
 
-8. **How much moral weight to put on future generations.** The default 100-year time limit puts much less weight on very distant future generations than fully longtermist views do. Users can adjust it.
+8. **How much moral weight to put on future generations.** The default 100-year time limit puts much less weight on very distant future generations than fully longtermist views do. You can adjust it.
 
 {{CONTRIBUTION_NOTE}}
 

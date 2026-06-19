@@ -23,7 +23,7 @@ This estimate excludes global-health programs in poorer countries, pandemic-risk
 
 ## What kinds of charities are we modeling?
 
-This estimate models **strong marginal health / medicine philanthropy** in rich countries — evidence-based direct programs (prevention, treatment access, adherence, navigation, care delivery), disease-focused translational and clinical research, and catalytic field-building or data infrastructure that plausibly speeds useful medical progress. It is not a model of the average unrestricted donation to a hospital or medical school.
+We model **strong marginal health / medicine philanthropy** in rich countries. That means evidence-based direct programs (prevention, treatment access, adherence, navigation, care delivery), disease-focused translational and clinical research, and catalytic field-building or data infrastructure that plausibly speeds useful medical progress. We do not model the average unrestricted donation to a hospital or medical school.
 
 :::details{title="What this is not a good model of"}
 This estimate is **not** a good model of generic hospital fundraising, prestige building projects, or low-additionality donations to already-rich academic medical centers. Those can easily be much worse than the category default and should ideally be estimated at the recipient level.
@@ -46,7 +46,7 @@ This estimate is **not** a good model of generic hospital fundraising, prestige 
 3. Public-health interventions assessed by NICE are often very cost-effective: across 380 cost-utility estimates from 2005-2018, the median ICER was £1,986 per QALY, 21% were cost-saving, and 75% were cost-effective at £20,000/QALY. Strong philanthropic opportunities should usually do several times worse than this median because donors do not control the whole health system; a 4x-5x haircut would imply roughly £8,000-£10,000/QALY, or about \$10,000-\$13,000/QALY. ([Owen & Fischer 2019](https://pubmed.ncbi.nlm.nih.gov/30885422/))
 4. Historical public/charitable biomedical research in the UK produced health-gain returns in the range of roughly 7%-10% per year, with typical lags of about 15-17 years between spending and health impact. ([Grant & Buxton 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC6144334/), [UKRI / RAND / HERG 2008](https://www.ukri.org/wp-content/uploads/2022/02/MRC-030222-medical-research-whats-it-worth.pdf))
 5. Cancer research gives a useful concrete research anchor: UK public and charitable cancer research spending of about £15 billion was associated with 5.9 million QALYs from prioritized interventions, with 17% of those gains attributed to UK research and a 15-year lag. That implies a crude attributable research cost of roughly £15,000 per QALY before counting broader economic spillovers. ([Glover et al. 2014](https://pubmed.ncbi.nlm.nih.gov/24930803/))
-6. A reasonable central model for this category is to split marginal dollars roughly 50/50 between a **direct-program bucket at \$10,000/QALY** (anchored by Assumptions 1-3) and a **research / translation bucket at \$25,000/QALY** (anchored by Assumptions 4-5). A 40/60 or 60/40 split is also plausible. This is a judgment call rather than a directly observed statistic, so the details section treats it as an explicit sensitivity lever rather than a precise statistic.
+6. A reasonable central model for this category is to split marginal dollars roughly 50/50 between a **direct-program bucket at \$10,000/QALY** (anchored by Assumptions 1-3) and a **research / translation bucket at \$25,000/QALY** (anchored by Assumptions 4-5). A 40/60 or 60/40 split is also plausible. This is a judgment call, not an observed statistic, so the details section treats it as a sensitivity lever.
 7. Direct-program benefits usually start in about 1-2 years, while research benefits start much later, around 15-17 years.
 8. Once a program or research breakthrough works, health benefits often persist for decades through beneficiaries' remaining lifetimes and through repeated use across future cohorts, so a 40-year duration is a reasonable central modeling choice.
 
@@ -87,7 +87,7 @@ The main concrete anchors are:
 - depression collaborative care: roughly **£13,000-£16,000/QALY**
 - cataract surgery: sometimes much better than this, but around **\$38,000/QALY** even in a pessimistic low-benefit subgroup
 
-Taken literally, these studies suggest that unusually strong direct programs can land anywhere from the low thousands to the upper tens of thousands per QALY, with several credible examples below \$7,000 but plenty of room for weaker fit, lower additionality, or harder-to-reach populations.
+Taken literally, these studies suggest that unusually strong direct programs can land anywhere from the low thousands to the upper tens of thousands per QALY. Several credible examples fall below \$7,000. But there is plenty of room for weaker fit, lower additionality, or harder-to-reach populations.
 
 Owen & Fischer provide the broadest cross-check. Their median NICE public-health ICER is **£1,986/QALY**. Philanthropic marginal dollars should usually do several times worse than that benchmark because donors rarely control full uptake, patient selection, or system-wide implementation. A **4x-5x** haircut implies roughly **£8,000-£10,000/QALY**, or about **\$10,000-\$13,000/QALY**.
 
@@ -130,10 +130,10 @@ $$
 
 **Range**
 
-Our plausible range is **\$7,000-\$35,000/QALY**. The three levers — both bucket values and the mix — largely capture where the real uncertainty lives, because this category rests on RCT-backed interventions and a health-native QALY metric rather than a contested causal story or a strained unit conversion. The range is therefore narrower than what you get by pushing every lever to its favorable or unfavorable edge at once, since those edges are unlikely to all land together. It stays this wide rather than narrower because the two bucket values are correlated — a worldview in which rich-country health philanthropy is generally weak (or strong) moves both at once — and because some of the recipient universe tagged here is plainly worse than the strong-philanthropy case we model.
+Our plausible range is **\$7,000-\$35,000/QALY**. The three levers — both bucket values and the mix — largely capture where the real uncertainty lives. This category rests on RCT-backed interventions and a health-native QALY metric, not a contested causal story or a strained unit conversion. So the range is narrower than what you get by pushing every lever to its favorable or unfavorable edge at once, since those edges are unlikely to all land together. Two things keep it this wide rather than narrower. First, the two bucket values are correlated: a worldview in which rich-country health philanthropy is generally weak (or strong) moves both at once. Second, some of the recipient universe tagged here is plainly worse than the strong-philanthropy case we model.
 
 :::details{title="What it takes to reach the edges"}
-Each bound is reachable from a strong-but-plausible scenario in which roughly two of the three levers move toward the same edge while the third stays moderate — for example a \$5,000-\$6,000 direct bucket with a \$14,000-\$15,000 research bucket and a modestly direct-tilted mix lands near the low end, and an \$18,000 direct bucket with a \$60,000 research bucket and a 30/70 mix lands near the high end.
+Each bound is reachable from a strong-but-plausible scenario in which roughly two of the three levers move toward the same edge while the third stays moderate. A \$5,000-\$6,000 direct bucket with a \$14,000-\$15,000 research bucket and a modestly direct-tilted mix lands near the low end. An \$18,000 direct bucket with a \$60,000 research bucket and a 30/70 mix lands near the high end.
 
 Pushing all three levers to their extremes simultaneously is much less likely and produces a wider span than the published range:
 

@@ -29,7 +29,7 @@ We do **not** mean all spending on "AI" in the broadest sense. Most enterprise s
 
 ## 1. Why the answer is in the trillions, but not the \$20–50 trillion naive extrapolation implies
 
-Current frontier-relevant spending is already large enough that even a decade near today's scale lands well into the trillions, so a denominator like \$100 billion or even \$500 billion is too low — yet exponential extrapolation that would imply \$20-50 trillion is also overconfident. The \$5T central estimate sits between these bounds.
+Current frontier-relevant spending is already large enough that even a decade near today's scale lands well into the trillions. So a denominator like \$100 billion or even \$500 billion is too low. But exponential extrapolation out to \$20-50 trillion is also overconfident. The \$5T central estimate sits between these bounds.
 
 :::details{title="The spending data that puts the floor in the trillions"}
 - Stanford's 2025 AI Index reports **\$252.3 billion** of global corporate AI investment in 2024, including **\$33.9 billion** in private generative-AI investment. ([Stanford AI Index 2025, Economy chapter](https://hai.stanford.edu/ai-index/2025-ai-index-report/economy))
@@ -37,7 +37,7 @@ Current frontier-relevant spending is already large enough that even a decade ne
 - Epoch AI estimates frontier AI labs have already raised **more than \$170 billion**. ([Epoch AI](https://epoch.ai/trends))
 - Epoch also reports that training compute for frontier language models has been growing at about **5x/year** since 2020 and training cost at about **3.5x/year**. ([Epoch AI](https://epoch.ai/trends))
 
-If frontier-relevant spending stayed anywhere near current scale for even a decade, cumulative totals would already land well into the trillions, and if current capex plans continue, totals could rise much faster — so a denominator like \$100 billion or even \$500 billion is now too low for most serious timing models.
+If frontier-relevant spending stayed anywhere near current scale for even a decade, cumulative totals would already land well into the trillions. If current capex plans continue, totals could rise much faster. So a denominator like \$100 billion or even \$500 billion is now too low for most serious timing models.
 :::
 
 :::details{title="The four reasons it is not $20–50 trillion"}
@@ -61,12 +61,12 @@ $$
 \text{Cumulative spend} \approx \text{average annual frontier-relevant spend} \times \text{years to transformative AI}
 $$
 
-Our [timelines estimate](/assumption/timelines-to-agi) puts AGI — and roughly with it, transformative AI — in the mid-2030s, on the order of **10 years** out. Frontier-relevant spending is already in the low hundreds of billions per year and ramping hard, so we take **\$500 billion/year** as a reasonable average over that horizon, giving $500\text{B} \times 10 = 5\text{T}$. This is a stylized estimate, not a forecast.
+Our [timelines estimate](/assumption/timelines-to-agi) puts AGI — and roughly with it, transformative AI — in the mid-2030s, on the order of **10 years** out. Frontier-relevant spending is already in the low hundreds of billions per year and ramping hard. So we take **\$500 billion/year** as a reasonable average over that horizon, giving $500\text{B} \times 10 = 5\text{T}$. This is a stylized estimate, not a forecast.
 
 :::details{title="Why 500 billion/year is a reasonable average, and the timeline anchor"}
 The ~10-year horizon is substantially sooner than the dated 50%-HLMI-by-2047 figure from the 2023 expert survey, whose definition also requires automating physical work.
 
-Frontier-relevant spending — the model training, frontier-lab R&D, and the compute, chip, and energy buildout that actually pushes the frontier, **not** routine enterprise adoption or downstream apps — is already in the low hundreds of billions of dollars per year and ramping hard: hyperscaler AI capex and projects like Stargate (≈\$125 billion/year on its own) are scaling quickly, and frontier training compute has been growing about 5x/year. Starting in the hundreds of billions today and rising toward \$1 trillion+/year as the buildout continues, a \$500 billion/year average over the next ~10 years is a reasonable midpoint.
+Frontier-relevant spending — the model training, frontier-lab R&D, and the compute, chip, and energy buildout that actually pushes the frontier, **not** routine enterprise adoption or downstream apps — is already in the low hundreds of billions of dollars per year and ramping hard. Hyperscaler AI capex and projects like Stargate (≈\$125 billion/year on its own) are scaling quickly, and frontier training compute has been growing about 5x/year. Spending starts in the hundreds of billions today and rises toward \$1 trillion+/year as the buildout continues. So a \$500 billion/year average over the next ~10 years is a reasonable midpoint.
 :::
 
 ---
@@ -86,12 +86,12 @@ The estimate has just two uncertain inputs, and we treat each as a plausible ran
 - **Average annual frontier-relevant spend:** central **\$500 billion/year**, plausible range **\$250 billion–\$1 trillion/year**. The low end is a world where only a fairly narrow slice of AI capex is truly frontier-relevant; the high end is a sustained capex boom averaging near \$1 trillion/year as today's hundreds-of-billions ramp continues.
 - **Years to transformative AI:** central **~10 years**, plausible range **~4–24 years** (2030–2050), taken directly from the [timelines estimate](/assumption/timelines-to-agi).
 
-Our published plausible range is **\$2–20 trillion** — wide because both inputs are deeply uncertain, and skewed upward because the two move together: a longer timeline is also the world in which the capex boom has more years to compound, so the high tail (long timeline _and_ a sustained boom) stretches further than a soonish, narrow-frontier low tail. The width reflects those two parameters plus structural uncertainty about where the "frontier-relevant" boundary really falls.
+Our published plausible range is **\$2–20 trillion**. It is wide because both inputs are deeply uncertain, and skewed upward because the two move together. A longer timeline is also the world in which the capex boom has more years to compound. So the high tail (long timeline _and_ a sustained boom) stretches further than a soonish, narrow-frontier low tail. The width reflects those two parameters plus structural uncertainty about where the "frontier-relevant" boundary really falls.
 
 :::details{title="Both inputs at the same extreme, and why our range is narrower"}
 Multiplying the extremes of the two ranges gives a mechanical corner of about **\$1 trillion** (4 years at \$250 billion/year) to **\$24 trillion** (24 years at \$1 trillion/year). That corner is wider than the plausible range: with only two independent inputs, pushing both to the same extreme together represents a more extreme joint case than either input's own range endpoint.
 
-Treating the two as independent, the plausible range would be roughly the corner's log-width divided by $\sqrt{2}$, which gives about **\$1.6–15 trillion**. We then widen back toward the corner on the high side, because the inputs are positively correlated (long timelines and a sustained boom tend to arrive together) and because the frontier-relevant boundary adds structural uncertainty the two parameters do not capture. On the low side we hold the floor near \$2 trillion rather than \$1 trillion: a soon-arriving transformative AI means the window is dominated by today's already-large and rising capex (Stargate alone is ≈\$125 billion/year), so a very short horizon and a very low average rate cannot both hold at once. The result is our published **\$2–20 trillion**.
+Treating the two as independent, the plausible range would be roughly the corner's log-width divided by $\sqrt{2}$, which gives about **\$1.6–15 trillion**. We then widen back toward the corner on the high side, for two reasons: the inputs are positively correlated (long timelines and a sustained boom tend to arrive together), and the frontier-relevant boundary adds structural uncertainty the two parameters do not capture. On the low side we hold the floor near \$2 trillion rather than \$1 trillion. A soon-arriving transformative AI means the window is dominated by today's already-large and rising capex (Stargate alone is ≈\$125 billion/year), so a very short horizon and a very low average rate cannot both hold at once. The result is our published **\$2–20 trillion**.
 :::
 
 - **\$2 trillion** if transformative AI arrives relatively soon, or if only a fairly narrow slice of future AI capex turns out to be truly frontier-relevant.
@@ -106,8 +106,8 @@ This denominator appears in both the upside and downside timing models for AGI D
 - A **smaller** denominator means a marginal dollar moves timelines more, making both the `standard-utopia` and `population-doom` effects in [AGI Development](/cause/ai-capabilities) stronger.
 - A **larger** denominator means marginal funding matters less, making both effects weaker.
 
-Users who think transformative AI is coming soon and that current capex is highly frontier-relevant should use a lower number.
-Users who think timelines are longer, or that much future spending will be downstream and not frontier-moving, should use a higher number.
+If you think transformative AI is coming soon and that current capex is highly frontier-relevant, use a lower number.
+If you think timelines are longer, or that much future spending will be downstream and not frontier-moving, use a higher number.
 
 {{CONTRIBUTION_NOTE}}
 

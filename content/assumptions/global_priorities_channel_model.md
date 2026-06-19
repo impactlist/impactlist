@@ -50,21 +50,21 @@ This page justifies three especially important judgment calls:
 - using **40%** for the direct improvement in that capital's all-things-considered welfare output ($g$), with a plausible range of **15%-80%**
 - using a broader-strategic channel worth about **100%** of the direct philanthropic channel ($k$), with a plausible range of **0%-300%**
 
-Together with the scale inputs inherited from the category page — **\$2 million** of annual GPR cost ($C$) influencing **\$200 million** of later philanthropy ($I$) — these imply about **\$5/QALY**: an influenced \$200M improved 40% against a \$400/QALY baseline is 200,000 direct QALYs, and a strategic channel of equal size doubles that to 400,000 QALYs for \$2M of cost. (This page justifies only $B$, $g$, and $k$; $C$ and $I$ are inherited.)
+These three combine with scale inputs inherited from the category page — **\$2 million** of annual GPR cost ($C$) influencing **\$200 million** of later philanthropy ($I$) — to imply about **\$5/QALY**. Improving that \$200M by 40% against a \$400/QALY baseline yields 200,000 direct QALYs. A strategic channel of equal size doubles that to 400,000 QALYs for \$2M of cost. This page justifies only $B$, $g$, and $k$; $C$ and $I$ are inherited.
 
 ## 1. Why use an all-things-considered QALY model?
 
-The key premise is that GPR is not only about near-term human-health grantmaking. Its point is to improve the allocation of large later resources across causes, interventions, institutions, and sometimes policy questions. Those downstream effects can still be expressed in QALY-equivalent terms.
+GPR is not only about near-term human-health grantmaking. Its point is to improve how large later resources get allocated across causes, interventions, institutions, and sometimes policy questions. We can still express those downstream effects in QALY-equivalent terms.
 
 That is broadly consistent with how major organizations in this space publicly describe their own work. Rethink Priorities says its updated Moral Parliament tool helps philanthropists and policymakers compare trade-offs across **healthcare resources, global health charities, animal species, and movement-building strategies**. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) Coefficient Giving likewise says it converts health and income impacts into common units and then uses the same framework for more indirect work such as **housing supply** and **scientific progress**, by translating those changes into downstream health or income gains. ([Coefficient cost-effectiveness](https://coefficientgiving.org/research/cost-effectiveness/))
 
-So the right question is not whether GPR affects only direct health outcomes. The right question is how much all-things-considered welfare a better portfolio produces, expressed in QALY-equivalent units.
+So the right question is not whether GPR affects only direct health outcomes. It is how much all-things-considered welfare a better portfolio produces, expressed in QALY-equivalent units.
 
 ## 2. Why use \$400/QALY for the counterfactual influenced capital?
 
-This benchmark ($B$) is not meant to represent ordinary untargeted philanthropy, nor a frontier funder's current best bar. It represents **impact-motivated but non-frontier** capital of the sort that a strong GPR organization can still improve. A central figure of **\$400/QALY** is a reasonable middle ground for capital that is already trying to do good but is still materially improvable by better prioritization, with a plausible range of **\$200-\$1,000/QALY** for donors respectively closer to or further from the frontier.
+We use **\$400/QALY** for this benchmark ($B$), with a plausible range of **\$200-\$1,000/QALY** for donors respectively closer to or further from the frontier. The benchmark stands for **impact-motivated but non-frontier** capital of the sort that a strong GPR organization can still improve. It is not ordinary untargeted philanthropy, and it is not a frontier funder's current best bar. It is capital that is already trying to do good but is still materially improvable by better prioritization, so a middle figure fits.
 
-That \$400 sits well inside the spread of serious opportunities — far worse than the frontier funders GPR competes with, but far better than untargeted giving. The site estimates below are calibration examples rather than independent evidence; the independent support is the broader fact that serious impact-focused funders already use common-unit frameworks and that very strong opportunities can sit around \$100/DALY-equivalent while broader but still impact-motivated portfolios are weaker.
+That \$400 sits well inside the spread of serious opportunities. It is far worse than the frontier funders GPR competes with, but far better than untargeted giving. The site estimates below are calibration examples, not independent evidence. The independent support is broader: serious impact-focused funders already use common-unit frameworks, and very strong opportunities can sit around \$100/DALY-equivalent while broader but still impact-motivated portfolios are weaker.
 
 :::details{title="Where the 400/QALY benchmark sits among serious opportunities"}
 As calibration examples, the site's own category estimates already span a very wide range: [Animal Welfare](/cause/animal-welfare) about **\$2.3/QALY**, [Meta and Theory](/cause/meta-theory) about **\$21/QALY**, [Global Health](/cause/global-health) about **\$105/QALY**, [Global Development](/cause/global-development) about **\$210/QALY**, [Human Rights](/cause/human-rights) about **\$310/QALY**, [Conflict Mitigation](/cause/conflict-mitigation) about **\$333/QALY**, [Climate Change](/cause/climate-change) about **\$590/QALY**, and [Institutions](/cause/institutions) about **\$3,000/QALY**. These are not independent evidence for the \$400 benchmark; they are a consistency check that the benchmark sits in the intended region.
@@ -74,7 +74,7 @@ Coefficient's 2021 framework update values a DALY at about **\$100,000**, so its
 
 ## 3. Why use 40% for the direct improvement factor?
 
-A direct improvement factor ($g$) of **40%**, with a plausible range of **15%-80%**, is a moderate central choice: the average influenced dollar gets materially better, but it is not pushed all the way to the frontier. A complete shift would imply far more than 40% — if the counterfactual portfolio is around **\$400/QALY** and some frontier opportunities are in the **\$25-\$100/QALY** range, moving all influenced capital to the frontier would multiply welfare output several-fold.
+We use a direct improvement factor ($g$) of **40%**, with a plausible range of **15%-80%**. This is a moderate central choice: the average influenced dollar gets materially better, but it is not pushed all the way to the frontier. A complete shift would imply far more than 40%. If the counterfactual portfolio is around **\$400/QALY** and some frontier opportunities are in the **\$25-\$100/QALY** range, moving all influenced capital to the frontier would multiply welfare output several-fold.
 
 But GPR should not be credited with anything like a complete shift:
 
@@ -83,7 +83,7 @@ But GPR should not be credited with anything like a complete shift:
 - some work improves intervention choice **within** a cause rather than changing the cause itself
 - some projects mostly improve judgment, grant selection, or sequencing rather than triggering a dramatic cause pivot
 
-So the central question is not whether a large improvement is possible in principle, but what is plausible **on average across all influenced capital** — and the public evidence supports a meaningful but not extreme figure.
+So the central question is not whether a large improvement is possible in principle, but what is plausible **on average across all influenced capital**. The public evidence supports a meaningful but not extreme figure.
 
 :::details{title="Public evidence behind a material-but-partial improvement"}
 Rethink Priorities says its GHD research supported major donors whose program budgets total **hundreds of millions of dollars**, and publicly reports one case where its research shifted **\$8 million** toward a more cost-effective lead intervention. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/), [RP impact page](https://rethinkpriorities.org/impact-area/improving-outcomes-shifting-funding-to-more-cost-effective-options/)) RP also describes cross-cause prioritization tools that compare very different downstream priorities rather than making only narrow within-cause tweaks. ([Rethink Priorities 2025 results / 2026 plans](https://rethinkpriorities.org/2025-results/)) Coefficient Giving says it has helped Good Ventures give **over \$4 billion** historically and directed **over \$100 million** from non-Good-Ventures donors in 2024, with that number more than doubling in 2025 so far. ([Open Philanthropy Is Now Coefficient Giving](https://coefficientgiving.org/research/open-philanthropy-is-now-coefficient-giving/))
@@ -93,7 +93,7 @@ Taken together, that supports a model where the average influenced dollar gets m
 
 ## 4. Why model broader strategic spillovers as a separate channel?
 
-The direct philanthropic-allocation effect is the clearest measured channel, but it is not the whole story. Strong GPR also reshapes which problems talented people work on, which fields get early institution-building support, which policy agendas look worth pursuing, and which conceptual tools later decision-makers inherit. These are not obviously tiny relative to later grant reallocation — for some of the strongest GPR, they may be a large part of the point — so the category models them as a separate strategic channel ($k$) worth about **100%** of the direct philanthropic channel in the central case, with a plausible range of **0%-300%**.
+The direct philanthropic-allocation effect is the clearest measured channel, but it is not the whole story. Strong GPR also reshapes which problems talented people work on, which fields get early institution-building support, which policy agendas look worth pursuing, and which conceptual tools later decision-makers inherit. These are not obviously tiny relative to later grant reallocation. For some of the strongest GPR, they may be a large part of the point. So the category models them as a separate strategic channel ($k$) worth about **100%** of the direct philanthropic channel in the central case, with a plausible range of **0%-300%**.
 
 The **100%** figure carries two qualifications:
 

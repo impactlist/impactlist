@@ -23,7 +23,7 @@ The second term is the mass on irreversible disempowerment or stable lock-in in 
 
 ## 1. Extinction-only anchor: about 10%
 
-The broader estimate builds on an explicit **extinction-only** anchor. The site's dedicated extinction page lands on about **10%** as the best single estimate for AI-caused human extinction this century ([detailed justification](/assumption/ai-doom-probability)). As a working estimate rather than a precise forecast, **10%** sits above the optimistic forecasting anchors and the 5% survey medians, in line with Toby Ord's roughly 10%, and below Grace et al.'s **14.4%** mean on the broader extinction-or-severe-disempowerment wording. That makes it a reasonable base for the broader estimate to build on.
+We start from an **extinction-only** anchor. The site's dedicated extinction page lands on about **10%** as the best single estimate for AI-caused human extinction this century ([detailed justification](/assumption/ai-doom-probability)). That **10%** sits above the optimistic forecasting anchors and the 5% survey medians. It lines up with Toby Ord's roughly 10%, and runs below Grace et al.'s **14.4%** mean on the broader extinction-or-severe-disempowerment wording. That makes it a reasonable base to build on.
 
 :::details{title="What the 10% extinction figure reflects"}
 In brief:
@@ -38,7 +38,7 @@ In brief:
 
 ## 2. Incremental non-extinction component: about +4 percentage points
 
-Once the modeled event includes **irreversible disempowerment** and **stable totalitarian lock-in**, the probability should rise above the extinction-only anchor. The most directly relevant survey evidence is already broader than literal extinction: [Grace et al. (2024)](https://arxiv.org/abs/2401.02843) — 2,778 researchers published in top-tier AI venues — puts a **14.4%** mean (5% median) on AI causing **human extinction or similarly permanent and severe disempowerment within 100 years**, running several points above any extinction-only anchor.
+Once the modeled event includes **irreversible disempowerment** and **stable totalitarian lock-in**, the probability should rise above the extinction-only anchor. The most directly relevant survey evidence is already broader than literal extinction. [Grace et al. (2024)](https://arxiv.org/abs/2401.02843) surveyed 2,778 researchers published in top-tier AI venues. They put a **14.4%** mean (5% median) on AI causing **human extinction or similarly permanent and severe disempowerment within 100 years** — several points above any extinction-only anchor.
 
 :::details{title="The Grace et al. numbers, and the authoritarian-control finding"}
 Three figures matter:
@@ -47,14 +47,14 @@ Three figures matter:
 - On a more specific question about future AI advances causing **human extinction or similarly permanent and severe disempowerment within 100 years**, the mean was **14.4%** and the median was **5%**.
 - Between **38% and 51%** of respondents gave at least a **10%** chance to advanced AI leading to outcomes as bad as human extinction, depending on the exact wording.
 
-So the survey puts nontrivial mass not just on everyone dying, but on the wider class of permanent disasters that end humanity's ability to determine its own future. Grace et al. also report that more than half of respondents thought "substantial" or "extreme" concern was warranted about several AI-related scenarios, including **authoritarian control** — which does not by itself imply existential catastrophe, but strengthens the case that non-extinction political lock-in belongs inside the serious-risk discussion rather than outside it.
+So the survey puts nontrivial mass not just on everyone dying, but on the wider class of permanent disasters that end humanity's ability to determine its own future. Grace et al. also report that more than half of respondents thought "substantial" or "extreme" concern was warranted about several AI-related scenarios, including **authoritarian control**. That does not by itself imply existential catastrophe. But it strengthens the case that non-extinction political lock-in belongs inside the serious-risk discussion rather than outside it.
 :::
 
 ---
 
 ## 3. Structured forecasting also points to a broader catastrophe class
 
-The [Existential Risk Persuasion Tournament](https://forecastingresearch.org/s/XPT.pdf) separates different event definitions, and the pattern is consistent: broader catastrophe definitions draw materially higher probabilities than extinction-only definitions, and even its lower-anchor forecasts do not force the broader catastrophe probability into the low single digits. XPT is a useful lower anchor, but not a reason to collapse the estimate to the extinction-only floor.
+The [Existential Risk Persuasion Tournament](https://forecastingresearch.org/s/XPT.pdf) separates different event definitions, and the pattern is consistent. Broader catastrophe definitions draw materially higher probabilities than extinction-only definitions. And even its lower-anchor forecasts do not force the broader catastrophe probability into the low single digits. XPT is a useful lower anchor, but not a reason to collapse the estimate to the extinction-only floor.
 
 :::details{title="XPT medians by event definition"}
 Its medians were approximately:
@@ -71,7 +71,7 @@ These do not directly answer the exact question this site wants. A catastrophe t
 
 ## 4. Why irreversible disempowerment and totalitarian lock-in should add real probability mass
 
-Recent work makes it hard to justify treating extinction as the only relevant endpoint: the non-extinction pathways are concrete enough that their probability mass should not be rounded to zero, though that literature does **not** show irreversible disempowerment or stable lock-in is likely.
+Recent work makes it hard to treat extinction as the only relevant endpoint. The non-extinction pathways are concrete enough that their probability mass should not be rounded to zero. That literature does **not** show irreversible disempowerment or stable lock-in is likely.
 
 :::details{title="The disempowerment and lock-in literature"}
 Leonard Dung's paper [“The argument for near-term human disempowerment through AI”](https://link.springer.com/article/10.1007/s00146-024-01930-2) argues directly for the possibility that AI could permanently disempower humanity this century, with extinction as one especially severe case rather than the only case.

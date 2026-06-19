@@ -16,7 +16,7 @@ effects:
 
 This effect captures welfare gains from donations to charities that improve how high-stakes institutions form beliefs and choose actions: probabilistic forecasting, prediction markets, evidence synthesis, collective intelligence, structured analytic techniques such as premortems and red-team reviews, decision audits, and related tools for governments and other consequential organizations.
 
-This is a hits-based and highly upstream category. The strongest evidence is that some methods here improve prediction quality. The weaker and more important question is how often that actually changes important decisions. So the cleanest model is not a single smooth formula, but a scenario-weighted expected-value model.
+This is a hits-based and highly upstream category. The strongest evidence is that some methods here improve prediction quality. The weaker and more important question is how often that actually changes important decisions. So we use a scenario-weighted expected-value model, not a single smooth formula.
 
 ## What kinds of charities are we modeling?
 
@@ -45,9 +45,9 @@ We are **not** modeling generic journalism, generic civic engagement, or direct 
 3. Forecasting and evidence tools can sometimes affect real decisions when they are embedded in an action framework. CNAS documents a State Department case where Good Judgment forecasts informed Colombia counternarcotics planning, and the anticipatory-action literature finds mainly positive household-level effects from acting on forecasts before shocks. ([Cochran & Tozzi 2017](https://www.cnas.org/publications/reports/getting-it-righter-faster), [ODI 2020](https://odi.org/en/publications/the-evidence-base-on-anticipatory-action/), [WFP 2025](https://www.wfp.org/publications/2025-saving-lives-time-and-money-evidence-anticipatory-action))
 4. Mature evidence institutions can influence extremely large stakes. The UK What Works Network covers policy areas accounting for more than £250 billion of public spending, and GAO reported \$62.7 billion of financial benefits in fiscal year 2025. ([What Works Network](https://www.gov.uk/guidance/what-works-network), [GAO 2026 release on FY 2025](https://www.gao.gov/press-release/gao-reports-62.7-billion-financial-benefits-fiscal-year-2025))
 5. A strong charity in this space can often operate on low-single-digit millions of dollars per year. Collective Intelligence Project reported about \$1.9 million of 2024 revenue, so a **total philanthropic investment of \$5 million over roughly 3–5 years** is a reasonable anchor for one serious organization or a comparable philanthropic push. ([ProPublica](https://projects.propublica.org/nonprofits/organizations/920327339))
-6. **Limited-impact scenario:** 50% probability. The work improves some discussion, prioritization, or smaller decisions, creating about \$10 million of total welfare-equivalent value over its lifetime. With a 10-year duration, this is about \$1 million per year, roughly what one would get from improving about \$1 billion of annual decisions by 0.1%.
-7. **Moderate-impact scenario:** 40% probability. The work materially shapes some medium-to-large decisions or one semi-durable process, creating about \$100 million of total welfare-equivalent value. With a 10-year duration, this is about \$10 million per year, roughly what one would get from improving about \$10 billion of annual decisions by 0.1% or about \$1 billion by 1%.
-8. **Major-win scenario:** 10% probability. The work helps create or redirect a genuinely important institutional process or policy trajectory, creating about \$800 million of total welfare-equivalent value. With a 10-year duration, this is about \$80 million per year, roughly what one would get from improving about \$80 billion of annual decisions by 0.1% or about \$8 billion by 1%. Taken together, the 50% / 40% / 10% split reflects a prior that most serious upstream efforts create some but limited value, a substantial minority gain real traction with an institution or decision process, and a smaller minority achieve a genuine durable win. The 10% major-win probability should be read as "rare but material," not as either the median case or a one-in-a-thousand moonshot.
+6. **Limited-impact scenario:** 50% probability. The work improves some discussion, prioritization, or smaller decisions, creating about \$10 million of total welfare-equivalent value over its lifetime. With a 10-year duration, this is about \$1 million per year, roughly what you would get from improving about \$1 billion of annual decisions by 0.1%.
+7. **Moderate-impact scenario:** 40% probability. The work materially shapes some medium-to-large decisions or one semi-durable process, creating about \$100 million of total welfare-equivalent value. With a 10-year duration, this is about \$10 million per year, roughly what you would get from improving about \$10 billion of annual decisions by 0.1% or about \$1 billion by 1%.
+8. **Major-win scenario:** 10% probability. The work helps create or redirect a genuinely important institutional process or policy trajectory, creating about \$800 million of total welfare-equivalent value. With a 10-year duration, this is about \$80 million per year, roughly what you would get from improving about \$80 billion of annual decisions by 0.1% or about \$8 billion by 1%. Taken together, the 50% / 40% / 10% split reflects a prior that most serious upstream efforts create some but limited value, a substantial minority gain real traction with an institution or decision process, and a smaller minority achieve a genuine durable win. The 10% major-win probability should be read as "rare but material," not as either the median case or a one-in-a-thousand moonshot.
 9. A money-metric value of a QALY in high-income policy settings is approximately \$100,000, near the lower end of ICER's current \$100,000–\$150,000 benchmark range. ([ICER 2023 Value Assessment Framework](https://icer.org/wp-content/uploads/2023/10/ICER_2023_2026_VAF_For-Publication_110425.pdf))
 10. It takes roughly 2 years for these capabilities to mature and enter real decision cycles.
 11. Benefits persist for around 10 years on average: many individual outputs fade faster, but embedded decision routines can last much longer. E.O. 12866 has structured U.S. regulatory review since 1993, the What Works Network has operated since 2013, and Good Judgment's forecasting infrastructure traces to the IARPA tournament launched in 2011. ([GW Regulatory Studies Center](https://regulatorystudies.columbian.gwu.edu/looking-back-30-years-executive-order-12866-0), [GOV.UK](https://www.gov.uk/government/publications/the-what-works-network-strategy), [Good Judgment](https://goodjudgment.com/about/))
@@ -57,7 +57,7 @@ We are **not** modeling generic journalism, generic civic engagement, or direct 
 
 ### Cost per QALY
 
-Because this category is hits-based, the most legible model is:
+Because this category is hits-based, we model it as:
 
 $$\text{Expected welfare value} = p_L \cdot V_L + p_M \cdot V_M + p_H \cdot V_H$$
 
@@ -94,27 +94,27 @@ $$\text{Expected QALYs} = \dfrac{125{,}000{,}000}{100{,}000} = 1{,}250$$
 $$\text{Cost per QALY} = \dfrac{5{,}000{,}000}{1{,}250} = 4{,}000$$
 :::
 
-A scenario model fits the structure of the evidence better than a single "all-in percentage improvement" parameter: the strong evidence is that some methods improve prediction quality, while the much weaker link is how often that changes important decisions, so a common mistake is to jump straight from "forecasting improves Brier scores a lot" to "welfare improves a lot."
+A scenario model fits the evidence better than a single "all-in percentage improvement" parameter. The strong evidence is that some methods improve prediction quality. The much weaker link is how often that changes important decisions. A common mistake is to jump straight from "forecasting improves Brier scores a lot" to "welfare improves a lot."
 
 :::details{title="Why a scenario model rather than a single formula"}
 Many efforts in this area probably improve conversations more than decisions, some matter because they are paired with a decision framework or live policy process, and a minority may land very large institutional wins. Petkovic et al. and Clark et al. support the view that better evidence products alone are often not enough, while the CNAS case study and anticipatory-action literature show that forecast-linked action can sometimes matter a great deal.
 :::
 
-The split is explicitly hits-based: the **major-win** scenario alone contributes \$80 million of the \$125 million expected value, about **64%** of the total, so the estimate is quite sensitive to whether 10% is the right probability for that tier. The implied **25x welfare-equivalent return** on \$5 million is substantial but not absurd for an upstream field, and even the major-win case is only about **0.13%** of GAO's FY 2025 annual financial benefits — a rare breakout success captures a small fraction of what mature evidence institutions influence, not "a small charity becomes GAO."
+The split is explicitly hits-based. The **major-win** scenario alone contributes \$80 million of the \$125 million expected value, about **64%** of the total. So the estimate is quite sensitive to whether 10% is the right probability for that tier. The implied **25x welfare-equivalent return** on \$5 million is substantial but not absurd for an upstream field. And even the major-win case is only about **0.13%** of GAO's FY 2025 annual financial benefits — a rare breakout captures a small fraction of what mature evidence institutions influence, not "a small charity becomes GAO."
 
 :::details{title="Anchoring the scenario values against real institutions"}
-Using the 10-year duration assumption, the three scenario values correspond to approximate annual welfare-equivalent gains of \$1 million, \$10 million, and \$80 million. A dimensional way to think about them is:
+Using the 10-year duration assumption, the three scenario values correspond to approximate annual welfare-equivalent gains of \$1 million, \$10 million, and \$80 million. One way to picture them:
 
 - **Limited impact:** about \$1 million per year, which is roughly equivalent to improving \$1 billion of annual decisions by 0.1%, or \$100 million by 1%.
 - **Moderate impact:** about \$10 million per year, which is roughly equivalent to improving \$10 billion of annual decisions by 0.1%, or \$1 billion by 1%.
 - **Major win:** about \$80 million per year, which is roughly equivalent to improving \$80 billion of annual decisions by 0.1%, or \$8 billion by 1%.
 
-These are large numbers, but still small relative to mature public evidence institutions. The major-win case is tiny relative to the more than **£250 billion** public-spending footprint covered by the What Works Network, which is why the major-win tier is best read as a rare breakout capturing a small fraction of the value such institutions can influence rather than a charity growing into one.
+These are large numbers, but still small relative to mature public evidence institutions. The major-win case is tiny relative to the more than **£250 billion** public-spending footprint covered by the What Works Network. So read the major-win tier as a rare breakout that captures a small fraction of what such institutions influence, not a charity growing into one.
 :::
 
 ### Range
 
-Our plausible range is **\$800-\$300,000/QALY**, kept wide because this category is very uncertainty-heavy. A joint sweep — moving cost, the scenario weights, and the scenario values together toward optimism or pessimism rather than one parameter at a time — gives a narrower **\$1,000-\$150,000/QALY**; the true distribution is fatter-tailed than that, so we widen to the \$800-\$300,000 best-judgment range, with the extra width reflecting model uncertainty beyond the three levers.
+Our plausible range is **\$800-\$300,000/QALY**, kept wide because this category is so uncertain. A joint sweep — moving cost, the scenario weights, and the scenario values together toward optimism or pessimism rather than one parameter at a time — gives a narrower **\$1,000-\$150,000/QALY**. But the true distribution is fatter-tailed than that, so we widen to the \$800-\$300,000 best-judgment range. The extra width reflects model uncertainty beyond the three levers.
 
 :::details{title="Optimistic and pessimistic bounds"}
 - **Pessimistic:** \$8 million cost, 80% / 18% / 2% scenario weights, and scenario values of \$1M / \$15M / \$100M gives about **\$150,000/QALY**.
@@ -123,11 +123,11 @@ Our plausible range is **\$800-\$300,000/QALY**, kept wide because this category
 
 ### Start time
 
-The 2-year start time reflects the fact that these interventions can matter faster than legislation-scale reform but slower than direct service delivery. A charity can publish useful work sooner than that, but it usually takes at least one or two funding, policy, or strategy cycles before the work predictably affects consequential decisions.
+These interventions can matter faster than legislation-scale reform but slower than direct service delivery, which is why we use a 2-year start time. A charity can publish useful work sooner than that. But it usually takes at least one or two funding, policy, or strategy cycles before the work predictably affects consequential decisions.
 
 ### Duration
 
-Assumption 11 gives the main durability anchors. We use 10 years rather than something like 15-30 years because most charities in this category are not themselves GAO, the What Works Network, or the regulatory-review framework created by E.O. 12866. Many outputs are closer to reports, tools, and advisory relationships that may decay within 2-5 years. The reason not to use a very short duration is that some of those efforts do become semi-embedded routines or lasting relationships. So 10 years is an expected-value compromise between a common short-lived case and a rarer but important long-lived case.
+Assumption 11 gives the main durability anchors. We use 10 years rather than something like 15-30 years because most charities in this category are not themselves GAO, the What Works Network, or the regulatory-review framework created by E.O. 12866. Many outputs are closer to reports, tools, and advisory relationships that may decay within 2-5 years. But we don't use a very short duration, because some of those efforts do become semi-embedded routines or lasting relationships. So 10 years is an expected-value compromise between a common short-lived case and a rarer but important long-lived case.
 
 ## Key uncertainties
 

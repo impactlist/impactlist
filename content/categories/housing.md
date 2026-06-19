@@ -27,7 +27,7 @@ This does not cover broad housing-supply reform, zoning reform, or generic affor
 
 ## What kinds of charities are we modeling?
 
-This estimate is best read as a model of **strong direct-service homelessness / housing philanthropy** in high-income settings: eviction prevention, rapid rehousing, well-targeted permanent supportive housing, hospital-discharge / step-down teams, and housing aimed at high-risk medical subgroups. Generic affordable-housing development, unrestricted nonprofit fundraising, zoning reform, and temporary-relief shelters are poor fits.
+This models **strong direct-service homelessness / housing philanthropy** in high-income settings: eviction prevention, rapid rehousing, well-targeted permanent supportive housing, hospital-discharge / step-down teams, and housing aimed at high-risk medical subgroups. Generic affordable-housing development, unrestricted nonprofit fundraising, zoning reform, and temporary-relief shelters are poor fits.
 
 :::details{title="Good fits vs. poor fits"}
 Good fits include:
@@ -67,7 +67,7 @@ Poor fits include:
 7. Housing services for homeless or unstably housed people with HIV were estimated at about **\$62,493/QALY**, which is a useful upper-end anchor for intensive, medically specific housing support. ([AIDS and Behavior 2013](https://pubmed.ncbi.nlm.nih.gov/22588529/))
 8. The Community Guide's systematic review of Housing First found large improvements in housing stability and homelessness outcomes and modest quality-of-life gains, and concluded that economic benefits likely exceed costs. But it also noted evidence gaps around direct cost-effectiveness and long-run health effects. ([Community Guide](https://www.thecommunityguide.org/findings/social-determinants-health-housing-first-programs.html))
 9. Housing interventions should not be modeled as automatically producing large mortality gains across all populations. In a 2025 secondary analysis of the 5-city Canadian Housing First trial among homeless adults with mental illness, the adjusted hazard ratio for mortality was **0.83** with a **95% CI of 0.43-1.22**, so the mortality effect was not clearly established. ([JAMA Network Open 2025](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2839942))
-10. A reasonable category-level portfolio is tilted toward the stronger short-term / targeted bucket rather than the broader supportive-housing bucket, because eviction prevention, temporary financial assistance, rapid rehousing, and targeted discharge support are usually easier to fund at the margin than adding many new permanent supportive-housing placements in supply-constrained local markets. We model this as roughly a **60% / 40%** split between a **\$25,000/QALY short-term / strongly targeted bucket** and a **\$45,000/QALY broader supportive-housing bucket**.
+10. A reasonable category-level portfolio tilts toward the stronger short-term / targeted bucket rather than the broader supportive-housing bucket. Eviction prevention, temporary financial assistance, rapid rehousing, and targeted discharge support are usually easier to fund at the margin than adding many new permanent supportive-housing placements in supply-constrained local markets. We model this as roughly a **60% / 40%** split between a **\$25,000/QALY short-term / strongly targeted bucket** and a **\$45,000/QALY broader supportive-housing bucket**.
 
 ## Details
 
@@ -146,11 +146,11 @@ Rounded, that gives a point estimate of **\$30,000/QALY**.
 
 **Range**
 
-The stated **\$15,000-\$110,000/QALY** range is our plausible range, kept wide and skewed upward because the biggest uncertainties are not in the cost-utility numbers themselves but in whether the modeled benefit is fully real at the margin.
+Our plausible range is **\$15,000-\$110,000/QALY**. It is wide and skewed upward. The biggest uncertainties are not in the cost-utility numbers themselves, but in whether the modeled benefit is fully real at the margin.
 
-The low end corresponds to unusually strong targeting: rapid-rehousing / prevention programs, especially good hospital-discharge models, or other interventions that mostly buy cheap housing stability for very high-risk clients. It sits a little below the cheapest direct cost-utility anchors (around \$19,000/QALY for SSVF rapid rehousing) because a portfolio dominated by the best marginal opportunities, combined with a favorable housed-vs-unhoused utility gap, could do somewhat better than any single published program.
+The low end corresponds to unusually strong targeting: rapid-rehousing / prevention programs, especially good hospital-discharge models, or other interventions that mostly buy cheap housing stability for very high-risk clients. It sits a little below the cheapest direct cost-utility anchors (around \$19,000/QALY for SSVF rapid rehousing). A portfolio dominated by the best marginal opportunities, combined with a favorable housed-vs-unhoused utility gap, could do somewhat better than any single published program.
 
-The high end is well above the most expensive direct anchor on this page (about \$62,500/QALY for HIV-specific housing) because the dominant downside risk lives outside the cost-utility parameters: if marginal dollars mostly reshuffle access to scarce units rather than adding net housing stability (Key uncertainty 5), if gains decay quickly after short interventions, or if the real marginal mix is tilted toward capital-heavy permanent-supportive-housing slots with weak health spillovers, the realized cost per QALY can rise well past what any program-level study reports.
+The high end is well above the most expensive direct anchor on this page (about \$62,500/QALY for HIV-specific housing). That is because the dominant downside risk lives outside the cost-utility parameters. The realized cost per QALY can rise well past what any program-level study reports if marginal dollars mostly reshuffle access to scarce units rather than adding net housing stability (Key uncertainty 5), if gains decay quickly after short interventions, or if the real marginal mix is tilted toward capital-heavy permanent-supportive-housing slots with weak health spillovers.
 
 ### Start time
 

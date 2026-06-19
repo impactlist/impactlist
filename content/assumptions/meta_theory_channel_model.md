@@ -10,13 +10,13 @@ The category page for Meta and Theory uses a two-channel model:
 1. **Direct money-moving and evaluator work**
 2. **Career, movement-building, and worldview work**
 
-The point of this page is to justify three judgment calls that are too important to leave implicit:
+This page justifies three judgment calls that are too important to leave implicit:
 
 - the **40% / 60%** channel split
 - the decision to use **\$100/QALY** for the direct channel and **\$150/QALY** for the broader channel
 - the decision to treat GiveWell's operating-leverage numbers as only a loose cross-check rather than the same kind of multiplier as GWWC or The Life You Can Save
 
-Together these imply about **\$21/QALY** for the category, with a {{PLAUSIBLE_RANGE}} of roughly **\$6-\$300/QALY**: a **40% / 60%** split of an **8x**-leveraged direct channel at **\$100/QALY** and a **4x**-leveraged broader channel at **\$150/QALY**. The category page supplies the leverage ranges (**5x-12x** for the direct channel and **1x-8x** for the broader channel); this page justifies the split and the two downstream benchmarks, including the direct-channel range of **\$80-\$150/QALY** and broader-channel range of **\$50-\$500/QALY**. The high end extends beyond the parameter sweep because marginal opportunities can have much weaker attribution or a less favorable channel mix than the central model.
+Together these imply about **\$21/QALY** for the category, with a {{PLAUSIBLE_RANGE}} of roughly **\$6-\$300/QALY**. That comes from a **40% / 60%** split of an **8x**-leveraged direct channel at **\$100/QALY** and a **4x**-leveraged broader channel at **\$150/QALY**. The category page supplies the leverage ranges: **5x-12x** for the direct channel and **1x-8x** for the broader channel. This page justifies the split and the two downstream benchmarks, including the direct-channel range of **\$80-\$150/QALY** and broader-channel range of **\$50-\$500/QALY**. The high end extends beyond the parameter sweep because marginal opportunities can have much weaker attribution or a less favorable channel mix than the central model.
 
 ## 1. Why split the category into two channels?
 
@@ -53,7 +53,7 @@ So **40% direct / 60% broader** is meant as a middle position:
 
 The site's own [Global Health](/cause/global-health) page uses **\$105/QALY** as its point estimate for top GiveWell-style opportunities.
 
-The direct channel here is close to that benchmark: **\$100/QALY**, with a plausible range of **\$80-\$150/QALY**. The small difference from the Global Health point estimate is not meant to be precise; it reflects three things:
+The direct channel here is close to that benchmark: **\$100/QALY**, with a plausible range of **\$80-\$150/QALY**. The small difference from the Global Health point estimate is not meant to be precise. It reflects three things:
 
 1. not all influenced giving will land in the single best GiveWell-style opportunities
 2. some money will go to slightly broader but still highly effective portfolios
@@ -65,7 +65,7 @@ So the direct channel should stay close to the site's top global-health estimate
 
 The broader career/worldview channel earns a different benchmark because of its downstream **portfolio mix**, not because its effects are outside the metric. It steers people across a very wide spread of destinations — from cheap cause areas like animal welfare (~\$2.3/QALY) and global priorities research (~\$5) up to expensive ones like institutions (~\$3,000), plus catastrophic-risk work the site does not express in ordinary cost-per-QALY terms at all.
 
-**\$150/QALY** is the compromise: a little worse than the direct channel's \$100 because the portfolio is more heterogeneous, but well below ordinary mixed philanthropy because many downstream wins still land in very strong cause areas (80,000 Hours in particular skews toward AGI and catastrophic-risk careers). The internal category estimates used below are calibration examples, not independent evidence; the load-bearing claim is that the broader channel targets a mixed but still unusually impact-oriented downstream portfolio.
+**\$150/QALY** is the compromise. It is a little worse than the direct channel's \$100 because the portfolio is more varied. But it stays well below ordinary mixed philanthropy because many downstream wins still land in very strong cause areas (80,000 Hours in particular skews toward AGI and catastrophic-risk careers). The internal category estimates used below are calibration examples, not independent evidence. The load-bearing claim is that the broader channel targets a mixed but still unusually impact-oriented downstream portfolio.
 
 :::details{title="Bounding the broader-channel benchmark"}
 As calibration examples, the full downstream spread under the site's current estimates includes [Animal Welfare](/cause/animal-welfare) ~\$2.3/QALY, [Global Priorities Research](/cause/global-priorities) ~\$5, [Global Health](/cause/global-health) ~\$105, [Global Development](/cause/global-development) ~\$210, [Conflict Mitigation](/cause/conflict-mitigation) ~\$333, [Improving Institutions](/cause/institutions) ~\$3,000 — plus targets like longtermist and catastrophic-risk work, talent pipelines with uncertain destinations, and worldview shifts that improve later allocation. Some of that points into [AI Existential Risk](/cause/ai-risk), [Pandemics](/cause/pandemics), and [Nuclear](/cause/nuclear), which do not use ordinary cost-per-QALY numbers, so the benchmark treats them as part of one all-things-considered QALY-equivalent portfolio. ([Donate to 80,000 Hours](https://80000hours.org/support-us/donate/), [80,000 Hours review: 2023 to mid-2025](https://80000hours.org/2025/09/80000-hours-review-2023-to-mid-2025/))
@@ -75,7 +75,7 @@ Using **\$90-\$100/QALY as the central benchmark** would assume the mix is nearl
 
 ## 5. Why not treat GiveWell's ratio as the same kind of multiplier as GWWC's 6x?
 
-Because they measure different things. GWWC's figure is close to a true counterfactual giving multiplier (extra high-impact giving caused per dollar spent), whereas GiveWell's published metrics are **operational leverage** (dollars directed relative to operating expenses). The latter is strong evidence that evaluators can be highly leveraged, but it shouldn't be plugged mechanically into the same slot as GWWC's 6x — so we let it raise confidence in the direct channel without treating it as an identical multiplier.
+Because they measure different things. GWWC's figure is close to a true counterfactual giving multiplier: extra high-impact giving caused per dollar spent. GiveWell's published metrics are **operational leverage**: dollars directed relative to operating expenses. Operational leverage is strong evidence that evaluators can be highly leveraged. But you shouldn't plug it mechanically into the same slot as GWWC's 6x. So we let it raise confidence in the direct channel without treating it as an identical multiplier.
 
 :::details{title="Why operational leverage isn't a counterfactual multiplier"}
 GiveWell's directed-dollars ratio differs from a counterfactual donation multiplier because:
@@ -108,7 +108,7 @@ The biggest uncertainty is not the arithmetic. It is whether the broader career/
 - treated as closer to **\$50/QALY** or closer to **\$500/QALY**
 - assigned a multiplier much above or below **4x**
 
-Those are the judgments most likely to move the category estimate materially. Combining the category page's leverage ranges with the benchmark ranges here gives the published category range of about **\$6-\$300/QALY**; the high-cost side extends beyond the fixed-split parameter table because a marginal opportunity can be more worldview-heavy than the central 40% / 60% split and because attribution can be weaker than the central model assumes.
+Those are the judgments most likely to move the category estimate materially. Combining the category page's leverage ranges with the benchmark ranges here gives the published category range of about **\$6-\$300/QALY**. The high-cost side extends beyond the fixed-split parameter table for two reasons: a marginal opportunity can be more worldview-heavy than the central 40% / 60% split, and attribution can be weaker than the central model assumes.
 
 # Internal Notes
 

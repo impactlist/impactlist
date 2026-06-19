@@ -82,9 +82,9 @@ Converting the resulting **\$0.96** of ordinary social value per donated dollar 
 $$\text{Cost per QALY} \approx \dfrac{\$100{,}000}{0.96} \approx \$104{,}000$$
 :::
 
-This number does not fully net out every ordinary downside. Some measured economic gains are rents, convenience, or producer surplus rather than clean welfare, and AI also creates downsides we do not separately model (job displacement, misinformation, surveillance, concentration of power) — reasons the ordinary upside may be somewhat overstated, though we do not adjust the point estimate without quantifying the adjustment. Conversely, the \$100,000/QALY conversion is mainly a rich-country benchmark, so to the extent AI capability gains substantially improve lower-income lives the true cost per QALY would be somewhat lower.
+This number does not fully net out every ordinary downside. Some measured economic gains are rents, convenience, or producer surplus rather than clean welfare. AI also creates downsides we do not separately model: job displacement, misinformation, surveillance, concentration of power. These are reasons the ordinary upside may be somewhat overstated, though we do not adjust the point estimate without quantifying the adjustment. Conversely, the \$100,000/QALY conversion is mainly a rich-country benchmark, so to the extent AI capability gains substantially improve lower-income lives the true cost per QALY would be somewhat lower.
 
-The plausible range (**\$40,000–\$800,000/QALY**) is deliberately asymmetric. The two main inputs — social value per additional dollar (\$6–25) and ordinary additionality (2–25%) — are roughly independent, so their unfavorable extremes rarely coincide; but we run the expensive end out to about \$800,000 (the low-value, low-additionality combination) rather than pulling it in, because the unmodeled downsides above are one-directional — they make the true cost per QALY higher, not lower. The cheap end (\$40,000) stays closer to the central figure than the favorable combination of the inputs alone would suggest, for the same reason: the corrections that would make this intervention look unusually good are weaker and fewer than the ones that would make it look worse.
+The plausible range (**\$40,000–\$800,000/QALY**) is deliberately asymmetric. The two main inputs — social value per additional dollar (\$6–25) and ordinary additionality (2–25%) — are roughly independent, so their unfavorable extremes rarely coincide. We still run the expensive end out to about \$800,000 (the low-value, low-additionality combination) rather than pulling it in. That is because the unmodeled downsides above are one-directional: they make the true cost per QALY higher, not lower. The cheap end (\$40,000) stays closer to the central figure than the favorable combination of the inputs alone would suggest, for the same reason. The corrections that would make this intervention look unusually good are weaker and fewer than the ones that would make it look worse.
 
 #### Start time
 
@@ -148,9 +148,9 @@ $$
 
 :::
 
-This number is **very sensitive** to worldview assumptions: if very good transformative-AI futures are much less likely or much farther away, this effect shrinks. The effect only captures the upside of earlier very good futures; it does **not** imply the overall cause is good, because the doom effect below is also material. Like the doom effect, it assumes small marginal capability pushes translate roughly linearly into timeline acceleration — imperfect, since real progress may involve thresholds, bottlenecks, and race dynamics, but the cleanest tractable baseline.
+This number is **very sensitive** to worldview assumptions: if very good transformative-AI futures are much less likely or much farther away, this effect shrinks. The effect only captures the upside of earlier very good futures. It does **not** imply the overall cause is good, because the doom effect below is also material. Like the doom effect, it assumes small marginal capability pushes translate roughly linearly into timeline acceleration. That is imperfect, since real progress may involve thresholds, bottlenecks, and race dynamics, but it is a tractable simplification, not a literal claim.
 
-The plausible range (**\$10,000–\$1,000,000/QALY**) is wide and skewed toward the expensive (weak-effect) end. It is _narrower_ than what pushing all five terms to one edge at once would give, because some of the terms — the frontier-equivalent share, the spending denominator, and the timeline — are roughly independent, so they rarely all land at their favorable (or unfavorable) extreme together. But the weak-effect end still runs far out, because the largest uncertainties — whether very good futures are at all likely, how big the welfare gain would be, and whether a marginal dollar accelerates the timeline at all — are worldview judgments that move together, and the possibility that this effect is essentially negligible lives _outside_ any tidy combination of the parameters.
+The plausible range (**\$10,000–\$1,000,000/QALY**) is wide and skewed toward the expensive (weak-effect) end. It is _narrower_ than what pushing all five terms to one edge at once would give. That is because some of the terms — the frontier-equivalent share, the spending denominator, and the timeline — are roughly independent, so they rarely all land at their favorable (or unfavorable) extreme together. But the weak-effect end still runs far out. The largest uncertainties — whether very good futures are at all likely, how big the welfare gain would be, and whether a marginal dollar accelerates the timeline at all — are worldview judgments that move together, and the possibility that this effect is essentially negligible lives _outside_ any tidy combination of the parameters.
 
 :::details{title="What the bounds represent"}
 The point estimate multiplies five uncertain terms. Each carries a rough plausible range: the frontier-equivalent share (0.12–0.55), the spending denominator (\$2–20 trillion), the years to transformative AI (roughly 4–24), the very-good-future probability (3%-25%), and the annual welfare gain (100 million-2 billion QALYs). Pushing all five to their favorable edges together implies a cost of a few hundred dollars per QALY; pushing all five to their unfavorable edges implies well over \$10 million/QALY. That all-edges span is much wider than the published plausible range because several inputs would need to land at the same edge together.
@@ -165,7 +165,7 @@ We use a 10-year start time because the point of this effect is not today's copi
 
 #### Duration
 
-We use a 5-year duration because this effect is about the window between "AI arrived earlier" and "AI would have arrived anyway." If the true acceleration is larger or smaller, users should adjust this themselves.
+We use a 5-year duration because this effect is about the window between "AI arrived earlier" and "AI would have arrived anyway." If you think the true acceleration is larger or smaller, adjust this yourself.
 
 ---
 
@@ -192,7 +192,7 @@ _If you disagree with these estimates after reading this page, click 'Edit' near
 1. The baseline probability of AI-caused existential catastrophe this century is about **14%**: roughly 10% extinction risk plus about 4 percentage points of additional irreversible-disempowerment or lock-in risk. ([See detailed justification](/assumption/ai-existential-catastrophe-probability))
 2. Total cumulative frontier or near-frontier AI spending before transformative AI is roughly **\$5 trillion**. ([See detailed justification](/assumption/cumulative-frontier-ai-spending-before-transformative-ai))
 3. A marginal philanthropic dollar in this cause is best modeled as about **30 cents of frontier-equivalent capability acceleration**. ([See detailed justification](/assumption/frontier-equivalent-share-of-ai-capabilities-philanthropy))
-4. As a first-pass model, small marginal accelerations of frontier capability progress increase existential-catastrophe risk roughly in proportion to how much they speed up the race. This linearity assumption is obviously imperfect, but it is the cleanest tractable baseline.
+4. Small marginal accelerations of frontier capability progress increase existential-catastrophe risk roughly in proportion to how much they speed up the race. This is an explicit linearity assumption, not a claim that progress is literally linear; thresholds, bottlenecks, and race dynamics could make the true relationship weaker or stronger.
 5. The average welfare shortfall across the AI-caused existential-catastrophe class is about **0.77 QALY-equivalents per affected person-year**, blending literal extinction with severe non-extinction catastrophes. ([See detailed justification](/cause/ai-risk))
 
 ### Details
@@ -215,13 +215,13 @@ $$
 
 :::
 
-The plausible range (**\$20 million–\$5 billion per microprobability**) is wide and skewed toward the cheap (strong-harm) end being closer in than the expensive (weak-harm) end. The three inputs are roughly independent, so they rarely all reach their unfavorable extremes together; but the weak-harm end runs far out, because the chance that this effect is essentially negligible — markets would have bought the capability anyway, or marginal acceleration barely moves existential-catastrophe risk — lives _outside_ the parameters and stretches the expensive, weak-harm tail well past what they alone would imply.
+The plausible range (**\$20 million–\$5 billion per microprobability**) is wide and lopsided: the cheap (strong-harm) end is closer in than the expensive (weak-harm) end. The three inputs are roughly independent, so they rarely all reach their unfavorable extremes together. But the weak-harm end runs far out. The chance that this effect is essentially negligible — markets would have bought the capability anyway, or marginal acceleration barely moves existential-catastrophe risk — lives _outside_ the parameters, and it stretches the expensive, weak-harm tail well past what they alone would imply.
 
 :::details{title="What the bounds represent"}
 The estimate multiplies the existential-catastrophe probability (3–35%), the frontier-equivalent share (0.12–0.55), and the spending denominator (\$2–20 trillion). Pushing all three to the strong-harm edge at once (high probability, high acceleration, low denominator) implies about **\$10 million** per microprobability; pushing all three to the weak-harm edge at once implies about **\$5.6 billion**. That all-edges span is wider than the published plausible range, since three roughly independent inputs seldom hit the same extreme together.
 
 - **\$20 million** carries a worried but not extreme worldview — existential-catastrophe risk and acceleration toward the high end, denominator toward the low end, but not every term at its limit.
-- **\$5 billion** is near the weak-harm edge of the parameters, because the structural possibility that frontier acceleration barely changes existential-catastrophe risk — through crowd-out or through the linear model failing — pushes this effect toward harmless, a tail the parameter ranges understate.
+- **\$5 billion** is near the weak-harm edge of the parameters. Frontier acceleration might barely change existential-catastrophe risk — through crowd-out or through the linear model failing — which pushes this effect toward harmless, a tail the parameter ranges understate.
 :::
 
 The population fraction affected is 1.0 because the modeled catastrophe is global by construction.
@@ -245,7 +245,7 @@ We use a 10-year start time for the same reason as in Effect 2: the relevant ris
 
 The very large `windowLength` in the YAML frontmatter is just a ceiling so the calculator can accommodate long horizons; in practice the effect is clamped by the user's chosen global time-limit parameter.
 
-The duration is controlled by the global time limit parameter. AI existential catastrophe has especially large long-run consequences, so users with longtermist views will see much larger harms than users who count only currently alive people or the next few generations.
+The duration is controlled by the global time limit parameter. AI existential catastrophe has especially large long-run consequences. If you hold longtermist views you will see much larger harms than if you count only currently alive people or the next few generations.
 
 ---
 

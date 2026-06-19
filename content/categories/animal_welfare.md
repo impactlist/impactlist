@@ -14,7 +14,7 @@ effects:
 
 ## Description of effect
 
-This effect captures welfare gains from donations to the best current animal-welfare charities. In practice, the clearest evidence base still comes from farmed-chicken corporate campaigns and accountability work, especially cage-free reforms for laying hens and Better Chicken Commitment (BCC) reforms for broilers. There are also increasingly promising aquatic-animal opportunities, especially shrimp welfare, but the cross-species conversion into human-equivalent QALYs is less mature there.
+This effect captures welfare gains from donations to the best current animal-welfare charities. The clearest evidence base still comes from farmed-chicken corporate campaigns and accountability work, especially cage-free reforms for laying hens and Better Chicken Commitment (BCC) reforms for broilers. Aquatic-animal work, especially shrimp welfare, looks increasingly promising. But converting it into human-equivalent QALYs is less mature.
 
 ## What kinds of charities are we modeling?
 
@@ -68,19 +68,19 @@ Here, the 11 hens-per-dollar figure is treated as the total marginal impact of a
 
 Assumption 6 is the most model-dependent part of this estimate, so it has its own page. In brief, it combines RP's chicken welfare range with a symmetry assumption around neutral welfare and a 25%-of-negative-range estimate for moving from conventional cages to aviaries. ([See detailed justification](/assumption/hen-cage-free-qaly-conversion))
 
-The central estimate uses a hens-only model, but two things shape the wide range: counterfactual and diminishing-returns uncertainty (THL's own retrospective implies ~2 hens/\$, not 11), and the broiler and shrimp opportunities the hen formula leaves out.
+The central estimate uses a hens-only model. Two things make the range wide. First, counterfactual and diminishing-returns uncertainty: THL's own retrospective implies ~2 hens/\$, not 11. Second, the broiler and shrimp opportunities the hen formula leaves out.
 
 :::details{title="Counterfactuals, diminishing returns, and non-hen opportunities"}
 **Why not the older 9-120 chicken-years/\$ model.** RP's 2019 estimate that historical chicken corporate campaigns affected 9-120 chicken-years per dollar is still useful background, but for current marginal giving ACE's current accountability benchmarks are more directly relevant.
 
-**Counterfactuals and diminishing returns.** The 11 hens-per-dollar figure is a current program estimate, not a law of constant returns. THL's lower 2 hens-per-dollar retrospective already embeds attribution uncertainty, some counterfactual deflection, mixed spending across acquisition and accountability, and the fact that later dollars tend to face harder targets — one reason the range is much wider than the central formula. This estimate describes current marginal giving to top opportunities rather than an average over the whole cause: ACE estimates THL can effectively absorb about \$28.7 million per year and SWP about \$3.6 million per year in 2026-2027, so additional dollars can still reach high-priority work. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/), [ACE Shrimp Welfare Project Review](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
+**Counterfactuals and diminishing returns.** The 11 hens-per-dollar figure is a current program estimate, not a law of constant returns. THL's lower 2 hens-per-dollar retrospective already embeds attribution uncertainty, some counterfactual deflection, mixed spending across acquisition and accountability, and the fact that later dollars tend to face harder targets — one reason the range is much wider than the central formula. This estimate describes current marginal giving to top opportunities, not an average over the whole cause. ACE estimates THL can effectively absorb about \$28.7 million per year and SWP about \$3.6 million per year in 2026-2027, so additional dollars can still reach high-priority work. ([ACE THL Review](https://animalcharityevaluators.org/charity-review/the-humane-league/), [ACE Shrimp Welfare Project Review](https://animalcharityevaluators.org/charity-review/shrimp-welfare-project/))
 
 **Broilers and shrimp.** The best current opportunities are not hens-only. WFI finds BCC/slower-growing reforms avert large amounts of intense pain per bird, and ACE estimates THL's BCC accountability work helps about 46 broilers per dollar; ACE also estimates Shrimp Welfare Project's humane-slaughter and India water-quality programs avert about 48 and 729 SADs per dollar. These need species-specific welfare bridges rather than the hen-QALY formula used for the point estimate, but they imply a hens-only model does not capture the cause's full uncertainty range.
 :::
 
 ### Why the range
 
-The range (**\$0.50–\$87/QALY**) reflects different high-impact intervention types, not just parameter variation on one formula: the pessimistic end is a pessimistic hen-QALY model (~**\$87**), and the optimistic end is ACE's shrimp-SAD program with a SAD-to-QALY cross-walk (~**\$0.50**). The shrimp case is less direct than the hen calculation, which is why it anchors only the optimistic edge rather than the point estimate.
+The range (**\$0.50–\$87/QALY**) reflects different high-impact intervention types, not just parameter variation on one formula. The pessimistic end is a pessimistic hen-QALY model (~**\$87**). The optimistic end is ACE's shrimp-SAD program with a SAD-to-QALY cross-walk (~**\$0.50**). The shrimp case is less direct than the hen calculation, which is why it anchors only the optimistic edge rather than the point estimate.
 
 :::details{title="The pessimistic and optimistic calculations"}
 **Pessimistic end** — 2 hens/\$, 40 weeks/hen, 0.0075 QALYs/hen-year (the low end of the cage-free conversion):
@@ -100,7 +100,7 @@ The 1-year start time reflects the lag between donations and realized animal out
 
 ### Duration
 
-The 15-year duration reflects the fact that implemented reforms affect multiple flock cycles and often persist for many years once supply chains change. It also sits comfortably inside RP's older 4-36 year range for years of impact and near the middle of the plausible durability range (Assumption 12).
+Implemented reforms affect multiple flock cycles and often persist for many years once supply chains change, which is what the 15-year duration reflects. It sits inside RP's older 4-36 year range for years of impact and near the middle of the plausible durability range (Assumption 12).
 
 {{CONTRIBUTION_NOTE}}
 

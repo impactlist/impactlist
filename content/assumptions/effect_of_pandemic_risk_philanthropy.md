@@ -5,7 +5,7 @@ name: 'Effect of previous pandemic-risk philanthropy'
 
 ## How much has existing pandemic-risk philanthropy reduced global catastrophic pandemic risk?
 
-This document analyzes the question:
+We want to answer one question:
 
 > By how many percentage points has roughly **\$400 million** of pandemic-risk philanthropy over about **10 years** reduced the probability of a **>10%-death global pandemic** over the next roughly **20 years**?
 
@@ -29,7 +29,7 @@ This corresponds to about:
 - about **10 basis points per \$1 billion**
 - about **\$1 million per microprobability**
 
-This is one of the most uncertain assumptions in the category. The evidence base is thin, the causal chains often run through governments and institutions rather than direct service delivery, and many of the most important risks are still emerging.
+This is one of the most uncertain assumptions in the category. The evidence is thin. The causal chains often run through governments and institutions rather than direct service delivery. And many of the most important risks are still emerging.
 
 ---
 
@@ -51,7 +51,7 @@ $$
 
 This sounds tiny, but the category is explicitly about very small changes in the probability of an extremely bad event.
 
-There is no clean empirical way to measure $X$ directly. So the right approach is to combine:
+There is no clean empirical way to measure $X$ directly. So we combine four things:
 
 1. the scale of the relevant philanthropic field
 2. the concrete levers that field is trying to move
@@ -62,7 +62,7 @@ There is no clean empirical way to measure $X$ directly. So the right approach i
 
 ## 2. What scale of philanthropy are we talking about?
 
-The most defensible order-of-magnitude estimate is that explicitly pandemic-risk-focused philanthropy to date is in the **mid hundreds of millions** — not tens of billions, and not the mere tens of millions. We therefore use **\$400 million over roughly 10 years** as a rough central anchor: a BOTEC for the field's size, not a precise figure.
+Explicitly pandemic-risk-focused philanthropy to date is in the **mid hundreds of millions** — not tens of billions, and not the mere tens of millions. We use **\$400 million over roughly 10 years** as a central anchor. It is a back-of-the-envelope estimate of the field's size, not a precise figure.
 
 :::details{title="The funding anchors behind that figure"}
 The strongest public anchor is [Coefficient Giving's biosecurity and pandemic preparedness page](https://coefficientgiving.org/funds/biosecurity-pandemic-preparedness/), which as of 2026 reports **140+ grants**, **\$250+ million given**, and work in the field since **2015** — already most of the way to a mid-hundreds-of-millions estimate.
@@ -86,7 +86,7 @@ The case for nonzero tractability is much stronger than "pandemics are bad, so p
 
 ## 4. How large is the baseline risk?
 
-A defensible central view is about **0.5–1.5%** catastrophic-pandemic risk over the next **20 years**, anchored on the [Existential Risk Persuasion Tournament](https://forecastingresearch.org/s/XPT.pdf) and adjusted because the hazard is unlikely to be uniform through time. At that baseline, a reduction of **0.04 percentage points** is a relative risk reduction of only a **few percent** — not a claim that philanthropy has already solved the problem.
+Our central view is about **0.5–1.5%** catastrophic-pandemic risk over the next **20 years**. We anchor on the [Existential Risk Persuasion Tournament](https://forecastingresearch.org/s/XPT.pdf) and adjust because the hazard is unlikely to be uniform through time. At that baseline, a reduction of **0.04 percentage points** is a relative risk reduction of only a **few percent** — not a claim that philanthropy has already solved the problem.
 
 :::details{title="The XPT baseline numbers"}
 In XPT postmortem medians for risk by **2100**:
@@ -111,7 +111,7 @@ A plausible "full bundle" against catastrophic pandemics would include some comb
 
 We do **not** have a direct estimate for how many percentage points such a bundle would reduce catastrophic-pandemic risk. But the source stack above strongly suggests the answer is not "almost zero." A bundle like this attacks multiple distinct failure modes.
 
-The central estimate in this document is:
+Our central estimate is:
 
 $$
 X = 0.04 \text{ percentage points}
@@ -122,7 +122,7 @@ For that to be true, historical philanthropy only needs to have bought a **small
 1. The field is explicitly trying to move unusually leveraged public-goods and policy levers.
 2. Pandemic-risk philanthropy is tiny relative to the stakes, so diminishing returns should be weaker than in crowded fields.
 3. Concrete policy and technical progress has occurred on exactly the kinds of levers the field has emphasized.
-4. The field includes a substantial amount of capacity building and agenda setting, so one should expect the realized effect to be meaningful but not enormous.
+4. The field includes a lot of capacity building and agenda setting, so we expect the realized effect to be meaningful but not enormous.
 
 For example, if a mature full bundle of plausible defenses could eventually cut 20-year catastrophic-pandemic risk by something like **0.5-2 percentage points**, then **0.04 percentage points** would correspond to only about **2-8%** of that total. That seems like a demanding but not implausible amount of progress for a small field over roughly a decade.
 
@@ -132,15 +132,15 @@ The claim is therefore modest. It is **not** that philanthropy has made catastro
 
 ## 6. Why use 0.004–0.27 percentage points as the plausible range?
 
-The biggest uncertainty here is not how to split a few scenario parameters — it is whether a small philanthropic field has any real counterfactual leverage over catastrophic-pandemic probability at all, and whether crediting it with a slice of government- and institution-led outcomes is even the right model. That structural uncertainty is what makes the range span almost two orders of magnitude.
+The biggest uncertainty is not how to split a few scenario parameters. It is whether a small philanthropic field has any real counterfactual leverage over catastrophic-pandemic probability at all. It is also whether crediting it with a slice of government- and institution-led outcomes is even the right model. That structural uncertainty is what makes the range span almost two orders of magnitude.
 
 ### Lower bound: 0.004 percentage points
 
-The dominant downside scenario is that philanthropy's counterfactual leverage is close to zero: the field mostly built capacity and produced research that has not yet changed any decision, public institutions remained the binding constraint, and the most technically promising interventions never translated into durable policy or deployment. In that world philanthropy bought only a few parts in a hundred thousand off the risk — far less than the few-percent-of-the-bundle slice the central estimate assumes.
+The dominant downside scenario is that philanthropy's counterfactual leverage is close to zero. The field mostly built capacity and produced research that has not yet changed any decision. Public institutions remained the binding constraint. And the most technically promising interventions never translated into durable policy or deployment. In that world philanthropy bought only a few parts in a hundred thousand off the risk — far less than the few-percent-of-the-bundle slice the central estimate assumes.
 
 ### Upper bound: 0.27 percentage points
 
-The dominant upside scenario is that engineered-risk pathways matter a lot, philanthropy-backed policy, field-building, and technical work have already meaningfully improved preparedness, early investments helped catalyze much larger public or multilateral actions, and some of the best pandemic-risk opportunities really are as leveraged as biosecurity advocates claim. That would put the field's contribution at roughly a tenth to a half of the full plausible defense bundle from section 5 — demanding, but not impossible for a neglected field shaping high-leverage public goods.
+The dominant upside scenario is that engineered-risk pathways matter a lot. Philanthropy-backed policy, field-building, and technical work have already meaningfully improved preparedness. Early investments helped catalyze much larger public or multilateral actions. And some of the best pandemic-risk opportunities really are as leveraged as biosecurity advocates claim. That would put the field's contribution at roughly a tenth to a half of the full plausible defense bundle from section 5 — demanding, but not impossible for a neglected field shaping high-leverage public goods.
 
 Both tails are about whether the causal model holds, not about tuning a parameter inside it, which is why the interval is wide and slightly skewed toward the low-leverage (high-cost) side.
 

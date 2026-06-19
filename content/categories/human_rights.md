@@ -15,11 +15,11 @@ effects:
 ## Description of effect
 
 This effect captures welfare gains from donations to unusually effective, relatively non-ideological human-rights
-charities that reduce severe rights violations with direct welfare consequences: especially preventing violence
+charities that reduce severe rights violations with direct welfare consequences. We focus on preventing violence
 against women and girls (VAWG), reducing bonded labour and trafficking, and related community-level protection and
-empowerment work. The model is meant to be **all-things-considered**: it includes safety, mental health, autonomy,
-dignity, social functioning, and freedom from exploitation after converting those effects into **QALY-equivalent**
-terms. It does **not** try to model the average human-rights NGO, nor use broad expressive advocacy or litigation to
+empowerment work. The model is **all-things-considered**: it includes safety, mental health, autonomy,
+dignity, social functioning, and freedom from exploitation, all converted into **QALY-equivalent**
+terms. It does **not** model the average human-rights NGO. Nor does it use broad expressive advocacy or litigation to
 anchor the headline estimate when the public evidence is still too thin.
 
 ## What kinds of charities are we modeling?
@@ -52,9 +52,9 @@ point estimate.
 - **Start time:** 2 years
 - **Duration:** 20 years
 
-The estimate is driven by a blend of two measurable anchors: top-tier VAWG prevention at about \$266/QALY-equivalent
+Two measurable anchors drive the estimate: top-tier VAWG prevention at about \$266/QALY-equivalent
 (70% of the portfolio) and promising anti-bonded-labour work at about \$504/QALY-equivalent (30%). Both start from
-trial-based dollars-per-DALY or dollars-per-person figures, then apply two cruxes — how much broader welfare a measured
+trial-based dollars-per-DALY or dollars-per-person figures. We then apply two cruxes: how much broader welfare a measured
 DALY (or a person freed from bondage) really represents, and how much to discount the strongest evidence for marginal
 category-level giving. The range is wide (\$130–\$1,500) because four conversion and discount parameters move together
 under an optimistic or pessimistic reading, and because the anti-slavery evidence is not randomised.
@@ -97,7 +97,7 @@ this page and enter your own values.*
 
 ### Cost per QALY
 
-The cleanest way to estimate this category is to anchor on the two parts of the field that are most measurable:
+We anchor the estimate on the two parts of the field that are most measurable:
 
 1. **Well-evaluated VAWG prevention**
 2. **Promising community-based anti-bonded-labour work**
@@ -122,8 +122,8 @@ inventories. So the measured DALYs should not be treated as the full welfare eff
 uses a central conversion of about **2.5 QALY-equivalent welfare gains per measured DALY averted** once those omitted
 harms are brought back into the model. ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827), [See detailed justification](/assumption/human-rights-welfare-conversion))
 
-For a category page, simply copying the best trial result into the headline number would probably overstate the likely
-value of a marginal donor dollar. A donor today is not buying the average dollar inside a tightly studied RCT. To
+Copying the best trial result straight into the headline number would probably overstate the value of a marginal donor
+dollar. Your donation today is not buying the average dollar inside a tightly studied RCT. To
 adjust for transportability, scaling, and publication-bias risk, we multiply the stronger VAWG figures by about **3x**.
 
 Using the strongest research-setting result:
@@ -136,8 +136,8 @@ So a reasonable category-level central figure for top-tier VAWG prevention is ab
 
 As an external validity check, this is directionally consistent with the broader VAWG evidence base. For example,
 SASA!, a well-known community mobilisation intervention in Kampala, reduced continuation and onset of multiple forms of
-abuse in a cluster randomised trial, supporting the idea that this class of intervention can produce real and durable
-changes rather than being driven only by one-off measurement noise. ([Abramsky et al. 2016](https://pubmed.ncbi.nlm.nih.gov/26873948/))
+abuse in a cluster randomised trial. That suggests this class of intervention can produce real and durable
+changes, not just one-off measurement noise. ([Abramsky et al. 2016](https://pubmed.ncbi.nlm.nih.gov/26873948/))
 :::
 
 **Approach 2 — bonded labour and trafficking: about \$500/QALY-equivalent.** Freedom Fund's India hotspots imply roughly
@@ -165,8 +165,8 @@ $$
 \frac{\$126}{1.0} = \$126 \text{ per QALY-equivalent}
 $$
 
-That raw figure likely overstates category-level marginal impact because the India hotspot evidence is not randomised,
-the interventions are multi-component, and the prevalence decline may overstate durable marginal impact due to
+That raw figure likely overstates category-level marginal impact. The India hotspot evidence is not randomised, and the
+interventions are multi-component. The measured prevalence decline may also overstate durable marginal impact, through
 substitution, secular change, or imperfect attribution. Applying a central penalty of about **4x** gives:
 
 $$
@@ -191,9 +191,9 @@ $$
 **Range: \$130–\$1,500/QALY.** Four parameters drive the spread: the VAWG welfare uplift (Assumption 2), the VAWG
 external-validity markup (Assumption 3), the bonded-labour welfare gain per person (Assumption 5), and the anti-slavery
 marginal discount (Assumption 6). The interval is wider than a sweep of any single one because these four move together
-under an optimistic or pessimistic reading of how much real welfare these interventions deliver, and the high end is
-stretched further to absorb structural uncertainty the four parameters do not capture — chiefly that the anti-slavery
-hotspot evidence is not randomised and that a real portfolio may lean toward weaker direct-welfare rights work than the
+under an optimistic or pessimistic reading of how much real welfare these interventions deliver. The high end is
+stretched further to absorb structural uncertainty the four parameters do not capture. Chiefly, the anti-slavery
+hotspot evidence is not randomised, and a real portfolio may lean toward weaker direct-welfare rights work than the
 category is trying to model.
 
 :::details{title="From the all-extremes bound to the published range"}

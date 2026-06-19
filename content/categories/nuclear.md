@@ -68,7 +68,7 @@ We are **not** modeling:
 
 ### Cost per microprobability
 
-We model this cause area as cumulative field spending divided by microprobabilities of catastrophe averted, with an extra severity adjustment because the risk-reduction evidence is for a broad >10-million-death nuclear catastrophe while this page values a much larger nuclear-winter event. At the central assumptions, roughly **\$600 million** of philanthropy (\$30M/year for 20 years, Assumption 4) buying a **0.025 percentage-point** broad risk reduction (Assumption 5) averts **250 broad microprobabilities**. Applying the **25% large-nuclear-winter-equivalent severity bridge** in Assumption 6 gives about **62.5 modeled microprobabilities**, or **\$9.6 million per modeled microprobability**.
+We model this cause area as cumulative field spending divided by microprobabilities of catastrophe averted. We then add a severity adjustment: the risk-reduction evidence is for a broad >10-million-death nuclear catastrophe, while this page values a much larger nuclear-winter event. At the central assumptions, roughly **\$600 million** of philanthropy (\$30M/year for 20 years, Assumption 4) buying a **0.025 percentage-point** broad risk reduction (Assumption 5) averts **250 broad microprobabilities**. Applying the **25% large-nuclear-winter-equivalent severity bridge** in Assumption 6 gives about **62.5 modeled microprobabilities**, or **\$9.6 million per modeled microprobability**.
 
 $$
 \text{Cost per microprobability} = \dfrac{\$600{,}000{,}000}{250 \times 0.25} = \$9{,}600{,}000
@@ -170,13 +170,13 @@ The 30-year duration is an equivalent-impact window that balances three things:
 2. **Deaths destroy decades of future life**, not just the first decade after the war.
 3. **Survivor harms** such as displacement, trauma, disease, and institutional collapse plausibly persist well beyond the peak famine years.
 
-So 30 years should not be read as a forecast that recovery takes exactly 30 years. It is an accounting device that spreads the catastrophe's total welfare losses over a period long enough to reflect both the acute shock and the life-years destroyed by premature death.
+So 30 years is not a forecast that recovery takes exactly 30 years. It is an accounting device. It spreads the catastrophe's total welfare losses over a period long enough to reflect both the acute shock and the life-years destroyed by premature death.
 
 ## Key uncertainties
 
 1. **How severe nuclear winter would really be in the relevant scenarios.** Xia et al. is the best current quantitative anchor, but uncertainty remains about soot generation, adaptation, trade responses, and food substitution.
 
-2. **How much weight to put on expert vs. superforecaster risk estimates.** ONN's 5% versus 1% by 2045 is a meaningful disagreement, and different views about the underlying risk will change how optimistic one should be about marginal work.
+2. **How much weight to put on expert vs. superforecaster risk estimates.** ONN's 5% versus 1% by 2045 is a meaningful disagreement, and your view of the underlying risk changes how optimistic you should be about marginal work.
 
 3. **How much leverage philanthropy really has.** The headline estimate turns heavily on whether a small field can still buy tiny but real reductions in catastrophe risk by changing policy, institutions, or crisis behavior.
 

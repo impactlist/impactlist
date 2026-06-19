@@ -16,7 +16,7 @@ effects:
 
 This effect captures welfare gains from charities that support **organized religious participation**: congregations, ministries, and similar institutions whose main product is worship, fellowship, pastoral support, and religious community life.
 
-The central question is not whether religion is true, nor whether religion has any value in some ultimate theological sense. The question is narrower and more empirical: **how much human welfare do marginal donations buy by helping willing participants take part in organized religion?**
+The central question is not whether religion is true, nor whether it has value in some ultimate theological sense. It is narrower and more empirical: **how much human welfare do marginal donations buy by helping willing participants take part in organized religion?**
 
 The main benefits here appear to come from community, meaning, social support, lower substance abuse, and modest improvements in mental health and possibly mortality. We do **not** give separate central credit for the direct food-bank, housing, disaster-relief, or medical work done by some religious organizations, because those outputs are better modeled in other categories and ordinary congregations spend only a small share of their budgets directly on social services.
 
@@ -66,7 +66,7 @@ If a religiously affiliated recipient is mainly providing a standard social serv
 
 ### Cost per QALY
 
-The cleanest model for this category is:
+We model this category as:
 
 $$
 \text{Cost per QALY} = \dfrac{\text{Effective donor cost per sustained participant-year}}{\text{QALYs gained per participant-year}}
@@ -89,7 +89,7 @@ The two inputs are derived below: the **0.015 QALYs** benefit is roughly **10%**
 
 #### The participant-year benefit is 0.015 QALYs: ~10% of an observational upper bound
 
-If one took the strongest observational mortality studies at face value, organized religion would look dramatically better than this. [Li et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27183175/) found that women attending services more than once per week had about **33% lower mortality** than non-attenders over 16 years, and [Chen, Kim & VanderWeele 2020](https://academic.oup.com/ije/article/49/6/2030/5734641) found similarly favorable patterns across three large cohorts. But the better-identified literature points to a much smaller causal effect, so we take an observational upper bound of about **0.12-0.15 QALYs/year** and apply a roughly **90% haircut**, landing at **0.015 QALYs per participant-year** (about **5.5 full-health-equivalent days per year**). The plausible range runs from **0.005** (mostly selection) to **0.03-0.04** (much of the literature genuinely causal, charities reaching isolated or at-risk people).
+Take the strongest observational mortality studies at face value and organized religion looks dramatically better than this. [Li et al. 2016](https://pubmed.ncbi.nlm.nih.gov/27183175/) found that women attending services more than once per week had about **33% lower mortality** than non-attenders over 16 years, and [Chen, Kim & VanderWeele 2020](https://academic.oup.com/ije/article/49/6/2030/5734641) found similarly favorable patterns across three large cohorts. But the better-identified literature points to a much smaller causal effect, so we take an observational upper bound of about **0.12-0.15 QALYs/year** and apply a roughly **90% haircut**, landing at **0.015 QALYs per participant-year** (about **5.5 full-health-equivalent days per year**). The plausible range runs from **0.005** (mostly selection) to **0.03-0.04** (much of the literature genuinely causal, charities reaching isolated or at-risk people).
 
 :::details{title="Deriving the 0.015 QALY benefit and its range"}
 The strongest observational studies look dramatically more favorable than 0.015. [Chen, Kim & VanderWeele 2020](https://academic.oup.com/ije/article/49/6/2030/5734641) found favorable patterns across three large cohorts for mortality, smoking, heavy drinking, social integration, purpose in life, and other wellbeing outcomes.
@@ -99,7 +99,7 @@ But it would be a mistake to read those estimates literally as the causal effect
 - [Garssen, Visser & Pool 2021](https://doi.org/10.1080/10508619.2020.1729570) meta-analyze 48 longitudinal studies and find a small positive overall effect, with public religious activity one of the few religion measures that consistently predicts better later mental health.
 - [Gruber & Hungerman 2008](https://www.nber.org/papers/w12410) use blue-law repeals as a natural experiment and find about a **5% decline in attendance** after repeal, plus increases in heavy drinking and drug use among the initially religious individuals affected by the policy change.
 - [Giles, Hungerman & Oostrom 2023](https://www.nber.org/papers/w30840) find that religion decline is associated with higher **deaths of despair**, with both the participation decline and the mortality increase driven mainly by middle-aged white Americans.
-- [Jokela 2022](https://academic.oup.com/aje/article-abstract/191/4/584/6429428) shows that when one compares siblings, the link between attendance and psychological distress is materially attenuated, though not eliminated.
+- [Jokela 2022](https://academic.oup.com/aje/article-abstract/191/4/584/6429428) shows that comparing siblings materially attenuates the link between attendance and psychological distress, though it does not eliminate it.
 - [Prati 2024](https://pmc.ncbi.nlm.nih.gov/articles/PMC11365415/) finds almost no evidence in German panel data of lagged effects of religion on mental health.
 - [Eriksson et al. 2022](https://www.cambridge.org/core/journals/bjpsych-open/article/religiosity-and-mental-health-a-contribution-to-understanding-the-heterogeneity-of-research-findings/1F885CB6F6C336954B77D2C3AA34A12B) similarly finds no robust protective association in a British birth cohort once confounding is handled carefully.
 
@@ -127,7 +127,7 @@ The plausible range is wide:
 
 #### The effective donor cost is \$2,000 per participant-year: raw budget plus an additionality penalty
 
-U.S. congregational budgets imply raw spending of about **\$1,250-\$1,430 per regular participant-year** (median congregation: **70** participants, **\$100,000** budget; the average attendee's congregation: **360** participants, **\$450,000** budget). Because congregations are mostly self-financed by members, many gifts support people who would have attended anyway, and congregations rarely close outright (roughly **1%** annually in older U.S. data, [Duke Today summary of Anderson & Chaves 2008](https://www.today.duke.edu/2008/06/religious_congregation.html)), we apply a moderate additionality haircut.
+U.S. congregational budgets imply raw spending of about **\$1,250-\$1,430 per regular participant-year** (median congregation: **70** participants, **\$100,000** budget; the average attendee's congregation: **360** participants, **\$450,000** budget). We apply a moderate additionality haircut on top of that raw figure. Congregations are mostly self-financed by members, so many gifts support people who would have attended anyway. And congregations rarely close outright — roughly **1%** annually in older U.S. data ([Duke Today summary of Anderson & Chaves 2008](https://www.today.duke.edu/2008/06/religious_congregation.html)).
 
 Numerically, the central estimate is:
 
@@ -139,7 +139,7 @@ The 0.65 factor is a judgment call: it says a marginal donor dollar is less than
 
 #### Range: \$25,000-\$1,200,000/QALY
 
-Cost per QALY is driven by just two uncertain inputs — the participant-year benefit (**0.005-0.04**, Assumption 4) and the effective donor cost (**\$1,000-\$6,000**, Assumption 6). Our published plausible range is about **\$25,000-\$1,200,000/QALY** — essentially the full span those two inputs can produce. Its width is dominated by the benefit: how much of the observational mortality and mental-health literature is genuinely causal is by far the largest source of uncertainty (Key uncertainty 1), and that question moves the two inputs together — a reading on which religion's marginal value is high tends to pair a high benefit with more-additional dollars, and a skeptical reading pairs a low benefit with more crowdout. We keep the range at the full input span rather than narrowing it, because that causal question is structural and large enough that the full span is a reasonable plausible range rather than a merely mechanical corner.
+Cost per QALY is driven by just two uncertain inputs — the participant-year benefit (**0.005-0.04**, Assumption 4) and the effective donor cost (**\$1,000-\$6,000**, Assumption 6). Our published plausible range is about **\$25,000-\$1,200,000/QALY** — essentially the full span those two inputs can produce. The benefit dominates that width. How much of the observational mortality and mental-health literature is genuinely causal is by far the largest source of uncertainty (Key uncertainty 1), and that question moves the two inputs together. Read religion's marginal value as high and you pair a high benefit with more-additional dollars; read it skeptically and you pair a low benefit with more crowdout. We keep the range at the full input span rather than narrowing it. That causal question is structural, and large enough that the full span is a reasonable plausible range rather than a merely mechanical corner.
 
 That **\$25,000-\$1,200,000** is the full corner of the two parameter ranges, both at their joint best and then their joint worst. For two independent inputs the corner would overstate a narrower independent-input range, but here we publish close to it, for the correlation and structural reasons above.
 
@@ -156,12 +156,12 @@ $$
 \dfrac{6000}{0.005} = 1{,}200{,}000
 $$
 
-This \$25,000-\$1,200,000 spread is the full corner of the two parameter ranges. Treating the two inputs as independent and combining their uncertainties (rather than forcing both to an extreme at once) would instead give roughly \$40,000-\$615,000 — but we do **not** use that narrower interval, because the inputs are positively correlated through one's overall read of religion's causal value and because the model carries structural uncertainty (the causal haircut, the additionality penalty, and generalizability beyond U.S. Christianity) beyond what the two parameters capture. The published **\$25,000-\$1,200,000** range therefore tracks the full corner.
+This \$25,000-\$1,200,000 spread is the full corner of the two parameter ranges. Treating the two inputs as independent and combining their uncertainties (rather than forcing both to an extreme at once) would instead give roughly \$40,000-\$615,000. We do **not** use that narrower interval, for two reasons: the inputs are positively correlated through your overall read of religion's causal value; and the model carries structural uncertainty — the causal haircut, the additionality penalty, and generalizability beyond U.S. Christianity — beyond what the two parameters capture. The published **\$25,000-\$1,200,000** range therefore tracks the full corner.
 :::
 
 ### Start time
 
-The **1-year** start time reflects that donations to congregations or ministries usually affect current staffing, facilities, small-group programming, and pastoral support fairly quickly. Benefits to participants can begin within months, but a 1-year estimate is a reasonable average once one includes budgeting and program cycles.
+The **1-year** start time reflects that donations to congregations or ministries usually affect current staffing, facilities, small-group programming, and pastoral support fairly quickly. Benefits to participants can begin within months, but a 1-year estimate is a reasonable average once you include budgeting and program cycles.
 
 ### Duration
 
@@ -185,7 +185,7 @@ So a 10-year window is a reasonable middle ground between treating the donation 
 
 5. **How much credit to give direct social-service work done by congregations.** We mostly exclude it here to avoid double counting, but that choice matters for some recipients.
 
-6. **Supernatural claims are not modeled.** If one believes religious giving affects salvation or afterlife outcomes, that could dominate the estimate, but there is no intersubjectively checkable way to assign that a public-facing cost-per-QALY figure.
+6. **Supernatural claims are not modeled.** If you believe religious giving affects salvation or afterlife outcomes, that could dominate the estimate. But there is no intersubjectively checkable way to assign that a public-facing cost-per-QALY figure.
 
 {{CONTRIBUTION_NOTE}}
 

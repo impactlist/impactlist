@@ -12,11 +12,11 @@ effects:
 
 # Justification of cost per life
 
-Unlike a typical cause area, donations to pandemic-risk charities are best modeled as slightly reducing the probability of a catastrophe rather than directly buying {{QALYS}}. We therefore estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of a **global catastrophic pandemic**.
+Donations to pandemic-risk charities work differently from a typical cause area. We model them as slightly reducing the probability of a catastrophe rather than directly buying {{QALYS}}. So we estimate the cost of averting one **microprobability**: a one-in-a-million absolute reduction in the probability of a **global catastrophic pandemic**.
 
 ## Description of effect
 
-This effect captures welfare gains from reducing the probability of a pandemic severe enough to kill **more than 10% of humanity within roughly five years** and leave lasting global health, economic, and institutional damage. This is intentionally worse than COVID-19 but narrower than literal human extinction or permanent civilizational collapse.
+We model the welfare gains from reducing the probability of a pandemic severe enough to kill **more than 10% of humanity within roughly five years** and leave lasting global health, economic, and institutional damage. This is intentionally worse than COVID-19 but narrower than literal human extinction or permanent civilizational collapse.
 
 That event definition lines up reasonably well with catastrophe-style biosecurity forecasting, especially the [Existential Risk Persuasion Tournament](https://forecastingresearch.org/s/XPT.pdf), which separately asked about catastrophic outcomes from natural and engineered pathogens.
 
@@ -69,7 +69,7 @@ We are **not** modeling:
 
 ### Cost per microprobability
 
-The cleanest way to model this cause area is:
+We model this cause area as:
 
 $$
 \text{Cost per microprobability} = \dfrac{\text{cumulative field spending}}{\text{microprobabilities averted}}
@@ -89,10 +89,10 @@ $$
 
 So the point estimate is **\$1 million per microprobability**.
 
-This is best read as a **historical field-average**. The load-bearing input is Assumption 5: that a mid-hundreds-of-millions field, still very neglected, has plausibly bought a few basis points of risk reduction through policy work, technical public goods, and capacity building — a field that has helped a little, not solved the problem. The marginal cost for a well-chosen donation to a top organization may be somewhat better, pulling the optimistic end well below the **\$1 million** field average, though diminishing returns are a live concern.
+This is best read as a **historical field-average**. The load-bearing input is Assumption 5: that a mid-hundreds-of-millions field, still very neglected, has plausibly bought a few basis points of risk reduction through policy work, technical public goods, and capacity building — a field that has helped a little, not solved the problem. The marginal cost for a well-chosen donation to a top organization may be somewhat better, pulling the optimistic end well below the **\$1 million** field average. Diminishing returns are a live concern, though.
 
 :::details{title="Micro-level sanity check, and what pulls the estimate up or down"}
-Some targeted opportunities plausibly beat the field average by a wide margin. For example, if a **\$20 million** policy effort prevented roughly **10 high-risk lab-years**, and if the relevant catastrophic-pandemic risk were on the order of $3 \times 10^{-5}$ per lab-year, that would buy about **300 microprobabilities** at roughly **\$67,000 each**. This BOTEC should not be taken literally, but it suggests unusually strong interventions can do much better than the historical field average, which makes a **\$1 million** central estimate for the field as a whole look reasonable rather than aggressive. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
+Some targeted opportunities plausibly beat the field average by a wide margin. For example, if a **\$20 million** policy effort prevented roughly **10 high-risk lab-years**, and if the relevant catastrophic-pandemic risk were on the order of $3 \times 10^{-5}$ per lab-year, that would buy about **300 microprobabilities** at roughly **\$67,000 each**. This rough calculation should not be taken literally, but it suggests unusually strong interventions can do much better than the historical field average, which makes a **\$1 million** central estimate for the field as a whole look reasonable rather than aggressive. ([Lipsitch & Inglesby 2014](https://journals.asm.org/doi/10.1128/mbio.02366-14))
 
 Two considerations pull the estimate **downward**:
 
@@ -113,7 +113,7 @@ The plausible range comes straight from Assumption 5's risk-reduction range, hol
 - **Pessimistic:** \$400M buys only **0.004 percentage points** = 40 microprobabilities -> **\$10 million** per microprobability
 - **Optimistic:** \$400M buys **0.27 percentage points** = 2,700 microprobabilities -> about **\$150,000** per microprobability
 
-That gives a plausible range of roughly **\$150,000–\$10 million per microprobability**. It is wide and skewed toward the high-cost end because the dominant uncertainty is structural rather than a single parameter: if philanthropy has almost no counterfactual leverage over catastrophic-pandemic risk the cost is much higher, while if the best current interventions are unusually high-leverage and past field-building has already unlocked substantial public action it is much lower.
+That gives a plausible range of roughly **\$150,000–\$10 million per microprobability**. It is wide and skewed toward the high-cost end, because the dominant uncertainty is structural rather than a single parameter. If philanthropy has almost no counterfactual leverage over catastrophic-pandemic risk, the cost is much higher. If the best current interventions are unusually high-leverage and past field-building has already unlocked substantial public action, it is much lower.
 
 ### Population fraction affected
 
@@ -129,9 +129,9 @@ We stop short of **1.0** only because some remote communities and unusually resi
 
 ### QALY improvement per affected person per year
 
-The point estimate (**0.35**, range 0.2–0.6) comes from distributing the catastrophe's total QALY losses across the affected population and the 15-year window. Deaths account for about **77%** of that loss, so the headline is not very sensitive to how the nonfatal survivor harms are split — but it would still be a mistake to model a >10%-death pandemic as "just deaths," since even far-milder COVID-19 caused enormous indirect mortality, care backlogs, and chronic illness.
+The point estimate (**0.35**, range 0.2–0.6) comes from distributing the catastrophe's total QALY losses across the affected population and the 15-year window. Deaths account for about **77%** of that loss, so the headline is not very sensitive to how the nonfatal survivor harms are split. But it would still be a mistake to model a >10%-death pandemic as "just deaths." Even far-milder COVID-19 caused enormous indirect mortality, care backlogs, and chronic illness.
 
-At the central estimate, averting one microprobability saves about **46,700 QALYs**, for an implied **~\$21/QALY** — extremely good by ordinary global-health standards, which is a general feature of catastrophe-risk models when the stakes are huge and tractability is nontrivial.
+At the central estimate, averting one microprobability saves about **46,700 QALYs**, for an implied **~\$21/QALY** — extremely good by ordinary global-health standards. That is a general feature of catastrophe-risk models: the stakes are huge and tractability is nontrivial.
 
 :::details{title="QALY decomposition and the 0.35 derivation"}
 Using an average world population of **9.9 billion** over the modeled 2036–2051 window and an affected fraction of **0.9**, the model implies about **8.9 billion affected people**. The population figure comes from the site's default population model and is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf). One rough illustrative decomposition, rounded for clarity:
@@ -185,7 +185,7 @@ So 15 years should not be read as a literal forecast that recovery takes exactly
 
 ## Key uncertainties
 
-1. **How much weight to put on expert versus superforecaster risk estimates.** The XPT gap is material, and the answer changes how optimistic one should be about marginal work.
+1. **How much weight to put on expert versus superforecaster risk estimates.** The XPT gap is material, and the answer changes how optimistic you should be about marginal work.
 
 2. **How much of the future risk comes from engineered versus natural pathogens.** If engineered threats dominate, policy and technology governance may be unusually leveraged. If nature dominates more, the best defenses may look somewhat different.
 

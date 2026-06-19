@@ -7,7 +7,7 @@ name: 'Timelines to AGI'
 
 This document estimates when **artificial general intelligence (AGI)** will arrive, defined here as the point at which **unaided machines can accomplish any cognitive (mental) task better and more cheaply than human workers** — reasoning, research, software, analysis, planning, and the like. It does **not** require physical embodiment or robotics: a system that matches or beats humans on every *mental* task counts even if humans still do manual labor.
 
-This is a cognitive-automation bar. It is more demanding than passing a particular AGI benchmark — it requires beating humans on essentially *every* mental task, and doing so more cheaply — but less demanding than full **high-level machine intelligence (HLMI)**, which additionally requires automating physical and embodied work. A system that beats all humans at all mental tasks is at the strong end of what people call AGI (some would call it a mild superintelligence); we use "AGI" because it is the term the forecasting evidence below is framed around.
+This is a cognitive-automation bar. It is more demanding than passing a particular AGI benchmark, since it requires beating humans on essentially *every* mental task, and doing so more cheaply. But it is less demanding than full **high-level machine intelligence (HLMI)**, which additionally requires automating physical and embodied work. A system that beats all humans at all mental tasks is at the strong end of what people call AGI; some would call it a mild superintelligence. We use "AGI" because it is the term the forecasting evidence below is framed around.
 
 **Summary:** We estimate a central arrival date of **around 2036** for AGI — roughly **10 years** out — with a {{PLAUSIBLE_RANGE}} of **2030–2050**. Because this bar excludes physical labor, it lands earlier than full HLMI; because it requires beating humans on *every* mental task more cheaply, it lands a little later than benchmark-style "AGI achieved" forecasts.
 
@@ -15,7 +15,7 @@ This is a cognitive-automation bar. It is more demanding than passing a particul
 
 ## 1. The broadest expert survey measures a later, physical-inclusive bar
 
-The largest direct survey, [Grace et al. (2024)](https://arxiv.org/abs/2401.02843), put a 50% date of **2047** on **HLMI** — but that definition requires automating *every* task, including physical ones, so it is an upper anchor for the cognitive-only milestone we care about here.
+The largest direct survey, [Grace et al. (2024)](https://arxiv.org/abs/2401.02843), put a 50% date of **2047** on **HLMI**. But that definition requires automating *every* task, including physical ones, so it is an upper anchor for the cognitive-only milestone we care about here.
 
 Two further things matter about that number:
 
@@ -26,7 +26,7 @@ So 2047 is a stale upper bound, not a current best guess for cognitive AGI.
 
 ## 2. Capability trends point to fast, accelerating progress
 
-[METR's time-horizon work](https://metr.org/blog/2026-1-29-time-horizon-1-1/) measures the length of task (in human-expert time) that frontier models can complete autonomously at 50% reliability — a direct read on the cognitive bar we care about. It is growing exponentially **and accelerating**: as of early 2026 the best systems handle on the order of a **5-hour** task, and the doubling time has itself shrunk to roughly **89 days** for the most recent models. Extrapolating even the slower historical rate implies week- to month-long autonomous cognitive tasks within a few years; the recent rate implies it sooner.
+[METR's time-horizon work](https://metr.org/blog/2026-1-29-time-horizon-1-1/) measures the length of task (in human-expert time) that frontier models can complete autonomously at 50% reliability — a direct read on the cognitive bar we care about. This horizon is growing exponentially **and accelerating**. As of early 2026 the best systems handle on the order of a **5-hour** task, and the doubling time has itself shrunk to roughly **89 days** for the most recent models. Extrapolating even the slower historical rate implies week- to month-long autonomous cognitive tasks within a few years. The recent rate implies it sooner.
 
 :::details{title="The measured doubling rates"}
 The horizon has roughly doubled every **196 days** across 2019–2025, every **131 days** restricted to models released since 2023, and every **89 days** for models since 2024.
@@ -34,7 +34,7 @@ The horizon has roughly doubled every **196 days** across 2019–2025, every **1
 
 ## 3. Forecasters and tournaments cluster in the early-to-mid 2030s
 
-Independent forecasting communities, asking AGI-style cognitive questions, have moved sharply earlier: an early-2026 Metaculus snapshot cited by 80,000 Hours centered on a 50% date around **2033**, the Forecasting Research Institute's 2026 LEAP round put expert medians around **2030** (superforecasters ~2028), and a February 2026 AI-safety survey clustered most respondents in **2030–2035**. We read these as bracketing the early-to-mid 2030s rather than pinning our exact milestone, since each uses a somewhat different bar.
+Independent forecasting communities asking AGI-style cognitive questions have moved sharply earlier. An early-2026 Metaculus snapshot cited by 80,000 Hours centered on a 50% date around **2033**. The Forecasting Research Institute's 2026 LEAP round put expert medians around **2030** (superforecasters ~2028). A February 2026 AI-safety survey clustered most respondents in **2030–2035**. We read these as bracketing the early-to-mid 2030s rather than pinning our exact milestone, since each uses a somewhat different bar.
 
 :::details{title="The individual forecaster anchors"}
 The three anchors don't measure quite the same thing, so each is an imperfect match for our bar:
@@ -48,7 +48,7 @@ The three anchors don't measure quite the same thing, so each is an imperfect ma
 
 Our bar does not nest cleanly inside any single anchor:
 
-- Relative to **benchmark-AGI** forecasts such as Metaculus's ~2033, it is **more demanding in breadth and cost** — it requires beating humans on *every* mental task, and more cheaply, and the long tail of rare or poorly-specified cognitive work is where automation is slowest. But those benchmarks also bundle in some physical/robotic criteria that our bar drops, which cuts the other way.
+- Relative to **benchmark-AGI** forecasts such as Metaculus's ~2033, it is **more demanding in breadth and cost**. It requires beating humans on *every* mental task, and more cheaply, and the long tail of rare or poorly-specified cognitive work is where automation is slowest. But those benchmarks also bundle in some physical/robotic criteria that our bar drops, which cuts the other way.
 - Relative to **full HLMI** (Grace's 2047), it is clearly **earlier**, because it does not require automating physical and embodied labor, which lags cognitive progress and adds years to that broader definition.
 
 On balance these considerations leave our milestone in the same early-to-mid-2030s cluster as the cognitive anchors — toward their later end, and well before full HLMI.
@@ -65,7 +65,7 @@ We therefore use **2036** — about **10 years** out — as the central date for
 
 ### Plausible range: 2030–2050
 
-We treat **2030–2050** as the plausible range. It is wide and slightly right-skewed, because timeline uncertainty is dominated by hard-to-forecast factors — algorithmic breakthroughs, compute scaling, and the possibility of plateaus on the hard cognitive long tail:
+We treat **2030–2050** as the plausible range. It is wide and slightly right-skewed. The reason is that timeline uncertainty hinges on hard-to-forecast factors: algorithmic breakthroughs, compute scaling, and possible plateaus on the hard cognitive long tail.
 
 - **2030** (10th percentile) if the post-2024 capability pace continues and the remaining gap is short.
 - **2050** (90th percentile) if progress on the hardest, least-specified cognitive work stalls, or a compute/funding slowdown intervenes.

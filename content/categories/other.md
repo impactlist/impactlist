@@ -16,11 +16,11 @@ effects:
 
 This is a fallback bucket for donations that cannot yet be classified more precisely: donor-advised funds, prize awards to individuals, mixed-purpose foundations, civic or journalism organizations with diffuse benefits, local charities that do not fit the main categories cleanly, and genuinely unknown recipients.
 
-The goal is to estimate the expected value of giving to this actual bucket of miscellaneous philanthropy. We model it as a three-bucket portfolio — **direct but uncategorized organizations**, **indirect vehicles / mixed foundations / prize-awardees**, and **unknown / opaque recipients** — which gives a central estimate of **\$75,000/QALY**. The two cruxes are the dollar split across those buckets and how much worse than known direct giving the indirect and unknown slices really are.
+We want the expected value of giving to this actual bucket of miscellaneous philanthropy. We model it as a three-bucket portfolio: **direct but uncategorized organizations**, **indirect vehicles / mixed foundations / prize-awardees**, and **unknown / opaque recipients**. That gives a central estimate of **\$75,000/QALY**. Two things drive it: the dollar split across the buckets, and how much worse than known direct giving the indirect and unknown slices really are.
 
 ## What kinds of recipients are we modeling?
 
-This category is a fallback, not a recommendation. It is appropriate for recipients whose purpose is genuinely mixed, unknown, or mediated through another decision-maker, such as donor-advised funds, broad family foundations, prize-award vehicles, and named recipients where the final charitable use is not disclosed. When a recipient has a clear substantive purpose, it should be moved to the relevant category or given a recipient-specific override rather than left here.
+This category is a fallback, not a recommendation. It is for recipients whose purpose is genuinely mixed, unknown, or mediated through another decision-maker: donor-advised funds, broad family foundations, prize-award vehicles, and named recipients where the final charitable use is not disclosed. A recipient with a clear substantive purpose belongs in the relevant category, or should get a recipient-specific override, rather than staying here.
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
@@ -69,9 +69,9 @@ $$
 
 ### Why the buckets look like this
 
-The direct bucket is anchored on [Local Community](/cause/local-community) at **\$29,000/QALY** and worsened modestly to **\$40,000/QALY**; each later bucket is a multiple of the previous one (**3x** to the indirect bucket, then **2x** to the unknown bucket) reflecting an extra intermediary step and then sheer opacity.
+The direct bucket starts from [Local Community](/cause/local-community) at **\$29,000/QALY** and worsens modestly to **\$40,000/QALY**. Each later bucket is a multiple of the previous one: **3x** to the indirect bucket for an extra intermediary step, then **2x** to the unknown bucket for sheer opacity.
 
-The central 35% / 45% / 20% split comes from a rough launch audit of the current recipient set: many entries are vehicles, broad foundations, or prize-award patterns; a smaller but still meaningful group are direct organizations that did not fit another category cleanly; and a residual group is opaque enough that the final use is not publicly visible. This is not a stable empirical fact about philanthropy in general, so it should be revisited as recipient coverage changes.
+The central 35% / 45% / 20% split comes from a rough launch audit of the current recipient set. Many entries are vehicles, broad foundations, or prize-award patterns. A smaller but still meaningful group are direct organizations that did not fit another category cleanly. A residual group is opaque enough that the final use is not publicly visible. This is not a stable empirical fact about philanthropy in general, so revisit it as recipient coverage changes.
 
 :::details{title="Bucket-by-bucket reasoning"}
 - **Direct organizations: \$40,000/QALY.** This is anchored on [Local Community](/cause/local-community) at **\$29,000/QALY** and moved upward modestly. The idea is that `Other` direct recipients are often broader and less health-targeted than the local-community portfolio, but they are still real operating organizations doing concrete work.
@@ -83,9 +83,9 @@ This estimate also passes a useful outside-view sanity check: **\$75,000/QALY** 
 
 ### Range
 
-The plausible range of **\$35,000-\$300,000/QALY** is wide, and most of that width comes from a single correlated worry rather than three independent ones: if "indirect and opaque giving is worse than it looks" is true, it pushes the vehicle bucket, the unknown bucket, and the dollar split toward the unfavorable side together. So we set the bounds by moving every input to its favorable or unfavorable edge at once rather than treating the inputs as independent and shrinking the range — the dominant uncertainty is structural (whether the three-bucket model and its QALY conversions are even right), and that uncertainty lives largely outside the parameters.
+The plausible range of **\$35,000-\$300,000/QALY** is wide. Most of that width comes from a single correlated worry, not three independent ones: if "indirect and opaque giving is worse than it looks" is true, it pushes the vehicle bucket, the unknown bucket, and the dollar split toward the unfavorable side together. So we set the bounds by moving every input to its favorable or unfavorable edge at once, rather than treating the inputs as independent and shrinking the range. The dominant uncertainty is structural: whether the three-bucket model and its QALY conversions are even right. That uncertainty lives largely outside the parameters.
 
-The portfolio structure itself bounds the downside, which is why **\$300,000/QALY** sits near the pessimistic edge rather than far beyond it: because direct and indirect dollars keep producing QALYs, the cost per QALY stays near **\$316,000** even if the opaque bucket is treated as essentially worthless under the pessimistic mix. The published upper bound is therefore a rounded pessimistic portfolio case, not an unbounded "unknown giving is worthless" tail.
+The portfolio structure itself bounds the downside. That is why **\$300,000/QALY** sits near the pessimistic edge rather than far beyond it. Direct and indirect dollars keep producing QALYs, so the cost per QALY stays near **\$316,000** even if the opaque bucket is treated as essentially worthless under the pessimistic mix. The published upper bound is therefore a rounded pessimistic portfolio case, not an unbounded "unknown giving is worthless" tail.
 
 :::details{title="Optimistic and pessimistic bound calculations"}
 **Optimistic** — direct **\$25,000/QALY**, indirect **\$60,000/QALY**, unknown **\$120,000/QALY**, mix **50% / 40% / 10%**:

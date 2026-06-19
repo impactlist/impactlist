@@ -16,7 +16,7 @@ effects:
 
 This effect captures charities that improve health and wellbeing by increasing direct participation in arts, culture, and heritage activities: arts-on-prescription programmes, community choirs, dance and creative workshops, and structured museum or heritage engagement. We model charities that pay for access, facilitation, and outreach to people with elevated loneliness, mild-to-moderate mental-health burden, or older age.
 
-We do **not** model preservation, elite arts production, or broad subsidy to cultural institutions unless they clearly translate into direct, attributable participation gains. The evidence for those broader pathways is much weaker from a donor-effectiveness perspective.
+We do **not** model preservation, elite arts production, or broad subsidy to cultural institutions unless they clearly translate into direct, attributable participation gains. For a donor, the evidence for those broader pathways is much weaker.
 
 ## What kinds of charities are we modeling?
 
@@ -58,7 +58,7 @@ $$\text{Cost per QALY} = \dfrac{\$225}{0.015} = \$15{,}000/\text{QALY}$$
 
 Both inputs are anchored on the cleanest available evidence — the community singing RCT for the QALY gain, and the same trial's micro-costing (marked up heavily for whole-charity overhead, access support, attrition, and counterfactual uncertainty) for the cost. We use **\$15,000/QALY** and carry a plausible range of about **\$5,000-\$60,000/QALY**.
 
-That range is wider than a simple independent combination of the two inputs would suggest. The optimistic end corresponds to unusually lean, highly targeted delivery; the pessimistic end reflects the unresolved funding counterfactual, thin and heterogeneous economic literature, and reliance on a single direct-QALY RCT in older adults. Those structural risks are large and asymmetric — fungible funding can only worsen cost-effectiveness — so we keep the upper end near the high-cost, low-QALY edge rather than narrowing aggressively.
+That range is wider than a simple independent combination of the two inputs would suggest. The optimistic end corresponds to unusually lean, highly targeted delivery. The pessimistic end reflects three things the inputs don't capture: the unresolved funding counterfactual, thin and heterogeneous economic literature, and reliance on a single direct-QALY RCT in older adults. These risks are large and asymmetric, because fungible funding can only worsen cost-effectiveness. So we keep the upper end near the high-cost, low-QALY edge rather than narrowing aggressively.
 
 :::details{title="Input sweep vs. the published range"}
 Pushing both inputs to their favorable extremes together, then to their unfavorable extremes together, gives a mechanical span of roughly **\$4,000-\$60,000/QALY**:
@@ -69,23 +69,23 @@ Pushing both inputs to their favorable extremes together, then to their unfavora
 For two independent inputs this span would overstate a plausible range: hitting both favorable extremes at once is a demanding joint scenario. We therefore do not publish the full optimistic corner. But we keep the pessimistic end near the corner, because the structural uncertainties above — the funding counterfactual, the thin literature, and the single RCT — are not captured by the two parameters at all and mostly push the estimate worse. Rounded, that gives a published range of about **\$5,000-\$60,000/QALY**.
 :::
 
-We deliberately do **not** start from "arts are good for people" and assume any arts donation inherits that benefit; the estimate is built around charities that buy actual participation — artist-led group sessions, museum programmes, community choirs, and arts-on-prescription courses — for groups with strong evidence of benefit, especially older adults and people with low baseline wellbeing.
+We deliberately do **not** start from "arts are good for people" and assume any arts donation inherits that benefit. The estimate is built around charities that buy actual participation — artist-led group sessions, museum programmes, community choirs, and arts-on-prescription courses. It targets groups with strong evidence of benefit, especially older adults and people with low baseline wellbeing.
 
 **QALY gain per completed participant-course: 0.015 centrally (0.01-0.02).** The central figure is the direct QALY gain from the community singing RCT, corroborated by the DCMS/Frontier museum model; the range allows for weaker real-world implementation and stronger targeted programmes (Assumption 6).
 
 :::details{title="QALY-gain anchors and why we exclude the observational literature"}
-The cleanest direct QALY anchor is the community singing RCT: an incremental gain of **0.015 QALYs over 6 months** for the intervention group relative to controls (Assumption 2). That figure is useful because it is a direct QALY estimate rather than a chain of conversions from intermediate wellbeing measures, but it is still only one RCT, so it is an anchor rather than a settled parameter.
+The cleanest direct QALY anchor is the community singing RCT: an incremental gain of **0.015 QALYs over 6 months** for the intervention group relative to controls (Assumption 2). That figure is useful because it measures QALYs directly, rather than converting from intermediate wellbeing measures. But it is still only one RCT, so we treat it as an anchor rather than a settled parameter.
 
 It is in the same ballpark as the DCMS/Frontier 2024 museum model, whose HTA valuation of weekly museum-based arts activities for older adults implies roughly **0.009-0.017 QALYs per participant**, depending on whether benefits persist for a short or somewhat longer period (Assumption 3).
 
-The broader Arts on Prescription literature is less causal, because many studies lack control groups, but it points the same way: Jensen et al.'s meta-analysis found a **5.82-point average WEMWBS improvement**, suggesting the trial results are not isolated statistical noise (Assumption 4). The ArtGran results suggest benefits are larger when programmes reach people with elevated baseline need and sustain attendance, which is why this estimate represents targeted access programmes rather than average cultural participation (Assumption 5).
+The broader Arts on Prescription literature is less causal, because many studies lack control groups, but it points the same way. Jensen et al.'s meta-analysis found a **5.82-point average WEMWBS improvement**, which suggests the trial results are not isolated statistical noise (Assumption 4). The ArtGran results suggest benefits are larger when programmes reach people with elevated baseline need and sustain attendance. That is why this estimate represents targeted access programmes rather than average cultural participation (Assumption 5).
 
 Both direct QALY anchors are from older-adult populations; QALY gains may differ for younger groups, though the broader Arts on Prescription wellbeing literature spans a wider age range (Assumption 4).
 
 We intentionally do **not** use the more dramatic observational literature on lower depression or dementia risk from cultural attendance to push the estimate higher, because those studies are much more vulnerable to selection effects (Assumption 9).
 :::
 
-**Donor cost per completed participant-course: about \$225 (\$75-\$600).** Coulton's trial micro-costing points to a very low direct programme cost per participant; we mark it up substantially because a donor funds a whole operating charity, not just delivery inside the room (Assumption 7). Here the evidence is worse than for the QALY gain, which is the larger reason the overall range is wide.
+**Donor cost per completed participant-course: about \$225 (\$75-\$600).** Coulton's trial micro-costing points to a very low direct programme cost per participant. We mark it up substantially, because a donor funds a whole operating charity, not just delivery inside the room (Assumption 7). Here the evidence is worse than for the QALY gain, which is the larger reason the overall range is wide.
 
 :::details{title="From Coulton's per-session costing to a donor cost per course"}
 Coulton reports total delivery and training cost of **£176.84 per session** for the choir intervention, and Table 3 states the **cost per participant over 14 sessions** as **£18.88**. That figure is already per participant over the full course, not a per-session number to multiply by 14.
@@ -100,7 +100,7 @@ As a sanity check, this bottom-up estimate is in the same neighborhood as real-w
 
 **The economic literature is small and heterogeneous.** With only a handful of eligible cost-effectiveness studies and many non-randomized programme evaluations, publication bias and selective reporting remain live concerns even if the published evidence is generally encouraging (Assumption 11).
 
-**The funding counterfactual is unresolved.** The RCT evidence addresses the individual-level counterfactual by comparing participation against usual activities, but not the funding-fungibility question — what fraction of participation would have happened without the donor's contribution. For targeted charities serving people who lack easy alternative access the counterfactual case is stronger than for general arts institutions, but it is not zero, especially in high-income settings where programmes combine philanthropic, public, and earned funding. This is better treated as a reason for the wide range than as a parameter we can currently estimate precisely.
+**The funding counterfactual is unresolved.** The RCT evidence addresses the individual-level counterfactual by comparing participation against usual activities. It does not address the funding-fungibility question — what fraction of participation would have happened without the donor's contribution. For targeted charities serving people who lack easy alternative access, the counterfactual case is stronger than for general arts institutions. But it is not zero, especially in high-income settings where programmes combine philanthropic, public, and earned funding. We treat this as a reason for the wide range, not as a parameter we can currently estimate precisely.
 
 **We exclude NHS savings and productivity gains** from the central figure, even though some studies and the DCMS report suggest they exist, to keep the estimate focused on participant welfare and avoid double counting.
 :::

@@ -5,7 +5,7 @@ effects:
   - effectId: standard
     startTime: 5
     windowLength: 25
-    costPerQALY: 60_000
+    costPerQALY: 35_000
 ---
 
 # Justification of cost per life
@@ -14,15 +14,15 @@ effects:
 
 ## Description of effect
 
-This effect captures welfare gains from **strong marginal science and technology philanthropy in wealthy countries**: research institutes, scientific fellowships, translational labs, research tools and infrastructure, and some open-knowledge or public-interest technology work. The core mechanism is that donations help create, preserve, or accelerate useful knowledge and capabilities that later improve human welfare.
+This effect captures welfare gains from **well-chosen science and technology philanthropy in wealthy countries**: research institutes, scientific fellowships, translational labs, research tools and infrastructure, and some open-knowledge or public-interest technology work. The core mechanism is that donations help create, preserve, or accelerate useful knowledge and capabilities that later improve human welfare.
 
 We exclude areas that are modeled separately, especially direct health delivery, climate mitigation, pandemics, AI existential risk, AI capabilities, and longevity-specific philanthropy.
 
-We estimate **\$60,000/QALY**. The driver is a simple present-value model. A donated dollar to strong science-and-tech philanthropy creates about **6.25 gross welfare-equivalent dollars** over its useful life, but only about **25%** of that value is truly additional at the margin. That leaves about **1.5625 additional welfare-equivalent dollars** per donated dollar. At a money-metric value of \$100,000 per QALY, that works out to roughly \$60,000/QALY. Two cruxes drive the estimate: **how additional the marginal dollar really is**, and **how well dollar-valued productivity gains convert into QALY-equivalent welfare**. We keep the range wide because both are rough.
+We estimate **\$35,000/QALY**. The driver is a simple present-value model. A donated dollar to well-chosen science-and-tech philanthropy creates about **10 gross welfare-equivalent dollars** over its useful life, but only about **30%** of that value is truly additional at the margin. That leaves about **3 additional welfare-equivalent dollars** per donated dollar. At a money-metric value of \$100,000 per QALY, that works out to roughly \$35,000/QALY. Two cruxes drive the estimate: **how additional the next donated dollar really is**, and **how well dollar-valued productivity gains convert into QALY-equivalent welfare**. We keep the range wide because both are rough.
 
 ## What kinds of charities are we modeling?
 
-This estimate is best read as a model of **strong marginal science-and-tech philanthropy** — mission-driven research institutes, fellowships, tools and open-science infrastructure, and risk-tolerant funding for strong researchers — not the average unrestricted gift to any university or science-branded nonprofit.
+This estimate is best read as a model of **high-quality, funding-constrained science-and-tech philanthropy** — mission-driven research institutes, fellowships, tools and open-science infrastructure, and risk-tolerant funding for unusually strong researchers — not the average unrestricted gift to any university or science-branded nonprofit.
 
 :::details{title="Representative good and poor fits"}
 Representative fits include:
@@ -43,7 +43,7 @@ Poor fits include:
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$60,000 (\$25,000-\$300,000)
+- **Cost per QALY:** \$35,000 (\$15,000-\$250,000)
 - **Start time:** 5 years
 - **Duration:** 25 years
 
@@ -54,11 +54,11 @@ Poor fits include:
 {{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. Historical public and charitable **medical research** in the UK appears to have earned about **7%-10% per year** in health gains plus about **15%-18% per year** in GDP spillovers, for a total around **25% per year**. ([Grant & Buxton 2018](https://bmjopen.bmj.com/content/8/9/e022131))
-2. Broader R&D evidence often points to even higher gross social returns. [Bloom, Schankerman, and Van Reenen](https://www.nber.org/papers/w13060) find that technology spillovers dominate business-stealing effects and imply social returns roughly twice private returns, while [Jones & Summers 2020](https://www.nber.org/system/files/working_papers/w27863/w27863.pdf) argue that even after several downside adjustments innovation efforts produce benefits that are many multiples of their costs. We therefore use a **6.25x total present-value gross welfare return per donated dollar** as the central category-level estimate, with a plausible range of roughly **2.25x-16x**. This is calibrated from the annual-return literature but should not be read as literally paying a fresh 25% return every year independent of the duration assumption.
+2. Broader R&D evidence often points to high gross social returns. [Bloom, Schankerman, and Van Reenen](https://www.nber.org/papers/w13060) find that technology spillovers dominate business-stealing effects and imply social returns roughly twice private returns. [Jones & Summers 2020](https://www.nber.org/system/files/working_papers/w27863/w27863.pdf) argue that even after conservative adjustments, innovation efforts produce benefits many times larger than their costs; their conservative average is about **\$5 of benefit per \$1 invested**, and less conservative assumptions land higher. We therefore use a **10x total present-value gross welfare return per donated dollar** as the central category-level estimate, with a plausible range of roughly **4x-20x**. This is calibrated from the annual-return literature but should not be read as literally paying a fresh 25% return every year independent of the duration assumption.
 3. Standard project grants are often far from fully additional. [Jacob & Lefgren 2011](https://www.nber.org/system/files/working_papers/w13519/w13519.pdf) find that receiving a roughly **\$1.7 million NIH R01** raised publication output by only about **7%** over five years for marginal applicants, consistent with substantial substitution to other funding sources.
 4. Flexible philanthropy can do materially better than that low-additionality ordinary-grant benchmark. [Azoulay, Graff Zivin, and Manso](https://www.nber.org/papers/w15466) find that Howard Hughes Medical Institute investigators produced high-impact papers at a much higher rate than similarly accomplished NIH-funded scientists, suggesting that unusually flexible, risk-tolerant funding can unlock more exploratory and valuable work.
 5. Science philanthropy is already large and not obviously neglected. [Shekhtman, Gates, and Barabási 2024](https://www.nature.com/articles/s41598-024-58367-2) find that philanthropic support to research institutions has reached about **\$30 billion per year**, rivals major federal agencies in scale, is strongly local, and is highly stable over time. That argues against assuming marginal donor dollars are close to **100% additional**.
-6. A reasonable central **additionality / marginality factor** for strong science-and-tech philanthropy is about **25%**, with a plausible range around **10%-40%**.
+6. A reasonable central **additionality / marginality factor** for well-chosen science-and-tech philanthropy is about **30%**, with a plausible range around **10%-50%**.
 7. A money-metric value of a QALY in high-income policy settings is about **\$100,000**. That is near the lower end of ICER's benchmark range, and it is also broadly consistent with WELLBY-style conversions for non-health benefits: the UK Green Book supplementary guidance uses about **£13,000 per WELLBY**, and Frijters and Krekel suggest roughly **6 WELLBYs per QALY**, which lands in a similar order of magnitude. ([ICER 2023 Value Assessment Framework](https://icer.org/wp-content/uploads/2023/10/ICER_2023_2026_VAF_For-Publication_110425.pdf), [HMT Green Book 2021](https://www.gov.uk/government/publications/green-book-supplementary-guidance-wellbeing), [Frijters & Krekel 2021](https://eprints.lse.ac.uk/114605/1/Frijters_PR3.pdf))
 8. **First meaningful benefits** often begin after about **5 years**. This is earlier than full mature diffusion because the site's `startTime` parameter marks when benefits begin, not when they peak. Scientific software, data resources, tools, fellowships, and early translational wins can start mattering within a few years even if the full long-run value takes much longer. ([Morris, Wooding, and Grant 2011](https://journals.sagepub.com/doi/full/10.1258/jrsm.2011.110180), [Hanney et al. 2015](https://health-policy-systems.biomedcentral.com/articles/10.1186/1478-4505-13-1), [Comin & Hobijn 2010](https://www.hbs.edu/faculty/Pages/item.aspx?num=30764))
 9. Once a useful discovery, tool, or platform starts helping people, a **25-year** effective benefit window is a reasonable central estimate, with a plausible range of about **15-40 years**. Many benefits persist across multiple cohorts and product cycles, but they do not last forever because technologies are superseded, institutions change, and some research lines turn out to be dead ends.
@@ -73,64 +73,64 @@ $$
 \text{Cost per QALY} = \dfrac{v}{G \times a}
 $$
 
-where $v$ is the money-metric value of a QALY, $G$ is the total present-value gross welfare return per donated dollar over the benefit window, and $a$ is the additionality / marginality factor. The central assumptions ($v$ = \$100,000, $G$ = 6.25, $a$ = 0.25) give about 1.5625 additional welfare-equivalent dollars per donated dollar and a cost of \$64,000/QALY. We round that to **\$60,000/QALY**.
+where $v$ is the money-metric value of a QALY, $G$ is the total present-value gross welfare return per donated dollar over the benefit window, and $a$ is the additionality / marginality factor. The central assumptions ($v$ = \$100,000, $G$ = 10, $a$ = 0.30) give about 3 additional welfare-equivalent dollars per donated dollar and a cost of about \$33,000/QALY. We round that to **\$35,000/QALY**.
 
 :::details{title="Worked calculation"}
 The expected welfare-equivalent dollars created per donated dollar are:
 
 $$
-G \times a = 6.25 \times 0.25 = 1.5625
+G \times a = 10 \times 0.30 = 3
 $$
 
 And therefore:
 
 $$
-\text{Cost per QALY} = \dfrac{100{,}000}{1.5625} = 64{,}000
+\text{Cost per QALY} = \dfrac{100{,}000}{3} \approx 33{,}300
 $$
 
-Rounded to the nearest **\$10,000**, that gives a point estimate of **\$60,000/QALY**.
+Rounded to the nearest **\$5,000**, that gives a point estimate of **\$35,000/QALY**.
 :::
 
-#### Why use a 6.25x gross present-value return?
+#### Why use a 10x gross present-value return?
 
-This is a category-level central return, not a best-case science return. The strongest direct anchor (UK medical research) reports annualized social returns around 25% combining health gains and GDP spillovers (Assumption 1), and broader R&D work points higher. We use that literature to calibrate a **total present-value return** of about **6.25x** over the modeled benefit window, rather than treating the annualized return as a separate payment stream that can be multiplied without limit.
+This is a category-level central return, not a best-case science return. The strongest direct anchor (UK medical research) reports annualized social returns around 25% combining health gains and GDP spillovers (Assumption 1), and broader R&D work points higher. We use that literature to calibrate a **total present-value return** of about **10x** over the modeled benefit window, rather than treating the annualized return as a separate payment stream that can be multiplied without limit.
 
-:::details{title="Anchors, and why we stay at 25% for a broad category"}
-The strongest direct empirical anchor is the UK medical-research returns literature, which lands around **25 pence per year of value for each £1 invested** when health gains and GDP spillovers are combined (Assumption 1). Broader R&D work often points higher than that: Bloom et al. find that technology spillovers dominate business-stealing effects and imply social returns roughly twice private returns, while Jones & Summers argue that innovation investments likely generate benefits many times larger than their costs even after several downside adjustments (Assumption 2). GDP-based return estimates also miss some real non-market welfare from technology adoption: [Brynjolfsson, Collis, and Eggers 2019](https://www.nber.org/system/files/working_papers/w25695/w25695.pdf) find very large consumer surplus from digital goods, which is another reason to treat **25%** as a reasonable category-level gross-return assumption rather than a best-case number.
+:::details{title="Anchors, and why we use 10x for a broad category"}
+The strongest direct empirical anchor is the UK medical-research returns literature, which lands around **25 pence per year of value for each £1 invested** when health gains and GDP spillovers are combined (Assumption 1). Broader R&D work often points higher than that: Bloom et al. find that technology spillovers dominate business-stealing effects and imply social returns roughly twice private returns, while Jones & Summers argue that innovation investments likely generate benefits many times larger than their costs even after several downside adjustments (Assumption 2). GDP-based return estimates also miss some real non-market welfare from technology adoption: [Brynjolfsson, Collis, and Eggers 2019](https://www.nber.org/system/files/working_papers/w25695/w25695.pdf) find very large consumer surplus from digital goods.
 
-So if we were modeling only the very best philanthropic science opportunities, a number above **6.25x** could easily be defended. We use **6.25x** anyway because this category is broader than just the very best cases. It includes some general university science, basic research, and technology work whose path to human benefit is more indirect than the best translational or mission-driven opportunities. As a rough cross-check, **6.25** gross welfare-equivalent dollars per dollar donated before the separate additionality discount is in the same ballpark as the **\$5-\$13** social-return range from Jones and Summers.
+So if we were modeling only the very best philanthropic science opportunities, a number above **10x** could be defended. We use **10x** because this category is selected but still broad: it includes mission-driven institutes, tools, fellowships, open infrastructure, and some university science, not only the highest-upside translational bets. As a rough cross-check, **10** gross welfare-equivalent dollars per dollar donated before the separate additionality discount sits between the conservative **\$5** and more optimistic **\$13+** social-return figures in Jones and Summers.
 :::
 
-#### Why only 25% additionality?
+#### Why only 30% additionality?
 
-This is the main reason the estimate is not dramatically lower than **\$60,000/QALY**. It is a middle ground. It sits much lower than assuming donors fund empty fields with no substitute capital, but much higher than assuming all science funding behaves like a marginal NIH R01 near the funding cutoff. The factor also covers more than simple crowd-out. The empirical anchors are net-output measures, so the **25%** implicitly covers project failure, scientific dead ends, overhead, and other ways dollars fail to turn into useful downstream results.
+This is the main reason the estimate is not close to **\$10,000/QALY**. If every gross dollar of value were fully creditable to the donor, the 10x gross return would imply about \$10,000/QALY. We instead credit only **30%** of that gross value to the next donated dollar. That still discounts heavily for substitute funding, project failure, scientific dead ends, overhead, and other ways dollars fail to turn into useful downstream results.
 
 :::details{title="The low- and high-additionality evidence"}
 The low-additionality case is real. Jacob and Lefgren show that marginal NIH project grants can have surprisingly small measured publication effects, consistent with researchers finding substitute funding or reshuffling projects. Shekhtman et al. show that science philanthropy is already huge, locally concentrated, and correlated with existing prestige funding. Those are all reasons to avoid assuming that a random extra donor dollar is close to fully decisive.
 
-But the low-additionality case is also too pessimistic for **strong** philanthropy. Azoulay et al. show that flexible HHMI-style support can produce much more ambitious and higher-impact work than standard NIH-style project funding. Many science philanthropists explicitly try to fund people, tools, bottlenecks, and risky early-stage work that standard funders undersupply.
+But the low-additionality case is too pessimistic for the category we are modeling. Azoulay et al. show that flexible HHMI-style support can produce much more ambitious and higher-impact work than standard NIH-style project funding. Many science philanthropists explicitly try to fund people, tools, bottlenecks, and risky early-stage work that standard funders undersupply. That is why we use **30%** rather than a number closer to the NIH cutoff evidence.
 :::
 
 #### Range
 
-The plausible range is **\$25,000-\$300,000/QALY**. The width reflects two multiplicative drivers — total gross return $G$ (2.25x-16x) and additionality $a$ (0.10-0.40) — plus model uncertainty the parameter sweep leaves out: the \$100,000/QALY conversion, dual-use downside risk, and how much of the credited value is genuine additionality rather than acceleration.
+The plausible range is **\$15,000-\$250,000/QALY**. The width reflects two multiplicative drivers — total gross return $G$ (4x-20x) and additionality $a$ (0.10-0.50) — plus model uncertainty the parameter sweep leaves out: the \$100,000/QALY conversion, dual-use downside risk, and how much of the credited value is genuine additionality rather than acceleration.
 
-Pushing both parameters to their favorable extremes together (and likewise to their unfavorable extremes) gives an all-extremes figure of about **\$16,000-\$440,000/QALY**. We publish inside that span but still very wide — about **\$25,000-\$300,000**. Hitting both extremes at once is unlikely, so the realistic range is narrower than the all-extremes figure. But we keep it wide for two reasons: the parameters are positively correlated (an optimistic read of science philanthropy lifts both return and additionality), and the listed parameters miss some model uncertainty. The upper bound runs especially high because a real upper tail exists — unrestricted gifts to already-rich universities, endowment accumulation, and prestige science with weak paths to human benefit. The lower bound stays well above the most favorable corner because the best case requires both return and additionality near their best at once.
+Pushing both parameters to their favorable extremes together gives about **\$10,000/QALY**; pushing both to their unfavorable extremes gives about **\$250,000/QALY**. We publish **\$15,000-\$250,000/QALY**. The low end stays above the most favorable corner because it requires both high returns and high additionality. The high end stays near the unfavorable corner because a real weak-recipient tail exists: unrestricted gifts to already-rich universities, endowment accumulation, prestige science with weak paths to human benefit, and technical work with meaningful downside risk.
 
 :::details{title="Every parameter pushed to its edge at once"}
-**Optimistic corner** (all favorable: $G = 16$, $a = 0.40$):
+**Optimistic corner** (all favorable: $G = 20$, $a = 0.50$):
 
 $$
-\dfrac{100{,}000}{16 \times 0.40} \approx 15{,}600
+\dfrac{100{,}000}{20 \times 0.50} = 10{,}000
 $$
 
-**Pessimistic corner** (all unfavorable: $G = 2.25$, $a = 0.10$):
+**Pessimistic corner** (all unfavorable: $G = 4$, $a = 0.10$):
 
 $$
-\dfrac{100{,}000}{2.25 \times 0.10} \approx 444{,}400
+\dfrac{100{,}000}{4 \times 0.10} = 250{,}000
 $$
 
-These two extremes bracket about \$16,000-\$440,000/QALY. The published range is narrower than this corner, but it stays wide because the inputs are positively correlated and the sweep omits the conversion and dual-use uncertainties.
+These two extremes bracket about \$10,000-\$250,000/QALY. The published range starts above the optimistic corner but keeps the high end near the unfavorable corner because the weak-recipient tail is real.
 :::
 
 ### Start time
@@ -153,7 +153,7 @@ Twenty-five years is a reasonable compromise between "innovation has long tails"
 
 ## Key uncertainties
 
-1. **How additional the marginal dollar really is.** This is the single most important uncertainty. If most marginal donations mainly substitute for government, university, or other foundation funding, the category is much worse than **\$60,000/QALY**. If donors really are filling neglected bottlenecks, it is much better.
+1. **How additional the marginal dollar really is.** This is the single most important uncertainty. If most marginal donations mainly substitute for government, university, or other foundation funding, the category is much worse than **\$35,000/QALY**. If donors really are filling neglected bottlenecks, it is much better.
 
 2. **How representative the strongest literature is of the actual tagged recipients.** The return estimates in the literature often come from relatively successful research ecosystems. Some specific recipients in this category are likely much better or much worse than the category default.
 
@@ -170,4 +170,5 @@ Twenty-five years is a reasonable compromise between "innovation has long tails"
 _The following analysis was done on April 10th 2026 by GPT-5, with prompts from Impact List staff._
 
 - The main conceptual constraint is to keep the return model separate from diffusion timing, so `costPerQALY` does not implicitly discount the same delays that `startTime` is meant to represent.
+- June 2026 revision: moved the gross return from 6.25x to 10x and additionality from 25% to 30%, because the prior estimate seemed too low for the well-chosen, funding-constrained part of science philanthropy this category is meant to model.
 - A future dedicated assumption page on **science-philanthropy additionality** could be useful if more recipient-specific overrides are added in this category.

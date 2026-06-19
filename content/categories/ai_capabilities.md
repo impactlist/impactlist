@@ -9,7 +9,7 @@ effects:
   - effectId: standard-utopia
     startTime: 10
     windowLength: 5
-    costPerQALY: 33_000
+    costPerQALY: 8_300
   - effectId: population-doom
     startTime: 10
     windowLength: 1_000_000_000_000
@@ -104,7 +104,7 @@ Importantly, this is **not** the probability that advanced AI is merely "on bala
 
 ### Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$33,000 (\$10,000–\$1,000,000)
+- **Cost per QALY:** \$8,300 (\$3,000–\$300,000)
 - **Start time:** 10 years
 - **Duration:** 5 years
 
@@ -119,13 +119,13 @@ _If you disagree with these estimates after reading this page, click 'Edit' near
 3. Total cumulative frontier or near-frontier AI spending before transformative AI is reached is roughly **\$5 trillion** centrally. ([See detailed justification](/assumption/cumulative-frontier-ai-spending-before-transformative-ai))
 4. A marginal philanthropic dollar in this cause is best modeled as about **30 cents of frontier-equivalent capability acceleration**, after accounting for crowd-out and the fact that some funded work is not direct frontier training. ([See detailed justification](/assumption/frontier-equivalent-share-of-ai-capabilities-philanthropy))
 5. Grace et al. (2024) report that respondents assigned about **10%** median probability and about **23%** mean probability to "extremely good" outcomes from HLMI. Because this effect is meant to capture only very good futures, we use **10%** as the central probability, with a rough plausible range of **3%-25%**. ([Grace et al. 2024](https://aiimpacts.org/wp-content/uploads/2023/04/Thousands_of_AI_authors_on_the_future_of_AI.pdf))
-6. In a genuinely very good transformative-AI world, welfare might improve by roughly **500 million QALYs per year** relative to baseline, with a rough plausible range of **100 million-2 billion QALYs per year**. The central figure corresponds to about 0.05 extra QALYs per year for 10 billion people. That is smaller than today's gap between rich-country and poor-country life conditions for much of the world, and it still leaves room for major improvements in health, poverty, and drudgery reduction rather than assuming literal utopia. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [World Bank 2024](https://www.worldbank.org/en/publication/poverty-prosperity-and-planet), [Our World in Data](https://ourworldindata.org/working-hours))
+6. In a genuinely very good transformative-AI world, welfare might improve by roughly **2 billion QALYs per year** relative to baseline, with a rough plausible range of **500 million-6 billion QALYs per year**. The central figure corresponds to about **0.2 extra QALYs per person-year** for 10 billion people. This is meant to represent a genuinely transformative positive world: disease burden, extreme poverty, and much unwanted labor fall sharply, while average autonomy and material living standards rise. It still does not assume literal utopia. ([WHO](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy), [World Bank 2024](https://www.worldbank.org/en/publication/poverty-prosperity-and-planet), [Our World in Data](https://ourworldindata.org/working-hours))
 
 ### Details
 
 #### Cost per QALY
 
-The **\$33,000/QALY** point estimate comes from a timing model: a donation buys a tiny fraction of frontier acceleration ($a_{\text{frontier}}/S_{\text{total}}$), which brings forward a very good world (probability $p_{\text{good}}$) worth $\Delta Q_{\text{year}}$ extra QALYs per year for the $T$ years it arrives early. With the central assumptions this is about $3 \times 10^{-5}$ QALYs per dollar, i.e. roughly **\$33,000/QALY**.
+The **\$8,300/QALY** point estimate comes from a timing model: a donation buys a tiny fraction of frontier acceleration ($a_{\text{frontier}}/S_{\text{total}}$), which brings forward a very good world (probability $p_{\text{good}}$) worth $\Delta Q_{\text{year}}$ extra QALYs per year for the $T$ years it arrives early. With the central assumptions this is about $1.2 \times 10^{-4}$ QALYs per dollar, i.e. roughly **\$8,300/QALY**.
 
 :::details{title="The timing-model formula and parameter substitution"}
 
@@ -135,28 +135,28 @@ $$
 
 Where $p_{\text{good}}$ is the probability of a genuinely very good outcome (Assumption 5), $a_{\text{frontier}}$ the frontier-equivalent acceleration per donated dollar (Assumption 4), $S_{\text{total}}$ cumulative frontier spending before transformative AI (Assumption 3), $T$ the years until transformative AI (Assumption 2), and $\Delta Q_{\text{year}}$ the annual QALY gain in the very good world relative to baseline (Assumption 6).
 
-Using $p_{\text{good}} = 0.10$, $a_{\text{frontier}} = 0.30$, $S_{\text{total}} = 5 \times 10^{12}$, $T = 10$, and $\Delta Q_{\text{year}} = 5 \times 10^{8}$:
+Using $p_{\text{good}} = 0.10$, $a_{\text{frontier}} = 0.30$, $S_{\text{total}} = 5 \times 10^{12}$, $T = 10$, and $\Delta Q_{\text{year}} = 2 \times 10^{9}$:
 
 $$
-\text{QALYs per \$} \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \times 10 \times 5 \times 10^{8}
-\approx 3 \times 10^{-5}
+\text{QALYs per \$} \approx 0.10 \times \dfrac{0.30}{5 \times 10^{12}} \times 10 \times 2 \times 10^{9}
+\approx 1.2 \times 10^{-4}
 $$
 
 $$
-\text{Cost per QALY} \approx \dfrac{1}{3 \times 10^{-5}} \approx \$33{,}300
+\text{Cost per QALY} \approx \dfrac{1}{1.2 \times 10^{-4}} \approx \$8{,}300
 $$
 
 :::
 
 This number is **very sensitive** to worldview assumptions: if very good transformative-AI futures are much less likely or much farther away, this effect shrinks. The effect only captures the upside of earlier very good futures. It does **not** imply the overall cause is good, because the doom effect below is also material. Like the doom effect, it assumes small marginal capability pushes translate roughly linearly into timeline acceleration. That is imperfect, since real progress may involve thresholds, bottlenecks, and race dynamics, but it is a tractable simplification, not a literal claim.
 
-The plausible range (**\$10,000–\$1,000,000/QALY**) is wide and skewed toward the expensive (weak-effect) end. It is _narrower_ than what pushing all five terms to one edge at once would give. That is because some of the terms — the frontier-equivalent share, the spending denominator, and the timeline — are roughly independent, so they rarely all land at their favorable (or unfavorable) extreme together. But the weak-effect end still runs far out. The largest uncertainties — whether very good futures are at all likely, how big the welfare gain would be, and whether a marginal dollar accelerates the timeline at all — are worldview judgments that move together, and the possibility that this effect is essentially negligible lives _outside_ any tidy combination of the parameters.
+The plausible range (**\$3,000–\$300,000/QALY**) is wide and skewed toward the expensive (weak-effect) end. It is _narrower_ than what pushing all five terms to one edge at once would give. That is because some of the terms — the frontier-equivalent share, the spending denominator, and the timeline — are roughly independent, so they rarely all land at their favorable (or unfavorable) extreme together. But the weak-effect end still runs far out. The largest uncertainties — whether very good futures are at all likely, how big the welfare gain would be, and whether a marginal dollar accelerates the timeline at all — are worldview judgments that move together, and the possibility that this effect is essentially negligible lives _outside_ any tidy combination of the parameters.
 
 :::details{title="What the bounds represent"}
-The point estimate multiplies five uncertain terms. Each carries a rough plausible range: the frontier-equivalent share (0.12–0.55), the spending denominator (\$2–20 trillion), the years to transformative AI (roughly 4–24), the very-good-future probability (3%-25%), and the annual welfare gain (100 million-2 billion QALYs). Pushing all five to their favorable edges together implies a cost of a few hundred dollars per QALY; pushing all five to their unfavorable edges implies well over \$10 million/QALY. That all-edges span is much wider than the published plausible range because several inputs would need to land at the same edge together.
+The point estimate multiplies five uncertain terms. Each carries a rough plausible range: the frontier-equivalent share (0.12–0.55), the spending denominator (\$2–20 trillion), the years to transformative AI (roughly 4–24), the very-good-future probability (3%-25%), and the annual welfare gain (500 million-6 billion QALYs). Pushing all five to their favorable edges together implies a cost around \$100 per QALY; pushing all five to their unfavorable edges implies a few million dollars per QALY. That all-edges span is much wider than the published plausible range because several inputs would need to land at the same edge together.
 
-- **\$10,000** is a coherently optimistic bundle: very good futures are somewhat more likely than the 10% central figure, acceleration is toward the high end, and the timeline is long enough for the early-arrival window to compound — but not every term at its limit.
-- **\$1,000,000** carries the genuinely skeptical worldview, in which very good futures are rare, the annual gain is modest, and small capability pushes barely move the timeline. We run this end well beyond the roughly independent combination of the parameter ranges, because a correlated skeptical worldview and the chance that the linear-acceleration model simply does not hold both push this effect toward negligible — a tail the parameters alone understate.
+- **\$3,000** is a coherently optimistic bundle: very good futures are somewhat more likely than the 10% central figure, acceleration is toward the high end, and the welfare gain is large — but not every term at its limit.
+- **\$300,000** carries the genuinely skeptical worldview, in which very good futures are rare, the annual gain is much smaller than the central figure, and small capability pushes barely move the timeline. We run this end well beyond the roughly independent combination of the parameter ranges, because a correlated skeptical worldview and the chance that the linear-acceleration model simply does not hold both push this effect toward negligible — a tail the parameters alone understate.
 :::
 
 #### Start time
@@ -254,13 +254,13 @@ The duration is controlled by the global time limit parameter. AI existential ca
 At the default 100-year time horizon and default 0% discount rate, the central estimates imply the following rough magnitudes per **\$1 million donated**:
 
 - **standard-mundane:** about **9.6 QALYs gained** (\$1,000,000 / \$104,000)
-- **standard-utopia:** about **30.3 QALYs gained** (\$1,000,000 / \$33,000)
+- **standard-utopia:** about **120 QALYs gained** (\$1,000,000 / \$8,300)
 - **population-doom:** about **8,650 QALYs destroyed** (0.0084 microprobabilities times about 1,030,000 QALYs per microprobability)
 
 So at the default settings, the net effect is roughly:
 
 $$
-9.6 + 30.3 - 8{,}650 \approx -8{,}610 \text{ QALYs}
+9.6 + 120 - 8{,}650 \approx -8{,}520 \text{ QALYs}
 $$
 
 At ordinary time horizons the existential-risk downside dominates the positive terms unless the underlying worldview assumptions change substantially.
@@ -274,8 +274,9 @@ These numbers are rough order-of-magnitude judgments. The biggest uncertainties 
 1. **How frontier-direct the marginal recipient is.** A dollar to a frontier lab, an open-model effort, and a public-interest AI institute do not have the same effect.
 2. **How much capability acceleration markets would already have bought.** This is the central reason the ordinary-benefit estimate is weaker than it first appears.
 3. **Whether transformative-AI acceleration is mostly good or mostly bad.** The upside and downside terms both depend heavily on worldview assumptions, and the upside and downside terms are partly correlated rather than fully independent.
-4. **Whether marginal risk scales linearly.** Real systems may have thresholds, bottlenecks, or race dynamics that make the doom effect either much smaller or much larger than this simple model.
-5. **Boundary around the catastrophe.** We now model extinction, irreversible disempowerment, and stable lock-in, but not every serious AI harm. Severe inequality, AI-enabled biosecurity damage below the existential threshold, or large nonhuman-animal effects could still make the category look too positive if capability acceleration materially worsens them.
+4. **How much better a very good transformative-AI world is.** The standard-utopia effect uses **2 billion extra QALYs per year** centrally, or about **0.2 extra QALYs per person-year** for 10 billion people. If you think a very good world would be only modestly better than baseline, the upside shrinks a lot; if you think disease, poverty, and drudgery mostly disappear, it grows.
+5. **Whether marginal risk scales linearly.** Real systems may have thresholds, bottlenecks, or race dynamics that make the doom effect either much smaller or much larger than this simple model.
+6. **Boundary around the catastrophe.** We now model extinction, irreversible disempowerment, and stable lock-in, but not every serious AI harm. Severe inequality, AI-enabled biosecurity damage below the existential threshold, or large nonhuman-animal effects could still make the category look too positive if capability acceleration materially worsens them.
 
 {{CONTRIBUTION_NOTE}}
 

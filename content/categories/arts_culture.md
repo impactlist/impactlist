@@ -4,8 +4,8 @@ name: 'Arts, Culture, Heritage'
 effects:
   - effectId: standard
     startTime: 1
-    windowLength: 1
-    costPerQALY: 15_000
+    windowLength: 10
+    costPerQALY: 180_000
 ---
 
 # Justification of cost per life
@@ -14,21 +14,25 @@ effects:
 
 ## Description of effect
 
-This effect captures charities that improve health and wellbeing by increasing direct participation in arts, culture, and heritage activities: arts-on-prescription programmes, community choirs, dance and creative workshops, and structured museum or heritage engagement. We model charities that pay for access, facilitation, and outreach to people with elevated loneliness, mild-to-moderate mental-health burden, or older age.
+This effect captures broad arts, culture, and heritage philanthropy: museums, libraries, opera and theater, orchestras, cultural centers, archives, art collections, arts education, community arts, cultural access programs, and heritage preservation or restoration.
 
-We do **not** model preservation, elite arts production, or broad subsidy to cultural institutions unless they clearly translate into direct, attributable participation gains. For a donor, the evidence for those broader pathways is much weaker.
+These donations can create real welfare. They give people enjoyment, meaning, identity, social connection, education, and access to shared cultural goods. But most large gifts in this category support institutions, buildings, collections, endowments, or productions. Only a small share looks like the targeted participation programs with the strongest evidence.
 
 ## What kinds of charities are we modeling?
 
-These estimates are for **direct participation programs**: arts-on-prescription, facilitated museum or heritage engagement, community choirs, dance and creative workshops, and similar targeted access programs for people with elevated need.
+We model the average marginal donation to the broad category. That includes three kinds of giving:
 
-They are **not** meant for generic museums, opera companies, theaters, preservation projects, elite arts production, or capital campaigns unless a recipient-level model shows that the marginal gift buys comparable direct participation gains.
+- **Targeted participation and access programs:** arts-on-prescription, museum-based group activities, community choirs, dance and creative workshops, and subsidized access for people with elevated need.
+- **Public cultural institutions:** museums, libraries, opera companies, theaters, orchestras, cultural centers, exhibitions, performances, public programming, and educational outreach.
+- **Heritage, capital, and endowment-heavy gifts:** restoration projects, new buildings, collections, archives, monuments, institutional reserves, and prestige cultural assets.
+
+The first bucket has the strongest causal evidence, but it is a small slice of the category default. The second and third buckets are still valuable, but their marginal effect is harder to trace: a gift may improve quality, keep admission lower, expand programming, preserve a collection, or bring a project forward rather than create a clearly new unit of wellbeing.
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
-- **Cost per QALY:** \$15,000 (\$5,000–\$60,000)
+- **Cost per QALY:** \$180,000 (\$40,000–\$2,000,000)
 - **Start time:** 1 year
-- **Duration:** 1 year
+- **Duration:** 10 years
 
 *If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values.*
 
@@ -36,93 +40,105 @@ They are **not** meant for generic museums, opera companies, theaters, preservat
 
 {{GLOBAL_ASSUMPTIONS_NOTE}}
 
-1. The strongest causal evidence is for structured participatory programmes and targeted access programmes, not for broad arts subsidy or heritage preservation in the abstract. ([WHO scoping review](https://www.ncch.org.uk/uploads/WHO-Scoping-Review-Arts-and-Health.pdf), [DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf), [Jensen et al. 2024](https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2024.1412306/full))
-2. A community singing RCT in older adults found that the intervention group gained 0.015 more QALYs over 6 months than controls. The authors concluded that the programme was marginally more cost-effective than usual activities, with a 64% probability of being cost-effective at a £30,000/QALY threshold. ([Coulton et al. 2015](https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/effectiveness-and-costeffectiveness-of-community-singing-on-mental-healthrelated-quality-of-life-of-older-people-randomised-controlled-trial/516558F0DDD7D4DD0197FDDEAD30ED85))
-3. DCMS/Frontier's 2024 modelling of a weekly 12-week museum-based arts programme for older adults implies roughly 0.009-0.017 QALYs per participant, depending on persistence assumptions, based on the underlying RCT evidence. ([DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf), [Beauchet et al. 2022](https://pubmed.ncbi.nlm.nih.gov/35578103/))
-4. Real-world Arts on Prescription programmes appear to generate meaningful wellbeing gains: Jensen et al.'s 2024 meta-analysis found an average WEMWBS improvement of 5.82 points (95% CI 4.90-6.75). ([Jensen et al. 2024](https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2024.1412306/full))
-5. Benefits are larger in programmes that reach people with elevated baseline need and maintain strong attendance. In the ArtGran museum programme for older adults, higher attendance was associated with significantly lower loneliness and better quality-of-life subscales. ([Mouriño-Ruiz et al. 2024](https://pubmed.ncbi.nlm.nih.gov/38552347/))
-6. A reasonable central estimate for a completed participant-course is 0.015 QALYs, with a plausible range of 0.01-0.02 QALYs. The central figure is anchored on the Coulton RCT and corroborated by the DCMS/Frontier museum model, while the range allows for both weaker real-world implementation and stronger targeted programmes. ([Coulton et al. 2015](https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/effectiveness-and-costeffectiveness-of-community-singing-on-mental-healthrelated-quality-of-life-of-older-people-randomised-controlled-trial/516558F0DDD7D4DD0197FDDEAD30ED85), [DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf))
-7. Coulton reports total delivery cost of £176.84 per session and estimates the **cost per participant over 14 sessions** at **£18.88**. That trial costing includes training, management, administration, facilitator time, venue hire, and refreshments, but a donor to a real charity also funds outreach, access support, attrition, and organization-level overhead. Allowing substantial room for those costs gives a reasonable central donor cost of about **\$225** per completed participant-course, with a plausible range of roughly **\$75-\$600**. Social prescribing economic reviews note that voluntary/community-sector and other direct non-medical costs are often omitted from published analyses. ([Coulton et al. 2015](https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/effectiveness-and-costeffectiveness-of-community-singing-on-mental-healthrelated-quality-of-life-of-older-people-randomised-controlled-trial/516558F0DDD7D4DD0197FDDEAD30ED85), [NASP economic review](https://socialprescribingacademy.org.uk/media/carfrp2e/evidence-review-economic-impact.pdf))
-8. The best-supported benefits last for roughly 3-6 months after programme start, with some extension when people keep attending or form durable social ties. Evidence for benefits beyond a year is thin, so long-duration estimates should be heavily discounted. ([Coulton et al. 2015](https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/effectiveness-and-costeffectiveness-of-community-singing-on-mental-healthrelated-quality-of-life-of-older-people-randomised-controlled-trial/516558F0DDD7D4DD0197FDDEAD30ED85), [Sumner et al. 2021](https://pubmed.ncbi.nlm.nih.gov/33631514/), [DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf))
-9. Broad observational evidence linking cultural engagement to lower depression and dementia risk is suggestive, but not clean enough to drive the central estimate because selection effects remain substantial. ([Fancourt & Tymoszuk 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC6758670/), [WHO scoping review](https://www.ncch.org.uk/uploads/WHO-Scoping-Review-Arts-and-Health.pdf), [DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf))
-10. Real-world social prescribing evaluations provide a useful but noisy cross-check. Doncaster reported £1,963 per QALY, while City and Hackney reported £20,100 per QALY. Both should be treated cautiously: Doncaster used a short horizon and a less rigorous evaluation design, while the City and Hackney estimate was based on only 59 participants, only 3 months of QALY measurement, and omitted voluntary/community-sector costs. ([Dayson & Bennett 2016](https://www4.shu.ac.uk/research/cresr/sites/shu.ac.uk/files/eval-doncaster-social-prescribing-service.pdf), [NASP 2023 briefing](https://socialprescribingacademy.org.uk/media/2uxfx40g/building-the-economic-case-for-social-prescribing-briefing-october-2023.pdf))
-11. The economic evidence base is still thin. A 2023 systematic review of economic evaluations in older adults found only six eligible studies and concluded that the evidence was encouraging but still too limited to support very precise cost-effectiveness claims. ([Crealey et al. 2023](https://link.springer.com/article/10.1186/s12889-023-17369-x))
+1. The broad category includes both highly targeted participation programs and general cultural philanthropy, including donations to operas, museums, theaters, libraries, archives, and heritage projects. The current recipient set tagged to this category includes examples such as San Francisco Opera, Lincoln Center, the New York Public Library, the Smithsonian, LACMA, MoMA, the Art Institute of Chicago, Notre-Dame reconstruction, and major arts foundations.
+2. The strongest causal evidence is for structured participatory programs and targeted access programs. These include community singing, arts-on-prescription, and museum-based programs for older adults or people with elevated need. ([WHO scoping review](https://www.ncch.org.uk/uploads/WHO-Scoping-Review-Arts-and-Health.pdf), [DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf), [Jensen et al. 2024](https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2024.1412306/full))
+3. Targeted participation and access programs make up about **3%** of the average marginal dollar in this category, with a plausible range of **0%–15%**. We estimate these programs at about **\$15,000/QALY**, with a plausible range of **\$5,000–\$60,000/QALY**. This is based on the direct participation model: roughly \$225 per completed participant-course divided by about 0.015 QALYs gained. ([Coulton et al. 2015](https://www.cambridge.org/core/journals/the-british-journal-of-psychiatry/article/effectiveness-and-costeffectiveness-of-community-singing-on-mental-healthrelated-quality-of-life-of-older-people-randomised-controlled-trial/516558F0DDD7D4DD0197FDDEAD30ED85), [DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf))
+4. Public cultural institutions make up about **62%** of the average marginal dollar, with a plausible range of **45%–80%**. We estimate this bucket at about **\$200,000/QALY**, with a plausible range of **\$50,000–\$1,000,000/QALY**. This is a judgment anchor, not a direct empirical estimate. The benefits are real, but many gifts buy quality, affordability, institutional stability, or visitor experience rather than clearly new participation.
+5. Heritage, capital, and endowment-heavy gifts make up about **35%** of the average marginal dollar, with a plausible range of **15%–60%**. We estimate this bucket at about **\$750,000/QALY**, with a plausible range of **\$100,000–\$5,000,000/QALY**. This is also a judgment anchor. These gifts can preserve valuable cultural assets for many people over many years, but the link from a marginal donor dollar to additional wellbeing is often indirect.
+6. DCMS/Frontier's 2024 review supports the idea that general cultural engagement has wellbeing value, including attendance at museums, galleries, heritage sites, theatre, cinema, and concerts. It also notes that evidence is weaker for built historic environments, archives, digital assets, and intangible heritage, which is why the heritage/capital bucket is much less effective than targeted participation. ([DCMS/Frontier 2024](https://worldheritageuk.org/wp-content/uploads/2025/01/DCMS-Frontier-Economics-Health-and-Wellbeing-Report-Nov-2024.pdf))
+7. Our central portfolio is therefore **3% targeted participation at \$15,000/QALY**, **62% public cultural institutions at \$200,000/QALY**, and **35% heritage/capital/endowment-heavy giving at \$750,000/QALY**. This gives about **\$180,000/QALY**.
+8. The plausible range is **\$40,000–\$2,000,000/QALY**. The good end means a donor dollar buys unusually additional access or participation. The bad end means little or none of the money reaches targeted participation, and most of it funds capital, prestige, preservation, or higher-quality experiences for people who would otherwise get similar cultural benefits elsewhere.
+9. We use a **1-year start time** because most grants affect programming, hiring, access, construction, or preservation only after a budget cycle.
+10. We use a **10-year duration** because the broad category includes both short-run operating support and long-lived cultural assets. This is a timing assumption: the cost-per-QALY estimate already represents total discounted benefits from the donation, while the duration spreads those benefits over time in the model.
 
 ## Details
 
 ### Cost per QALY
 
-The estimate divides a donor cost per completed participant-course by the QALY gain that course produces:
+The direct-participation estimate is useful, but only for one small slice of the category. A broad arts and heritage default needs to price in opera, museums, libraries, collections, buildings, restoration, and endowments.
 
-$$\text{Cost per QALY} = \dfrac{\$225}{0.015} = \$15{,}000/\text{QALY}$$
+We model the category as a portfolio:
 
-Both inputs are anchored on the cleanest available evidence — the community singing RCT for the QALY gain, and the same trial's micro-costing (marked up heavily for whole-charity overhead, access support, attrition, and counterfactual uncertainty) for the cost. We use **\$15,000/QALY** and carry a plausible range of about **\$5,000-\$60,000/QALY**.
+$$
+\text{QALYs per dollar} =
+\frac{0.03}{\$15{,}000}
++ \frac{0.62}{\$200{,}000}
++ \frac{0.35}{\$750{,}000}
+\approx 0.0000056
+$$
 
-That range is wider than a simple independent combination of the two inputs would suggest. The optimistic end corresponds to unusually lean, highly targeted delivery. The pessimistic end reflects three things the inputs don't capture: the unresolved funding counterfactual, thin and heterogeneous economic literature, and reliance on a single direct-QALY RCT in older adults. These risks are large and asymmetric, because fungible funding can only worsen cost-effectiveness. So we keep the upper end near the high-cost, low-QALY edge rather than narrowing aggressively.
+$$
+\text{Cost per QALY} =
+\frac{1}{0.0000056}
+\approx \$180{,}000/\text{QALY}
+$$
 
-:::details{title="Input sweep vs. the published range"}
-Pushing both inputs to their favorable extremes together, then to their unfavorable extremes together, gives a mechanical span of roughly **\$4,000-\$60,000/QALY**:
+We use **\$180,000/QALY**.
 
-- **Optimistic:** \$75 / 0.02 = \$3,750/QALY
-- **Pessimistic:** \$600 / 0.01 = \$60,000/QALY
+:::details{title="Why targeted participation stays much more effective than the category average"}
+The direct participation evidence is the best part of the arts evidence base. Coulton's community singing RCT found an incremental gain of **0.015 QALYs over 6 months** for older adults, and DCMS/Frontier's museum-based program model is in the same broad range. If a charity spends about **\$225** to deliver a completed course, that gives:
 
-For two independent inputs this span would overstate a plausible range: hitting both favorable extremes at once is a demanding joint scenario. We therefore do not publish the full optimistic corner. But we keep the pessimistic end near the corner, because the structural uncertainties above — the funding counterfactual, the thin literature, and the single RCT — are not captured by the two parameters at all and mostly push the estimate worse. Rounded, that gives a published range of about **\$5,000-\$60,000/QALY**.
+$$
+\frac{\$225}{0.015} = \$15{,}000/\text{QALY}
+$$
+
+That is not a good model for a typical opera, museum, library, restoration, or capital gift. Those gifts may still help many people, but the mechanism is less direct. A donor might subsidize existing programming, reduce ticket prices a little, improve artistic quality, preserve a building, or strengthen an institution's finances. Those are benefits, but they usually create fewer clearly attributable QALYs per dollar than a targeted program for lonely older adults or people with low baseline wellbeing.
 :::
 
-We deliberately do **not** start from "arts are good for people" and assume any arts donation inherits that benefit. The estimate is built around charities that buy actual participation — artist-led group sessions, museum programmes, community choirs, and arts-on-prescription courses. It targets groups with strong evidence of benefit, especially older adults and people with low baseline wellbeing.
+:::details{title="Why we use $200,000/QALY for public cultural institutions"}
+The public-institution bucket covers museums, libraries, operas, theaters, orchestras, exhibitions, public programming, and similar organizations. We expect real welfare gains from enjoyment, meaning, learning, identity, and social connection.
 
-**QALY gain per completed participant-course: 0.015 centrally (0.01-0.02).** The central figure is the direct QALY gain from the community singing RCT, corroborated by the DCMS/Frontier museum model; the range allows for weaker real-world implementation and stronger targeted programmes (Assumption 6).
+The harder question is marginality. Many visitors or audience members would have attended anyway, paid more, gone to another cultural activity, or received similar benefits from an institution's existing public, earned, or philanthropic funding. A broad gift often improves the quality or stability of an institution rather than creating a clean new participant-course.
 
-:::details{title="QALY-gain anchors and why we exclude the observational literature"}
-The cleanest direct QALY anchor is the community singing RCT: an incremental gain of **0.015 QALYs over 6 months** for the intervention group relative to controls (Assumption 2). That figure is useful because it measures QALYs directly, rather than converting from intermediate wellbeing measures. But it is still only one RCT, so we treat it as an anchor rather than a settled parameter.
+A rough way to read **\$200,000/QALY** is: each \$1 creates about 0.000005 QALYs, or about 2.6 quality-adjusted minutes. That can happen through many small experiences across many people: better performances, cheaper access, longer opening hours, educational programs, or keeping a public collection available.
 
-It is in the same ballpark as the DCMS/Frontier 2024 museum model, whose HTA valuation of weekly museum-based arts activities for older adults implies roughly **0.009-0.017 QALYs per participant**, depending on whether benefits persist for a short or somewhat longer period (Assumption 3).
-
-The broader Arts on Prescription literature is less causal, because many studies lack control groups, but it points the same way. Jensen et al.'s meta-analysis found a **5.82-point average WEMWBS improvement**, which suggests the trial results are not isolated statistical noise (Assumption 4). The ArtGran results suggest benefits are larger when programmes reach people with elevated baseline need and sustain attendance. That is why this estimate represents targeted access programmes rather than average cultural participation (Assumption 5).
-
-Both direct QALY anchors are from older-adult populations; QALY gains may differ for younger groups, though the broader Arts on Prescription wellbeing literature spans a wider age range (Assumption 4).
-
-We intentionally do **not** use the more dramatic observational literature on lower depression or dementia risk from cultural attendance to push the estimate higher, because those studies are much more vulnerable to selection effects (Assumption 9).
+This is not pinned down by a direct cost-effectiveness study. DCMS/Frontier supports the direction of the claim: broad cultural engagement has wellbeing value, but evidence is weaker and less intervention-like than the targeted participation evidence. We use a wide **\$50,000–\$1,000,000/QALY** plausible range because the same label covers free public libraries and museums on one end, and donor-supported elite cultural production on the other.
 :::
 
-**Donor cost per completed participant-course: about \$225 (\$75-\$600).** Coulton's trial micro-costing points to a very low direct programme cost per participant. We mark it up substantially, because a donor funds a whole operating charity, not just delivery inside the room (Assumption 7). Here the evidence is worse than for the QALY gain, which is the larger reason the overall range is wide.
+:::details{title="Why we use $750,000/QALY for heritage, capital, and endowment-heavy gifts"}
+The heritage/capital bucket covers restoration, new buildings, collections, archives, monuments, institutional reserves, and prestige assets. These gifts can have long-lived value: people may visit the asset, learn from it, feel pride or connection, or value the fact that it exists.
 
-:::details{title="From Coulton's per-session costing to a donor cost per course"}
-Coulton reports total delivery and training cost of **£176.84 per session** for the choir intervention, and Table 3 states the **cost per participant over 14 sessions** as **£18.88**. That figure is already per participant over the full course, not a per-session number to multiply by 14.
+But this is the weakest part of the model. The donation may change timing or quality rather than whether the asset exists. Benefits are often spread thinly across many people, some projects mainly shift cultural spending from one venue to another, and the evidence is weaker for built historic environments, archives, and intangible heritage than for direct participation or regular cultural engagement.
 
-We do not use £18.88 directly as the donor cost, because a donor funds outreach, access support, attrition, management, and the charity's overhead rather than only the trial's measured delivery cost. A central donor cost of about **\$225** represents a large markup over the trial micro-costing while still recognizing that these interventions are inexpensive to deliver. The lower bound of **\$75** represents unusually lean delivery or lower-cost settings; the upper bound of **\$600** allows for higher support intensity, attrition, and broader overhead.
+We use **\$750,000/QALY** centrally, with a wide **\$100,000–\$5,000,000/QALY** plausible range. The good end covers genuinely additional preservation of a widely used asset. The bad end covers gifts that mostly buy naming, prestige, aesthetic quality, or financial slack for an institution that would have survived anyway.
 :::
 
-As a sanity check, this bottom-up estimate is in the same neighborhood as real-world UK social prescribing evaluations: Doncaster reported **£1,963/QALY** and City and Hackney **£20,100/QALY** (Assumption 10). Both are too fragile to anchor the model by themselves, but they make a low-to-mid tens-of-thousands estimate look plausible rather than anomalous.
+:::details{title="Range checks for the $40,000–$2,000,000 interval"}
+The published plausible range is wider and more lopsided than a simple central calculation because the main uncertainty is whether the marginal dollar reaches targeted participation at all.
 
-:::details{title="Why the range stays wide: fragile cross-checks, thin literature, and counterfactuals"}
-**The cross-checks are noisy.** Doncaster's £1,963/QALY is much better than the central estimate here, but comes from a less rigorous evaluation and short-horizon extrapolation. City and Hackney's £20,100/QALY is closer, but was based on only **59 participants**, only **3 months** of QALY measurement, and omitted some voluntary/community-sector costs (Assumption 10).
+A favorable mix might be **15% targeted participation at \$10,000/QALY**, **70% public cultural institutions at \$75,000/QALY**, and **15% heritage/capital at \$250,000/QALY**:
 
-**The economic literature is small and heterogeneous.** With only a handful of eligible cost-effectiveness studies and many non-randomized programme evaluations, publication bias and selective reporting remain live concerns even if the published evidence is generally encouraging (Assumption 11).
+$$
+\frac{1}{\frac{0.15}{\$10{,}000} + \frac{0.70}{\$75{,}000} + \frac{0.15}{\$250{,}000}}
+\approx \$40{,}000/\text{QALY}
+$$
 
-**The funding counterfactual is unresolved.** The RCT evidence addresses the individual-level counterfactual by comparing participation against usual activities. It does not address the funding-fungibility question — what fraction of participation would have happened without the donor's contribution. For targeted charities serving people who lack easy alternative access, the counterfactual case is stronger than for general arts institutions. But it is not zero, especially in high-income settings where programmes combine philanthropic, public, and earned funding. We treat this as a reason for the wide range, not as a parameter we can currently estimate precisely.
+That is why the low end is around **\$40,000/QALY** rather than \$15,000/QALY: even a favorable broad-category donor mix is not usually all targeted participation.
 
-**We exclude NHS savings and productivity gains** from the central figure, even though some studies and the DCMS report suggest they exist, to keep the estimate focused on participant welfare and avoid double counting.
+A weak mix might have **0% targeted participation**, **40% public cultural institutions at \$1,000,000/QALY**, and **60% heritage/capital at \$5,000,000/QALY**:
+
+$$
+\frac{1}{\frac{0.40}{\$1{,}000{,}000} + \frac{0.60}{\$5{,}000{,}000}}
+\approx \$1{,}900{,}000/\text{QALY}
+$$
+
+That supports a high end around **\$2,000,000/QALY**. The tail is large because many real recipients in this category are pure public-institution or heritage gifts. For those, the cheap targeted-participation bucket may not apply at all.
 :::
 
 ### Start time
 
-The 1-year start time reflects grant cycles, partnership-building, facilitator hiring, and participant recruitment. Once a programme is operating, benefits can begin within weeks, but the time from donation to a functioning referral or outreach pipeline is often several months.
+The 1-year start time reflects grant cycles, season planning, hiring, program design, capital planning, and restoration timelines. Some operating grants affect programming faster, while construction or preservation gifts can take several years to matter.
 
 ### Duration
 
-The 1-year duration reflects that the strongest evidence is for benefits that accrue during an 8-14 week programme and persist for some months afterward. Some participants continue informally, get re-referred, or retain new social ties, but the evidence for strong benefits beyond a year is weak. A 1-year window is a reasonable expected-value estimate across programmes.
-
-### Notes on heritage
-
-We only give heritage funding credit here when it changes participation or access: museum prescribing, guided heritage activities, or culturally meaningful group programmes. We do **not** assume that preservation, restoration, or general institutional subsidy has the same cost-effectiveness as direct participation programmes, because the causal link from marginal donor dollar to participant wellbeing is much less clear.
+The 10-year duration is a rough average over a mixed category. Direct programs mostly benefit participants within a year, while museums, libraries, archives, opera houses, buildings, and restored heritage assets can keep producing benefits for a long time. We do not use a very long duration because many gifts fund operating budgets, and even capital gifts often bring forward or improve projects rather than creating all future benefits from scratch.
 
 {{CONTRIBUTION_NOTE}}
 
 # Internal Notes
 
-_The following analysis was done on April 6th 2026 by GPT-5.4 and Claude Opus 4.6, with prompts from Impact List staff._
+_The following analysis was updated on June 19th 2026 by GPT-5, with prompts from Impact List staff._
 
-- This category should be read as a model of the **best-supported participation charities in arts/culture**, not of generic arts philanthropy.
-- The biggest uncertainties are real-world per-participant cost, the size of counterfactual participation gains from donor funding, and how fast benefits decay after the programme ends.
-- If future evidence produces a credible multi-site RCT or pragmatic trial for arts-on-prescription with direct EQ-5D outcomes and real programme budgets, that should probably become the new primary anchor for this file.
+- This file previously modeled only targeted participation and used \$15,000/QALY. That remains as the targeted-participation bucket, but the category scope is now broader and includes opera, museums, libraries, heritage, capital, and endowment-heavy gifts.
+- The most load-bearing assumption is the targeted-participation share, because that cheap bucket contributes a large share of QALYs even when it receives little money. The \$200,000/QALY public-institution bucket is the next most important judgment anchor. If future donor coverage shows that category dollars are mostly direct participation, this estimate should move much better. If dollars are mostly capital/endowment/preservation for already-stable institutions, it should move worse.
+- The recipient set currently tagged to this category looks broad enough that a direct-participation-only default would overstate the category.

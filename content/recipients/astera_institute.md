@@ -16,7 +16,7 @@ categories:
 
 # Notes
 
-Astera Institute is modeled as a multi-cause research foundation: 45% longevity, 35% science and technology, 10% other, 5% AI capabilities, and 5% AI risk. The split reflects Astera's work across biomedical and longevity science, general science infrastructure, and Neuro & AGI programs. We do not apply a recipient-specific multiplier to the AI-risk slice; the category split already separates the safety-relevant AI work from the capabilities-relevant AI work, so Astera uses the default category estimates. ([Astera Neuro & AGI](https://astera.org/neuro-agi/), [Astera AI Safety](https://astera.org/ai-safety/), [Steve Byrnes](https://astera.org/team/steve-byrnes/))
+Astera Institute is modeled as a multi-cause research foundation: 45% longevity, 35% science and technology, 10% other, 5% AI capabilities, and 5% AI risk. The split reflects Astera's work across biomedical and longevity science, general science infrastructure, and Neuro & AGI programs. We do not apply a recipient-specific multiplier to the AI-risk slice. The split already separates the safety-relevant AI work from the capabilities-relevant AI work, so Astera uses the default category estimates. ([Astera Neuro & AGI](https://astera.org/neuro-agi/), [Astera AI Safety](https://astera.org/ai-safety/), [Steve Byrnes](https://astera.org/team/steve-byrnes/))
 
 # Justification of cost per life
 

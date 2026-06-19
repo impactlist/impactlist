@@ -12,7 +12,7 @@ categories:
 
 # Justification of cost per life
 
-We assign the Charter Cities Institute (CCI) a **cost per QALY of \$1,500**. The main reason it comes in below the baseline [Improving Institutions](/cause/institutions) estimate is that successful institutional improvements in lower-income countries can generate much larger welfare gains per dollar. The estimate still carries a large attribution discount because CCI is a research, technical-assistance, and convening organization rather than the direct builder of charter cities.
+We assign the Charter Cities Institute (CCI) a **cost per QALY of \$1,500**. It comes in below the baseline [Improving Institutions](/cause/institutions) estimate mainly because successful institutional improvements in lower-income countries can generate much larger welfare gains per dollar. We still apply a large attribution discount: CCI researches, advises, and convenes around charter cities, but it does not build them.
 
 ## Description of effect
 
@@ -71,7 +71,7 @@ This implies CCI could be much more effective than the baseline institutions est
 
 $$\text{Cost per QALY}_{CCI} = \frac{\$3{,}000}{2.0} = \$1{,}500$$
 
-The plausible range is **\$400-\$60,000/QALY**. The low end corresponds to a real charter-city success in a low-income setting where CCI was materially causal; the high end corresponds to the more common case where advocacy, convening, or policy design absorbs funding without producing a durable institutional improvement. The estimate is therefore best read as a hits-based override, not as a claim that the average charter-city project reliably clears this bar.
+The plausible range is **\$400-\$60,000/QALY**. The low end is a real charter-city success in a low-income setting where CCI was materially causal. The high end is the more common case, where advocacy, convening, or policy design absorbs funding without producing a durable institutional improvement. Read the estimate as a hits-based override, not as a claim that the average charter-city project reliably clears this bar.
 
 {{CONTRIBUTION_NOTE}}
 

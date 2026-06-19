@@ -12,11 +12,11 @@ categories:
 
 # Justification of cost per life
 
-We assign the Internet Archive a **cost per QALY of \$6,000**. The core idea is that preserving valuable knowledge can be much cheaper than creating it from scratch, which makes it look substantially better than the baseline [Science and Tech](/cause/science-tech) estimate, but the launch estimate now includes an explicit marginal-funding haircut because the Internet Archive already has a substantial contribution base.
+We assign the Internet Archive a **cost per QALY of \$6,000**. Preserving valuable knowledge is much cheaper than creating it from scratch, which puts the Internet Archive well below the baseline [Science and Tech](/cause/science-tech) estimate. We also apply an explicit marginal-funding haircut, because the Internet Archive already has a substantial contribution base.
 
 ## Description of effect
 
-This effect captures the welfare gains from the universal preservation of digital knowledge (The Wayback Machine, Open Library). While the baseline "Science and Tech" cause focuses on the expensive, high-risk process of _discovering new_ information (R&D), the Internet Archive focuses on the highly efficient process of _preventing the loss_ of existing information. We model this as "Civilizational Insurance": safeguarding the epistemic foundation upon which all other science, law, and culture rely.
+This effect captures the welfare gains from preserving digital knowledge for everyone (the Wayback Machine, Open Library). The baseline "Science and Tech" cause pays for the expensive, high-risk work of _discovering new_ information (R&D). The Internet Archive instead does the cheap work of _keeping existing_ information from being lost. We model this as "Civilizational Insurance": safeguarding the epistemic foundation that all other science, law, and culture rely on.
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
@@ -74,7 +74,7 @@ Applying that comparison to the baseline:
 
 $$\text{Cost per QALY}_{IA} = \frac{\$60{,}000}{10} = \$6{,}000$$
 
-The plausible range is **\$2,000-\$60,000/QALY**. The low end corresponds to the Internet Archive preserving unusually important records that would otherwise disappear and be costly or impossible to reconstruct. The high end corresponds to a world where much of the archive's marginal crawl is low-value, duplicated elsewhere, useful mostly to a small set of users, or funded by donors who would have replaced the marginal gift. The estimate remains below the science-and-tech baseline because preservation is unusually cheap, but the range is wide because "value per preserved page" and marginal funding additionality are both hard to measure.
+The plausible range is **\$2,000-\$60,000/QALY**. At the low end, the Internet Archive preserves unusually important records that would otherwise disappear and be costly or impossible to reconstruct. At the high end, much of its marginal crawl is low-value: duplicated elsewhere, useful only to a few people, or paid for by donors who would have replaced a marginal gift. The estimate stays below the science-and-tech baseline because preservation is so cheap. The range is wide because both "value per preserved page" and marginal funding additionality are hard to measure.
 
 {{CONTRIBUTION_NOTE}}
 

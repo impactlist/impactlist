@@ -8,11 +8,11 @@ categories:
 
 # Justification of cost per life
 
-The Thiel Fellowship inherits the [Education](/cause/education) category default. The case for a lower recipient-specific estimate rests on the Fellowship's "hits-based" strategy of accelerating unusually high-upside talent rather than improving average educational outcomes, but most of the raw value created by successful fellows should still be attributed to selection and the fellows themselves. At the current \$200,000-\$250,000 cost per fellow, the evidence is not strong enough to justify a below-default override.
+The Thiel Fellowship inherits the [Education](/cause/education) category default. The case for a lower estimate rests on the Fellowship's "hits-based" strategy: it accelerates unusually high-upside talent rather than improving average educational outcomes. But most of the raw value successful fellows create should still go to selection and the fellows themselves. At the current \$200,000-\$250,000 cost per fellow, the evidence is not strong enough to justify a below-default override.
 
 ## Description of effect
 
-This effect captures the welfare gains from the **Thiel Fellowship**, which pays unusually young founders and researchers to work full-time on entrepreneurial or scientific projects instead of following a conventional college path. The grant was historically \$100,000, and the 2026 class receives \$250,000 over two years. While the baseline "Standard Education" cause focuses on increasing educational attainment (e.g., university scholarships, K-12 interventions), the Thiel Fellowship acts as a talent-acceleration mechanism. We model this as shifting from a normal-distribution strategy (lifting the average student's wages) to a power-law strategy (uncapping the upside of outlier talent). The primary impact comes from accelerating high-impact companies or projects and from the cultural signal against credentialism. ([Thiel Foundation 2026 class announcement](https://www.businesswire.com/news/home/20260420984007/en/Thiel-Foundation-Announces-2026-Class-of-Thiel-Fellows))
+This effect captures the welfare gains from the **Thiel Fellowship**, which pays unusually young founders and researchers to work full-time on entrepreneurial or scientific projects instead of following a conventional college path. The grant was historically \$100,000, and the 2026 class receives \$250,000 over two years. The baseline "Standard Education" cause raises educational attainment (e.g., university scholarships, K-12 interventions). The Thiel Fellowship instead accelerates talent. We model this as a shift from a normal-distribution strategy (lifting the average student's wages) to a power-law strategy (uncapping the upside of outlier talent). The primary impact comes from accelerating high-impact companies or projects and from the cultural signal against credentialism. ([Thiel Foundation 2026 class announcement](https://www.businesswire.com/news/home/20260420984007/en/Thiel-Foundation-Announces-2026-Class-of-Thiel-Fellows))
 
 ## Point estimates and {{PLAUSIBLE_RANGES}}
 
@@ -33,7 +33,7 @@ This effect captures the welfare gains from the **Thiel Fellowship**, which pays
 
 ### Why we use the category default
 
-We benchmark the Thiel Fellowship against the education category estimate of **\$25,000/QALY**. The key comparison is between the expected value of a marginal Fellowship slot ($EV_{TF}$) and what the same philanthropic budget would buy through standard effective education charities ($EV_{Base}$).
+We benchmark the Thiel Fellowship against the education category estimate of **\$25,000/QALY**. We compare two things: the expected value of a marginal Fellowship slot ($EV_{TF}$), and what the same philanthropic budget buys through standard effective education charities ($EV_{Base}$).
 
 $$\text{Relative effectiveness} = \dfrac{EV_{TF}}{EV_{Base}}$$
 
@@ -62,9 +62,9 @@ $$EV_{TF} = (2\% \text{ chance}) \times \$500{,}000{,}000 \text{ value} \times 1
 
 $$EV_{TF} = 0.02 \times 500{,}000{,}000 \times 0.01 = \$100{,}000$$
 
-That deliberately narrow calculation alone would make the Fellowship less effective than the baseline education benchmark. The reason not to stop there is that it excludes much of the hits-based case: rarer much-larger outcomes, earlier entry into frontier fields, network effects among fellows, and the signaling effect on non-fellows.
+This narrow calculation alone would make the Fellowship less effective than the baseline education benchmark. But it leaves out much of the hits-based case: rarer much-larger outcomes, earlier entry into frontier fields, network effects among fellows, and the signaling effect on non-fellows.
 
-We treat those omitted channels as real but highly uncertain. Centrally, we add a judgmental **\$900,000** upside-and-signaling allowance to the explicit **\$100,000** large-outcome calculation, giving about **\$1 million of adjusted attributable surplus per current Fellowship slot**. This still credits the Fellowship with only a very small fraction of the value generated by its highest-outcome alumni, but avoids assuming that broad hits-based upside automatically justifies a much larger multiplier.
+We treat those omitted channels as real but highly uncertain. Centrally, we add a judgmental **\$900,000** upside-and-signaling allowance to the explicit **\$100,000** large-outcome calculation, giving about **\$1 million of adjusted attributable surplus per current Fellowship slot**. This still credits the Fellowship with only a very small fraction of the value its highest-outcome alumni generate. But it avoids assuming that broad hits-based upside automatically justifies a much larger multiplier.
 
 ### 3. Final cost-per-QALY calculation
 

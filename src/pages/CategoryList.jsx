@@ -9,11 +9,12 @@ import SortableTable from '../components/shared/SortableTable';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { formatCurrency } from '../utils/formatters';
 import { buildCausePath } from '../utils/causeRoutes';
-import AssumptionsSelector from '../components/shared/AssumptionsSelector';
+import ListSearchControls from '../components/shared/ListSearchControls';
 import ListPageShell from '../components/shared/ListPageShell';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
 import { CATEGORY_LIVES_SAVED_TOOLTIP, CATEGORY_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import useNameSearch from '../hooks/useNameSearch';
 
 const buildCategoryStats = (combinedAssumptions) => {
   // Get all categories
@@ -98,22 +99,24 @@ const categoryColumns = [
 ];
 
 const CategoryList = () => {
-  useDocumentTitle('Cause Areas');
+  useDocumentTitle('Causes');
   const { combinedAssumptions } = useAssumptions();
 
   const categoryStats = useMemo(() => buildCategoryStats(combinedAssumptions), [combinedAssumptions]);
+  const { searchTerm, setSearchTerm, filteredItems: filteredCategories } = useNameSearch(categoryStats);
 
   return (
     <ListPageShell title="Causes" subtitle="Focus areas for charitable giving">
-      <AssumptionsSelector />
+      <ListSearchControls searchTerm={searchTerm} onSearchChange={setSearchTerm} placeholder="Search causes..." />
       <div className="impact-surface impact-surface--table">
         <SortableTable
           columns={categoryColumns}
-          data={categoryStats}
+          data={filteredCategories}
           defaultSortColumn="actualCostPerLife"
           defaultSortDirection="asc"
           tiebreakColumn="totalLivesSaved"
           tiebreakDirection="desc"
+          emptyMessage="No causes match your search."
         />
       </div>
     </ListPageShell>

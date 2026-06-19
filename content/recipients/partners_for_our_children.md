@@ -2,7 +2,7 @@
 id: partners-for-our-children
 name: 'Partners for Our Children'
 categories:
-  - id: social-justice
+  - id: local-community
     fraction: 1.0
 ---
 
@@ -14,4 +14,4 @@ categories:
 
 # Internal Notes
 
-A public-private child-welfare partnership based at the University of Washington School of Social Work (policy analysis, program development, and training to improve Washington's foster-care system). Mapped to social-justice 1.0 following the precedent of Think Of Us, the other child-welfare recipient in the dataset.
+A public-private child-welfare partnership based at the University of Washington School of Social Work (policy analysis, program development, and training to improve Washington's foster-care system). Mapped to local-community in June 2026 because the recipient is a child-welfare and family-support system-improvement partnership, not a close fit for the broadened Social Justice category.

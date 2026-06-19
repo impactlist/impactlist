@@ -2,7 +2,7 @@
 id: think-of-us
 name: 'Think Of Us'
 categories:
-  - id: social-justice
+  - id: local-community
     fraction: 1
 ---
 

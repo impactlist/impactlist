@@ -62,7 +62,7 @@ $$\text{Cost per QALY} = \dfrac{\$1}{0.44} \approx \$2.28$$
 
 This yields a central estimate of about \$2.3 per QALY.
 
-Here, the 11 hens-per-dollar figure is treated as the total marginal impact of a donation, not as an annual rate that recurs throughout the 15-year window. In the model, `windowLength` determines how benefits are distributed through time for discounting and truncation, not how many times the core effect repeats.
+Here, the 11 hens-per-dollar figure is treated as the total marginal impact of a donation, not as an annual rate that recurs throughout the 15-year duration. The duration affects how benefits are spread over time for discounting and truncation, not how many times the core effect repeats.
 
 ### Hen-to-QALY conversion
 

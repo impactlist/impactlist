@@ -157,7 +157,7 @@ The point estimate multiplies five uncertain terms. Each carries a rough plausib
 
 - **\$3,000** is a coherently optimistic bundle: very good futures are somewhat more likely than the 10% central figure, acceleration is toward the high end, and the welfare gain is large — but not every term at its limit.
 - **\$300,000** carries the genuinely skeptical worldview, in which very good futures are rare, the annual gain is much smaller than the central figure, and small capability pushes barely move the timeline. We run this end well beyond the roughly independent combination of the parameter ranges, because a correlated skeptical worldview and the chance that the linear-acceleration model simply does not hold both push this effect toward negligible — a tail the parameters alone understate.
-:::
+  :::
 
 #### Start time
 
@@ -222,7 +222,7 @@ The estimate multiplies the existential-catastrophe probability (3–35%), the f
 
 - **\$20 million** carries a worried but not extreme worldview — existential-catastrophe risk and acceleration toward the high end, denominator toward the low end, but not every term at its limit.
 - **\$5 billion** is near the weak-harm edge of the parameters. Frontier acceleration might barely change existential-catastrophe risk — through crowd-out or through the linear model failing — which pushes this effect toward harmless, a tail the parameter ranges understate.
-:::
+  :::
 
 The population fraction affected is 1.0 because the modeled catastrophe is global by construction.
 
@@ -235,7 +235,7 @@ With the default 100-year time limit and the site's population model (about 8.3 
 
 - Total QALYs destroyed: **about 1,030 billion**
 - QALYs destroyed per microprobability: **about 1,030,000**
-:::
+  :::
 
 #### Start time
 
@@ -243,7 +243,7 @@ We use a 10-year start time for the same reason as in Effect 2: the relevant ris
 
 #### Duration
 
-The very large `windowLength` in the YAML frontmatter is just a ceiling so the calculator can accommodate long horizons; in practice the effect is clamped by the user's chosen global time-limit parameter.
+The very large window length parameter is just a ceiling so the calculator can accommodate long horizons; in practice the effect is clamped by the user's chosen global time-limit parameter.
 
 The duration is controlled by the global time limit parameter. AI existential catastrophe has especially large long-run consequences. If you hold longtermist views you will see much larger harms than if you count only currently alive people or the next few generations.
 

@@ -199,7 +199,7 @@ We use a **10-year** duration. Some institutional reforms last longer. Some work
 
 5. **DEI and workplace reform.** The best behaviorally designed interventions may be useful, but generic trainings and symbolic corporate campaigns look weak.
 
-6. **Whether this category should be split.** `social-justice` may be too broad. Separate categories for civil rights, criminal-justice reform, racial justice, workplace inclusion, and expressive activism would probably produce cleaner estimates.
+6. **Whether this category should be split.** Social Justice may be too broad. Separate categories for civil rights, criminal-justice reform, racial justice, workplace inclusion, and expressive activism would probably produce cleaner estimates.
 
 {{CONTRIBUTION_NOTE}}
 

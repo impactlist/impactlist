@@ -34,7 +34,7 @@ This category is a fallback, not a recommendation. It is for recipients whose pu
 
 {{GLOBAL_ASSUMPTIONS_NOTE}}
 
-1. The current `Other` bucket is mostly a mix of three things: **direct but hard-to-classify organizations**, **indirect vehicles / mixed foundations / prize-awardees**, and **genuinely opaque or unknown recipients**.
+1. The current Other bucket is mostly a mix of three things: **direct but hard-to-classify organizations**, **indirect vehicles / mixed foundations / prize-awardees**, and **genuinely opaque or unknown recipients**.
 2. The **direct but uncategorized** bucket has a central cost-effectiveness of roughly **\$40,000/QALY**. A reasonable proxy is that these recipients are somewhat worse than [Local Community](/cause/local-community) at **\$29,000/QALY**, because they are often broader and less tightly tied to direct welfare gains. So we apply a modest worsening rather than a dramatic one.
 3. The **indirect vehicles / mixed foundations / prize-awardees** bucket has a central cost-effectiveness of roughly **\$120,000/QALY**. These gifts often move through another decision-maker, another time period, or a broader mandate before reaching final beneficiaries. Still, they are not close to worthless: National Philanthropic Trust reports that donor-advised funds paid out **23.9%** of prior-year assets in 2023. ([NPT 2024 DAF Report](https://www.nptrust.org/reports/the-2024-daf-report/))
 4. The **unknown / highly opaque** bucket has a central cost-effectiveness of roughly **\$250,000/QALY**. The point is not that unknown recipients do no good; it is that expected value should usually be materially worse when the recipient is too poorly specified to model well.
@@ -45,7 +45,7 @@ This category is a fallback, not a recommendation. It is for recipients whose pu
 
 ### Cost per QALY
 
-We model `Other` as a three-bucket portfolio whose cost per QALY is the reciprocal of the dollar-weighted QALYs per dollar:
+We model Other as a three-bucket portfolio whose cost per QALY is the reciprocal of the dollar-weighted QALYs per dollar:
 
 $$
 \text{Cost per QALY} = \dfrac{1}{\frac{d}{D} + \frac{v}{V} + \frac{u}{U}}
@@ -74,7 +74,7 @@ The direct bucket starts from [Local Community](/cause/local-community) at **\$2
 The central 35% / 45% / 20% split comes from a rough launch audit of the current recipient set. Many entries are vehicles, broad foundations, or prize-award patterns. A smaller but still meaningful group are direct organizations that did not fit another category cleanly. A residual group is opaque enough that the final use is not publicly visible. This is not a stable empirical fact about philanthropy in general, so revisit it as recipient coverage changes.
 
 :::details{title="Bucket-by-bucket reasoning"}
-- **Direct organizations: \$40,000/QALY.** This is anchored on [Local Community](/cause/local-community) at **\$29,000/QALY** and moved upward modestly. The idea is that `Other` direct recipients are often broader and less health-targeted than the local-community portfolio, but they are still real operating organizations doing concrete work.
+- **Direct organizations: \$40,000/QALY.** This is anchored on [Local Community](/cause/local-community) at **\$29,000/QALY** and moved upward modestly. The idea is that direct recipients in Other are often broader and less health-targeted than the local-community portfolio, but they are still real operating organizations doing concrete work.
 - **Indirect vehicles and mixed foundations: \$120,000/QALY.** This is roughly **3x** the direct bucket. That is a reasonable central haircut for an extra intermediary step, slower deployment, and broader downstream allocation. The NPT payout rate is a useful check against going much lower: DAFs are diluted and slower, but not dormant.
 - **Unknown recipients: \$250,000/QALY.** This is roughly **2x** the indirect bucket. The logic is simply that if a recipient is still too opaque to classify at all, expected value should usually be materially worse than for a known vehicle or mixed foundation whose mission and mechanism are at least partly visible.
 :::
@@ -103,7 +103,7 @@ $$
 
 ### Start time
 
-The **1-year** start time reflects that some `Other` recipients can spend quickly, while others take longer to deploy funds or create downstream impact.
+The **1-year** start time reflects that some Other recipients can spend quickly, while others take longer to deploy funds or create downstream impact.
 
 ### Duration
 

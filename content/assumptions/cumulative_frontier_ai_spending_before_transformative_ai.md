@@ -103,7 +103,7 @@ Treating the two as independent, the plausible range would be roughly the corner
 
 This denominator appears in both the upside and downside timing models for AGI Development.
 
-- A **smaller** denominator means a marginal dollar moves timelines more, making both the `standard-utopia` and `population-doom` effects in [AGI Development](/cause/ai-capabilities) stronger.
+- A **smaller** denominator means a marginal dollar moves timelines more, making both the very good transformative-AI upside and the AI-catastrophe downside in [AGI Development](/cause/ai-capabilities) stronger.
 - A **larger** denominator means marginal funding matters less, making both effects weaker.
 
 If you think transformative AI is coming soon and that current capex is highly frontier-relevant, use a lower number.

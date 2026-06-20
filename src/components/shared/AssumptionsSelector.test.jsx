@@ -223,7 +223,7 @@ describe('AssumptionsSelector', () => {
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
       'You can create and share your own assumptions on the Assumptions page.'
     );
-    expect(screen.queryByRole('link', { name: 'Assumptions page' })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Assumptions page' })).toHaveAttribute('href', '/assumptions');
     expect(within(summaryRow).getByText('Curated')).toBeInTheDocument();
   });
 

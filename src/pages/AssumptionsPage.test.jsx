@@ -1514,6 +1514,10 @@ describe('AssumptionsPage routing integration', () => {
 
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
     expect(await screen.findByRole('heading', { name: 'Default (100 years)' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Description:' })).not.toHaveTextContent(
+      'You can create and share your own assumptions on the Assumptions page.'
+    );
+    expect(screen.queryByRole('link', { name: 'Assumptions page' })).not.toBeInTheDocument();
   });
 
   it('does not prefill the save description when saving custom unsaved assumptions', async () => {

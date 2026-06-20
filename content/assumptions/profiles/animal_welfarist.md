@@ -27,5 +27,3 @@ The cause writeup currently assumes chickens have about one-third of the welfare
 This assumptions set turns the cause into that human-equal version while also disabling
 [AI Existential Risk](/cause/ai-risk) and the AI-catastrophe downside in
 [AGI Development](/cause/ai-capabilities).
-
-Those are two independent worldview changes. If you want only the animal-welfare moral-weight change, treat the AI-risk disabling as a separate bundled choice, not part of the animal-welfare calculation itself.

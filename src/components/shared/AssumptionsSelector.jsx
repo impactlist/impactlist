@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom';
 import useAssumptionsLibrary from '../../hooks/useAssumptionsLibrary';
 import useAssumptionsSelectorPreference from '../../hooks/useAssumptionsSelectorPreference';
 import { OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL } from '../../utils/assumptionsLoadHelpers';
+import { DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../../constants/assumptionsLibraryEntries';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
 import SharedImportDecisionModal from '../SharedImportDecisionModal';
 import InfoTooltipIcon from './InfoTooltipIcon';
 import AssumptionsDropdown from './AssumptionsDropdown';
+
+const DEFAULT_ASSUMPTIONS_SELECTOR_NOTE =
+  'You can create and share your own assumptions on the [Assumptions page](/assumptions).';
 
 const AssumptionsSelector = ({ className = '', interactive }) => {
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
@@ -30,6 +34,17 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
 
   const handleDescriptionModalOpen = useCallback((entry) => {
     if (!entry?.id || (!entry.description && !entry.content)) {
+      return;
+    }
+
+    if (entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID) {
+      setPendingDescriptionEntry({
+        ...entry,
+        description: [entry.content || entry.description, DEFAULT_ASSUMPTIONS_SELECTOR_NOTE]
+          .filter(Boolean)
+          .join('\n\n'),
+        content: '',
+      });
       return;
     }
 

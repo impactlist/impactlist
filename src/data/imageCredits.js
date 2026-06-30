@@ -595,6 +595,16 @@ export const imageCredits = [
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
   },
   {
+    donorId: 'sam-bankman-fried',
+    name: 'Sam Bankman-Fried',
+    author: 'Cointelegraph',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Sam_Bankman-Fried.png',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
+    notes: 'Square-cropped and resized from the Commons original.',
+  },
+  {
     donorId: 'sean-parker',
     name: 'Sean Parker',
     author: 'Amager (English Wikipedia)',

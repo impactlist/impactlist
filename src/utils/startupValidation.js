@@ -1,7 +1,13 @@
 // Startup validation to ensure data integrity
 // This runs when the app starts to catch data structure issues early
 import { categoriesById, recipientsById, donorsById, donations, globalParameters } from '../data/generatedData';
-import { validateCategory, validateRecipient, assertExists, assertPositiveNumber } from './dataValidation';
+import {
+  validateCategory,
+  validateRecipient,
+  assertExists,
+  assertPositiveNumber,
+  assertNumber,
+} from './dataValidation';
 import { assertValidGlobalParameters } from './globalParameterRules';
 
 /**
@@ -65,7 +71,10 @@ const validateAllDonors = () => {
     try {
       assertExists(donor, 'donor', `with ID "${donorId}"`);
       assertExists(donor.name, 'donor.name', `for donor "${donorId}"`);
-      assertPositiveNumber(donor.netWorth, 'donor.netWorth', `for donor "${donorId}"`);
+      // Net worth is display-only (it feeds no lives-saved / cost-per-life math) and can
+      // legitimately be zero or negative for a donor whose debts exceed their assets
+      // (e.g. Sam Bankman-Fried, post-forfeiture), so any finite number is allowed.
+      assertNumber(donor.netWorth, 'donor.netWorth', `for donor "${donorId}"`);
 
       // totalDonated is optional, but if present must be positive
       if (donor.totalDonated !== undefined) {

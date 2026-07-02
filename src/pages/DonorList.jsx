@@ -82,7 +82,7 @@ const DonorList = () => {
         {/* Page Header */}
         <PageHeader
           title="Impact List"
-          subtitle="Ranking donors by their positive impact on the world"
+          subtitle="Ranking people by their positive impact on the world via donations"
           className="pt-8 sm:pt-10"
         />
 

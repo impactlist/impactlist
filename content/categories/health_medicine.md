@@ -162,7 +162,7 @@ A 40-year duration is a reasonable central estimate because:
 
 - successful prevention or chronic-disease-control programs can improve health over long remaining lifetimes
 - research-enabled interventions can keep benefiting new cohorts of patients for decades before being superseded
-- the site's 100-year time cap already truncates very long tails of benefit
+- the site's global time-limit parameter already truncates very long tails of benefit
 
 ## Key uncertainties
 

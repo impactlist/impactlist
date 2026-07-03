@@ -129,36 +129,36 @@ We stop short of **1.0** only because some remote communities and unusually resi
 
 ### QALY improvement per affected person per year
 
-The point estimate (**0.35**, range 0.2–0.6) comes from distributing the catastrophe's total QALY losses across the affected population and the 15-year window. Deaths account for about **77%** of that loss, so the headline is not very sensitive to how the nonfatal survivor harms are split. But it would still be a mistake to model a >10%-death pandemic as "just deaths." Even far-milder COVID-19 caused enormous indirect mortality, care backlogs, and chronic illness.
+The point estimate (**0.35**, range 0.2–0.6) comes from distributing the catastrophe's total QALY losses across the affected population and the 15-year window. Deaths account for about **78%** of that loss, so the headline is not very sensitive to how the nonfatal survivor harms are split. But it would still be a mistake to model a >10%-death pandemic as "just deaths." Even far-milder COVID-19 caused enormous indirect mortality, care backlogs, and chronic illness.
 
-At the central estimate, averting one microprobability saves about **46,700 QALYs**, for an implied **~\$21/QALY** — extremely good by ordinary global-health standards. That is a general feature of catastrophe-risk models: the stakes are huge and tractability is nontrivial.
+At the central estimate, averting one microprobability saves about **41,000 QALYs**, for an implied **~\$24/QALY** — extremely good by ordinary global-health standards. That is a general feature of catastrophe-risk models: the stakes are huge and tractability is nontrivial.
 
 :::details{title="QALY decomposition and the 0.35 derivation"}
-Using an average world population of **9.9 billion** over the modeled 2036–2051 window and an affected fraction of **0.9**, the model implies about **8.9 billion affected people**. The population figure comes from the site's default population model and is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf). One rough illustrative decomposition, rounded for clarity:
+Using an average world population of about **8.7 billion** over the modeled 2036–2051 window and an affected fraction of **0.9**, the model implies about **7.8 billion affected people**. The population figure assumes 0.3% annual population growth from about 8.3 billion people today and is broadly consistent with [UN 2024](https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf). One rough illustrative decomposition, rounded for clarity:
 
-- **~1.0 billion deaths** × **36 QALYs** each = **36 billion QALYs** (using the floor of the ">10%" event definition)
-- **~2.4 billion severe survivors** × **2.5 QALYs** each = **6.0 billion QALYs**
-- **~5.5 billion moderately or indirectly affected people** × **0.8 QALYs** each = **4.4 billion QALYs**
-- **Total:** about **46.4 billion QALYs**
+- **~0.9 billion deaths** × **36 QALYs** each = **32 billion QALYs** (using the floor of the ">10%" event definition)
+- **~1.9 billion severe survivors** × **2.5 QALYs** each = **4.8 billion QALYs**
+- **~5.0 billion moderately or indirectly affected people** × **0.8 QALYs** each = **4.0 billion QALYs**
+- **Total:** about **41 billion QALYs**
 
 These survivor buckets are not precise epidemiological claims; they only show the total is not driven by deaths alone. Affected person-years over the 15-year window are:
 
 $$
-9.9 \text{B} \times 0.9 \times 15 \approx 134 \text{ billion affected person-years}
+8.7 \text{B} \times 0.9 \times 15 \approx 117 \text{ billion affected person-years}
 $$
 
 $$
-\dfrac{46.4 \text{B QALYs}}{134 \text{B affected person-years}} \approx 0.35
+\dfrac{41 \text{B QALYs}}{117 \text{B affected person-years}} \approx 0.35
 $$
 
 That floor-case decomposition gives about **0.35**; this matches the model input while still being best read as a rounded severity parameter rather than a precise epidemiological forecast. The cost-effectiveness figure then follows:
 
 $$
-9.9 \text{B} \times 0.9 \times 0.35 \times 15 \times 10^{-6} \approx 46{,}700 \text{ QALYs}
+8.7 \text{B} \times 0.9 \times 0.35 \times 15 \times 10^{-6} \approx 41{,}000 \text{ QALYs}
 $$
 
 $$
-\dfrac{\$1 \text{M}}{46{,}700} \approx \$21.4 / \text{QALY}
+\dfrac{\$1 \text{M}}{41{,}000} \approx \$24.4 / \text{QALY}
 $$
 :::
 

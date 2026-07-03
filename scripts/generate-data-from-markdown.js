@@ -34,7 +34,7 @@ const MARKDOWN_VARIABLES = {
   GLOBAL_ASSUMPTIONS_NOTE: `_All estimates rely on global assumptions, such as years per life, discounting, population growth, and how far into the future we care about. You can view or edit these on the [Assumptions page](/assumptions). Additional assumptions specific to this estimate follow._`,
   QALY: QALY_LINK_WITH_TOOLTIP,
   QALYS: QALYS_LINK_WITH_TOOLTIP,
-  STANDARD_QALY_METHOD_NOTE: `We arrive at the cost per life by estimating the cost per ${QALY_LINK_WITH_TOOLTIP} and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the [Assumptions page](/assumptions) for this and other parameters).`,
+  STANDARD_QALY_METHOD_NOTE: `We arrive at the cost per life by estimating the cost per ${QALY_LINK_WITH_TOOLTIP} and multiplying this by the global years-per-life parameter, which is shown with the other global parameters on the [Assumptions page](/assumptions).`,
   RECIPIENT_DEFAULT_JUSTIFICATION: `The cost per life of this recipient is assumed to be the same as for the baseline for each of its cause areas.
 You can see how these cost per life values were calculated by going to the pages of its associated cause areas (see above).`,
   // Inline definition tooltip for the term "plausible range". Use at the FIRST mention of

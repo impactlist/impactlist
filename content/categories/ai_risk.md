@@ -30,7 +30,7 @@ They are **not** estimates for generic AI ethics, ordinary responsible-AI work f
 - **Population fraction affected:** 1.0 (the modeled event is global by construction)
 - **QALY improvement per affected person per year:** 0.80 (0.65–0.9)
 - **Start time:** 10 years (~2036)
-- **Duration:** From the start time to the global time limit parameter (default 100 years, so a 90-year window by default), capped at a trillion years
+- **Duration:** From the start time to the global time limit parameter, capped at a trillion years. At a 100-year limit that is a 90-year window.
 
 _If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values._
 
@@ -97,47 +97,47 @@ The **0.45** itself is roughly a hedonic part plus a non-hedonic part. Day-to-da
 
 **How total QALYs scale with the time limit:**
 
-A microprobability is worth more the longer the horizon you count over. At the **default 100-year time limit** it is worth about **1.07 million QALYs**, which puts the cost at roughly **\$1.10 per QALY — about \$90 per life**. Because the population keeps growing until it hits the default cap, the QALYs at stake rise faster than linearly with the time limit, so the implied cost falls accordingly: about **\$375 per life** at a 40-year limit and about **\$1.70 per life** at a 1,000-year limit.
+A microprobability is worth more the longer the horizon you count over. At a **100-year time limit** it is worth about **700,000 QALYs**, which puts the cost at roughly **\$1.70 per QALY — about \$140 per life**. Because the population keeps growing until it levels off at its cap, the QALYs at stake keep rising as you extend the time limit, so the implied cost falls accordingly: about **\$450 per life** at a 40-year limit and about **\$12 per life** at a 1,000-year limit.
 
 :::details{title="Worked examples at 40-, 100-, and 1,000-year time limits"}
-These use the site's default global parameters and its actual population model, so they match what the site displays. The effect window always runs from year 10 to the time limit.
+Each example uses a 0% discount rate, 0.3% annual population growth (from about 8.3 billion people today), and a 1.25x population cap, varying only the time limit; set the site's assumptions to match and it displays these same figures. The effect window always runs from year 10 to the time limit.
 
 **Example 1 — Time limit = 40 years (30-year window)**
 
-- Person-years in the window: about 321 billion
-- QALYs at stake: $321\text{B} \times 0.80 \approx 257 \text{ billion}$
-- QALYs saved per microprobability: $257\text{B} \times 10^{-6} = 257{,}000$
-- Cost per QALY: $$\$1.2\text{M} / 257{,}000 \approx \$4.7/\text{QALY}$$ (about \$375 per life of 80 QALYs)
+- Person-years in the window: about 269 billion
+- QALYs at stake: $269\text{B} \times 0.80 \approx 215 \text{ billion}$
+- QALYs saved per microprobability: $215\text{B} \times 10^{-6} = 215{,}000$
+- Cost per QALY: $$\$1.2\text{M} / 215{,}000 \approx \$5.6/\text{QALY}$$ (about \$450 per life of 80 QALYs)
 
-**Example 2 — Time limit = 100 years (the default; 90-year window)**
+**Example 2 — Time limit = 100 years (90-year window)**
 
-- Person-years in the window: about 1,335 billion
-- QALYs at stake: $1{,}335\text{B} \times 0.80 \approx 1{,}070 \text{ billion}$
-- QALYs saved per microprobability: $1{,}070\text{B} \times 10^{-6} = 1{,}070{,}000$
-- Cost per QALY: $$\$1.2\text{M} / 1{,}070{,}000 \approx \$1.10/\text{QALY}$$ (about \$90 per life)
+- Person-years in the window: about 873 billion
+- QALYs at stake: $873\text{B} \times 0.80 \approx 699 \text{ billion}$
+- QALYs saved per microprobability: $699\text{B} \times 10^{-6} = 699{,}000$
+- Cost per QALY: $$\$1.2\text{M} / 699{,}000 \approx \$1.70/\text{QALY}$$ (about \$140 per life)
 
 **Example 3 — Time limit = 1,000 years (990-year window)**
 
-- The population reaches the default cap (10x today's) after about 230 years, so most of the window sits at the cap
-- Person-years in the window: about 71,000 billion
-- QALYs at stake: $71{,}000\text{B} \times 0.80 \approx 57{,}000 \text{ billion}$
-- QALYs saved per microprobability: $57{,}000\text{B} \times 10^{-6} = 57 \text{ million}$
-- Cost per QALY: $$\$1.2\text{M} / 57\text{M} \approx \$0.021/\text{QALY}$$ (about \$1.70 per life)
+- The population reaches its cap after about 75 years, so almost the entire window sits at the cap
+- Person-years in the window: about 10,200 billion
+- QALYs at stake: $10{,}200\text{B} \times 0.80 \approx 8{,}170 \text{ billion}$
+- QALYs saved per microprobability: $8{,}170\text{B} \times 10^{-6} = 8.17 \text{ million}$
+- Cost per QALY: $$\$1.2\text{M} / 8.17\text{M} \approx \$0.15/\text{QALY}$$ (about \$12 per life)
 
-Because the default population curve grows at 1% per year until it hits the cap, the long-horizon numbers are dominated by the population growth and cap parameters — both of which you can edit.
+Because the population keeps growing until it hits the cap, the long-horizon numbers are dominated by the population growth and cap parameters — both of which you can edit.
 :::
 
-These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is a general feature of existential-risk expected-value models, which combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. At the default time limit, the cost per microprobability would have to exceed roughly **\$67 million** before this category looked worse than a \$5,000-per-life global-health benchmark, so the weak-but-positive end of the range is roughly near that line. The decision-relevant cruxes are whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
+These implied cost-per-QALY figures are extremely low relative to GiveWell-style global-health benchmarks. That is a general feature of existential-risk expected-value models, which combine very large stakes with a nontrivial probability of catastrophe and at least modest tractability. At a 100-year time limit, the cost per microprobability would have to exceed roughly **\$44 million** before this category looked worse than a \$5,000-per-life global-health benchmark. The point estimate is far below that, and only the weak end of the conditional \$200,000–\$70 million range crosses into looking worse than top global health. The decision-relevant cruxes are whether marginal safety work is net-positive at all, and how much weight the time limit and discount rate place on the future.
 
 ### Start time
 
 The 10-year start time means the main risk arrives around **2036**, which is our central [AGI estimate](/assumption/timelines-to-agi) — the point at which machines can outperform humans on any mental task and catastrophic risks become pressing. The window opens around when highly capable systems plausibly become strategically decisive.
 
-Conceptually, the start time stands in for the expected date at which welfare losses would begin conditional on the catastrophe occurring — a single number approximating a distribution over arrival times. It is a second-order input: shifting it by a decade changes the QALYs at stake by roughly 8% at the default time limit, far less than the cost and severity assumptions move the result. If you hold shorter or longer timelines, adjust it.
+Conceptually, the start time stands in for the expected date at which welfare losses would begin conditional on the catastrophe occurring — a single number approximating a distribution over arrival times. It is a second-order input: shifting it by a decade changes the QALYs at stake by roughly 10% at a 100-year time limit, far less than the cost and severity assumptions move the result. If you hold shorter or longer timelines, adjust it.
 
 ### Duration
 
-The duration is controlled by the global "time limit" parameter, which defaults to 100 years. Combined with the 10-year start time, the default window covers years 10 through 100 — a 90-year window. This cause area sets no practical horizon of its own — its built-in ceiling is a trillion years — so in practice the time limit is what determines how far into the future the benefit is counted.
+The duration is controlled by the global "time limit" parameter. At a 100-year limit, combined with the 10-year start time, the window covers years 10 through 100 — a 90-year window. This cause area sets no practical horizon of its own — its built-in ceiling is a trillion years — so in practice the time limit is what determines how far into the future the benefit is counted.
 
 Because the modeled catastrophe is permanent by construction, the value of this cause area is highly sensitive to how much weight you place on future people.
 
@@ -157,7 +157,7 @@ Because the modeled catastrophe is permanent by construction, the value of this 
 
 7. **Where to draw the boundary around the modeled event.** AI can worsen surveillance, repression, and concentration of power by many degrees. The hard question is which of those pathways are merely very bad and which are global, effectively irreversible, and severe enough to count as permanent curtailment of humanity's future.
 
-8. **How much moral weight to put on future generations.** The default 100-year time limit puts much less weight on very distant future generations than fully longtermist views do. You can adjust it.
+8. **How much moral weight to put on future generations.** A 100-year time limit puts much less weight on very distant future generations than fully longtermist views do. You can adjust it.
 
 {{CONTRIBUTION_NOTE}}
 

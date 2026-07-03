@@ -22,7 +22,7 @@ effects:
 
 We model the AI Capabilities cause as having three independent effects on the world, which we calculate separately and then combine into a single overall cost per life.
 
-For the first two effects, which we call "standard effects", we arrive at the cost per life by estimating the cost per {{QALY}} and multiplying this by our hardcoded value for how many years make up a life (80 at the time of this writing -- check the [Assumptions page](/assumptions) for this and other parameters).
+For the first two effects, which we call "standard effects", we arrive at the cost per life by estimating the cost per {{QALY}} and multiplying this by the global years-per-life parameter, which is shown with the other global parameters on the [Assumptions page](/assumptions).
 
 The third effect, which we call a "population effect", is modeled as slightly increasing the probability of a catastrophe rather than directly buying QALYs. We therefore estimate the cost of adding one microprobability: a one-in-a-million absolute increase in the probability of an AI-caused existential catastrophe.
 
@@ -181,7 +181,7 @@ Note: The QALY improvement per year is **-0.77** (negative), indicating this is 
 - **Population fraction affected:** 1.0
 - **QALY improvement per affected person per year:** -0.77
 - **Start time:** 10 years
-- **Duration:** Defined by the global time limit parameter (default is 100 years)
+- **Duration:** Defined by the global time limit parameter (the worked example below uses 100 years)
 
 _If you disagree with these estimates after reading this page, click 'Edit' near the cost per life field at the top of this page and enter your own values._
 
@@ -228,13 +228,13 @@ The population fraction affected is 1.0 because the modeled catastrophe is globa
 
 #### QALY improvement per affected person per year
 
-The value is **-0.77** because this effect is harm, not benefit. It blends literal extinction (about 0.9 QALYs lost per person-year) with permanent non-extinction catastrophes (about 0.45), weighted by the roughly 10%/4% extinction/non-extinction split from Assumption 1: $(0.10 \times 0.9 + 0.04 \times 0.45)/0.14 \approx 0.77$. (The [AI existential risk page](/cause/ai-risk) uses a slightly higher **0.80** because safety spending differentially averts extinction; here, marginal capability acceleration is modeled as raising the whole catastrophe class proportionally per Assumption 4, so the added risk carries the baseline mix.) Combining the catastrophe probability per dollar with the QALYs at stake, at the central estimate **\$1 million** donated to AI capabilities increases expected losses by roughly $0.0084 \times 1{,}030{,}000 \approx 8{,}650$ QALYs. This downside becomes much larger if you extend the time horizon beyond 100 years.
+The value is **-0.77** because this effect is harm, not benefit. It blends literal extinction (about 0.9 QALYs lost per person-year) with permanent non-extinction catastrophes (about 0.45), weighted by the roughly 10%/4% extinction/non-extinction split from Assumption 1: $(0.10 \times 0.9 + 0.04 \times 0.45)/0.14 \approx 0.77$. (The [AI existential risk page](/cause/ai-risk) uses a slightly higher **0.80** because safety spending differentially averts extinction; here, marginal capability acceleration is modeled as raising the whole catastrophe class proportionally per Assumption 4, so the added risk carries the baseline mix.) Combining the catastrophe probability per dollar with the QALYs at stake, at the central estimate **\$1 million** donated to AI capabilities increases expected losses by roughly $0.0084 \times 672{,}000 \approx 5{,}650$ QALYs. This downside becomes much larger if you extend the time horizon beyond 100 years.
 
-:::details{title="QALYs at stake per microprobability at the default 100-year horizon"}
-With the default 100-year time limit and the site's population model (about 8.3 billion people today growing at 1%/year), the effect window runs from year 10 to year 100 — roughly **1,335 billion person-years**. At about 0.77 QALYs per person-year:
+:::details{title="QALYs at stake per microprobability at a 100-year horizon"}
+With a 100-year time limit, 0.3% annual population growth (from about 8.3 billion people today), and a 1.25x population cap, the effect window runs from year 10 to year 100 — roughly **873 billion person-years**. At about 0.77 QALYs per person-year:
 
-- Total QALYs destroyed: **about 1,030 billion**
-- QALYs destroyed per microprobability: **about 1,030,000**
+- Total QALYs destroyed: **about 672 billion**
+- QALYs destroyed per microprobability: **about 672,000**
   :::
 
 #### Start time
@@ -249,18 +249,18 @@ The duration is controlled by the global time limit parameter. AI existential ca
 
 ---
 
-## Worked example at default settings
+## Worked example
 
-At the default 100-year time horizon and default 0% discount rate, the central estimates imply the following rough magnitudes per **\$1 million donated**:
+At a 100-year time horizon, a 0% discount rate, 0.3% annual population growth, and a 1.25x population cap, the central estimates imply the following rough magnitudes per **\$1 million donated**:
 
 - **standard-mundane:** about **9.6 QALYs gained** (\$1,000,000 / \$104,000)
 - **standard-utopia:** about **120 QALYs gained** (\$1,000,000 / \$8,300)
-- **population-doom:** about **8,650 QALYs destroyed** (0.0084 microprobabilities times about 1,030,000 QALYs per microprobability)
+- **population-doom:** about **5,650 QALYs destroyed** (0.0084 microprobabilities times about 672,000 QALYs per microprobability)
 
-So at the default settings, the net effect is roughly:
+So at these settings, the net effect is roughly:
 
 $$
-9.6 + 120 - 8{,}650 \approx -8{,}520 \text{ QALYs}
+9.6 + 120 - 5{,}650 \approx -5{,}520 \text{ QALYs}
 $$
 
 At ordinary time horizons the existential-risk downside dominates the positive terms unless the underlying worldview assumptions change substantially.

@@ -349,12 +349,6 @@ export const getRecipientEffectsChangeState = (effects, options = {}) => {
   let hasUnsavedChanges = false;
 
   effects.forEach((effect) => {
-    const cleanEffect = {
-      effectId: effect.effectId,
-      overrides: {},
-      disabled: effect.disabled || false,
-    };
-
     const fieldNames = getEffectFieldNames(effect._baseEffect);
     const defaultRecipientEffect = effect._defaultRecipientEffect;
     const userEffect = effect._userEffect;
@@ -370,6 +364,14 @@ export const getRecipientEffectsChangeState = (effects, options = {}) => {
 
     let needsClearing = disabledNeedsClearing;
     let effectHasChanges = disabledDiffersFromDefault || needsClearing;
+    let hasChangedFieldValue = false;
+
+    // At combine time a user overrides object REPLACES the recipient
+    // default's overrides wholesale (mergeRecipientEffectWithUser), so the
+    // saved object must carry the FULL effective set the editor displays.
+    // Persisting only the edited fields would silently drop the recipient's
+    // default overrides, reverting those fields to the raw category values.
+    const overridesToSave = {};
 
     fieldNames.forEach((fieldName) => {
       const currentValue = effect.overrides?.[fieldName];
@@ -379,33 +381,36 @@ export const getRecipientEffectsChangeState = (effects, options = {}) => {
         userEffect?.overrides?.[fieldName] !== undefined && userEffect?.overrides?.[fieldName] !== null;
       const userHadMultiplier =
         userEffect?.multipliers?.[fieldName] !== undefined && userEffect?.multipliers?.[fieldName] !== null;
-      const userHadCustomValue = userHadOverride;
       const currentMultiplierValue = effect.multipliers?.[fieldName];
       const multiplierClearedInOverrideMode =
         includeUserClearings && userHadMultiplier && !hasValue(currentMultiplierValue);
 
+      const currentIsPresent = hasValue(currentValue);
+      const parsedCurrent = currentIsPresent ? cleanAndParseValue(currentValue).numValue : NaN;
+
+      if (currentIsPresent && isNaN(parsedCurrent) && throwOnInvalid) {
+        throw new Error(
+          `Failed to convert override ${fieldName} to number in effect ${effect.effectId}. Value: "${currentValue}"`
+        );
+      }
+
+      if (currentIsPresent && !isNaN(parsedCurrent)) {
+        overridesToSave[fieldName] = parsedCurrent;
+      } else if (!currentIsPresent && hasValue(defaultValue)) {
+        // A cleared field falls back to the recipient default (the editor
+        // shows it as the placeholder), so re-emit the default value —
+        // wholesale replacement must reconstruct the same state.
+        overridesToSave[fieldName] = defaultValue;
+      }
+
       if (isMeaningfullyDifferent(currentValue, defaultValue)) {
         effectHasChanges = true;
-        if (currentValue !== null && currentValue !== undefined && currentValue !== '') {
-          const { numValue } = cleanAndParseValue(currentValue);
-          if (isNaN(numValue)) {
-            if (throwOnInvalid) {
-              throw new Error(
-                `Failed to convert override ${fieldName} to number in effect ${effect.effectId}. Value: "${currentValue}"`
-              );
-            }
-            return;
-          }
-
-          cleanEffect.overrides[fieldName] = numValue;
-        } else if (defaultValue !== null && defaultValue !== undefined && defaultValue !== '') {
+        if (currentIsPresent && !isNaN(parsedCurrent)) {
+          hasChangedFieldValue = true;
+        } else if (!currentIsPresent) {
           needsClearing = true;
         }
-      } else if (
-        includeUserClearings &&
-        userHadCustomValue &&
-        (currentValue === null || currentValue === undefined || currentValue === '')
-      ) {
+      } else if (includeUserClearings && userHadOverride && !currentIsPresent) {
         needsClearing = true;
         effectHasChanges = true;
       } else if (multiplierClearedInOverrideMode) {
@@ -414,9 +419,13 @@ export const getRecipientEffectsChangeState = (effects, options = {}) => {
       }
     });
 
-    if (Object.keys(cleanEffect.overrides).length > 0 || disabledDiffersFromDefault || needsClearing) {
-      if (!disabledDiffersFromDefault) {
-        delete cleanEffect.disabled;
+    if (hasChangedFieldValue || disabledDiffersFromDefault || needsClearing) {
+      const cleanEffect = {
+        effectId: effect.effectId,
+        overrides: overridesToSave,
+      };
+      if (disabledDiffersFromDefault) {
+        cleanEffect.disabled = currentDisabled;
       }
       effectsToSave.push(cleanEffect);
       effectHasChanges = true;

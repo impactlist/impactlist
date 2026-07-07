@@ -29,10 +29,10 @@ Fail hard and loudly on unexpected states (project rule). The deliberate excepti
 
 ## Cross-cutting conventions
 
-- All routes are `React.lazy` in `App.jsx`; pages set titles via `hooks/useDocumentTitle` (no-ops on falsy so loading/NotFound flows compose).
+- All routes are `React.lazy` in `App.jsx`. App mounts them through a `createBrowserRouter` splat route (a data router — required by the assumptions editor's `useBlocker` navigation guard) with route definitions in a descendant `<Routes>`; tests that render the assumptions page must use `createMemoryRouter` the same way. Pages set titles via `hooks/useDocumentTitle` (no-ops on falsy so loading/NotFound flows compose).
 - Modals must use `components/shared/ModalShell.jsx` (dialog semantics, focus trap, Escape/scrim close). Don't hand-roll scrim+panel.
 - Design tokens: `impact-*` classes and `var(--*)` custom properties defined in `src/index.css` (`@layer components`). Prefer them over raw Tailwind color utilities.
-- Tests are behavioral (Testing Library, no snapshots). `src/test-setup.js` stubs ResizeObserver/IntersectionObserver/matchMedia, so layout-measuring components render fine in jsdom.
+- Tests are behavioral (Testing Library, no snapshots). `src/test-setup.js` stubs ResizeObserver/IntersectionObserver/matchMedia, so layout-measuring components render fine in jsdom, and shims `Request` so data-router navigations survive the jsdom-AbortSignal/undici brand mismatch (see the comment there before touching fetch primitives).
 - Pure JS (ES6) + React + Tailwind + Vite only — no TypeScript, no new frameworks.
 
 ## Workflow gotchas

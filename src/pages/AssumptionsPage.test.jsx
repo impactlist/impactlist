@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { createMemoryRouter, Route, RouterProvider, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
@@ -12,9 +12,9 @@ import {
 } from '../utils/assumptionsDataHelpers';
 import { formatCurrency } from '../utils/formatters';
 import { getCurrentYear } from '../utils/donationDataHelpers';
-import { saveNewAssumptions, setActiveSavedAssumptionsId } from '../utils/savedAssumptionsStore';
+import { __internal, saveNewAssumptions, setActiveSavedAssumptionsId } from '../utils/savedAssumptionsStore';
 
-/* global localStorage, sessionStorage */
+/* global localStorage, sessionStorage, Event */
 
 const assumptionsData = createDefaultAssumptions();
 const firstValidCategoryId = Object.keys(assumptionsData.categories)[0];
@@ -49,16 +49,30 @@ const RouterControls = () => {
 };
 
 const renderAssumptionsRoute = (initialEntry) => {
+  // A data router (single splat route hosting descendant <Routes>) mirrors
+  // App.jsx — AssumptionsEditor's useBlocker requires one.
+  const router = createMemoryRouter(
+    [
+      {
+        path: '*',
+        element: (
+          <>
+            <RouterControls />
+            <Routes>
+              <Route path="/" element={<div>Home</div>} />
+              <Route path="/assumptions" element={<AssumptionsPage />} />
+            </Routes>
+          </>
+        ),
+      },
+    ],
+    { initialEntries: [initialEntry] }
+  );
+
   render(
     <NotificationProvider>
       <AssumptionsProvider>
-        <MemoryRouter initialEntries={[initialEntry]}>
-          <RouterControls />
-          <Routes>
-            <Route path="/" element={<div>Home</div>} />
-            <Route path="/assumptions" element={<AssumptionsPage />} />
-          </Routes>
-        </MemoryRouter>
+        <RouterProvider router={router} />
       </AssumptionsProvider>
     </NotificationProvider>
   );
@@ -345,6 +359,40 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
+  it('opens the cause editor when the card body is clicked, but not when the cause link is', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions?tab=categories');
+
+    const categoryName = assumptionsData.categories[firstValidCategoryId].name;
+    const cardLink = await screen.findByRole('link', { name: categoryName });
+    const cardRoot = cardLink.closest('.assumption-card');
+    expect(cardRoot).not.toBeNull();
+
+    // The card body is a widened pointer target for the Edit action.
+    await user.click(within(cardRoot).getByText('cost per life'));
+    await waitFor(() => {
+      expect(screen.getByText(/Edit effects for cause/i)).toBeInTheDocument();
+      expect(screen.getByTestId('location-probe').textContent).toContain(`categoryId=${firstValidCategoryId}`);
+    });
+
+    // Multi-effect categories render header + footer Cancel buttons; the
+    // footer one always exists.
+    const cancelButtons = screen.getAllByRole('button', { name: 'Cancel' });
+    await user.click(cancelButtons[cancelButtons.length - 1]);
+    await waitFor(() => {
+      expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
+    });
+
+    // Clicking the entity link navigates to the cause page without also
+    // triggering the card's edit action (which would push categoryId= last).
+    await user.click(screen.getByRole('link', { name: categoryName }));
+    await waitFor(() => {
+      const probe = screen.getByTestId('location-probe').textContent;
+      expect(probe).toContain('/cause/');
+      expect(probe).not.toContain('categoryId=');
+    });
+  });
+
   it('saves and resets global parameter overrides from the global tab', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
@@ -471,7 +519,305 @@ describe('AssumptionsPage routing integration', () => {
       getCurrentYear()
     );
 
-    expect(within(cardRoot).getByDisplayValue(formatCurrency(expectedCost).replace('$', ''))).toBeInTheDocument();
+    // The card shows the combined cost as a text readout (not an input).
+    expect(within(cardRoot).getByText(formatCurrency(expectedCost))).toBeInTheDocument();
+  });
+
+  it('prompts before navigating away with unapplied global edits, and keeps or discards them', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '123');
+
+    await user.click(screen.getByRole('button', { name: 'Go Home' }));
+
+    const prompt = await screen.findByText('Apply your edits before leaving?');
+    expect(prompt).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Keep editing' }));
+    await waitFor(() => {
+      expect(screen.queryByText('Apply your edits before leaving?')).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId('location-probe')).toHaveTextContent('/assumptions');
+    expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('123');
+
+    await user.click(screen.getByRole('button', { name: 'Go Home' }));
+    await screen.findByText('Apply your edits before leaving?');
+    await user.click(screen.getByRole('button', { name: 'Discard and leave' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('/');
+      expect(screen.getByText('Home')).toBeInTheDocument();
+    });
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('applies unapplied global edits when leaving via "Apply and leave"', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const updatedTimeLimit = assumptionsData.globalParameters.timeLimit + 50;
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(updatedTimeLimit));
+
+    await user.click(screen.getByRole('button', { name: 'Go Home' }));
+    await screen.findByText('Apply your edits before leaving?');
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Home')).toBeInTheDocument();
+    });
+    expect(JSON.parse(sessionStorage.getItem('customEffectsData')).globalParameters.timeLimit).toBe(updatedTimeLimit);
+  });
+
+  it('stays on the page when "Apply and leave" hits validation errors', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '0');
+
+    await user.click(screen.getByRole('button', { name: 'Go Home' }));
+    await screen.findByText('Apply your edits before leaving?');
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Apply your edits before leaving?')).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId('location-probe')).toHaveTextContent('/assumptions');
+    expect(screen.getByText('Time limit must be positive')).toBeInTheDocument();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('does not prompt when switching tabs with unapplied global edits', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '123');
+
+    await user.click(screen.getByRole('tab', { name: 'Causes' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('tab=categories');
+    });
+    expect(screen.queryByText('Apply your edits before leaving?')).not.toBeInTheDocument();
+
+    // The form survives the tab round-trip.
+    await user.click(screen.getByRole('tab', { name: 'Global' }));
+    expect(await screen.findByLabelText('Time Limit (years)')).toHaveValue('123');
+  });
+
+  it('asks the browser to confirm unload while global edits are unapplied', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const fireBeforeUnload = () => {
+      const event = new Event('beforeunload', { cancelable: true });
+      window.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+
+    expect(await screen.findByLabelText('Time Limit (years)')).toBeInTheDocument();
+    expect(fireBeforeUnload()).toBe(false);
+
+    const timeLimitInput = screen.getByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '123');
+    expect(fireBeforeUnload()).toBe(true);
+
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    await waitFor(() => {
+      expect(fireBeforeUnload()).toBe(false);
+    });
+  });
+
+  it('preserves unapplied global drafts when reverting an unrelated change in the review modal', async () => {
+    const user = userEvent.setup();
+
+    const categoryEffect = assumptionsData.categories[firstValidCategoryId].effects[0];
+    const categoryField = categoryEffect.costPerQALY !== undefined ? 'costPerQALY' : 'costPerMicroprobability';
+    localStorage.setItem(__internal.SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        categories: {
+          [firstValidCategoryId]: {
+            effects: [{ effectId: categoryEffect.effectId, [categoryField]: categoryEffect[categoryField] * 2 }],
+          },
+        },
+      })
+    );
+
+    renderAssumptionsRoute('/assumptions');
+
+    const draftValue = assumptionsData.globalParameters.timeLimit + 50;
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(draftValue));
+    const draftDisplay = timeLimitInput.value;
+
+    await user.click(screen.getByRole('button', { name: 'Review changes (1)' }));
+    const dialog = await screen.findByRole('dialog');
+    await user.click(within(dialog).getByRole('button', { name: /^Revert / }));
+    await within(dialog).findByText('All assumptions currently match the site defaults.');
+    await user.click(within(dialog).getByRole('button', { name: 'Close' }));
+
+    // Reverting a cause change must not clobber the unapplied global draft.
+    expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(draftDisplay);
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeEnabled();
+  });
+
+  it('preserves unapplied global drafts when loading a saved set that does not touch them', async () => {
+    const user = userEvent.setup();
+
+    const defaultDiscountRate = assumptionsData.globalParameters.discountRate;
+    const entryDiscountRate = defaultDiscountRate === 0.07 ? 0.09 : 0.07;
+    saveNewAssumptions({
+      label: 'Discount Only',
+      assumptions: {
+        globalParameters: { discountRate: entryDiscountRate },
+        categories: {},
+        recipients: {},
+      },
+    });
+
+    renderAssumptionsRoute('/assumptions');
+
+    const draftValue = assumptionsData.globalParameters.timeLimit + 50;
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(draftValue));
+    const draftDisplay = timeLimitInput.value;
+
+    const { menu } = await openAssumptionsLibraryMenu(user);
+    await user.click(
+      within(getAssumptionsLibraryRow(menu, 'Discount Only')).getByRole('button', { name: /Discount Only/ })
+    );
+
+    // The loaded set's parameter hydrates; the untouched draft survives.
+    // (×100 with the same float-artifact rounding the form applies.)
+    await waitFor(() => {
+      expect(screen.getByLabelText('Discount Rate (%)')).toHaveValue(
+        String(Math.round(entryDiscountRate * 100 * 1e10) / 1e10)
+      );
+    });
+    expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(draftDisplay);
+
+    // Contract for the two dirtiness indicators: the panel reports the
+    // APPLIED state (the loaded entry is active and clean — the draft is not
+    // applied), so the entry keeps its normal presentation with no Save
+    // action and no "Custom (unsaved)" pseudo-entry. The surviving draft is
+    // the editor's concern and shows as its enabled Apply, protected by the
+    // navigation guard.
+    const summary = getAssumptionsLibrarySummary();
+    expect(within(summary).getByText('Discount Only')).toBeInTheDocument();
+    expect(within(summary).getByText('Local')).toBeInTheDocument();
+    expect(within(summary).queryByText('Custom (unsaved)')).not.toBeInTheDocument();
+    expect(queryActiveAssumptionsActionButton('Save')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeEnabled();
+  });
+
+  it('reviews and reverts applied global changes from the review-changes modal', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    expect(await screen.findByLabelText('Time Limit (years)')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Review changes/ })).not.toBeInTheDocument();
+
+    const defaultTimeLimit = assumptionsData.globalParameters.timeLimit;
+    const updatedTimeLimit = defaultTimeLimit + 50;
+    const timeLimitInput = screen.getByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(updatedTimeLimit));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    await user.click(await screen.findByRole('button', { name: 'Review changes (1)' }));
+
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText('Changes from default assumptions')).toBeInTheDocument();
+    const row = within(dialog).getByText('Time Limit (years)').closest('li');
+    expect(row).toHaveTextContent(String(defaultTimeLimit));
+    expect(row).toHaveTextContent(String(updatedTimeLimit));
+
+    await user.click(within(dialog).getByRole('button', { name: 'Revert Time Limit (years)' }));
+
+    expect(await within(dialog).findByText('All assumptions currently match the site defaults.')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+    });
+
+    await user.click(within(dialog).getByRole('button', { name: 'Close' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Review changes/ })).not.toBeInTheDocument();
+    });
+  });
+
+  it('lists cause and recipient changes in the review-changes modal and reverts them individually', async () => {
+    const user = userEvent.setup();
+
+    const categoryEffect = assumptionsData.categories[firstValidCategoryId].effects[0];
+    const categoryField = categoryEffect.costPerQALY !== undefined ? 'costPerQALY' : 'costPerMicroprobability';
+
+    // A recipient category without default effect wrappers keeps the expected
+    // diff to exactly the one override we seed.
+    const [plainRecipientId, plainRecipient] = Object.entries(assumptionsData.recipients).find(([, recipient]) =>
+      Object.entries(recipient.categories || {}).some(([, category]) => !category.effects?.length)
+    );
+    const plainCategoryId = Object.entries(plainRecipient.categories).find(
+      ([, category]) => !category.effects?.length
+    )[0];
+    const recipientBaseEffect = assumptionsData.categories[plainCategoryId].effects[0];
+    const recipientField = recipientBaseEffect.costPerQALY !== undefined ? 'costPerQALY' : 'costPerMicroprobability';
+
+    // Seeded custom assumptions would otherwise trigger the one-time
+    // migration prompt, which opens a competing dialog.
+    localStorage.setItem(__internal.SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        categories: {
+          [firstValidCategoryId]: {
+            effects: [{ effectId: categoryEffect.effectId, [categoryField]: categoryEffect[categoryField] * 2 }],
+          },
+        },
+        recipients: {
+          [plainRecipientId]: {
+            categories: {
+              [plainCategoryId]: {
+                effects: [{ effectId: recipientBaseEffect.effectId, overrides: { [recipientField]: 123457 } }],
+              },
+            },
+          },
+        },
+      })
+    );
+
+    renderAssumptionsRoute('/assumptions');
+
+    await user.click(await screen.findByRole('button', { name: 'Review changes (2)' }));
+    const dialog = await screen.findByRole('dialog');
+
+    const categoryName = assumptionsData.categories[firstValidCategoryId].name;
+    const recipientGroupTitle = `${plainRecipient.name} · ${assumptionsData.categories[plainCategoryId].name}`;
+    expect(within(dialog).getByText(categoryName)).toBeInTheDocument();
+    expect(within(dialog).getByText(recipientGroupTitle)).toBeInTheDocument();
+    // The recipient row's "before" side resolves to the concrete cause value.
+    expect(within(dialog).getByText('from cause')).toBeInTheDocument();
+
+    const revertButtons = within(dialog).getAllByRole('button', { name: /^Revert / });
+    expect(revertButtons).toHaveLength(2);
+    await user.click(revertButtons[0]);
+
+    await waitFor(() => {
+      expect(within(dialog).getAllByRole('button', { name: /^Revert / })).toHaveLength(1);
+    });
+    expect(screen.getByRole('button', { name: 'Review changes (1)' })).toBeInTheDocument();
   });
 
   it('hides Save to Library when there are no custom assumptions', async () => {

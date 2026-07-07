@@ -1,15 +1,11 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import CurrencyInput from '../shared/CurrencyInput';
-import SectionCard from '../shared/SectionCard';
-import IconActionButton from '../shared/IconActionButton';
+import AssumptionEntityCard from './AssumptionEntityCard';
 import { formatCurrency } from '../../utils/formatters';
 import { calculateCostPerLife } from '../../utils/effectsCalculation';
 import { calculateCategoryEffectCostPerLife, mergeGlobalParameters } from '../../utils/assumptionsEditorHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
-import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Component for managing cost per life values for categories.
@@ -64,74 +60,18 @@ const CategoryValuesSection = ({
     <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 ${className}`.trim()}>
       {Object.entries(categoriesData)
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
-        .map(([key, categoryData]) => {
-          const defaultValue = categoryData.defaultCostPerLife;
-          const currentValue = categoryData.currentCostPerLife;
-
-          // Check if this category has any custom effect parameters
-          const isCustom = categoriesWithCustomValues && categoriesWithCustomValues.has(key);
-
-          // Format values for display (strip $ sign since CurrencyInput adds it)
-          const formattedDefaultWithSymbol = formatCurrency(defaultValue);
-          const formattedDefault = formattedDefaultWithSymbol.replace('$', '');
-          const formattedCurrent = formatCurrency(currentValue).replace('$', '');
-
-          return (
-            <SectionCard key={key} isCustom={isCustom} padding="sm" className="h-full">
-              <div className="assumption-card__top">
-                <div className="min-w-0">
-                  <div className="assumption-card__title-wrap pr-2">
-                    <label className="block min-w-0" htmlFor={`category-${key}`}>
-                      <Link
-                        to={buildCausePath(key)}
-                        className="assumptions-link assumption-card__title-link block truncate"
-                        title={categoryData.name}
-                      >
-                        {categoryData.name}
-                      </Link>
-                    </label>
-                    {isCustom && (
-                      <span className="assumption-card__default-meta">
-                        (Baseline: <FormattedScientificValue value={formattedDefaultWithSymbol} variant="compact" />)
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="assumption-card__actions">
-                  {isCustom && onResetCategory && (
-                    <IconActionButton icon="reset" label="Reset" onClick={() => onResetCategory(key)} />
-                  )}
-                  <IconActionButton
-                    icon="edit"
-                    label="Edit"
-                    onClick={() => {
-                      if (!onEditCategory) {
-                        throw new Error('onEditCategory prop is required when editing categories');
-                      }
-                      onEditCategory(key);
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-2">
-                <CurrencyInput
-                  id={`category-${key}`}
-                  value={formattedCurrent}
-                  onChange={() => {}}
-                  className="w-full"
-                  validateOnBlur={true}
-                  placeholder={formattedDefault}
-                  isCustom={isCustom}
-                  displayOnly={true}
-                  ariaLabel={categoryData.name}
-                  displayValue={<FormattedScientificValue value={formattedCurrent} />}
-                />
-              </div>
-            </SectionCard>
-          );
-        })}
+        .map(([key, categoryData]) => (
+          <AssumptionEntityCard
+            key={key}
+            name={categoryData.name}
+            to={buildCausePath(key)}
+            isCustom={Boolean(categoriesWithCustomValues && categoriesWithCustomValues.has(key))}
+            baselineValue={formatCurrency(categoryData.defaultCostPerLife)}
+            currentValue={formatCurrency(categoryData.currentCostPerLife)}
+            onEdit={() => onEditCategory(key)}
+            onReset={onResetCategory ? () => onResetCategory(key) : null}
+          />
+        ))}
     </div>
   );
 };
@@ -139,7 +79,7 @@ const CategoryValuesSection = ({
 CategoryValuesSection.propTypes = {
   defaultAssumptions: PropTypes.object.isRequired,
   userAssumptions: PropTypes.object,
-  onEditCategory: PropTypes.func,
+  onEditCategory: PropTypes.func.isRequired,
   onResetCategory: PropTypes.func,
   categoriesWithCustomValues: PropTypes.object,
   previewYear: PropTypes.number,

@@ -19,9 +19,6 @@ const CurrencyInput = ({
   validateOnBlur = false, // If true, only validates when input loses focus
   isCustom = false, // If true, highlights field to show custom value
   rightElement = null, // Optional element to render on the right side inside the input
-  displayOnly = false, // If true, render a read-only display surface instead of a disabled input
-  ariaLabel,
-  displayValue = null,
   // 'decimal' brings up a numeric keypad on mobile, but iOS's decimal pad
   // has NO minus key — negative values are legitimate for cost fields
   // (domain rule), so only positive-only call sites should opt in.
@@ -74,10 +71,9 @@ const CurrencyInput = ({
   }, [localValue, onChange, setLocalValue, validateOnBlur]);
 
   const state = error ? 'error' : isCustom ? 'custom' : 'default';
-  const hasDisplayOverlay = displayOnly && displayValue && localValue;
 
   return (
-    <div className={`impact-field ${className}`.trim()} data-state={state} data-display={displayOnly || undefined}>
+    <div className={`impact-field ${className}`.trim()} data-state={state}>
       {label && (
         <label htmlFor={id} className="impact-field__label">
           {label}
@@ -91,46 +87,22 @@ const CurrencyInput = ({
         >
           $
         </span>
-        {displayOnly ? (
-          <>
-            <input
-              id={id}
-              aria-label={ariaLabel || label}
-              type="text"
-              inputMode="text"
-              value={localValue}
-              placeholder={placeholder}
-              readOnly={true}
-              tabIndex={-1}
-              onMouseDown={(event) => event.preventDefault()}
-              className={`impact-field__input impact-field__input--with-prefix impact-field__input--display ${
-                hasDisplayOverlay ? 'impact-field__input--display-rendered' : ''
-              }`.trim()}
-            />
-            {hasDisplayOverlay && (
-              <div className="impact-field__display-overlay impact-field__display-overlay--with-prefix">
-                {displayValue}
-              </div>
-            )}
-          </>
-        ) : (
-          <input
-            ref={inputRef}
-            id={id}
-            type="text"
-            inputMode={inputMode}
-            value={localValue}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder={placeholder}
-            disabled={disabled}
-            aria-invalid={!!error}
-            aria-errormessage={error ? `${id}-error` : undefined}
-            className={`impact-field__input impact-field__input--with-prefix ${
-              rightElement ? 'impact-field__input--with-right' : ''
-            }`.trim()}
-          />
-        )}
+        <input
+          ref={inputRef}
+          id={id}
+          type="text"
+          inputMode={inputMode}
+          value={localValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          disabled={disabled}
+          aria-invalid={!!error}
+          aria-errormessage={error ? `${id}-error` : undefined}
+          className={`impact-field__input impact-field__input--with-prefix ${
+            rightElement ? 'impact-field__input--with-right' : ''
+          }`.trim()}
+        />
         {rightElement && <div className="absolute right-2 top-1/2 z-10 -translate-y-1/2">{rightElement}</div>}
       </div>
       {error && (
@@ -154,9 +126,6 @@ CurrencyInput.propTypes = {
   validateOnBlur: PropTypes.bool,
   isCustom: PropTypes.bool,
   rightElement: PropTypes.node,
-  displayOnly: PropTypes.bool,
-  ariaLabel: PropTypes.string,
-  displayValue: PropTypes.node,
   inputMode: PropTypes.oneOf(['text', 'decimal', 'numeric']),
 };
 

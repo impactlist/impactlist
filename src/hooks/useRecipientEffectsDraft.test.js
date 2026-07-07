@@ -18,7 +18,7 @@ const baseQalyEffect = {
   windowLength: 10,
 };
 
-const buildDefaults = ({ recipientMultiplier } = {}) => ({
+const buildDefaults = ({ recipientMultiplier, recipientOverrides } = {}) => ({
   categories: {
     health: { name: 'Health', effects: [baseQalyEffect] },
   },
@@ -26,9 +26,19 @@ const buildDefaults = ({ recipientMultiplier } = {}) => ({
     clinic: {
       name: 'Clinic',
       categories: {
-        health: recipientMultiplier
-          ? { fraction: 1, effects: [{ effectId: 'health-effect', multipliers: { costPerQALY: recipientMultiplier } }] }
-          : { fraction: 1 },
+        health:
+          recipientMultiplier || recipientOverrides
+            ? {
+                fraction: 1,
+                effects: [
+                  {
+                    effectId: 'health-effect',
+                    ...(recipientMultiplier ? { multipliers: { costPerQALY: recipientMultiplier } } : {}),
+                    ...(recipientOverrides ? { overrides: recipientOverrides } : {}),
+                  },
+                ],
+              }
+            : { fraction: 1 },
       },
     },
   },
@@ -133,6 +143,27 @@ describe('useRecipientEffectsDraft', () => {
     // _baseEffect must never reach saved state — normalizeUserAssumptions
     // would reject it as an unknown field.
     expect(Object.hasOwn(effectsToSave[0], '_baseEffect')).toBe(false);
+  });
+
+  it('saving an edit to one field carries the recipient default overrides forward', () => {
+    // Regression: a recipient shipping default overrides (e.g. a cheaper
+    // cost per QALY than its category) must keep them when the user edits an
+    // UNRELATED field. User overrides replace the default set wholesale at
+    // combine time, so a save shape holding only {startTime} would silently
+    // revert costPerQALY to the category value — doubling the recipient's
+    // cost per life in the Charter Cities Institute case.
+    const { result } = renderDraft({
+      defaultAssumptions: buildDefaults({ recipientOverrides: { costPerQALY: 500 } }),
+    });
+
+    expect(result.current.hasUnsavedChanges).toBe(false);
+    expect(result.current.getEffectsToSave()).toEqual([]);
+
+    act(() => result.current.updateEffectField(0, 'startTime', '4'));
+
+    expect(result.current.getEffectsToSave()).toEqual([
+      { effectId: 'health-effect', overrides: { costPerQALY: 500, startTime: 4 } },
+    ]);
   });
 
   it('exposes per-effect input sources including the recipient default wrapper', () => {

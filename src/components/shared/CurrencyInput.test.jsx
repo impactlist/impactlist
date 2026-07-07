@@ -1,39 +1,26 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import CurrencyInput from './CurrencyInput';
 
 describe('CurrencyInput', () => {
-  it('renders a read-only input when displayOnly is enabled', () => {
-    render(
-      <CurrencyInput
-        id="category-cost"
-        value="62"
-        onChange={vi.fn()}
-        placeholder="31"
-        displayOnly={true}
-        ariaLabel="AGI Development"
-      />
-    );
+  it('associates the label and reports cleaned values on change', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<CurrencyInput id="donation-amount" label="Donation Amount" value="" onChange={onChange} />);
 
-    const input = screen.getByDisplayValue('62');
-    expect(input).toHaveAttribute('readonly');
-    expect(input).toHaveAttribute('tabindex', '-1');
-    expect(input).toHaveAccessibleName('AGI Development');
-    expect(input).toHaveClass('impact-field__input--display');
+    const input = screen.getByLabelText('Donation Amount');
+    await user.type(input, '1234');
+
+    expect(onChange).toHaveBeenLastCalledWith('1234');
+    expect(input).toHaveValue('1,234');
   });
 
-  it('falls back to the placeholder when display-only value is empty', () => {
-    render(
-      <CurrencyInput
-        id="recipient-cost"
-        value=""
-        onChange={vi.fn()}
-        placeholder="640"
-        displayOnly={true}
-        ariaLabel="Animal Welfare"
-      />
-    );
+  it('renders the error message and marks the input invalid', () => {
+    render(<CurrencyInput id="amount" label="Amount" value="abc" onChange={vi.fn()} error="Must be a valid number" />);
 
-    expect(screen.getByPlaceholderText('640')).toHaveAccessibleName('Animal Welfare');
+    const input = screen.getByLabelText('Amount');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByText('Must be a valid number')).toBeInTheDocument();
   });
 });

@@ -1,15 +1,11 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import SearchInput from '../shared/SearchInput';
-import CurrencyInput from '../shared/CurrencyInput';
-import SectionCard from '../shared/SectionCard';
-import IconActionButton from '../shared/IconActionButton';
+import AssumptionEntityCard from './AssumptionEntityCard';
 import { formatCurrency } from '../../utils/formatters';
 import { getRecipientId, getCurrentYear } from '../../utils/donationDataHelpers';
 import { createCombinedAssumptions, getCostPerLifeForRecipientFromCombined } from '../../utils/assumptionsDataHelpers';
 import { recipientHasMeaningfulCustomValues } from '../../utils/assumptionsEditorHelpers';
-import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Component for displaying recipient-specific cost per life values.
@@ -40,7 +36,7 @@ const RecipientValuesSection = ({
   );
 
   // Calculate combined/weighted cost per life across all categories for a recipient
-  const getCombinedCostPerLife = (recipientId, recipient, includeUserOverrides = true) => {
+  const getCombinedCostPerLife = (recipientId, includeUserOverrides = true) => {
     const assumptionsToUse = includeUserOverrides ? currentCombinedAssumptions : baselineCombinedAssumptions;
     return getCostPerLifeForRecipientFromCombined(assumptionsToUse, recipientId, previewYear || getCurrentYear());
   };
@@ -85,56 +81,20 @@ const RecipientValuesSection = ({
               if (recipientCategories.length === 0) return null;
 
               const recipientId = getRecipientId(recipient);
-              const combinedCost = getCombinedCostPerLife(recipientId, recipient, true);
-              const defaultCombinedCost = getCombinedCostPerLife(recipientId, recipient, false);
-              const formattedCost = combinedCost !== null ? formatCurrency(combinedCost).replace('$', '') : '—';
-              const formattedDefaultCost = defaultCombinedCost !== null ? formatCurrency(defaultCombinedCost) : '—';
-              const hasCustomValues = recipientHasAnyCustomValues(recipientId, recipient);
+              const combinedCost = getCombinedCostPerLife(recipientId, true);
+              const defaultCombinedCost = getCombinedCostPerLife(recipientId, false);
 
               return (
-                <SectionCard key={recipient.name} isCustom={hasCustomValues} padding="sm" className="h-full">
-                  <div className="assumption-card__top">
-                    <div className="min-w-0">
-                      <div className="assumption-card__title-wrap pr-2">
-                        <Link
-                          to={`/recipient/${encodeURIComponent(recipientId)}`}
-                          className="assumptions-link assumption-card__title-link block min-w-0 truncate"
-                          title={recipient.name}
-                        >
-                          {recipient.name}
-                        </Link>
-                        {hasCustomValues && (
-                          <span className="assumption-card__default-meta">
-                            (Baseline: <FormattedScientificValue value={formattedDefaultCost} variant="compact" />)
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="assumption-card__actions">
-                      {hasCustomValues && onResetRecipient && (
-                        <IconActionButton icon="reset" label="Reset" onClick={() => onResetRecipient(recipientId)} />
-                      )}
-                      <IconActionButton
-                        icon="edit"
-                        label="Edit"
-                        onClick={() => onEditRecipient(recipient, recipientId)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-2">
-                    <CurrencyInput
-                      id={`recipient-${recipientId}`}
-                      value={formattedCost}
-                      onChange={() => {}}
-                      className="w-full"
-                      isCustom={hasCustomValues}
-                      displayOnly={true}
-                      ariaLabel={recipient.name}
-                      displayValue={<FormattedScientificValue value={formattedCost} />}
-                    />
-                  </div>
-                </SectionCard>
+                <AssumptionEntityCard
+                  key={recipient.name}
+                  name={recipient.name}
+                  to={`/recipient/${encodeURIComponent(recipientId)}`}
+                  isCustom={recipientHasAnyCustomValues(recipientId, recipient)}
+                  baselineValue={defaultCombinedCost !== null ? formatCurrency(defaultCombinedCost) : '—'}
+                  currentValue={combinedCost !== null ? formatCurrency(combinedCost) : '—'}
+                  onEdit={() => onEditRecipient(recipient, recipientId)}
+                  onReset={onResetRecipient ? () => onResetRecipient(recipientId) : null}
+                />
               );
             })}
         </div>

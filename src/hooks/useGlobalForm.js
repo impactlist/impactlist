@@ -1,6 +1,16 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { formatNumberWithCommas } from '../utils/formatters';
 import { cleanAndParseValue, isPartialInput, validateGlobalField } from '../utils/effectValidation';
+
+const valuesMatch = (valueA, valueB) => {
+  if (valueA === valueB) {
+    return true;
+  }
+  if (typeof valueA === 'number' && typeof valueB === 'number') {
+    return Number.isNaN(valueA) && Number.isNaN(valueB);
+  }
+  return false;
+};
 
 /**
  * Custom hook for managing global parameter form state
@@ -12,28 +22,64 @@ import { cleanAndParseValue, isPartialInput, validateGlobalField } from '../util
 export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlobalParameters) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
+  // Per-parameter values as of the last hydration. The inputs to this hook
+  // get fresh object identities on EVERY assumptions change (normalization
+  // deep-copies), so identity alone can't tell "this parameter's value
+  // changed" from "something unrelated changed elsewhere in userAssumptions".
+  const hydratedValuesRef = useRef(null);
 
-  // Rehydrate form values whenever the assumptions source changes
-  // (for example after importing shared assumptions).
+  // Rehydrate form values whenever the underlying assumptions VALUES change
+  // (applying edits, loading a saved set, importing a shared link, reverting
+  // a change). Only the parameters whose values actually changed rehydrate —
+  // un-applied drafts on other parameters must survive unrelated mutations
+  // like reverting a cause change or loading a set that leaves them alone.
   useEffect(() => {
     if (!globalParameters) {
       return;
     }
 
-    const initialValues = {};
-
+    const nextHydrated = {};
     Object.keys(globalParameters).forEach((paramKey) => {
       const customValue = userGlobalParameters?.[paramKey];
-      const value = customValue !== undefined ? customValue : globalParameters[paramKey];
-
-      initialValues[paramKey] = {
-        raw: value,
-        formatted: formatValue(value, getParameterFormat(paramKey)),
-      };
+      nextHydrated[paramKey] = customValue !== undefined ? customValue : globalParameters[paramKey];
     });
 
-    setFormValues(initialValues);
-    setErrors({});
+    const previousHydrated = hydratedValuesRef.current;
+    hydratedValuesRef.current = nextHydrated;
+
+    const isFirstHydration = previousHydrated === null;
+    const changedKeys = new Set(
+      Object.keys(nextHydrated).filter(
+        (paramKey) => isFirstHydration || !valuesMatch(nextHydrated[paramKey], previousHydrated[paramKey])
+      )
+    );
+
+    if (changedKeys.size === 0) {
+      return;
+    }
+
+    setFormValues((previous) => {
+      const next = {};
+      Object.keys(nextHydrated).forEach((paramKey) => {
+        const shouldHydrate = changedKeys.has(paramKey) || !previous[paramKey];
+        next[paramKey] = shouldHydrate
+          ? {
+              raw: nextHydrated[paramKey],
+              formatted: formatValue(nextHydrated[paramKey], getParameterFormat(paramKey)),
+            }
+          : previous[paramKey];
+      });
+      return next;
+    });
+
+    // A hydrated parameter shows a known-valid value; drop only its error.
+    setErrors((previous) => {
+      const next = { ...previous };
+      changedKeys.forEach((paramKey) => {
+        delete next[paramKey];
+      });
+      return next;
+    });
   }, [globalParameters, userGlobalParameters]);
 
   // Get the format type for a parameter
@@ -157,16 +203,6 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
         return defaultGlobalParameters[paramKey];
       }
       return globalParameters[paramKey];
-    };
-
-    const valuesMatch = (currentValue, baselineValue) => {
-      if (currentValue === baselineValue) {
-        return true;
-      }
-      if (typeof currentValue === 'number' && typeof baselineValue === 'number') {
-        return Number.isNaN(currentValue) && Number.isNaN(baselineValue);
-      }
-      return false;
     };
 
     return Object.keys(globalParameters).some((paramKey) => {

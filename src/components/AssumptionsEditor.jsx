@@ -1,8 +1,10 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useBlocker } from 'react-router-dom';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { validateGlobalParameterValues, scrollToFirstError } from '../utils/assumptionsFormValidation';
 import { cleanAndParseValue } from '../utils/effectValidation';
+import { buildAssumptionsDiff, revertAssumptionsDiffEntry } from '../utils/assumptionsDiff';
 import { useRecipientSearch } from '../hooks/useAssumptionsForm';
 import { useGlobalForm } from '../hooks/useGlobalForm';
 import { useAssumptionsEditorController } from '../hooks/useAssumptionsEditorController';
@@ -11,6 +13,8 @@ import {
   mergeGlobalParameters,
   getCategoryFromDefaults,
 } from '../utils/assumptionsEditorHelpers';
+import ReviewChangesModal from './ReviewChangesModal';
+import UnappliedEditsModal from './UnappliedEditsModal';
 
 import CategoryValuesSection from './assumptions/CategoryValuesSection';
 import RecipientValuesSection from './assumptions/RecipientValuesSection';
@@ -51,9 +55,25 @@ const AssumptionsEditor = forwardRef(
       resetAllGlobalParameters,
       resetCategoryToDefaults,
       resetRecipientToDefaults,
+      getNormalizedUserAssumptionsForSharing,
+      setAllUserAssumptions,
     } = useAssumptions();
 
     const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
+    const [isReviewChangesOpen, setIsReviewChangesOpen] = useState(false);
+
+    const normalizedUserAssumptions = getNormalizedUserAssumptionsForSharing();
+    const assumptionsDiff = useMemo(
+      () => buildAssumptionsDiff(defaultAssumptions, normalizedUserAssumptions),
+      [defaultAssumptions, normalizedUserAssumptions]
+    );
+
+    const handleRevertChange = useCallback(
+      (path) => {
+        setAllUserAssumptions(revertAssumptionsDiffEntry(normalizedUserAssumptions, path, defaultAssumptions));
+      },
+      [setAllUserAssumptions, normalizedUserAssumptions, defaultAssumptions]
+    );
 
     const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
 
@@ -141,6 +161,54 @@ const AssumptionsEditor = forwardRef(
     const handleSaveGlobal = useCallback(() => {
       commitGlobalChanges();
     }, [commitGlobalChanges]);
+
+    // Un-applied global edits only live in this form's state, so navigating
+    // away would silently discard them. Block full navigations and prompt;
+    // tab/entity switches only change query params (same pathname) and stay
+    // free — the form survives those.
+    const hasUnappliedGlobalEdits = globalForm.hasUnsavedChanges;
+    const navigationBlocker = useBlocker(
+      useCallback(
+        ({ currentLocation, nextLocation }) =>
+          hasUnappliedGlobalEdits && currentLocation.pathname !== nextLocation.pathname,
+        [hasUnappliedGlobalEdits]
+      )
+    );
+
+    // Release a blocked navigation if the edits get applied or reset while
+    // the prompt is up (standard useBlocker safety valve).
+    useEffect(() => {
+      if (navigationBlocker.state === 'blocked' && !hasUnappliedGlobalEdits) {
+        navigationBlocker.reset();
+      }
+    }, [navigationBlocker, hasUnappliedGlobalEdits]);
+
+    // The router blocker can't see reloads or tab closes; ask the browser to
+    // confirm those too while edits are un-applied.
+    useEffect(() => {
+      if (!hasUnappliedGlobalEdits) {
+        return undefined;
+      }
+
+      const handleBeforeUnload = (event) => {
+        event.preventDefault();
+        // Chrome still requires returnValue to show the confirmation dialog.
+        event.returnValue = '';
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [hasUnappliedGlobalEdits]);
+
+    const handleApplyAndLeave = useCallback(() => {
+      // On validation failure commitGlobalChanges surfaces the errors (and
+      // switches to the Global tab), so stay on the page.
+      if (commitGlobalChanges()) {
+        navigationBlocker.proceed();
+      } else {
+        navigationBlocker.reset();
+      }
+    }, [commitGlobalChanges, navigationBlocker]);
 
     useImperativeHandle(ref, () => {
       const commitPendingAssumptionsEdits = () => {
@@ -251,26 +319,37 @@ const AssumptionsEditor = forwardRef(
                 Apply or cancel current edits to switch sections.
               </span>
             ) : (
-              <FormActions
-                onReset={
-                  activeTab === 'global'
-                    ? handleGlobalReset
-                    : activeTab === 'categories'
-                      ? handleCategoryReset
-                      : handleResetRecipients
-                }
-                onSave={handleSaveGlobal}
-                showSave={activeTab === 'global'}
-                resetLabel={
-                  activeTab === 'global'
-                    ? 'Reset Global'
-                    : activeTab === 'categories'
-                      ? 'Reset Causes'
-                      : 'Reset Recipients'
-                }
-                hasErrors={Object.keys(globalForm.errors).length > 0}
-                hasUnsavedChanges={globalForm.hasUnsavedChanges}
-              />
+              <>
+                {assumptionsDiff.changeCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewChangesOpen(true)}
+                    className="impact-btn impact-btn--secondary impact-btn--sm assumptions-toolbar__review"
+                  >
+                    Review changes ({assumptionsDiff.changeCount})
+                  </button>
+                )}
+                <FormActions
+                  onReset={
+                    activeTab === 'global'
+                      ? handleGlobalReset
+                      : activeTab === 'categories'
+                        ? handleCategoryReset
+                        : handleResetRecipients
+                  }
+                  onSave={handleSaveGlobal}
+                  showSave={activeTab === 'global'}
+                  resetLabel={
+                    activeTab === 'global'
+                      ? 'Reset Global'
+                      : activeTab === 'categories'
+                        ? 'Reset Causes'
+                        : 'Reset Recipients'
+                  }
+                  hasErrors={Object.keys(globalForm.errors).length > 0}
+                  hasUnsavedChanges={globalForm.hasUnsavedChanges}
+                />
+              </>
             )}
           </div>
         </div>
@@ -359,6 +438,21 @@ const AssumptionsEditor = forwardRef(
             />
           )}
         </div>
+
+        <ReviewChangesModal
+          isOpen={isReviewChangesOpen}
+          onClose={() => setIsReviewChangesOpen(false)}
+          diff={assumptionsDiff}
+          onRevert={handleRevertChange}
+          hasUnappliedGlobalEdits={hasUnappliedGlobalEdits}
+        />
+
+        <UnappliedEditsModal
+          isOpen={navigationBlocker.state === 'blocked'}
+          onApplyAndLeave={handleApplyAndLeave}
+          onDiscardAndLeave={() => navigationBlocker.proceed()}
+          onStay={() => navigationBlocker.reset()}
+        />
       </div>
     );
   }

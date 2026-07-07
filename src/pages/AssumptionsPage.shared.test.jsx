@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { createMemoryRouter, Route, RouterProvider, Routes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
@@ -21,18 +21,32 @@ const LocationProbe = () => {
 };
 
 const renderAppRoutes = (initialEntry, { strictMode = false } = {}) => {
+  // A data router (single splat route hosting descendant <Routes>) mirrors
+  // App.jsx — AssumptionsEditor's useBlocker requires one.
+  const router = createMemoryRouter(
+    [
+      {
+        path: '*',
+        element: (
+          <>
+            <GlobalNotificationBanner />
+            <GlobalSharedAssumptionsImport />
+            <LocationProbe />
+            <Routes>
+              <Route path="/" element={<div>Home</div>} />
+              <Route path="/assumptions" element={<AssumptionsPage />} />
+            </Routes>
+          </>
+        ),
+      },
+    ],
+    { initialEntries: [initialEntry] }
+  );
+
   const tree = (
     <NotificationProvider>
       <AssumptionsProvider>
-        <MemoryRouter initialEntries={[initialEntry]}>
-          <GlobalNotificationBanner />
-          <GlobalSharedAssumptionsImport />
-          <LocationProbe />
-          <Routes>
-            <Route path="/" element={<div>Home</div>} />
-            <Route path="/assumptions" element={<AssumptionsPage />} />
-          </Routes>
-        </MemoryRouter>
+        <RouterProvider router={router} />
       </AssumptionsProvider>
     </NotificationProvider>
   );

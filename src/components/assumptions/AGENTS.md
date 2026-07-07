@@ -5,6 +5,8 @@ The editing UI for global parameters, category effects, and per-recipient effect
 ## Structure
 
 - `GlobalValuesSection` / `CategoryValuesSection` / `RecipientValuesSection` — the three tabs' list/summary views.
+- `AssumptionEntityCard` — the cause/recipient list card. The cost per life is a computed READOUT (not an input — it's derived from effect parameters); the whole card is a widened pointer target that opens the editor, with the inner Edit button as the keyboard/AT path (same pattern as AssumptionsDropdown rows). Entity link and action buttons stop propagation.
+- `AssumptionsEditor` (one level up) also owns the review-changes modal (`ReviewChangesModal` over `utils/assumptionsDiff.js` — the userAssumptions-vs-defaults diff with per-row revert via `setAllUserAssumptions`) and the unapplied-global-edits navigation guard (`useBlocker` + `beforeunload` + `UnappliedEditsModal`). `useBlocker` requires the app's data router — tests must render through `createMemoryRouter` (see the page test helpers).
 - `CategoryEffectEditor` — edits a category's effects (direct field values); owns the category-flavor draft logic.
 - `RecipientEffectEditor` / `MultiCategoryRecipientEditor` — edit a recipient's per-category effect **overrides/multipliers** (not direct values). Multi-category recipients get one section per category. Both are thin shells around `hooks/useRecipientEffectsDraft` (the entire draft state machine — unit-tested; change edit behavior THERE) and `RecipientEffectCard`.
 - `EffectCard` — the card chrome shared by all three editors (title/toggle/cost row, active-interval note, disabled dimming); `RecipientEffectCard` composes it with the recipient override inputs.
@@ -20,4 +22,4 @@ The editing UI for global parameters, category effects, and per-recipient effect
 
 ## Testing
 
-Recipient draft logic is unit-tested in `src/hooks/useRecipientEffectsDraft.test.js` (init, stringly overrides, override/multiplier exclusivity, validation errors, disable toggling, the minimal save shape, baseline reinitialization). Editor UI behavior is covered by the `AssumptionsPage.test.jsx` integration suite and the e2e smoke specs — run both after changes here.
+Recipient draft logic is unit-tested in `src/hooks/useRecipientEffectsDraft.test.js` (init, stringly overrides, override/multiplier exclusivity, validation errors, disable toggling, the save shape — which carries recipient default overrides forward because user override sets replace them wholesale at combine time — and baseline reinitialization). Editor UI behavior is covered by the `AssumptionsPage.test.jsx` integration suite and the e2e smoke specs — run both after changes here.

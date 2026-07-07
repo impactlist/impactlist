@@ -2,7 +2,7 @@
 
 ## Layout
 
-- Root: modals (Save/Share/Description/Confirm/Migration/SpecificDonation), `AssumptionsEditor` (the editor shell), `MiniImpactList`, `CategoryDisplay`, `SavedAssumptionsPanel`.
+- Root: modals (Save/Share/Description/Confirm/Migration/SpecificDonation/ReviewChanges/UnappliedEdits), `AssumptionsEditor` (the editor shell), `MiniImpactList`, `CategoryDisplay`, `SavedAssumptionsPanel`.
 - `shared/` — design-system primitives: `ModalShell` (use it for ALL modals), `SortableTable`, `Tooltip`, `FormField`, `CurrencyInput`/`NumericInput`, `MarkdownContent`, `AssumptionsSelector`/`AssumptionsDropdown`, `PageHeader`, etc.
 - `assumptions/` — the assumptions editor internals (has its own context file).
 - `calculator/` — donation calculator pieces (`CalculatorForm`, `RecipientTable`, `CalculatorStats`).

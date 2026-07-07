@@ -1,9 +1,10 @@
 import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import {
-  BrowserRouter as Router,
+  createBrowserRouter,
   Navigate,
   Route,
+  RouterProvider,
   Routes,
   useLocation,
   useNavigationType,
@@ -165,6 +166,12 @@ const AppContent = () => {
   );
 };
 
+// A data router with a single splat route hosting the existing descendant
+// <Routes>. The data-router layer exists so `useBlocker` works (the
+// assumptions editor's unapplied-edits navigation guard); route definitions
+// stay in AppContent.
+const router = createBrowserRouter([{ path: '*', element: <AppContent /> }]);
+
 const App = () => {
   const [error, setError] = useState(null);
 
@@ -218,9 +225,7 @@ const App = () => {
     <ErrorBoundary>
       <NotificationProvider>
         <AssumptionsProvider>
-          <Router>
-            <AppContent />
-          </Router>
+          <RouterProvider router={router} />
         </AssumptionsProvider>
       </NotificationProvider>
     </ErrorBoundary>

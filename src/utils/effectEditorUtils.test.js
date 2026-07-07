@@ -131,6 +131,46 @@ describe('getRecipientEffectsChangeState', () => {
     expect(hasUnsavedChanges).toBe(true);
   });
 
+  it('carries recipient default overrides forward when saving an edit to a different field', () => {
+    // User overrides REPLACE the recipient default's overrides wholesale at
+    // combine time (mergeRecipientEffectWithUser), so saving only the edited
+    // field would silently drop the default override — reverting that field
+    // to the raw category value.
+    const { effectsToSave } = getRecipientEffectsChangeState([
+      buildDraft({
+        overrides: { costPerQALY: 500, startTime: '4' },
+        _defaultRecipientEffect: { effectId: 'std', overrides: { costPerQALY: 500 } },
+      }),
+    ]);
+
+    expect(effectsToSave).toEqual([{ effectId: 'std', overrides: { costPerQALY: 500, startTime: 4 } }]);
+  });
+
+  it('re-emits a cleared default-override field at its default value alongside other edits', () => {
+    // Clearing a field with a recipient default means "back to the default"
+    // (the editor shows it as the placeholder) — wholesale replacement must
+    // reconstruct that, not fall through to the category value.
+    const { effectsToSave } = getRecipientEffectsChangeState([
+      buildDraft({
+        overrides: { startTime: '4' },
+        _defaultRecipientEffect: { effectId: 'std', overrides: { costPerQALY: 500 } },
+      }),
+    ]);
+
+    expect(effectsToSave).toEqual([{ effectId: 'std', overrides: { costPerQALY: 500, startTime: 4 } }]);
+  });
+
+  it('still reports no changes when a draft matches its recipient default overrides', () => {
+    const result = getRecipientEffectsChangeState([
+      buildDraft({
+        overrides: { costPerQALY: 500 },
+        _defaultRecipientEffect: { effectId: 'std', overrides: { costPerQALY: 500 } },
+      }),
+    ]);
+
+    expect(result).toEqual({ effectsToSave: [], hasUnsavedChanges: false });
+  });
+
   it('throws on unconvertible override values by default and skips them with throwOnInvalid: false', () => {
     const drafts = [buildDraft({ overrides: { costPerQALY: 'garbage' } })];
 

@@ -10,7 +10,7 @@ import {
   createDefaultAssumptions,
   getCostPerLifeForRecipientFromCombined,
 } from '../utils/assumptionsDataHelpers';
-import { formatCurrency } from '../utils/formatters';
+import { formatCurrency, formatNumberWithCommas } from '../utils/formatters';
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import { __internal, saveNewAssumptions, setActiveSavedAssumptionsId } from '../utils/savedAssumptionsStore';
 
@@ -338,7 +338,7 @@ describe('AssumptionsPage routing integration', () => {
     const searchInput = await screen.findByPlaceholderText('Search recipients...');
     await user.type(searchInput, 'a');
 
-    const editButtons = await screen.findAllByRole('button', { name: 'Edit' });
+    const editButtons = await screen.findAllByRole('button', { name: /^Edit / });
     await user.click(editButtons[0]);
 
     await waitFor(() => {
@@ -408,11 +408,63 @@ describe('AssumptionsPage routing integration', () => {
       expect(persisted.globalParameters.timeLimit).toBe(150);
     });
 
-    await user.click(screen.getByRole('button', { name: 'Reset Global' }));
+    // The per-parameter reset icon returns the field to its default; Apply
+    // persists it (the pruned diff then matches the defaults exactly).
+    await user.click(screen.getByRole('button', { name: 'Reset Time Limit (years)' }));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     await waitFor(() => {
       expect(sessionStorage.getItem('customEffectsData')).toBeNull();
     });
+  });
+
+  it('offers the per-field reset as an escape hatch from invalid global input', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    expect(screen.queryByRole('button', { name: 'Reset Time Limit (years)' })).not.toBeInTheDocument();
+
+    // A partial value parses to NaN — never "custom" — and a save attempt
+    // pins an error that disables Apply, so the reset icon must appear for
+    // errored fields too or the user is stuck retyping the default by hand.
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '-');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    expect(await screen.findByText('Please enter a complete number')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: 'Reset Time Limit (years)' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Please enter a complete number')).not.toBeInTheDocument();
+    });
+    expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(
+      formatNumberWithCommas(String(assumptionsData.globalParameters.timeLimit))
+    );
+  });
+
+  it('hides the differences section while a drill-in editor is open', async () => {
+    const categoryEffect = assumptionsData.categories[firstValidCategoryId].effects[0];
+    const categoryField = categoryEffect.costPerQALY !== undefined ? 'costPerQALY' : 'costPerMicroprobability';
+    localStorage.setItem(__internal.SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        categories: {
+          [firstValidCategoryId]: {
+            effects: [{ effectId: categoryEffect.effectId, [categoryField]: categoryEffect[categoryField] * 2 }],
+          },
+        },
+      })
+    );
+
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
+
+    expect(await screen.findByText(/Edit effects for cause/i)).toBeInTheDocument();
+    // Reverting the entity being edited underneath its open draft would let a
+    // later Apply resurrect the reverted values, so the section stays hidden.
+    expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
   });
 
   it('shows inline errors instead of crashing when typed global values are out of range', async () => {
@@ -637,7 +689,7 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
-  it('preserves unapplied global drafts when reverting an unrelated change in the review modal', async () => {
+  it('preserves unapplied global drafts when reverting an unrelated change in the differences section', async () => {
     const user = userEvent.setup();
 
     const categoryEffect = assumptionsData.categories[firstValidCategoryId].effects[0];
@@ -662,11 +714,15 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, String(draftValue));
     const draftDisplay = timeLimitInput.value;
 
-    await user.click(screen.getByRole('button', { name: 'Review changes (1)' }));
-    const dialog = await screen.findByRole('dialog');
-    await user.click(within(dialog).getByRole('button', { name: /^Revert / }));
-    await within(dialog).findByText('All assumptions currently match the site defaults.');
-    await user.click(within(dialog).getByRole('button', { name: 'Close' }));
+    const toggle = screen.getByRole('button', { name: /Differences from default assumptions/ });
+    await user.click(toggle);
+    const section = toggle.closest('.review-changes-section');
+    await user.click(within(section).getByRole('button', { name: /^Revert / }));
+
+    // Nothing differs any more, so the section disappears.
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
+    });
 
     // Reverting a cause change must not clobber the unapplied global draft.
     expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(draftDisplay);
@@ -723,12 +779,15 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.getByRole('button', { name: 'Apply' })).toBeEnabled();
   });
 
-  it('reviews and reverts applied global changes from the review-changes modal', async () => {
+  it('reviews and reverts applied global changes from the differences section', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions');
 
     expect(await screen.findByLabelText('Time Limit (years)')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Review changes/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
+    // No phantom wrapper spacing in the panel either — the page gates the
+    // slot on changeCount, since a null-rendering element is still truthy.
+    expect(document.querySelector('.saved-assumptions-panel__review')).toBeNull();
 
     const defaultTimeLimit = assumptionsData.globalParameters.timeLimit;
     const updatedTimeLimit = defaultTimeLimit + 50;
@@ -737,28 +796,27 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, String(updatedTimeLimit));
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    await user.click(await screen.findByRole('button', { name: 'Review changes (1)' }));
+    const toggle = await screen.findByRole('button', { name: /Differences from default assumptions/ });
+    expect(toggle).toHaveTextContent('1 change');
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
 
-    const dialog = await screen.findByRole('dialog');
-    expect(within(dialog).getByText('Changes from default assumptions')).toBeInTheDocument();
-    const row = within(dialog).getByText('Time Limit (years)').closest('li');
+    const section = toggle.closest('.review-changes-section');
+    const row = within(section).getByText('Time Limit (years)').closest('li');
     expect(row).toHaveTextContent(String(defaultTimeLimit));
     expect(row).toHaveTextContent(String(updatedTimeLimit));
 
-    await user.click(within(dialog).getByRole('button', { name: 'Revert Time Limit (years)' }));
+    await user.click(within(section).getByRole('button', { name: 'Revert Time Limit (years)' }));
 
-    expect(await within(dialog).findByText('All assumptions currently match the site defaults.')).toBeInTheDocument();
+    // Nothing differs from the defaults any more: the section disappears.
     await waitFor(() => {
-      expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+      expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
     });
-
-    await user.click(within(dialog).getByRole('button', { name: 'Close' }));
-    await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Review changes/ })).not.toBeInTheDocument();
-    });
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
   });
 
-  it('lists cause and recipient changes in the review-changes modal and reverts them individually', async () => {
+  it('lists cause and recipient changes in the differences section and reverts them individually', async () => {
     const user = userEvent.setup();
 
     const categoryEffect = assumptionsData.categories[firstValidCategoryId].effects[0];
@@ -800,24 +858,26 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    await user.click(await screen.findByRole('button', { name: 'Review changes (2)' }));
-    const dialog = await screen.findByRole('dialog');
+    const toggle = await screen.findByRole('button', { name: /Differences from default assumptions/ });
+    expect(toggle).toHaveTextContent('2 changes');
+    await user.click(toggle);
+    const section = toggle.closest('.review-changes-section');
 
     const categoryName = assumptionsData.categories[firstValidCategoryId].name;
     const recipientGroupTitle = `${plainRecipient.name} · ${assumptionsData.categories[plainCategoryId].name}`;
-    expect(within(dialog).getByText(categoryName)).toBeInTheDocument();
-    expect(within(dialog).getByText(recipientGroupTitle)).toBeInTheDocument();
+    expect(within(section).getByText(categoryName)).toBeInTheDocument();
+    expect(within(section).getByText(recipientGroupTitle)).toBeInTheDocument();
     // The recipient row's "before" side resolves to the concrete cause value.
-    expect(within(dialog).getByText('from cause')).toBeInTheDocument();
+    expect(within(section).getByText('from cause')).toBeInTheDocument();
 
-    const revertButtons = within(dialog).getAllByRole('button', { name: /^Revert / });
+    const revertButtons = within(section).getAllByRole('button', { name: /^Revert / });
     expect(revertButtons).toHaveLength(2);
     await user.click(revertButtons[0]);
 
     await waitFor(() => {
-      expect(within(dialog).getAllByRole('button', { name: /^Revert / })).toHaveLength(1);
+      expect(within(section).getAllByRole('button', { name: /^Revert / })).toHaveLength(1);
     });
-    expect(screen.getByRole('button', { name: 'Review changes (1)' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Differences from default assumptions/ })).toHaveTextContent('1 change');
   });
 
   it('hides Save to Library when there are no custom assumptions', async () => {

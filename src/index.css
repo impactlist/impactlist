@@ -277,6 +277,10 @@
     padding-right: 0.1rem;
   }
 
+  .saved-assumptions-panel__review {
+    margin-top: 0.85rem;
+  }
+
   .saved-assumptions-panel__footer {
     margin-top: 0.85rem;
     padding-top: 0.35rem;
@@ -955,24 +959,39 @@
     background: color-mix(in srgb, var(--accent-soft) 30%, white 70%);
   }
 
-  .assumptions-toolbar {
+  .assumptions-tabs-region {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: column;
+  }
+
+  .assumptions-toolbar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    /* wrap-reverse: if the row ever wraps, the actions move ABOVE the tab
+       strip, keeping the tabs attached to the panel below. It flips the
+       cross axis, so flex-START is the visual bottom here. */
+    flex-wrap: wrap-reverse;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 12px;
-    padding: 12px;
-    background: var(--bg-surface-alt);
-    border: 1px solid color-mix(in srgb, var(--border-subtle) 75%, white 25%);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-1);
+    gap: 8px 10px;
+    /* Overlap the panel's top border by 1px so the active tab's background
+       fuses with the panel surface. */
+    margin-bottom: -1px;
+    padding: 0 2px;
+  }
+
+  /* Drill-in editors render as their own card (assumptions-shell--editor),
+     so the locked tab strip detaches instead of fusing into it. */
+  .assumptions-tabs-region--detached .assumptions-toolbar {
+    margin-bottom: 10px;
   }
 
   .assumptions-toolbar__nav {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     min-width: 0;
+    overflow-x: auto;
   }
 
   .assumptions-toolbar__actions {
@@ -982,10 +1001,78 @@
     gap: 0.7rem;
     min-width: 0;
     margin-left: auto;
+    margin-bottom: 6px;
   }
 
-  .assumptions-toolbar__review {
-    white-space: nowrap;
+  .review-changes-section {
+    border: 1px solid color-mix(in srgb, var(--edited-accent) 34%, var(--border-subtle) 66%);
+    border-left: 7px solid var(--edited-accent);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--edited-accent-soft) 42%, white 58%);
+    box-shadow: var(--shadow-1);
+    overflow: hidden;
+  }
+
+  .review-changes-section__heading {
+    margin: 0;
+  }
+
+  .review-changes-section__toggle {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    gap: 0.35rem 0.6rem;
+    border: 0;
+    background: transparent;
+    padding: 0.62rem 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 140ms ease;
+  }
+
+  .review-changes-section__toggle:hover {
+    background: color-mix(in srgb, var(--edited-accent-soft) 62%, white 38%);
+  }
+
+  .review-changes-section__toggle:focus-visible {
+    outline: none;
+    box-shadow: inset var(--shadow-focus);
+  }
+
+  .review-changes-section__chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--edited-accent) 38%, var(--border-subtle) 62%);
+    background: var(--bg-surface);
+    color: var(--edited-accent-strong);
+  }
+
+  .review-changes-section__chevron svg {
+    width: 0.85rem;
+    height: 0.85rem;
+    transition: transform 160ms var(--ease-standard);
+  }
+
+  .review-changes-section__chevron[data-open='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  .review-changes-section__title {
+    font-size: 0.9rem;
+    font-weight: 650;
+    color: var(--text-strong);
+  }
+
+  .review-changes-section__body {
+    border-top: 1px solid color-mix(in srgb, var(--edited-accent) 24%, var(--border-subtle) 76%);
+    background: var(--bg-surface);
+    padding: 0.75rem 1rem 0.9rem;
   }
 
   .assumptions-form-actions {
@@ -1000,36 +1087,6 @@
     font-size: 0.76rem;
     font-weight: 600;
     color: var(--text-muted);
-  }
-
-  .assumptions-form-actions__buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-  }
-
-  .assumptions-form-actions__reset {
-    border: 0;
-    padding: 0.2rem 0;
-    border-radius: 0;
-    color: color-mix(in srgb, var(--interactive-accent-strong) 72%, var(--text-strong) 28%);
-    background: transparent;
-    font-size: 0.85rem;
-    font-weight: 600;
-    line-height: 1.2;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    cursor: pointer;
-  }
-
-  .assumptions-form-actions__reset:hover:not(:disabled) {
-    color: var(--interactive-accent-strong);
-    background: transparent;
-  }
-
-  .assumptions-form-actions__reset:focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-focus);
   }
 
   .assumptions-form-actions__apply {
@@ -1167,6 +1224,11 @@
 
   .assumptions-tabpanel {
     padding: 16px;
+    background: var(--bg-surface);
+    /* The surface the active tab fuses into — its border color must match
+       the attached tabs' border color exactly. */
+    border: 1px solid var(--border-subtle);
+    border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
   }
 
   .assumptions-info-block {
@@ -1326,6 +1388,50 @@
 
   .impact-tab:disabled {
     cursor: not-allowed;
+  }
+
+  /* --attached: classic folder tabs sitting on a bordered panel (the
+     assumptions editor). The pill look above stays for segmented controls
+     like the chart view toggle. */
+  .impact-tabs--attached {
+    align-items: flex-end;
+    gap: 3px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .impact-tabs--attached .impact-tab {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    padding: 0.5rem 1.1rem;
+    background: color-mix(in srgb, var(--bg-surface-alt) 74%, white 26%);
+    color: var(--text-muted);
+    /* Slight inner shading recesses inactive tabs behind the panel edge. */
+    box-shadow: inset 0 -5px 8px -8px rgba(32, 24, 12, 0.4);
+  }
+
+  .impact-tabs--attached .impact-tab:hover:not([data-active='true']) {
+    color: var(--text-strong);
+    background: color-mix(in srgb, var(--bg-surface-alt) 45%, white 55%);
+  }
+
+  .impact-tabs--attached .impact-tab[data-active='true'] {
+    background: var(--bg-surface);
+    border-color: var(--border-subtle);
+    /* Accent bar on top; the extra height makes the active tab stand proud
+       of its neighbors, classic-tab style. */
+    border-top: 3px solid var(--tab-active-bg);
+    border-bottom: 0;
+    padding-bottom: calc(0.5rem + 1px);
+    color: var(--text-strong);
+    box-shadow: none;
+  }
+
+  .impact-tabs--attached .impact-tab:focus-visible {
+    z-index: 1;
   }
 
   .assumptions-toolbar__hint {
@@ -2451,9 +2557,12 @@
   }
 
   .assumptions-toolbar {
+    /* Actions stack ABOVE the tab strip so the tabs stay attached to the
+       panel below. */
+    flex-direction: column-reverse;
     align-items: stretch;
-    gap: 0.85rem;
-    padding: 10px;
+    gap: 0.6rem;
+    padding: 0;
   }
 
   .assumptions-toolbar__nav,
@@ -2464,14 +2573,11 @@
   .assumptions-toolbar__actions {
     justify-content: flex-end;
     padding-top: 0.15rem;
+    margin-bottom: 0;
   }
 
   .assumptions-form-actions {
     width: 100%;
-    justify-content: flex-end;
-  }
-
-  .assumptions-form-actions__buttons {
     justify-content: flex-end;
   }
 

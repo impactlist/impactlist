@@ -16,6 +16,7 @@ const SavedAssumptionsPanel = ({
   onDelete,
   onCopyLink,
   onDescription,
+  reviewChanges = null,
   footer = null,
 }) => {
   return (
@@ -65,6 +66,9 @@ const SavedAssumptionsPanel = ({
           onDescription={onDescription}
           menuAriaLabel="Assumptions Library entries"
         />
+        {/* The diff vs defaults belongs to the active-set story this panel
+            tells ("Custom (unsaved)" → custom HOW?), not to the editor. */}
+        {reviewChanges && <div className="saved-assumptions-panel__review">{reviewChanges}</div>}
         {footer && <div className="saved-assumptions-panel__footer">{footer}</div>}
       </div>
     </section>
@@ -97,6 +101,7 @@ SavedAssumptionsPanel.propTypes = {
   onDelete: PropTypes.func,
   onCopyLink: PropTypes.func,
   onDescription: PropTypes.func.isRequired,
+  reviewChanges: PropTypes.node,
   footer: PropTypes.node,
 };
 

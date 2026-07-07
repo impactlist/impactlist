@@ -4,7 +4,6 @@ import { useBlocker } from 'react-router-dom';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { validateGlobalParameterValues, scrollToFirstError } from '../utils/assumptionsFormValidation';
 import { cleanAndParseValue } from '../utils/effectValidation';
-import { buildAssumptionsDiff, revertAssumptionsDiffEntry } from '../utils/assumptionsDiff';
 import { useRecipientSearch } from '../hooks/useAssumptionsForm';
 import { useGlobalForm } from '../hooks/useGlobalForm';
 import { useAssumptionsEditorController } from '../hooks/useAssumptionsEditorController';
@@ -13,7 +12,6 @@ import {
   mergeGlobalParameters,
   getCategoryFromDefaults,
 } from '../utils/assumptionsEditorHelpers';
-import ReviewChangesModal from './ReviewChangesModal';
 import UnappliedEditsModal from './UnappliedEditsModal';
 
 import CategoryValuesSection from './assumptions/CategoryValuesSection';
@@ -23,7 +21,6 @@ import CategoryEffectEditor from './assumptions/CategoryEffectEditor';
 import RecipientEffectEditor from './assumptions/RecipientEffectEditor';
 import MultiCategoryRecipientEditor from './assumptions/MultiCategoryRecipientEditor';
 import TabNavigation from './assumptions/TabNavigation';
-import FormActions from './assumptions/FormActions';
 import YearSelector from './shared/YearSelector';
 
 const tabs = [
@@ -41,6 +38,7 @@ const AssumptionsEditor = forwardRef(
       initialActiveCategory = null,
       activeAssumptionsLabel = '',
       onParamsChange = () => {},
+      onUnappliedGlobalEditsChange = () => {},
     },
     ref
   ) => {
@@ -52,28 +50,11 @@ const AssumptionsEditor = forwardRef(
       replaceRecipientEffectsByCategory,
       updateGlobalParameterValue,
       resetGlobalParameter,
-      resetAllGlobalParameters,
       resetCategoryToDefaults,
       resetRecipientToDefaults,
-      getNormalizedUserAssumptionsForSharing,
-      setAllUserAssumptions,
     } = useAssumptions();
 
     const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
-    const [isReviewChangesOpen, setIsReviewChangesOpen] = useState(false);
-
-    const normalizedUserAssumptions = getNormalizedUserAssumptionsForSharing();
-    const assumptionsDiff = useMemo(
-      () => buildAssumptionsDiff(defaultAssumptions, normalizedUserAssumptions),
-      [defaultAssumptions, normalizedUserAssumptions]
-    );
-
-    const handleRevertChange = useCallback(
-      (path) => {
-        setAllUserAssumptions(revertAssumptionsDiffEntry(normalizedUserAssumptions, path, defaultAssumptions));
-      },
-      [setAllUserAssumptions, normalizedUserAssumptions, defaultAssumptions]
-    );
 
     const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
 
@@ -167,6 +148,14 @@ const AssumptionsEditor = forwardRef(
     // tab/entity switches only change query params (same pathname) and stay
     // free — the form survives those.
     const hasUnappliedGlobalEdits = globalForm.hasUnsavedChanges;
+
+    // The page renders the differences section (in the Active Assumptions
+    // panel) and needs to know when un-applied drafts exist; report boolean
+    // transitions only.
+    useEffect(() => {
+      onUnappliedGlobalEditsChange(hasUnappliedGlobalEdits);
+    }, [onUnappliedGlobalEditsChange, hasUnappliedGlobalEdits]);
+
     const navigationBlocker = useBlocker(
       useCallback(
         ({ currentLocation, nextLocation }) =>
@@ -237,23 +226,6 @@ const AssumptionsEditor = forwardRef(
       };
     }, [commitGlobalChanges, editingCategoryId, editingRecipient]);
 
-    const handleGlobalReset = useCallback(() => {
-      globalForm.reset();
-      resetAllGlobalParameters();
-    }, [globalForm, resetAllGlobalParameters]);
-
-    const handleCategoryReset = useCallback(() => {
-      Object.keys(userAssumptions?.categories ?? {}).forEach((categoryId) => {
-        resetCategoryToDefaults(categoryId);
-      });
-    }, [userAssumptions, resetCategoryToDefaults]);
-
-    const handleResetRecipients = useCallback(() => {
-      recipientSearch.filteredRecipients.forEach((recipient) => {
-        resetRecipientToDefaults(recipient.id);
-      });
-    }, [recipientSearch.filteredRecipients, resetRecipientToDefaults]);
-
     const handleSaveCategoryEffects = useCallback(
       (updatedEffects) => {
         if (!editingCategoryId) {
@@ -291,6 +263,7 @@ const AssumptionsEditor = forwardRef(
     );
 
     const isEditingEffects = Boolean(editingCategoryId || editingRecipient);
+    const hasGlobalFormErrors = Object.keys(globalForm.errors).length > 0;
     const activePanelId = `assumptions-panel-${activeTab}`;
 
     return (
@@ -302,150 +275,132 @@ const AssumptionsEditor = forwardRef(
           </h2>
         </div>
 
-        <div className="assumptions-toolbar">
-          <div className="assumptions-toolbar__nav">
-            <TabNavigation
-              activeTab={activeTab}
-              onTabChange={handleTabChange}
-              tabs={tabs}
-              idBase="assumptions"
-              isLocked={isEditingEffects}
-            />
-          </div>
+        {/* Strip + panel live in one wrapper so the root's flex gap doesn't
+            separate them: the strip overlaps the panel border to fuse the
+            active tab into it. Drill-in editors are their own card, so the
+            locked strip detaches instead. */}
+        <div className={`assumptions-tabs-region${isEditingEffects ? ' assumptions-tabs-region--detached' : ''}`}>
+          <div className="assumptions-toolbar">
+            <div className="assumptions-toolbar__nav">
+              <TabNavigation
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+                tabs={tabs}
+                idBase="assumptions"
+                isLocked={isEditingEffects}
+              />
+            </div>
 
-          <div className="assumptions-toolbar__actions">
-            {isEditingEffects ? (
-              <span className="assumptions-toolbar__hint" role="status" aria-live="polite">
-                Apply or cancel current edits to switch sections.
-              </span>
-            ) : (
-              <>
-                {assumptionsDiff.changeCount > 0 && (
+            <div className="assumptions-toolbar__actions">
+              {isEditingEffects ? (
+                <span className="assumptions-toolbar__hint" role="status" aria-live="polite">
+                  Apply or cancel current edits to switch sections.
+                </span>
+              ) : activeTab === 'global' ? (
+                // Only the Global tab commits through an explicit Apply;
+                // cause/recipient edits commit from their drill-in editors.
+                <div className="assumptions-form-actions">
+                  {hasGlobalFormErrors && (
+                    <p className="assumptions-form-actions__status">Fix validation errors before applying.</p>
+                  )}
                   <button
                     type="button"
-                    onClick={() => setIsReviewChangesOpen(true)}
-                    className="impact-btn impact-btn--secondary impact-btn--sm assumptions-toolbar__review"
+                    onClick={handleSaveGlobal}
+                    disabled={hasGlobalFormErrors || !globalForm.hasUnsavedChanges}
+                    className="impact-btn impact-btn--custom-accent assumptions-form-actions__apply"
                   >
-                    Review changes ({assumptionsDiff.changeCount})
+                    Apply
                   </button>
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          <div
+            className={isEditingEffects ? '' : 'assumptions-tabpanel'}
+            id={isEditingEffects ? undefined : activePanelId}
+            role={isEditingEffects ? undefined : 'tabpanel'}
+            aria-labelledby={isEditingEffects ? undefined : `assumptions-tab-${activeTab}`}
+          >
+            {!isEditingEffects && (
+              <div className="assumptions-panel-context">
+                {activeTab === 'global' ? (
+                  <span>Global parameters that affect the lives saved calculations:</span>
+                ) : (
+                  <>
+                    <span>Cost to save a life in</span>
+                    <YearSelector
+                      value={previewYear}
+                      onChange={setPreviewYear}
+                      id="assumptions-preview-year"
+                      label=""
+                      className="assumptions-panel-context__year-selector"
+                    />
+                    <span>{activeTab === 'categories' ? 'for each cause:' : 'for each recipient:'}</span>
+                  </>
                 )}
-                <FormActions
-                  onReset={
-                    activeTab === 'global'
-                      ? handleGlobalReset
-                      : activeTab === 'categories'
-                        ? handleCategoryReset
-                        : handleResetRecipients
-                  }
-                  onSave={handleSaveGlobal}
-                  showSave={activeTab === 'global'}
-                  resetLabel={
-                    activeTab === 'global'
-                      ? 'Reset Global'
-                      : activeTab === 'categories'
-                        ? 'Reset Causes'
-                        : 'Reset Recipients'
-                  }
-                  hasErrors={Object.keys(globalForm.errors).length > 0}
-                  hasUnsavedChanges={globalForm.hasUnsavedChanges}
-                />
-              </>
+              </div>
+            )}
+
+            {editingCategoryId ? (
+              <CategoryEffectEditor
+                category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}
+                categoryId={editingCategoryId}
+                globalParameters={mergedGlobalParameters}
+                onSave={handleSaveCategoryEffects}
+                onCancel={handleCancelCategoryEdit}
+              />
+            ) : editingRecipient?.isMultiCategory ? (
+              <MultiCategoryRecipientEditor
+                recipient={editingRecipient.recipient}
+                recipientId={editingRecipient.recipientId}
+                categories={editingRecipient.categories}
+                activeCategory={editingRecipient.activeCategory}
+                globalParameters={mergedGlobalParameters}
+                onSave={handleSaveMultiCategoryEffects}
+                onCancel={handleCancelRecipientEdit}
+              />
+            ) : editingRecipient ? (
+              <RecipientEffectEditor
+                recipient={editingRecipient.recipient}
+                recipientId={editingRecipient.recipientId}
+                category={editingRecipient.category}
+                categoryId={editingRecipient.categoryId}
+                globalParameters={mergedGlobalParameters}
+                onSave={handleSaveRecipientEffects}
+                onCancel={handleCancelRecipientEdit}
+              />
+            ) : activeTab === 'global' ? (
+              <GlobalValuesSection
+                globalParameters={mergedGlobalParameters}
+                defaultGlobalParameters={defaultAssumptions.globalParameters}
+                formValues={globalForm.formValues}
+                errors={globalForm.errors}
+                onChange={globalForm.handleChange}
+              />
+            ) : activeTab === 'categories' ? (
+              <CategoryValuesSection
+                defaultAssumptions={defaultAssumptions}
+                userAssumptions={userAssumptions}
+                onEditCategory={handleEditCategory}
+                onResetCategory={resetCategoryToDefaults}
+                categoriesWithCustomValues={categoriesWithCustomValues}
+                previewYear={previewYear}
+              />
+            ) : (
+              <RecipientValuesSection
+                filteredRecipients={recipientSearch.filteredRecipients}
+                onSearch={recipientSearch.handleSearchChange}
+                searchTerm={recipientSearch.searchTerm}
+                defaultAssumptions={defaultAssumptions}
+                userAssumptions={userAssumptions}
+                onEditRecipient={handleEditRecipient}
+                onResetRecipient={resetRecipientToDefaults}
+                previewYear={previewYear}
+              />
             )}
           </div>
         </div>
-
-        <div
-          className={isEditingEffects ? '' : 'assumptions-tabpanel'}
-          id={isEditingEffects ? undefined : activePanelId}
-          role={isEditingEffects ? undefined : 'tabpanel'}
-          aria-labelledby={isEditingEffects ? undefined : `assumptions-tab-${activeTab}`}
-        >
-          {!isEditingEffects && (
-            <div className="assumptions-panel-context">
-              {activeTab === 'global' ? (
-                <span>Global parameters that affect the lives saved calculations:</span>
-              ) : (
-                <>
-                  <span>Cost to save a life in</span>
-                  <YearSelector
-                    value={previewYear}
-                    onChange={setPreviewYear}
-                    id="assumptions-preview-year"
-                    label=""
-                    className="assumptions-panel-context__year-selector"
-                  />
-                  <span>{activeTab === 'categories' ? 'for each cause:' : 'for each recipient:'}</span>
-                </>
-              )}
-            </div>
-          )}
-
-          {editingCategoryId ? (
-            <CategoryEffectEditor
-              category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}
-              categoryId={editingCategoryId}
-              globalParameters={mergedGlobalParameters}
-              onSave={handleSaveCategoryEffects}
-              onCancel={handleCancelCategoryEdit}
-            />
-          ) : editingRecipient?.isMultiCategory ? (
-            <MultiCategoryRecipientEditor
-              recipient={editingRecipient.recipient}
-              recipientId={editingRecipient.recipientId}
-              categories={editingRecipient.categories}
-              activeCategory={editingRecipient.activeCategory}
-              globalParameters={mergedGlobalParameters}
-              onSave={handleSaveMultiCategoryEffects}
-              onCancel={handleCancelRecipientEdit}
-            />
-          ) : editingRecipient ? (
-            <RecipientEffectEditor
-              recipient={editingRecipient.recipient}
-              recipientId={editingRecipient.recipientId}
-              category={editingRecipient.category}
-              categoryId={editingRecipient.categoryId}
-              globalParameters={mergedGlobalParameters}
-              onSave={handleSaveRecipientEffects}
-              onCancel={handleCancelRecipientEdit}
-            />
-          ) : activeTab === 'global' ? (
-            <GlobalValuesSection
-              globalParameters={mergedGlobalParameters}
-              defaultGlobalParameters={defaultAssumptions.globalParameters}
-              formValues={globalForm.formValues}
-              errors={globalForm.errors}
-              onChange={globalForm.handleChange}
-            />
-          ) : activeTab === 'categories' ? (
-            <CategoryValuesSection
-              defaultAssumptions={defaultAssumptions}
-              userAssumptions={userAssumptions}
-              onEditCategory={handleEditCategory}
-              onResetCategory={resetCategoryToDefaults}
-              categoriesWithCustomValues={categoriesWithCustomValues}
-              previewYear={previewYear}
-            />
-          ) : (
-            <RecipientValuesSection
-              filteredRecipients={recipientSearch.filteredRecipients}
-              onSearch={recipientSearch.handleSearchChange}
-              searchTerm={recipientSearch.searchTerm}
-              defaultAssumptions={defaultAssumptions}
-              userAssumptions={userAssumptions}
-              onEditRecipient={handleEditRecipient}
-              onResetRecipient={resetRecipientToDefaults}
-              previewYear={previewYear}
-            />
-          )}
-        </div>
-
-        <ReviewChangesModal
-          isOpen={isReviewChangesOpen}
-          onClose={() => setIsReviewChangesOpen(false)}
-          diff={assumptionsDiff}
-          onRevert={handleRevertChange}
-          hasUnappliedGlobalEdits={hasUnappliedGlobalEdits}
-        />
 
         <UnappliedEditsModal
           isOpen={navigationBlocker.state === 'blocked'}
@@ -465,6 +420,7 @@ AssumptionsEditor.propTypes = {
   initialActiveCategory: PropTypes.string,
   activeAssumptionsLabel: PropTypes.string,
   onParamsChange: PropTypes.func,
+  onUnappliedGlobalEditsChange: PropTypes.func,
 };
 
 AssumptionsEditor.displayName = 'AssumptionsEditor';

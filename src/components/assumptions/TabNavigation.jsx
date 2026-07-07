@@ -34,7 +34,12 @@ const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions', i
   };
 
   return (
-    <div className="impact-tabs" role="tablist" aria-label="Assumption sections" data-locked={isLocked}>
+    <div
+      className="impact-tabs impact-tabs--attached"
+      role="tablist"
+      aria-label="Assumption sections"
+      data-locked={isLocked}
+    >
       {tabs.map((tab, index) => (
         <button
           key={tab.id}

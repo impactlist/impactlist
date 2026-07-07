@@ -34,4 +34,11 @@ describe('AssumptionEntityCard', () => {
     const meta = container.querySelector('.assumption-card__default-meta');
     expect(meta.textContent).toContain('was\u00A0$9,400');
   });
+
+  it('names its actions after the entity so multiple cards stay distinguishable', () => {
+    const { getByRole } = renderCard({ onReset: vi.fn() });
+
+    expect(getByRole('button', { name: 'Edit AI Existential Risk' })).toBeInTheDocument();
+    expect(getByRole('button', { name: 'Reset AI Existential Risk' })).toBeInTheDocument();
+  });
 });

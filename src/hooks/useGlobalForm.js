@@ -169,26 +169,6 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
     });
   };
 
-  // Reset form to default values
-  const reset = () => {
-    if (!defaultGlobalParameters) {
-      throw new Error('defaultGlobalParameters is required for reset functionality');
-    }
-
-    const resetValues = {};
-
-    Object.keys(globalParameters).forEach((paramKey) => {
-      const defaultValue = defaultGlobalParameters[paramKey];
-      resetValues[paramKey] = {
-        raw: defaultValue,
-        formatted: formatValue(defaultValue, getParameterFormat(paramKey)),
-      };
-    });
-
-    setFormValues(resetValues);
-    setErrors({});
-  };
-
   const hasUnsavedChanges = useMemo(() => {
     if (!globalParameters || Object.keys(formValues).length === 0) {
       return false;
@@ -222,7 +202,6 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
     errors,
     setErrors,
     handleChange,
-    reset,
     hasUnsavedChanges,
   };
 };

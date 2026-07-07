@@ -15,6 +15,57 @@ const resolveActiveTab = ({ initialTab, initialCategoryId, initialRecipientId })
   return targetTab;
 };
 
+// Pure resolvers shared with AssumptionsPage (which needs to know whether a
+// drill-in editor is open without duplicating the URL-param validation
+// rules): unknown ids are EXPECTED input (stale links) and resolve to null.
+
+export const resolveEditingCategoryId = ({ initialCategoryId, initialRecipientId, defaultAssumptions }) => {
+  if (initialRecipientId || !initialCategoryId) {
+    return null;
+  }
+
+  return getCategoryFromDefaults(defaultAssumptions, initialCategoryId) ? initialCategoryId : null;
+};
+
+export const resolveEditingRecipient = ({
+  initialRecipientId,
+  initialActiveCategory,
+  allRecipients,
+  defaultAssumptions,
+}) => {
+  if (!initialRecipientId) {
+    return null;
+  }
+
+  const recipient = allRecipients.find((entry) => entry.id === initialRecipientId);
+  if (!recipient) {
+    return null;
+  }
+
+  const categoryIds = Object.keys(recipient.categories || {});
+  if (categoryIds.length === 0) {
+    return null;
+  }
+
+  const isMultiCategory = categoryIds.length > 1;
+  const activeCategory =
+    initialActiveCategory && categoryIds.includes(initialActiveCategory) ? initialActiveCategory : categoryIds[0];
+
+  return {
+    recipient,
+    recipientId: recipient.id,
+    categories: categoryIds.map((categoryId) => ({
+      categoryId,
+      category: getCategoryFromDefaults(defaultAssumptions, categoryId),
+    })),
+    isMultiCategory,
+    activeCategory,
+    // Keep single-category fields for compatibility with RecipientEffectEditor.
+    categoryId: activeCategory,
+    category: getCategoryFromDefaults(defaultAssumptions, activeCategory),
+  };
+};
+
 export const useAssumptionsEditorController = ({
   initialTab,
   initialCategoryId,
@@ -29,47 +80,15 @@ export const useAssumptionsEditorController = ({
     [initialTab, initialCategoryId, initialRecipientId]
   );
 
-  const editingCategoryId = useMemo(() => {
-    if (initialRecipientId || !initialCategoryId) {
-      return null;
-    }
+  const editingCategoryId = useMemo(
+    () => resolveEditingCategoryId({ initialCategoryId, initialRecipientId, defaultAssumptions }),
+    [initialCategoryId, initialRecipientId, defaultAssumptions]
+  );
 
-    return getCategoryFromDefaults(defaultAssumptions, initialCategoryId) ? initialCategoryId : null;
-  }, [initialCategoryId, initialRecipientId, defaultAssumptions]);
-
-  const editingRecipient = useMemo(() => {
-    if (!initialRecipientId) {
-      return null;
-    }
-
-    const recipient = allRecipients.find((entry) => entry.id === initialRecipientId);
-    if (!recipient) {
-      return null;
-    }
-
-    const categoryIds = Object.keys(recipient.categories || {});
-    if (categoryIds.length === 0) {
-      return null;
-    }
-
-    const isMultiCategory = categoryIds.length > 1;
-    const activeCategory =
-      initialActiveCategory && categoryIds.includes(initialActiveCategory) ? initialActiveCategory : categoryIds[0];
-
-    return {
-      recipient,
-      recipientId: recipient.id,
-      categories: categoryIds.map((categoryId) => ({
-        categoryId,
-        category: getCategoryFromDefaults(defaultAssumptions, categoryId),
-      })),
-      isMultiCategory,
-      activeCategory,
-      // Keep single-category fields for compatibility with RecipientEffectEditor.
-      categoryId: activeCategory,
-      category: getCategoryFromDefaults(defaultAssumptions, activeCategory),
-    };
-  }, [allRecipients, defaultAssumptions, initialRecipientId, initialActiveCategory]);
+  const editingRecipient = useMemo(
+    () => resolveEditingRecipient({ initialRecipientId, initialActiveCategory, allRecipients, defaultAssumptions }),
+    [allRecipients, defaultAssumptions, initialRecipientId, initialActiveCategory]
+  );
 
   const handleTabChange = useCallback(
     (tab) => {

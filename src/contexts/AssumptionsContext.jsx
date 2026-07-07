@@ -121,10 +121,6 @@ export const AssumptionsProvider = ({ children }) => {
         setUserAssumptions((prev) => apiHelpers.clearGlobalParameter(prev, parameterName));
       },
 
-      resetAllGlobalParameters: () => {
-        setUserAssumptions((prev) => apiHelpers.clearAllGlobalParameters(prev));
-      },
-
       setAllUserAssumptions: (nextUserAssumptions) => {
         const normalized = apiHelpers.normalizeUserAssumptions(nextUserAssumptions, defaultAssumptions);
         setUserAssumptions(normalized);

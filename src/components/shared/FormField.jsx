@@ -103,7 +103,7 @@ const FormField = ({
 
         <div className="impact-field__header-action">
           {isCustom && !disabled ? (
-            <IconActionButton icon="reset" label="Reset" onClick={handleReset} className="shrink-0" />
+            <IconActionButton icon="reset" label={`Reset ${label}`} onClick={handleReset} className="shrink-0" />
           ) : (
             <span className="impact-field__action-spacer" aria-hidden="true" />
           )}

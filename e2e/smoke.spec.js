@@ -114,7 +114,9 @@ test.describe('Critical path smoke tests', () => {
     await saveCustomDiscountRate(page, newValue);
     await expect(customStateLabel(page).first()).toBeVisible();
 
-    await page.getByRole('button', { name: 'Reset Global' }).click();
+    // Revert from the "Differences from default assumptions" section.
+    await page.getByRole('button', { name: /Differences from default assumptions/ }).click();
+    await page.getByRole('button', { name: 'Revert Discount Rate (%)' }).click();
 
     await expect(discountRateInput).toHaveValue(defaultValue);
     await expect
@@ -133,9 +135,14 @@ test.describe('Critical path smoke tests', () => {
 
     const recipientSearchInput = page.getByPlaceholder('Search recipients...');
     await recipientSearchInput.fill(RECIPIENT_SEARCH_TOKEN);
-    const editButton = page.getByRole('button', { name: 'Edit' }).first();
-    await expect(editButton).toBeVisible();
-    await editButton.click();
+
+    // The first card's entity link names the recipient this test edits; card
+    // actions carry per-entity accessible names ("Edit X" / "Reset X").
+    const entityLink = page.getByRole('tabpanel').getByRole('link').first();
+    await expect(entityLink).toBeVisible();
+    const entityName = (await entityLink.innerText()).trim();
+
+    await page.getByRole('button', { name: `Edit ${entityName}`, exact: true }).click();
 
     await expect(page.getByRole('heading', { name: /Edit effects for recipient/i })).toBeVisible();
 
@@ -149,11 +156,11 @@ test.describe('Critical path smoke tests', () => {
     await expect(page.getByRole('button', { name: 'Enable effect' }).first()).toBeVisible();
 
     await page.getByRole('button', { name: 'Apply' }).click();
-    await expect(page.getByRole('button', { name: 'Reset Recipients' })).toBeVisible();
     await expect.poll(() => hasRecipientCustomizations(page)).toBe(true);
     await expect(customStateLabel(page).first()).toBeVisible();
 
-    await page.getByRole('button', { name: 'Reset Recipients' }).click();
+    // The customized recipient's card grows a per-card reset action.
+    await page.getByRole('button', { name: `Reset ${entityName}`, exact: true }).click();
     await expect
       .poll(async () => {
         return page.evaluate(() => window.sessionStorage.getItem('customEffectsData'));
@@ -167,7 +174,13 @@ test.describe('Critical path smoke tests', () => {
     await page.goto('/assumptions');
 
     await page.getByRole('tab', { name: 'Causes' }).click();
-    await page.getByRole('button', { name: 'Edit' }).first().click();
+
+    // Same per-entity naming as the recipients flow.
+    const entityLink = page.getByRole('tabpanel').getByRole('link').first();
+    await expect(entityLink).toBeVisible();
+    const entityName = (await entityLink.innerText()).trim();
+
+    await page.getByRole('button', { name: `Edit ${entityName}`, exact: true }).click();
 
     await expect(page.getByRole('heading', { name: /Edit effects for cause/i })).toBeVisible();
 
@@ -178,11 +191,11 @@ test.describe('Critical path smoke tests', () => {
 
     // The category editor shows Apply in both its header and footer.
     await page.getByRole('button', { name: 'Apply' }).last().click();
-    await expect(page.getByRole('button', { name: 'Reset Causes' })).toBeVisible();
     await expect.poll(() => hasCategoryCustomizations(page)).toBe(true);
     await expect(customStateLabel(page).first()).toBeVisible();
 
-    await page.getByRole('button', { name: 'Reset Causes' }).click();
+    // The customized cause's card grows a per-card reset action.
+    await page.getByRole('button', { name: `Reset ${entityName}`, exact: true }).click();
     await expect
       .poll(async () => {
         return page.evaluate(() => window.sessionStorage.getItem('customEffectsData'));

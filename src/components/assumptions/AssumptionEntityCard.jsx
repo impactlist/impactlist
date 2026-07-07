@@ -48,8 +48,11 @@ const AssumptionEntityCard = ({ name, to, isCustom, baselineValue, currentValue,
         </div>
 
         <div className="assumption-card__actions">
-          {isCustom && onReset && <IconActionButton icon="reset" label="Reset" onClick={stopThen(onReset)} />}
-          <IconActionButton icon="edit" label="Edit" onClick={stopThen(onEdit)} />
+          {/* Per-entity accessible names: several of these cards render on
+              one page, so bare "Reset"/"Edit" would be indistinguishable to
+              assistive tech. */}
+          {isCustom && onReset && <IconActionButton icon="reset" label={`Reset ${name}`} onClick={stopThen(onReset)} />}
+          <IconActionButton icon="edit" label={`Edit ${name}`} onClick={stopThen(onEdit)} />
         </div>
       </div>
 

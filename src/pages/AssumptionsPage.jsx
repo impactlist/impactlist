@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
@@ -8,6 +8,7 @@ import ShareAssumptionsModal from '../components/ShareAssumptionsModal';
 import SaveAssumptionsModal from '../components/SaveAssumptionsModal';
 import SavedAssumptionsMigrationModal from '../components/SavedAssumptionsMigrationModal';
 import SavedAssumptionsPanel from '../components/SavedAssumptionsPanel';
+import ReviewChangesSection from '../components/assumptions/ReviewChangesSection';
 import SharedImportDecisionModal from '../components/SharedImportDecisionModal';
 import ConfirmActionModal from '../components/ConfirmActionModal';
 import { useAssumptions } from '../contexts/AssumptionsContext';
@@ -18,6 +19,9 @@ import useAssumptionsShareActions from '../hooks/useAssumptionsShareActions';
 import { ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED } from '../utils/assumptionsSelectorDisplayPreference';
 import { OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL } from '../utils/assumptionsLoadHelpers';
 import { hasCuratedAssumptionsLabel } from '../utils/curatedAssumptionsProfiles';
+import { buildAssumptionsDiff, revertAssumptionsDiffEntry } from '../utils/assumptionsDiff';
+import { getAllRecipientsFromDefaults } from '../utils/assumptionsEditorHelpers';
+import { resolveEditingCategoryId, resolveEditingRecipient } from '../hooks/useAssumptionsEditorController';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import useAssumptionsLibrary, { STORAGE_ERROR_MESSAGE } from '../hooks/useAssumptionsLibrary';
 import {
@@ -31,7 +35,8 @@ import { DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../constants/assumptionsLibraryEnt
 
 const AssumptionsPage = () => {
   useDocumentTitle('Assumptions Editor');
-  const { isUsingCustomValues, getNormalizedUserAssumptionsForSharing } = useAssumptions();
+  const { defaultAssumptions, isUsingCustomValues, getNormalizedUserAssumptionsForSharing, setAllUserAssumptions } =
+    useAssumptions();
   const { showNotification } = useNotificationActions();
   const [showSelectorEveryPage, setShowSelectorEveryPage] = useAssumptionsSelectorPreference();
   const shouldReduceMotion = useReducedMotion();
@@ -41,12 +46,38 @@ const AssumptionsPage = () => {
   const [migrationPromptOpen, setMigrationPromptOpen] = useState(false);
   const [migrationDefaultLabel, setMigrationDefaultLabel] = useState('My Current Assumptions');
   const [migrationCheckDone, setMigrationCheckDone] = useState(false);
+  const [editorHasUnappliedGlobalEdits, setEditorHasUnappliedGlobalEdits] = useState(false);
   const assumptionsEditorRef = useRef(null);
 
   const initialTab = searchParams.get('tab') || 'global';
   const initialCategoryId = searchParams.get('categoryId') || null;
   const initialRecipientId = searchParams.get('recipientId') || null;
   const initialActiveCategory = searchParams.get('activeCategory') || null;
+
+  // Whether a drill-in effect editor is open — resolved with the same rules
+  // the editor itself uses (unknown ids from stale links resolve to null).
+  const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
+  const isEditingEffects = useMemo(
+    () =>
+      Boolean(
+        resolveEditingCategoryId({ initialCategoryId, initialRecipientId, defaultAssumptions }) ||
+          resolveEditingRecipient({ initialRecipientId, initialActiveCategory, allRecipients, defaultAssumptions })
+      ),
+    [initialCategoryId, initialRecipientId, initialActiveCategory, allRecipients, defaultAssumptions]
+  );
+
+  const normalizedUserAssumptions = getNormalizedUserAssumptionsForSharing();
+  const assumptionsDiff = useMemo(
+    () => buildAssumptionsDiff(defaultAssumptions, normalizedUserAssumptions),
+    [defaultAssumptions, normalizedUserAssumptions]
+  );
+
+  const handleRevertChange = useCallback(
+    (path) => {
+      setAllUserAssumptions(revertAssumptionsDiffEntry(normalizedUserAssumptions, path, defaultAssumptions));
+    },
+    [setAllUserAssumptions, normalizedUserAssumptions, defaultAssumptions]
+  );
 
   const {
     assumptionsForSharing,
@@ -317,6 +348,20 @@ const AssumptionsPage = () => {
           onDelete={handleRequestDeleteSavedAssumptions}
           onCopyLink={handleCopySavedLink}
           onDescription={handleDescriptionModalOpen}
+          reviewChanges={
+            // Gated here (not just inside the section) so the panel's wrapper
+            // spacing doesn't render around a null section at zero changes.
+            // Hidden while a drill-in editor is open: reverting the entity
+            // being edited underneath its open draft would let a later Apply
+            // silently resurrect the reverted values.
+            !isEditingEffects && assumptionsDiff.changeCount > 0 ? (
+              <ReviewChangesSection
+                diff={assumptionsDiff}
+                onRevert={handleRevertChange}
+                hasUnappliedGlobalEdits={editorHasUnappliedGlobalEdits}
+              />
+            ) : null
+          }
           footer={
             ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED ? (
               <div className="saved-assumptions-panel__preference">
@@ -346,6 +391,7 @@ const AssumptionsPage = () => {
             initialActiveCategory={initialActiveCategory}
             activeAssumptionsLabel={activeAssumptionsLabel}
             onParamsChange={handleParamsChange}
+            onUnappliedGlobalEditsChange={setEditorHasUnappliedGlobalEdits}
           />
         </div>
 

@@ -65,10 +65,13 @@ const GlobalValuesSection = ({ globalParameters, defaultGlobalParameters, formVa
                 </div>
 
                 <div className="assumption-card__actions">
-                  {!param.readonly && isCustom && (
+                  {/* Also shown for invalid drafts: malformed input parses to
+                      NaN (never "custom") while blocking Apply, so the reset
+                      is the escape hatch back to a valid value. */}
+                  {!param.readonly && (isCustom || hasError) && (
                     <IconActionButton
                       icon="reset"
-                      label="Reset"
+                      label={`Reset ${param.label}`}
                       tone={hasError ? 'danger' : 'default'}
                       onClick={() => {
                         const formattedValue = formatDisplayValue(defaultValue, param.format);

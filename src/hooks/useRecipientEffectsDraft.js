@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { applyRecipientEffectToBase, calculateCombinedCostPerLife } from '../utils/effectsCalculation';
 import {
   buildRecipientEditableEffects,
   calculateEffectCostPerLife,
+  getBaselineReinitSignature,
   getRecipientEffectsChangeState,
   haveEffectsChanged,
 } from '../utils/effectEditorUtils';
@@ -54,11 +55,22 @@ const useRecipientEffectsDraft = ({
     });
   }, [baseCategoryEffects, defaultRecipientEffects, userAssumptions, recipientId, categoryId]);
 
-  // (Re)initialize drafts whenever the baseline changes (entity switch, save,
-  // reset, external assumption load).
+  // (Re)initialize drafts whenever the baseline VALUES change (entity switch,
+  // save, revert, external assumption load). Assumption updates hand us fresh
+  // object identities on every change (normalization deep-copies), so gate on
+  // a value signature — an unrelated change (e.g. reverting another entity's
+  // row in the differences section) must not wipe in-progress draft edits.
+  // The signature must include `_baseEffect`: cause-level changes alter the
+  // effective base while leaving the wrapper's own fields identical.
+  const baselineSignature = useMemo(() => getBaselineReinitSignature(baselineEffects), [baselineEffects]);
+  const lastBaselineSignatureRef = useRef(null);
   useEffect(() => {
+    if (lastBaselineSignatureRef.current === baselineSignature) {
+      return;
+    }
+    lastBaselineSignatureRef.current = baselineSignature;
     setEffects(baselineEffects);
-  }, [baselineEffects]);
+  }, [baselineSignature, baselineEffects]);
 
   const toggleEffectDisabled = (effectIndex) => {
     setEffects((prev) => {

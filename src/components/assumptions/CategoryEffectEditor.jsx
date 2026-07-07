@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import QalyEffectInputs from './effects/QalyEffectInputs';
@@ -11,6 +11,7 @@ import InfoTooltipIcon from '../shared/InfoTooltipIcon';
 import {
   calculateEffectCostPerLife,
   cleanEffectsForSave,
+  getBaselineReinitSignature,
   haveEffectsChanged,
   sortEffectsByActiveDate,
 } from '../../utils/effectEditorUtils';
@@ -50,10 +51,20 @@ const CategoryEffectEditor = ({ category, categoryId, globalParameters, onSave, 
     return sortEffectsByActiveDate(mergedEffects);
   }, [category, categoryId, userAssumptions]);
 
-  // Initialize temp effects from category with user overrides if they exist
+  // (Re)initialize drafts whenever the baseline VALUES change. Assumption
+  // updates hand us fresh object identities on every change (normalization
+  // deep-copies), so gate on a value signature — an unrelated change (e.g.
+  // reverting another entity's row in the differences section) must not wipe
+  // in-progress draft edits.
+  const baselineSignature = useMemo(() => getBaselineReinitSignature(baselineEffects), [baselineEffects]);
+  const lastBaselineSignatureRef = useRef(null);
   useEffect(() => {
+    if (lastBaselineSignatureRef.current === baselineSignature) {
+      return;
+    }
+    lastBaselineSignatureRef.current = baselineSignature;
     setTempEditToEffects(baselineEffects);
-  }, [baselineEffects]);
+  }, [baselineSignature, baselineEffects]);
 
   // Validate all effects on mount and when effects change
   useEffect(() => {

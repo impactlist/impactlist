@@ -15,11 +15,10 @@ const resolveActiveTab = ({ initialTab, initialCategoryId, initialRecipientId })
   return targetTab;
 };
 
-// Pure resolvers shared with AssumptionsPage (which needs to know whether a
-// drill-in editor is open without duplicating the URL-param validation
-// rules): unknown ids are EXPECTED input (stale links) and resolve to null.
+// Pure editing-state resolvers: unknown ids are EXPECTED input (stale links)
+// and resolve to null.
 
-export const resolveEditingCategoryId = ({ initialCategoryId, initialRecipientId, defaultAssumptions }) => {
+const resolveEditingCategoryId = ({ initialCategoryId, initialRecipientId, defaultAssumptions }) => {
   if (initialRecipientId || !initialCategoryId) {
     return null;
   }
@@ -27,12 +26,7 @@ export const resolveEditingCategoryId = ({ initialCategoryId, initialRecipientId
   return getCategoryFromDefaults(defaultAssumptions, initialCategoryId) ? initialCategoryId : null;
 };
 
-export const resolveEditingRecipient = ({
-  initialRecipientId,
-  initialActiveCategory,
-  allRecipients,
-  defaultAssumptions,
-}) => {
+const resolveEditingRecipient = ({ initialRecipientId, initialActiveCategory, allRecipients, defaultAssumptions }) => {
   if (!initialRecipientId) {
     return null;
   }

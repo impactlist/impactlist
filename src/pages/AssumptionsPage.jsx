@@ -20,8 +20,6 @@ import { ASSUMPTIONS_SELECTOR_PREFERENCE_CONTROL_ENABLED } from '../utils/assump
 import { OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL } from '../utils/assumptionsLoadHelpers';
 import { hasCuratedAssumptionsLabel } from '../utils/curatedAssumptionsProfiles';
 import { buildAssumptionsDiff, revertAssumptionsDiffEntry } from '../utils/assumptionsDiff';
-import { getAllRecipientsFromDefaults } from '../utils/assumptionsEditorHelpers';
-import { resolveEditingCategoryId, resolveEditingRecipient } from '../hooks/useAssumptionsEditorController';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import useAssumptionsLibrary, { STORAGE_ERROR_MESSAGE } from '../hooks/useAssumptionsLibrary';
 import {
@@ -53,18 +51,6 @@ const AssumptionsPage = () => {
   const initialCategoryId = searchParams.get('categoryId') || null;
   const initialRecipientId = searchParams.get('recipientId') || null;
   const initialActiveCategory = searchParams.get('activeCategory') || null;
-
-  // Whether a drill-in effect editor is open — resolved with the same rules
-  // the editor itself uses (unknown ids from stale links resolve to null).
-  const allRecipients = useMemo(() => getAllRecipientsFromDefaults(defaultAssumptions), [defaultAssumptions]);
-  const isEditingEffects = useMemo(
-    () =>
-      Boolean(
-        resolveEditingCategoryId({ initialCategoryId, initialRecipientId, defaultAssumptions }) ||
-          resolveEditingRecipient({ initialRecipientId, initialActiveCategory, allRecipients, defaultAssumptions })
-      ),
-    [initialCategoryId, initialRecipientId, initialActiveCategory, allRecipients, defaultAssumptions]
-  );
 
   const normalizedUserAssumptions = getNormalizedUserAssumptionsForSharing();
   const assumptionsDiff = useMemo(
@@ -351,10 +337,10 @@ const AssumptionsPage = () => {
           reviewChanges={
             // Gated here (not just inside the section) so the panel's wrapper
             // spacing doesn't render around a null section at zero changes.
-            // Hidden while a drill-in editor is open: reverting the entity
-            // being edited underneath its open draft would let a later Apply
-            // silently resurrect the reverted values.
-            !isEditingEffects && assumptionsDiff.changeCount > 0 ? (
+            // Stays available while a drill-in editor is open: reverts update
+            // the applied state, and open editors re-initialize their drafts
+            // only when their own baseline values actually changed.
+            assumptionsDiff.changeCount > 0 ? (
               <ReviewChangesSection
                 diff={assumptionsDiff}
                 onRevert={handleRevertChange}

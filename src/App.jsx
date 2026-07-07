@@ -1,15 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
-import {
-  createBrowserRouter,
-  Navigate,
-  Route,
-  RouterProvider,
-  Routes,
-  useLocation,
-  useNavigationType,
-  useParams,
-} from 'react-router-dom';
+import { createBrowserRouter, Navigate, Route, RouterProvider, Routes, useLocation, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import NotFound from './pages/NotFound';
 
@@ -32,6 +23,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import GlobalSharedAssumptionsImport from './components/shared/GlobalSharedAssumptionsImport';
 import GlobalNotificationBanner from './components/shared/GlobalNotificationBanner';
+import ScrollToTop from './components/shared/ScrollToTop';
 import { CAUSES_PATH, buildCausePath } from './utils/causeRoutes';
 import { validateDataOnStartup } from './utils/startupValidation';
 
@@ -83,21 +75,6 @@ class ErrorBoundary extends React.Component {
 
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired,
-};
-
-// Scroll to top on forward navigations. POP navigations (back/forward
-// buttons) keep the browser's restored scroll position.
-const ScrollToTop = () => {
-  const { pathname } = useLocation();
-  const navigationType = useNavigationType();
-
-  useEffect(() => {
-    if (navigationType !== 'POP') {
-      window.scrollTo(0, 0);
-    }
-  }, [pathname, navigationType]);
-
-  return null;
 };
 
 const LegacyCausesListRedirect = () => {

@@ -1004,75 +1004,59 @@
     margin-bottom: 6px;
   }
 
-  .review-changes-section {
-    border: 1px solid color-mix(in srgb, var(--edited-accent) 34%, var(--border-subtle) 66%);
-    border-left: 7px solid var(--edited-accent);
-    border-radius: var(--radius-md);
-    background: color-mix(in srgb, var(--edited-accent-soft) 42%, white 58%);
-    box-shadow: var(--shadow-1);
-    overflow: hidden;
-  }
-
   .review-changes-section__heading {
     margin: 0;
   }
 
+  /* A pseudo-link disclosure: dotted-underlined text with a +/- glyph, no
+     box — deliberately quiet next to the active-set summary row. */
   .review-changes-section__toggle {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    align-items: center;
-    gap: 0.35rem 0.6rem;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
     border: 0;
     background: transparent;
-    padding: 0.62rem 0.9rem;
+    padding: 2px 2px 2px 0;
+    border-radius: 4px;
     text-align: left;
     cursor: pointer;
-    transition: background-color 140ms ease;
+    font-size: 0.82rem;
+    font-weight: 550;
+    color: var(--text-muted);
+    transition: color 140ms ease;
   }
 
   .review-changes-section__toggle:hover {
-    background: color-mix(in srgb, var(--edited-accent-soft) 62%, white 38%);
+    color: var(--text-strong);
   }
 
   .review-changes-section__toggle:focus-visible {
     outline: none;
-    box-shadow: inset var(--shadow-focus);
+    box-shadow: var(--shadow-focus);
   }
 
-  .review-changes-section__chevron {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.35rem;
-    height: 1.35rem;
+  .review-changes-section__glyph {
+    width: 0.75em;
     flex-shrink: 0;
-    border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--edited-accent) 38%, var(--border-subtle) 62%);
-    background: var(--bg-surface);
-    color: var(--edited-accent-strong);
+    text-align: center;
+    font-weight: 700;
   }
 
-  .review-changes-section__chevron svg {
-    width: 0.85rem;
-    height: 0.85rem;
-    transition: transform 160ms var(--ease-standard);
+  .review-changes-section__label {
+    text-decoration: underline dotted;
+    text-decoration-color: color-mix(in srgb, var(--text-muted) 65%, transparent 35%);
+    text-underline-offset: 3px;
   }
 
-  .review-changes-section__chevron[data-open='true'] svg {
-    transform: rotate(180deg);
-  }
-
-  .review-changes-section__title {
-    font-size: 0.9rem;
-    font-weight: 650;
-    color: var(--text-strong);
+  .review-changes-section__toggle:hover .review-changes-section__label {
+    text-decoration-color: var(--text-strong);
   }
 
   .review-changes-section__body {
-    border-top: 1px solid color-mix(in srgb, var(--edited-accent) 24%, var(--border-subtle) 76%);
-    background: var(--bg-surface);
-    padding: 0.75rem 1rem 0.9rem;
+    /* Indent to the label's start (past the glyph) so the expanded list
+       reads as the link's continuation. */
+    margin-top: 0.55rem;
+    padding-left: 1.15rem;
   }
 
   .assumptions-form-actions {
@@ -1111,17 +1095,39 @@
     color: var(--info-accent-strong);
   }
 
+  /* Two categorically different heading devices, not two weights of the
+     same one: level-1 sections are labeled rules (uppercase eyebrow with a
+     hairline running the full width), level-2 entity names are muted
+     sub-labels — lighter than both the eyebrow and the row content. */
   .review-changes__section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     margin-bottom: 0.45rem;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: color-mix(in srgb, var(--text-muted) 60%, var(--text-strong) 40%);
   }
 
+  .review-changes__section-title::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid color-mix(in srgb, var(--border-subtle) 80%, white 20%);
+  }
+
+  /* Hierarchy by geometry: group content sits one step in from the section
+     eyebrow, and a titled group's rows one further step under the entity
+     name. Rows' right edge (values + revert) stays column-aligned across
+     sections regardless of left indent. */
   .review-changes__group {
     margin-bottom: 0.65rem;
+    padding-left: 0.85rem;
+  }
+
+  .review-changes__group--titled .review-changes__list {
+    padding-left: 0.85rem;
   }
 
   .review-changes__group:last-child {
@@ -1130,9 +1136,9 @@
 
   .review-changes__group-title {
     margin-bottom: 0.15rem;
-    font-size: 0.85rem;
-    font-weight: 650;
-    color: var(--text-strong);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--text-strong) 55%, var(--text-muted) 45%);
   }
 
   .review-changes__list {
@@ -1145,13 +1151,8 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--border-subtle) 55%, white 45%);
+    padding: 0.3rem 0;
     font-size: 0.84rem;
-  }
-
-  .review-changes__row:last-child {
-    border-bottom: none;
   }
 
   .review-changes__field {

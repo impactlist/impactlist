@@ -115,7 +115,7 @@ test.describe('Critical path smoke tests', () => {
     await expect(customStateLabel(page).first()).toBeVisible();
 
     // Revert from the "Differences from default assumptions" section.
-    await page.getByRole('button', { name: /Differences from default assumptions/ }).click();
+    await page.getByRole('button', { name: /differences? from default assumptions/i }).click();
     await page.getByRole('button', { name: 'Revert Discount Rate (%)' }).click();
 
     await expect(discountRateInput).toHaveValue(defaultValue);

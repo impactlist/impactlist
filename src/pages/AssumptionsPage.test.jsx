@@ -444,13 +444,16 @@ describe('AssumptionsPage routing integration', () => {
     );
   });
 
-  it('hides the differences section while a drill-in editor is open', async () => {
+  it('keeps the differences section usable while a drill-in editor is open', async () => {
+    const user = userEvent.setup();
     const categoryEffect = assumptionsData.categories[firstValidCategoryId].effects[0];
     const categoryField = categoryEffect.costPerQALY !== undefined ? 'costPerQALY' : 'costPerMicroprobability';
+    const fieldLabel = categoryEffect.costPerQALY !== undefined ? 'Cost per life-year' : 'Cost per microprobability';
     localStorage.setItem(__internal.SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
     sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
+        globalParameters: { timeLimit: assumptionsData.globalParameters.timeLimit + 50 },
         categories: {
           [firstValidCategoryId]: {
             effects: [{ effectId: categoryEffect.effectId, [categoryField]: categoryEffect[categoryField] * 2 }],
@@ -462,9 +465,31 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
 
     expect(await screen.findByText(/Edit effects for cause/i)).toBeInTheDocument();
-    // Reverting the entity being edited underneath its open draft would let a
-    // later Apply resurrect the reverted values, so the section stays hidden.
-    expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
+    const toggle = screen.getByRole('button', { name: /differences? from default assumptions/i });
+    await user.click(toggle);
+    const section = toggle.closest('.review-changes-section');
+
+    // Type an in-progress draft into the open editor…
+    const costField = screen.getAllByRole('textbox', { name: fieldLabel })[0];
+    await user.clear(costField);
+    await user.type(costField, '777');
+
+    // …reverting an UNRELATED row must not wipe it…
+    await user.click(within(section).getByRole('button', { name: 'Revert Time Limit (years)' }));
+    expect(screen.getAllByRole('textbox', { name: fieldLabel })[0]).toHaveValue('777');
+
+    // …while reverting the edited cause's own row re-initializes the draft
+    // to the restored default value.
+    await user.click(within(section).getByRole('button', { name: new RegExp(`^Revert .*${fieldLabel}$`) }));
+    await waitFor(() => {
+      expect(screen.getAllByRole('textbox', { name: fieldLabel })[0]).toHaveValue(
+        formatNumberWithCommas(String(categoryEffect[categoryField]))
+      );
+    });
+
+    // Nothing differs any more; the section retires while the editor stays open.
+    expect(screen.queryByRole('button', { name: /differences? from default assumptions/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/Edit effects for cause/i)).toBeInTheDocument();
   });
 
   it('shows inline errors instead of crashing when typed global values are out of range', async () => {
@@ -714,14 +739,14 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, String(draftValue));
     const draftDisplay = timeLimitInput.value;
 
-    const toggle = screen.getByRole('button', { name: /Differences from default assumptions/ });
+    const toggle = screen.getByRole('button', { name: /differences? from default assumptions/i });
     await user.click(toggle);
     const section = toggle.closest('.review-changes-section');
     await user.click(within(section).getByRole('button', { name: /^Revert / }));
 
     // Nothing differs any more, so the section disappears.
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /differences? from default assumptions/i })).not.toBeInTheDocument();
     });
 
     // Reverting a cause change must not clobber the unapplied global draft.
@@ -784,7 +809,7 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute('/assumptions');
 
     expect(await screen.findByLabelText('Time Limit (years)')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /differences? from default assumptions/i })).not.toBeInTheDocument();
     // No phantom wrapper spacing in the panel either — the page gates the
     // slot on changeCount, since a null-rendering element is still truthy.
     expect(document.querySelector('.saved-assumptions-panel__review')).toBeNull();
@@ -796,8 +821,8 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, String(updatedTimeLimit));
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    const toggle = await screen.findByRole('button', { name: /Differences from default assumptions/ });
-    expect(toggle).toHaveTextContent('1 change');
+    const toggle = await screen.findByRole('button', { name: /differences? from default assumptions/i });
+    expect(toggle).toHaveTextContent('Show 1 difference from default assumptions');
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await user.click(toggle);
     expect(toggle).toHaveAttribute('aria-expanded', 'true');
@@ -811,7 +836,7 @@ describe('AssumptionsPage routing integration', () => {
 
     // Nothing differs from the defaults any more: the section disappears.
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Differences from default assumptions/ })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /differences? from default assumptions/i })).not.toBeInTheDocument();
     });
     expect(sessionStorage.getItem('customEffectsData')).toBeNull();
   });
@@ -858,8 +883,8 @@ describe('AssumptionsPage routing integration', () => {
 
     renderAssumptionsRoute('/assumptions');
 
-    const toggle = await screen.findByRole('button', { name: /Differences from default assumptions/ });
-    expect(toggle).toHaveTextContent('2 changes');
+    const toggle = await screen.findByRole('button', { name: /differences? from default assumptions/i });
+    expect(toggle).toHaveTextContent('Show 2 differences from default assumptions');
     await user.click(toggle);
     const section = toggle.closest('.review-changes-section');
 
@@ -877,7 +902,10 @@ describe('AssumptionsPage routing integration', () => {
     await waitFor(() => {
       expect(within(section).getAllByRole('button', { name: /^Revert / })).toHaveLength(1);
     });
-    expect(screen.getByRole('button', { name: /Differences from default assumptions/ })).toHaveTextContent('1 change');
+    // The count updates live in the disclosure label (open → "Hide").
+    expect(screen.getByRole('button', { name: /differences? from default assumptions/i })).toHaveTextContent(
+      'Hide 1 difference from default assumptions'
+    );
   });
 
   it('hides Save to Library when there are no custom assumptions', async () => {

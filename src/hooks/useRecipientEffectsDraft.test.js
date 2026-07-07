@@ -207,4 +207,64 @@ describe('useRecipientEffectsDraft', () => {
     expect(result.current.effects[0].overrides.costPerQALY).toBe(250);
     expect(result.current.hasUnsavedChanges).toBe(false);
   });
+
+  it('preserves in-progress draft edits when assumptions change without touching this baseline', () => {
+    const defaultAssumptions = buildDefaults();
+    const { result, rerender } = renderHook(
+      ({ userAssumptions }) =>
+        useRecipientEffectsDraft({
+          recipientId: 'clinic',
+          categoryId: 'health',
+          category: defaultAssumptions.categories.health,
+          globalParameters,
+          previewYear: 2026,
+          defaultAssumptions,
+          userAssumptions,
+        }),
+      { initialProps: { userAssumptions: null } }
+    );
+
+    act(() => result.current.updateEffectField(0, 'costPerQALY', '2,000'));
+
+    // A fresh userAssumptions identity whose values don't affect this
+    // recipient's baseline (e.g. someone reverted an unrelated change in the
+    // differences section) must not wipe the typed draft.
+    rerender({ userAssumptions: {} });
+
+    expect(result.current.effects[0].overrides.costPerQALY).toBe('2,000');
+    expect(result.current.hasUnsavedChanges).toBe(true);
+  });
+
+  it('reinitializes against the restored cause baseline when a cause-level change reverts', () => {
+    const defaultAssumptions = buildDefaults();
+    const causeEdited = {
+      categories: { health: { effects: [{ effectId: 'health-effect', costPerQALY: 2000 }] } },
+    };
+    const { result, rerender } = renderHook(
+      ({ userAssumptions }) =>
+        useRecipientEffectsDraft({
+          recipientId: 'clinic',
+          categoryId: 'health',
+          category: defaultAssumptions.categories.health,
+          globalParameters,
+          previewYear: 2026,
+          defaultAssumptions,
+          userAssumptions,
+        }),
+      { initialProps: { userAssumptions: causeEdited } }
+    );
+
+    expect(result.current.effects[0]._baseEffect.costPerQALY).toBe(2000);
+    act(() => result.current.updateEffectField(0, 'startTime', '4'));
+
+    // Reverting the cause row changes the recipient's effective base while
+    // leaving its wrapper fields untouched — the draft must reinitialize
+    // (fresh _baseEffect; the in-progress edit is superseded), not keep
+    // calculating against the stale base.
+    rerender({ userAssumptions: {} });
+
+    expect(result.current.effects[0]._baseEffect.costPerQALY).toBe(1000);
+    expect(result.current.effects[0].overrides?.startTime).toBeUndefined();
+    expect(result.current.hasUnsavedChanges).toBe(false);
+  });
 });

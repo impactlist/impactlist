@@ -301,6 +301,16 @@ export const getEffectsSignature = (effects) => {
   return JSON.stringify(normalized);
 };
 
+/**
+ * Signature for the editors' draft (re)initialization gate. Unlike
+ * `getEffectsSignature` (a saved-shape comparison that rightly ignores `_`
+ * internals), this must SEE `_baseEffect`: a cause-level revert changes the
+ * effective base a recipient draft calculates against while leaving the
+ * wrapper's own fields untouched. Successive baselines are built by the same
+ * pipeline from the same sources, so plain serialization compares stably.
+ */
+export const getBaselineReinitSignature = (effects) => JSON.stringify(effects ?? []);
+
 export const haveEffectsChanged = (currentEffects, baselineEffects) => {
   return getEffectsSignature(currentEffects) !== getEffectsSignature(baselineEffects);
 };

@@ -46,7 +46,7 @@ ChangeEntryRow.propTypes = {
 };
 
 const ChangeGroup = ({ title, entries, onRevert }) => (
-  <div className="review-changes__group">
+  <div className={`review-changes__group${title ? ' review-changes__group--titled' : ''}`}>
     {title && <h5 className="review-changes__group-title">{title}</h5>}
     <ul className="review-changes__list">
       {entries.map((entry) => (
@@ -94,9 +94,14 @@ const ReviewChangesSection = ({ diff, onRevert, hasUnappliedGlobalEdits = false 
     return null;
   }
 
+  const differencesNoun = diff.changeCount === 1 ? 'difference' : 'differences';
+
   return (
     <section className="review-changes-section">
       <h3 className="review-changes-section__heading">
+        {/* Deliberately quiet — a pseudo-link disclosure, not a boxed bar:
+            the summary row above already announces the active set's state,
+            and this is supporting detail. */}
         <button
           type="button"
           className="review-changes-section__toggle"
@@ -104,18 +109,11 @@ const ReviewChangesSection = ({ diff, onRevert, hasUnappliedGlobalEdits = false 
           aria-controls={isOpen ? bodyId : undefined}
           onClick={() => setIsOpen((open) => !open)}
         >
-          <span className="review-changes-section__chevron" data-open={isOpen} aria-hidden={true}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fillRule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.512a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                clipRule="evenodd"
-              />
-            </svg>
+          <span className="review-changes-section__glyph" aria-hidden={true}>
+            {isOpen ? '−' : '+'}
           </span>
-          <span className="review-changes-section__title">Differences from default assumptions</span>
-          <span className="assumption-state-pill assumption-state-pill--compact" data-state="custom">
-            {diff.changeCount} {diff.changeCount === 1 ? 'change' : 'changes'}
+          <span className="review-changes-section__label">
+            {isOpen ? 'Hide' : 'Show'} {diff.changeCount} {differencesNoun} from default assumptions
           </span>
         </button>
       </h3>

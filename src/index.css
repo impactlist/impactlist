@@ -1531,6 +1531,26 @@
     white-space: nowrap;
   }
 
+  .assumption-card__readout-edit {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .assumption-card__edit-link {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .assumption-card__edit-link:focus-visible {
+    outline: none;
+    border-radius: 2px;
+    box-shadow: var(--shadow-focus);
+  }
+
   .assumption-card__actions {
     display: inline-flex;
     align-items: center;

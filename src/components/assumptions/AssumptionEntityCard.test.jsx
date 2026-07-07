@@ -38,7 +38,10 @@ describe('AssumptionEntityCard', () => {
   it('names its actions after the entity so multiple cards stay distinguishable', () => {
     const { getByRole } = renderCard({ onReset: vi.fn() });
 
-    expect(getByRole('button', { name: 'Edit AI Existential Risk' })).toBeInTheDocument();
+    // The edit control shows a plain "(edit)" link in the readout line but
+    // keeps the per-entity accessible name.
+    const editLink = getByRole('button', { name: 'Edit AI Existential Risk' });
+    expect(editLink).toHaveTextContent('edit');
     expect(getByRole('button', { name: 'Reset AI Existential Risk' })).toBeInTheDocument();
   });
 });

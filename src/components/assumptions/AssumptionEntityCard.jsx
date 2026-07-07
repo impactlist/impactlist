@@ -48,11 +48,10 @@ const AssumptionEntityCard = ({ name, to, isCustom, baselineValue, currentValue,
         </div>
 
         <div className="assumption-card__actions">
-          {/* Per-entity accessible names: several of these cards render on
-              one page, so bare "Reset"/"Edit" would be indistinguishable to
+          {/* Per-entity accessible name: several of these cards render on
+              one page, so a bare "Reset" would be indistinguishable to
               assistive tech. */}
           {isCustom && onReset && <IconActionButton icon="reset" label={`Reset ${name}`} onClick={stopThen(onReset)} />}
-          <IconActionButton icon="edit" label={`Edit ${name}`} onClick={stopThen(onEdit)} />
         </div>
       </div>
 
@@ -61,6 +60,18 @@ const AssumptionEntityCard = ({ name, to, isCustom, baselineValue, currentValue,
           <FormattedScientificValue value={currentValue} />
         </span>
         <span className="assumption-card__readout-caption">cost per life</span>
+        <span className="assumption-card__readout-edit">
+          (
+          <button
+            type="button"
+            className="assumptions-link assumption-card__edit-link"
+            aria-label={`Edit ${name}`}
+            onClick={stopThen(onEdit)}
+          >
+            edit
+          </button>
+          )
+        </span>
       </div>
     </SectionCard>
   );

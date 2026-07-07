@@ -55,11 +55,12 @@ const AssumptionEntityCard = ({ name, to, isCustom, baselineValue, currentValue,
         </div>
       </div>
 
+      {/* No per-card "cost per life" caption: the tab's context line above
+          the grid already states what the figure is. */}
       <div className="assumption-card__readout mt-2">
         <span className="assumption-card__readout-value">
           <FormattedScientificValue value={currentValue} />
         </span>
-        <span className="assumption-card__readout-caption">cost per life</span>
         <span className="assumption-card__readout-edit">
           (
           <button

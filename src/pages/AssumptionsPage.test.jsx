@@ -369,7 +369,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(cardRoot).not.toBeNull();
 
     // The card body is a widened pointer target for the Edit action.
-    await user.click(within(cardRoot).getByText('cost per life'));
+    await user.click(cardRoot);
     await waitFor(() => {
       expect(screen.getByText(/Edit effects for cause/i)).toBeInTheDocument();
       expect(screen.getByTestId('location-probe').textContent).toContain(`categoryId=${firstValidCategoryId}`);

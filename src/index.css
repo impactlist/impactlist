@@ -1512,22 +1512,14 @@
   }
 
   .assumption-card__readout-value {
-    font-size: 1.28rem;
-    font-weight: 650;
+    /* A notch above the entity-name size: the card's datum, not a billboard. */
+    font-size: 0.98rem;
+    font-weight: 400;
     line-height: 1.2;
     color: var(--text-strong);
     font-variant-numeric: tabular-nums;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .assumption-card__readout-caption {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--text-muted);
     white-space: nowrap;
   }
 

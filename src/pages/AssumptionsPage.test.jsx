@@ -1343,12 +1343,16 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     await user.click(getActiveAssumptionsActionButton('Save to browser'));
-    expect(await screen.findByRole('button', { name: 'Update “Current Working Model”' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: 'Update Saved Assumptions' })).toBeInTheDocument();
+    // The overwrite target is named in the modal copy (labels are uncapped,
+    // so prose — not the button — carries the variable-length text).
+    const saveDialog = screen.getByRole('dialog');
+    expect(within(saveDialog).getByText('Current Working Model')).toBeInTheDocument();
     expect(screen.getByLabelText('Label')).toHaveValue('');
     const descriptionInput = screen.getByLabelText('Description (optional)');
     expect(descriptionInput).toHaveValue('');
     await user.type(descriptionInput, 'Extended horizon after reviewing sensitivity analysis.');
-    await user.click(screen.getByRole('button', { name: 'Update “Current Working Model”' }));
+    await user.click(screen.getByRole('button', { name: 'Update Saved Assumptions' }));
 
     const savedEntries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
     expect(savedEntries).toHaveLength(1);

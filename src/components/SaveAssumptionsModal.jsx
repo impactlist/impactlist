@@ -83,6 +83,16 @@ const SaveAssumptionsModal = ({
         Save a named copy of the current assumptions in this browser, so you can load it again later.
       </p>
 
+      {/* The overwrite target is named here in prose rather than inside the
+          update button: labels have no length cap, and long text wraps
+          gracefully in a paragraph but wrecks an action row. */}
+      {canUpdateExisting && updateExistingLabel && (
+        <p className="impact-modal__copy mb-4">
+          “Update Saved Assumptions” overwrites <strong className="font-semibold">{updateExistingLabel}</strong>; “Save
+          as New” keeps it unchanged.
+        </p>
+      )}
+
       {duplicateOfLabel && (
         <p className="impact-modal__warning mb-4">
           You are about to save a duplicate copy of <strong className="font-semibold">{duplicateOfLabel}</strong>.
@@ -133,9 +143,7 @@ const SaveAssumptionsModal = ({
 
         {canUpdateExisting && (
           <button type="button" onClick={() => handleSubmit('update')} className="impact-btn impact-btn--secondary">
-            {/* Name the set being overwritten — "current entry" was ambiguous
-                against the Current Assumptions heading. */}
-            {updateExistingLabel ? `Update “${updateExistingLabel}”` : 'Update Existing Set'}
+            Update Saved Assumptions
           </button>
         )}
 

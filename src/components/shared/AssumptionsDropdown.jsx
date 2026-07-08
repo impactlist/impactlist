@@ -369,7 +369,9 @@ const AssumptionsDropdown = ({
               onClick={(event) => stopActionEvent(event, onSaveCurrent)}
               className="impact-btn impact-btn--secondary impact-btn--xs saved-assumption-row__summary-btn"
             >
-              Save
+              {/* "to browser" names the storage location, separating keeping a
+                  copy (localStorage) from Apply (make active on the site). */}
+              Save to browser
             </button>
           )}
           {shouldShowSummaryShareAction && (

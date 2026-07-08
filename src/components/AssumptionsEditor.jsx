@@ -177,7 +177,7 @@ const AssumptionsEditor = forwardRef(
     const hasUnappliedGlobalEdits = globalForm.hasUnsavedChanges;
     const hasUnappliedEdits = hasUnappliedGlobalEdits || hasUnappliedEffectEdits;
 
-    // The page renders the differences section (in the Active Assumptions
+    // The page renders the differences section (in the Current Assumptions
     // panel) and needs to know when un-applied drafts exist.
     useUnsavedChangesReporter(hasUnappliedEdits, onUnappliedEditsChange);
 

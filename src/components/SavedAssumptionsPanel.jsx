@@ -23,7 +23,7 @@ const SavedAssumptionsPanel = ({
     <section className="assumptions-shell mb-5">
       <div className="flex items-center justify-between px-4 py-3 sm:px-5">
         <h2 className="assumptions-title flex items-center gap-2 text-2xl font-semibold text-strong">
-          <span>Active Assumptions</span>
+          <span>Current Assumptions</span>
           <InfoTooltipIcon
             className="text-muted"
             iconClassName="h-5 w-5"
@@ -64,7 +64,7 @@ const SavedAssumptionsPanel = ({
           onDelete={onDelete}
           onCopyLink={onCopyLink}
           onDescription={onDescription}
-          menuAriaLabel="Assumptions Library entries"
+          menuAriaLabel="Assumptions sets"
         />
         {/* The diff vs defaults belongs to the active-set story this panel
             tells ("Custom (unsaved)" → custom HOW?), not to the editor. */}

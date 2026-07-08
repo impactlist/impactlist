@@ -77,9 +77,11 @@ const SaveAssumptionsModal = ({
 
   return (
     <ModalShell isOpen={isOpen} onClose={onClose} labelledBy="save-assumptions-modal-title">
-      <ModalHeader title="Save to Library" titleId="save-assumptions-modal-title" onClose={onClose} />
+      <ModalHeader title="Save to Browser" titleId="save-assumptions-modal-title" onClose={onClose} />
 
-      <p className="impact-modal__copy mb-4">Save the current assumptions to your local Assumptions Library.</p>
+      <p className="impact-modal__copy mb-4">
+        Save a named copy of the current assumptions in this browser, so you can load it again later.
+      </p>
 
       {duplicateOfLabel && (
         <p className="impact-modal__warning mb-4">
@@ -131,12 +133,17 @@ const SaveAssumptionsModal = ({
 
         {canUpdateExisting && (
           <button type="button" onClick={() => handleSubmit('update')} className="impact-btn impact-btn--secondary">
-            Update Current Library Entry
+            {/* Name the set being overwritten — "current entry" was ambiguous
+                against the Current Assumptions heading. */}
+            {updateExistingLabel ? `Update “${updateExistingLabel}”` : 'Update Existing Set'}
           </button>
         )}
 
         <button type="button" onClick={() => handleSubmit('new')} className="impact-btn impact-btn--custom-accent">
-          {canUpdateExisting ? 'Save as New' : 'Save to Library'}
+          {/* Plain "Save" here: the modal title already names the destination,
+              and this keeps the name distinct from the "Save to browser"
+              trigger still in the page behind the modal. */}
+          {canUpdateExisting ? 'Save as New' : 'Save'}
         </button>
       </div>
     </ModalShell>

@@ -80,7 +80,7 @@ describe('AssumptionsSelector', () => {
   };
 
   const openMenu = async (user) => {
-    await user.click(screen.getByRole('button', { name: /Active assumptions/ }));
+    await user.click(screen.getByRole('button', { name: /Current assumptions/ }));
     return screen.getByRole('group', { name: 'Assumptions options' });
   };
 
@@ -107,10 +107,10 @@ describe('AssumptionsSelector', () => {
   it('renders the assumptions trigger', () => {
     renderSelector();
 
-    const trigger = screen.getByRole('button', { name: /Active assumptions/ });
+    const trigger = screen.getByRole('button', { name: /Current assumptions/ });
 
     expect(trigger).toBeInTheDocument();
-    expect(trigger).toHaveAccessibleName('Active assumptions. Current selection: Default (100 years)');
+    expect(trigger).toHaveAccessibleName('Current assumptions. Current selection: Default (100 years)');
     expect(trigger).not.toHaveAccessibleName(/view \/ edit/);
     expect(trigger).not.toHaveAccessibleName(/more information/i);
   });
@@ -128,20 +128,20 @@ describe('AssumptionsSelector', () => {
     renderSelector({ interactive: false });
 
     expect(document.querySelector('.assumptions-selector-bar__display-text')).toHaveTextContent(
-      'Active assumptions: My Saved Assumptions'
+      'Current assumptions: My Saved Assumptions'
     );
     expect(screen.getByRole('link', { name: 'view / edit' })).toHaveAttribute('href', '/assumptions');
-    expect(screen.queryByRole('button', { name: /Active assumptions/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Current assumptions/ })).not.toBeInTheDocument();
   });
 
-  it('shows an explanatory tooltip next to the active assumptions label', async () => {
+  it('shows an explanatory tooltip next to the current assumptions label', async () => {
     const user = userEvent.setup();
     renderSelector();
 
     await user.hover(screen.getByRole('button', { name: 'More information' }));
 
     expect(
-      await screen.findByText('Change the active assumptions to see how it affects the rankings.')
+      await screen.findByText('Change the current assumptions to see how it affects the rankings.')
     ).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -253,16 +253,16 @@ describe('AssumptionsSelector', () => {
 
     renderSelector();
 
-    expect(screen.getByRole('button', { name: /Active assumptions/ })).toHaveTextContent('Custom (unsaved)');
+    expect(screen.getByRole('button', { name: /Current assumptions/ })).toHaveTextContent('Custom (unsaved)');
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
 
     expect(screen.getByRole('heading', { name: 'Custom (unsaved)' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
-      'The active assumptions have been edited and no longer match a saved set of assumptions.'
+      'The current assumptions have been edited and no longer match a saved set of assumptions.'
     );
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
-      'If you want to reuse these exact assumptions later, click Save to save a local copy or click Share to create a link to these assumptions that you can share with others.'
+      'If you want to reuse these exact assumptions later, click Save to browser to keep a copy in this browser, or click Share to create a link to these assumptions that you can share with others.'
     );
   });
 
@@ -274,7 +274,7 @@ describe('AssumptionsSelector', () => {
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
-    expect(within(summaryRow).queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Save to browser' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
   });

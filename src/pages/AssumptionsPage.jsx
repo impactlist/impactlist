@@ -413,8 +413,8 @@ const AssumptionsPage = () => {
 
         <ConfirmActionModal
           isOpen={Boolean(pendingDeleteEntryId)}
-          title="Delete from Assumptions Library?"
-          description="This saved assumptions entry will be removed from this browser."
+          title="Delete saved assumptions?"
+          description="This saved assumptions set will be removed from this browser."
           confirmLabel="Delete"
           cancelLabel="Cancel"
           onConfirm={() => {

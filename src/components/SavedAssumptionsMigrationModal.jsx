@@ -8,7 +8,7 @@ const SavedAssumptionsMigrationModal = ({ isOpen, onSaveCurrent, onSkip }) => {
         Save Current Assumptions?
       </h2>
       <p className="impact-modal__copy mt-2">
-        You already have custom assumptions in this browser. Save them to your Assumptions Library now?
+        You already have custom assumptions in this browser. Save them as a named set now?
       </p>
 
       <div className="mt-6 flex justify-end gap-2">

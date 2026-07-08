@@ -129,8 +129,8 @@ const GlobalSharedAssumptionsImport = () => {
       if (!upsertResult.ok) {
         const failureSuffix =
           upsertResult.errorCode === 'over_limit'
-            ? 'Assumptions Library is full, so this import was not added.'
-            : 'Could not save them to the Assumptions Library locally.';
+            ? 'Saved assumptions are full, so this import was not added.'
+            : 'Could not save them in this browser.';
         showNotification('info', `${statusPrefix} ${failureSuffix}`);
       } else {
         const evictionMessage = buildEvictionNotificationMessage({

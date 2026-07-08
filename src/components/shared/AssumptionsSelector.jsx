@@ -63,13 +63,13 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
 
   const inlineLabel = (
     <>
-      <span>Active assumptions</span>
+      <span>Current assumptions</span>
       <InfoTooltipIcon
         className="assumptions-selector-bar__label-tooltip"
         iconClassName="h-4 w-4 text-muted"
         content={
           <>
-            <p>Change the active assumptions to see how it affects the rankings.</p>
+            <p>Change the current assumptions to see how it affects the rankings.</p>
             <p className="mt-2">
               If you want to view the details of the existing assumptions or specify/save/share your own assumptions, go
               to the Assumptions page.
@@ -82,13 +82,13 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
   );
   const displayLabel = (
     <>
-      <span className="assumptions-selector-bar__display-text">Active assumptions: {activeAssumptionsLabel}</span>
+      <span className="assumptions-selector-bar__display-text">Current assumptions: {activeAssumptionsLabel}</span>
       <InfoTooltipIcon
         className="assumptions-selector-bar__label-tooltip"
         iconClassName="h-4 w-4 text-muted"
         content={
           <>
-            <p>The active assumptions affect all rankings and calculations.</p>
+            <p>The current assumptions affect all rankings and calculations.</p>
             <p className="mt-2">To change them or view more detail, go to the Assumptions page.</p>
           </>
         }
@@ -110,7 +110,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
       <AssumptionsDropdown
         className={className}
         inlineLabel={inlineLabel}
-        inlineLabelText="Active assumptions"
+        inlineLabelText="Current assumptions"
         entries={libraryEntries}
         activeId={activeSavedAssumptionsId}
         hasUnsavedChanges={hasUnsavedChanges}

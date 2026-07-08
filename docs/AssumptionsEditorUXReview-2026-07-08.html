@@ -242,7 +242,7 @@
   <div class="tldr">
     <p class="eyebrow">TL;DR</p>
     <p>The bones are strong. The page's best architectural idea — user assumptions stored as a minimal diff against defaults — is visible to the user: a "differences from default assumptions" disclosure itemizes every customization with before → after values, provenance notes, and one-click reverts. Un-applied edits are guarded against navigation loss. Computed values render as readouts, not fake inputs, with the whole card as the edit affordance. The three tabs are real folder tabs, and tab/entity state lives in the URL with working back/forward. None of the options below touch that machinery.</p>
-    <p>What remains clusters in two places. <strong>The words:</strong> the page speaks two vocabularies at once — overloaded state verbs ("Apply" vs "Save", two meanings of "unsaved") and machine identifiers promoted to user-facing labels ("Effect 1: population", "Cost per microprobability"). <strong>The drill-in loop:</strong> effect editors replace the list they came from (comparing two causes means close, reopen, repeat) and run a preview year of their own. The single highest-leverage move is <strong>human display names for effects (option 1.1)</strong> — raw ids currently sit on two primary surfaces, and every other copy fix reads better once names are human.</p>
+    <p>What remains clusters in two places. <strong>The words:</strong> the page speaks two vocabularies at once — an overloaded word ("unsaved" means both un-applied and not-saved-to-browser) and machine identifiers promoted to user-facing labels ("Effect 1: population", "Cost per microprobability"). <strong>The drill-in loop:</strong> effect editors replace the list they came from (comparing two causes means close, reopen, repeat) and run a preview year of their own. The single highest-leverage move is <strong>human display names for effects (option 1.1)</strong> — raw ids currently sit on two primary surfaces, and every other copy fix reads better once names are human.</p>
   </div>
 
   <nav class="toc" aria-label="Contents">
@@ -260,7 +260,7 @@
   <section id="s1">
     <div class="sec-head"><span class="sec-num">§ 1</span><h2>The machine as built</h2></div>
 
-    <p>Naming the parts precisely first, because one of the findings is that the page names itself three times. A visitor meets <strong>three stacked headings for one surface</strong> — "Assumptions" <code class="ref">AssumptionsPage.jsx:321</code>, "Active Assumptions" <code class="ref">SavedAssumptionsPanel.jsx:26</code>, and "Edit/View Assumptions: …" <code class="ref">AssumptionsEditor.jsx:273</code> — above a library dropdown, a differences disclosure, three folder tabs, and drill-in editors.</p>
+    <p>Naming the parts precisely first, because one of the findings is that the page names itself three times. A visitor meets <strong>three stacked headings for one surface</strong> — "Assumptions" <code class="ref">AssumptionsPage.jsx:321</code>, "Current Assumptions" <code class="ref">SavedAssumptionsPanel.jsx:26</code>, and "Edit/View Assumptions: …" <code class="ref">AssumptionsEditor.jsx:414</code> — above a library dropdown, a differences disclosure, three folder tabs, and drill-in editors.</p>
   </section>
 </div>
 
@@ -275,11 +275,11 @@
         </div>
         <div class="anat-block">
           <span class="tag-letter">B</span>
-          <h5>"Active Assumptions" panel — library + state metadata</h5>
-          <p>Dropdown of curated / local / remote entries with load, rename, delete, copy-link, and description actions; Save &amp; Share appear once the active state diverges. Below the dropdown, the differences disclosure — a quiet dotted-underline toggle that expands into the full customization list with per-row reverts <code class="ref">SavedAssumptionsPanel.jsx:71</code>. The footer holds a site-wide display preference.</p>
+          <h5>"Current Assumptions" panel — saved sets + state metadata</h5>
+          <p>Dropdown of curated / local / remote entries with load, rename, delete, copy-link, and description actions; "Save to browser" &amp; Share appear once the state diverges. Below the dropdown, the differences disclosure — a quiet dotted-underline toggle that expands into the full customization list with per-row reverts <code class="ref">SavedAssumptionsPanel.jsx:71</code>. The footer holds a site-wide display preference.</p>
           <div class="anat-inline">
             <span class="m-name" style="text-decoration:none;">Custom (unsaved)</span>
-            <span class="m-btn secondary" style="padding:4px 12px;">Save</span>
+            <span class="m-btn secondary" style="padding:4px 12px;">Save to browser</span>
             <span class="m-btn primary" style="padding:4px 12px;">Share</span>
             <span class="m-meta">▾</span>
           </div>
@@ -337,7 +337,7 @@
           <span class="store">sessionStorage</span>
           <span class="warn">Announced as "Custom (unsaved)" once diverged — the vocabulary trap (§ 2)</span>
         </div>
-        <div class="hop"><span class="verb">Save</span><span class="arrow">→</span><span class="verb2">← Load</span></div>
+        <div class="hop"><span class="verb">Save to browser</span><span class="arrow">→</span><span class="verb2">← Load</span></div>
         <div class="station">
           <h5>3 · Library</h5>
           <p>Named snapshots kept in this browser, alongside curated sets.</p>
@@ -362,12 +362,12 @@
   <section id="s2">
     <div class="sec-head"><span class="sec-num">§ 2</span><h2>Four root causes of friction</h2></div>
 
-    <p>Twelve individual issues are catalogued in §3; they are symptoms of four underlying causes. Fix causes, not symptoms.</p>
+    <p>Eleven individual issues are catalogued in §3; they are symptoms of four underlying causes. Fix causes, not symptoms.</p>
 
     <h3><span class="tag">Root cause 1 · High</span>One page, two vocabularies</h3>
     <p>The page's remaining confusion is mostly lexical, in two species:</p>
     <ul>
-      <li><strong>Overloaded state verbs.</strong> "Apply" commits a draft to the active set <code class="ref">AssumptionsEditor.jsx:433</code>; "Save" writes the active set into the library. Nothing on screen explains the difference — a three-paragraph tooltip on "Active Assumptions" <code class="ref">SavedAssumptionsPanel.jsx:27</code> does the work a sentence of visible copy should. And "unsaved" means two things: the navigation guard speaks of un-applied <em>drafts</em>, while the dropdown's "Custom (unsaved)" <code class="ref">constants/customAssumptionsEntry.js:5</code> means <em>not in your library</em> — so a user who just clicked Apply is immediately told their work is unsaved anyway.</li>
+      <li><strong>"Unsaved" means two things.</strong> The verbs themselves are now location-named — "Apply" commits a draft to the active set <code class="ref">AssumptionsEditor.jsx:433</code>, "Save to browser" keeps a named copy — but the state word behind them is still overloaded: the navigation guard speaks of un-applied <em>drafts</em>, while the dropdown's "Custom (unsaved)" <code class="ref">constants/customAssumptionsEntry.js:5</code> means <em>not saved to this browser</em> — so a user who just clicked Apply is immediately told their work is unsaved anyway. And a three-paragraph tooltip on "Current Assumptions" <code class="ref">SavedAssumptionsPanel.jsx:27</code> still does the work a sentence of visible copy should.</li>
       <li><strong>Machine identifiers in user space.</strong> Effect cards are titled "Effect 1: population" <code class="ref">EffectCard.jsx:35</code> — content-frontmatter ids promoted to primary labels — and the differences rows chip the same raw ids <code class="ref">ReviewChangesSection.jsx:23</code>, so ids now sit on two primary surfaces. Field labels like "Cost per microprobability" <code class="ref">constants/effectFieldDefinitions.js:24</code> each carry a paragraph of tooltip, and the editor's header help exits to the FAQ mid-task <code class="ref">CategoryEffectEditor.jsx:208</code>.</li>
       <li><strong>Labels that hedge or overspecify.</strong> "Edit/View Assumptions" hedges. "Fixed" pills on two Global cards never say <em>why</em> those parameters are fixed <code class="ref">GlobalValuesSection.jsx:82</code>. The default library entry bakes a parameter value into its name — "Default (100 years)" <code class="ref">constants/assumptionsLibraryEntries.js:5</code> — doing disambiguation work that belongs in a description. And "Default" (Global tab) vs "Baseline" (drill-ins <code class="ref">effects/QalyEffectInputs.jsx:18</code>) encode a real distinction — a recipient's baseline is inherited from the cause <em>including your cause edits</em> — that is never explained where it appears, so precision reads as inconsistency.</li>
     </ul>
@@ -399,17 +399,16 @@
       <thead><tr><th>#</th><th>Sev</th><th class="inv-issue">Issue</th><th>Where</th><th>Cause</th><th>Fix</th></tr></thead>
       <tbody>
         <tr><td class="num">1</td><td><span class="chip high">High</span></td><td class="inv-issue">Raw effect IDs as primary labels on effect cards and differences rows; jargon fields lean on paragraph tooltips; help exits to the FAQ</td><td><code class="ref">EffectCard.jsx:35</code></td><td>RC1</td><td><span class="chip tier">1.1 · 3.2</span></td></tr>
-        <tr><td class="num">2</td><td><span class="chip high">High</span></td><td class="inv-issue">"Apply" vs "Save" — one mental action split across two unexplained layers</td><td><code class="ref">AssumptionsEditor.jsx:433</code></td><td>RC1</td><td><span class="chip tier">1.2 · 2.2</span></td></tr>
-        <tr><td class="num">3</td><td><span class="chip med">Med</span></td><td class="inv-issue">"Unsaved" means both un-applied draft and not-in-library</td><td><code class="ref">customAssumptionsEntry.js:5</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
-        <tr><td class="num">4</td><td><span class="chip med">Med</span></td><td class="inv-issue">Drill-in replaces the list it came from — no side-by-side context; comparing entities means closing and reopening the editor</td><td><code class="ref">AssumptionsEditor.jsx:473</code></td><td>RC2</td><td><span class="chip tier">2.1</span></td></tr>
-        <tr><td class="num">5</td><td><span class="chip med">Med</span></td><td class="inv-issue">Two independent preview-year controls that don't sync</td><td><code class="ref">AssumptionsEditor.jsx:59</code></td><td>RC3</td><td><span class="chip tier">1.3</span></td></tr>
-        <tr><td class="num">6</td><td><span class="chip med">Med</span></td><td class="inv-issue">Apply is silent while library actions notify — the site-wide recalculation is the page's quietest event</td><td><code class="ref">AssumptionsEditor.jsx:144</code></td><td>RC3</td><td><span class="chip tier">1.2</span></td></tr>
-        <tr><td class="num">7</td><td><span class="chip med">Med</span></td><td class="inv-issue">Three stacked headings; "Edit/View Assumptions: X" repeats the label shown just above it</td><td><code class="ref">AssumptionsEditor.jsx:406</code></td><td>RC4</td><td><span class="chip tier">1.4</span></td></tr>
-        <tr><td class="num">8</td><td><span class="chip med">Med</span></td><td class="inv-issue">"Default" vs "Baseline" distinction never explained where shown</td><td><code class="ref">QalyEffectInputs.jsx:18</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
-        <tr><td class="num">9</td><td><span class="chip low">Low</span></td><td class="inv-issue">"Fixed" pills never say why those parameters are fixed</td><td><code class="ref">GlobalValuesSection.jsx:82</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
-        <tr><td class="num">10</td><td><span class="chip low">Low</span></td><td class="inv-issue">"Default (100 years)" bakes a parameter value into a library-entry name</td><td><code class="ref">assumptionsLibraryEntries.js:5</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
-        <tr><td class="num">11</td><td><span class="chip low">Low</span></td><td class="inv-issue">Recipient search hard-capped at 10 results with no count and no way to see more</td><td><code class="ref">useAssumptionsForm.js:24</code></td><td>RC3</td><td><span class="chip tier">—</span></td></tr>
-        <tr><td class="num">12</td><td><span class="chip low">Low</span></td><td class="inv-issue">Three-paragraph tooltip doing a layout's job; site-wide display preference buried in the panel footer</td><td><code class="ref">SavedAssumptionsPanel.jsx:27</code></td><td>RC4</td><td><span class="chip tier">1.4</span></td></tr>
+        <tr><td class="num">2</td><td><span class="chip med">Med</span></td><td class="inv-issue">"Unsaved" means both un-applied draft and not-in-library</td><td><code class="ref">customAssumptionsEntry.js:5</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">3</td><td><span class="chip med">Med</span></td><td class="inv-issue">Drill-in replaces the list it came from — no side-by-side context; comparing entities means closing and reopening the editor</td><td><code class="ref">AssumptionsEditor.jsx:473</code></td><td>RC2</td><td><span class="chip tier">2.1</span></td></tr>
+        <tr><td class="num">4</td><td><span class="chip med">Med</span></td><td class="inv-issue">Two independent preview-year controls that don't sync</td><td><code class="ref">AssumptionsEditor.jsx:59</code></td><td>RC3</td><td><span class="chip tier">1.3</span></td></tr>
+        <tr><td class="num">5</td><td><span class="chip med">Med</span></td><td class="inv-issue">Apply is silent while library actions notify — the site-wide recalculation is the page's quietest event</td><td><code class="ref">AssumptionsEditor.jsx:144</code></td><td>RC3</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">6</td><td><span class="chip med">Med</span></td><td class="inv-issue">Three stacked headings; "Edit/View Assumptions: X" repeats the label shown just above it</td><td><code class="ref">AssumptionsEditor.jsx:414</code></td><td>RC4</td><td><span class="chip tier">1.4</span></td></tr>
+        <tr><td class="num">7</td><td><span class="chip med">Med</span></td><td class="inv-issue">"Default" vs "Baseline" distinction never explained where shown</td><td><code class="ref">QalyEffectInputs.jsx:18</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">8</td><td><span class="chip low">Low</span></td><td class="inv-issue">"Fixed" pills never say why those parameters are fixed</td><td><code class="ref">GlobalValuesSection.jsx:82</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">9</td><td><span class="chip low">Low</span></td><td class="inv-issue">"Default (100 years)" bakes a parameter value into a library-entry name</td><td><code class="ref">assumptionsLibraryEntries.js:5</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">10</td><td><span class="chip low">Low</span></td><td class="inv-issue">Recipient search hard-capped at 10 results with no count and no way to see more</td><td><code class="ref">useAssumptionsForm.js:24</code></td><td>RC3</td><td><span class="chip tier">—</span></td></tr>
+        <tr><td class="num">11</td><td><span class="chip low">Low</span></td><td class="inv-issue">Three-paragraph tooltip doing a layout's job; site-wide display preference buried in the panel footer</td><td><code class="ref">SavedAssumptionsPanel.jsx:27</code></td><td>RC4</td><td><span class="chip tier">1.4</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -465,7 +464,7 @@
       <div class="opt-head"><span class="opt-id">1.2</span><h4>One meaning per word — a rename pass</h4></div>
       <p>A coordinated pass over labels so each verb maps to exactly one layer of Fig. 2, and each reference word to one concept:</p>
       <ul>
-        <li><strong>"Custom (unsaved)"</strong> → "Edited — not saved to library" (its description already says this; the label should).</li>
+        <li><strong>"Custom (unsaved)"</strong> → "Edited — not saved to this browser" (its description already says this; the label should).</li>
         <li><strong>Notify on Apply:</strong> one sentence through the existing notification context — "Assumptions applied — rankings site-wide now use them." Fixes the feedback asymmetry and teaches Apply's scope in the moment it matters.</li>
         <li><strong>"Baseline"</strong> → keep, but let it explain itself once per surface: "Baseline (from cause): $X". "Default" stays for Global.</li>
         <li><strong>"Fixed"</strong> → the pill's tooltip gains the actual reason those two parameters can't be edited.</li>
@@ -530,7 +529,7 @@
       <div class="opt-head"><span class="opt-id">2.2</span><h4>Auto-apply Global — a product decision, now de-risked</h4></div>
       <p>Remove the Apply layer on the Global tab: valid values commit on blur/debounce; invalid ones hold with the existing field errors. Drill-ins keep Apply/Cancel — they're modal <em>sessions</em>, which is a coherent split. The engineering preconditions are already in place: the differences disclosure narrates what changed with per-row reverts (the safety net), and the form's per-parameter value-aware rehydration means live commits can't clobber typing elsewhere.</p>
       <dl>
-        <dt>Why</dt><dd>Deletes the Draft layer for the tab most users touch first — and with it the entire "Apply vs Save" collision (issue #2) and the global half of the navigation guard's job, rather than renaming around them.</dd>
+        <dt>Why</dt><dd>Deletes the Draft layer for the tab most users touch first — and with it the "unsaved" double meaning (issue #2) and the global half of the navigation guard's job, rather than renaming around them.</dd>
         <dt>Cost</dt><dd>Mid-typing recalculation (mitigated by blur-commit; the calculations are memoized and cheap); users lose "stage several parameters, apply once" batching. Genuinely a product call about how the page should feel, not an engineering question.</dd>
         <dt>Effort</dt><dd>M.</dd>
       </dl>
@@ -592,8 +591,8 @@
     <ol>
       <li><strong>1.1 first — effect display names.</strong> It's the prerequisite: effect cards, differences rows, and any future editor phrasing all read better the moment names are human, and every step below inherits it.</li>
       <li><strong>1.2 + 1.4 together</strong> — the rename pass and the shell trim are one sitting of copy-scale diffs. Afterward each verb means one thing, Apply announces itself, and the page introduces itself once instead of three times.</li>
-      <li><strong>1.3</strong> — one preview year. Small, isolated, closes issue #5.</li>
-      <li><strong>2.1</strong> — slide-over editors, the one structural item left. The guard already made leaving an edit safe; this makes staying in context possible, and closes issue #4.</li>
+      <li><strong>1.3</strong> — one preview year. Small, isolated, closes issue #4.</li>
+      <li><strong>2.1</strong> — slide-over editors, the one structural item left. The guard already made leaving an edit safe; this makes staying in context possible, and closes issue #3.</li>
       <li><strong>Then decide 2.2</strong> (auto-apply Global) as the product call it is — the engineering risk is already retired. Treat Tier 3 as separate bets: 3.2 first if the goal is editing quality, 3.1 if the goal is reach.</li>
     </ol>
 

@@ -2,8 +2,9 @@ import { useCallback, useState } from 'react';
 import { attachSavedAssumptionsShareReference, saveNewAssumptions } from '../utils/savedAssumptionsStore';
 import { slugify } from '../utils/shareAssumptions';
 
-const SHARE_LIBRARY_SAVE_ERROR = 'Share link created, but could not save it to the Assumptions Library.';
-const SHARE_LIBRARY_SYNC_ERROR = 'Share link created, but could not sync it to the Assumptions Library.';
+const SHARE_LIBRARY_SAVE_ERROR =
+  'Share link created, but could not save it with your assumptions sets in this browser.';
+const SHARE_LIBRARY_SYNC_ERROR = 'Share link created, but could not attach it to your saved assumptions set.';
 const NO_SHARE_LINK_ERROR = 'No share link available for this entry.';
 const COPY_LINK_ERROR = 'Could not copy link automatically. Please copy it manually.';
 const COPY_LINK_SUCCESS = 'Copied share link.';

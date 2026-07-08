@@ -60,7 +60,7 @@ const getPersistedCustomEffectsData = () => {
 };
 
 const openAssumptionsLibraryMenu = async (user) => {
-  const section = screen.getByText('Active Assumptions').closest('section');
+  const section = screen.getByText('Current Assumptions').closest('section');
   const openMenu = section.querySelector('.saved-assumptions-panel__menu');
 
   if (!openMenu) {
@@ -71,7 +71,7 @@ const openAssumptionsLibraryMenu = async (user) => {
 };
 
 const getActiveAssumptionsSummary = () =>
-  screen.getByText('Active Assumptions').closest('section').querySelector('.saved-assumptions-panel__summary');
+  screen.getByText('Current Assumptions').closest('section').querySelector('.saved-assumptions-panel__summary');
 
 describe('Global shared assumptions import flow', () => {
   const originalFetch = globalThis.fetch;
@@ -129,7 +129,7 @@ describe('Global shared assumptions import flow', () => {
       reference: 'abc123',
     });
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
-    const section = screen.getByText('Active Assumptions').closest('section');
+    const section = screen.getByText('Current Assumptions').closest('section');
     expect(within(section).getByText('abc123')).toBeInTheDocument();
     const menu = await openAssumptionsLibraryMenu(user);
     expect(menu).not.toBeNull();

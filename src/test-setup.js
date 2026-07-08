@@ -2,6 +2,8 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+/* global Element */
+
 // Cleanup after each test
 afterEach(() => {
   cleanup();
@@ -67,3 +69,7 @@ class MockResizeObserver {
 }
 
 globalThis.ResizeObserver = MockResizeObserver;
+
+// jsdom doesn't implement scrollIntoView (MultiCategoryRecipientEditor
+// scrolls its active category section into view on mount).
+Element.prototype.scrollIntoView = vi.fn();

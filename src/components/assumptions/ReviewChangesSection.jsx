@@ -86,7 +86,7 @@ ChangeSection.propTypes = {
  * when there are no differences. Pure view: the parent owns the diff (see
  * utils/assumptionsDiff.js) and the revert behavior.
  */
-const ReviewChangesSection = ({ diff, onRevert, hasUnappliedGlobalEdits = false }) => {
+const ReviewChangesSection = ({ diff, onRevert, hasUnappliedEdits = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const bodyId = useId();
 
@@ -120,10 +120,8 @@ const ReviewChangesSection = ({ diff, onRevert, hasUnappliedGlobalEdits = false 
 
       {isOpen && (
         <div id={bodyId} className="review-changes-section__body">
-          {hasUnappliedGlobalEdits && (
-            <p className="review-changes__note">
-              Global parameter edits you haven&apos;t applied yet are not listed here.
-            </p>
+          {hasUnappliedEdits && (
+            <p className="review-changes__note">Edits you haven&apos;t applied yet are not listed here.</p>
           )}
 
           <div className="review-changes">
@@ -175,7 +173,7 @@ ReviewChangesSection.propTypes = {
     recipients: PropTypes.array.isRequired,
   }).isRequired,
   onRevert: PropTypes.func.isRequired,
-  hasUnappliedGlobalEdits: PropTypes.bool,
+  hasUnappliedEdits: PropTypes.bool,
 };
 
 export default ReviewChangesSection;

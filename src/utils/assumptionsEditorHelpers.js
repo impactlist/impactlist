@@ -1,6 +1,8 @@
 // Helper functions for the assumptions editor that work directly with
 // defaultAssumptions and userAssumptions without needing combinedAssumptions
 
+/* global URLSearchParams */
+
 import { calculateCostPerLife } from './effectsCalculation';
 
 /**
@@ -17,6 +19,28 @@ export const getAllRecipientsFromDefaults = (defaultAssumptions) => {
     categories: recipient.categories,
     content: recipient.content,
   }));
+};
+
+/**
+ * Resolve which drill-in effect editor a /assumptions URL addresses, as an
+ * opaque identity string (null when no editor is open). Mirrors the editor
+ * controller's precedence: a recipientId wins over a categoryId, and other
+ * params (tab, activeCategory) don't affect which editor is mounted. Used by
+ * the navigation guard to tell "this navigation would close or retarget the
+ * open editor" apart from URL changes the editor survives.
+ * @param {string} search - A location search string (e.g. "?tab=categories&categoryId=x")
+ * @returns {string|null} Editor identity, e.g. "recipient:x" / "category:y"
+ */
+export const getEffectEditingTargetFromSearch = (search) => {
+  const params = new URLSearchParams(search);
+
+  const recipientId = params.get('recipientId');
+  if (recipientId) {
+    return `recipient:${recipientId}`;
+  }
+
+  const categoryId = params.get('categoryId');
+  return categoryId ? `category:${categoryId}` : null;
 };
 
 /**

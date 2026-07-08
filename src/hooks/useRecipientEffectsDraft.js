@@ -33,7 +33,6 @@ const useRecipientEffectsDraft = ({
   defaultAssumptions,
   userAssumptions,
 }) => {
-  const [effects, setEffects] = useState([]);
   const [errors, setErrors] = useState({});
 
   // The recipient's own default effect wrappers for this category.
@@ -55,7 +54,13 @@ const useRecipientEffectsDraft = ({
     });
   }, [baseCategoryEffects, defaultRecipientEffects, userAssumptions, recipientId, categoryId]);
 
-  // (Re)initialize drafts whenever the baseline VALUES change (entity switch,
+  // Drafts initialize FROM the baseline — never from [] — so a freshly
+  // mounted editor is clean on its very first render. hasUnsavedChanges feeds
+  // the navigation guard and the Apply button; an empty initial draft would
+  // report a false "dirty" frame before any install effect ran.
+  const [effects, setEffects] = useState(baselineEffects);
+
+  // Re-initialize drafts whenever the baseline VALUES change (entity switch,
   // save, revert, external assumption load). Assumption updates hand us fresh
   // object identities on every change (normalization deep-copies), so gate on
   // a value signature — an unrelated change (e.g. reverting another entity's
@@ -63,7 +68,7 @@ const useRecipientEffectsDraft = ({
   // The signature must include `_baseEffect`: cause-level changes alter the
   // effective base while leaving the wrapper's own fields identical.
   const baselineSignature = useMemo(() => getBaselineReinitSignature(baselineEffects), [baselineEffects]);
-  const lastBaselineSignatureRef = useRef(null);
+  const lastBaselineSignatureRef = useRef(baselineSignature);
   useEffect(() => {
     if (lastBaselineSignatureRef.current === baselineSignature) {
       return;

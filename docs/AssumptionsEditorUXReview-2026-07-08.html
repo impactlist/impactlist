@@ -1,0 +1,630 @@
+<title>Assumptions Editor — UX Review &amp; Options</title>
+<style>
+  :root {
+    --ground: #f5f1e8;
+    --ink: #29241b;
+    --muted: #6e6455;
+    --faint: #94897a;
+    --line: #d8cfbc;
+    --line-soft: #e6dfd0;
+    --rust: #9a4a1c;
+    --rust-deep: #7c3a14;
+    --rust-soft: #f0e0d2;
+    --plate: #eee8d9;
+    --plate-frame: #d9d0bb;
+    --mock-paper: #fffdf8;
+    --mock-border: #e3dbc9;
+    --mock-muted: #8a8070;
+    --indigo: #4460b2;
+    --indigo-strong: #354c91;
+    --indigo-soft: #dbe4ff;
+    --good: #2e6e4e;
+    --sev-high: #a23434;
+    --sev-high-bg: #f2dad5;
+    --sev-med: #8f6516;
+    --sev-med-bg: #f0e3c2;
+    --sev-low: #56707d;
+    --sev-low-bg: #dfe8ec;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Avenir Next", Avenir, Seravek, "Segoe UI", "Trebuchet MS", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --ui: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.68;
+    margin: 0;
+    padding: 0 20px 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .col { max-width: 46rem; margin: 0 auto; }
+  .wide { max-width: 58rem; margin: 0 auto; }
+
+  a { color: var(--rust); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--rust-deep); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; border-radius: 2px; }
+
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.2; text-wrap: balance; color: var(--ink); }
+
+  /* ---------- masthead ---------- */
+  .masthead { padding: 72px 0 8px; border-bottom: 3px double var(--line); margin-bottom: 12px; }
+  .eyebrow {
+    font-family: var(--sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--rust);
+    margin: 0 0 18px;
+  }
+  .masthead h1 { font-size: clamp(34px, 6vw, 46px); margin: 0 0 14px; font-weight: 600; letter-spacing: -0.01em; }
+  .dek { font-size: 20px; line-height: 1.5; color: var(--muted); margin: 0 0 28px; max-width: 40rem; font-style: italic; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 8px 36px;
+    font-family: var(--sans); font-size: 13px; color: var(--muted);
+    padding: 14px 0; border-top: 1px solid var(--line);
+  }
+  .meta-row b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- structure ---------- */
+  section { margin-top: 64px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 26px; }
+  .sec-num { font-family: var(--sans); font-size: 13px; font-weight: 700; color: var(--rust); letter-spacing: 0.08em; }
+  .sec-head h2 { font-size: 27px; margin: 0; }
+  h3 { font-size: 20px; margin: 38px 0 10px; }
+  h3 .tag { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); display: block; margin-bottom: 4px; }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 18px; padding-left: 24px; }
+  li { margin-bottom: 8px; }
+  li::marker { color: var(--rust); }
+  strong { font-weight: 600; }
+
+  code.ref {
+    font-family: var(--mono); font-size: 0.78em; font-weight: 500;
+    background: #ece5d4; border: 1px solid var(--line);
+    padding: 1px 6px 2px; border-radius: 4px; white-space: nowrap; color: #574f3f;
+  }
+
+  .callout {
+    background: var(--rust-soft); border-left: 4px solid var(--rust);
+    padding: 16px 20px; margin: 24px 0; border-radius: 0 6px 6px 0;
+    font-size: 16px;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* ---------- TL;DR ---------- */
+  .tldr { background: #fbf8f1; border: 1px solid var(--line); border-radius: 10px; padding: 26px 30px 20px; margin: 36px 0 8px; }
+  .tldr .eyebrow { margin-bottom: 10px; }
+  .tldr p { font-size: 17.5px; }
+
+  /* ---------- TOC ---------- */
+  nav.toc { font-family: var(--sans); font-size: 14px; margin: 30px 0 0; columns: 2; column-gap: 48px; }
+  nav.toc a { display: block; padding: 5px 0; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-soft); break-inside: avoid; }
+  nav.toc a:hover { color: var(--rust); }
+  nav.toc .n { color: var(--rust); font-weight: 700; margin-right: 10px; font-size: 12px; }
+  @media (max-width: 620px) { nav.toc { columns: 1; } }
+
+  /* ---------- figures / plates ---------- */
+  figure.plate { margin: 34px 0; background: var(--plate); border: 1px solid var(--plate-frame); border-radius: 12px; padding: 22px; }
+  figure.plate figcaption { font-family: var(--sans); font-size: 13.5px; color: var(--muted); margin-top: 16px; line-height: 1.55; }
+  figure.plate figcaption .fig { color: var(--rust); font-weight: 700; letter-spacing: 0.06em; }
+  .plate-scroll { overflow-x: auto; padding: 4px; }
+  .plate-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 720px) { .plate-pair { grid-template-columns: 1fr; } }
+  .pane-label { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin: 0 0 8px; }
+  .pane-label.bad { color: var(--sev-high); }
+  .pane-label.good { color: var(--good); }
+  .pane-label.neutral { color: var(--muted); }
+
+  /* ---------- mockup primitives (Impact List vocabulary) ---------- */
+  .m { font-family: var(--ui); color: #33302a; }
+  .m * { box-sizing: border-box; }
+  .m-card {
+    background: var(--mock-paper); border: 1px solid var(--mock-border); border-left-width: 7px;
+    border-left-color: #ece5d6; border-radius: 10px; padding: 12px 14px;
+    box-shadow: 0 6px 14px -12px rgba(32,24,12,0.45);
+  }
+  .m-card.custom { border-color: #b9c4e6; border-left-color: var(--indigo); background: #f4f6fe; }
+  .m-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .m-name { font-size: 14px; font-weight: 600; color: var(--indigo-strong); text-decoration: underline; text-decoration-color: #b9c4e6; text-underline-offset: 2px; }
+  .m-meta { font-size: 11px; color: var(--mock-muted); font-weight: 500; }
+  .m-btn { font-family: var(--ui); font-size: 12.5px; font-weight: 600; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+  .m-btn.primary { background: linear-gradient(160deg, var(--indigo), var(--indigo-strong)); color: #f2f6ff; border: 1px solid var(--indigo-strong); }
+  .m-btn.secondary { background: #fdfbf5; color: #47423a; border: 1px solid #c9c0ab; }
+  .m-pill { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 999px; padding: 3px 8px; }
+  .m-pill.fixed { background: #eeeae0; color: #8a8070; }
+  .m-value { font-size: 15px; font-variant-numeric: tabular-nums; color: #2c2822; }
+  .m-note { font-size: 11.5px; color: var(--mock-muted); }
+  .m-editlink { font-size: 12px; color: var(--indigo-strong); text-decoration: underline; text-underline-offset: 2px; }
+
+  /* differences-disclosure mock */
+  .m-disclose { font-size: 12.5px; color: #47423a; }
+  .m-disclose .glyph { color: #7d7464; margin-right: 6px; font-weight: 600; }
+  .m-disclose .lbl { border-bottom: 1px dotted #a89d89; padding-bottom: 1px; }
+
+  /* folder-tab mock */
+  .m-ftabs { display: flex; gap: 3px; align-items: flex-end; }
+  .m-ftab { font-size: 12px; font-weight: 600; padding: 6px 14px; border: 1px solid var(--mock-border); border-bottom: none; border-radius: 8px 8px 0 0; background: #f3eee1; color: #7d7464; }
+  .m-ftab.on { background: var(--mock-paper); color: #2c2822; border-top: 3px solid var(--indigo); padding: 7px 14px 8px; }
+
+  /* anatomy schematic */
+  .anat { display: flex; flex-direction: column; gap: 10px; min-width: 560px; }
+  .anat-block { border: 1.5px dashed #c4b998; border-radius: 9px; padding: 10px 12px; background: rgba(255,253,248,0.65); position: relative; }
+  .anat-block .tag-letter {
+    position: absolute; top: -11px; left: 12px; background: var(--rust); color: #fdf6ee;
+    font-family: var(--sans); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 1px 7px; letter-spacing: 0.06em;
+  }
+  .anat-block h5 { margin: 4px 0 2px; font-family: var(--ui); font-size: 13px; font-weight: 650; color: #47423a; }
+  .anat-block p { margin: 0; font-family: var(--ui); font-size: 12px; color: var(--mock-muted); line-height: 1.5; }
+  .anat-inline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+  .anat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+  .anat-mini { border: 1px solid var(--mock-border); border-left: 5px solid #ece5d6; background: var(--mock-paper); border-radius: 7px; padding: 7px 9px; font-family: var(--ui); font-size: 11px; color: #57503f; }
+  .anat-mini.custom { border-color: #b9c4e6; border-left-color: var(--indigo); background: #f4f6fe; }
+  .anat-mini .v { display: block; font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums; margin-top: 3px; }
+
+  /* state machine */
+  .flow { display: flex; align-items: stretch; gap: 0; min-width: 780px; padding: 6px 2px 2px; }
+  .station { flex: 1; background: var(--mock-paper); border: 1px solid var(--plate-frame); border-radius: 10px; padding: 14px 16px; position: relative; }
+  .station h5 { margin: 0 0 6px; font-family: var(--sans); font-size: 14px; font-weight: 700; color: var(--ink); }
+  .station p { margin: 0; font-family: var(--sans); font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .station .store { display: inline-block; margin-top: 10px; font-family: var(--mono); font-size: 10.5px; color: #6d6453; background: #f0ead9; border-radius: 4px; padding: 2px 7px; }
+  .station .warn { display: block; margin-top: 10px; font-family: var(--sans); font-size: 11.5px; font-weight: 600; color: var(--sev-med); }
+  .station .ok { display: block; margin-top: 10px; font-family: var(--sans); font-size: 11.5px; font-weight: 600; color: var(--good); }
+  .hop { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 6px; min-width: 74px; }
+  .hop .verb { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rust); }
+  .hop .arrow { font-size: 20px; color: var(--rust); line-height: 1; }
+  .hop .verb2 { font-family: var(--sans); font-size: 10.5px; font-weight: 600; color: var(--faint); margin-top: 2px; }
+
+  /* severity chips + tables */
+  .chip { font-family: var(--sans); font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+  .chip.high { background: var(--sev-high-bg); color: var(--sev-high); }
+  .chip.med { background: var(--sev-med-bg); color: var(--sev-med); }
+  .chip.low { background: var(--sev-low-bg); color: var(--sev-low); }
+  .chip.tier { background: #e8e2d2; color: #5d5545; }
+
+  .table-scroll { overflow-x: auto; margin: 26px 0; border: 1px solid var(--line); border-radius: 10px; background: #fbf8f1; }
+  table { border-collapse: collapse; width: 100%; font-family: var(--sans); font-size: 13.5px; min-width: 640px; }
+  th {
+    text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); padding: 12px 14px 8px; border-bottom: 2px solid var(--line);
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--faint); font-weight: 600; }
+  .inv-issue { max-width: 340px; }
+
+  /* option blocks */
+  .opt { border-left: 3px solid var(--line); padding: 2px 0 2px 20px; margin: 30px 0; }
+  .opt-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+  .opt-head h4 { margin: 0; font-size: 18.5px; }
+  .opt-id { font-family: var(--sans); font-size: 12px; font-weight: 700; color: var(--rust); letter-spacing: 0.05em; }
+  .opt dl { font-family: var(--sans); font-size: 13.5px; margin: 12px 0 0; display: grid; grid-template-columns: 92px 1fr; row-gap: 6px; }
+  .opt dt { font-weight: 700; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; padding-top: 2px; }
+  .opt dd { margin: 0; }
+
+  /* sentence editor mock */
+  .m-sentence { font-size: 15px; line-height: 2.15; color: #3d3830; }
+  .m-slot {
+    display: inline-block; border: 1px solid #b9c4e6; background: #fff; border-radius: 6px;
+    padding: 1px 8px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--indigo-strong); white-space: nowrap;
+  }
+
+  /* schematic pair for editing context */
+  .ctx { border: 1.5px dashed #c4b998; border-radius: 9px; background: rgba(255,253,248,0.6); padding: 12px; font-family: var(--ui); font-size: 12px; color: #57503f; }
+  .ctx .bar-sk { height: 26px; border-radius: 999px; background: #ece5d4; margin-bottom: 10px; position: relative; overflow: hidden; }
+  .ctx .sheet { border: 1px solid var(--mock-border); background: var(--mock-paper); border-radius: 8px; padding: 10px; min-height: 110px; }
+  .ctx .dim { opacity: 0.45; }
+  .ctx .overlay { position: relative; }
+  .ctx .panel { position: absolute; top: -6px; right: -6px; bottom: -6px; width: 62%; background: #fff; border: 1px solid #b9c4e6; border-radius: 8px; box-shadow: -12px 0 24px -18px rgba(32,24,12,0.5); padding: 10px; }
+
+  .foot { margin-top: 80px; padding-top: 18px; border-top: 3px double var(--line); font-family: var(--sans); font-size: 12.5px; color: var(--faint); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .m-btn, nav.toc a { transition: background-color 140ms ease, color 140ms ease; }
+  }
+</style>
+
+<div class="col">
+  <header class="masthead">
+    <p class="eyebrow">Impact List · Interface Review</p>
+    <h1>The Assumptions Editor, Reconsidered</h1>
+    <p class="dek">The machinery under /assumptions is honest and well-guarded. The friction that remains lives in four places — the words, the drill-in loop, the feedback, and the shell — each traced through the source, with a menu of fixes.</p>
+    <div class="meta-row">
+      <span><b>Date</b> &nbsp;July 8, 2026</span>
+      <span><b>Scope</b> &nbsp;/assumptions — library panel, differences view, three tabs, effect editors, save/share flows</span>
+      <span><b>Method</b> &nbsp;Static review of source (~30 files); mockups are code-derived, app not run</span>
+    </div>
+  </header>
+
+  <div class="tldr">
+    <p class="eyebrow">TL;DR</p>
+    <p>The bones are strong. The page's best architectural idea — user assumptions stored as a minimal diff against defaults — is visible to the user: a "differences from default assumptions" disclosure itemizes every customization with before → after values, provenance notes, and one-click reverts. Un-applied edits are guarded against navigation loss. Computed values render as readouts, not fake inputs, with the whole card as the edit affordance. The three tabs are real folder tabs, and tab/entity state lives in the URL with working back/forward. None of the options below touch that machinery.</p>
+    <p>What remains clusters in two places. <strong>The words:</strong> the page speaks two vocabularies at once — overloaded state verbs ("Apply" vs "Save", two meanings of "unsaved") and machine identifiers promoted to user-facing labels ("Effect 1: population", "Cost per microprobability"). <strong>The drill-in loop:</strong> effect editors replace the list they came from (comparing two causes means close, reopen, repeat) and run a preview year of their own. The single highest-leverage move is <strong>human display names for effects (option 1.1)</strong> — raw ids currently sit on two primary surfaces, and every other copy fix reads better once names are human.</p>
+  </div>
+
+  <nav class="toc" aria-label="Contents">
+    <a href="#s1"><span class="n">1</span>The machine as built</a>
+    <a href="#s2"><span class="n">2</span>Four root causes of friction</a>
+    <a href="#s3"><span class="n">3</span>Issue inventory</a>
+    <a href="#s4"><span class="n">4</span>Options — Tier 1: words &amp; copy</a>
+    <a href="#s4b"><span class="n">4</span>Options — Tier 2: the editing loop</a>
+    <a href="#s4c"><span class="n">4</span>Options — Tier 3: bigger bets</a>
+    <a href="#s5"><span class="n">5</span>What I'd do, in order</a>
+    <a href="#s6"><span class="n">6</span>Appendix: where each option lands</a>
+  </nav>
+
+  <!-- ============================================================ -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">§ 1</span><h2>The machine as built</h2></div>
+
+    <p>Naming the parts precisely first, because one of the findings is that the page names itself three times. A visitor meets <strong>three stacked headings for one surface</strong> — "Assumptions" <code class="ref">AssumptionsPage.jsx:321</code>, "Active Assumptions" <code class="ref">SavedAssumptionsPanel.jsx:26</code>, and "Edit/View Assumptions: …" <code class="ref">AssumptionsEditor.jsx:273</code> — above a library dropdown, a differences disclosure, three folder tabs, and drill-in editors.</p>
+  </section>
+</div>
+
+<div class="wide">
+  <figure class="plate">
+    <div class="plate-scroll">
+      <div class="anat m">
+        <div class="anat-block">
+          <span class="tag-letter">A</span>
+          <h5>Page header</h5>
+          <p>"Assumptions" + subtitle. First of three headings.</p>
+        </div>
+        <div class="anat-block">
+          <span class="tag-letter">B</span>
+          <h5>"Active Assumptions" panel — library + state metadata</h5>
+          <p>Dropdown of curated / local / remote entries with load, rename, delete, copy-link, and description actions; Save &amp; Share appear once the active state diverges. Below the dropdown, the differences disclosure — a quiet dotted-underline toggle that expands into the full customization list with per-row reverts <code class="ref">SavedAssumptionsPanel.jsx:71</code>. The footer holds a site-wide display preference.</p>
+          <div class="anat-inline">
+            <span class="m-name" style="text-decoration:none;">Custom (unsaved)</span>
+            <span class="m-btn secondary" style="padding:4px 12px;">Save</span>
+            <span class="m-btn primary" style="padding:4px 12px;">Share</span>
+            <span class="m-meta">▾</span>
+          </div>
+          <div class="anat-inline">
+            <span class="m-disclose"><span class="glyph">+</span><span class="lbl">Show 6 differences from default assumptions</span></span>
+          </div>
+        </div>
+        <div class="anat-block">
+          <span class="tag-letter">C</span>
+          <h5>Editor shell — "Edit/View Assumptions: Custom (unsaved)"</h5>
+          <p>Third heading; repeats the label the panel above just showed. Below it, the tab strip: folder tabs fused into a bordered panel, with Apply on the right (Global tab only — cause/recipient edits commit from their drill-ins). The tabs stay live while a drill-in is open; navigating away from a dirty draft prompts (Apply and leave / Discard / Keep editing) instead of locking.</p>
+          <div class="anat-inline" style="align-items:flex-end;">
+            <span class="m-ftabs"><span class="m-ftab on">Global</span><span class="m-ftab">Causes</span><span class="m-ftab">Recipients</span></span>
+            <span style="flex:1"></span>
+            <span class="m-btn primary" style="padding:4px 14px;">Apply</span>
+          </div>
+        </div>
+        <div class="anat-block">
+          <span class="tag-letter">D</span>
+          <h5>Tab panel — one form, two catalogs</h5>
+          <div class="anat-grid">
+            <div class="anat-mini"><b>Global</b> — 6 parameter cards, editable inline (2 marked "Fixed"), an info note, a future-value graph.<span class="v">Real inputs</span></div>
+            <div class="anat-mini custom"><b>Causes</b> — ~27 readout cards: computed cost per life + "(edit)" link; customized ones say "adjusted · was $X". Whole card opens the editor.<span class="v">Readouts</span></div>
+            <div class="anat-mini"><b>Recipients</b> — search (custom-only by default, 10-result cap), same readout-card pattern, drill-in per recipient.<span class="v">Readouts</span></div>
+          </div>
+        </div>
+        <div class="anat-block">
+          <span class="tag-letter">E</span>
+          <h5>Drill-in effect editors (replace D when open)</h5>
+          <p>Header with entity links + combined cost (only when &gt;1 effect) · effect cards titled "Effect 1: population" with per-type field grids · own preview-year selector · Apply / Cancel footer. Replaces the list until you apply or cancel; leaving mid-edit is guarded, not locked.</p>
+        </div>
+        <div class="anat-block">
+          <span class="tag-letter">F</span>
+          <h5>Seven modals</h5>
+          <p>Save, Share, overwrite-confirm, migration, delete-confirm, description, and the unapplied-edits navigation guard (Apply and leave / Discard / Keep editing).</p>
+        </div>
+      </div>
+    </div>
+    <figcaption><span class="fig">Fig. 1</span> — Anatomy of /assumptions as built. Letters are referenced throughout the report.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <div class="plate-scroll">
+      <div class="flow">
+        <div class="station">
+          <h5>1 · Draft</h5>
+          <p>What you've typed but not committed. Global form values; drill-in effect drafts.</p>
+          <span class="store">React state</span>
+          <span class="ok">✓ Guarded — any navigation that would discard edits (global or drill-in, back button included) prompts Apply and leave / Discard / Keep editing</span>
+        </div>
+        <div class="hop"><span class="verb">Apply</span><span class="arrow">→</span></div>
+        <div class="station">
+          <h5>2 · Active</h5>
+          <p>The assumptions every page calculates from, this browser tab, right now. Itemized by the differences disclosure.</p>
+          <span class="store">sessionStorage</span>
+          <span class="warn">Announced as "Custom (unsaved)" once diverged — the vocabulary trap (§ 2)</span>
+        </div>
+        <div class="hop"><span class="verb">Save</span><span class="arrow">→</span><span class="verb2">← Load</span></div>
+        <div class="station">
+          <h5>3 · Library</h5>
+          <p>Named snapshots kept in this browser, alongside curated sets.</p>
+          <span class="store">localStorage</span>
+        </div>
+        <div class="hop"><span class="verb">Share</span><span class="arrow">→</span><span class="verb2">← Import</span></div>
+        <div class="station">
+          <h5>4 · Link</h5>
+          <p>A server-hosted snapshot anyone can open.</p>
+          <span class="store">server</span>
+        </div>
+      </div>
+    </div>
+    <figcaption><span class="fig">Fig. 2</span> — The four-layer state machine. Layers 1 and 2 are now narrated to the user — the navigation guard protects drafts, the differences disclosure itemizes the active diff. The remaining confusion lives in the <em>words on the arrows</em>: Apply and Save read as synonyms but act on different layers, and "unsaved" describes both.</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+  <p><strong>Worth keeping, explicitly:</strong> the differences disclosure and its diff engine — before → after rows that resolve inherited recipient values to concrete numbers with "from cause" and "×&nbsp;n" provenance notes, per-row revert included <code class="ref">utils/assumptionsDiff.js</code>, <code class="ref">ReviewChangesSection.jsx</code>; the navigation guard covering both global and drill-in drafts (tab switches and the browser back button included) plus its <code class="ref">beforeunload</code> backstop <code class="ref">AssumptionsEditor.jsx:186</code>; value-gated draft preservation (the Global form rehydrates per-parameter by value, and drill-in editors re-initialize only when their own baseline changes — so unrelated reverts and loads never clobber in-progress typing) <code class="ref">useGlobalForm.js</code>, <code class="ref">useRecipientEffectsDraft.js</code>; honest readout cards with per-entity accessible names <code class="ref">AssumptionEntityCard.jsx</code>; URL-backed tab/entity state <code class="ref">useAssumptionsEditorController.js</code>; the indigo "customized" color language; validation that blocks bad commits loudly; scroll position preserved across editor open/close <code class="ref">shared/ScrollToTop.jsx</code>. None of the options below sacrifice these.</p>
+
+  <!-- ============================================================ -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">§ 2</span><h2>Four root causes of friction</h2></div>
+
+    <p>Twelve individual issues are catalogued in §3; they are symptoms of four underlying causes. Fix causes, not symptoms.</p>
+
+    <h3><span class="tag">Root cause 1 · High</span>One page, two vocabularies</h3>
+    <p>The page's remaining confusion is mostly lexical, in two species:</p>
+    <ul>
+      <li><strong>Overloaded state verbs.</strong> "Apply" commits a draft to the active set <code class="ref">AssumptionsEditor.jsx:433</code>; "Save" writes the active set into the library. Nothing on screen explains the difference — a three-paragraph tooltip on "Active Assumptions" <code class="ref">SavedAssumptionsPanel.jsx:27</code> does the work a sentence of visible copy should. And "unsaved" means two things: the navigation guard speaks of un-applied <em>drafts</em>, while the dropdown's "Custom (unsaved)" <code class="ref">constants/customAssumptionsEntry.js:5</code> means <em>not in your library</em> — so a user who just clicked Apply is immediately told their work is unsaved anyway.</li>
+      <li><strong>Machine identifiers in user space.</strong> Effect cards are titled "Effect 1: population" <code class="ref">EffectCard.jsx:35</code> — content-frontmatter ids promoted to primary labels — and the differences rows chip the same raw ids <code class="ref">ReviewChangesSection.jsx:23</code>, so ids now sit on two primary surfaces. Field labels like "Cost per microprobability" <code class="ref">constants/effectFieldDefinitions.js:24</code> each carry a paragraph of tooltip, and the editor's header help exits to the FAQ mid-task <code class="ref">CategoryEffectEditor.jsx:208</code>.</li>
+      <li><strong>Labels that hedge or overspecify.</strong> "Edit/View Assumptions" hedges. "Fixed" pills on two Global cards never say <em>why</em> those parameters are fixed <code class="ref">GlobalValuesSection.jsx:82</code>. The default library entry bakes a parameter value into its name — "Default (100 years)" <code class="ref">constants/assumptionsLibraryEntries.js:5</code> — doing disambiguation work that belongs in a description. And "Default" (Global tab) vs "Baseline" (drill-ins <code class="ref">effects/QalyEffectInputs.jsx:18</code>) encode a real distinction — a recipient's baseline is inherited from the cause <em>including your cause edits</em> — that is never explained where it appears, so precision reads as inconsistency.</li>
+    </ul>
+
+    <h3><span class="tag">Root cause 2 · Medium</span>The drill-in hides the list it came from</h3>
+    <p>Opening a cause or recipient editor replaces the whole tab panel <code class="ref">AssumptionsEditor.jsx:473</code>. Leaving mid-edit is handled well — the tabs stay live, and a dirty draft gets the same Apply-and-leave / Discard / Keep-editing prompt that protects global edits — but the list context is still gone: comparing two causes means close → reopen → repeat, and the figures you were scanning vanish the moment you start editing one of them. A slide-over editor (option 2.1) keeps the world visible behind the edit session.</p>
+
+    <h3><span class="tag">Root cause 3 · Medium</span>Feedback gaps in the editing loop</h3>
+    <ul>
+      <li><strong>Two preview years that don't sync.</strong> The list header has a year selector <code class="ref">AssumptionsEditor.jsx:59</code>; each drill-in initializes its own <code class="ref">CategoryEffectEditor.jsx:38</code> — so the number you drilled in from can differ from the number the editor shows, with no cue why.</li>
+      <li><strong>Applying is silent.</strong> Library actions notify ("loaded", "saved"); Apply — the moment the entire site recalculates — says nothing. The highest-consequence event on the page is its quietest.</li>
+      <li><strong>Recipient search caps at 10</strong> results with no count and no way to see more <code class="ref">useAssumptionsForm.js:24</code>.</li>
+    </ul>
+
+    <h3><span class="tag">Root cause 4 · Medium</span>A shell that narrates itself three times</h3>
+    <p>Three stacked headings introduce one surface (Fig. 1, A–C), and the third — "Edit/View Assumptions: X" — repeats the label shown directly above it in the panel that also owns the dropdown <em>and</em> the differences view. The panel footer hosts a site-wide display preference <code class="ref">AssumptionsPage.jsx:358</code> that has nothing to do with the library. The shell spends its space saying what things are called instead of letting the one real hierarchy (library → state → editor) show.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">§ 3</span><h2>Issue inventory</h2></div>
+    <p>Every concrete issue found, ranked. "Fix" points to the option in §4 that addresses it.</p>
+  </section>
+</div>
+
+<div class="wide">
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>#</th><th>Sev</th><th class="inv-issue">Issue</th><th>Where</th><th>Cause</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td><span class="chip high">High</span></td><td class="inv-issue">Raw effect IDs as primary labels on effect cards and differences rows; jargon fields lean on paragraph tooltips; help exits to the FAQ</td><td><code class="ref">EffectCard.jsx:35</code></td><td>RC1</td><td><span class="chip tier">1.1 · 3.2</span></td></tr>
+        <tr><td class="num">2</td><td><span class="chip high">High</span></td><td class="inv-issue">"Apply" vs "Save" — one mental action split across two unexplained layers</td><td><code class="ref">AssumptionsEditor.jsx:433</code></td><td>RC1</td><td><span class="chip tier">1.2 · 2.2</span></td></tr>
+        <tr><td class="num">3</td><td><span class="chip med">Med</span></td><td class="inv-issue">"Unsaved" means both un-applied draft and not-in-library</td><td><code class="ref">customAssumptionsEntry.js:5</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">4</td><td><span class="chip med">Med</span></td><td class="inv-issue">Drill-in replaces the list it came from — no side-by-side context; comparing entities means closing and reopening the editor</td><td><code class="ref">AssumptionsEditor.jsx:473</code></td><td>RC2</td><td><span class="chip tier">2.1</span></td></tr>
+        <tr><td class="num">5</td><td><span class="chip med">Med</span></td><td class="inv-issue">Two independent preview-year controls that don't sync</td><td><code class="ref">AssumptionsEditor.jsx:59</code></td><td>RC3</td><td><span class="chip tier">1.3</span></td></tr>
+        <tr><td class="num">6</td><td><span class="chip med">Med</span></td><td class="inv-issue">Apply is silent while library actions notify — the site-wide recalculation is the page's quietest event</td><td><code class="ref">AssumptionsEditor.jsx:144</code></td><td>RC3</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">7</td><td><span class="chip med">Med</span></td><td class="inv-issue">Three stacked headings; "Edit/View Assumptions: X" repeats the label shown just above it</td><td><code class="ref">AssumptionsEditor.jsx:406</code></td><td>RC4</td><td><span class="chip tier">1.4</span></td></tr>
+        <tr><td class="num">8</td><td><span class="chip med">Med</span></td><td class="inv-issue">"Default" vs "Baseline" distinction never explained where shown</td><td><code class="ref">QalyEffectInputs.jsx:18</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">9</td><td><span class="chip low">Low</span></td><td class="inv-issue">"Fixed" pills never say why those parameters are fixed</td><td><code class="ref">GlobalValuesSection.jsx:82</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">10</td><td><span class="chip low">Low</span></td><td class="inv-issue">"Default (100 years)" bakes a parameter value into a library-entry name</td><td><code class="ref">assumptionsLibraryEntries.js:5</code></td><td>RC1</td><td><span class="chip tier">1.2</span></td></tr>
+        <tr><td class="num">11</td><td><span class="chip low">Low</span></td><td class="inv-issue">Recipient search hard-capped at 10 results with no count and no way to see more</td><td><code class="ref">useAssumptionsForm.js:24</code></td><td>RC3</td><td><span class="chip tier">—</span></td></tr>
+        <tr><td class="num">12</td><td><span class="chip low">Low</span></td><td class="inv-issue">Three-paragraph tooltip doing a layout's job; site-wide display preference buried in the panel footer</td><td><code class="ref">SavedAssumptionsPanel.jsx:27</code></td><td>RC4</td><td><span class="chip tier">1.4</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="col">
+  <!-- ============================================================ -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">§ 4</span><h2>Options — Tier 1: words &amp; copy <span style="font-size:14px; font-family:var(--sans); color:var(--faint); font-weight:600;">(S–M; no architecture changes)</span></h2></div>
+
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">1.1</span><h4>Humanize effect names at the source</h4></div>
+      <p>Add <code class="ref">displayName</code> (and optionally a one-line <code class="ref">summary</code>) to effect frontmatter in <code class="ref">content/categories/*.md</code>, thread it through the generator and validation, and render "Existential catastrophe from AI" instead of "Effect 1: population" — on effect-card titles, differences rows, and editor headers alike. Keep the raw id as small print for cross-referencing with the written justifications.</p>
+      <dl>
+        <dt>Why</dt><dd>The single highest-leverage remaining move. Raw ids sit on two primary surfaces (effect cards and the differences view), and every other copy fix in this tier reads better once names are human.</dd>
+        <dt>Effort</dt><dd>M — touches content schema, generator, validation, and three render sites; mechanical throughout.</dd>
+      </dl>
+    </div>
+  </section>
+</div>
+
+<div class="wide">
+  <figure class="plate">
+    <div class="plate-pair m">
+      <div>
+        <p class="pane-label bad">As built</p>
+        <div class="m-card custom">
+          <div class="m-row">
+            <span style="font-size:13.5px; font-weight:650;">Effect 1: population</span>
+            <span class="m-meta">cost/life: <b style="color:#2c2822;">$9,400</b></span>
+          </div>
+          <div class="m-note" style="margin-top:8px;">Cost per microprobability · Population fraction affected · QALYs lost per person per year · Start time · Duration</div>
+          <div class="m-note" style="margin-top:6px; font-style:italic;">"See the FAQ to learn how to edit these assumptions…"</div>
+        </div>
+      </div>
+      <div>
+        <p class="pane-label good">Proposed</p>
+        <div class="m-card custom">
+          <div class="m-row">
+            <span style="font-size:13.5px; font-weight:650;">Existential catastrophe from AI <span class="m-meta" style="font-weight:500;">· id: population</span></span>
+            <span class="m-meta">cost/life: <b style="color:#2c2822;">$9,400</b></span>
+          </div>
+          <div class="m-note" style="margin-top:8px;">Same fields — but the title now states the belief being edited, and the differences view inherits the same name.</div>
+        </div>
+      </div>
+    </div>
+    <figcaption><span class="fig">Fig. 3</span> — Effect naming, before and after (option 1.1). A frontmatter id promoted to a title vs. a display name with the id demoted to small print. (Values fictional.)</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">1.2</span><h4>One meaning per word — a rename pass</h4></div>
+      <p>A coordinated pass over labels so each verb maps to exactly one layer of Fig. 2, and each reference word to one concept:</p>
+      <ul>
+        <li><strong>"Custom (unsaved)"</strong> → "Edited — not saved to library" (its description already says this; the label should).</li>
+        <li><strong>Notify on Apply:</strong> one sentence through the existing notification context — "Assumptions applied — rankings site-wide now use them." Fixes the feedback asymmetry and teaches Apply's scope in the moment it matters.</li>
+        <li><strong>"Baseline"</strong> → keep, but let it explain itself once per surface: "Baseline (from cause): $X". "Default" stays for Global.</li>
+        <li><strong>"Fixed"</strong> → the pill's tooltip gains the actual reason those two parameters can't be edited.</li>
+        <li><strong>"Default (100 years)"</strong> → "Impact List defaults", with the time-limit note in its description, so a future default change doesn't falsify the name.</li>
+      </ul>
+      <dl><dt>Effort</dt><dd>S — copy plus one notification call.</dd></dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">1.3</span><h4>One preview year</h4></div>
+      <p>Lift the drill-in editors' year state up to the list's existing <code class="ref">previewYear</code> so the year you previewed in the list is the year the editor shows, with one consistent label ("Cost to save a life in 2026").</p>
+      <dl><dt>Effort</dt><dd>S.</dd></dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">1.4</span><h4>Trim the shell</h4></div>
+      <p>Retire the "Edit/View Assumptions: X" heading — the panel directly above already names the active set, offers its actions, and itemizes its differences; the tab strip is self-explanatory without a title. Move the "show selector on every page" preference out of the library panel footer into a low-key settings row at the bottom of the page. Shrink the three-paragraph tooltip to one line by promoting its load-bearing sentence ("these assumptions drive every calculation on the site") into visible microcopy under the panel heading.</p>
+      <dl>
+        <dt>Why</dt><dd>One heading, one switcher, one status surface — the layout stops repeating itself and the hierarchy (library → state → editor) becomes the visible structure.</dd>
+        <dt>Effort</dt><dd>S–M — layout surgery in <code class="ref">AssumptionsPage.jsx</code> / <code class="ref">SavedAssumptionsPanel.jsx</code> / <code class="ref">AssumptionsEditor.jsx</code>, no logic changes.</dd>
+      </dl>
+    </div>
+
+  <!-- ============================================================ -->
+  <section id="s4b">
+    <div class="sec-head"><span class="sec-num">§ 4</span><h2>Options — Tier 2: the editing loop <span style="font-size:14px; font-family:var(--sans); color:var(--faint); font-weight:600;">(M each; change how editing feels)</span></h2></div>
+
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">2.1</span><h4>Slide-over editors</h4></div>
+      <p>Open cause/recipient editors in a right-side sheet (a wide <code class="ref">ModalShell</code> variant — the focus/Escape/scrim machinery already exists) over the dimmed list, instead of replacing the panel. URL semantics stay identical; Apply/Cancel become the sheet's footer; closing returns to a list that never went away.</p>
+      <dl>
+        <dt>Why</dt><dd>Resolves RC2 at the root: the list survives the edit session, so compare-and-edit stops requiring round trips. The navigation guard already handles dirty exits — the sheet is pure presentation on top of machinery that exists.</dd>
+        <dt>Cost</dt><dd>The multi-category editor is long — the sheet needs comfortable width (~min(720px, 90vw)), internal scroll, and a full-screen fallback on small viewports.</dd>
+        <dt>Effort</dt><dd>M.</dd>
+      </dl>
+    </div>
+</div>
+
+<div class="wide">
+  <figure class="plate">
+    <div class="plate-pair">
+      <div class="ctx">
+        <p class="pane-label bad" style="margin-top:0;">As built — drill-in replaces list</p>
+        <div class="bar-sk"></div>
+        <div class="sheet">Editor fills the panel.<br>Leaving a dirty draft is guarded — but the cards you were comparing are gone.</div>
+      </div>
+      <div class="ctx">
+        <p class="pane-label good" style="margin-top:0;">Proposed — sheet over context</p>
+        <div class="bar-sk"></div>
+        <div class="sheet overlay">
+          <div class="dim">Cause cards remain visible…</div>
+          <div class="panel"><b>Edit: AI Existential Risk</b><br><span style="color:var(--mock-muted);">effect fields · Apply / Cancel footer</span></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><span class="fig">Fig. 4</span> — Editing context (option 2.1). Same URL semantics, same editors, same guard — but the list survives the edit session instead of vanishing under it.</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">2.2</span><h4>Auto-apply Global — a product decision, now de-risked</h4></div>
+      <p>Remove the Apply layer on the Global tab: valid values commit on blur/debounce; invalid ones hold with the existing field errors. Drill-ins keep Apply/Cancel — they're modal <em>sessions</em>, which is a coherent split. The engineering preconditions are already in place: the differences disclosure narrates what changed with per-row reverts (the safety net), and the form's per-parameter value-aware rehydration means live commits can't clobber typing elsewhere.</p>
+      <dl>
+        <dt>Why</dt><dd>Deletes the Draft layer for the tab most users touch first — and with it the entire "Apply vs Save" collision (issue #2) and the global half of the navigation guard's job, rather than renaming around them.</dd>
+        <dt>Cost</dt><dd>Mid-typing recalculation (mitigated by blur-commit; the calculations are memoized and cheap); users lose "stage several parameters, apply once" batching. Genuinely a product call about how the page should feel, not an engineering question.</dd>
+        <dt>Effort</dt><dd>M.</dd>
+      </dl>
+    </div>
+
+  <!-- ============================================================ -->
+  <section id="s4c">
+    <div class="sec-head"><span class="sec-num">§ 4</span><h2>Options — Tier 3: bigger bets <span style="font-size:14px; font-family:var(--sans); color:var(--faint); font-weight:600;">(L; rethink pieces of the model)</span></h2></div>
+
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">3.1</span><h4>Worldview-first landing</h4></div>
+      <p>Reframe the page's opening move from "here are three tabs of parameters" to "here are worldviews — pick, compare, then customize." Curated profiles become cards with one-line philosophies and headline consequences ("longtermist: AI risk dominates; global health ~$8K/life"); editing is the second act. The current editor remains, one level in.</p>
+      <dl>
+        <dt>Why</dt><dd>Most visitors will never edit a microprobability; they want to know whether the rankings survive <em>their</em> worldview. This serves that majority and makes the editor an advanced mode rather than the front door.</dd>
+        <dt>Cost</dt><dd>A real product decision about the page's purpose, not just its layout; adds a level of hierarchy power users must click through (mitigate: deep-link straight to the editor).</dd>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">3.2</span><h4>Plain-language effect editing</h4></div>
+      <p>Present each effect as a sentence with editable slots, generated from the same fields — the raw grid stays behind "Show raw fields" for power users. The FAQ's explanations move into the control itself.</p>
+      <dl>
+        <dt>Why</dt><dd>The current fields describe the math's variables; the sentence describes the <em>belief</em>. Beliefs are what users came to edit. Kills the paragraph-tooltip pattern (RC1) at its root, and composes naturally with 1.1's display names.</dd>
+        <dt>Cost</dt><dd>Sentence templates per effect type (two exist today) and careful input widths; validation messages need sentence-aware placement. The highest-craft item here, and the one that would most distinguish the site.</dd>
+      </dl>
+    </div>
+</div>
+
+<div class="wide">
+  <figure class="plate">
+    <div class="m m-card" style="max-width: 640px; margin: 0 auto;">
+      <div class="m-row" style="margin-bottom:6px;">
+        <span style="font-size:13.5px; font-weight:650;">Existential catastrophe from AI <span class="m-meta" style="font-weight:500;">· population effect</span></span>
+        <span class="m-meta">cost/life: <b style="color:#2c2822;">$6,100</b></span>
+      </div>
+      <p class="m-sentence">Each <span class="m-slot">$500</span> donated shifts the odds of the catastrophe by <span class="m-slot">1 in a million</span>. If it happens, it affects <span class="m-slot">95%</span> of people, costing each <span class="m-slot">1</span> life-year per year, beginning <span class="m-slot">20</span> years out and lasting <span class="m-slot">60</span> years.</p>
+      <div class="m-note" style="margin-top:8px;"><a href="#s4c" onclick="return false;" style="color:var(--indigo-strong);">Show raw fields</a> · cost per microprobability, population fraction, QALY/yr, start, duration</div>
+    </div>
+    <figcaption><span class="fig">Fig. 5</span> — Sentence-form effect editing (option 3.2). The same five parameters, phrased as the belief they encode; slots are inputs. (Values fictional.)</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">3.3</span><h4>Comparison mode</h4></div>
+      <p>"Compare" any two assumption sets: side-by-side parameter diff plus consequence deltas — top-10 donor rank shifts, biggest cause cost movements. Turns the library from storage into an instrument, and gives shared links a reason to circulate ("look how our rankings differ"). Notably cheaper than it sounds: the diff engine and its row renderer already exist <code class="ref">utils/assumptionsDiff.js</code>, <code class="ref">ReviewChangesSection.jsx</code> — the new work is the rank-delta computation and a view.</p>
+      <dl><dt>Cost</dt><dd>L — a dedicated surface; purely additive to everything above.</dd></dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt-head"><span class="opt-id">3.4</span><h4>Sliders coupled to the future-value graph</h4></div>
+      <p>Global parameters get bounded sliders (with exact-entry fields kept) wired live to <code class="ref">GlobalFutureValueGraph</code>, so discount rate and time limit are <em>felt</em> — the curve moves under your thumb. Pairs naturally with 2.2.</p>
+      <dl><dt>Cost</dt><dd>M — choosing honest bounds is the hard part; the graph exists.</dd></dl>
+    </div>
+
+  <!-- ============================================================ -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">§ 5</span><h2>What I'd do, in order</h2></div>
+    <ol>
+      <li><strong>1.1 first — effect display names.</strong> It's the prerequisite: effect cards, differences rows, and any future editor phrasing all read better the moment names are human, and every step below inherits it.</li>
+      <li><strong>1.2 + 1.4 together</strong> — the rename pass and the shell trim are one sitting of copy-scale diffs. Afterward each verb means one thing, Apply announces itself, and the page introduces itself once instead of three times.</li>
+      <li><strong>1.3</strong> — one preview year. Small, isolated, closes issue #5.</li>
+      <li><strong>2.1</strong> — slide-over editors, the one structural item left. The guard already made leaving an edit safe; this makes staying in context possible, and closes issue #4.</li>
+      <li><strong>Then decide 2.2</strong> (auto-apply Global) as the product call it is — the engineering risk is already retired. Treat Tier 3 as separate bets: 3.2 first if the goal is editing quality, 3.1 if the goal is reach.</li>
+    </ol>
+
+    <div class="callout">
+      <p><strong>What I would deliberately not do:</strong> add more tooltips — the fix for words under the page is words on the page; allow typing into the computed cause/recipient readouts (back-solving a cost per life into effect parameters is underdetermined and would falsify the effects model); build a second "what have I changed" surface (tab badges, counts elsewhere) — the differences disclosure is the single home for that answer, and duplicating it re-creates the ambiguity it resolved; or mix apply models across tabs beyond the deliberate 2.2 split.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-num">§ 6</span><h2>Appendix: where each option lands</h2></div>
+  </section>
+</div>
+
+<div class="wide">
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Option</th><th>Primary files</th><th>Effort</th></tr></thead>
+      <tbody>
+        <tr><td><b>1.1</b> Effect display names</td><td><code class="ref">content/categories/*.md</code> · generator + validation · <code class="ref">EffectCard.jsx</code> · <code class="ref">assumptionsDiff.js</code> / <code class="ref">ReviewChangesSection.jsx</code></td><td>M</td></tr>
+        <tr><td><b>1.2</b> Rename pass</td><td><code class="ref">customAssumptionsEntry.js</code> · <code class="ref">assumptionsLibraryEntries.js</code> · <code class="ref">GlobalValuesSection.jsx</code> · <code class="ref">AssumptionsEditor.jsx</code> (Apply notification) · effect input labels</td><td>S</td></tr>
+        <tr><td><b>1.3</b> One preview year</td><td><code class="ref">AssumptionsEditor.jsx</code> · <code class="ref">CategoryEffectEditor.jsx</code> · recipient editors</td><td>S</td></tr>
+        <tr><td><b>1.4</b> Shell trim</td><td><code class="ref">AssumptionsEditor.jsx</code> (heading) · <code class="ref">AssumptionsPage.jsx</code> · <code class="ref">SavedAssumptionsPanel.jsx</code></td><td>S–M</td></tr>
+        <tr><td><b>2.1</b> Slide-over editors</td><td><code class="ref">ModalShell.jsx</code> (sheet variant) · <code class="ref">AssumptionsEditor.jsx</code> render branch</td><td>M</td></tr>
+        <tr><td><b>2.2</b> Auto-apply Global</td><td><code class="ref">useGlobalForm.js</code> · <code class="ref">AssumptionsEditor.jsx</code></td><td>M</td></tr>
+        <tr><td><b>3.1–3.4</b> Bets</td><td>new surfaces; 3.3 reuses the existing diff engine and row renderer; 3.4 reuses <code class="ref">GlobalFutureValueGraph</code></td><td>L</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="col">
+  <p class="foot">Prepared for Impact List · reviewed at commit 1e743d7 plus the uncommitted working tree · mockups are approximations derived from <code class="ref">index.css</code> tokens and component source; values in figures are fictional. The app was not run for this review (project convention).</p>
+</div>

@@ -44,7 +44,7 @@ const AssumptionsPage = () => {
   const [migrationPromptOpen, setMigrationPromptOpen] = useState(false);
   const [migrationDefaultLabel, setMigrationDefaultLabel] = useState('My Current Assumptions');
   const [migrationCheckDone, setMigrationCheckDone] = useState(false);
-  const [editorHasUnappliedGlobalEdits, setEditorHasUnappliedGlobalEdits] = useState(false);
+  const [editorHasUnappliedEdits, setEditorHasUnappliedEdits] = useState(false);
   const assumptionsEditorRef = useRef(null);
 
   const initialTab = searchParams.get('tab') || 'global';
@@ -344,7 +344,7 @@ const AssumptionsPage = () => {
               <ReviewChangesSection
                 diff={assumptionsDiff}
                 onRevert={handleRevertChange}
-                hasUnappliedGlobalEdits={editorHasUnappliedGlobalEdits}
+                hasUnappliedEdits={editorHasUnappliedEdits}
               />
             ) : null
           }
@@ -377,7 +377,7 @@ const AssumptionsPage = () => {
             initialActiveCategory={initialActiveCategory}
             activeAssumptionsLabel={activeAssumptionsLabel}
             onParamsChange={handleParamsChange}
-            onUnappliedGlobalEditsChange={setEditorHasUnappliedGlobalEdits}
+            onUnappliedEditsChange={setEditorHasUnappliedEdits}
           />
         </div>
 

@@ -1,14 +1,16 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useBlocker } from 'react-router-dom';
+import { useBlocker, useLocation } from 'react-router-dom';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { validateGlobalParameterValues, scrollToFirstError } from '../utils/assumptionsFormValidation';
 import { cleanAndParseValue } from '../utils/effectValidation';
 import { useRecipientSearch } from '../hooks/useAssumptionsForm';
 import { useGlobalForm } from '../hooks/useGlobalForm';
 import { useAssumptionsEditorController } from '../hooks/useAssumptionsEditorController';
+import useUnsavedChangesReporter from '../hooks/useUnsavedChangesReporter';
 import {
   getAllRecipientsFromDefaults,
+  getEffectEditingTargetFromSearch,
   mergeGlobalParameters,
   getCategoryFromDefaults,
 } from '../utils/assumptionsEditorHelpers';
@@ -38,7 +40,7 @@ const AssumptionsEditor = forwardRef(
       initialActiveCategory = null,
       activeAssumptionsLabel = '',
       onParamsChange = () => {},
-      onUnappliedGlobalEditsChange = () => {},
+      onUnappliedEditsChange = () => {},
     },
     ref
   ) => {
@@ -143,23 +145,64 @@ const AssumptionsEditor = forwardRef(
       commitGlobalChanges();
     }, [commitGlobalChanges]);
 
-    // Un-applied global edits only live in this form's state, so navigating
-    // away would silently discard them. Block full navigations and prompt;
-    // tab/entity switches only change query params (same pathname) and stay
-    // free — the form survives those.
+    /**
+     * EFFECT_EDITOR_HANDLE_CONTRACT
+     *
+     * The drill-in effect editors (CategoryEffectEditor, RecipientEffectEditor,
+     * MultiCategoryRecipientEditor) forward a ref exposing
+     *   attemptApply(): { ok: boolean, effects: <payload>|null }
+     * — ok:false means validation errors block a commit (the editor is left
+     * showing them; never navigate then); effects:null means the draft is
+     * clean; otherwise `effects` is exactly what the editor's onSave would
+     * receive. They also report draft dirtiness via onUnsavedChangesChange,
+     * including a false on unmount. The navigation guard below consumes both.
+     */
+    const effectEditorRef = useRef(null);
+    const [hasUnappliedEffectEdits, setHasUnappliedEffectEdits] = useState(false);
+    // Ref mirror for same-tick reads: applying or cancelling navigates in the
+    // same event tick that clears the draft, before React re-renders — the
+    // blocker predicate would otherwise block the editor's own close
+    // navigation with a stale "dirty" closure.
+    const hasUnappliedEffectEditsRef = useRef(false);
+
+    const handleEffectEditorUnsavedChanges = useCallback((dirty) => {
+      hasUnappliedEffectEditsRef.current = dirty;
+      setHasUnappliedEffectEdits(dirty);
+    }, []);
+
+    // Un-applied edits (global form values, drill-in effect drafts) live only
+    // in component state, so a navigation that unmounts them destroys work.
+    // Global drafts survive same-page query changes (tab switches); a drill-in
+    // draft dies with any navigation that closes or retargets its editor.
     const hasUnappliedGlobalEdits = globalForm.hasUnsavedChanges;
+    const hasUnappliedEdits = hasUnappliedGlobalEdits || hasUnappliedEffectEdits;
 
     // The page renders the differences section (in the Active Assumptions
-    // panel) and needs to know when un-applied drafts exist; report boolean
-    // transitions only.
-    useEffect(() => {
-      onUnappliedGlobalEditsChange(hasUnappliedGlobalEdits);
-    }, [onUnappliedGlobalEditsChange, hasUnappliedGlobalEdits]);
+    // panel) and needs to know when un-applied drafts exist.
+    useUnsavedChangesReporter(hasUnappliedEdits, onUnappliedEditsChange);
+
+    const location = useLocation();
 
     const navigationBlocker = useBlocker(
       useCallback(
-        ({ currentLocation, nextLocation }) =>
-          hasUnappliedGlobalEdits && currentLocation.pathname !== nextLocation.pathname,
+        ({ currentLocation, nextLocation }) => {
+          const pathnameChanged = currentLocation.pathname !== nextLocation.pathname;
+
+          if (hasUnappliedGlobalEdits && pathnameChanged) {
+            return true;
+          }
+
+          if (!hasUnappliedEffectEditsRef.current) {
+            return false;
+          }
+
+          if (pathnameChanged) {
+            return true;
+          }
+
+          const currentTarget = getEffectEditingTargetFromSearch(currentLocation.search);
+          return currentTarget !== null && currentTarget !== getEffectEditingTargetFromSearch(nextLocation.search);
+        },
         [hasUnappliedGlobalEdits]
       )
     );
@@ -167,15 +210,15 @@ const AssumptionsEditor = forwardRef(
     // Release a blocked navigation if the edits get applied or reset while
     // the prompt is up (standard useBlocker safety valve).
     useEffect(() => {
-      if (navigationBlocker.state === 'blocked' && !hasUnappliedGlobalEdits) {
+      if (navigationBlocker.state === 'blocked' && !hasUnappliedEdits) {
         navigationBlocker.reset();
       }
-    }, [navigationBlocker, hasUnappliedGlobalEdits]);
+    }, [navigationBlocker, hasUnappliedEdits]);
 
     // The router blocker can't see reloads or tab closes; ask the browser to
     // confirm those too while edits are un-applied.
     useEffect(() => {
-      if (!hasUnappliedGlobalEdits) {
+      if (!hasUnappliedEdits) {
         return undefined;
       }
 
@@ -187,21 +230,85 @@ const AssumptionsEditor = forwardRef(
 
       window.addEventListener('beforeunload', handleBeforeUnload);
       return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [hasUnappliedGlobalEdits]);
+    }, [hasUnappliedEdits]);
+
+    // Commit an effect editor's payload to the applied assumptions WITHOUT
+    // the editor-closing navigation its onSave handlers chain — the guard's
+    // pending navigation supplies the exit.
+    const commitEffectEditorPayload = useCallback(
+      (effects) => {
+        if (editingCategoryId) {
+          replaceCategoryEffects(editingCategoryId, effects);
+        } else if (editingRecipient?.isMultiCategory) {
+          replaceRecipientEffectsByCategory(editingRecipient.recipientId, effects);
+        } else if (editingRecipient) {
+          replaceRecipientCategoryEffects(editingRecipient.recipientId, editingRecipient.categoryId, effects);
+        }
+      },
+      [
+        editingCategoryId,
+        editingRecipient,
+        replaceCategoryEffects,
+        replaceRecipientEffectsByCategory,
+        replaceRecipientCategoryEffects,
+      ]
+    );
 
     const handleApplyAndLeave = useCallback(() => {
-      // On validation failure commitGlobalChanges surfaces the errors (and
-      // switches to the Global tab), so stay on the page.
-      if (commitGlobalChanges()) {
-        navigationBlocker.proceed();
-      } else {
-        navigationBlocker.reset();
+      const stay = () => {
+        if (navigationBlocker.state === 'blocked') {
+          navigationBlocker.reset();
+        }
+      };
+
+      // Deliberately NOT atomic when both draft kinds are dirty: the drill-in
+      // payload commits first (its failure keeps the user in the editor,
+      // where the errors are visible), and a global validation failure below
+      // then holds the navigation with the drill-in work already applied —
+      // visible and revertible in the differences section, never silent.
+      // Refusing both would strand the valid drill-in draft: surfacing the
+      // global errors means switching to the Global tab, a navigation the
+      // still-dirty editor would itself re-block.
+      if (hasUnappliedEffectEditsRef.current) {
+        const result = effectEditorRef.current?.attemptApply() ?? { ok: false };
+        if (!result.ok) {
+          // The editor is showing its validation errors.
+          stay();
+          return;
+        }
+        if (result.effects) {
+          commitEffectEditorPayload(result.effects);
+        }
+        handleEffectEditorUnsavedChanges(false);
       }
-    }, [commitGlobalChanges, navigationBlocker]);
+
+      // A same-page navigation (tab or entity switch) only threatens the
+      // drill-in draft — the global form survives it, so leave global edits
+      // un-applied rather than committing more than the user asked for.
+      const leavingPage = navigationBlocker.location?.pathname !== location.pathname;
+      if (leavingPage && !commitGlobalChanges()) {
+        // commitGlobalChanges surfaced the errors (switching to the Global
+        // tab if needed), so stay.
+        stay();
+        return;
+      }
+
+      if (navigationBlocker.state === 'blocked') {
+        navigationBlocker.proceed();
+      }
+    }, [
+      commitEffectEditorPayload,
+      commitGlobalChanges,
+      handleEffectEditorUnsavedChanges,
+      location.pathname,
+      navigationBlocker,
+    ]);
 
     useImperativeHandle(ref, () => {
       const commitPendingAssumptionsEdits = () => {
-        if (editingCategoryId || editingRecipient) {
+        // An open-but-clean drill-in editor is fine; only a dirty draft makes
+        // the current state ambiguous to save or share.
+        if (hasUnappliedEffectEditsRef.current) {
           return {
             ok: false,
             message: 'Apply or cancel your in-progress edits before continuing.',
@@ -224,8 +331,12 @@ const AssumptionsEditor = forwardRef(
         // Backward-compatible alias while callers migrate to the generic name.
         prepareForShare: commitPendingAssumptionsEdits,
       };
-    }, [commitGlobalChanges, editingCategoryId, editingRecipient]);
+    }, [commitGlobalChanges]);
 
+    // Applying commits and then navigates the editor closed; cancelling is an
+    // explicit discard. Both navigations run in the same tick that retires the
+    // draft, so clear the dirty flag first (see hasUnappliedEffectEditsRef) —
+    // the guard must not block the editor's own exits.
     const handleSaveCategoryEffects = useCallback(
       (updatedEffects) => {
         if (!editingCategoryId) {
@@ -233,9 +344,10 @@ const AssumptionsEditor = forwardRef(
         }
 
         replaceCategoryEffects(editingCategoryId, updatedEffects);
+        handleEffectEditorUnsavedChanges(false);
         handleCancelCategoryEdit();
       },
-      [editingCategoryId, replaceCategoryEffects, handleCancelCategoryEdit]
+      [editingCategoryId, replaceCategoryEffects, handleEffectEditorUnsavedChanges, handleCancelCategoryEdit]
     );
 
     const handleSaveRecipientEffects = useCallback(
@@ -245,9 +357,10 @@ const AssumptionsEditor = forwardRef(
         }
 
         replaceRecipientCategoryEffects(editingRecipient.recipientId, editingRecipient.categoryId, updatedEffects);
+        handleEffectEditorUnsavedChanges(false);
         handleCancelRecipientEdit();
       },
-      [editingRecipient, replaceRecipientCategoryEffects, handleCancelRecipientEdit]
+      [editingRecipient, replaceRecipientCategoryEffects, handleEffectEditorUnsavedChanges, handleCancelRecipientEdit]
     );
 
     const handleSaveMultiCategoryEffects = useCallback(
@@ -257,14 +370,42 @@ const AssumptionsEditor = forwardRef(
         }
 
         replaceRecipientEffectsByCategory(editingRecipient.recipientId, allCategoryEffects);
+        handleEffectEditorUnsavedChanges(false);
         handleCancelRecipientEdit();
       },
-      [editingRecipient, replaceRecipientEffectsByCategory, handleCancelRecipientEdit]
+      [editingRecipient, replaceRecipientEffectsByCategory, handleEffectEditorUnsavedChanges, handleCancelRecipientEdit]
     );
+
+    const handleDiscardCategoryEdit = useCallback(() => {
+      handleEffectEditorUnsavedChanges(false);
+      handleCancelCategoryEdit();
+    }, [handleEffectEditorUnsavedChanges, handleCancelCategoryEdit]);
+
+    const handleDiscardRecipientEdit = useCallback(() => {
+      handleEffectEditorUnsavedChanges(false);
+      handleCancelRecipientEdit();
+    }, [handleEffectEditorUnsavedChanges, handleCancelRecipientEdit]);
 
     const isEditingEffects = Boolean(editingCategoryId || editingRecipient);
     const hasGlobalFormErrors = Object.keys(globalForm.errors).length > 0;
     const activePanelId = `assumptions-panel-${activeTab}`;
+
+    // Word the guard prompt for what the blocked navigation would actually
+    // discard: same-page navigations (tab or entity switches) only threaten
+    // the drill-in draft — the global form survives them.
+    const editingEntityName = editingCategoryId
+      ? getCategoryFromDefaults(defaultAssumptions, editingCategoryId)?.name
+      : editingRecipient?.recipient?.name;
+    const blockerLeavesPage =
+      navigationBlocker.state === 'blocked' && navigationBlocker.location?.pathname !== location.pathname;
+    const atRiskSubjects = [];
+    if (hasUnappliedGlobalEdits && blockerLeavesPage) {
+      atRiskSubjects.push('global parameters');
+    }
+    if (hasUnappliedEffectEdits) {
+      atRiskSubjects.push(editingEntityName ? `effects for ${editingEntityName}` : 'effects');
+    }
+    const unappliedEditsMessage = `You changed ${atRiskSubjects.join(' and ')} but haven't applied them. Edits that aren't applied are discarded when you leave.`;
 
     return (
       <div className="flex flex-col gap-3 p-3 sm:p-4">
@@ -278,25 +419,17 @@ const AssumptionsEditor = forwardRef(
         {/* Strip + panel live in one wrapper so the root's flex gap doesn't
             separate them: the strip overlaps the panel border to fuse the
             active tab into it. Drill-in editors are their own card, so the
-            locked strip detaches instead. */}
+            strip detaches instead. Tabs stay enabled while an editor is open —
+            switching away from a dirty draft is caught by the navigation
+            guard, not by locking the UI. */}
         <div className={`assumptions-tabs-region${isEditingEffects ? ' assumptions-tabs-region--detached' : ''}`}>
           <div className="assumptions-toolbar">
             <div className="assumptions-toolbar__nav">
-              <TabNavigation
-                activeTab={activeTab}
-                onTabChange={handleTabChange}
-                tabs={tabs}
-                idBase="assumptions"
-                isLocked={isEditingEffects}
-              />
+              <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} idBase="assumptions" />
             </div>
 
             <div className="assumptions-toolbar__actions">
-              {isEditingEffects ? (
-                <span className="assumptions-toolbar__hint" role="status" aria-live="polite">
-                  Apply or cancel current edits to switch sections.
-                </span>
-              ) : activeTab === 'global' ? (
+              {!isEditingEffects && activeTab === 'global' && (
                 // Only the Global tab commits through an explicit Apply;
                 // cause/recipient edits commit from their drill-in editors.
                 <div className="assumptions-form-actions">
@@ -312,15 +445,18 @@ const AssumptionsEditor = forwardRef(
                     Apply
                   </button>
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
 
+          {/* The tabpanel class (panel chrome) drops while a drill-in editor
+              renders its own card, but the panel semantics stay: the tabs
+              remain operable, so their aria-controls target must exist. */}
           <div
             className={isEditingEffects ? '' : 'assumptions-tabpanel'}
-            id={isEditingEffects ? undefined : activePanelId}
-            role={isEditingEffects ? undefined : 'tabpanel'}
-            aria-labelledby={isEditingEffects ? undefined : `assumptions-tab-${activeTab}`}
+            id={activePanelId}
+            role="tabpanel"
+            aria-labelledby={`assumptions-tab-${activeTab}`}
           >
             {!isEditingEffects && (
               <div className="assumptions-panel-context">
@@ -344,31 +480,37 @@ const AssumptionsEditor = forwardRef(
 
             {editingCategoryId ? (
               <CategoryEffectEditor
+                ref={effectEditorRef}
                 category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}
                 categoryId={editingCategoryId}
                 globalParameters={mergedGlobalParameters}
                 onSave={handleSaveCategoryEffects}
-                onCancel={handleCancelCategoryEdit}
+                onCancel={handleDiscardCategoryEdit}
+                onUnsavedChangesChange={handleEffectEditorUnsavedChanges}
               />
             ) : editingRecipient?.isMultiCategory ? (
               <MultiCategoryRecipientEditor
+                ref={effectEditorRef}
                 recipient={editingRecipient.recipient}
                 recipientId={editingRecipient.recipientId}
                 categories={editingRecipient.categories}
                 activeCategory={editingRecipient.activeCategory}
                 globalParameters={mergedGlobalParameters}
                 onSave={handleSaveMultiCategoryEffects}
-                onCancel={handleCancelRecipientEdit}
+                onCancel={handleDiscardRecipientEdit}
+                onUnsavedChangesChange={handleEffectEditorUnsavedChanges}
               />
             ) : editingRecipient ? (
               <RecipientEffectEditor
+                ref={effectEditorRef}
                 recipient={editingRecipient.recipient}
                 recipientId={editingRecipient.recipientId}
                 category={editingRecipient.category}
                 categoryId={editingRecipient.categoryId}
                 globalParameters={mergedGlobalParameters}
                 onSave={handleSaveRecipientEffects}
-                onCancel={handleCancelRecipientEdit}
+                onCancel={handleDiscardRecipientEdit}
+                onUnsavedChangesChange={handleEffectEditorUnsavedChanges}
               />
             ) : activeTab === 'global' ? (
               <GlobalValuesSection
@@ -404,6 +546,7 @@ const AssumptionsEditor = forwardRef(
 
         <UnappliedEditsModal
           isOpen={navigationBlocker.state === 'blocked'}
+          message={unappliedEditsMessage}
           onApplyAndLeave={handleApplyAndLeave}
           onDiscardAndLeave={() => navigationBlocker.proceed()}
           onStay={() => navigationBlocker.reset()}
@@ -420,7 +563,7 @@ AssumptionsEditor.propTypes = {
   initialActiveCategory: PropTypes.string,
   activeAssumptionsLabel: PropTypes.string,
   onParamsChange: PropTypes.func,
-  onUnappliedGlobalEditsChange: PropTypes.func,
+  onUnappliedEditsChange: PropTypes.func,
 };
 
 AssumptionsEditor.displayName = 'AssumptionsEditor';

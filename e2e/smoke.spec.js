@@ -204,6 +204,36 @@ test.describe('Critical path smoke tests', () => {
     await expect(customStateLabel(page)).toHaveCount(0);
   });
 
+  test('assumptions editor guards unapplied drill-in edits on navigation @smoke', async ({ page }) => {
+    await clearAppLocalStorage(page);
+    await page.goto('/assumptions?tab=categories');
+
+    const entityLink = page.getByRole('tabpanel').getByRole('link').first();
+    await expect(entityLink).toBeVisible();
+    const entityName = (await entityLink.innerText()).trim();
+    await page.getByRole('button', { name: `Edit ${entityName}`, exact: true }).click();
+    await expect(page.getByRole('heading', { name: /Edit effects for cause/i })).toBeVisible();
+
+    await page.locator('input[id^="effect-0-"]').first().fill('1234');
+
+    // Tabs stay enabled while editing; switching away from a dirty draft
+    // prompts instead of locking.
+    await page.getByRole('tab', { name: 'Recipients' }).click();
+    const guardDialog = page.getByRole('dialog', { name: 'Apply your edits before leaving?' });
+    await expect(guardDialog).toBeVisible();
+    await guardDialog.getByRole('button', { name: 'Keep editing' }).click();
+    await expect(guardDialog).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: /Edit effects for cause/i })).toBeVisible();
+
+    // The real browser back button gets the same guard, and applying from the
+    // prompt commits the draft and completes the navigation.
+    await page.goBack();
+    await expect(guardDialog).toBeVisible();
+    await guardDialog.getByRole('button', { name: 'Apply and leave' }).click();
+    await expect(page.getByRole('heading', { name: /Edit effects for cause/i })).not.toBeVisible();
+    await expect.poll(() => hasCategoryCustomizations(page)).toBe(true);
+  });
+
   test('specific donations modal supports add/edit/delete with persistence @smoke', async ({ page }) => {
     await clearAppLocalStorage(page);
     await page.goto('/calculator');

@@ -224,19 +224,19 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.getByTestId('location-probe')).toHaveTextContent(`categoryId=${firstValidCategoryId}`);
   });
 
-  it('keeps tab navigation visible and locked while editing a category', async () => {
+  it('keeps tabs operable while editing a category: a clean editor closes without prompting', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
 
     expect(await screen.findByText(/Edit effects for cause/i)).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'Global' })).toBeDisabled();
-    expect(screen.getByRole('tab', { name: 'Causes' })).toBeDisabled();
-    expect(screen.getByRole('tab', { name: 'Recipients' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Global' })).toBeEnabled();
+    expect(screen.getByRole('tab', { name: 'Causes' })).toBeEnabled();
+    expect(screen.getByRole('tab', { name: 'Recipients' })).toBeEnabled();
 
     await user.click(screen.getByRole('tab', { name: 'Global' }));
-    expect(screen.getByTestId('location-probe').textContent).toBe(
-      `/assumptions?tab=categories&categoryId=${firstValidCategoryId}`
-    );
+    expect(screen.queryByText('Apply your edits before leaving?')).not.toBeInTheDocument();
+    expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions');
+    expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
   });
 
   it('opens recipient editor from deep-link even when tab query param is global', async () => {
@@ -250,7 +250,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.getByTestId('location-probe')).toHaveTextContent(`recipientId=${firstValidRecipientId}`);
   });
 
-  it('keeps tab navigation visible and locked while editing a recipient', async () => {
+  it('keeps tabs operable while editing a recipient: a clean editor closes without prompting', async () => {
     if (!firstValidRecipientId) {
       throw new Error('Expected at least one recipient with categories in default assumptions data');
     }
@@ -259,12 +259,12 @@ describe('AssumptionsPage routing integration', () => {
     renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${firstValidRecipientId}`);
 
     expect(await screen.findByText(/Edit effects for recipient/i)).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'Global' })).toBeDisabled();
-    expect(screen.getByRole('tab', { name: 'Causes' })).toBeDisabled();
-    expect(screen.getByRole('tab', { name: 'Recipients' })).toBeDisabled();
+    expect(screen.getByRole('tab', { name: 'Causes' })).toBeEnabled();
 
     await user.click(screen.getByRole('tab', { name: 'Causes' }));
-    expect(screen.getByTestId('location-probe').textContent).toContain(`recipientId=${firstValidRecipientId}`);
+    expect(screen.queryByText('Apply your edits before leaving?')).not.toBeInTheDocument();
+    expect(screen.getByTestId('location-probe').textContent).toBe('/assumptions?tab=categories');
+    expect(screen.queryByText(/Edit effects for recipient/i)).not.toBeInTheDocument();
   });
 
   it('updates URL tab params from tab navigation and omits tab param for global', async () => {
@@ -712,6 +712,275 @@ describe('AssumptionsPage routing integration', () => {
     await waitFor(() => {
       expect(fireBeforeUnload()).toBe(false);
     });
+  });
+
+  // ---- Drill-in editor navigation guard ----
+  // The guard that protects un-applied global edits also covers drill-in
+  // effect drafts: any navigation that would close or retarget the open
+  // editor (tab switch, back button, leaving the page) prompts instead of
+  // silently discarding, while the editor's own Apply/Cancel exits and
+  // navigations from a clean editor stay prompt-free.
+
+  const guardPromptTitle = 'Apply your edits before leaving?';
+
+  const categoryEditorField = () => {
+    // The first textbox with this label belongs to the editor's first
+    // (date-sorted) effect, which may not be effects[0] of the raw data — so
+    // persistence assertions match by value, not by effect id.
+    const effect = assumptionsData.categories[firstValidCategoryId].effects[0];
+    const isQaly = effect.costPerQALY !== undefined;
+    return {
+      label: isQaly ? 'Cost per life-year' : 'Cost per microprobability',
+      fieldKey: isQaly ? 'costPerQALY' : 'costPerMicroprobability',
+    };
+  };
+
+  const typeIntoFirstCostField = async (user, editor, value) => {
+    const input = within(editor).getAllByRole('textbox', { name: categoryEditorField().label })[0];
+    await user.clear(input);
+    if (value) {
+      await user.type(input, value);
+    }
+    return input;
+  };
+
+  const openDirtyCategoryEditor = async (user, value = '777') => {
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
+    const editor = (await screen.findByText(/Edit effects for cause/i)).closest('.assumptions-shell');
+    const input = await typeIntoFirstCostField(user, editor, value);
+    return { editor, input };
+  };
+
+  it('prompts when switching tabs would discard drill-in effect edits, and "Keep editing" preserves them', async () => {
+    const user = userEvent.setup();
+    const { input } = await openDirtyCategoryEditor(user);
+
+    await user.click(screen.getByRole('tab', { name: 'Recipients' }));
+
+    expect(await screen.findByText(guardPromptTitle)).toBeInTheDocument();
+    // Only the drill-in draft is at risk on a same-page navigation, so the
+    // prompt names it alone.
+    expect(screen.getByText(/You changed effects for .+ but haven't applied them\./)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Keep editing' }));
+    await waitFor(() => {
+      expect(screen.queryByText(guardPromptTitle)).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId('location-probe')).toHaveTextContent(`categoryId=${firstValidCategoryId}`);
+    expect(input).toHaveValue('777');
+  });
+
+  it('"Discard and leave" abandons the drill-in draft and completes the tab switch', async () => {
+    const user = userEvent.setup();
+    await openDirtyCategoryEditor(user);
+
+    await user.click(screen.getByRole('tab', { name: 'Recipients' }));
+    await screen.findByText(guardPromptTitle);
+    await user.click(screen.getByRole('button', { name: 'Discard and leave' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('tab=recipients');
+    });
+    expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('"Apply and leave" commits the drill-in draft and completes the tab switch', async () => {
+    const user = userEvent.setup();
+    const { fieldKey } = categoryEditorField();
+    await openDirtyCategoryEditor(user);
+
+    await user.click(screen.getByRole('tab', { name: 'Recipients' }));
+    await screen.findByText(guardPromptTitle);
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('tab=recipients');
+    });
+    const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+    expect(persisted.categories[firstValidCategoryId].effects.some((effect) => effect[fieldKey] === 777)).toBe(true);
+  });
+
+  it('"Apply and leave" keeps you in the editor when the drill-in draft has validation errors', async () => {
+    const user = userEvent.setup();
+    // Clearing a category effect field is a change AND a validation error.
+    await openDirtyCategoryEditor(user, '');
+
+    await user.click(screen.getByRole('tab', { name: 'Recipients' }));
+    await screen.findByText(guardPromptTitle);
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText(guardPromptTitle)).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId('location-probe')).toHaveTextContent(`categoryId=${firstValidCategoryId}`);
+    expect(screen.getByText(/is required/i)).toBeInTheDocument();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('the editor footer Cancel discards a dirty draft without prompting', async () => {
+    const user = userEvent.setup();
+    const { editor } = await openDirtyCategoryEditor(user);
+
+    const cancelButtons = within(editor).getAllByRole('button', { name: 'Cancel' });
+    await user.click(cancelButtons[cancelButtons.length - 1]);
+
+    expect(screen.queryByText(guardPromptTitle)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
+    });
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('guards the browser back button while the drill-in draft is dirty', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions?tab=categories');
+
+    await user.click(screen.getByRole('button', { name: 'Open Category Editor' }));
+    const editor = (await screen.findByText(/Edit effects for cause/i)).closest('.assumptions-shell');
+    const input = await typeIntoFirstCostField(user, editor, '777');
+
+    await user.click(screen.getByRole('button', { name: 'Go Back' }));
+    expect(await screen.findByText(guardPromptTitle)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Keep editing' }));
+    await waitFor(() => {
+      expect(screen.queryByText(guardPromptTitle)).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId('location-probe')).toHaveTextContent(`categoryId=${firstValidCategoryId}`);
+    expect(input).toHaveValue('777');
+  });
+
+  it('guards tab switches away from a dirty recipient editor and applies via the prompt', async () => {
+    const singleCategoryRecipient = Object.entries(assumptionsData.recipients).find(
+      ([, recipient]) => Object.keys(recipient.categories || {}).length === 1
+    );
+    if (!singleCategoryRecipient) {
+      throw new Error('Expected a single-category recipient in default assumptions data');
+    }
+    const [recipientId] = singleCategoryRecipient;
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${recipientId}`);
+    const editor = (await screen.findByText(/Edit effects for recipient/i)).closest('.assumptions-shell');
+
+    const input = within(editor).getAllByRole('textbox', { name: /cost per|population|qaly/i })[0];
+    await user.clear(input);
+    await user.type(input, '123');
+
+    await user.click(screen.getByRole('tab', { name: 'Causes' }));
+    await screen.findByText(guardPromptTitle);
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('tab=categories');
+    });
+    expect(JSON.parse(sessionStorage.getItem('customEffectsData')).recipients?.[recipientId]).toBeDefined();
+  });
+
+  it('guards a dirty multi-category recipient editor the same way', async () => {
+    const multiCategoryRecipient = Object.entries(assumptionsData.recipients).find(
+      ([, recipient]) => Object.keys(recipient.categories || {}).length > 1
+    );
+    if (!multiCategoryRecipient) {
+      throw new Error('Expected a multi-category recipient in default assumptions data');
+    }
+    const [recipientId] = multiCategoryRecipient;
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${recipientId}`);
+    const editor = (await screen.findByText(/Edit effects for recipient/i)).closest('.assumptions-shell');
+
+    const input = within(editor).getAllByRole('textbox', { name: /cost per|population|qaly/i })[0];
+    await user.clear(input);
+    await user.type(input, '123');
+
+    await user.click(screen.getByRole('tab', { name: 'Causes' }));
+    await screen.findByText(guardPromptTitle);
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('tab=categories');
+    });
+    expect(JSON.parse(sessionStorage.getItem('customEffectsData')).recipients?.[recipientId]).toBeDefined();
+  });
+
+  it('applies both un-applied global edits and the drill-in draft when leaving the page', async () => {
+    const user = userEvent.setup();
+    const { fieldKey } = categoryEditorField();
+    renderAssumptionsRoute('/assumptions');
+
+    const updatedTimeLimit = assumptionsData.globalParameters.timeLimit + 50;
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(updatedTimeLimit));
+
+    // Moving into a drill-in is a same-page navigation: no prompt, and the
+    // global draft survives it.
+    await user.click(screen.getByRole('button', { name: 'Open Category Editor' }));
+    const editor = (await screen.findByText(/Edit effects for cause/i)).closest('.assumptions-shell');
+    expect(screen.queryByText(guardPromptTitle)).not.toBeInTheDocument();
+    await typeIntoFirstCostField(user, editor, '777');
+
+    await user.click(screen.getByRole('button', { name: 'Go Home' }));
+    await screen.findByText(guardPromptTitle);
+    // Leaving the page threatens both drafts, and the prompt says so.
+    expect(screen.getByText(/You changed global parameters and effects for/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+    await waitFor(() => {
+      expect(screen.getByText('Home')).toBeInTheDocument();
+    });
+    const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+    expect(persisted.globalParameters.timeLimit).toBe(updatedTimeLimit);
+    expect(persisted.categories[firstValidCategoryId].effects.some((effect) => effect[fieldKey] === 777)).toBe(true);
+  });
+
+  it('applies the valid drill-in draft and holds invalid global edits when leaving via "Apply and leave"', async () => {
+    // Pins the DELIBERATE partial-apply semantics (see handleApplyAndLeave):
+    // the drill-in payload commits first; the global validation failure then
+    // cancels the navigation, landing on the Global tab with the error shown
+    // and the drill-in work already applied.
+    const user = userEvent.setup();
+    const { fieldKey } = categoryEditorField();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '0');
+
+    await user.click(screen.getByRole('button', { name: 'Open Category Editor' }));
+    const editor = (await screen.findByText(/Edit effects for cause/i)).closest('.assumptions-shell');
+    await typeIntoFirstCostField(user, editor, '777');
+
+    await user.click(screen.getByRole('button', { name: 'Go Home' }));
+    await screen.findByText(guardPromptTitle);
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText(guardPromptTitle)).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId('location-probe')).toHaveTextContent('/assumptions');
+    expect(await screen.findByText('Time limit must be positive')).toBeInTheDocument();
+    const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+    expect(persisted.globalParameters?.timeLimit).toBeUndefined();
+    expect(persisted.categories[firstValidCategoryId].effects.some((effect) => effect[fieldKey] === 777)).toBe(true);
+  });
+
+  it('asks the browser to confirm unload while drill-in edits are unapplied', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
+    const editor = (await screen.findByText(/Edit effects for cause/i)).closest('.assumptions-shell');
+
+    const fireBeforeUnload = () => {
+      const event = new Event('beforeunload', { cancelable: true });
+      window.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+
+    expect(fireBeforeUnload()).toBe(false);
+    await typeIntoFirstCostField(user, editor, '777');
+    expect(fireBeforeUnload()).toBe(true);
   });
 
   it('preserves unapplied global drafts when reverting an unrelated change in the differences section', async () => {

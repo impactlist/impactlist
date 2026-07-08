@@ -31,7 +31,7 @@ export const POPULATION_EFFECT_FIELDS = [
   },
   {
     name: 'qalyImprovementPerYear',
-    label: 'Life-year improvement/year',
+    label: 'Welfare change/year',
     tooltip: EFFECT_TOOLTIPS.population.qalyImprovementPerYear,
   },
   {

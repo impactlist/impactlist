@@ -57,7 +57,7 @@ const PopulationEffectInputs = ({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <FormField
           id={`effect-${effectIndex}-qalyImprovementPerYear`}
-          label="Life-year improvement/year"
+          label="Welfare change/year"
           description={getEffectTooltip('population', 'qalyImprovementPerYear')}
           value={effect.qalyImprovementPerYear}
           defaultValue={defaultEffect?.qalyImprovementPerYear}

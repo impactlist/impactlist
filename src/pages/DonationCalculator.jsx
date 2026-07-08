@@ -160,8 +160,6 @@ const findDonorRank = (donorStats, lives) => {
   return { rank, neighbors: { above: donorAbove, below: donorBelow, twoBelow, twoAbove } };
 };
 
-const NO_NEIGHBORS = { above: null, below: null, twoBelow: null, twoAbove: null };
-
 const DonationCalculator = () => {
   useDocumentTitle('Donation Calculator');
   const { combinedAssumptions } = useAssumptions();
@@ -266,21 +264,16 @@ const DonationCalculator = () => {
       totalLives += livesSavedForSpecificDonation(combinedAssumptions, donation);
     });
 
-    if (totalLives === 0) {
-      return {
-        totalDonated: totalAmount,
-        totalLivesSaved: 0,
-        costPerLife: Infinity,
-        donorRank: null,
-        neighboringDonors: NO_NEIGHBORS,
-      };
-    }
-
+    // Zero lives saved (e.g. nothing donated yet) still gets a rank: the
+    // mini list should show where you'd START on the list, which is below
+    // every donor with non-negative lives saved — but above net-negative
+    // donors, matching the site's ranking semantics.
     const { rank, neighbors } = findDonorRank(donorStats, totalLives);
     return {
       totalDonated: totalAmount,
       totalLivesSaved: totalLives,
-      costPerLife: totalAmount / totalLives,
+      // Infinity is the domain sentinel for "no effect"; 0/0 would be NaN.
+      costPerLife: totalLives === 0 ? Infinity : totalAmount / totalLives,
       donorRank: rank,
       neighboringDonors: neighbors,
     };

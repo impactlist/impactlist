@@ -124,13 +124,13 @@ export const validateEffectField = (fieldName, value, effectType) => {
     if (fieldName === 'qalyImprovementPerYear') {
       const { cleanValue, numValue } = cleanAndParseValue(value);
       if (isPartialInput(cleanValue)) {
-        return 'QALY improvement is required';
+        return 'Welfare change is required';
       }
       if (isNaN(numValue)) {
-        return 'QALY improvement must be a valid number';
+        return 'Welfare change must be a valid number';
       }
       if (numValue === 0) {
-        return 'QALY improvement cannot be zero';
+        return 'Welfare change cannot be zero';
       }
     }
   }

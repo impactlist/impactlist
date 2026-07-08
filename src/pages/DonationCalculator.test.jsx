@@ -5,7 +5,11 @@ import DonationCalculator from './DonationCalculator';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
-import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
+import {
+  calculateDonorStatsFromCombined,
+  createCombinedAssumptions,
+  createDefaultAssumptions,
+} from '../utils/assumptionsDataHelpers';
 
 /* global localStorage, sessionStorage */
 
@@ -294,5 +298,30 @@ describe('DonationCalculator persistence', () => {
       expect(stored).toHaveLength(1);
       expect(stored[0].id).toBe('keep');
     });
+  });
+});
+
+describe('DonationCalculator ranking', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it('shows the mini ranking at the starting zero-lives rank before anything is donated', async () => {
+    renderCalculator();
+
+    expect(await screen.findByText('Your potential rank on Impact List')).toBeInTheDocument();
+
+    const youRow = screen.getByText('You').closest('tr');
+    expect(youRow).not.toBeNull();
+
+    // Zero lives saved starts below every donor with non-negative lives
+    // saved; donors with net-negative lives saved still rank below you.
+    const donorStats = calculateDonorStatsFromCombined(createCombinedAssumptions(defaultAssumptions, null));
+    const expectedRank = donorStats.filter((donor) => donor.totalLivesSaved >= 0).length + 1;
+    expect(within(youRow).getByText(String(expectedRank))).toBeInTheDocument();
+    expect(within(youRow).getByText('$0')).toBeInTheDocument();
+    // Zero donated + zero lives renders the "no effect" cost sentinel.
+    expect(within(youRow).getByText('∞')).toBeInTheDocument();
   });
 });

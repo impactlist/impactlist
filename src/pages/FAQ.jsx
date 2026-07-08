@@ -381,8 +381,9 @@ const FAQ = () => {
                       event occurs
                     </li>
                     <li>
-                      <strong>QALY improvement per year:</strong> QALYs gained or lost per person per year if the event
-                      happens
+                      <strong>Welfare change per year:</strong> estimated welfare change per affected person per year,
+                      in QALYs. Positive values mean the funded work makes a bad event less likely or a good event more
+                      likely; negative values mean it does the opposite.
                     </li>
                     <li>
                       <strong>Start time / Duration:</strong> Same meaning as for the standard effects

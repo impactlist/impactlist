@@ -49,15 +49,13 @@ const CalculatorStats = ({
         />
       </div>
 
-      {donorRank !== null && (
-        <MiniImpactList
-          donorRank={donorRank}
-          totalLivesSaved={totalLivesSaved}
-          totalDonated={totalDonated}
-          costPerLife={costPerLife}
-          neighboringDonors={neighboringDonors}
-        />
-      )}
+      <MiniImpactList
+        donorRank={donorRank}
+        totalLivesSaved={totalLivesSaved}
+        totalDonated={totalDonated}
+        costPerLife={costPerLife}
+        neighboringDonors={neighboringDonors}
+      />
     </motion.div>
   );
 };
@@ -66,13 +64,13 @@ CalculatorStats.propTypes = {
   totalDonated: PropTypes.number.isRequired,
   totalLivesSaved: PropTypes.number.isRequired,
   costPerLife: PropTypes.number.isRequired,
-  donorRank: PropTypes.number,
+  donorRank: PropTypes.number.isRequired,
   neighboringDonors: PropTypes.shape({
     above: PropTypes.object,
     below: PropTypes.object,
     twoBelow: PropTypes.object,
     twoAbove: PropTypes.object,
-  }),
+  }).isRequired,
   className: PropTypes.string,
 };
 

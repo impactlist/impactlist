@@ -19,7 +19,7 @@ export const EFFECT_TOOLTIPS = {
     populationFractionAffected:
       'Fraction (0-1) of the population affected if the event happens. For instance if the event is a pandemic that kills 10% of the population, the population fraction affected is 0.1.',
     qalyImprovementPerYear:
-      'Quality-adjusted life years gained or lost per person per year if the event happens. For instance if the event kills everyone it affects, the life-year improvement per year is -1 (each person loses one life-year per year after they die).',
+      'Estimated welfare change per affected person per year, in quality-adjusted life years (QALYs). Use positive values when the funded work makes a bad event less likely or a good event more likely; use negative values when it does the opposite. For instance, work that reduces the chance of an event that would kill everyone it affects would use a value of about 1, since each affected person would otherwise lose one life-year per year.',
     startTime: 'Number of years after the intervention starts until the event is expected to happen, if it happens.',
     windowLength:
       'Duration of the effect of the event, if it happens. The duration can be superseded by a shorter global time limit parameter.',

@@ -243,7 +243,7 @@ describe('AssumptionsSelector', () => {
     expect(within(defaultRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
   });
 
-  it('shows Custom (unsaved) when edits no longer match the active saved assumptions and exposes its description', async () => {
+  it('shows the custom not-saved-to-browser entry when edits no longer match the active saved assumptions and exposes its description', async () => {
     const user = userEvent.setup();
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.isUsingCustomValues = true;
@@ -253,13 +253,15 @@ describe('AssumptionsSelector', () => {
 
     renderSelector();
 
-    expect(screen.getByRole('button', { name: /Current assumptions/ })).toHaveTextContent('Custom (unsaved)');
+    expect(screen.getByRole('button', { name: /Current assumptions/ })).toHaveTextContent(
+      'Custom (not saved to browser)'
+    );
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
 
-    expect(screen.getByRole('heading', { name: 'Custom (unsaved)' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Custom (not saved to browser)' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
-      'The current assumptions have been edited and no longer match a saved set of assumptions.'
+      'The current assumptions have been edited and no longer match a saved set of assumptions. They are applied — every ranking and calculation on the site uses them'
     );
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
       'If you want to reuse these exact assumptions later, click Save to browser to keep a copy in this browser, or click Share to create a link to these assumptions that you can share with others.'
@@ -296,10 +298,10 @@ describe('AssumptionsSelector', () => {
       })
     );
 
-    expect(screen.getByRole('heading', { name: 'Overwrite your unsaved assumptions?' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Overwrite your current assumptions?' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
-    expect(screen.queryByRole('heading', { name: 'Overwrite your unsaved assumptions?' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Overwrite your current assumptions?' })).not.toBeInTheDocument();
     expect(mockSetAllUserAssumptions).not.toHaveBeenCalled();
     expect(mockSetActiveSavedAssumptionsId).not.toHaveBeenCalled();
   });

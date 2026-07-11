@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AssumptionsPage from './AssumptionsPage';
 import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
+import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
 import {
   createCombinedAssumptions,
   createDefaultAssumptions,
@@ -57,6 +58,9 @@ const renderAssumptionsRoute = (initialEntry) => {
         path: '*',
         element: (
           <>
+            {/* Mirrors App.jsx so notification-producing flows are assertable
+                (the banner renders null while no notification is showing). */}
+            <GlobalNotificationBanner />
             <RouterControls />
             <Routes>
               <Route path="/" element={<div>Home</div>} />
@@ -801,6 +805,75 @@ describe('AssumptionsPage routing integration', () => {
     expect(persisted.categories[firstValidCategoryId].effects.some((effect) => effect[fieldKey] === 777)).toBe(true);
   });
 
+  // ---- Apply confirmation ----
+  // Committing a draft is otherwise invisible (the numbers simply become the
+  // applied state), so every apply path confirms through the global
+  // notification banner.
+
+  const applyConfirmationText = 'Assumptions applied — rankings and calculations now use these values.';
+
+  it('confirms a global Apply with a notification', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    expect(await screen.findByRole('status')).toHaveTextContent(applyConfirmationText);
+  });
+
+  it('confirms a drill-in Apply with a notification', async () => {
+    const user = userEvent.setup();
+    const { editor } = await openDirtyCategoryEditor(user);
+
+    const applyButtons = within(editor).getAllByRole('button', { name: 'Apply' });
+    await user.click(applyButtons[applyButtons.length - 1]);
+
+    expect(await screen.findByRole('status')).toHaveTextContent(applyConfirmationText);
+  });
+
+  it('confirms "Apply and leave" with a notification once the navigation completes', async () => {
+    const user = userEvent.setup();
+    await openDirtyCategoryEditor(user);
+
+    await user.click(screen.getByRole('tab', { name: 'Recipients' }));
+    await screen.findByText(guardPromptTitle);
+    await user.click(screen.getByRole('button', { name: 'Apply and leave' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('tab=recipients');
+    });
+    expect(screen.getByRole('status')).toHaveTextContent(applyConfirmationText);
+  });
+
+  it('confirms the implicit apply when Save to browser commits a pending global draft', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    // Establish an applied custom state so the summary row offers Save, then
+    // dismiss that apply's confirmation to isolate the one under test.
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    await user.click(within(await screen.findByRole('status')).getByRole('button', { name: 'Dismiss notification' }));
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+
+    // Leave a fresh draft pending; the save flow commits it before saving.
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '160');
+    await user.click(getActiveAssumptionsActionButton('Save to browser'));
+
+    expect(await screen.findByRole('heading', { name: 'Save to Browser' })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(applyConfirmationText);
+    const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+    expect(persisted.globalParameters.timeLimit).toBe(160);
+  });
+
   it('"Apply and leave" keeps you in the editor when the drill-in draft has validation errors', async () => {
     const user = userEvent.setup();
     // Clearing a category effect field is a change AND a validation error.
@@ -962,6 +1035,12 @@ describe('AssumptionsPage routing integration', () => {
     });
     expect(screen.getByTestId('location-probe')).toHaveTextContent('/assumptions');
     expect(await screen.findByText('Time limit must be positive')).toBeInTheDocument();
+    // The partial commit is announced with an info notice — not the success
+    // confirmation, which would ring false next to the validation errors
+    // that are holding the navigation.
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Your effect edits were applied. Fix the global parameter errors before leaving.'
+    );
     const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
     expect(persisted.globalParameters?.timeLimit).toBeUndefined();
     expect(persisted.categories[firstValidCategoryId].effects.some((effect) => effect[fieldKey] === 777)).toBe(true);
@@ -1062,13 +1141,13 @@ describe('AssumptionsPage routing integration', () => {
     // Contract for the two dirtiness indicators: the panel reports the
     // APPLIED state (the loaded entry is active and clean — the draft is not
     // applied), so the entry keeps its normal presentation with no Save
-    // action and no "Custom (unsaved)" pseudo-entry. The surviving draft is
-    // the editor's concern and shows as its enabled Apply, protected by the
-    // navigation guard.
+    // action and no "Custom (not saved to browser)" pseudo-entry. The
+    // surviving draft is the editor's concern and shows as its enabled
+    // Apply, protected by the navigation guard.
     const summary = getAssumptionsLibrarySummary();
     expect(within(summary).getByText('Discount Only')).toBeInTheDocument();
     expect(within(summary).getByText('Local')).toBeInTheDocument();
-    expect(within(summary).queryByText('Custom (unsaved)')).not.toBeInTheDocument();
+    expect(within(summary).queryByText('Custom (not saved to browser)')).not.toBeInTheDocument();
     expect(queryActiveAssumptionsActionButton('Save to browser')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Apply' })).toBeEnabled();
   });
@@ -2005,7 +2084,7 @@ describe('AssumptionsPage routing integration', () => {
     const customRow = getAssumptionsLibrarySummary();
     expect(customRow).toHaveAttribute('data-active', 'true');
     expect(customRow).toHaveAttribute('data-dirty', 'false');
-    expect(within(customRow).getByText('Custom (unsaved)')).toBeInTheDocument();
+    expect(within(customRow).getByText('Custom (not saved to browser)')).toBeInTheDocument();
     expect(within(customRow).getByRole('button', { name: 'Save to browser' })).toBeInTheDocument();
     expect(within(customRow).getByRole('button', { name: 'Share' })).toBeInTheDocument();
     expect(within(customRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
@@ -2058,7 +2137,7 @@ describe('AssumptionsPage routing integration', () => {
     const importedRow = getAssumptionsLibraryRow(menu, 'Imported From Friend');
     await user.click(importedRow.querySelector('[data-menu-item]'));
 
-    expect(await screen.findByText('Overwrite your unsaved assumptions?')).toBeInTheDocument();
+    expect(await screen.findByText('Overwrite your current assumptions?')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Continue (overwrite yours)' }));
 
     await waitFor(() => {
@@ -2105,7 +2184,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(targetRow.querySelector('[data-menu-item]'));
 
     await waitFor(() => {
-      expect(screen.queryByText('Overwrite your unsaved assumptions?')).not.toBeInTheDocument();
+      expect(screen.queryByText('Overwrite your current assumptions?')).not.toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -2177,7 +2256,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     const activeRow = getAssumptionsLibrarySummary();
-    expect(within(activeRow).getByText('Custom (unsaved)')).toBeInTheDocument();
+    expect(within(activeRow).getByText('Custom (not saved to browser)')).toBeInTheDocument();
     expect(activeRow).toHaveAttribute('data-dirty', 'false');
 
     const { menu } = await openAssumptionsLibraryMenu(user);
@@ -2197,9 +2276,9 @@ describe('AssumptionsPage routing integration', () => {
     const summaryRow = getAssumptionsLibrarySummary();
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
 
-    expect(await screen.findByRole('heading', { name: 'Custom (unsaved)' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Custom (not saved to browser)' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
-      'The current assumptions have been edited and no longer match a saved set of assumptions.'
+      'The current assumptions have been edited and no longer match a saved set of assumptions. They are applied — every ranking and calculation on the site uses them'
     );
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
       'If you want to reuse these exact assumptions later, click Save to browser to keep a copy in this browser, or click Share to create a link to these assumptions that you can share with others.'
@@ -2249,7 +2328,7 @@ describe('AssumptionsPage routing integration', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
     const summaryRow = getAssumptionsLibrarySummary();
-    expect(within(summaryRow).getByText('Custom (unsaved)')).toBeInTheDocument();
+    expect(within(summaryRow).getByText('Custom (not saved to browser)')).toBeInTheDocument();
 
     await user.click(within(summaryRow).getByRole('button', { name: 'Save to browser' }));
 

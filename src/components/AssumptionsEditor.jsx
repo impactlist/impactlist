@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo
 import PropTypes from 'prop-types';
 import { useBlocker, useLocation } from 'react-router-dom';
 import { useAssumptions } from '../contexts/AssumptionsContext';
+import { useNotificationActions } from '../contexts/NotificationContext';
 import { validateGlobalParameterValues, scrollToFirstError } from '../utils/assumptionsFormValidation';
 import { cleanAndParseValue } from '../utils/effectValidation';
 import { useRecipientSearch } from '../hooks/useAssumptionsForm';
@@ -31,6 +32,15 @@ const tabs = [
   { id: 'recipients', label: 'Recipients' },
 ];
 
+// Every path that moves a draft into the applied assumptions confirms with
+// this one message, so "applied" keeps a single meaning across the editor.
+export const APPLY_SUCCESS_MESSAGE = 'Assumptions applied — rankings and calculations now use these values.';
+
+// When "Apply and leave" commits the drill-in draft but global validation
+// errors cancel the navigation, the partial commit is announced with this
+// info notice — a success confirmation would ring false next to the errors.
+const PARTIAL_APPLY_MESSAGE = 'Your effect edits were applied. Fix the global parameter errors before leaving.';
+
 const AssumptionsEditor = forwardRef(
   (
     {
@@ -55,6 +65,8 @@ const AssumptionsEditor = forwardRef(
       resetCategoryToDefaults,
       resetRecipientToDefaults,
     } = useAssumptions();
+
+    const { showNotification } = useNotificationActions();
 
     const [previewYear, setPreviewYear] = useState(new Date().getFullYear());
 
@@ -142,8 +154,12 @@ const AssumptionsEditor = forwardRef(
     ]);
 
     const handleSaveGlobal = useCallback(() => {
-      commitGlobalChanges();
-    }, [commitGlobalChanges]);
+      // Capture before committing: the commit itself retires the draft.
+      const hadChanges = globalForm.hasUnsavedChanges;
+      if (commitGlobalChanges() && hadChanges) {
+        showNotification('success', APPLY_SUCCESS_MESSAGE);
+      }
+    }, [commitGlobalChanges, globalForm.hasUnsavedChanges, showNotification]);
 
     /**
      * EFFECT_EDITOR_HANDLE_CONTRACT
@@ -269,6 +285,7 @@ const AssumptionsEditor = forwardRef(
       // Refusing both would strand the valid drill-in draft: surfacing the
       // global errors means switching to the Global tab, a navigation the
       // still-dirty editor would itself re-block.
+      let appliedSomething = false;
       if (hasUnappliedEffectEditsRef.current) {
         const result = effectEditorRef.current?.attemptApply() ?? { ok: false };
         if (!result.ok) {
@@ -278,6 +295,7 @@ const AssumptionsEditor = forwardRef(
         }
         if (result.effects) {
           commitEffectEditorPayload(result.effects);
+          appliedSomething = true;
         }
         handleEffectEditorUnsavedChanges(false);
       }
@@ -286,11 +304,23 @@ const AssumptionsEditor = forwardRef(
       // drill-in draft — the global form survives it, so leave global edits
       // un-applied rather than committing more than the user asked for.
       const leavingPage = navigationBlocker.location?.pathname !== location.pathname;
-      if (leavingPage && !commitGlobalChanges()) {
-        // commitGlobalChanges surfaced the errors (switching to the Global
-        // tab if needed), so stay.
-        stay();
-        return;
+      if (leavingPage) {
+        const hadGlobalChanges = globalForm.hasUnsavedChanges;
+        if (!commitGlobalChanges()) {
+          // commitGlobalChanges surfaced the errors (switching to the Global
+          // tab if needed), so stay — announcing the drill-in half that DID
+          // commit, which would otherwise be a hidden state change.
+          if (appliedSomething) {
+            showNotification('info', PARTIAL_APPLY_MESSAGE);
+          }
+          stay();
+          return;
+        }
+        appliedSomething = appliedSomething || hadGlobalChanges;
+      }
+
+      if (appliedSomething) {
+        showNotification('success', APPLY_SUCCESS_MESSAGE);
       }
 
       if (navigationBlocker.state === 'blocked') {
@@ -299,9 +329,11 @@ const AssumptionsEditor = forwardRef(
     }, [
       commitEffectEditorPayload,
       commitGlobalChanges,
+      globalForm.hasUnsavedChanges,
       handleEffectEditorUnsavedChanges,
       location.pathname,
       navigationBlocker,
+      showNotification,
     ]);
 
     useImperativeHandle(ref, () => {
@@ -315,12 +347,19 @@ const AssumptionsEditor = forwardRef(
           };
         }
 
-        const globalSaved = commitGlobalChanges();
-        if (!globalSaved) {
+        const hadGlobalChanges = globalForm.hasUnsavedChanges;
+        if (!commitGlobalChanges()) {
           return {
             ok: false,
             message: 'Fix global parameter errors before continuing.',
           };
+        }
+
+        if (hadGlobalChanges) {
+          // Save/Share implicitly apply a pending global draft (the state
+          // being persisted is the applied state), so the apply gets the
+          // same confirmation as the explicit Apply paths.
+          showNotification('success', APPLY_SUCCESS_MESSAGE);
         }
 
         return { ok: true };
@@ -331,7 +370,7 @@ const AssumptionsEditor = forwardRef(
         // Backward-compatible alias while callers migrate to the generic name.
         prepareForShare: commitPendingAssumptionsEdits,
       };
-    }, [commitGlobalChanges]);
+    }, [commitGlobalChanges, globalForm.hasUnsavedChanges, showNotification]);
 
     // Applying commits and then navigates the editor closed; cancelling is an
     // explicit discard. Both navigations run in the same tick that retires the
@@ -346,8 +385,15 @@ const AssumptionsEditor = forwardRef(
         replaceCategoryEffects(editingCategoryId, updatedEffects);
         handleEffectEditorUnsavedChanges(false);
         handleCancelCategoryEdit();
+        showNotification('success', APPLY_SUCCESS_MESSAGE);
       },
-      [editingCategoryId, replaceCategoryEffects, handleEffectEditorUnsavedChanges, handleCancelCategoryEdit]
+      [
+        editingCategoryId,
+        replaceCategoryEffects,
+        handleEffectEditorUnsavedChanges,
+        handleCancelCategoryEdit,
+        showNotification,
+      ]
     );
 
     const handleSaveRecipientEffects = useCallback(
@@ -359,8 +405,15 @@ const AssumptionsEditor = forwardRef(
         replaceRecipientCategoryEffects(editingRecipient.recipientId, editingRecipient.categoryId, updatedEffects);
         handleEffectEditorUnsavedChanges(false);
         handleCancelRecipientEdit();
+        showNotification('success', APPLY_SUCCESS_MESSAGE);
       },
-      [editingRecipient, replaceRecipientCategoryEffects, handleEffectEditorUnsavedChanges, handleCancelRecipientEdit]
+      [
+        editingRecipient,
+        replaceRecipientCategoryEffects,
+        handleEffectEditorUnsavedChanges,
+        handleCancelRecipientEdit,
+        showNotification,
+      ]
     );
 
     const handleSaveMultiCategoryEffects = useCallback(
@@ -372,8 +425,15 @@ const AssumptionsEditor = forwardRef(
         replaceRecipientEffectsByCategory(editingRecipient.recipientId, allCategoryEffects);
         handleEffectEditorUnsavedChanges(false);
         handleCancelRecipientEdit();
+        showNotification('success', APPLY_SUCCESS_MESSAGE);
       },
-      [editingRecipient, replaceRecipientEffectsByCategory, handleEffectEditorUnsavedChanges, handleCancelRecipientEdit]
+      [
+        editingRecipient,
+        replaceRecipientEffectsByCategory,
+        handleEffectEditorUnsavedChanges,
+        handleCancelRecipientEdit,
+        showNotification,
+      ]
     );
 
     const handleDiscardCategoryEdit = useCallback(() => {

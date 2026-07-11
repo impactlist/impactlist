@@ -49,7 +49,7 @@ const useSaveAssumptionsModal = ({
   const handleSaveAssumptionsClick = useCallback(() => {
     const prepareResult = beforeSave?.();
     if (prepareResult?.ok === false) {
-      showNotification('error', prepareResult.message || 'Resolve unsaved edits before saving.');
+      showNotification('error', prepareResult.message || 'Resolve unapplied edits before saving.');
       return;
     }
 

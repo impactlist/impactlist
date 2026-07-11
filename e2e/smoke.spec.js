@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 // While edited assumptions don't match any saved set, the assumptions
-// selector shows a "Custom (unsaved)" entry — the current signal that custom
-// values are active. (The old [title="Using custom values"] icon is gone.)
-const customStateLabel = (page) => page.getByText('Custom (unsaved)');
+// selector shows a "Custom (not saved to browser)" entry — the current
+// signal that custom values are active. (The old [title="Using custom
+// values"] icon is gone.)
+const customStateLabel = (page) => page.getByText('Custom (not saved to browser)');
 const RECIPIENT_SEARCH_TOKEN = 'a';
 
 // Custom assumptions persist in sessionStorage (see AssumptionsContext);

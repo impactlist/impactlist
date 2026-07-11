@@ -1,9 +1,9 @@
 import { createComparableAssumptionsFingerprint } from './savedAssumptionsStore';
 
 export const OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL = Object.freeze({
-  title: 'Overwrite your unsaved assumptions?',
+  title: 'Overwrite your current assumptions?',
   description:
-    'You already have custom assumptions in this browser. Continuing will replace them with this saved entry.',
+    'Your current custom assumptions are not saved to this browser. Continuing will replace them with this saved entry.',
   continueLabel: 'Continue (overwrite yours)',
   cancelLabel: 'Cancel',
 });

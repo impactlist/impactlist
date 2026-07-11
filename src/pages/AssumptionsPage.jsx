@@ -171,7 +171,7 @@ const AssumptionsPage = () => {
   const handleShareButtonClick = useCallback(() => {
     const prepareResult = commitPendingEdits();
     if (prepareResult?.ok === false) {
-      showNotification('error', prepareResult.message || 'Resolve unsaved edits before sharing.');
+      showNotification('error', prepareResult.message || 'Resolve unapplied edits before sharing.');
       return;
     }
 

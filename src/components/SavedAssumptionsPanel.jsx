@@ -67,7 +67,8 @@ const SavedAssumptionsPanel = ({
           menuAriaLabel="Assumptions sets"
         />
         {/* The diff vs defaults belongs to the active-set story this panel
-            tells ("Custom (unsaved)" → custom HOW?), not to the editor. */}
+            tells ("Custom (not saved to browser)" → custom HOW?), not to the
+            editor. */}
         {reviewChanges && <div className="saved-assumptions-panel__review">{reviewChanges}</div>}
         {footer && <div className="saved-assumptions-panel__footer">{footer}</div>}
       </div>

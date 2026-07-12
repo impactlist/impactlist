@@ -16,6 +16,13 @@ export const DONOR_LIVES_SAVED_TOOLTIP = (
   </div>
 );
 
+export const DONOR_DONATED_TOOLTIP = (
+  <div>
+    The percentage in parentheses is the portion of the person's net worth that they have donated: the total amount
+    donated divided by their current net worth.
+  </div>
+);
+
 export const DONOR_COST_PER_LIFE_TOOLTIP = (
   <div>
     Cost/Life is the amount donated divided by the lives saved. For every multiple of the dollar amount shown here, the

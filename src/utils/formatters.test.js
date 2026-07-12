@@ -5,6 +5,7 @@ import {
   formatLives,
   formatRoundedLives,
   formatCurrency,
+  formatPercentage,
   calculateCursorPosition,
 } from './formatters';
 
@@ -244,5 +245,24 @@ describe('formatCurrency', () => {
   it('should use scientific notation for extremely small amounts', () => {
     expect(formatCurrency(0.00001)).toBe('$1.00 × 10⁻⁵');
     expect(formatCurrency(0.000001)).toBe('$1.00 × 10⁻⁶');
+  });
+});
+
+describe('formatPercentage', () => {
+  it('should format ratios with two significant figures', () => {
+    expect(formatPercentage(0.312)).toBe('31%');
+    expect(formatPercentage(0.042)).toBe('4.2%');
+    expect(formatPercentage(0.0047)).toBe('0.47%');
+  });
+
+  it('should format ratios at or above 100%', () => {
+    expect(formatPercentage(1)).toBe('100%');
+    expect(formatPercentage(4.2)).toBe('420%');
+    expect(formatPercentage(123)).toBe('12,000%');
+  });
+
+  it('should format zero and negative ratios', () => {
+    expect(formatPercentage(0)).toBe('0%');
+    expect(formatPercentage(-0.25)).toBe('-25%');
   });
 });

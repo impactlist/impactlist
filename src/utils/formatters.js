@@ -424,3 +424,19 @@ export const formatCurrency = (amount) => {
 
   return isNegative ? `-${formattedValue}` : formattedValue;
 };
+
+/**
+ * Format a ratio as a percentage with two significant figures
+ * - 0.312 is shown as 31%
+ * - 0.042 is shown as 4.2%
+ * - 0.0047 is shown as 0.47%
+ *
+ * @param {number} ratio - The ratio to format (1 = 100%)
+ * @returns {string} - Formatted percentage string
+ */
+export const formatPercentage = (ratio) => {
+  const percent = ratio * 100;
+  const isNegative = percent < 0;
+  const formattedValue = formatWithSignificantFigures(Math.abs(percent), 2);
+  return isNegative ? `-${formattedValue}%` : `${formattedValue}%`;
+};

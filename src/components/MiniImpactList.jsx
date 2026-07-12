@@ -2,6 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import FormattedScientificValue from './shared/FormattedScientificValue';
+import DonatedValueCell from './shared/DonatedValueCell';
+import InfoTooltipIcon from './shared/InfoTooltipIcon';
+import { DONOR_DONATED_TOOLTIP } from '../constants/metricTooltips';
 
 const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife, neighboringDonors }) => {
   // Create the three rows to display
@@ -111,7 +114,12 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
               <th className="px-3 py-2 text-left">Rank</th>
               <th className="px-3 py-2 text-left">Name</th>
               <th className="px-3 py-2 text-left">Lives Saved</th>
-              <th className="px-3 py-2 text-left">Donated</th>
+              <th className="px-3 py-2 text-left">
+                <span className="impact-table__header-inner">
+                  Donated
+                  <InfoTooltipIcon content={DONOR_DONATED_TOOLTIP} iconClassName="h-3.5 w-3.5 text-muted" />
+                </span>
+              </th>
               <th className="px-3 py-2 text-left">Cost/Life</th>
               <th className="px-3 py-2 text-left">Net Worth</th>
             </tr>
@@ -134,7 +142,9 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                     <FormattedScientificValue value={formatRoundedLives(row.totalLivesSaved)} variant="compact" />
                   </span>
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">{formatCurrency(row.totalDonated)}</td>
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <DonatedValueCell totalDonated={row.totalDonated} netWorth={row.netWorth} />
+                </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
                   {row.totalLivesSaved === 0 ? (
                     '∞'

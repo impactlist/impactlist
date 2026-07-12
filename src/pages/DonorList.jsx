@@ -9,7 +9,12 @@ import PageHeader from '../components/shared/PageHeader';
 import DonorPhoto from '../components/shared/DonorPhoto';
 import ListSearchControls from '../components/shared/ListSearchControls';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
-import { DONOR_LIVES_SAVED_TOOLTIP, DONOR_COST_PER_LIFE_TOOLTIP } from '../constants/metricTooltips';
+import DonatedValueCell from '../components/shared/DonatedValueCell';
+import {
+  DONOR_LIVES_SAVED_TOOLTIP,
+  DONOR_DONATED_TOOLTIP,
+  DONOR_COST_PER_LIFE_TOOLTIP,
+} from '../constants/metricTooltips';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import useNameSearch from '../hooks/useNameSearch';
 
@@ -48,7 +53,8 @@ const donorColumns = [
   {
     key: 'totalDonated',
     label: 'Donated',
-    render: (donor) => <div className="text-sm text-strong">{formatCurrency(donor.totalDonated)}</div>,
+    tooltip: DONOR_DONATED_TOOLTIP,
+    render: (donor) => <DonatedValueCell totalDonated={donor.totalDonated} netWorth={donor.netWorth} />,
   },
   {
     key: 'costPerLife',

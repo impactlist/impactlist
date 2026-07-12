@@ -15,6 +15,10 @@ const QalyEffectInputs = ({
   onChange,
   globalParameters,
   isDisabled,
+  // Namespaces input/error ids when several sections repeat effect indexes
+  // (the multi-category editor passes the category id) — duplicate DOM ids
+  // would break label and aria-errormessage associations.
+  fieldIdPrefix = '',
   referenceLabel = 'Baseline',
 }) => {
   const handleChange = (fieldName) => (value) => {
@@ -29,7 +33,7 @@ const QalyEffectInputs = ({
     <div className="space-y-1">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <FormField
-          id={`effect-${effectIndex}-costPerQALY`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-costPerQALY`}
           label="Cost per life-year"
           description={getEffectTooltip('qaly', 'costPerQALY')}
           value={effect.costPerQALY}
@@ -42,7 +46,7 @@ const QalyEffectInputs = ({
         />
 
         <FormField
-          id={`effect-${effectIndex}-startTime`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-startTime`}
           label="Start Time (years)"
           description={getEffectTooltip('qaly', 'startTime')}
           value={effect.startTime}
@@ -54,7 +58,7 @@ const QalyEffectInputs = ({
         />
 
         <FormField
-          id={`effect-${effectIndex}-windowLength`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-windowLength`}
           label="Duration (years)"
           description={getEffectTooltip('qaly', 'windowLength')}
           value={effect.windowLength}
@@ -91,6 +95,7 @@ QalyEffectInputs.propTypes = {
   onChange: PropTypes.func.isRequired,
   globalParameters: PropTypes.object,
   isDisabled: PropTypes.bool,
+  fieldIdPrefix: PropTypes.string,
   referenceLabel: PropTypes.string,
 };
 

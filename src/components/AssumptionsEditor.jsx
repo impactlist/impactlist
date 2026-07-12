@@ -113,12 +113,7 @@ const AssumptionsEditor = forwardRef(
       userAssumptions?.globalParameters
     );
 
-    const recipientSearch = useRecipientSearch(
-      allRecipients,
-      defaultAssumptions,
-      userAssumptions,
-      activeTab === 'recipients'
-    );
+    const recipientSearch = useRecipientSearch(allRecipients, defaultAssumptions, userAssumptions);
 
     const commitGlobalChanges = useCallback(() => {
       if (!globalForm.hasUnsavedChanges) {
@@ -652,6 +647,9 @@ const AssumptionsEditor = forwardRef(
             ) : (
               <RecipientValuesSection
                 filteredRecipients={recipientSearch.filteredRecipients}
+                totalMatches={recipientSearch.totalMatches}
+                isTruncated={recipientSearch.isTruncated}
+                onShowAllMatches={recipientSearch.handleShowAllMatches}
                 onSearch={recipientSearch.handleSearchChange}
                 searchTerm={recipientSearch.searchTerm}
                 defaultAssumptions={defaultAssumptions}

@@ -21,6 +21,7 @@ const RecipientEffectCard = ({
   onToggleDisabled,
   globalParameters,
   previewYear,
+  fieldIdPrefix = '',
   headingLevel = 'h4',
 }) => {
   const baseEffect = effect._baseEffect;
@@ -40,6 +41,7 @@ const RecipientEffectCard = ({
     onChange,
     globalParameters,
     isDisabled: isFullyDisabled,
+    fieldIdPrefix,
   };
 
   return (
@@ -81,6 +83,7 @@ RecipientEffectCard.propTypes = {
   onToggleDisabled: PropTypes.func.isRequired,
   globalParameters: PropTypes.object.isRequired,
   previewYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  fieldIdPrefix: PropTypes.string,
   headingLevel: PropTypes.oneOf(['h3', 'h4']),
 };
 

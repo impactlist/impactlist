@@ -110,6 +110,9 @@ const CategoryEffectSection = ({
             onToggleDisabled={() => toggleEffectDisabled(index)}
             globalParameters={globalParameters}
             previewYear={previewYear}
+            // Each section's effect indexes restart at 0; the category id
+            // keeps input/error ids unique across the whole editor.
+            fieldIdPrefix={`${categoryId}-`}
           />
         ))}
       </div>

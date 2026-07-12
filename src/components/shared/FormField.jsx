@@ -92,8 +92,13 @@ const FormField = ({
         <div className="impact-field__header-main pr-2">
           <label htmlFor={id} className="impact-field__label-inline">
             {label}
-            {description && <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-muted" />}
           </label>
+          {/* A sibling of the label, not a child: inside it, the tooltip
+              button's text would join the input's accessible name
+              ("Cost per life-year More information"). */}
+          {description && (
+            <InfoTooltipIcon content={description} iconClassName="h-4 w-4 text-muted" ariaLabel={`About ${label}`} />
+          )}
           {isCustom && !hasError && (
             <span className="assumption-card__default-meta impact-field__default-meta">
               ({referenceLabel}: {defaultLabelValue})
@@ -121,13 +126,15 @@ const FormField = ({
           onChange={handleChange}
           placeholder={placeholderValue}
           disabled={disabled}
+          aria-invalid={hasError}
+          aria-errormessage={hasError ? `${id}-error` : undefined}
           className={`impact-field__input h-8 text-sm ${prefix ? 'impact-field__input--with-prefix pl-6 pr-2' : 'px-2'}`}
         />
       </div>
 
-      {/* Error message */}
+      {/* Error message (same association pattern as NumericInput) */}
       {hasError && (
-        <p className="impact-field__error" role="alert">
+        <p id={`${id}-error`} className="impact-field__error" role="alert">
           {error}
         </p>
       )}

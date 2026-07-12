@@ -15,6 +15,10 @@ const PopulationEffectInputs = ({
   onChange,
   globalParameters,
   isDisabled,
+  // Namespaces input/error ids when several sections repeat effect indexes
+  // (the multi-category editor passes the category id) — duplicate DOM ids
+  // would break label and aria-errormessage associations.
+  fieldIdPrefix = '',
   referenceLabel = 'Baseline',
 }) => {
   const handleChange = (fieldName) => (value) => {
@@ -29,7 +33,7 @@ const PopulationEffectInputs = ({
     <div className="space-y-3">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <FormField
-          id={`effect-${effectIndex}-costPerMicroprobability`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-costPerMicroprobability`}
           label="Cost per microprobability"
           description={getEffectTooltip('population', 'costPerMicroprobability')}
           value={effect.costPerMicroprobability}
@@ -42,7 +46,7 @@ const PopulationEffectInputs = ({
         />
 
         <FormField
-          id={`effect-${effectIndex}-populationFractionAffected`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-populationFractionAffected`}
           label="Population fraction affected"
           description={getEffectTooltip('population', 'populationFractionAffected')}
           value={effect.populationFractionAffected}
@@ -56,7 +60,7 @@ const PopulationEffectInputs = ({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <FormField
-          id={`effect-${effectIndex}-qalyImprovementPerYear`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-qalyImprovementPerYear`}
           label="Welfare change/year"
           description={getEffectTooltip('population', 'qalyImprovementPerYear')}
           value={effect.qalyImprovementPerYear}
@@ -68,7 +72,7 @@ const PopulationEffectInputs = ({
         />
 
         <FormField
-          id={`effect-${effectIndex}-startTime`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-startTime`}
           label="Start time (years)"
           description={getEffectTooltip('population', 'startTime')}
           value={effect.startTime}
@@ -80,7 +84,7 @@ const PopulationEffectInputs = ({
         />
 
         <FormField
-          id={`effect-${effectIndex}-windowLength`}
+          id={`${fieldIdPrefix}effect-${effectIndex}-windowLength`}
           label="Duration (years)"
           description={getEffectTooltip('population', 'windowLength')}
           value={effect.windowLength}
@@ -121,6 +125,7 @@ PopulationEffectInputs.propTypes = {
   onChange: PropTypes.func.isRequired,
   globalParameters: PropTypes.object,
   isDisabled: PropTypes.bool,
+  fieldIdPrefix: PropTypes.string,
   referenceLabel: PropTypes.string,
 };
 

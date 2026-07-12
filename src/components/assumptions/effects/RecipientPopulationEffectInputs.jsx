@@ -20,6 +20,7 @@ const RecipientPopulationEffectInputs = ({
   onChange,
   globalParameters,
   isDisabled,
+  fieldIdPrefix = '',
 }) => {
   const { effect, defaultEffect, normalizedErrors } = useRecipientEffectAdapter({
     fieldDefinitions: POPULATION_EFFECT_FIELDS,
@@ -41,6 +42,7 @@ const RecipientPopulationEffectInputs = ({
       onChange={onChange}
       globalParameters={globalParameters}
       isDisabled={isDisabled}
+      fieldIdPrefix={fieldIdPrefix}
     />
   );
 };
@@ -56,6 +58,7 @@ RecipientPopulationEffectInputs.propTypes = {
   onChange: PropTypes.func.isRequired,
   globalParameters: PropTypes.object,
   isDisabled: PropTypes.bool,
+  fieldIdPrefix: PropTypes.string,
 };
 
 export default RecipientPopulationEffectInputs;

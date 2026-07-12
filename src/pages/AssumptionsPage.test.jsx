@@ -1160,6 +1160,25 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryAllByText(`Combined cost per life in ${getCurrentYear()}:`)).toHaveLength(0);
   });
 
+  it('gives every field in the multi-category editor a unique id', async () => {
+    const multiCategoryRecipientId = Object.entries(assumptionsData.recipients).find(
+      ([, recipient]) => Object.keys(recipient.categories || {}).length > 1
+    )?.[0];
+    if (!multiCategoryRecipientId) {
+      throw new Error('Expected a multi-category recipient in the generated data');
+    }
+
+    renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${multiCategoryRecipientId}`);
+
+    const editor = (await screen.findByText(/Edit effects for recipient/i)).closest('.assumptions-shell');
+    // Every category section indexes its effects from 0, so without a
+    // per-section id prefix the sections would repeat ids — and label /
+    // aria-errormessage references would resolve to another section's field.
+    const ids = Array.from(editor.querySelectorAll('[id]')).map((element) => element.id);
+    expect(ids.length).toBeGreaterThan(0);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   it('"Apply and leave" keeps you in the editor when the drill-in draft has validation errors', async () => {
     const user = userEvent.setup();
     // Clearing a category effect field is a change AND a validation error.

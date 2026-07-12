@@ -23,7 +23,10 @@ const StatisticsCard = ({
         {label}
         {labelTooltip && <InfoTooltipIcon content={labelTooltip} iconClassName="h-3.5 w-3.5 text-muted" />}
       </span>
-      <div className="flex items-center mt-1 space-x-2">
+      {/* flex-wrap + shrink-0 action: when the card is too narrow for value
+          and actions side by side, the action group drops below the value,
+          centered — instead of clipping through the card edge. */}
+      <div className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
         {icon && <span>{icon}</span>}
         <span data-testid={valueTestId} className={`text-3xl font-bold ${valueClassName}`}>
           {typeof value === 'string' || typeof value === 'number' ? (

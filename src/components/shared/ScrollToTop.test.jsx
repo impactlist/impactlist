@@ -48,14 +48,29 @@ const renderAt = (initialEntry) => {
 describe('ScrollToTop', () => {
   let scrollSpy;
   let scrollIntoViewSpy;
+  let resizeCallback;
 
   beforeEach(() => {
     scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
     scrollIntoViewSpy = vi.spyOn(window.Element.prototype, 'scrollIntoView');
+    // Capture the body observer so tests can play "the page grew".
+    resizeCallback = null;
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(callback) {
+          resizeCallback = callback;
+        }
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      }
+    );
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     document.getElementById('full-justification')?.remove();
   });
 
@@ -126,5 +141,51 @@ describe('ScrollToTop', () => {
       expect(scrollIntoViewSpy).toHaveBeenCalled();
     });
     expect(scrollIntoViewSpy.mock.instances[0]).toBe(target);
+  });
+
+  it('re-pins only when growth actually moved the target, not when content below it grows', async () => {
+    const user = userEvent.setup();
+    renderAt('/assumptions');
+    await user.click(screen.getByRole('button', { name: 'Push Hash Page' }));
+
+    const target = appendHashTarget();
+    const rect = { top: 0 };
+    vi.spyOn(target, 'getBoundingClientRect').mockImplementation(() => rect);
+
+    await waitFor(() => {
+      expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+    });
+
+    // Content BELOW the anchor grows (donation table): body resizes but the
+    // target hasn't moved — no re-scroll.
+    resizeCallback();
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+
+    // A chart ABOVE the target finishes measuring and expands, pushing the
+    // already-scrolled-to target back down the page — re-pin.
+    rect.top = 300;
+    resizeCallback();
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('stops pinning the moment the user interacts', async () => {
+    const user = userEvent.setup();
+    renderAt('/assumptions');
+    await user.click(screen.getByRole('button', { name: 'Push Hash Page' }));
+
+    const target = appendHashTarget();
+    const rect = { top: 0 };
+    vi.spyOn(target, 'getBoundingClientRect').mockImplementation(() => rect);
+
+    await waitFor(() => {
+      expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+    });
+
+    // Grabbing the scrollbar fires pointerdown (no wheel, touch, or key).
+    window.dispatchEvent(new window.Event('pointerdown'));
+    rect.top = 300;
+    resizeCallback();
+
+    expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
   });
 });

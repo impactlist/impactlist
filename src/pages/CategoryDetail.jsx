@@ -98,7 +98,7 @@ const CategoryDetail = () => {
           livesSavedTooltip={CATEGORY_LIVES_SAVED_TOOLTIP}
           costPerLifeTooltip={CATEGORY_COST_PER_LIFE_TOOLTIP}
           costPerLifeAction={
-            <>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleEditCategoryAssumptions}
@@ -108,12 +108,12 @@ const CategoryDetail = () => {
               </button>
               <a
                 href="#full-justification"
-                className="assumptions-link ml-2 whitespace-nowrap text-xs"
+                className="assumptions-link whitespace-nowrap text-xs"
                 aria-label="Cost per life justification"
               >
                 (justification)
               </a>
-            </>
+            </div>
           }
         />
 

@@ -20,7 +20,7 @@ import { getEffectType, validateEffectField, validateEffects } from '../../utils
 import { useAssumptions } from '../../contexts/AssumptionsContext';
 import useUnsavedChangesReporter from '../../hooks/useUnsavedChangesReporter';
 import { mergeEffects } from '../../utils/assumptionsDataHelpers';
-import { getCurrentYear, resolveCalcYear } from '../../utils/donationDataHelpers';
+import { resolveCalcYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 
@@ -32,10 +32,27 @@ import YearSelector from '../shared/YearSelector';
  * AssumptionsEditor) so the navigation guard can commit or hold the draft.
  */
 const CategoryEffectEditor = forwardRef(
-  ({ category, categoryId, globalParameters, onSave, onCancel, onUnsavedChangesChange = () => {} }, ref) => {
+  (
+    {
+      category,
+      categoryId,
+      globalParameters,
+      previewYear,
+      onPreviewYearChange,
+      onSave,
+      onCancel,
+      onUnsavedChangesChange = () => {},
+    },
+    ref
+  ) => {
     const [errors, setErrors] = useState({});
-    const [previewYear, setPreviewYear] = useState(getCurrentYear());
     const { defaultAssumptions, userAssumptions } = useAssumptions();
+    // ONE preview year, owned by the editor shell and shared with the list
+    // views — a list set to 2010 can't silently show different costs than
+    // this editor. YearSelector commits only valid years; resolveCalcYear is
+    // a defensive guard, and labels display the same resolved year that the
+    // costs are computed with.
+    const calculationYear = resolveCalcYear(previewYear);
 
     // Get default effects for comparison
     const defaultEffects = useMemo(() => {
@@ -128,24 +145,13 @@ const CategoryEffectEditor = forwardRef(
 
     // Calculate cost per life for each effect
     const effectCostPerLife = useMemo(() => {
-      const yearForCalculation = resolveCalcYear(previewYear);
-      return tempEditToEffects.map((effect) =>
-        calculateEffectCostPerLife(effect, globalParameters, yearForCalculation)
-      );
-    }, [tempEditToEffects, globalParameters, previewYear]);
+      return tempEditToEffects.map((effect) => calculateEffectCostPerLife(effect, globalParameters, calculationYear));
+    }, [tempEditToEffects, globalParameters, calculationYear]);
 
     // Calculate combined cost per life
     const combinedCostPerLife = useMemo(() => {
       return calculateCombinedCostPerLife(effectCostPerLife);
     }, [effectCostPerLife]);
-
-    // Check if any effects have time intervals
-    const hasTimeIntervals = useMemo(() => {
-      return tempEditToEffects.some(
-        (effect) =>
-          effect.validTimeInterval && (effect.validTimeInterval[0] !== null || effect.validTimeInterval[1] !== null)
-      );
-    }, [tempEditToEffects]);
 
     // Check if there are any validation errors
     const hasErrors = useMemo(() => {
@@ -219,19 +225,18 @@ const CategoryEffectEditor = forwardRef(
             </>
           }
           description={
-            tempEditToEffects.length > 1 && hasTimeIntervals ? (
-              <div className="flex items-center gap-2">
-                <YearSelector
-                  value={previewYear}
-                  onChange={setPreviewYear}
-                  label="Preview calculations for year:"
-                  id="category-effect-preview-year"
-                  className=""
-                />
-              </div>
-            ) : null
+            <div className="flex items-center gap-2">
+              <YearSelector
+                value={previewYear}
+                onChange={onPreviewYearChange}
+                label="Preview calculations for year:"
+                id="category-effect-preview-year"
+                className=""
+              />
+            </div>
           }
           combinedCostPerLife={showHeaderActions ? combinedCostPerLife : undefined}
+          combinedCostYear={calculationYear}
           showCombinedCost={showHeaderActions}
           headerActions={headerActions}
         />
@@ -262,7 +267,7 @@ const CategoryEffectEditor = forwardRef(
                   isToggledOff={isDisabled}
                   onToggleDisabled={() => toggleEffectDisabled(index)}
                   validTimeInterval={effect.validTimeInterval}
-                  previewYear={previewYear}
+                  previewYear={calculationYear}
                 >
                   {effectType === 'qaly' ? (
                     <QalyEffectInputs {...inputProps} />
@@ -297,6 +302,8 @@ CategoryEffectEditor.propTypes = {
   }),
   categoryId: PropTypes.string.isRequired,
   globalParameters: PropTypes.object.isRequired,
+  previewYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  onPreviewYearChange: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onUnsavedChangesChange: PropTypes.func,

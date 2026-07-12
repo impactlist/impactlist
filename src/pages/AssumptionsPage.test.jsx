@@ -1011,6 +1011,155 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryByText(/With currently applied values:/)).not.toBeInTheDocument();
   });
 
+  // ---- Shared preview year ----
+  // The editor shell owns ONE preview year: the list views and every drill-in
+  // editor read and write the same value, so a list set to 2010 can never
+  // silently disagree with the editor's computed costs. Computed labels name
+  // the year they were computed for.
+
+  it('shares one preview year between the list and the drill-in editor', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions?tab=categories');
+
+    const listYear = await screen.findByLabelText('Preview calculation year');
+    await user.clear(listYear);
+    await user.type(listYear, '2010');
+
+    await user.click(screen.getByRole('button', { name: 'Open Category Editor' }));
+    const editorYear = await screen.findByLabelText('Preview calculations for year:');
+    expect(editorYear).toHaveValue(2010);
+
+    // Adjusting the year inside the editor adjusts the SAME year: it is
+    // still set after the editor closes.
+    await user.clear(editorYear);
+    await user.type(editorYear, '2015');
+
+    const editor = screen.getByText(/Edit effects for cause/i).closest('.assumptions-shell');
+    const cancelButtons = within(editor).getAllByRole('button', { name: 'Cancel' });
+    await user.click(cancelButtons[cancelButtons.length - 1]);
+    await waitFor(() => {
+      expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
+    });
+    expect(screen.getByLabelText('Preview calculation year')).toHaveValue(2015);
+  });
+
+  it('names the preview year in the combined cost label', async () => {
+    const multiEffectCategoryId = Object.entries(assumptionsData.categories).find(
+      ([, category]) => category.effects.length > 1
+    )?.[0];
+    if (!multiEffectCategoryId) {
+      throw new Error('Expected a multi-effect category in the generated data');
+    }
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${multiEffectCategoryId}`);
+
+    expect(await screen.findByText(`Combined cost per life in ${getCurrentYear()}:`)).toBeInTheDocument();
+
+    const editorYear = screen.getByLabelText('Preview calculations for year:');
+    await user.clear(editorYear);
+    await user.type(editorYear, '2010');
+
+    expect(screen.getByText('Combined cost per life in 2010:')).toBeInTheDocument();
+  });
+
+  it('the year control clamps out-of-range input and restores the last valid year when cleared', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions?tab=categories');
+
+    const yearInput = await screen.findByLabelText('Preview calculation year');
+
+    // Below the minimum clamps to the minimum — not a silent jump elsewhere.
+    await user.clear(yearInput);
+    await user.type(yearInput, '1850');
+    await user.tab();
+    expect(yearInput).toHaveValue(1900);
+
+    await user.clear(yearInput);
+    await user.type(yearInput, '2010');
+    await user.tab();
+    expect(yearInput).toHaveValue(2010);
+
+    // Leaving the field empty restores the year it had, not the current year.
+    await user.clear(yearInput);
+    await user.tab();
+    expect(yearInput).toHaveValue(2010);
+  });
+
+  it('keeps the committed year (and every computed label) while typing partial or out-of-range input', async () => {
+    const multiEffectCategoryId = Object.entries(assumptionsData.categories).find(
+      ([, category]) => category.effects.length > 1
+    )?.[0];
+    if (!multiEffectCategoryId) {
+      throw new Error('Expected a multi-effect category in the generated data');
+    }
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${multiEffectCategoryId}`);
+
+    const editorYear = await screen.findByLabelText('Preview calculations for year:');
+    await user.clear(editorYear);
+    await user.type(editorYear, '2010');
+    expect(await screen.findByText('Combined cost per life in 2010:')).toBeInTheDocument();
+
+    // Out-of-range (and partial) text stays local to the control: costs and
+    // labels hold the committed year until blur resolves the input.
+    await user.clear(editorYear);
+    await user.type(editorYear, '1850');
+    expect(editorYear).toHaveValue(1850);
+    expect(screen.getByText('Combined cost per life in 2010:')).toBeInTheDocument();
+
+    await user.tab();
+    expect(editorYear).toHaveValue(1900);
+    expect(screen.getByText('Combined cost per life in 1900:')).toBeInTheDocument();
+  });
+
+  it('shares the preview year with the recipient drill-in editor', async () => {
+    const overrideRecipient = Object.entries(assumptionsData.recipients).find(([, recipient]) =>
+      Object.values(recipient.categories || {}).some((category) => (category.effects || []).length > 0)
+    );
+    if (!overrideRecipient) {
+      throw new Error('Expected a recipient with built-in overrides in the generated data');
+    }
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions?tab=recipients');
+
+    const listYear = await screen.findByLabelText('Preview calculation year');
+    await user.clear(listYear);
+    await user.type(listYear, '2012');
+
+    // Recipients with built-in overrides are listed without a search.
+    await user.click(screen.getByRole('button', { name: `Edit ${overrideRecipient[1].name}`, exact: true }));
+
+    const editorYear = await screen.findByLabelText('Preview calculations for year:');
+    expect(editorYear).toHaveValue(2012);
+  });
+
+  it('shares the preview year with the multi-category editor and keeps its aggregate on the same year', async () => {
+    const multiCategoryRecipientId = Object.entries(assumptionsData.recipients).find(
+      ([, recipient]) => Object.keys(recipient.categories || {}).length > 1
+    )?.[0];
+    if (!multiCategoryRecipientId) {
+      throw new Error('Expected a multi-category recipient in the generated data');
+    }
+
+    const user = userEvent.setup();
+    renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${multiCategoryRecipientId}`);
+
+    const editorYear = await screen.findByLabelText('Preview calculations for year:');
+    expect(editorYear).toHaveValue(getCurrentYear());
+
+    await user.clear(editorYear);
+    await user.type(editorYear, '2012');
+
+    // The header aggregate only renders from section reports computed for
+    // the current year, so once it shows, label and value agree — and no
+    // label anywhere is left naming the previous year.
+    expect((await screen.findAllByText('Combined cost per life in 2012:')).length).toBeGreaterThan(0);
+    expect(screen.queryAllByText(`Combined cost per life in ${getCurrentYear()}:`)).toHaveLength(0);
+  });
+
   it('"Apply and leave" keeps you in the editor when the drill-in draft has validation errors', async () => {
     const user = userEvent.setup();
     // Clearing a category effect field is a change AND a validation error.

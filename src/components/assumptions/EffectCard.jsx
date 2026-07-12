@@ -38,7 +38,12 @@ const EffectCard = ({
             {disabledNote && <span className={`effect-card__disabled-note ${dimmedClass}`}>{disabledNote}</span>}
           </div>
           <div className={dimmedClass}>
-            <EffectCostDisplay cost={costPerLife} showInfinity={true} className="text-sm whitespace-nowrap" />
+            <EffectCostDisplay
+              cost={costPerLife}
+              label={previewYear ? `Cost per life in ${previewYear}:` : 'Cost per life:'}
+              showInfinity={true}
+              className="text-sm whitespace-nowrap"
+            />
           </div>
         </div>
         {validTimeInterval && (

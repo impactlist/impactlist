@@ -9,11 +9,16 @@ const EffectEditorHeader = ({
   title,
   description,
   combinedCostPerLife,
+  combinedCostYear,
   showCombinedCost = true,
   headerActions = null,
   onClose,
 }) => {
   const hasCombinedCost = showCombinedCost && combinedCostPerLife !== undefined;
+  // Computed values always name the year they were computed for, so a list
+  // set to another year can never silently disagree with the editor.
+  const combinedCostLabel =
+    combinedCostYear !== undefined ? `Combined cost per life in ${combinedCostYear}:` : 'Combined cost per life:';
   const hasRightContent = Boolean(headerActions) || Boolean(onClose);
 
   return (
@@ -30,7 +35,7 @@ const EffectEditorHeader = ({
           {hasCombinedCost && (
             <EffectCostDisplay
               cost={combinedCostPerLife}
-              label="Combined cost per life:"
+              label={combinedCostLabel}
               showInfinity={true}
               className="mt-1.5 whitespace-nowrap"
             />
@@ -58,6 +63,7 @@ EffectEditorHeader.propTypes = {
   title: PropTypes.node.isRequired,
   description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   combinedCostPerLife: PropTypes.number,
+  combinedCostYear: PropTypes.number,
   showCombinedCost: PropTypes.bool,
   headerActions: PropTypes.node,
   onClose: PropTypes.func,

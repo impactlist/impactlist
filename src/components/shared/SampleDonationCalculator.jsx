@@ -31,8 +31,8 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
   const isCategory = !!categoryId;
   const entityId = categoryId || recipientId;
 
-  // selectedYear can be a transient '' (or other partial value) while the user
-  // edits the YearSelector, so sanitize it before any cost calculation.
+  // YearSelector commits only valid years, so this resolve is a defensive
+  // guard rather than a mid-typing necessity.
   const yearForCalc = resolveCalcYear(selectedYear);
 
   // Calculate cost per life whenever the year changes. Entity data is validated,
@@ -76,7 +76,13 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
     <div className="impact-surface p-6 mb-8">
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
         <h2 className="text-xl font-semibold text-strong">Sample donation for year</h2>
-        <YearSelector value={selectedYear} onChange={setSelectedYear} label="" className="" />
+        <YearSelector
+          value={selectedYear}
+          onChange={setSelectedYear}
+          label=""
+          ariaLabel="Sample donation year"
+          className=""
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">

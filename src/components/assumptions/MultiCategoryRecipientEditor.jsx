@@ -11,7 +11,7 @@ import useUnsavedChangesReporter from '../../hooks/useUnsavedChangesReporter';
 import { getRecipientEffectsChangeState } from '../../utils/effectEditorUtils';
 import { formatCurrency } from '../../utils/formatters';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
-import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { resolveCalcYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
@@ -50,10 +50,19 @@ const CategoryEffectSection = ({
     userAssumptions,
   });
 
-  // Report changes to parent whenever effects or errors change
+  // Report changes to parent whenever effects or errors change. The report
+  // carries the year the costs were computed for, so the parent's aggregate
+  // can ignore reports from a previous year (they lag one effect-flush
+  // behind a year change).
   useEffect(() => {
-    onEffectsChange(categoryId, effects, errors, hasUnsavedChanges, combinedCostPerLife);
-  }, [categoryId, effects, errors, hasUnsavedChanges, combinedCostPerLife, onEffectsChange]);
+    onEffectsChange(categoryId, {
+      effects,
+      errors,
+      hasUnsavedChanges,
+      combinedCostPerLife,
+      calculationYear: previewYear,
+    });
+  }, [categoryId, effects, errors, hasUnsavedChanges, combinedCostPerLife, previewYear, onEffectsChange]);
 
   return (
     <div ref={sectionRef} className="effect-card effect-card--flush effect-card--category-group mb-4 overflow-hidden">
@@ -68,7 +77,7 @@ const CategoryEffectSection = ({
           {/* Only show combined cost when there are multiple effects */}
           {effects.length > 1 && (
             <div className="effect-card__summary">
-              <span>Combined cost per life: </span>
+              <span>Combined cost per life in {previewYear}: </span>
               <span
                 className={
                   combinedCostPerLife === Infinity || combinedCostPerLife < 0
@@ -135,13 +144,18 @@ const MultiCategoryRecipientEditor = forwardRef(
       categories,
       activeCategory,
       globalParameters,
+      previewYear,
+      onPreviewYearChange,
       onSave,
       onCancel,
       onUnsavedChangesChange = () => {},
     },
     ref
   ) => {
-    const [previewYear, setPreviewYear] = useState(getCurrentYear());
+    // ONE preview year, owned by the editor shell and shared with the list
+    // views (see CategoryEffectEditor). Sections and labels get the resolved
+    // year, so what's shown is always what was computed.
+    const calculationYear = resolveCalcYear(previewYear);
     const [categoryData, setCategoryData] = useState({});
     const sectionRefs = useRef({});
     const scrollContainerRef = useRef(null);
@@ -156,11 +170,12 @@ const MultiCategoryRecipientEditor = forwardRef(
       }
     }, [activeCategory]);
 
-    // Handle effects change from a category section
-    const handleEffectsChange = useCallback((categoryId, effects, errors, hasUnsavedChanges, combinedCostPerLife) => {
+    // Handle a section's report (effects/errors/dirtiness/cost, tagged with
+    // the year the cost was computed for).
+    const handleEffectsChange = useCallback((categoryId, report) => {
       setCategoryData((prev) => ({
         ...prev,
-        [categoryId]: { effects, errors, hasUnsavedChanges, combinedCostPerLife },
+        [categoryId]: report,
       }));
     }, []);
 
@@ -211,16 +226,6 @@ const MultiCategoryRecipientEditor = forwardRef(
       }
     };
 
-    // Check if any category has time intervals
-    const hasTimeIntervals = useMemo(() => {
-      return categories.some(({ category }) =>
-        category?.effects?.some(
-          (effect) =>
-            effect?.validTimeInterval && (effect.validTimeInterval[0] !== null || effect.validTimeInterval[1] !== null)
-        )
-      );
-    }, [categories]);
-
     const recipientCombinedCostPerLife = useMemo(() => {
       if (categories.length === 0) {
         return undefined;
@@ -230,7 +235,15 @@ const MultiCategoryRecipientEditor = forwardRef(
       let totalWeight = 0;
 
       for (const { categoryId } of categories) {
-        const cost = categoryData[categoryId]?.combinedCostPerLife;
+        const data = categoryData[categoryId];
+        // Section reports lag one effect-flush behind a year change; a report
+        // computed for another year must not aggregate under this year's
+        // label — the header briefly shows no cost instead of a wrong one.
+        if (!data || data.calculationYear !== calculationYear) {
+          return undefined;
+        }
+
+        const cost = data.combinedCostPerLife;
         if (typeof cost !== 'number') {
           return undefined;
         }
@@ -247,7 +260,7 @@ const MultiCategoryRecipientEditor = forwardRef(
       }
 
       return totalWeightedCost / totalWeight;
-    }, [categories, categoryData, recipient]);
+    }, [calculationYear, categories, categoryData, recipient]);
 
     const showHeaderActions = categories.length > 1;
     const headerActions = showHeaderActions ? (
@@ -278,17 +291,16 @@ const MultiCategoryRecipientEditor = forwardRef(
           description={
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted">{categories.length} causes</span>
-              {hasTimeIntervals && (
-                <YearSelector
-                  value={previewYear}
-                  onChange={setPreviewYear}
-                  label="Preview for year:"
-                  id="multi-category-preview-year"
-                />
-              )}
+              <YearSelector
+                value={previewYear}
+                onChange={onPreviewYearChange}
+                label="Preview calculations for year:"
+                id="multi-category-preview-year"
+              />
             </div>
           }
           combinedCostPerLife={showHeaderActions ? recipientCombinedCostPerLife : undefined}
+          combinedCostYear={calculationYear}
           showCombinedCost={showHeaderActions}
           headerActions={headerActions}
         />
@@ -302,7 +314,7 @@ const MultiCategoryRecipientEditor = forwardRef(
               category={category}
               categoryId={categoryId}
               globalParameters={globalParameters}
-              previewYear={previewYear}
+              previewYear={calculationYear}
               onEffectsChange={handleEffectsChange}
               sectionRef={(el) => {
                 sectionRefs.current[categoryId] = el;
@@ -335,6 +347,8 @@ MultiCategoryRecipientEditor.propTypes = {
   ).isRequired,
   activeCategory: PropTypes.string,
   globalParameters: PropTypes.object.isRequired,
+  previewYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  onPreviewYearChange: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onUnsavedChangesChange: PropTypes.func,

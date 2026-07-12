@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
@@ -9,7 +9,7 @@ import RecipientEffectCard from './RecipientEffectCard';
 import useRecipientEffectsDraft from '../../hooks/useRecipientEffectsDraft';
 import useUnsavedChangesReporter from '../../hooks/useUnsavedChangesReporter';
 import { useAssumptions } from '../../contexts/AssumptionsContext';
-import { getCurrentYear } from '../../utils/donationDataHelpers';
+import { resolveCalcYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 
@@ -28,21 +28,25 @@ const RecipientEffectEditor = forwardRef(
       category,
       categoryId,
       globalParameters,
+      previewYear,
+      onPreviewYearChange,
       onSave,
       onCancel,
       onUnsavedChangesChange = () => {},
     },
     ref
   ) => {
-    const [previewYear, setPreviewYear] = useState(getCurrentYear());
     const { defaultAssumptions, userAssumptions } = useAssumptions();
+    // ONE preview year, owned by the editor shell and shared with the list
+    // views (see CategoryEffectEditor). Computations and labels both use the
+    // resolved year, so what's shown is always what was computed.
+    const calculationYear = resolveCalcYear(previewYear);
 
     const {
       effects,
       errors,
       hasErrors,
       hasUnsavedChanges,
-      hasTimeIntervals,
       effectCostPerLife,
       combinedCostPerLife,
       effectInputSources,
@@ -54,7 +58,7 @@ const RecipientEffectEditor = forwardRef(
       categoryId,
       category,
       globalParameters,
-      previewYear,
+      previewYear: calculationYear,
       defaultAssumptions,
       userAssumptions,
     });
@@ -115,19 +119,18 @@ const RecipientEffectEditor = forwardRef(
             </>
           }
           description={
-            effects.length > 1 && hasTimeIntervals ? (
-              <div className="flex items-center gap-2">
-                <YearSelector
-                  value={previewYear}
-                  onChange={setPreviewYear}
-                  label="Preview calculations for year:"
-                  id="recipient-effect-preview-year"
-                  className=""
-                />
-              </div>
-            ) : null
+            <div className="flex items-center gap-2">
+              <YearSelector
+                value={previewYear}
+                onChange={onPreviewYearChange}
+                label="Preview calculations for year:"
+                id="recipient-effect-preview-year"
+                className=""
+              />
+            </div>
           }
           combinedCostPerLife={showHeaderActions ? combinedCostPerLife : undefined}
+          combinedCostYear={calculationYear}
           showCombinedCost={showHeaderActions}
           headerActions={headerActions}
         />
@@ -146,7 +149,7 @@ const RecipientEffectEditor = forwardRef(
                 onChange={updateEffectField}
                 onToggleDisabled={() => toggleEffectDisabled(index)}
                 globalParameters={globalParameters}
-                previewYear={previewYear}
+                previewYear={calculationYear}
                 headingLevel="h3"
               />
             ))}
@@ -172,6 +175,8 @@ RecipientEffectEditor.propTypes = {
   category: PropTypes.object.isRequired,
   categoryId: PropTypes.string.isRequired,
   globalParameters: PropTypes.object.isRequired,
+  previewYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  onPreviewYearChange: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onUnsavedChangesChange: PropTypes.func,

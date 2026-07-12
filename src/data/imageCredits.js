@@ -594,16 +594,19 @@ export const imageCredits = [
     license: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
   },
-  {
-    donorId: 'sam-bankman-fried',
-    name: 'Sam Bankman-Fried',
-    author: 'Cointelegraph',
-    sourceName: 'Wikimedia Commons',
-    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Sam_Bankman-Fried.png',
-    license: 'CC BY 3.0',
-    licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
-    notes: 'Square-cropped and resized from the Commons original.',
-  },
+  // Sam Bankman-Fried is excluded from the site (see
+  // content/donors/sam_bankman_fried.md.excluded); the credit stays here
+  // commented out so restoring him is a pure uncomment.
+  // {
+  //   donorId: 'sam-bankman-fried',
+  //   name: 'Sam Bankman-Fried',
+  //   author: 'Cointelegraph',
+  //   sourceName: 'Wikimedia Commons',
+  //   sourceUrl: 'https://commons.wikimedia.org/wiki/File:Sam_Bankman-Fried.png',
+  //   license: 'CC BY 3.0',
+  //   licenseUrl: 'https://creativecommons.org/licenses/by/3.0',
+  //   notes: 'Square-cropped and resized from the Commons original.',
+  // },
   {
     donorId: 'sean-parker',
     name: 'Sean Parker',

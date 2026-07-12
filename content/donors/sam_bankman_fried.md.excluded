@@ -1,4 +1,13 @@
 ---
+# EXCLUDED FROM THE SITE (donations funded by misappropriated FTX customer money);
+# see the FAQ's "Why isn't [person] on the list?". All data below is unchanged.
+# To restore:
+#   - remove the .excluded suffix from this file and from
+#     content/donations/sam_bankman_fried.md.excluded
+#   - move content/excluded/sam-bankman-fried.jpeg back to
+#     public/images/people/small/ (nothing under public/ may be merely
+#     renamed — everything there ships verbatim in the build)
+#   - uncomment his entry in src/data/imageCredits.js
 id: 'sam-bankman-fried'
 name: 'Sam Bankman-Fried'
 birthDate: 1992-03-05

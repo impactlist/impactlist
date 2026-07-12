@@ -1,4 +1,7 @@
 ---
+# EXCLUDED FROM THE SITE along with the donor file (see
+# content/donors/sam_bankman_fried.md.excluded). To restore, rename both files
+# back to .md. All donation data below is unchanged.
 donations:
   - date: 2021-12-31
     recipient: building-a-stronger-future

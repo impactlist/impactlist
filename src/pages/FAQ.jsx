@@ -266,6 +266,33 @@ const FAQ = () => {
             </FAQCard>
 
             <FAQCard
+              question="Why isn't a particular person on the list?"
+              isOpen={isOpen(13)}
+              onToggle={() => toggleItem(13)}
+            >
+              <p className="mb-3">
+                We exclude people whose donations came from the proceeds of crimes — for example, giving funded by money
+                that was later found to have been stolen or misappropriated doesn't earn a place on the list.
+              </p>
+              <p className="mb-3">
+                We also may simply have missed someone who belongs here. The list is built from a donation database that
+                we expand over time, and our coverage of donors is still incomplete.
+              </p>
+              <p>
+                If you think someone should be included, please tell us via{' '}
+                <a
+                  href="https://forms.gle/NEC6LNics3n6WVo47"
+                  className="impact-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  this form
+                </a>
+                .
+              </p>
+            </FAQCard>
+
+            <FAQCard
               question="Some donations are showing as resulting in negative lives saved. Why is that?"
               isOpen={isOpen(6)}
               onToggle={() => toggleItem(6)}

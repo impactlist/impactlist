@@ -236,6 +236,25 @@ Rules for donation entries (the data generation script enforces all of these and
 - `credit` is required and its values must sum to 1 (how 100% of the donation is attributed across donors).
 - The only allowed fields are `date`, `recipient`, `amount`, `credit`, `source`, and `notes`.
 
+## Excluding a donor
+
+To remove a donor from the site while keeping all of their data (e.g. pending an
+inclusion-policy decision), step their files out of the loaders' `*.md` globs instead of
+deleting anything:
+
+1. Rename `content/donors/<name>.md` to `<name>.md.excluded`.
+2. Rename `content/donations/<name>.md` to `<name>.md.excluded`.
+3. Move their portrait from `public/images/people/small/<id>.jpeg` into
+   `content/excluded/` — anything left under `public/` ships verbatim in the production
+   build, so renaming there does NOT exclude a file from deployment.
+4. Comment out their entry in `src/data/imageCredits.js`.
+
+Recipients that only they donated to drop out of the generated data automatically (the
+generator emits only donation-receiving recipients) — leave those recipient files alone.
+Put a YAML `#` comment at the top of the excluded donor file listing the restore steps
+(see `sam_bankman_fried.md.excluded` for the pattern). `src/data/excludedContent.test.js`
+asserts that excluded donors stay out of the generated data.
+
 ## Data Generation
 
 After updating these files, run the data generation script to create the JavaScript data file:

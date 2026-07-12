@@ -58,4 +58,15 @@ describe('RecipientValuesSection', () => {
     expect(screen.getByText('Showing 2 matching recipients.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Show all/ })).not.toBeInTheDocument();
   });
+
+  it('links every card to its justification', () => {
+    renderSection();
+
+    const justificationLinks = screen.getAllByRole('link', { name: /Justification for/ });
+    expect(justificationLinks).toHaveLength(sampleRecipients.length);
+    expect(justificationLinks[0]).toHaveAttribute(
+      'href',
+      expect.stringMatching(/^\/recipient\/.+#full-justification$/)
+    );
+  });
 });

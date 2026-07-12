@@ -1521,18 +1521,13 @@
     white-space: nowrap;
   }
 
-  .assumption-card--clickable {
-    cursor: pointer;
-  }
-
-  .assumption-card--clickable:hover {
-    border-color: color-mix(in srgb, var(--edited-accent) 30%, var(--border-subtle) 70%);
-  }
-
   .assumption-card__readout {
     display: flex;
+    /* Wrap so the (edit)/(justification) links drop below the value on
+       narrow cards instead of crushing it into ellipsis. */
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.45rem;
+    gap: 0.15rem 0.45rem;
     min-width: 0;
   }
 
@@ -1548,17 +1543,14 @@
     white-space: nowrap;
   }
 
-  .assumption-card__readout-edit {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-
+  /* The readout's action links ("(edit)", "(justification)"): button reset +
+     small type. Their hit targets come from .impact-inline-action. */
   .assumption-card__edit-link {
     border: 0;
     background: none;
-    padding: 0;
     font: inherit;
+    font-size: 0.78rem;
+    white-space: nowrap;
     cursor: pointer;
   }
 
@@ -2337,6 +2329,29 @@
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 600;
+  }
+
+  /* Inline text actions ("(edit)", "(justification)", "Why these values?"):
+     small text with an adult-size hit target — the padding grows the target
+     to ≥24px tall (taller on touch) while the negative margins keep the
+     visual line compact. The expansion is budgeted on BOTH axes so
+     neighboring targets can never overlap into misclicks: horizontal ≤ half
+     the smallest gap between adjacent uses (0.45rem in the entity-card
+     readout), vertical ≤ the smallest gap to an interactive row above
+     (the readout's mt-2 = 0.5rem). Pinned by the coarse-pointer geometry
+     e2e spec. */
+  .impact-inline-action {
+    padding: 0.32rem 0.2rem;
+    margin: -0.32rem -0.2rem;
+  }
+
+  @media (pointer: coarse) {
+    .impact-inline-action {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      margin-top: -0.5rem;
+      margin-bottom: -0.5rem;
+    }
   }
 
   .assumptions-link:hover {

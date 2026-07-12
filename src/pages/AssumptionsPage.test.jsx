@@ -363,7 +363,7 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
-  it('opens the cause editor when the card body is clicked, but not when the cause link is', async () => {
+  it('opens the cause editor only from the explicit (edit) action, never from the card body', async () => {
     const user = userEvent.setup();
     renderAssumptionsRoute('/assumptions?tab=categories');
 
@@ -372,8 +372,13 @@ describe('AssumptionsPage routing integration', () => {
     const cardRoot = cardLink.closest('.assumption-card');
     expect(cardRoot).not.toBeNull();
 
-    // The card body is a widened pointer target for the Edit action.
+    // The card body stopped being a click target once cards grew multiple
+    // links — a body click must not open the editor.
     await user.click(cardRoot);
+    expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
+    expect(screen.getByTestId('location-probe').textContent).not.toContain('categoryId=');
+
+    await user.click(screen.getByRole('button', { name: `Edit ${categoryName}` }));
     await waitFor(() => {
       expect(screen.getByText(/Edit effects for cause/i)).toBeInTheDocument();
       expect(screen.getByTestId('location-probe').textContent).toContain(`categoryId=${firstValidCategoryId}`);
@@ -387,8 +392,8 @@ describe('AssumptionsPage routing integration', () => {
       expect(screen.queryByText(/Edit effects for cause/i)).not.toBeInTheDocument();
     });
 
-    // Clicking the entity link navigates to the cause page without also
-    // triggering the card's edit action (which would push categoryId= last).
+    // The entity link navigates to the cause page — and must not also push
+    // an editor navigation (categoryId= would land last if it did).
     await user.click(screen.getByRole('link', { name: categoryName }));
     await waitFor(() => {
       const probe = screen.getByTestId('location-probe').textContent;

@@ -108,7 +108,7 @@ const CategoryDetail = () => {
               </button>
               <a
                 href="#full-justification"
-                className="assumptions-link whitespace-nowrap text-xs"
+                className="assumptions-link impact-inline-action whitespace-nowrap text-xs"
                 aria-label="Cost per life justification"
               >
                 (justification)

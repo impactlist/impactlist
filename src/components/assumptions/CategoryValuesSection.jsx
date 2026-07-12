@@ -70,6 +70,7 @@ const CategoryValuesSection = ({
             currentValue={formatCurrency(categoryData.currentCostPerLife)}
             onEdit={() => onEditCategory(key)}
             onReset={onResetCategory ? () => onResetCategory(key) : null}
+            justificationTo={`${buildCausePath(key)}#full-justification`}
           />
         ))}
     </div>

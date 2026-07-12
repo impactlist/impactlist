@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 
 /**
  * Shared card wrapper component with consistent styling for form sections.
- *
- * `onClick` makes the whole card a pointer target (e.g. the cause/recipient
- * cards open their editor). The card itself carries no keyboard handler or
- * role — an inner button must provide the keyboard/AT path, same pattern as
- * the AssumptionsDropdown rows.
+ * Purely presentational: interactive affordances belong to the controls
+ * inside it (a whole-card click target was tried for the cause/recipient
+ * cards and removed once they grew multiple inner links).
  */
 const SectionCard = ({
   children,
@@ -16,7 +14,6 @@ const SectionCard = ({
   className = '',
   padding = 'default',
   showStateBadge = false,
-  onClick = null,
 }) => {
   const state = hasError ? 'error' : isCustom ? 'custom' : 'default';
   const stateLabels = {
@@ -33,12 +30,7 @@ const SectionCard = ({
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div
-      className={`assumption-card ${onClick ? 'assumption-card--clickable ' : ''}${className}`.trim()}
-      data-state={state}
-      onClick={onClick || undefined}
-    >
+    <div className={`assumption-card ${className}`.trim()} data-state={state}>
       <div className={paddingClasses[padding]}>
         {showStateBadge && (
           <div className="mb-2.5 flex justify-end">
@@ -60,7 +52,6 @@ SectionCard.propTypes = {
   className: PropTypes.string,
   padding: PropTypes.oneOf(['none', 'sm', 'default', 'lg']),
   showStateBadge: PropTypes.bool,
-  onClick: PropTypes.func,
 };
 
 export default SectionCard;

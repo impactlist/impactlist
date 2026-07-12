@@ -103,6 +103,7 @@ const RecipientValuesSection = ({
                 key={recipient.name}
                 name={recipient.name}
                 to={`/recipient/${encodeURIComponent(recipientId)}`}
+                justificationTo={`/recipient/${encodeURIComponent(recipientId)}#full-justification`}
                 isCustom={recipientHasAnyCustomValues(recipientId, recipient)}
                 baselineValue={defaultCombinedCost !== null ? formatCurrency(defaultCombinedCost) : '—'}
                 currentValue={combinedCost !== null ? formatCurrency(combinedCost) : '—'}

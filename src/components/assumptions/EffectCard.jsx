@@ -45,7 +45,7 @@ const EffectCard = ({
                 applies to edited values too. A sibling of the heading, not a
                 child — headings must not contain interactive controls. */}
             {rationaleHref && (
-              <Link to={rationaleHref} className="assumptions-link text-xs whitespace-nowrap">
+              <Link to={rationaleHref} className="assumptions-link impact-inline-action text-xs whitespace-nowrap">
                 Why these values?
               </Link>
             )}

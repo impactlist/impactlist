@@ -7,32 +7,31 @@ import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * One cause/recipient card on the assumptions list tabs: entity name linking
- * to its site page, a computed cost-per-life readout, and edit/reset actions.
+ * to its site page, a computed cost-per-life readout, and edit/reset/
+ * justification actions.
  *
  * The cost per life is a derived result of the entity's effect parameters,
- * not a directly editable assumption, so it renders as a readout. The whole
- * card opens the effect editor; the entity link and the action buttons stop
- * propagation so they don't also trigger the edit.
+ * not a directly editable assumption, so it renders as a readout. The card
+ * body is NOT a click target — with several links on one card, whole-card
+ * clicks became misclick-prone, so only the explicit "(edit)" action opens
+ * the editor.
  */
-const AssumptionEntityCard = ({ name, to, isCustom, baselineValue, currentValue, onEdit, onReset = null }) => {
-  const stopThen = (action) => (event) => {
-    event.stopPropagation();
-    if (action) {
-      action();
-    }
-  };
-
+const AssumptionEntityCard = ({
+  name,
+  to,
+  isCustom,
+  baselineValue,
+  currentValue,
+  onEdit,
+  onReset = null,
+  justificationTo = null,
+}) => {
   return (
-    <SectionCard isCustom={isCustom} padding="sm" className="h-full" onClick={onEdit}>
+    <SectionCard isCustom={isCustom} padding="sm" className="h-full">
       <div className="assumption-card__top">
         <div className="min-w-0">
           <div className="assumption-card__title-wrap pr-2">
-            <Link
-              to={to}
-              onClick={stopThen(null)}
-              className="assumptions-link assumption-card__title-link block min-w-0 truncate"
-              title={name}
-            >
+            <Link to={to} className="assumptions-link assumption-card__title-link block min-w-0 truncate" title={name}>
               {name}
             </Link>
             {isCustom && (
@@ -51,7 +50,7 @@ const AssumptionEntityCard = ({ name, to, isCustom, baselineValue, currentValue,
           {/* Per-entity accessible name: several of these cards render on
               one page, so a bare "Reset" would be indistinguishable to
               assistive tech. */}
-          {isCustom && onReset && <IconActionButton icon="reset" label={`Reset ${name}`} onClick={stopThen(onReset)} />}
+          {isCustom && onReset && <IconActionButton icon="reset" label={`Reset ${name}`} onClick={onReset} />}
         </div>
       </div>
 
@@ -61,18 +60,25 @@ const AssumptionEntityCard = ({ name, to, isCustom, baselineValue, currentValue,
         <span className="assumption-card__readout-value">
           <FormattedScientificValue value={currentValue} />
         </span>
-        <span className="assumption-card__readout-edit">
-          (
-          <button
-            type="button"
-            className="assumptions-link assumption-card__edit-link"
-            aria-label={`Edit ${name}`}
-            onClick={stopThen(onEdit)}
+        {/* Parentheses INSIDE the controls: they're part of the hit target,
+            not decoration around a bare word. */}
+        <button
+          type="button"
+          className="assumptions-link assumption-card__edit-link impact-inline-action"
+          aria-label={`Edit ${name}`}
+          onClick={onEdit}
+        >
+          (edit)
+        </button>
+        {justificationTo && (
+          <Link
+            to={justificationTo}
+            className="assumptions-link assumption-card__edit-link impact-inline-action"
+            aria-label={`Justification for ${name}`}
           >
-            edit
-          </button>
-          )
-        </span>
+            (justification)
+          </Link>
+        )}
       </div>
     </SectionCard>
   );
@@ -86,6 +92,7 @@ AssumptionEntityCard.propTypes = {
   currentValue: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired,
   onReset: PropTypes.func,
+  justificationTo: PropTypes.string,
 };
 
 export default AssumptionEntityCard;

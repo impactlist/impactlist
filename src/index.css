@@ -45,6 +45,10 @@
     --success: #1f6e54;
     --success-soft: #e4f4ed;
     --warning: #96691a;
+    /* Text sitting ON a warning-soft surface needs this darker step to reach
+       4.5:1 (plain --warning lands ~3.7-4.0:1 there); --warning itself stays
+       fine on white/surface backgrounds. */
+    --warning-strong: #6d4c13;
     --warning-soft: #f2dfbc;
     --danger: #b03a3a;
     --danger-soft: #fde7e7;
@@ -1080,6 +1084,36 @@
     justify-content: center;
   }
 
+  .assumptions-form-actions__discard {
+    border-radius: var(--radius-md);
+    padding: 0.7rem 0.9rem;
+    justify-content: center;
+  }
+
+  /* Draft (unapplied) indicators share this one amber chip. Deliberately NOT
+     the blue edited/custom hue: blue marks APPLIED customization, amber marks
+     a draft the site is not using yet — the two states must never read as
+     one. Draft indicators also never appear inside the applied-differences
+     view (and vice versa). */
+  .assumptions-draft-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.16rem 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--warning) 42%, transparent 58%);
+    border-radius: 999px;
+    background: var(--warning-soft);
+    color: var(--warning-strong);
+    font-size: 0.74rem;
+    font-weight: 650;
+    white-space: nowrap;
+  }
+
+  .assumptions-draft-reminder {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
   .review-changes {
     display: flex;
     flex-direction: column;
@@ -1356,6 +1390,25 @@
 
   .impact-tab:hover {
     color: var(--text-strong);
+  }
+
+  /* Unapplied-draft count on a tab; same amber language as
+     .assumptions-draft-chip. */
+  .impact-tab__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    margin-left: 0.45rem;
+    padding: 0 0.28rem;
+    border-radius: 999px;
+    background: var(--warning);
+    color: #fff;
+    font-size: 0.66rem;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
   }
 
   .impact-tab:focus-visible {
@@ -1646,7 +1699,7 @@
   }
 
   .assumption-state-pill[data-state='warning'] {
-    color: var(--warning);
+    color: var(--warning-strong);
     background: color-mix(in srgb, var(--warning-soft) 78%, white 22%);
   }
 
@@ -2526,7 +2579,7 @@
     border: 1px solid color-mix(in srgb, var(--warning) 30%, var(--border-subtle) 70%);
     background: color-mix(in srgb, var(--warning-soft) 72%, white 28%);
     padding: 0.45rem 0.65rem;
-    color: var(--warning);
+    color: var(--warning-strong);
     font-size: 0.84rem;
   }
 }

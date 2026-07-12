@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
-const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions' }) => {
+const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions', badges = {} }) => {
   const tabRefs = useRef([]);
 
   const handleKeyDown = (event, index) => {
@@ -35,26 +35,47 @@ const TabNavigation = ({ activeTab, onTabChange, tabs, idBase = 'assumptions' })
 
   return (
     <div className="impact-tabs impact-tabs--attached" role="tablist" aria-label="Assumption sections">
-      {tabs.map((tab, index) => (
-        <button
-          key={tab.id}
-          type="button"
-          onClick={() => onTabChange(tab.id)}
-          id={`${idBase}-tab-${tab.id}`}
-          ref={(element) => {
-            tabRefs.current[index] = element;
-          }}
-          role="tab"
-          aria-selected={activeTab === tab.id}
-          aria-controls={`${idBase}-panel-${tab.id}`}
-          tabIndex={activeTab === tab.id ? 0 : -1}
-          onKeyDown={(event) => handleKeyDown(event, index)}
-          data-active={activeTab === tab.id}
-          className="impact-tab"
-        >
-          {tab.label}
-        </button>
-      ))}
+      {tabs.map((tab, index) => {
+        const badge = badges[tab.id];
+        const badgeDescriptionId = `${idBase}-tab-${tab.id}-badge`;
+
+        return (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => onTabChange(tab.id)}
+            id={`${idBase}-tab-${tab.id}`}
+            ref={(element) => {
+              tabRefs.current[index] = element;
+            }}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`${idBase}-panel-${tab.id}`}
+            // The badge is an accessible DESCRIPTION, not part of the name:
+            // the tab keeps announcing (and matching queries) as its label,
+            // with the badge state read after it.
+            aria-describedby={badge ? badgeDescriptionId : undefined}
+            tabIndex={activeTab === tab.id ? 0 : -1}
+            onKeyDown={(event) => handleKeyDown(event, index)}
+            data-active={activeTab === tab.id}
+            className="impact-tab"
+          >
+            {tab.label}
+            {badge && (
+              <>
+                <span className="impact-tab__badge" aria-hidden="true">
+                  {badge.count}
+                </span>
+                {/* hidden keeps this out of the tab's accessible name while
+                    aria-describedby still reads it as the description. */}
+                <span id={badgeDescriptionId} hidden>
+                  {badge.description}
+                </span>
+              </>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 };
@@ -69,6 +90,12 @@ TabNavigation.propTypes = {
     })
   ).isRequired,
   idBase: PropTypes.string,
+  badges: PropTypes.objectOf(
+    PropTypes.shape({
+      count: PropTypes.number.isRequired,
+      description: PropTypes.string.isRequired,
+    })
+  ),
 };
 
 export default TabNavigation;

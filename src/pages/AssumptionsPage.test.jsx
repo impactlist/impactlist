@@ -874,6 +874,143 @@ describe('AssumptionsPage routing integration', () => {
     expect(persisted.globalParameters.timeLimit).toBe(160);
   });
 
+  // ---- Persistent draft indicators ----
+  // A Global draft survives tab switches but its Apply button doesn't, so the
+  // draft carries its own status layer: a count chip beside Apply, a badge on
+  // the Global tab, an actionable reminder on the other tabs, and draft-
+  // preview labeling on the future-value graph. All of it speaks in
+  // "unapplied changes"; the applied-differences view stays draft-free.
+
+  it('shows the unapplied count beside Apply, a Global tab badge, and Discard while the draft is dirty', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    expect(screen.queryByText(/unapplied change/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Discard \d+ change/ })).not.toBeInTheDocument();
+
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+
+    // The tab badge's hidden description holds the same text as the chip, so
+    // chip assertions scope to the chip element.
+    expect(screen.getByText('1 unapplied change', { selector: '.assumptions-draft-chip' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Global' })).toHaveAccessibleDescription('1 unapplied change');
+    expect(screen.getByRole('button', { name: 'Discard 1 change' })).toBeInTheDocument();
+
+    // A second dirty parameter bumps the count.
+    const currentDiscountPct = Math.round(assumptionsData.globalParameters.discountRate * 100 * 1e10) / 1e10;
+    const draftDiscountPct = currentDiscountPct === 7 ? 8 : 7;
+    const discountInput = screen.getByLabelText('Discount Rate (%)');
+    await user.clear(discountInput);
+    await user.type(discountInput, String(draftDiscountPct));
+
+    expect(screen.getByText('2 unapplied changes', { selector: '.assumptions-draft-chip' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Global' })).toHaveAccessibleDescription('2 unapplied changes');
+
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText(/unapplied change/)).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole('tab', { name: 'Global' })).not.toHaveAccessibleDescription();
+    expect(screen.queryByRole('button', { name: /^Discard \d+ change/ })).not.toBeInTheDocument();
+  });
+
+  it('Discard reverts the whole draft to the applied values and clears validation errors', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    const originalTimeLimit = timeLimitInput.value;
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+
+    const discountInput = screen.getByLabelText('Discount Rate (%)');
+    const originalDiscount = discountInput.value;
+    await user.clear(discountInput);
+    await user.type(discountInput, '150');
+
+    expect(screen.getByText('Discount rate must be no greater than 100%')).toBeInTheDocument();
+    expect(screen.getByText('Fix validation errors before applying.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
+
+    // The escape hatch stays available while errors block Apply.
+    await user.click(screen.getByRole('button', { name: 'Discard 2 changes' }));
+
+    expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(originalTimeLimit);
+    expect(screen.getByLabelText('Discount Rate (%)')).toHaveValue(originalDiscount);
+    expect(screen.queryByText('Discount rate must be no greater than 100%')).not.toBeInTheDocument();
+    expect(screen.queryByText(/unapplied change/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+  });
+
+  it('reminds about the Global draft on other tabs, and Review returns to it intact', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+
+    await user.click(screen.getByRole('tab', { name: 'Causes' }));
+
+    expect(screen.getByText('Global has 1 unapplied change')).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Global' })).toHaveAccessibleDescription('1 unapplied change');
+
+    await user.click(screen.getByRole('button', { name: 'Review unapplied global changes' }));
+
+    expect(screen.getByRole('tab', { name: 'Global' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('155');
+    expect(screen.getByText('1 unapplied change', { selector: '.assumptions-draft-chip' })).toBeInTheDocument();
+    expect(screen.queryByText('Global has 1 unapplied change')).not.toBeInTheDocument();
+  });
+
+  it('keeps the draft reminder visible while a drill-in editor is open', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+
+    await user.click(screen.getByRole('button', { name: 'Open Category Editor' }));
+
+    expect(await screen.findByText(/Edit effects for cause/i)).toBeInTheDocument();
+    expect(screen.getByText('Global has 1 unapplied change')).toBeInTheDocument();
+  });
+
+  it('labels the future-value graph as a draft preview only when the preview actually diverges', async () => {
+    const user = userEvent.setup();
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    expect(screen.queryByText('Preview using unapplied values')).not.toBeInTheDocument();
+
+    // An invalid draft resolves back to the applied value, so the graph is
+    // NOT previewing it — dirty form, but no draft-preview label.
+    const discountInput = screen.getByLabelText('Discount Rate (%)');
+    await user.clear(discountInput);
+    await user.type(discountInput, '150');
+    expect(screen.getByText('Fix validation errors before applying.')).toBeInTheDocument();
+    expect(screen.queryByText('Preview using unapplied values')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Discard 1 change' }));
+
+    // A valid draft diverges: the graph says so and shows the applied total.
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+    expect(screen.getByText('Preview using unapplied values')).toBeInTheDocument();
+    expect(screen.getByText(/With currently applied values:/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    await waitFor(() => {
+      expect(screen.queryByText('Preview using unapplied values')).not.toBeInTheDocument();
+    });
+    expect(screen.queryByText(/With currently applied values:/)).not.toBeInTheDocument();
+  });
+
   it('"Apply and leave" keeps you in the editor when the drill-in draft has validation errors', async () => {
     const user = userEvent.setup();
     // Clearing a category effect field is a change AND a validation error.

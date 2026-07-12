@@ -16,6 +16,26 @@ const GlobalFutureValueGraph = ({ globalParameters, defaultGlobalParameters, for
     [previewParameters]
   );
 
+  // The graph previews the DRAFT (form values), while the rest of the site
+  // uses the applied parameters — say so whenever the two actually diverge.
+  // Compare resolved parameters, not form dirtiness: an invalid draft field
+  // resolves back to its applied value, so the graph isn't previewing it.
+  // The empty-formValues guard skips the pre-hydration first render, which
+  // resolves to defaults and would otherwise flash a false preview label.
+  const isDraftPreview = useMemo(() => {
+    if (!previewParameters || !globalParameters || Object.keys(formValues).length === 0) {
+      return false;
+    }
+    return Object.keys(previewParameters).some(
+      (paramKey) => !Object.is(previewParameters[paramKey], globalParameters[paramKey])
+    );
+  }, [formValues, globalParameters, previewParameters]);
+
+  const appliedTotalFutureLives = useMemo(
+    () => (isDraftPreview ? calculateFutureValueSeries(globalParameters).totalFutureLives : null),
+    [isDraftPreview, globalParameters]
+  );
+
   if (!previewParameters || !graphData || graphData.points.length === 0) {
     return null;
   }
@@ -25,7 +45,10 @@ const GlobalFutureValueGraph = ({ globalParameters, defaultGlobalParameters, for
   return (
     <div className="impact-surface mt-6 p-5">
       <div className="mb-4">
-        <h3 className="text-base font-semibold text-strong">Total weighted lives in the present and future</h3>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <h3 className="text-base font-semibold text-strong">Total weighted lives in the present and future</h3>
+          {isDraftPreview && <span className="assumptions-draft-chip">Preview using unapplied values</span>}
+        </div>
         <p className="mt-1 text-sm text-muted">
           This graph shows how much value the model assigns to lives in each year. It starts with projected global
           population, applies the population limit, then adjusts the value of later years using the discount rate. The
@@ -38,6 +61,15 @@ const GlobalFutureValueGraph = ({ globalParameters, defaultGlobalParameters, for
           </span>{' '}
           life equivalents
         </p>
+        {appliedTotalFutureLives !== null && (
+          <p className="mt-1 text-sm text-muted">
+            With currently applied values:{' '}
+            <span className="font-semibold text-strong">
+              <FormattedScientificValue value={formatLives(appliedTotalFutureLives)} variant="compact" />
+            </span>{' '}
+            life equivalents
+          </p>
+        )}
       </div>
 
       <LivesSavedGraph

@@ -12,6 +12,44 @@ const valuesMatch = (valueA, valueB) => {
   return false;
 };
 
+// Get the format type for a parameter
+const getParameterFormat = (paramKey) => {
+  if (paramKey === 'discountRate' || paramKey === 'populationGrowthRate') {
+    return 'percentage';
+  }
+  return 'number';
+};
+
+// Format value for display
+const formatValue = (value, format) => {
+  if (value === '' || value === null || value === undefined) {
+    return '';
+  }
+
+  if (format === 'percentage') {
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      // Convert to percentage and round to avoid floating-point precision issues
+      // Round to 10 decimal places to preserve precision while removing artifacts
+      const percentValue = Math.round(numValue * 100 * 1e10) / 1e10;
+      return formatNumberWithCommas(percentValue.toString());
+    }
+  }
+
+  if (format === 'number') {
+    // Format with thousand separators
+    return formatNumberWithCommas(value.toString());
+  }
+
+  return value.toString();
+};
+
+// A form entry ({raw, formatted}) for a known-valid parameter value.
+const buildFormEntry = (paramKey, value) => ({
+  raw: value,
+  formatted: formatValue(value, getParameterFormat(paramKey)),
+});
+
 /**
  * Custom hook for managing global parameter form state
  * @param {Object} globalParameters - Global parameters from combinedAssumptions
@@ -62,12 +100,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
       const next = {};
       Object.keys(nextHydrated).forEach((paramKey) => {
         const shouldHydrate = changedKeys.has(paramKey) || !previous[paramKey];
-        next[paramKey] = shouldHydrate
-          ? {
-              raw: nextHydrated[paramKey],
-              formatted: formatValue(nextHydrated[paramKey], getParameterFormat(paramKey)),
-            }
-          : previous[paramKey];
+        next[paramKey] = shouldHydrate ? buildFormEntry(paramKey, nextHydrated[paramKey]) : previous[paramKey];
       });
       return next;
     });
@@ -81,38 +114,6 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
       return next;
     });
   }, [globalParameters, userGlobalParameters]);
-
-  // Get the format type for a parameter
-  const getParameterFormat = (paramKey) => {
-    if (paramKey === 'discountRate' || paramKey === 'populationGrowthRate') {
-      return 'percentage';
-    }
-    return 'number';
-  };
-
-  // Format value for display
-  const formatValue = (value, format) => {
-    if (value === '' || value === null || value === undefined) {
-      return '';
-    }
-
-    if (format === 'percentage') {
-      const numValue = parseFloat(value);
-      if (!isNaN(numValue)) {
-        // Convert to percentage and round to avoid floating-point precision issues
-        // Round to 10 decimal places to preserve precision while removing artifacts
-        const percentValue = Math.round(numValue * 100 * 1e10) / 1e10;
-        return formatNumberWithCommas(percentValue.toString());
-      }
-    }
-
-    if (format === 'number') {
-      // Format with thousand separators
-      return formatNumberWithCommas(value.toString());
-    }
-
-    return value.toString();
-  };
 
   // Parse value from user input
   const parseValue = (inputValue, format) => {
@@ -169,9 +170,11 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
     });
   };
 
-  const hasUnsavedChanges = useMemo(() => {
+  // How many parameters the draft would change if applied right now.
+  // hasUnsavedChanges derives from this so the two can never disagree.
+  const unappliedChangeCount = useMemo(() => {
     if (!globalParameters || Object.keys(formValues).length === 0) {
-      return false;
+      return 0;
     }
 
     const getBaselineValue = (paramKey) => {
@@ -185,7 +188,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
       return globalParameters[paramKey];
     };
 
-    return Object.keys(globalParameters).some((paramKey) => {
+    return Object.keys(globalParameters).filter((paramKey) => {
       const baselineValue = getBaselineValue(paramKey);
       const currentRaw = formValues[paramKey]?.raw;
       const currentValue =
@@ -194,8 +197,28 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
           : currentRaw;
 
       return !valuesMatch(currentValue, baselineValue);
-    });
+    }).length;
   }, [globalParameters, defaultGlobalParameters, userGlobalParameters, formValues]);
+
+  const hasUnsavedChanges = unappliedChangeCount > 0;
+
+  // Throw the whole draft away: reset every field to the value the site is
+  // currently using. hydratedValuesRef holds exactly that baseline — the
+  // last applied values the form hydrated from.
+  const discardDraft = () => {
+    const hydrated = hydratedValuesRef.current;
+    if (!hydrated) {
+      return;
+    }
+
+    setFormValues(
+      Object.keys(hydrated).reduce((next, paramKey) => {
+        next[paramKey] = buildFormEntry(paramKey, hydrated[paramKey]);
+        return next;
+      }, {})
+    );
+    setErrors({});
+  };
 
   return {
     formValues,
@@ -203,5 +226,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
     setErrors,
     handleChange,
     hasUnsavedChanges,
+    unappliedChangeCount,
+    discardDraft,
   };
 };

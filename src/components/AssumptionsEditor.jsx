@@ -41,6 +41,12 @@ export const APPLY_SUCCESS_MESSAGE = 'Assumptions applied — rankings and calcu
 // info notice — a success confirmation would ring false next to the errors.
 const PARTIAL_APPLY_MESSAGE = 'Your effect edits were applied. Fix the global parameter errors before leaving.';
 
+// The draft-status indicators (tab badge, chips, reminder) all speak in
+// "unapplied changes" — never "differences", which is the applied-state
+// vocabulary of the Current Assumptions panel's differences view.
+const pluralChanges = (count) => `change${count === 1 ? '' : 's'}`;
+const formatUnappliedChangeCount = (count) => `${count} unapplied ${pluralChanges(count)}`;
+
 const AssumptionsEditor = forwardRef(
   (
     {
@@ -450,6 +456,19 @@ const AssumptionsEditor = forwardRef(
     const hasGlobalFormErrors = Object.keys(globalForm.errors).length > 0;
     const activePanelId = `assumptions-panel-${activeTab}`;
 
+    // Persistent draft status: a Global draft survives tab switches (see the
+    // navigation-guard comments above) but its Apply button doesn't, so the
+    // draft must stay visible on its own — as a badge on the Global tab and,
+    // away from that tab, as an actionable reminder where Apply would be.
+    const unappliedGlobalLabel = formatUnappliedChangeCount(globalForm.unappliedChangeCount);
+    const tabBadges = useMemo(
+      () =>
+        hasUnappliedGlobalEdits
+          ? { global: { count: globalForm.unappliedChangeCount, description: unappliedGlobalLabel } }
+          : {},
+      [hasUnappliedGlobalEdits, globalForm.unappliedChangeCount, unappliedGlobalLabel]
+    );
+
     // Word the guard prompt for what the blocked navigation would actually
     // discard: same-page navigations (tab or entity switches) only threaten
     // the drill-in draft — the global form survives them.
@@ -485,16 +504,38 @@ const AssumptionsEditor = forwardRef(
         <div className={`assumptions-tabs-region${isEditingEffects ? ' assumptions-tabs-region--detached' : ''}`}>
           <div className="assumptions-toolbar">
             <div className="assumptions-toolbar__nav">
-              <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} idBase="assumptions" />
+              <TabNavigation
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+                tabs={tabs}
+                idBase="assumptions"
+                badges={tabBadges}
+              />
             </div>
 
             <div className="assumptions-toolbar__actions">
-              {!isEditingEffects && activeTab === 'global' && (
+              {!isEditingEffects && activeTab === 'global' ? (
                 // Only the Global tab commits through an explicit Apply;
                 // cause/recipient edits commit from their drill-in editors.
                 <div className="assumptions-form-actions">
-                  {hasGlobalFormErrors && (
+                  {hasGlobalFormErrors ? (
                     <p className="assumptions-form-actions__status">Fix validation errors before applying.</p>
+                  ) : (
+                    hasUnappliedGlobalEdits && <span className="assumptions-draft-chip">{unappliedGlobalLabel}</span>
+                  )}
+                  {hasUnappliedGlobalEdits && (
+                    // Deliberately available while errors block Apply: it is
+                    // the bulk escape hatch back to the applied values. The
+                    // count states the blast radius before the click — and
+                    // keeps it visible when the error status replaces the
+                    // count chip.
+                    <button
+                      type="button"
+                      onClick={globalForm.discardDraft}
+                      className="impact-btn impact-btn--secondary assumptions-form-actions__discard"
+                    >
+                      Discard {globalForm.unappliedChangeCount} {pluralChanges(globalForm.unappliedChangeCount)}
+                    </button>
                   )}
                   <button
                     type="button"
@@ -505,7 +546,19 @@ const AssumptionsEditor = forwardRef(
                     Apply
                   </button>
                 </div>
-              )}
+              ) : hasUnappliedGlobalEdits ? (
+                <div className="assumptions-draft-reminder">
+                  <span className="assumptions-draft-chip">Global has {unappliedGlobalLabel}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleTabChange('global')}
+                    aria-label="Review unapplied global changes"
+                    className="impact-btn impact-btn--secondary impact-btn--xs"
+                  >
+                    Review
+                  </button>
+                </div>
+              ) : null}
             </div>
           </div>
 

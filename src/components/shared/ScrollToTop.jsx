@@ -20,7 +20,7 @@ const HASH_SETTLE_MIN_MS = 500;
  *   pathname change counts as arriving on a new page. Same-page anchor
  *   clicks scroll natively without our help.
  * - Navigations WITH a hash land on the hash's target instead of the top
- *   (e.g. the editor's "Why this default?" links target a detail page's
+ *   (e.g. the editor's "Why these values?" links target a detail page's
  *   `#full-justification`). There is no single "page finished rendering"
  *   moment to await: the route page is React.lazy (the target doesn't exist
  *   when the navigation commits), and the charts above the target render

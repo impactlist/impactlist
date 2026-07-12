@@ -38,13 +38,15 @@ const EffectCard = ({
             </Heading>
             {showDisableToggle && <DisableToggleButton isDisabled={isToggledOff} onToggle={onToggleDisabled} />}
             {disabledNote && <span className={`effect-card__disabled-note ${dimmedClass}`}>{disabledNote}</span>}
-            {/* "default", deliberately: the justification explains the
-                published baseline, which stays true even while the user's
-                edited values are on screen. A sibling of the heading, not a
+            {/* Known wording trade-off: the justification explains the
+                PUBLISHED values, so for a user mid-edit "these values" is a
+                slight overpromise — accepted because the unedited case
+                dominates, the form marks defaults inline, and the reasoning
+                applies to edited values too. A sibling of the heading, not a
                 child — headings must not contain interactive controls. */}
             {rationaleHref && (
               <Link to={rationaleHref} className="assumptions-link text-xs whitespace-nowrap">
-                Why this default?
+                Why these values?
               </Link>
             )}
           </div>

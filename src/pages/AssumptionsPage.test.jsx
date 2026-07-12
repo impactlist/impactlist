@@ -1184,7 +1184,7 @@ describe('AssumptionsPage routing integration', () => {
 
     await screen.findByText(/Edit effects for cause/i);
 
-    const rationaleLinks = screen.getAllByRole('link', { name: 'Why this default?' });
+    const rationaleLinks = screen.getAllByRole('link', { name: 'Why these values?' });
     expect(rationaleLinks).toHaveLength(assumptionsData.categories[firstValidCategoryId].effects.length);
     expect(rationaleLinks[0]).toHaveAttribute(
       'href',

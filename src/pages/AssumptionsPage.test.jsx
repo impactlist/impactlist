@@ -1179,6 +1179,19 @@ describe('AssumptionsPage routing integration', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  it('links each effect to the rationale for its defaults', async () => {
+    renderAssumptionsRoute(`/assumptions?tab=categories&categoryId=${firstValidCategoryId}`);
+
+    await screen.findByText(/Edit effects for cause/i);
+
+    const rationaleLinks = screen.getAllByRole('link', { name: 'Why this default?' });
+    expect(rationaleLinks).toHaveLength(assumptionsData.categories[firstValidCategoryId].effects.length);
+    expect(rationaleLinks[0]).toHaveAttribute(
+      'href',
+      `/cause/${encodeURIComponent(firstValidCategoryId)}#full-justification`
+    );
+  });
+
   it('"Apply and leave" keeps you in the editor when the drill-in draft has validation errors', async () => {
     const user = userEvent.setup();
     // Clearing a category effect field is a change AND a validation error.

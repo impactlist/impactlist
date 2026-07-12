@@ -22,6 +22,7 @@ const RecipientEffectCard = ({
   globalParameters,
   previewYear,
   fieldIdPrefix = '',
+  rationaleHref = null,
   headingLevel = 'h4',
 }) => {
   const baseEffect = effect._baseEffect;
@@ -57,6 +58,7 @@ const RecipientEffectCard = ({
       onToggleDisabled={onToggleDisabled}
       validTimeInterval={baseEffect?.validTimeInterval}
       previewYear={previewYear}
+      rationaleHref={rationaleHref}
     >
       {effectType === 'qaly' ? (
         <RecipientQalyEffectInputs {...inputProps} />
@@ -84,6 +86,7 @@ RecipientEffectCard.propTypes = {
   globalParameters: PropTypes.object.isRequired,
   previewYear: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   fieldIdPrefix: PropTypes.string,
+  rationaleHref: PropTypes.string,
   headingLevel: PropTypes.oneOf(['h3', 'h4']),
 };
 

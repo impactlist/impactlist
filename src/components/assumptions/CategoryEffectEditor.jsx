@@ -268,6 +268,7 @@ const CategoryEffectEditor = forwardRef(
                   onToggleDisabled={() => toggleEffectDisabled(index)}
                   validTimeInterval={effect.validTimeInterval}
                   previewYear={calculationYear}
+                  rationaleHref={`${buildCausePath(categoryId)}#full-justification`}
                 >
                   {effectType === 'qaly' ? (
                     <QalyEffectInputs {...inputProps} />

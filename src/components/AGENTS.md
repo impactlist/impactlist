@@ -7,7 +7,7 @@
 - `assumptions/` — the assumptions editor internals (has its own context file).
 - `calculator/` — donation calculator pieces (`CalculatorForm`, `RecipientTable`, `CalculatorStats`).
 - `charts/` — recharts wrappers (`ImpactBarChart`, `LivesSavedGraph`, `EntityChartSection` lives in entity/). Negative-value domains are handled deliberately.
-- `entity/` — donor/recipient detail-page sections (`EntityStatistics`, `EntityChartSection`, `EntityDonationTable`).
+- `entity/` — donor/recipient detail-page sections (`EntityStatistics`, `EntityChartSection`, `EntityDonationTable`). Cost-per-life justification discoverability: the cause/recipient markdown write-up renders inside the stable anchor `#full-justification`, targeted one click deep by the stats-card "(justification)" link beside Edit and by the editor's per-effect "Why this default?" links; `ScrollToTop` honors `location.hash` so cross-page anchor links land on the section. (An intermediate "How this estimate is calculated" summary section was tried and deliberately removed as clutter — link straight to the write-up.)
 - `layout/` — `Header`, `Footer`.
 
 ## Hard rules

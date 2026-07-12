@@ -98,21 +98,32 @@ const CategoryDetail = () => {
           livesSavedTooltip={CATEGORY_LIVES_SAVED_TOOLTIP}
           costPerLifeTooltip={CATEGORY_COST_PER_LIFE_TOOLTIP}
           costPerLifeAction={
-            <button
-              type="button"
-              onClick={handleEditCategoryAssumptions}
-              className="impact-btn impact-btn--secondary impact-btn--xs"
-            >
-              Edit
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={handleEditCategoryAssumptions}
+                className="impact-btn impact-btn--secondary impact-btn--xs"
+              >
+                Edit
+              </button>
+              <a
+                href="#full-justification"
+                className="assumptions-link ml-2 whitespace-nowrap text-xs"
+                aria-label="Cost per life justification"
+              >
+                (justification)
+              </a>
+            </>
           }
         />
 
         {/* Sample donation calculator */}
         <SampleDonationCalculator categoryId={categoryId} combinedAssumptions={combinedAssumptions} />
 
-        {/* Category markdown content */}
-        <MarkdownContent content={categoryInfo.content} className="mt-8 mb-8" />
+        {/* Category markdown content (the full justification) */}
+        <div id="full-justification" className="scroll-mt-3">
+          <MarkdownContent content={categoryInfo.content} className="mt-8 mb-8" />
+        </div>
       </motion.div>
     </motion.div>
   );

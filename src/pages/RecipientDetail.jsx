@@ -133,13 +133,22 @@ const RecipientDetail = () => {
           livesSavedTooltip={RECIPIENT_LIVES_SAVED_TOOLTIP}
           costPerLifeTooltip={RECIPIENT_COST_PER_LIFE_TOOLTIP}
           costPerLifeAction={
-            <button
-              type="button"
-              onClick={handleEditRecipientAssumptions}
-              className="impact-btn impact-btn--secondary impact-btn--xs"
-            >
-              Edit
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={handleEditRecipientAssumptions}
+                className="impact-btn impact-btn--secondary impact-btn--xs"
+              >
+                Edit
+              </button>
+              <a
+                href="#full-justification"
+                className="assumptions-link ml-2 whitespace-nowrap text-xs"
+                aria-label="Cost per life justification"
+              >
+                (justification)
+              </a>
+            </>
           }
         />
 
@@ -161,8 +170,10 @@ const RecipientDetail = () => {
           />
         )}
 
-        {/* Recipient markdown content */}
-        <MarkdownContent content={recipientContent} className="mt-8 mb-8" />
+        {/* Recipient markdown content (the full justification) */}
+        <div id="full-justification" className="scroll-mt-3">
+          <MarkdownContent content={recipientContent} className="mt-8 mb-8" />
+        </div>
 
         {/* Donations list */}
         <EntityDonationTable

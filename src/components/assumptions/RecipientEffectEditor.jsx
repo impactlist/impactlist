@@ -150,6 +150,7 @@ const RecipientEffectEditor = forwardRef(
                 onToggleDisabled={() => toggleEffectDisabled(index)}
                 globalParameters={globalParameters}
                 previewYear={calculationYear}
+                rationaleHref={`/recipient/${encodeURIComponent(recipientId)}#full-justification`}
                 headingLevel="h3"
               />
             ))}

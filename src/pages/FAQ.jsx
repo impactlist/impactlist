@@ -249,15 +249,18 @@ const FAQ = () => {
                   quality adjusted life year (QALY)
                 </a>{' '}
                 to estimate the lives saved of a donation. One QALY represents the value of a life year lived in good
-                health. To compare different cause areas, we need to convert the effects of charities into QALYs.
+                health. To compare different cause areas, we need to convert the effects of charities into QALYs. This
+                doesn't mean that we only consider effects on health. We can handle any effect on wellbeing under this
+                framework by converting it to a QALY-equivalent value.
               </p>
               <p className="mb-3">
-                For instance, if a charity cures someone's blindness we would need to estimate how much better their
-                life is per year now that they can see, as a fraction of a life year. We might estimate that a year of
-                not being able to see is 15% less good than a year of being able to see. So curing someone's blindness
-                for a year is equivalent to 0.15 QALYs. We would then multiply this by the amount of years we expect
-                them to be able to see for. If we expect them to be able to see for 10 years, then we would estimate
-                that curing their blindness is equivalent to 1.5 QALYs.
+                For instance, if we want to evaluate the positive impact of an art museum we would estimate how much
+                better visiting the art museum makes each visitor's life, as a fraction of a life year. If the average
+                visitor went to the museum ten times in their lives, and each time the experience gave them an amount of
+                enjoyment that was as good as an extra two days of healthy life, then the museum would benefit each
+                visitor by 20/365 = 0.055 QALYs. Note that this is an extremely simplified example meant to give an
+                intuition for how we can use QALYs to compare different charitable causes. In practice we would want to
+                do a lot more work to estimate the value of an art museum.
               </p>
               <p>
                 This process inherently involves approximations and a lot of uncertainty, but we think it's better than

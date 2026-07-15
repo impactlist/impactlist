@@ -90,4 +90,63 @@ describe('useCategoryChartData', () => {
     expect(renderChartData(combined, [])).toEqual([]);
     expect(() => renderChartData(combined, [donation('nope', 100)])).toThrow(/Recipient not found/);
   });
+
+  // Negative cost per life (donations that cost lives) is legitimate input;
+  // percentages use the gross magnitude total so mixed-sign categories sum to
+  // 100% — a signed net denominator inflated shares past 100%.
+  it('keeps lives-saved percentages on a gross basis for mixed-sign categories', () => {
+    const combined = createCombinedAssumptions(
+      {
+        globalParameters,
+        categories: {
+          good: { name: 'Good Cause', effects: [qalyEffect('effect-good', 1000)] },
+          harm: { name: 'Harmful Cause', effects: [qalyEffect('effect-harm', -1000)] },
+        },
+        recipients: {
+          mixed: { name: 'Mixed Recipient', categories: { good: { fraction: 0.75 }, harm: { fraction: 0.25 } } },
+        },
+      },
+      null
+    );
+
+    const rows = renderChartData(combined, [donation('mixed', 1000)]);
+    const byName = Object.fromEntries(rows.map((row) => [row.name, row]));
+
+    expect(byName['Good Cause'].livesSavedValue).toBeGreaterThan(0);
+    expect(byName['Harmful Cause'].livesSavedValue).toBeLessThan(0);
+    expect(byName['Good Cause'].livesSavedPercentage).toBe('75.0');
+    expect(byName['Harmful Cause'].livesSavedPercentage).toBe('25.0');
+  });
+
+  it("keeps the Other Causes share consistent with the bar it labels (the collapsed rows' net)", () => {
+    const combined = createCombinedAssumptions(
+      {
+        globalParameters,
+        categories: {
+          a: { name: 'Category A', effects: [qalyEffect('effect-a', 1000)] },
+          b: { name: 'Category B', effects: [qalyEffect('effect-b', -1000)] },
+          c: { name: 'Category C', effects: [qalyEffect('effect-c', 1000)] },
+        },
+        recipients: {
+          spread: {
+            name: 'Spread Recipient',
+            categories: { a: { fraction: 0.5 }, b: { fraction: 0.3 }, c: { fraction: 0.2 } },
+          },
+        },
+      },
+      null
+    );
+
+    const rows = renderChartData(combined, [donation('spread', 1000)], { maxCategories: 2 });
+
+    expect(rows.map((row) => row.name)).toEqual(['Category A', 'Other Causes']);
+    const [categoryA, other] = rows;
+    // B (-0.3) and C (+0.2) collapse into a net -0.1 bar; its label must
+    // describe that bar — 10% of the gross total — not the 50% of collapsed
+    // magnitude (which could label a zero-length bar "50%"). The visible
+    // shares deliberately total under 100% when signs cancel inside Other.
+    expect(other.livesSavedValue).toBeLessThan(0);
+    expect(categoryA.livesSavedPercentage).toBe('50.0');
+    expect(other.livesSavedPercentage).toBe('10.0');
+  });
 });

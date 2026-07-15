@@ -235,8 +235,12 @@ const MultiCategoryRecipientEditor = forwardRef(
         return undefined;
       }
 
-      let totalWeightedCost = 0;
-      let totalWeight = 0;
+      // Combine harmonically (lives per dollar), mirroring
+      // getCostPerLifeForRecipientFromCombined: ∞-cost categories keep their
+      // weight (fractions sum to 1) and just add no lives. A fraction-weighted
+      // arithmetic mean would contradict the recipient card readout whenever
+      // category costs are heterogeneous.
+      let livesPerDollar = 0;
 
       for (const { categoryId } of categories) {
         const data = categoryData[categoryId];
@@ -254,16 +258,15 @@ const MultiCategoryRecipientEditor = forwardRef(
 
         const fraction = recipient?.categories?.[categoryId]?.fraction ?? 0;
         if (cost !== Infinity && fraction > 0) {
-          totalWeightedCost += cost * fraction;
-          totalWeight += fraction;
+          livesPerDollar += fraction / cost;
         }
       }
 
-      if (totalWeight === 0) {
+      if (livesPerDollar === 0) {
         return Infinity;
       }
 
-      return totalWeightedCost / totalWeight;
+      return 1 / livesPerDollar;
     }, [calculationYear, categories, categoryData, recipient]);
 
     const showHeaderActions = categories.length > 1;

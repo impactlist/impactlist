@@ -84,8 +84,12 @@ const DonorDetail = () => {
     if (donorData.totalDonated && donorData.totalDonated > knownDonationsTotal) {
       const unknownAmount = donorData.totalDonated - knownDonationsTotal;
       const knownLivesSaved = knownDonations.reduce((total, donation) => total + donation.totalLivesSaved, 0);
-      const avgCostPerLife = knownLivesSaved !== 0 ? knownDonationsTotal / knownLivesSaved : 0;
-      const unknownLivesSaved = avgCostPerLife !== 0 ? unknownAmount / avgCostPerLife : 0;
+      // When known lives cancel to zero there is no meaningful average:
+      // Infinity is the domain's "no effect" sentinel, and it keeps the
+      // Cost/Life SORT consistent with the ∞ the cell displays (a stored 0
+      // would sort the visibly-infinite row as the cheapest).
+      const avgCostPerLife = knownLivesSaved !== 0 ? knownDonationsTotal / knownLivesSaved : Infinity;
+      const unknownLivesSaved = Number.isFinite(avgCostPerLife) ? unknownAmount / avgCostPerLife : 0;
 
       tableDonations.unshift({
         date: 'Unknown',
@@ -94,6 +98,7 @@ const DonorDetail = () => {
         recipientId: 'unknown',
         recipient: 'Unknown',
         amount: unknownAmount,
+        creditedAmount: unknownAmount,
         categoryId: 'other',
         categoryName: 'Unknown',
         totalLivesSaved: unknownLivesSaved,
@@ -181,7 +186,7 @@ const DonorDetail = () => {
         <MarkdownContent content={donorContent} className="mt-8 mb-8" />
 
         {/* Donations list */}
-        <EntityDonationTable donations={donorDonations} entityType="donor" combinedAssumptions={combinedAssumptions} />
+        <EntityDonationTable donations={donorDonations} entityType="donor" />
 
         {/* Feedback note */}
         <p className="mb-8 mt-4 text-center italic text-muted">

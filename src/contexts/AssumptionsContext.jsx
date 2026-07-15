@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { createCombinedAssumptions, createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
 import * as apiHelpers from '../utils/assumptionsAPIHelpers';
 import { normalizeUserAssumptions } from '../utils/assumptionsAPIHelpers';
+import { getLocalStorage, getSessionStorage } from '../utils/safeStorage';
 
 const AssumptionsContext = createContext();
 const defaultAssumptions = createDefaultAssumptions();
@@ -30,15 +31,16 @@ export const useAssumptions = () => {
 
 export const AssumptionsProvider = ({ children }) => {
   const [userAssumptions, setUserAssumptions] = useState(() => {
-    globalThis.localStorage.removeItem('customCostPerLifeValues');
+    const localStorage = getLocalStorage();
+    localStorage.removeItem('customCostPerLifeValues');
 
-    if (globalThis.localStorage.getItem(SESSION_STORAGE_CLEANUP_KEY) !== '1') {
-      globalThis.localStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
-      globalThis.localStorage.removeItem(LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
-      globalThis.localStorage.setItem(SESSION_STORAGE_CLEANUP_KEY, '1');
+    if (localStorage.getItem(SESSION_STORAGE_CLEANUP_KEY) !== '1') {
+      localStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      localStorage.removeItem(LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+      localStorage.setItem(SESSION_STORAGE_CLEANUP_KEY, '1');
     }
 
-    const savedData = globalThis.sessionStorage.getItem(CUSTOM_EFFECTS_DATA_KEY);
+    const savedData = getSessionStorage().getItem(CUSTOM_EFFECTS_DATA_KEY);
     if (!savedData) return null;
 
     try {
@@ -48,7 +50,7 @@ export const AssumptionsProvider = ({ children }) => {
       // the whole app on every load of this tab (refreshing can't fix
       // persisted storage). Discard it loudly and fall back to defaults.
       console.error('Discarding corrupted stored assumptions', error);
-      globalThis.sessionStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
       return null;
     }
   });
@@ -60,9 +62,9 @@ export const AssumptionsProvider = ({ children }) => {
 
   useEffect(() => {
     if (userAssumptions) {
-      globalThis.sessionStorage.setItem(CUSTOM_EFFECTS_DATA_KEY, JSON.stringify(userAssumptions));
+      getSessionStorage().setItem(CUSTOM_EFFECTS_DATA_KEY, JSON.stringify(userAssumptions));
     } else {
-      globalThis.sessionStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
     }
   }, [userAssumptions]);
 

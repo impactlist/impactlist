@@ -50,3 +50,21 @@ test.describe('Donor list and detail flow', () => {
     await expect(page.getByRole('heading', { name: 'Impact List', level: 1 })).toBeVisible();
   });
 });
+
+// Date-only strings parse as UTC midnight; formatted in local time they'd
+// display the PREVIOUS day for any viewer west of UTC (the whole US). The
+// unit suite can't force a timezone (Node caches it per process and CI runs
+// in UTC), so this pins the regression deterministically in a real browser.
+test.describe('Donation dates render on the recorded day', () => {
+  test.use({ timezoneId: 'America/Los_Angeles' });
+
+  test('west-of-UTC viewers see Jan 1 dates as Jan 1, not Dec 31 of the prior year', async ({ page }) => {
+    // Jaan Tallinn's grants include 36 donations dated 2024-01-01 and none
+    // dated 2023-12-31, so any "Dec 31, 2023" here is the timezone bug.
+    await page.goto('/donor/jaan-tallinn');
+    await expect(page.getByRole('heading', { name: 'Jaan Tallinn', level: 1 })).toBeVisible();
+
+    await expect(page.getByText('Jan 1, 2024').first()).toBeVisible();
+    await expect(page.getByText('Dec 31, 2023')).toHaveCount(0);
+  });
+});

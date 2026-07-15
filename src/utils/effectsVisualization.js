@@ -207,6 +207,15 @@ export const calculateLivesSavedSegments = (
     .filter((t) => t <= timeLimit) // Ensure no points extend beyond the global time limit
     .sort((a, b) => a - b);
 
+  // A sub-year time limit rounds every sample point onto t=0, leaving nothing
+  // to integrate: the trapezoidal pass below would see no interval, skip
+  // normalization, and report zero lives per series against a nonzero total.
+  // Keep the exact fractional horizon as a second endpoint so the single
+  // interval integrates and normalizes like any other window.
+  if (sortedTimePoints.length === 1 && timeLimit > sortedTimePoints[0]) {
+    sortedTimePoints.push(timeLimit);
+  }
+
   // 3. Calculate the rate at each critical point
   const points = [];
   for (let i = 0; i < sortedTimePoints.length; i++) {
@@ -216,9 +225,16 @@ export const calculateLivesSavedSegments = (
       year: absoluteYear,
     };
 
-    // The interval (dt) is the time between this point and the next
-    // For the last point, we can use the difference to the previous point
-    const dt = i < sortedTimePoints.length - 1 ? sortedTimePoints[i + 1] - t : t - sortedTimePoints[i - 1];
+    // The interval (dt) is the time between this point and the next.
+    // For the last point, use the difference to the previous point; with a
+    // single point (timeLimit < 1 collapses every rounded edge onto 0) there
+    // is no previous point, so sample across the remaining horizon instead.
+    const dt =
+      i < sortedTimePoints.length - 1
+        ? sortedTimePoints[i + 1] - t
+        : i > 0
+          ? t - sortedTimePoints[i - 1]
+          : timeLimit - t;
 
     if (dt <= 0) {
       // Avoid division by zero and redundant calculations if points are too close

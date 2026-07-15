@@ -106,6 +106,20 @@ describe('useAssumptionsShareActions', () => {
     expect(result.current.shareModalInitialSlug).toBe('saved-assumptions');
   });
 
+  it('leaves the slug empty when the entry label slugifies to something invalid', () => {
+    // Slugs need ≥3 chars; a short label must not prefill a value the API
+    // would reject the moment the user clicks Create Link.
+    const { result } = buildHook({
+      activeLibraryEntry: { ...activeLibraryEntry, label: 'AB' },
+    });
+
+    act(() => {
+      result.current.handleOpenShareModal();
+    });
+
+    expect(result.current.shareModalInitialSlug).toBe('');
+  });
+
   it('creates a new saved assumptions entry when no matching entry can be found', () => {
     mockAttachSavedAssumptionsShareReference.mockReturnValue({
       ok: false,

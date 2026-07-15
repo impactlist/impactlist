@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import SectionCard from '../shared/SectionCard';
 import NumericInput from '../shared/NumericInput';
 import InfoTooltipIcon from '../shared/InfoTooltipIcon';
@@ -138,9 +139,11 @@ const GlobalValuesSection = ({ globalParameters, defaultGlobalParameters, formVa
             <p className="mb-1 font-semibold">Note: Animal lives vs. human lives</p>
             <p>
               Adjust the assumptions about the relative value of animal lives vs. human lives inside the{' '}
-              <a href={buildCausePath('animal-welfare')} className="assumptions-link">
+              {/* Client-side Link: a raw <a> full-page reload would bypass the
+                  unapplied-edits navigation guard and drop draft edits. */}
+              <Link to={buildCausePath('animal-welfare')} className="assumptions-link">
                 Animal Welfare
-              </a>{' '}
+              </Link>{' '}
               cause settings, or for any specific recipient in that cause.
             </p>
           </div>

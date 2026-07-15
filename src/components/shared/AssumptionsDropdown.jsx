@@ -8,7 +8,7 @@ import { DEFAULT_ASSUMPTIONS_ENTRY, DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../../c
 
 export { DEFAULT_ASSUMPTIONS_ENTRY_ID };
 
-const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges }) => {
+const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges, allowAddDescriptionAction }) => {
   const isDefaultEntry = entry.id === DEFAULT_ASSUMPTIONS_ENTRY_ID;
   const isCustomEntry = entry.id === CURRENT_CUSTOM_ENTRY_ID;
   const isActive = activeId === entry.id;
@@ -16,12 +16,16 @@ const getEntryUiState = (entry, { activeId, editingId, hasUnsavedChanges }) => {
   const isCurated = isDefaultEntry || (!isCustomEntry && entry.source === 'curated');
   const isRemote = !isDefaultEntry && !isCustomEntry && Boolean(entry.reference);
   const isLoadDisabled = isActive && !hasUnsavedChanges;
-  const shouldShowDescriptionAction = isCustomEntry
-    ? true
-    : isDefaultEntry
-      ? Boolean(entry.description || entry.content)
-      : isCurated
-        ? Boolean(entry.description || entry.content)
+  const hasDescriptionContent = Boolean(entry.description || entry.content);
+  // A view-only consumer (allowAddDescriptionAction=false) shows the action
+  // only when there is something to view — otherwise "Add description" would
+  // render as a dead button (its modal is read-only and won't open empty).
+  const shouldShowDescriptionAction = !allowAddDescriptionAction
+    ? hasDescriptionContent
+    : isCustomEntry
+      ? true
+      : isDefaultEntry || isCurated
+        ? hasDescriptionContent
         : !isRemote || Boolean(entry.description);
 
   return {
@@ -122,6 +126,7 @@ const AssumptionsDropdown = ({
   showShareForLocal = false,
   allowEntryManagementActions = false,
   allowCopyLinkAction = false,
+  allowAddDescriptionAction = true,
   onLoad,
   onSaveCurrent = () => {},
   onShareCurrent = () => {},
@@ -324,8 +329,14 @@ const AssumptionsDropdown = ({
   }, []);
 
   const selectedEntryUiState = useMemo(
-    () => getEntryUiState(selectedEntry, { activeId: currentSelectionId, editingId, hasUnsavedChanges }),
-    [currentSelectionId, editingId, hasUnsavedChanges, selectedEntry]
+    () =>
+      getEntryUiState(selectedEntry, {
+        activeId: currentSelectionId,
+        editingId,
+        hasUnsavedChanges,
+        allowAddDescriptionAction,
+      }),
+    [allowAddDescriptionAction, currentSelectionId, editingId, hasUnsavedChanges, selectedEntry]
   );
   const summaryTriggerAriaLabel = `${
     inlineLabel && inlineLabelText ? inlineLabelText : 'Select assumptions set'
@@ -520,6 +531,7 @@ const AssumptionsDropdown = ({
                 activeId: currentSelectionId,
                 editingId,
                 hasUnsavedChanges,
+                allowAddDescriptionAction,
               });
 
               return (
@@ -611,6 +623,7 @@ AssumptionsDropdown.propTypes = {
   showShareForLocal: PropTypes.bool,
   allowEntryManagementActions: PropTypes.bool,
   allowCopyLinkAction: PropTypes.bool,
+  allowAddDescriptionAction: PropTypes.bool,
   onLoad: PropTypes.func.isRequired,
   onSaveCurrent: PropTypes.func,
   onShareCurrent: PropTypes.func,

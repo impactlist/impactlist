@@ -64,7 +64,7 @@ export const validateEffectField = (fieldName, value, effectType) => {
     if (isPartialInput(cleanValue)) {
       return 'Start time is required';
     }
-    if (isNaN(numValue) || numValue < 0) {
+    if (!Number.isFinite(numValue) || numValue < 0) {
       return 'Start time must be non-negative';
     }
   }
@@ -74,7 +74,7 @@ export const validateEffectField = (fieldName, value, effectType) => {
     if (isPartialInput(cleanValue)) {
       return 'Duration is required';
     }
-    if (isNaN(numValue) || numValue <= 0) {
+    if (!Number.isFinite(numValue) || numValue <= 0) {
       return 'Duration must be positive';
     }
   }
@@ -85,7 +85,7 @@ export const validateEffectField = (fieldName, value, effectType) => {
     if (isPartialInput(cleanValue)) {
       return 'Cost per QALY is required';
     }
-    if (isNaN(numValue)) {
+    if (!Number.isFinite(numValue)) {
       return 'Cost per QALY must be a valid number';
     }
     if (numValue === 0) {
@@ -100,7 +100,7 @@ export const validateEffectField = (fieldName, value, effectType) => {
       if (isPartialInput(cleanValue)) {
         return 'Cost per microprobability is required';
       }
-      if (isNaN(numValue)) {
+      if (!Number.isFinite(numValue)) {
         return 'Cost per microprobability must be a valid number';
       }
       if (numValue === 0) {
@@ -113,7 +113,7 @@ export const validateEffectField = (fieldName, value, effectType) => {
       if (isPartialInput(cleanValue)) {
         return 'Population fraction is required';
       }
-      if (isNaN(numValue)) {
+      if (!Number.isFinite(numValue)) {
         return 'Population fraction must be a valid number';
       }
       if (numValue <= 0 || numValue > 1) {
@@ -126,7 +126,7 @@ export const validateEffectField = (fieldName, value, effectType) => {
       if (isPartialInput(cleanValue)) {
         return 'Welfare change is required';
       }
-      if (isNaN(numValue)) {
+      if (!Number.isFinite(numValue)) {
         return 'Welfare change must be a valid number';
       }
       if (numValue === 0) {
@@ -243,7 +243,7 @@ export const validateGlobalField = (fieldName, value) => {
   }
 
   // Check if it's a valid number
-  if (isNaN(numValue)) {
+  if (!Number.isFinite(numValue)) {
     return 'Invalid number';
   }
 
@@ -261,16 +261,20 @@ export const validateGlobalField = (fieldName, value) => {
  * @returns {string|null} Error message if validation fails, null if valid
  */
 export const validateRecipientEffectField = (fieldName, value, type, effectType) => {
-  // Use cleanAndParseValue to properly validate the entire string
-  const { cleanValue, numValue } = cleanAndParseValue(value);
-
-  // Allow partial inputs during typing
-  if (isPartialInput(cleanValue)) {
-    return null; // Don't show error for partial inputs
+  // A RAW empty value is a cleared override/multiplier (the draft hook
+  // deletes the key for exactly '', null, undefined — mirror that contract).
+  // This must run BEFORE parsing: cleanAndParseValue calls .replace() on
+  // non-number values and would throw on null/undefined.
+  if (value === '' || value === null || value === undefined) {
+    return null;
   }
 
-  // Check if it's a valid number
-  if (isNaN(numValue)) {
+  // Everything else, including strings that merely CLEAN to empty ('$') and
+  // partials ('-', '.'), stays in the draft and must parse to a finite
+  // number, or Apply crashes converting it. Non-finite parses like '1e999'
+  // are rejected too: normalization refuses non-finite numbers.
+  const { numValue } = cleanAndParseValue(value);
+  if (!Number.isFinite(numValue)) {
     return 'Invalid number';
   }
 

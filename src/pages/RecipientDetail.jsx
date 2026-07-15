@@ -8,6 +8,7 @@ import {
   getCreditedAmount,
   getDonationsForRecipient,
   getCurrentYear,
+  extractYearFromDonation,
 } from '../utils/donationDataHelpers';
 import {
   getCostPerLifeForRecipientFromCombined,
@@ -66,6 +67,13 @@ const RecipientDetail = () => {
         ...donation,
         creditedAmount: getCreditedAmount(donation),
         totalLivesSaved: calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation),
+        // The donation table sorts by the values its cells display, so every
+        // row needs its cost per life at the donation's year (as DonorDetail).
+        costPerLife: getCostPerLifeForRecipientFromCombined(
+          combinedAssumptions,
+          recipientId,
+          extractYearFromDonation(donation)
+        ),
         dateObj: new Date(donation.date),
       }))
       .sort((a, b) => b.dateObj - a.dateObj);
@@ -176,11 +184,7 @@ const RecipientDetail = () => {
         </div>
 
         {/* Donations list */}
-        <EntityDonationTable
-          donations={recipientDonations}
-          entityType="recipient"
-          combinedAssumptions={combinedAssumptions}
-        />
+        <EntityDonationTable donations={recipientDonations} entityType="recipient" />
       </motion.div>
     </motion.div>
   );

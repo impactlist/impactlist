@@ -7,6 +7,21 @@ import { formatLives, formatCurrency } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import FormattedScientificValue from './shared/FormattedScientificValue';
 
+// Clean a number input value (user-typed strings may carry commas)
+const cleanNumberInput = (value) => {
+  return value.toString().replace(/,/g, '');
+};
+
+// A custom cost per life applies only when it parses to a finite nonzero
+// number (negative is legitimate — some recipients cost lives; zero and
+// Infinity are invalid). ONE predicate feeds submit validation, the lives
+// preview, and the cost readout so the surfaces can never disagree.
+const parseCustomCostPerLife = (raw) => {
+  if (!raw) return null;
+  const parsed = Number(cleanNumberInput(raw));
+  return Number.isFinite(parsed) && parsed !== 0 ? parsed : null;
+};
+
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
   const { combinedAssumptions } = useAssumptions();
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,7 +81,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         return '';
       }
 
-      return String(getCostPerLifeFromCombined(combinedAssumptions, categoryId, year));
+      // Prefill with a human-readable rounding (raw floats carry ~17-digit
+      // dust); a non-finite default (∞ = "no effect") leaves the field empty
+      // rather than the literal string "Infinity".
+      const cost = getCostPerLifeFromCombined(combinedAssumptions, categoryId, year);
+      return Number.isFinite(cost) ? String(Number(cost.toPrecision(6))) : '';
     },
     [combinedAssumptions]
   );
@@ -97,7 +116,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
             editingDonation.categoryId,
             editingYear
           );
-          setCustomCostPerLife(String(baseCostPerLife * editingDonation.multiplier));
+          const derivedCostPerLife = baseCostPerLife * editingDonation.multiplier;
+          setCustomCostPerLife(
+            Number.isFinite(derivedCostPerLife) ? String(Number(derivedCostPerLife.toPrecision(6))) : ''
+          );
           setHasEditedCustomCostPerLife(true);
         } else if (editingDonation.categoryId) {
           setCustomCostPerLife(getDefaultCustomCostPerLife(editingDonation.categoryId, editingYear));
@@ -211,11 +233,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     }
   };
 
-  // Clean a number input value
-  const cleanNumberInput = (value) => {
-    return value.toString().replace(/,/g, '');
-  };
-
   const handleSubmit = () => {
     // Hide dropdown when submitting
     setShowDropdown(false);
@@ -229,9 +246,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       newErrors.customRecipientName = 'Please enter a recipient name';
     }
 
-    // Validate amount
+    // Validate amount — finite only, matching parseDonationAmount ('1e999'
+    // parses to Infinity and is not a valid donation).
     const cleanedAmount = cleanNumberInput(amount);
-    if (!cleanedAmount || isNaN(Number(cleanedAmount)) || Number(cleanedAmount) <= 0) {
+    const amountNum = Number(cleanedAmount);
+    if (!cleanedAmount || !Number.isFinite(amountNum) || amountNum <= 0) {
       newErrors.amount = 'Please enter a valid amount';
     }
 
@@ -253,13 +272,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       const cleanedCustomCostPerLife = cleanNumberInput(customCostPerLife);
       if (!cleanedCustomCostPerLife) {
         newErrors.customCostPerLife = 'Please enter a valid cost per life';
-      } else {
-        const customCostPerLifeNum = Number(cleanedCustomCostPerLife);
-        if (isNaN(customCostPerLifeNum)) {
-          newErrors.customCostPerLife = 'Please enter a valid cost per life';
-        } else if (customCostPerLifeNum === 0) {
-          newErrors.customCostPerLife = 'Cost per life cannot be zero';
-        }
+      } else if (parseCustomCostPerLife(customCostPerLife) === null) {
+        newErrors.customCostPerLife =
+          Number(cleanedCustomCostPerLife) === 0
+            ? 'Cost per life cannot be zero'
+            : 'Please enter a valid cost per life';
       }
     }
 
@@ -289,10 +306,13 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     }
   };
 
-  // Calculate lives saved for the current donation
+  // Lives saved for the current draft, or null when there is nothing
+  // meaningful to preview (invalid amount, invalid custom cost, no selection)
+  // — a suppressed preview beats a confidently wrong one.
   const calculateLivesSaved = () => {
-    if (!amount || isNaN(Number(cleanNumberInput(amount))) || Number(cleanNumberInput(amount)) <= 0) {
-      return 0;
+    const amountNum = Number(cleanNumberInput(amount));
+    if (!amount || !Number.isFinite(amountNum) || amountNum <= 0) {
+      return null;
     }
 
     if (!combinedAssumptions) {
@@ -313,16 +333,19 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, yearToUse);
       return cleanedAmount / recipientCostPerLife;
     } else if (!isExistingRecipient && selectedCategory) {
-      let effectiveCostPerLife = getCostPerLifeFromCombined(combinedAssumptions, selectedCategory, yearToUse);
-
-      if (customCostPerLife && !isNaN(Number(cleanNumberInput(customCostPerLife)))) {
-        effectiveCostPerLife = Number(cleanNumberInput(customCostPerLife));
+      // Submit requires a finite nonzero cost (the field arrives prefilled
+      // with the cause default), so an empty OR invalid draft has nothing
+      // coherent to preview — falling back to the cause default here would
+      // show lives for a donation that submit is about to reject.
+      const customCost = parseCustomCostPerLife(customCostPerLife);
+      if (customCost === null) {
+        return null;
       }
 
-      return cleanedAmount / effectiveCostPerLife;
+      return cleanedAmount / customCost;
     }
 
-    return 0;
+    return null;
   };
 
   const livesSaved = calculateLivesSaved();
@@ -393,6 +416,10 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value);
+                      // Editing the text invalidates any prior selection —
+                      // submitting would otherwise save the donation to a
+                      // recipient the box no longer shows.
+                      setSelectedRecipient(null);
                       setShowDropdown(true);
                       setHighlightedIndex(-1);
                     }}
@@ -530,11 +557,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   This starts at the selected cause&apos;s current cost per life, and you can edit it for this
                   recipient.
                 </p>
-                {customCostPerLife && !isNaN(Number(cleanNumberInput(customCostPerLife))) && (
+                {parseCustomCostPerLife(customCostPerLife) !== null && (
                   <p className="mt-1 text-xs text-muted">
                     Recipient cost per life:{' '}
                     <FormattedScientificValue
-                      value={formatCurrency(Number(cleanNumberInput(customCostPerLife)))}
+                      value={formatCurrency(parseCustomCostPerLife(customCostPerLife))}
                       variant="compact"
                     />
                   </p>
@@ -583,8 +610,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
           {errors.year && <p className="impact-field__error">{errors.year}</p>}
         </div>
 
-        {/* Lives saved preview */}
-        {amount && !errors.amount && (
+        {/* Lives saved preview — hidden entirely while the draft is invalid */}
+        {amount && !errors.amount && livesSaved !== null && (
           <div
             className={`mb-4 rounded-md p-3 ${livesSaved < 0 ? 'bg-[var(--danger-soft)]' : 'bg-[var(--success-soft)]'}`}
           >

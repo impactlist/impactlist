@@ -21,21 +21,20 @@ import CalculatorStats from '../components/calculator/CalculatorStats';
 import CalculatorForm from '../components/calculator/CalculatorForm';
 import RecipientTable from '../components/calculator/RecipientTable';
 import useDocumentTitle from '../hooks/useDocumentTitle';
-
-/* global localStorage */
+import { getLocalStorage } from '../utils/safeStorage';
 
 // A corrupted stored value would otherwise crash the calculator on every
 // visit (refreshing can't fix persisted storage): discard it loudly and start
 // fresh instead. The caller notifies the user (notifying can't happen here —
 // this runs during the first render).
 const readStoredJson = (key) => {
-  const raw = localStorage.getItem(key);
+  const raw = getLocalStorage().getItem(key);
   if (!raw) return { value: null, corrupted: false };
   try {
     return { value: JSON.parse(raw), corrupted: false };
   } catch (error) {
     console.error(`Discarding corrupted localStorage value for "${key}"`, error);
-    localStorage.removeItem(key);
+    getLocalStorage().removeItem(key);
     return { value: null, corrupted: true };
   }
 };
@@ -149,9 +148,10 @@ const findDonorRank = (donorStats, lives) => {
     } else {
       // This donor would be below the user
       donorBelow = donor;
-      // Get the donor two positions below if we're at the top
-      if (rank === 1 && i + 2 < donorStats.length) {
-        twoBelow = donorStats[i + 2];
+      // If the user is at the top, also grab the next donor down (the list
+      // shows You(1), donorBelow(2), twoBelow(3)).
+      if (rank === 1 && i + 1 < donorStats.length) {
+        twoBelow = donorStats[i + 1];
       }
       break;
     }
@@ -208,7 +208,7 @@ const DonationCalculator = () => {
 
   const [categoryYear, setCategoryYear] = useState(() => {
     // Initialize with saved value or current year
-    const savedCategoryYear = localStorage.getItem('categoryYear');
+    const savedCategoryYear = getLocalStorage().getItem('categoryYear');
     if (savedCategoryYear) {
       const year = parseInt(savedCategoryYear, 10);
       if (!isNaN(year)) {
@@ -281,21 +281,27 @@ const DonationCalculator = () => {
 
   // Save calculator state to localStorage when it changes
   useEffect(() => {
-    localStorage.setItem('donationCalculatorValues', JSON.stringify(donations));
+    getLocalStorage().setItem('donationCalculatorValues', JSON.stringify(donations));
   }, [donations]);
 
   useEffect(() => {
-    localStorage.setItem('specificDonations', JSON.stringify(specificDonations));
+    getLocalStorage().setItem('specificDonations', JSON.stringify(specificDonations));
   }, [specificDonations]);
 
   useEffect(() => {
-    localStorage.setItem('categoryYear', categoryYear.toString());
+    getLocalStorage().setItem('categoryYear', categoryYear.toString());
   }, [categoryYear]);
 
   // Handle donation input change
   const handleDonationChange = (categoryId, value) => {
     // Remove any non-numeric characters except decimal point
     const sanitizedValue = value.replace(/[^0-9.]/g, '');
+
+    // A second decimal point would make the value unparseable (silently
+    // counting as $0), so ignore changes that introduce one.
+    if ((sanitizedValue.match(/\./g) || []).length > 1) {
+      return;
+    }
 
     setDonations((prev) => ({
       ...prev,

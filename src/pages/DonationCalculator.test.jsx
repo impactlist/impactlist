@@ -324,4 +324,110 @@ describe('DonationCalculator ranking', () => {
     // Zero donated + zero lives renders the "no effect" cost sentinel.
     expect(within(youRow).getByText('∞')).toBeInTheDocument();
   });
+
+  it('shows the two donors immediately below when the user ranks #1 (rank-3 off-by-one regression)', async () => {
+    renderCalculator();
+
+    const donorStats = calculateDonorStatsFromCombined(createCombinedAssumptions(defaultAssumptions, null));
+    const combined = createCombinedAssumptions(defaultAssumptions, null);
+    const currentYear = new Date().getFullYear();
+
+    // Pick a cause that saves lives under default assumptions and donate
+    // enough through it to outrank every real donor.
+    const { getCostPerLifeFromCombined } = await import('../utils/assumptionsDataHelpers');
+    const positiveCategory = sortedCategories.find((category) => {
+      const costPerLife = getCostPerLifeFromCombined(combined, category.id, currentYear);
+      return Number.isFinite(costPerLife) && costPerLife > 0;
+    });
+    expect(positiveCategory).toBeDefined();
+
+    const costPerLife = getCostPerLifeFromCombined(combined, positiveCategory.id, currentYear);
+    const livesToBeat = donorStats[0].totalLivesSaved * 2 + 10;
+    const amount = Math.ceil(costPerLife * livesToBeat);
+
+    const input = await screen.findByLabelText(positiveCategory.name);
+    fireEvent.change(input, { target: { value: String(amount) } });
+
+    const youRow = (await screen.findByText('You')).closest('tr');
+    await waitFor(() => {
+      expect(within(youRow).getByText('1')).toBeInTheDocument();
+    });
+
+    // Rank 2 must be the old #1 and rank 3 the old #2 — not the old #3.
+    const rankTwoRow = screen.getByText(donorStats[0].name).closest('tr');
+    expect(within(rankTwoRow).getByText('2')).toBeInTheDocument();
+    const rankThreeRow = screen.getByText(donorStats[1].name).closest('tr');
+    expect(within(rankThreeRow).getByText('3')).toBeInTheDocument();
+  });
+});
+
+describe('DonationCalculator amount input', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it('ignores input that would introduce a second decimal point instead of counting it as $0', async () => {
+    renderCalculator();
+
+    const input = await screen.findByLabelText(firstCategory.name);
+    fireEvent.change(input, { target: { value: '1.5' } });
+    expect(input).toHaveValue('1.5');
+
+    fireEvent.change(input, { target: { value: '1.5.5' } });
+    expect(input).toHaveValue('1.5');
+
+    await waitFor(() => {
+      const stored = JSON.parse(localStorage.getItem('donationCalculatorValues'));
+      expect(stored[firstCategory.id]).toBe('1.5');
+    });
+  });
+
+  it('never displays characters the calculation ignores (display and stored value share one sanitization)', async () => {
+    renderCalculator();
+
+    const input = await screen.findByLabelText(firstCategory.name);
+
+    // A minus sign is rejected from the DISPLAY too — the field previously
+    // kept showing '-100' while the calculator quietly used 100.
+    fireEvent.change(input, { target: { value: '-100' } });
+    expect(input).toHaveValue('100');
+    await waitFor(() => {
+      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$100');
+    });
+
+    // Scientific notation is not supported: the 'e' is visibly rejected so
+    // the field can never show '1e3' while the total says $13.
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.change(input, { target: { value: '1e3' } });
+    expect(input).toHaveValue('13');
+    await waitFor(() => {
+      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$13');
+    });
+
+    // Pasted currency text keeps only the digits/separators it can use.
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.change(input, { target: { value: '$1,234.56' } });
+    expect(input).toHaveValue('1,234.56');
+  });
+
+  it('keeps the caret in place when editing inside a comma-formatted value', async () => {
+    renderCalculator();
+
+    const input = await screen.findByLabelText(firstCategory.name);
+    fireEvent.change(input, { target: { value: '100000' } });
+    expect(input).toHaveValue('100,000');
+
+    // Type '2' after the leading '1' of "100,000" → "1,200,000" with the
+    // caret still after the typed digit, not snapped to the end.
+    input.focus();
+    fireEvent.change(input, { target: { value: '1200,000', selectionStart: 2 } });
+    expect(input).toHaveValue('1,200,000');
+    await waitFor(() => {
+      expect(input.selectionStart).toBe(3);
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$1.20 M');
+    });
+  });
 });

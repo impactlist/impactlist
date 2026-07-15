@@ -117,6 +117,7 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
         menuAriaLabel="Assumptions options"
         allowEntryManagementActions={false}
         allowCopyLinkAction={false}
+        allowAddDescriptionAction={false}
         showCurrentSaveAction={false}
         showCurrentShareAction={false}
         showShareForLocal={false}

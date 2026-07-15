@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { attachSavedAssumptionsShareReference, saveNewAssumptions } from '../utils/savedAssumptionsStore';
-import { slugify } from '../utils/shareAssumptions';
+import { isValidSlug, slugify } from '../utils/shareAssumptions';
 
 const SHARE_LIBRARY_SAVE_ERROR =
   'Share link created, but could not save it with your assumptions sets in this browser.';
@@ -41,7 +41,10 @@ export const useAssumptionsShareActions = ({
     }
 
     setShareModalInitialDescription(shouldPrefillDescription ? activeLibraryEntry?.description || '' : '');
-    setShareModalInitialSlug(shouldPrefillSlug ? slugify(activeLibraryEntry?.label || '') : '');
+    // Slugs are optional; a short label can slugify to something the API
+    // rejects (min 3 chars), so only prefill when the result is valid.
+    const prefillSlug = shouldPrefillSlug ? slugify(activeLibraryEntry?.label || '') : '';
+    setShareModalInitialSlug(isValidSlug(prefillSlug) ? prefillSlug : '');
     setShareModalOpen(true);
   }, [
     activeLibraryEntry?.description,

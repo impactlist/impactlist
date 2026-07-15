@@ -128,6 +128,39 @@ describe('validateRecipientEffectField', () => {
     expect(validateRecipientEffectField('costPerQALY', '-500', 'override', 'qaly')).toBeNull();
     expect(validateRecipientEffectField('windowLength', '0', 'override', 'qaly')).toMatch(/positive/);
   });
+
+  // A RAW empty value is a cleared override/multiplier (falls back to the
+  // default), but everything else that can't apply as a finite number must
+  // error — returning null let Apply crash converting it ('-') or throw in
+  // normalization, which rejects non-finite numbers ('1e999' → Infinity).
+  it('accepts raw-empty as cleared but rejects partials, symbols, and non-finite numbers', () => {
+    // null/undefined are cleared values per the draft hook's contract and
+    // must not reach the string parser (which would throw on them).
+    for (const cleared of ['', null, undefined]) {
+      expect(validateRecipientEffectField('costPerQALY', cleared, 'override', 'qaly')).toBeNull();
+      expect(validateRecipientEffectField('costPerQALY', cleared, 'multiplier', 'qaly')).toBeNull();
+    }
+    for (const invalid of ['-', '.', '-.', '$', '1e999', '-1e999']) {
+      expect(validateRecipientEffectField('costPerQALY', invalid, 'override', 'qaly')).toBe('Invalid number');
+      expect(validateRecipientEffectField('costPerQALY', invalid, 'multiplier', 'qaly')).toBe('Invalid number');
+    }
+  });
+});
+
+describe('non-finite parses are invalid everywhere', () => {
+  it('rejects 1e999 (parses to Infinity, which passes isNaN) in category effect fields', () => {
+    expect(validateEffectField('costPerQALY', '1e999', 'qaly')).toMatch(/valid number/);
+    expect(validateEffectField('costPerQALY', '-1e999', 'qaly')).toMatch(/valid number/);
+    expect(validateEffectField('windowLength', '1e999', 'qaly')).toMatch(/positive/);
+    expect(validateEffectField('startTime', '1e999', 'qaly')).toMatch(/non-negative/);
+    expect(validateEffectField('costPerMicroprobability', '1e999', 'population')).toMatch(/valid number/);
+    expect(validateEffectField('qalyImprovementPerYear', '-1e999', 'population')).toMatch(/valid number/);
+  });
+
+  it('rejects 1e999 in global parameter fields', () => {
+    expect(validateGlobalField('timeLimit', '1e999')).not.toBeNull();
+    expect(validateGlobalField('discountRate', '-1e999')).not.toBeNull();
+  });
 });
 
 describe('validateRecipientEffects', () => {

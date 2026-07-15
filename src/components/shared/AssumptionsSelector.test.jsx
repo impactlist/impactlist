@@ -243,6 +243,19 @@ describe('AssumptionsSelector', () => {
     expect(within(defaultRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
   });
 
+  it('renders no description action for entries without content instead of a dead Add button', async () => {
+    const user = userEvent.setup();
+    renderSelector();
+
+    const menu = await openMenu(user);
+
+    // The selector's description modal is read-only, so "Add description"
+    // could never do anything here — entries without content get no action.
+    expect(within(menu).queryByRole('button', { name: 'Add description' })).not.toBeInTheDocument();
+    const savedRow = getMenuRow(menu, 'My Saved Assumptions');
+    expect(within(savedRow).queryByRole('button', { name: 'View description' })).not.toBeInTheDocument();
+  });
+
   it('shows the custom not-saved-to-browser entry when edits no longer match the active saved assumptions and exposes its description', async () => {
     const user = userEvent.setup();
     mockSavedAssumptionsState.activeId = savedEntry.id;

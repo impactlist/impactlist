@@ -6,14 +6,16 @@ export const OTHER_CAUSES_NAME = 'Other Causes';
 
 const formatDonationPercentage = (value, total) => (total > 0 ? ((value / total) * 100).toFixed(1) : '0.0');
 
-const formatLivesSavedPercentage = (value, total) =>
-  total !== 0 ? ((Math.abs(value) / Math.abs(total)) * 100).toFixed(1) : '0.0';
+// grossTotal is the sum of absolute per-category values: against a signed net
+// total, mixed-sign categories inflate past 100% (and a deadly category reads
+// as a positive share of a shrunken denominator).
+const formatLivesSavedPercentage = (value, grossTotal) =>
+  grossTotal > 0 ? ((Math.abs(value) / grossTotal) * 100).toFixed(1) : '0.0';
 
 const buildCategoryChartData = (combinedAssumptions, donations, maxCategories) => {
   // Accumulate per category NAME (multiple recipients can share a category).
   const entriesByCategoryName = {};
   let donationsTotal = 0;
-  let livesSavedTotal = 0;
 
   donations.forEach((donation) => {
     const recipient = combinedAssumptions.getRecipientById(donation.recipientId);
@@ -48,18 +50,20 @@ const buildCategoryChartData = (combinedAssumptions, donations, maxCategories) =
       entry.donationValue += categoryAmount;
       entry.livesSavedValue += livesSaved;
       donationsTotal += categoryAmount;
-      livesSavedTotal += livesSaved;
     });
   });
 
-  const rows = Object.values(entriesByCategoryName).map((entry) => ({
+  const entries = Object.values(entriesByCategoryName);
+  const livesSavedAbsTotal = entries.reduce((total, entry) => total + Math.abs(entry.livesSavedValue), 0);
+
+  const rows = entries.map((entry) => ({
     name: entry.name,
     categoryId: entry.categoryId,
     donationValue: entry.donationValue,
     livesSavedValue: entry.livesSavedValue,
     effectiveCostPerLife: entry.livesSavedValue !== 0 ? entry.donationValue / entry.livesSavedValue : Infinity,
     donationPercentage: formatDonationPercentage(entry.donationValue, donationsTotal),
-    livesSavedPercentage: formatLivesSavedPercentage(entry.livesSavedValue, livesSavedTotal),
+    livesSavedPercentage: formatLivesSavedPercentage(entry.livesSavedValue, livesSavedAbsTotal),
   }));
 
   rows.sort((a, b) => b.donationValue - a.donationValue);
@@ -82,7 +86,11 @@ const buildCategoryChartData = (combinedAssumptions, donations, maxCategories) =
       livesSavedValue: otherLivesSavedTotal,
       effectiveCostPerLife: otherLivesSavedTotal !== 0 ? otherDonationTotal / otherLivesSavedTotal : Infinity,
       donationPercentage: formatDonationPercentage(otherDonationTotal, donationsTotal),
-      livesSavedPercentage: formatLivesSavedPercentage(otherLivesSavedTotal, livesSavedTotal),
+      // The share describes THE BAR (the collapsed rows' net), like every
+      // other row. When mixed-sign rows cancel inside Other, the visible
+      // shares deliberately total less than 100% — the alternative (counting
+      // collapsed magnitudes) could label a zero-length bar "50%".
+      livesSavedPercentage: formatLivesSavedPercentage(otherLivesSavedTotal, livesSavedAbsTotal),
     });
   }
 

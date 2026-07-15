@@ -1165,6 +1165,36 @@ describe('AssumptionsPage routing integration', () => {
     expect(screen.queryAllByText(`Combined cost per life in ${getCurrentYear()}:`)).toHaveLength(0);
   });
 
+  it('aggregates the recipient header cost harmonically, matching the sitewide recipient readout', async () => {
+    const multiCategoryRecipientId = Object.entries(assumptionsData.recipients).find(
+      ([, recipient]) => Object.keys(recipient.categories || {}).length > 1
+    )?.[0];
+    if (!multiCategoryRecipientId) {
+      throw new Error('Expected a multi-category recipient in the generated data');
+    }
+
+    renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${multiCategoryRecipientId}`);
+
+    // The recipient-level aggregate lives in the editor header; per-category
+    // sections render their own combined labels inside .effect-card. It only
+    // renders once every section has reported, hence the waitFor.
+    let headerLabel;
+    await waitFor(() => {
+      const labels = screen.queryAllByText(`Combined cost per life in ${getCurrentYear()}:`);
+      headerLabel = labels.find((label) => label.closest('.effect-card') === null);
+      expect(headerLabel).toBeDefined();
+    });
+
+    // With untouched drafts, the header must equal the harmonic recipient
+    // aggregate shown everywhere else — a weighted arithmetic mean here once
+    // contradicted the recipient card an order of magnitude apart.
+    const combined = createCombinedAssumptions(assumptionsData, null);
+    const expected = formatCurrency(
+      getCostPerLifeForRecipientFromCombined(combined, multiCategoryRecipientId, getCurrentYear())
+    );
+    expect(headerLabel.parentElement).toHaveTextContent(expected);
+  });
+
   it('gives every field in the multi-category editor a unique id', async () => {
     const multiCategoryRecipientId = Object.entries(assumptionsData.recipients).find(
       ([, recipient]) => Object.keys(recipient.categories || {}).length > 1

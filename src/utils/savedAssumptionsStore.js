@@ -1,4 +1,5 @@
 import { isPlainObject } from './typeGuards';
+import { getLocalStorage, getSessionStorage } from './safeStorage';
 
 const SAVED_ASSUMPTIONS_KEY = 'savedAssumptions:v1';
 const ACTIVE_SAVED_ASSUMPTIONS_ID_KEY = 'activeSavedAssumptionsId:v1';
@@ -102,7 +103,7 @@ const createId = () => {
 };
 
 const readJson = (key) => {
-  const raw = globalThis.localStorage.getItem(key);
+  const raw = getLocalStorage().getItem(key);
   if (!raw) {
     return null;
   }
@@ -115,11 +116,11 @@ const readJson = (key) => {
 };
 
 const readMigrationStatus = () => {
-  return globalThis.localStorage.getItem(SAVED_ASSUMPTIONS_MIGRATION_KEY) === '1';
+  return getLocalStorage().getItem(SAVED_ASSUMPTIONS_MIGRATION_KEY) === '1';
 };
 
 const writeMigrationStatus = () => {
-  globalThis.localStorage.setItem(SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
+  getLocalStorage().setItem(SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
 };
 
 const pruneToSerializableAssumptions = (assumptions) => {
@@ -315,10 +316,10 @@ const applyLimits = (entries, { protectEntryIds = new Set(), allowLocalEviction 
 };
 
 const writeSavedAssumptionsUnsafe = (entries) => {
-  globalThis.localStorage.setItem(SAVED_ASSUMPTIONS_KEY, JSON.stringify(entries));
+  getLocalStorage().setItem(SAVED_ASSUMPTIONS_KEY, JSON.stringify(entries));
 };
 
-const getActiveEntryStorage = () => globalThis.sessionStorage;
+const getActiveEntryStorage = () => getSessionStorage();
 
 const persistSavedAssumptions = (
   entries,

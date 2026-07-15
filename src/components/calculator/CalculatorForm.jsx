@@ -1,10 +1,68 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { formatLives, formatCurrency, formatNumberWithCommas } from '../../utils/formatters';
+import { formatLives, formatCurrency } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
+import useFormattedNumberInput from '../../hooks/useFormattedNumberInput';
+
+/**
+ * One cause's amount input. Owns its display state via useFormattedNumberInput
+ * (like CurrencyInput) so mid-string edits keep the cursor in place and
+ * backspacing a comma works; a fully controlled reformat-on-render input
+ * snapped the cursor to the end on every keystroke.
+ */
+const DonationAmountInput = ({ categoryId, amount, onDonationChange }) => {
+  const emitChange = useCallback(
+    (formattedValue, rawValue) => onDonationChange(categoryId, rawValue.replace(/,/g, '')),
+    [categoryId, onDonationChange]
+  );
+  const { inputRef, localValue, handleChange } = useFormattedNumberInput(amount, emitChange);
+
+  const handleGuardedChange = (event) => {
+    const raw = event.target.value;
+    // One sanitization path feeds BOTH the visible text and the stored value:
+    // the field must never display characters (minus signs, 'e', '$') that
+    // the calculation would silently ignore.
+    const sanitized = raw.replace(/[^0-9.,]/g, '');
+
+    // Ignore edits that would introduce a second decimal point — the value
+    // would be unparseable and silently count as $0.
+    if ((sanitized.replace(/,/g, '').match(/\./g) || []).length > 1) {
+      return;
+    }
+
+    if (sanitized !== raw) {
+      // Rewrite the DOM value before the shared formatter reads it, keeping
+      // the caret at the same logical spot (minus the characters dropped).
+      const caret = event.target.selectionStart ?? sanitized.length;
+      const keptBeforeCaret = raw.slice(0, caret).replace(/[^0-9.,]/g, '').length;
+      event.target.value = sanitized;
+      event.target.setSelectionRange(keptBeforeCaret, keptBeforeCaret);
+    }
+    handleChange(event);
+  };
+
+  return (
+    <input
+      ref={inputRef}
+      id={`donation-${categoryId}`}
+      type="text"
+      inputMode="decimal"
+      value={localValue}
+      onChange={handleGuardedChange}
+      className="calculator-cause-card__input w-full rounded px-2 py-0.5 text-sm leading-tight"
+      placeholder="0"
+    />
+  );
+};
+
+DonationAmountInput.propTypes = {
+  categoryId: PropTypes.string.isRequired,
+  amount: PropTypes.string.isRequired,
+  onDonationChange: PropTypes.func.isRequired,
+};
 
 /**
  * Form component for the donation calculator to input cause-based donations.
@@ -70,15 +128,7 @@ const CalculatorForm = ({
               </div>
               <div className="flex items-center mb-1">
                 <span className="mr-1 text-muted">$</span>
-                <input
-                  id={`donation-${category.id}`}
-                  type="text"
-                  inputMode="decimal"
-                  value={formatNumberWithCommas(amount)}
-                  onChange={(e) => onDonationChange(category.id, e.target.value)}
-                  className="calculator-cause-card__input w-full rounded px-2 py-0.5 text-sm leading-tight"
-                  placeholder="0"
-                />
+                <DonationAmountInput categoryId={category.id} amount={amount} onDonationChange={onDonationChange} />
               </div>
               {amount && !isNaN(Number(amount)) && (
                 <div className={`text-sm ${livesSaved < 0 ? 'text-danger' : 'text-success'}`}>

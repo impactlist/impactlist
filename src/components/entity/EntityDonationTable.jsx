@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SortableTable from '../shared/SortableTable';
 import { formatRoundedLives, formatCurrency } from '../../utils/formatters';
-import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
-import { extractYearFromDonation, getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
 
 /**
  * Displays a table of donations for a donor or recipient entity.
+ * Rows must carry `creditedAmount`, `totalLivesSaved`, and `costPerLife` —
+ * every displayed value doubles as its column's sort key.
  */
-const EntityDonationTable = ({ donations, entityType, className = '', combinedAssumptions = null }) => {
+const EntityDonationTable = ({ donations, entityType, className = '' }) => {
   const isDonor = entityType === 'donor';
 
   // Shared column definitions. Donor tables include synthetic "Unknown" rows
@@ -26,22 +26,27 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
         {donation.isUnknown ? (
           <span className="text-muted">Unknown</span>
         ) : (
+          // Dates are date-only strings parsed as UTC midnight; format in UTC
+          // so viewers west of UTC don't see the previous day.
           new Date(donation.date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
+            timeZone: 'UTC',
           })
         )}
       </div>
     ),
   };
 
+  // Sorts by creditedAmount (what the cell shows) — sorting by the raw amount
+  // would visibly misorder partial-credit rows.
   const amountColumn = {
-    key: 'amount',
+    key: 'creditedAmount',
     label: 'Amount',
     render: (donation) =>
       donation.isUnknown ? (
-        <span className="text-sm text-muted">{formatCurrency(donation.amount)}</span>
+        <span className="text-sm text-muted">{formatCurrency(donation.creditedAmount)}</span>
       ) : (
         <div>
           <a
@@ -50,7 +55,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
             rel="noopener noreferrer"
             className="impact-link text-sm font-medium"
           >
-            {formatCurrency(donation.creditedAmount || donation.amount)}
+            {formatCurrency(donation.creditedAmount)}
           </a>
           {donation.credit < 1 && (
             <div className="mt-1 text-xs text-muted">{Math.round(donation.credit * 100)}% credit</div>
@@ -79,9 +84,9 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
     ),
   };
 
-  // The lives===0 guard here is load-bearing beyond display: synthetic
-  // "Unknown" rows have no real recipient, and computing their cost per life
-  // through the combined assumptions would throw.
+  // The lives===0 guard is load-bearing for synthetic "Unknown" rows: their
+  // costPerLife is a meaningless 0 when no known donation saved lives, so ∞
+  // ("no measurable effect") is the honest display.
   const costPerLifeColumn = {
     key: 'costPerLife',
     label: 'Cost/Life',
@@ -96,16 +101,7 @@ const EntityDonationTable = ({ donations, entityType, className = '', combinedAs
         {donation.totalLivesSaved === 0 ? (
           <span className="text-2xl">∞</span>
         ) : (
-          <FormattedScientificValue
-            value={formatCurrency(
-              getEffectiveCostPerLifeFromCombined(
-                combinedAssumptions,
-                donation,
-                donation.isUnknown ? getCurrentYear() : extractYearFromDonation(donation)
-              )
-            )}
-            variant="compact"
-          />
+          <FormattedScientificValue value={formatCurrency(donation.costPerLife)} variant="compact" />
         )}
       </div>
     ),
@@ -193,7 +189,6 @@ EntityDonationTable.propTypes = {
   donations: PropTypes.array.isRequired,
   entityType: PropTypes.oneOf(['donor', 'recipient']).isRequired,
   className: PropTypes.string,
-  combinedAssumptions: PropTypes.object,
 };
 
 export default React.memo(EntityDonationTable);

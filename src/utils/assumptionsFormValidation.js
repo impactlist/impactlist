@@ -47,11 +47,13 @@ export const validateGlobalParameterValues = (formValues, globalParameters) => {
 };
 
 /**
- * Scrolls to the first error element if any errors exist
+ * Scrolls to the first invalid form field if any errors exist.
+ * NumericInput/CurrencyInput/FormField all mark erroring inputs with
+ * aria-invalid, so that attribute — not a styling class — is the stable hook.
  */
 export const scrollToFirstError = () => {
   setTimeout(() => {
-    const errorElement = document.querySelector('.border-red-300');
+    const errorElement = document.querySelector('[aria-invalid="true"]');
     if (errorElement) {
       errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }

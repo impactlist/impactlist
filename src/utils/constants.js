@@ -47,9 +47,16 @@ export const CHART_COLORS = [
   '#17becf',
 ];
 
+// Markdown link titles beginning with this prefix mark generated "Challenge assumption"
+// links; the text after the prefix is the link's accessible label (e.g. "Challenge
+// assumption 3 (under 'Effect 2: …')"), which distinguishes a page's many identically-worded
+// challenge buttons for screen readers. Shared between scripts/generate-data-from-markdown.js
+// (which emits it) and MarkdownContent's CustomLink (which detects it).
+export const CHALLENGE_ASSUMPTION_TITLE_PREFIX = 'challenge-assumption:';
+
 // Feedback note for donation pages
 export const DONATION_FEEDBACK_NOTE = {
-  text: 'Does this data look incorrect or incomplete? You can submit quick feedback with',
+  text: 'Does this data look incorrect or incomplete? You can submit feedback with',
   formLinkText: 'this form',
   formUrl: 'https://forms.gle/NEC6LNics3n6WVo47',
   middleText: 'or get more involved',

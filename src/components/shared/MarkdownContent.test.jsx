@@ -34,6 +34,28 @@ describe('MarkdownContent', () => {
     expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
   });
 
+  it('renders a challenge-assumption link as a styled button with a distinguishing accessible name', () => {
+    const href =
+      'https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=pp_url&entry.899420459=Challenging%20assumption%203%20on%20the%20%27AI%20Existential%20Risk%27%20cause%20page%3A%0A';
+    render(
+      <MemoryRouter>
+        <MarkdownContent
+          content={`Some assumption. [Challenge assumption](${href} "challenge-assumption:Challenge assumption 3 (under 'Effect 2: standard-utopia')")`}
+          delay={0}
+        />
+      </MemoryRouter>
+    );
+
+    // The title payload after the marker prefix becomes the accessible name, so
+    // screen-reader users can tell the page's many challenge buttons apart.
+    const link = screen.getByRole('link', { name: "Challenge assumption 3 (under 'Effect 2: standard-utopia')" });
+    expect(link).toHaveTextContent('Challenge assumption');
+    expect(link).toHaveAttribute('href', href);
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
+    expect(link).toHaveClass('impact-challenge');
+  });
+
   it('falls back to a normal anchor for internal routes outside router context', () => {
     render(<MarkdownContent content="Visit [Animal Welfare](/cause/animal-welfare)." delay={0} />);
 

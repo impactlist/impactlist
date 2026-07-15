@@ -10,6 +10,7 @@ import { glob } from 'glob';
 // Shared validation modules (pure ES6, also used by app startup validation).
 // The pipeline test harness copies these into its temp workspaces.
 import { validateCategory, validateRecipient } from '../src/utils/dataValidation.js';
+import { CHALLENGE_ASSUMPTION_TITLE_PREFIX } from '../src/utils/constants.js';
 import { GLOBAL_PARAMETER_NAMES, assertValidGlobalParameters } from '../src/utils/globalParameterRules.js';
 
 // Get current directory path in ES modules
@@ -28,9 +29,135 @@ const outputFile = path.join(__dirname, '../src/data/generatedData.js');
 const QALY_LINK_WITH_TOOLTIP = `[QALY](https://en.wikipedia.org/wiki/Quality-adjusted_life_year "tooltip:qaly")`;
 const QALYS_LINK_WITH_TOOLTIP = `[QALYs](https://en.wikipedia.org/wiki/Quality-adjusted_life_year "tooltip:qaly")`;
 
+// {{CHALLENGE_ASSUMPTION:n}} renders a "Challenge assumption" link that opens the feedback form
+// (the same form CONTRIBUTION_NOTE links to) with its first field pre-filled to identify the
+// page and assumption number being challenged. The entry id targets the form's
+// "What's your feedback?" paragraph field.
+const CHALLENGE_FORM_PREFILL_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSeyolsqiakbi83k8GKUj91_sWbuxu1rW-RKTnSOZ-8IU7veNQ/viewform?usp=pp_url&entry.899420459=';
+
+// The pre-filled text ends with a newline so the respondent's cursor starts on the line
+// below the reference when the field gains focus. `sectionLabel` (the optional second
+// token argument) disambiguates pages with several Assumptions sections whose numbering
+// each restarts at 1 (e.g. ai_capabilities' per-effect sections).
+function challengeAssumptionLink(pageKind, pageName, assumptionNumber, sectionLabel) {
+  const section = sectionLabel ? ` (under '${sectionLabel}')` : '';
+  const prefill = `Challenging assumption ${assumptionNumber}${section} on the '${pageName}' ${pageKind} page:\n`;
+  // encodeURIComponent leaves ' ( ) unescaped; encode them too so the URL survives
+  // markdown link syntax regardless of the page name.
+  const encoded = encodeURIComponent(prefill).replace(
+    /[()']/g,
+    (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`
+  );
+  // The title carries the accessible label so screen readers can tell a page's many
+  // identically-worded challenge buttons apart.
+  const ariaLabel = `Challenge assumption ${assumptionNumber}${section}`;
+  return `[Challenge assumption](${CHALLENGE_FORM_PREFILL_URL}${encoded} "${CHALLENGE_ASSUMPTION_TITLE_PREFIX}${ariaLabel}")`;
+}
+
+// Enforce the challenge-token contract documented in content/CLAUDE.md: inside every
+// "Assumptions" section, each numbered item ends with a {{CHALLENGE_ASSUMPTION:n}} token
+// whose n matches the item's visible number; pages with several Assumptions sections
+// additionally label each token with its enclosing heading; tokens appear nowhere else.
+// Enforced at build time so list edits can't silently mislabel challenge-form feedback.
+function validateChallengeAssumptionTokens(content, context) {
+  const fail = (message) => {
+    throw new Error(`Error: ${context} ${message}`);
+  };
+
+  const lines = content.split('\n');
+  const headingStack = []; // headingStack[level] = latest non-Assumptions heading at that level
+  let inFence = false;
+  let section = null;
+  const sections = [];
+  const closeSection = () => {
+    if (section) sections.push(section);
+    section = null;
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^```/.test(line.trim())) inFence = !inFence;
+    if (inFence) continue;
+
+    const heading = line.match(/^(#{1,6})\s+(.+?)\s*$/);
+    if (heading) {
+      const level = heading[1].length;
+      const text = heading[2];
+      if (section && level <= section.level) closeSection();
+      if (!section && /^assumptions$/i.test(text)) {
+        // Parent = nearest enclosing heading shallower than the Assumptions heading.
+        section = { level, parent: headingStack.slice(0, level).filter(Boolean).pop() ?? null, items: [] };
+      } else if (!section) {
+        headingStack[level] = text;
+        headingStack.length = level + 1; // deeper headings are no longer enclosing
+      }
+      continue;
+    }
+    if (!section) continue;
+
+    const item = line.match(/^\s{0,3}(\d+)\.\s/);
+    if (item) {
+      section.items.push({ num: Number(item[1]), end: i });
+    } else if (section.items.length > 0 && line.trim() !== '') {
+      // Indented lines, and non-blank lines directly after the item, continue the item.
+      const last = section.items[section.items.length - 1];
+      const prevBlank = lines[i - 1].trim() === '';
+      if (/^\s{2,}/.test(line) || (!prevBlank && last.end === i - 1)) last.end = i;
+    }
+  }
+  closeSection();
+
+  const itemsByEndLine = new Map();
+  for (const s of sections) {
+    for (const it of s.items) itemsByEndLine.set(it.end, { ...it, parent: s.parent });
+  }
+  const useLabels = sections.length > 1;
+
+  const tokenRe = /\{\{CHALLENGE_ASSUMPTION:(\d+)(?::([^}]+))?\}\}/g;
+  for (let i = 0; i < lines.length; i++) {
+    const matches = [...lines[i].matchAll(tokenRe)];
+    const expected = itemsByEndLine.get(i);
+    if (!expected) {
+      if (matches.length > 0) {
+        fail(
+          `has ${matches[0][0]} on line ${i + 1}, but the token is only allowed at the end of a numbered item's last line inside an Assumptions section.`
+        );
+      }
+      continue;
+    }
+    if (matches.length === 0) {
+      fail(
+        `assumption ${expected.num} (ending on line ${i + 1}) is missing its {{CHALLENGE_ASSUMPTION:${expected.num}}} token.`
+      );
+    }
+    if (matches.length > 1) {
+      fail(`assumption ${expected.num} (line ${i + 1}) has more than one challenge token.`);
+    }
+    const [token, number, label] = matches[0];
+    if (!lines[i].trimEnd().endsWith(token)) {
+      fail(`assumption ${expected.num} (line ${i + 1}) must end with its challenge token; found ${token} mid-line.`);
+    }
+    if (Number(number) !== expected.num) {
+      fail(`assumption ${expected.num} (line ${i + 1}) carries mismatched token ${token}.`);
+    }
+    if (useLabels) {
+      if (label !== expected.parent) {
+        fail(
+          `assumption ${expected.num} (line ${i + 1}) must carry its enclosing section as a label: expected {{CHALLENGE_ASSUMPTION:${expected.num}:${expected.parent}}}, found ${token}.`
+        );
+      }
+    } else if (label) {
+      fail(
+        `assumption ${expected.num} (line ${i + 1}) has section label '${label}', but this page has only one Assumptions section, so the label must be omitted.`
+      );
+    }
+  }
+}
+
 // Shared text variables for markdown substitution
 const MARKDOWN_VARIABLES = {
-  CONTRIBUTION_NOTE: `_These estimates are approximate and we welcome contributions to improve them. You can submit quick feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
+  CONTRIBUTION_NOTE: `_These estimates are approximate and we welcome contributions to improve them. You can submit feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
   GLOBAL_ASSUMPTIONS_NOTE: `_All estimates rely on global assumptions, such as years per life, discounting, population growth, and how far into the future we care about. You can view or edit these on the [Assumptions page](/assumptions). Additional assumptions specific to this estimate follow._`,
   QALY: QALY_LINK_WITH_TOOLTIP,
   QALYS: QALYS_LINK_WITH_TOOLTIP,
@@ -78,17 +205,34 @@ function assertUniqueId(seenIds, id, fileName, entityLabel) {
   seenIds.set(id, fileName);
 }
 
-// Replace {{VARIABLE_NAME}} placeholders with actual values
-function replaceVariables(content, context = 'content') {
+// Replace {{VARIABLE_NAME}} placeholders with actual values. `page` ({kind, name}) enables the
+// parameterized {{CHALLENGE_ASSUMPTION:n}} token on the content types that support it.
+function replaceVariables(content, context = 'content', page = null) {
   if (!content) return content;
   let result = content;
   for (const [key, value] of Object.entries(MARKDOWN_VARIABLES)) {
     result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
   }
 
-  // A leftover {{TOKEN}} means a typo'd or unknown variable that would ship
+  if (page) {
+    validateChallengeAssumptionTokens(result, context);
+  }
+
+  result = result.replace(
+    /\{\{CHALLENGE_ASSUMPTION:(\d+)(?::([^}]+))?\}\}/g,
+    (token, assumptionNumber, sectionLabel) => {
+      if (!page) {
+        throw new Error(
+          `Error: ${context} contains ${token}, which is only supported in category, recipient, and assumption files.`
+        );
+      }
+      return challengeAssumptionLink(page.kind, page.name, assumptionNumber, sectionLabel);
+    }
+  );
+
+  // A leftover {{TOKEN}} or {{TOKEN:arg}} means a typo'd or unknown variable that would ship
   // as literal text on the site.
-  const leftover = result.match(/\{\{[A-Z0-9_]+\}\}/);
+  const leftover = result.match(/\{\{[A-Z0-9_]+(?::[^}]*)?\}\}/);
   if (leftover) {
     throw new Error(
       `Error: ${context} contains unreplaced placeholder ${leftover[0]}. Known variables: ${Object.keys(MARKDOWN_VARIABLES).join(', ')}.`
@@ -312,7 +456,10 @@ function loadCategories() {
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content, `Category file ${fileName}`);
     if (extractedContent) {
-      categories[data.id].content = replaceVariables(extractedContent, `Category file ${fileName}`);
+      categories[data.id].content = replaceVariables(extractedContent, `Category file ${fileName}`, {
+        kind: 'cause',
+        name: data.name,
+      });
     }
   });
 
@@ -466,7 +613,10 @@ function loadRecipients() {
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content, `Recipient file ${fileName}`);
     if (extractedContent) {
-      recipients[data.id].content = replaceVariables(extractedContent, `Recipient file ${fileName}`);
+      recipients[data.id].content = replaceVariables(extractedContent, `Recipient file ${fileName}`, {
+        kind: 'recipient',
+        name: data.name,
+      });
     }
   });
 
@@ -685,7 +835,11 @@ function loadAssumptions() {
     assumptions[data.id] = {
       id: data.id,
       name: data.name,
-      content: replaceVariables(extractedContent, `Assumption file ${fileName}`) || '',
+      content:
+        replaceVariables(extractedContent, `Assumption file ${fileName}`, {
+          kind: 'assumption',
+          name: data.name,
+        }) || '',
     };
   });
 

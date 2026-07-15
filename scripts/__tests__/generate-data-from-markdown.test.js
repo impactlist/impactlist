@@ -397,6 +397,134 @@ describe('pipeline strictness', () => {
     runGeneratorExpectingError(workspace, 'unreplaced placeholder {{TYPO_VARIABLE}}');
   });
 
+  it('replaces {{CHALLENGE_ASSUMPTION:n}} with a pre-filled challenge-form link', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n## Assumptions\n\n1. First assumption. {{CHALLENGE_ASSUMPTION:1}}\n2. Second assumption. {{CHALLENGE_ASSUMPTION:2}}\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    expect(generated.categoriesById.health.content).toContain(
+      '[Challenge assumption](https://docs.google.com/forms/d/e/1FAIpQLSeyolsqiakbi83k8GKUj91_sWbuxu1rW-RKTnSOZ-8IU7veNQ/viewform?usp=pp_url&entry.899420459=Challenging%20assumption%202%20on%20the%20%27Health%27%20cause%20page%3A%0A "challenge-assumption:Challenge assumption 2")'
+    );
+  });
+
+  it('supports challenge tokens at the end of multiline assumption items', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n## Assumptions\n\n1. First assumption starts on one line\n   and continues onto another before its token. {{CHALLENGE_ASSUMPTION:1}}\n2. Second assumption. {{CHALLENGE_ASSUMPTION:2}}\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    expect(generated.categoriesById.health.content).toContain(
+      'and continues onto another before its token. [Challenge assumption]('
+    );
+    expect(generated.categoriesById.health.content).not.toContain('{{CHALLENGE_ASSUMPTION:1}}');
+  });
+
+  it('labels tokens with their enclosing section on pages with several Assumptions sections', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n## Effect 1: standard-mundane\n\n### Assumptions\n\n1. First assumption. {{CHALLENGE_ASSUMPTION:1:Effect 1: standard-mundane}}\n\n## Effect 2: standard-utopia\n\n### Assumptions\n\n1. Other first assumption. {{CHALLENGE_ASSUMPTION:1:Effect 2: standard-utopia}}\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    // The section label lands in both the pre-filled text and the accessible label.
+    expect(generated.categoriesById.health.content).toContain(
+      '[Challenge assumption](https://docs.google.com/forms/d/e/1FAIpQLSeyolsqiakbi83k8GKUj91_sWbuxu1rW-RKTnSOZ-8IU7veNQ/viewform?usp=pp_url&entry.899420459=Challenging%20assumption%201%20%28under%20%27Effect%201%3A%20standard-mundane%27%29%20on%20the%20%27Health%27%20cause%20page%3A%0A "challenge-assumption:Challenge assumption 1 (under \'Effect 1: standard-mundane\')")'
+    );
+  });
+
+  it('fails when a numbered assumption is missing its challenge token', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n## Assumptions\n\n1. First assumption. {{CHALLENGE_ASSUMPTION:1}}\n2. Second assumption, token forgotten.\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'is missing its {{CHALLENGE_ASSUMPTION:2}} token');
+  });
+
+  it('fails when a challenge token number does not match its assumption', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n## Assumptions\n\n1. First assumption. {{CHALLENGE_ASSUMPTION:7}}\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'carries mismatched token {{CHALLENGE_ASSUMPTION:7}}');
+  });
+
+  it('fails on a challenge token outside an Assumptions section', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n## Details\n\nSee also {{CHALLENGE_ASSUMPTION:1}} in prose.\n'
+    );
+
+    runGeneratorExpectingError(
+      workspace,
+      "only allowed at the end of a numbered item's last line inside an Assumptions section"
+    );
+  });
+
+  it('fails when a token label does not match the enclosing section heading', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n## Effect 1: standard-mundane\n\n### Assumptions\n\n1. First assumption. {{CHALLENGE_ASSUMPTION:1:Stale heading}}\n\n## Effect 2: standard-utopia\n\n### Assumptions\n\n1. Other first assumption. {{CHALLENGE_ASSUMPTION:1:Effect 2: standard-utopia}}\n'
+    );
+
+    runGeneratorExpectingError(
+      workspace,
+      'expected {{CHALLENGE_ASSUMPTION:1:Effect 1: standard-mundane}}, found {{CHALLENGE_ASSUMPTION:1:Stale heading}}'
+    );
+  });
+
+  it('fails on {{CHALLENGE_ASSUMPTION:n}} in content types without challenge links', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'donors/donor_a.md',
+      '---\nid: donor_a\nname: Donor A\nbirthDate: 1980-02-03\nnetWorth: 1000000\nabout: Donor A bio.\n---\n\nBio text. {{CHALLENGE_ASSUMPTION:1}}\n'
+    );
+
+    runGeneratorExpectingError(
+      workspace,
+      'contains {{CHALLENGE_ASSUMPTION:1}}, which is only supported in category, recipient, and assumption files'
+    );
+  });
+
+  it('fails on a malformed {{CHALLENGE_ASSUMPTION}} argument instead of shipping it as text', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n1. First assumption. {{CHALLENGE_ASSUMPTION:one}}\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'unreplaced placeholder {{CHALLENGE_ASSUMPTION:one}}');
+  });
+
   it('fails the build when category fractions do not sum to 1', () => {
     const workspace = setupWorkspaceFromFixture('donation-validation');
     writeContentFile(

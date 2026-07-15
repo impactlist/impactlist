@@ -537,6 +537,79 @@
     color: var(--link-accent-external-hover);
   }
 
+  /* "Challenge assumption" button (rendered by ChallengeAssumptionLink.jsx).
+     Quietly elevated at rest; inverts to solid purple on hover, and the arrow nudges
+     toward the form it opens. */
+  .impact-challenge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.42em 0.75em 0.44em;
+    border: 1px solid color-mix(in srgb, var(--custom-accent) 52%, var(--border-strong) 48%);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--custom-accent-strong);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-height: 1.5rem; /* keeps the control at or above the 24px WCAG 2.5.8 target size */
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: 0.1em;
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--text-strong) 14%, transparent 86%);
+    transition:
+      color 140ms var(--ease-standard),
+      background-color 140ms var(--ease-standard),
+      border-color 140ms var(--ease-standard),
+      box-shadow 140ms var(--ease-standard),
+      transform 140ms var(--ease-standard);
+  }
+
+  .impact-challenge:hover {
+    background: var(--custom-accent);
+    border-color: var(--custom-accent-strong);
+    color: var(--text-on-custom-accent);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--custom-accent-strong) 38%, transparent 62%);
+    transform: translateY(-1px);
+  }
+
+  .impact-challenge:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--custom-accent-strong) 30%, transparent 70%);
+  }
+
+  .impact-challenge:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+
+  .impact-challenge__icon {
+    width: 0.9em;
+    height: 0.9em;
+    flex: none;
+    transition: transform 140ms var(--ease-standard);
+  }
+
+  .impact-challenge:hover .impact-challenge__icon {
+    transform: translate(1px, -1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .impact-challenge,
+    .impact-challenge__icon {
+      transition: none;
+    }
+
+    .impact-challenge:hover {
+      transform: none;
+    }
+
+    .impact-challenge:hover .impact-challenge__icon {
+      transform: none;
+    }
+  }
+
   .prose.impact-markdown :where(p, li):not(:where(.not-prose, .not-prose *)) {
     color: var(--text-muted);
   }

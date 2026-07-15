@@ -42,40 +42,40 @@ field at the top of this page and enter your own values.*
 {{GLOBAL_ASSUMPTIONS_NOTE}}
 
 1. CUNY's ACE program increased five-year bachelor's-degree completion by about 11.7 percentage
-   points in a randomized evaluation. ([CUNY](https://www.cuny.edu/about/administration/offices/student-success-initiatives/asap/evaluation/))
+   points in a randomized evaluation. ([CUNY](https://www.cuny.edu/about/administration/offices/student-success-initiatives/asap/evaluation/)) {{CHALLENGE_ASSUMPTION:1}}
 2. In Table 1 of the ACE policy brief's midpoint persistence scenario, ACE has approximately
    \$12,374 in direct expenditures per participant and current-generation lifetime earnings gains of
    approximately \$51,986 in present value. Subtracting direct expenditures from those earnings gains
    gives about \$39,600 before any intergenerational benefits; the cost-effectiveness calculation
    below uses the gross earnings gain as the welfare benefit and the direct expenditure as the cost.
-   ([Scott-Clayton et al. 2025](https://www.nber.org/papers/w33956), [Columbia brief 2024](https://povertycenter.columbia.edu/sites/default/files/content/Publications/Net-Benefits-of-Raising-Bachelor-Degree-Completion-CPSP-BRIEF-2024.pdf))
+   ([Scott-Clayton et al. 2025](https://www.nber.org/papers/w33956), [Columbia brief 2024](https://povertycenter.columbia.edu/sites/default/files/content/Publications/Net-Benefits-of-Raising-Bachelor-Degree-Completion-CPSP-BRIEF-2024.pdf)) {{CHALLENGE_ASSUMPTION:2}}
 3. A reasonable money-metric conversion in rich countries is roughly \$100,000-\$115,000 per
    QALY-equivalent. This is a wellbeing-based conversion: it maps non-health gains such as income
    into QALY-equivalent units, so it is conceptually broader than a pure health-state QALY.
-   ([HM Treasury 2021](https://www.gov.uk/government/publications/green-book-supplementary-guidance-wellbeing), [Frijters and Krekel 2021](https://eprints.lse.ac.uk/114605/1/Frijters_PR3.pdf))
+   ([HM Treasury 2021](https://www.gov.uk/government/publications/green-book-supplementary-guidance-wellbeing), [Frijters and Krekel 2021](https://eprints.lse.ac.uk/114605/1/Frijters_PR3.pdf)) {{CHALLENGE_ASSUMPTION:3}}
 4. ASAP-type comprehensive college-support programs have replicated large impacts outside the
    original CUNY setting and now show observed labor-market gains: in Ohio, the program increased
    degree receipt by 15 percentage points after eight years and raised year-8 earnings by \$3,337,
    while the direct program cost was \$5,521 per participant over three years (\$8,030 including the
-   added cost of educating students longer). ([MDRC 2025](https://www.mdrc.org/work/publications/learning-earning), [MDRC 2020](https://www.mdrc.org/sites/default/files/ASAP_OH_3yr_Impact_Report_1.pdf))
+   added cost of educating students longer). ([MDRC 2025](https://www.mdrc.org/work/publications/learning-earning), [MDRC 2020](https://www.mdrc.org/sites/default/files/ASAP_OH_3yr_Impact_Report_1.pdf)) {{CHALLENGE_ASSUMPTION:4}}
 5. KiVa, a schoolwide anti-bullying program, was estimated at €13,823 per QALY in a
-   decision-analytic model. ([Persson et al. 2018](https://link.springer.com/article/10.1007/s11121-018-0893-6))
+   decision-analytic model. ([Persson et al. 2018](https://link.springer.com/article/10.1007/s11121-018-0893-6)) {{CHALLENGE_ASSUMPTION:5}}
 6. A 2024 systematic review of universal primary-school social-emotional and mental-health
    interventions found that all but one comparable full economic evaluation judged interventions
    cost-effective, with QALY/DALY results ranging from cost-saving to about Int\$25,463 per QALY.
-   ([Abou Jaoude et al. 2024](https://link.springer.com/article/10.1007/s12310-024-09642-0))
+   ([Abou Jaoude et al. 2024](https://link.springer.com/article/10.1007/s12310-024-09642-0)) {{CHALLENGE_ASSUMPTION:6}}
 7. Some schoolwide social-emotional-learning programs are only marginally cost-effective or
    sensitive to costing assumptions: in the PATHS trial, the base-case estimate was about
    £16,800/QALY, but it was no longer cost-effective once teacher salary costs were treated as
-   incremental. ([Turner et al. 2020](https://link.springer.com/article/10.1007/s40258-019-00498-z))
+   incremental. ([Turner et al. 2020](https://link.springer.com/article/10.1007/s40258-019-00498-z)) {{CHALLENGE_ASSUMPTION:7}}
 8. Associational evidence points toward health benefits from education, including a 2024 global
    meta-analysis finding roughly 1.9% lower adult mortality per additional year of education, but
    causal evidence from quasi-experiments is mixed. So the headline estimate should not rely mainly
    on mortality reductions from years of schooling.
-   ([Lancet Public Health 2024](https://pubmed.ncbi.nlm.nih.gov/38278172/), [Galama et al. 2018](https://www.nber.org/papers/w24225), [Clark and Royer 2013](https://www.aeaweb.org/articles?id=10.1257/aer.103.6.2087))
+   ([Lancet Public Health 2024](https://pubmed.ncbi.nlm.nih.gov/38278172/), [Galama et al. 2018](https://www.nber.org/papers/w24225), [Clark and Royer 2013](https://www.aeaweb.org/articles?id=10.1257/aer.103.6.2087)) {{CHALLENGE_ASSUMPTION:8}}
 9. School-climate benefits begin within the school year, while degree-completion benefits begin
     after students leave school and can persist for decades through earnings, employment, and
-    related wellbeing channels.
+    related wellbeing channels. {{CHALLENGE_ASSUMPTION:9}}
 
 ## Details
 

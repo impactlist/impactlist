@@ -5,7 +5,9 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkDirective from 'remark-directive';
 import InfoTooltipIcon from './InfoTooltipIcon';
+import ChallengeAssumptionLink from './ChallengeAssumptionLink';
 import { CONTENT_TOOLTIPS } from '../../constants/contentTooltips';
+import { CHALLENGE_ASSUMPTION_TITLE_PREFIX } from '../../utils/constants';
 
 // Markdown links whose href starts with this sentinel render the phrase as plain
 // text followed by an info-icon tooltip, instead of a hyperlink. A `#`-fragment is
@@ -61,6 +63,14 @@ const CustomLink = ({ node, href, title, children }) => {
     // valid key, so this only guards against a hand-written typo rather than shipping a
     // broken-looking link.
     return <span>{children}</span>;
+  }
+
+  if (title?.startsWith(CHALLENGE_ASSUMPTION_TITLE_PREFIX)) {
+    return (
+      <ChallengeAssumptionLink href={href} label={title.slice(CHALLENGE_ASSUMPTION_TITLE_PREFIX.length)}>
+        {children}
+      </ChallengeAssumptionLink>
+    );
   }
 
   if (isExternal) {

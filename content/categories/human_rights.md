@@ -70,28 +70,28 @@ this page and enter your own values.*
    trial-based cost-effectiveness analysis, the strongest research-setting intervention achieved about **\$222 per DALY
    averted**, while the broad cross-intervention range ran from **\$222** to **\$17,548**. We anchor the VAWG component on
    that strongest research-setting figure, then apply an external-validity markup before blending it with the
-   anti-slavery component. ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827))
+   anti-slavery component. ([Ferrari et al. 2022](https://journals.plos.org/plosmedicine/article?id=10.1371%2Fjournal.pmed.1003827)) {{CHALLENGE_ASSUMPTION:1}}
 2. Those measured VAWG DALYs likely understate full welfare gains. A reasonable central conversion is that **1 DALY
    averted** in this literature corresponds to about **2.5 QALY-equivalent welfare gains** in total, with a practical
    range of about **1–4**, once omitted mortality risk, post-intervention persistence, safety, autonomy, dignity, and
-   broader psychosocial harms are included. ([See detailed justification](/assumption/human-rights-welfare-conversion))
+   broader psychosocial harms are included. ([See detailed justification](/assumption/human-rights-welfare-conversion)) {{CHALLENGE_ASSUMPTION:2}}
 3. For category-level marginal giving, a reasonable central external-validity markup on the strongest VAWG trial
    results is about **3x**, with a plausible range of **1.5x–5x**, to account for transportability, scaling, and
-   publication-bias risk.
+   publication-bias risk. {{CHALLENGE_ASSUMPTION:3}}
 4. Community-based anti-bonded-labour programs in Freedom Fund's India hotspots appear promising but are supported by
    weaker evidence than the VAWG literature. A Freedom Fund evidence paper summarising external evaluations reports
    roughly **125,000 fewer individuals in bonded labour** across target villages after about **\$15.8 million** in
-   spending across two India hotspots, implying roughly **\$126** per fewer person in bondage. ([Freedom Fund evidence paper](https://www.freedomfund.org/our-reports/unlocking-what-works-how-community-based-interventions-are-ending-bonded-labour-in-india/))
+   spending across two India hotspots, implying roughly **\$126** per fewer person in bondage. ([Freedom Fund evidence paper](https://www.freedomfund.org/our-reports/unlocking-what-works-how-community-based-interventions-are-ending-bonded-labour-in-india/)) {{CHALLENGE_ASSUMPTION:4}}
 5. A typical person avoiding bonded labour or similar labour trafficking plausibly gains about **1.0 QALY-equivalent**
    in total, with a plausible range of about **0.4–2.0**. This combines health-related quality-of-life loss,
    exploitation duration, fear, shame, worthlessness, restricted agency, and impaired daily functioning into one
-   all-things-considered welfare estimate. ([See detailed justification](/assumption/human-rights-welfare-conversion))
+   all-things-considered welfare estimate. ([See detailed justification](/assumption/human-rights-welfare-conversion)) {{CHALLENGE_ASSUMPTION:5}}
 6. For category-level marginal giving, the Freedom Fund-style anti-slavery evidence should be discounted by about
    **4x**, with a plausible range of **2x–8x**, for attribution, substitution, durability, and multi-component-program
-   uncertainty.
+   uncertainty. {{CHALLENGE_ASSUMPTION:6}}
 7. A reasonable central portfolio split for this category is about **70% VAWG prevention** and **30% anti-slavery /
    anti-trafficking work**. This is a modeling judgment about the strongest current direct-welfare human-rights
-   opportunities rather than a literal budget breakdown of the whole field.
+   opportunities rather than a literal budget breakdown of the whole field. {{CHALLENGE_ASSUMPTION:7}}
 
 ## Details
 

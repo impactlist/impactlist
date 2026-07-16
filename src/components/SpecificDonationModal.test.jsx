@@ -3,9 +3,12 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SpecificDonationModal from './SpecificDonationModal';
 
+const defaultRecipients = [{ id: 'amf', name: 'Against Malaria Foundation' }];
+const mockGetAllRecipients = vi.fn(() => defaultRecipients);
+
 const mockCombinedAssumptions = {
   globalParameters: { yearsPerLife: 50 },
-  getAllRecipients: () => [{ id: 'amf', name: 'Against Malaria Foundation' }],
+  getAllRecipients: mockGetAllRecipients,
   getAllCategories: () => [
     { id: 'health', name: 'Global Health' },
     { id: 'animal', name: 'Animal Welfare' },
@@ -46,12 +49,29 @@ vi.mock('../utils/assumptionsDataHelpers', () => ({
 
 describe('SpecificDonationModal', () => {
   beforeEach(() => {
+    mockGetAllRecipients.mockReturnValue(defaultRecipients);
     mockGetCostPerLifeFromCombined.mockImplementation((_combinedAssumptions, categoryId) => {
       if (categoryId === 'health') return 5000;
       if (categoryId === 'animal') return 2000;
       return 1000;
     });
     mockGetCostPerLifeForRecipientFromCombined.mockReturnValue(4000);
+  });
+
+  it('reports when recipient autocomplete results are capped', async () => {
+    mockGetAllRecipients.mockReturnValue(
+      Array.from({ length: 15 }, (_, index) => ({ id: `recipient-${index}`, name: `Alpha Recipient ${index + 1}` }))
+    );
+    const user = userEvent.setup();
+
+    render(<SpecificDonationModal isOpen={true} onClose={vi.fn()} onSave={vi.fn()} />);
+
+    await user.type(screen.getByLabelText('Search for a recipient'), 'alpha');
+
+    expect(await screen.findAllByRole('option')).toHaveLength(10);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Showing the first 10 of 15 matches. Keep typing to narrow the list.'
+    );
   });
 
   it('prefills custom recipient cost per life from the selected cause', async () => {

@@ -191,17 +191,21 @@ const EntityChartSection = ({
     const isLivesView = chartView === 'livesSaved';
     const percentage = isLivesView ? entry.livesSavedPercentage : entry.donationPercentage;
     const label = isLivesView ? formatRoundedLives(entry.livesSavedValue) : formatCurrency(entry.donationValue);
+    // Recharts gives a negative bar's x at its far-left edge and width back
+    // to zero. Put its label just beyond that zero edge instead of farther
+    // left, where it can collide with a long category-axis label.
+    const labelX = x + width + 8;
 
     return (
       <FormattedScientificSvgText
         value={label}
         suffix={` (${percentage}%)`}
-        x={value < 0 ? x - 8 : x + width + 8}
+        x={labelX}
         y={y + height / 2}
         fill="var(--text-muted)"
         fontSize={12}
         fontWeight={400}
-        textAnchor={value < 0 ? 'end' : 'start'}
+        textAnchor="start"
         dominantBaseline="middle"
       />
     );

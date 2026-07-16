@@ -38,6 +38,8 @@ const parseSpecificDonationAmount = (raw) => {
   return parsed !== null && parsed > 0 ? parsed : null;
 };
 
+const RECIPIENT_SEARCH_RESULT_LIMIT = 10;
+
 const createSpecificDonationId = () =>
   typeof globalThis.crypto?.randomUUID === 'function'
     ? globalThis.crypto.randomUUID()
@@ -80,15 +82,20 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   const [hasEditedCustomCostPerLife, setHasEditedCustomCostPerLife] = useState(false);
 
   // Filtered recipients based on search
-  const filteredRecipients = useMemo(() => {
+  const matchingRecipients = useMemo(() => {
     if (!searchTerm || !showDropdown) return [];
 
     const term = searchTerm.toLowerCase();
     return allRecipients
       .filter((recipient) => recipient.name.toLowerCase().includes(term))
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .slice(0, 10); // Limit to first 10 results
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [searchTerm, allRecipients, showDropdown]);
+
+  const filteredRecipients = useMemo(
+    () => matchingRecipients.slice(0, RECIPIENT_SEARCH_RESULT_LIMIT),
+    [matchingRecipients]
+  );
+  const hasMoreRecipientMatches = matchingRecipients.length > filteredRecipients.length;
 
   // Callers pass the year explicitly (usually getValidYearForCalculation()).
   // Deliberately NOT dependent on the year field state: this callback is a
@@ -443,6 +450,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     onKeyDown={handleKeyDown}
                     placeholder="Type to search..."
                     className="impact-field__input"
+                    aria-describedby={hasMoreRecipientMatches ? 'recipient-search-summary' : undefined}
                     onBlur={(e) => {
                       if (!e.relatedTarget || !e.relatedTarget.classList.contains('recipient-item')) {
                         setTimeout(() => setShowDropdown(false), 200);
@@ -451,34 +459,46 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   />
                 </div>
                 {showDropdown && searchTerm && filteredRecipients.length > 0 && (
-                  <div
-                    ref={dropdownRef}
-                    role="listbox"
-                    aria-label="Recipient search results"
-                    className="impact-surface absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md py-1 text-sm shadow-lg focus:outline-none"
-                  >
-                    {filteredRecipients.map((recipient, index) => (
-                      <div
-                        key={recipient.name}
-                        role="option"
-                        aria-selected={index === highlightedIndex}
-                        onClick={() => handleSelectRecipient(recipient)}
-                        onKeyDown={(event) => {
-                          if (event.key === 'Enter' || event.key === ' ') {
-                            event.preventDefault();
-                            handleSelectRecipient(recipient);
-                          }
-                        }}
-                        className={`recipient-item cursor-pointer px-4 py-2 text-strong ${
-                          index === highlightedIndex
-                            ? 'bg-[var(--accent-soft)]'
-                            : 'hover:bg-[var(--accent-soft)] hover:bg-opacity-60'
-                        }`}
-                        tabIndex="0"
+                  <div className="impact-surface absolute z-10 mt-1 w-full rounded-md text-sm shadow-lg">
+                    <div
+                      ref={dropdownRef}
+                      role="listbox"
+                      aria-label="Recipient search results"
+                      className="max-h-60 overflow-auto py-1 focus:outline-none"
+                    >
+                      {filteredRecipients.map((recipient, index) => (
+                        <div
+                          key={recipient.name}
+                          role="option"
+                          aria-selected={index === highlightedIndex}
+                          onClick={() => handleSelectRecipient(recipient)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault();
+                              handleSelectRecipient(recipient);
+                            }
+                          }}
+                          className={`recipient-item cursor-pointer px-4 py-2 text-strong ${
+                            index === highlightedIndex
+                              ? 'bg-[var(--accent-soft)]'
+                              : 'hover:bg-[var(--accent-soft)] hover:bg-opacity-60'
+                          }`}
+                          tabIndex="0"
+                        >
+                          {recipient.name}
+                        </div>
+                      ))}
+                    </div>
+                    {hasMoreRecipientMatches && (
+                      <p
+                        id="recipient-search-summary"
+                        role="status"
+                        className="border-t border-[var(--border-subtle)] px-4 py-2 text-xs text-muted"
                       >
-                        {recipient.name}
-                      </div>
-                    ))}
+                        Showing the first {filteredRecipients.length} of {matchingRecipients.length} matches. Keep
+                        typing to narrow the list.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>

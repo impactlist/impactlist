@@ -1,7 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { StrictMode } from 'react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { getSessionStorage } from '../../utils/safeStorage';
 import ScrollToTop from './ScrollToTop';
 
 const NavButtons = () => {
@@ -30,7 +32,7 @@ const NavButtons = () => {
   );
 };
 
-const renderAt = (initialEntry) => {
+const renderWithHistory = (initialEntries, initialIndex, { strictMode = false } = {}) => {
   const router = createMemoryRouter(
     [
       {
@@ -43,18 +45,34 @@ const renderAt = (initialEntry) => {
         ),
       },
     ],
-    { initialEntries: [initialEntry] }
+    { initialEntries, initialIndex }
   );
-  render(<RouterProvider router={router} />);
+  const tree = <RouterProvider router={router} />;
+  render(strictMode ? <StrictMode>{tree}</StrictMode> : tree);
 };
+
+const renderAt = (initialEntry) => renderWithHistory([initialEntry]);
+
+const scrollPositionStorageKey = (locationKey, url = '/assumptions') =>
+  `impactlist:scroll-position:${locationKey}:${url}`;
 
 describe('ScrollToTop', () => {
   let scrollSpy;
   let scrollIntoViewSpy;
   let resizeCallback;
+  let currentScrollX;
+  let currentScrollY;
 
   beforeEach(() => {
-    scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    currentScrollX = 0;
+    currentScrollY = 0;
+    Object.defineProperty(window, 'scrollX', { configurable: true, get: () => currentScrollX });
+    Object.defineProperty(window, 'scrollY', { configurable: true, get: () => currentScrollY });
+    scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation((x, y) => {
+      currentScrollX = x;
+      currentScrollY = y;
+      window.dispatchEvent(new window.Event('scroll'));
+    });
     scrollIntoViewSpy = vi.spyOn(window.Element.prototype, 'scrollIntoView');
     // Capture the body observer so tests can play "the page grew".
     resizeCallback = null;
@@ -73,8 +91,15 @@ describe('ScrollToTop', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
     vi.unstubAllGlobals();
     document.getElementById('full-justification')?.remove();
+    for (let index = window.sessionStorage.length - 1; index >= 0; index -= 1) {
+      const key = window.sessionStorage.key(index);
+      if (key?.startsWith('impactlist:scroll-position:')) {
+        window.sessionStorage.removeItem(key);
+      }
+    }
   });
 
   const appendHashTarget = () => {
@@ -98,9 +123,12 @@ describe('ScrollToTop', () => {
     expect(scrollSpy).not.toHaveBeenCalled();
   });
 
-  it('scrolls to top when a forward navigation changes the pathname, but not on POP', async () => {
+  it('scrolls forward navigations to the top and restores a POP entry after lazy routing', async () => {
     const user = userEvent.setup();
     renderAt('/assumptions');
+
+    currentScrollY = 640;
+    fireEvent.scroll(window);
 
     await user.click(screen.getByRole('button', { name: 'Push Page' }));
     await waitFor(() => {
@@ -112,7 +140,97 @@ describe('ScrollToTop', () => {
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Push Page' })).toBeInTheDocument();
     });
-    expect(scrollSpy).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(scrollSpy).toHaveBeenCalledWith(0, 640);
+    });
+  });
+
+  it('restores a POP entry from session storage after the in-memory position cache is lost', async () => {
+    const user = userEvent.setup();
+    renderWithHistory(
+      [
+        { pathname: '/assumptions', key: 'assumptions-entry' },
+        { pathname: '/faq', key: 'faq-entry' },
+      ],
+      1
+    );
+
+    // A hard reload creates a fresh ScrollToTop instance, but session storage
+    // keeps the position associated with the older history entry's key.
+    window.sessionStorage.setItem(scrollPositionStorageKey('assumptions-entry'), JSON.stringify({ x: 0, y: 875 }));
+
+    await user.click(screen.getByRole('button', { name: 'Back' }));
+
+    await waitFor(() => {
+      expect(scrollSpy).toHaveBeenCalledWith(0, 875);
+    });
+  });
+
+  it('restores the current page on initial load when a reload cleared the in-memory cache', async () => {
+    window.sessionStorage.setItem(scrollPositionStorageKey('reload-entry'), JSON.stringify({ x: 0, y: 930 }));
+
+    renderWithHistory([{ pathname: '/assumptions', key: 'reload-entry' }], undefined, { strictMode: true });
+
+    await waitFor(() => {
+      expect(scrollSpy).toHaveBeenCalledWith(0, 930);
+    });
+  });
+
+  it('debounces persistent writes while keeping the latest position in memory', async () => {
+    vi.useFakeTimers();
+    const setItemSpy = vi.spyOn(window.Storage.prototype, 'setItem');
+    renderWithHistory([{ pathname: '/assumptions', key: 'debounce-entry' }]);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(250);
+    });
+    setItemSpy.mockClear();
+
+    for (const y of [100, 200, 300, 400]) {
+      currentScrollY = y;
+      fireEvent.scroll(window);
+    }
+
+    expect(setItemSpy).not.toHaveBeenCalled();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(249);
+    });
+    expect(setItemSpy).not.toHaveBeenCalled();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1);
+    });
+    expect(setItemSpy).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(window.sessionStorage.getItem(scrollPositionStorageKey('debounce-entry')))).toEqual({
+      x: 0,
+      y: 400,
+    });
+  });
+
+  it('flushes the latest position on pagehide before the debounce fires', () => {
+    renderWithHistory([{ pathname: '/assumptions', key: 'pagehide-entry' }]);
+
+    currentScrollY = 725;
+    fireEvent.scroll(window);
+    window.dispatchEvent(new window.Event('pagehide'));
+
+    expect(JSON.parse(window.sessionStorage.getItem(scrollPositionStorageKey('pagehide-entry')))).toEqual({
+      x: 0,
+      y: 725,
+    });
+  });
+
+  it('does not throw when persistent scroll storage fails', () => {
+    getSessionStorage();
+    vi.spyOn(window.Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new window.DOMException('Storage unavailable', 'QuotaExceededError');
+    });
+    renderWithHistory([{ pathname: '/assumptions', key: 'failing-storage-entry' }]);
+
+    currentScrollY = 300;
+    fireEvent.scroll(window);
+
+    expect(() => window.dispatchEvent(new window.Event('pagehide'))).not.toThrow();
   });
 
   it('keeps retrying until a lazily rendered hash target appears, then scrolls to it', async () => {

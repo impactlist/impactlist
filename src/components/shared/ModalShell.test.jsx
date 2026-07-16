@@ -21,6 +21,28 @@ describe('ModalShell', () => {
     expect(dialog).toHaveFocus();
   });
 
+  it('locks body scrolling while open and restores the previous overflow value on close', async () => {
+    document.body.style.overflow = 'visible';
+
+    const { rerender } = render(
+      <ModalShell isOpen onClose={() => {}} labelledBy="test-modal-title">
+        <h2 id="test-modal-title">Test Modal</h2>
+      </ModalShell>
+    );
+
+    expect(document.body.style.overflow).toBe('hidden');
+
+    rerender(
+      <ModalShell isOpen={false} onClose={() => {}} labelledBy="test-modal-title">
+        <h2 id="test-modal-title">Test Modal</h2>
+      </ModalShell>
+    );
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    await waitFor(() => expect(document.body.style.overflow).toBe('visible'));
+    document.body.style.removeProperty('overflow');
+  });
+
   it('closes on Escape and restores focus to the previously focused element', async () => {
     const onClose = vi.fn();
     const outside = document.createElement('button');

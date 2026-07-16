@@ -21,6 +21,7 @@ describe('MiniImpactList', () => {
     renderList({ above: null, below: null, twoBelow: null, twoAbove: null });
 
     expect(screen.getByText('You')).toBeInTheDocument();
+    expect(screen.getByText('Unknown')).toBeInTheDocument();
     expect(screen.getAllByRole('row')).toHaveLength(2);
   });
 

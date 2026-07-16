@@ -11,6 +11,24 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
+let bodyScrollLockCount = 0;
+let previousBodyOverflow = '';
+
+const lockBodyScroll = () => {
+  if (bodyScrollLockCount === 0) {
+    previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+  }
+  bodyScrollLockCount += 1;
+
+  return () => {
+    bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
+    if (bodyScrollLockCount === 0) {
+      document.body.style.overflow = previousBodyOverflow;
+    }
+  };
+};
+
 const ModalShellContent = ({ onClose, dismissible, labelledBy, panelClassName, children }) => {
   const panelRef = useRef(null);
 
@@ -25,6 +43,11 @@ const ModalShellContent = ({ onClose, dismissible, labelledBy, panelClassName, c
         previouslyFocused.focus();
       }
     };
+  }, []);
+
+  useEffect(() => {
+    const unlockBodyScroll = lockBodyScroll();
+    return unlockBodyScroll;
   }, []);
 
   const handleKeyDown = (event) => {

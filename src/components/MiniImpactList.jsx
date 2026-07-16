@@ -103,7 +103,7 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
                   )}
                 </td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">
-                  {row.isCurrentUser ? '???' : formatCurrency(row.netWorth)}
+                  {row.isCurrentUser ? 'Unknown' : formatCurrency(row.netWorth)}
                 </td>
               </tr>
             ))}

@@ -27,6 +27,15 @@ const useFormattedNumberInput = (value, emitChange) => {
   const [cursorPosition, setCursorPosition] = useState(null);
   const inputRef = useRef(null);
 
+  // Callers use this path when text must remain exactly as entered (for
+  // example, an incomplete exponent such as `1e`). The browser already put
+  // the caret in the right place for that edit, so discard any position saved
+  // by an earlier formatter-owned edit instead of reapplying a stale caret.
+  const setUnformattedLocalValue = useCallback((nextValue) => {
+    setCursorPosition(null);
+    setLocalValue(nextValue);
+  }, []);
+
   // Initialize local value from prop
   useEffect(() => {
     if (value !== undefined && value !== null) {
@@ -62,7 +71,7 @@ const useFormattedNumberInput = (value, emitChange) => {
     [emitChange]
   );
 
-  return { inputRef, localValue, setLocalValue, handleChange };
+  return { inputRef, localValue, setLocalValue: setUnformattedLocalValue, handleChange };
 };
 
 export default useFormattedNumberInput;

@@ -1,8 +1,22 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import NumericInput from './NumericInput';
 
 describe('NumericInput', () => {
+  it('keeps the caret after an incomplete exponent while scientific notation is typed', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<NumericInput id="quantity" label="Quantity" value="" onChange={onChange} />);
+
+    const input = screen.getByLabelText('Quantity');
+    await user.type(input, '1e7');
+
+    expect(input).toHaveValue('1e7');
+    expect(input.selectionStart).toBe(3);
+    expect(onChange).toHaveBeenLastCalledWith('1e7');
+  });
+
   it('preserves the exact decimal text instead of round-tripping through exponent notation', () => {
     const onChange = vi.fn();
     render(<NumericInput id="quantity" label="Quantity" value="" onChange={onChange} />);

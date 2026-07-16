@@ -232,6 +232,18 @@ const FAQ = () => {
                   .
                 </li>
               </ol>
+              <p className="mt-3">
+                We also welcome higher-level{' '}
+                <a
+                  href="https://forms.gle/NEC6LNics3n6WVo47"
+                  className="impact-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  feedback
+                </a>{' '}
+                about what would make the estimates more trustworthy.
+              </p>
             </FAQCard>
 
             <FAQCard
@@ -275,8 +287,9 @@ const FAQ = () => {
               onToggle={() => toggleItem(13)}
             >
               <p className="mb-3">
-                We exclude people whose donations came from the proceeds of crimes — for example, giving funded by money
-                that was later found to have been stolen or misappropriated doesn't earn a place on the list.
+                We exclude people whose donations were funded by the proceeds of crime. For example, a donation made
+                with money that was later found to have been stolen or misappropriated does not earn the donor a place
+                on the list.
               </p>
               <p className="mb-3">
                 We also may simply have missed someone who belongs here. The list is built from a donation database that

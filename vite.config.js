@@ -1,10 +1,22 @@
 import { defineConfig, configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { resolveSiteOrigin } from './scripts/siteOrigin.js';
+
+// Social-preview crawlers require absolute og:url/og:image URLs, so
+// index.html carries %SITE_ORIGIN% placeholders that are stamped at build
+// time from the same origin chain the generated sitemap uses.
+const injectSiteOrigin = () => ({
+  name: 'inject-site-origin',
+  transformIndexHtml: {
+    order: 'pre',
+    handler: (html) => html.replaceAll('%SITE_ORIGIN%', resolveSiteOrigin()),
+  },
+});
 
 // Single config for Vite and Vitest (vitest reads the `test` key).
 // https://vitejs.dev/config/ and https://vitest.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), injectSiteOrigin()],
   build: {
     rollupOptions: {
       output: {

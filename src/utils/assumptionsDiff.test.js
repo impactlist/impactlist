@@ -198,7 +198,7 @@ describe('buildAssumptionsDiff', () => {
           field: 'startTime',
         },
         effectLabel: null,
-        fieldLabel: 'Start Time (years)',
+        fieldLabel: 'Start time (years)',
         fromDisplay: '0',
         fromNote: 'from cause',
         toDisplay: '3',

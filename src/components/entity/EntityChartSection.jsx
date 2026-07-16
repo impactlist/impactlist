@@ -76,7 +76,10 @@ const EntityChartSection = ({
           ) : (
             <>
               <p className={`text-sm ${value < 0 ? 'text-danger' : 'text-success'}`}>
-                <FormattedScientificValue value={formatRoundedLives(value)} /> lives {value < 0 ? 'lost' : 'saved'}
+                {/* "lost" carries the sign, so the number is shown unsigned —
+                    "-1,003 lives lost" was a double negative. */}
+                <FormattedScientificValue value={formatRoundedLives(Math.abs(value))} />{' '}
+                {Math.abs(Math.round(value)) === 1 ? 'life' : 'lives'} {value < 0 ? 'lost' : 'saved'}
               </p>
               <p className="text-xs text-muted">{`${percentage}% of total impact`}</p>
               {entry.name !== 'Other Causes' && entry.categoryId && (
@@ -96,6 +99,47 @@ const EntityChartSection = ({
     return null;
   };
 
+  // Long category names overflow the fixed-width axis and get clipped
+  // mid-word; wrap them onto two lines split at the space nearest the middle.
+  const splitTickLabel = (text) => {
+    if (text.length <= 16) {
+      return [text];
+    }
+
+    const midpoint = text.length / 2;
+    let splitIndex = -1;
+    let bestDistance = Infinity;
+    for (let index = 0; index < text.length; index += 1) {
+      if (text[index] === ' ' && Math.abs(index - midpoint) < bestDistance) {
+        bestDistance = Math.abs(index - midpoint);
+        splitIndex = index;
+      }
+    }
+
+    return splitIndex === -1 ? [text] : [text.slice(0, splitIndex), text.slice(splitIndex + 1)];
+  };
+
+  const renderTickText = (value, fill, className) => {
+    const lines = splitTickLabel(value);
+
+    return (
+      <text x={-6} y={0} textAnchor="end" fill={fill} fontSize={14} className={className}>
+        {lines.length === 1 ? (
+          <tspan dy={4}>{lines[0]}</tspan>
+        ) : (
+          <>
+            <tspan x={-6} dy={-3}>
+              {lines[0]}
+            </tspan>
+            <tspan x={-6} dy={14}>
+              {lines[1]}
+            </tspan>
+          </>
+        )}
+      </text>
+    );
+  };
+
   // Custom Y-axis tick renderer to make category names clickable
   const renderYAxisTick = (props) => {
     const { x, y, payload } = props;
@@ -103,29 +147,13 @@ const EntityChartSection = ({
     const dataEntry = chartData.find((item) => item.name === payload.value);
 
     if (!dataEntry || !dataEntry.categoryId || dataEntry.name === 'Other Causes') {
-      return (
-        <g transform={`translate(${x},${y})`}>
-          <text x={-6} y={0} dy={4} textAnchor="end" fill="var(--text-strong)" fontSize={14}>
-            {payload.value}
-          </text>
-        </g>
-      );
+      return <g transform={`translate(${x},${y})`}>{renderTickText(payload.value, 'var(--text-strong)')}</g>;
     }
 
     return (
       <g transform={`translate(${x},${y})`}>
         <Link to={buildCausePath(dataEntry.categoryId)}>
-          <text
-            x={-6}
-            y={0}
-            dy={4}
-            textAnchor="end"
-            fill="var(--link-accent-strong)"
-            fontSize={14}
-            className="hover:underline hover:font-medium"
-          >
-            {payload.value}
-          </text>
+          {renderTickText(payload.value, 'var(--link-accent-strong)', 'hover:underline hover:font-medium')}
         </Link>
       </g>
     );
@@ -149,15 +177,25 @@ const EntityChartSection = ({
     </g>
   );
 
-  const renderLivesSavedBarLabel = ({ x, y, width, height, value, payload }) => {
-    if (value === undefined || payload?.livesSavedPercentage === undefined) {
+  // Recharts calls Bar label content with geometry plus the row INDEX only —
+  // no payload row — and plain label formatters receive just the value. Both
+  // previous label mechanisms therefore silently rendered nothing; derive the
+  // row from chartData by index instead.
+  const renderBarLabel = (props) => {
+    const { x, y, width, height, value, index } = props;
+    const entry = chartData[index];
+    if (!entry || value === undefined || isTransitioning) {
       return null;
     }
 
+    const isLivesView = chartView === 'livesSaved';
+    const percentage = isLivesView ? entry.livesSavedPercentage : entry.donationPercentage;
+    const label = isLivesView ? formatRoundedLives(entry.livesSavedValue) : formatCurrency(entry.donationValue);
+
     return (
       <FormattedScientificSvgText
-        value={formatRoundedLives(payload.livesSavedValue)}
-        suffix={` (${payload.livesSavedPercentage}%)`}
+        value={label}
+        suffix={` (${percentage}%)`}
         x={value < 0 ? x - 8 : x + width + 8}
         y={y + height / 2}
         fill="var(--text-muted)"
@@ -229,16 +267,7 @@ const EntityChartSection = ({
               ];
             }
           })()}
-          labelFormatter={(value, entry) => {
-            if (!entry) return '';
-
-            const percentage = chartView === 'donations' ? entry.donationPercentage : entry.livesSavedPercentage;
-
-            return chartView === 'donations'
-              ? `${formatCurrency(entry.donationValue)} (${percentage}%)`
-              : `${formatRoundedLives(entry.livesSavedValue)} (${percentage}%)`;
-          }}
-          renderBarLabel={chartView === 'livesSaved' ? renderLivesSavedBarLabel : null}
+          renderBarLabel={renderBarLabel}
           barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
           heightCalculator={(dataLength) => Math.max(containerHeight, dataLength * 55)}
           isAnimationActive={true}

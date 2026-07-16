@@ -168,19 +168,25 @@ const DonorDetail = () => {
         {/* Donor about section */}
         <MarkdownContent content={donorAboutContent} className="mt-8 mb-0" />
 
-        {/* Donation categories visualization */}
-        <EntityChartSection
-          chartData={chartData}
-          chartView={chartView}
-          onViewChange={handleChartViewChange}
-          isTransitioning={isTransitioning}
-          toggleComponent={
-            <ImpactChartToggle chartView={chartView} onToggle={handleChartViewChange} disabled={isTransitioning} />
-          }
-          entityType="donor"
-          className="mt-8"
-          combinedAssumptions={combinedAssumptions}
-        />
+        {/* Donation categories visualization. Gated on more than one row
+            (mirroring RecipientDetail's breakdown gate): a distribution chart
+            of a single category is one full-width bar saying "100%". The gate
+            uses rawChartData — the transition-managed chartData would flicker
+            the section during view toggles. */}
+        {rawChartData.length > 1 && (
+          <EntityChartSection
+            chartData={chartData}
+            chartView={chartView}
+            onViewChange={handleChartViewChange}
+            isTransitioning={isTransitioning}
+            toggleComponent={
+              <ImpactChartToggle chartView={chartView} onToggle={handleChartViewChange} disabled={isTransitioning} />
+            }
+            entityType="donor"
+            className="mt-8"
+            combinedAssumptions={combinedAssumptions}
+          />
+        )}
 
         {/* Donor markdown content */}
         <MarkdownContent content={donorContent} className="mt-8 mb-8" />

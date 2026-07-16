@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Where to find context
 
-Most directories have their own CLAUDE.md (with an identical AGENTS.md) describing that area's architecture and gotchas — read the one for whatever you're touching. Start with `src/CLAUDE.md` for the overall architecture and data-flow map. The prioritized improvement backlog is `docs/CodebaseReview-2026-06-10.md`; check it before refactoring, since many known issues are deliberately deferred to numbered items there.
+Most directories have their own CLAUDE.md (with an identical AGENTS.md) describing that area's architecture and gotchas — read the one for whatever you're touching. Start with `src/CLAUDE.md` for the overall architecture and data-flow map.
 
 ## Workflow essentials
 

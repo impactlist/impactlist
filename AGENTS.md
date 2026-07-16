@@ -8,7 +8,7 @@
 - Content: `content/` (categories, donors, recipients, donations, `globalParameters.md`).
 - Scripts: `scripts/` (e.g., `generate-data-from-markdown.js`).
 - Static: `public/`, entry `index.html`.
-- Most directories contain an AGENTS.md (identical to the sibling CLAUDE.md) with that area's architecture and gotchas — read it before working there. `src/AGENTS.md` has the overall data-flow map; `docs/CodebaseReview-2026-06-10.md` is the prioritized improvement backlog.
+- Most directories contain an AGENTS.md (identical to the sibling CLAUDE.md) with that area's architecture and gotchas — read it before working there. `src/AGENTS.md` has the overall data-flow map.
 
 ## Build, Test, and Development Commands
 

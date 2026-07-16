@@ -37,6 +37,23 @@ test.describe('Donor list and detail flow', () => {
     await expect(page.getByRole('heading', { name: topDonorName, level: 1 })).toBeVisible();
   });
 
+  test('donor category chart renders bar value labels in both views', async ({ page }) => {
+    // Regression: both previous label mechanisms silently rendered nothing
+    // (recharts passes label formatters only the value, and label content
+    // functions the row INDEX, not the payload). jsdom can't render recharts
+    // bars, so this contract is only verifiable in a real browser.
+    await page.goto('/donor/bill-gates');
+    await expect(page.getByRole('heading', { name: 'Bill Gates', level: 1 })).toBeVisible();
+
+    // Donations view (default): labels read like "$1.23 B (45.6%)".
+    const barLabel = page.getByText(/\(\d[\d.,]*%\)/).first();
+    await expect(barLabel).toBeVisible();
+
+    // Lives-saved view relabels after the toggle animation settles.
+    await page.getByRole('tab', { name: 'Lives Saved' }).click();
+    await expect(page.getByText(/\(\d[\d.,]*%\)/).first()).toBeVisible();
+  });
+
   test('unknown donor IDs and URLs show the not-found page, not an error screen', async ({ page }) => {
     await page.goto('/donor/this-donor-does-not-exist');
     await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();

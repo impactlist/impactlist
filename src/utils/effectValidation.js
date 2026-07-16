@@ -99,13 +99,13 @@ export const validateEffectField = (fieldName, value, effectType) => {
   if (effectType === 'qaly' && fieldName === 'costPerQALY') {
     const { cleanValue, numValue } = cleanAndParseValue(value);
     if (isPartialInput(cleanValue)) {
-      return 'Cost per QALY is required';
+      return 'Cost per life-year is required';
     }
     if (!Number.isFinite(numValue)) {
-      return 'Cost per QALY must be a valid number';
+      return 'Cost per life-year must be a valid number';
     }
     if (numValue === 0) {
-      return 'Cost per QALY cannot be zero';
+      return 'Cost per life-year cannot be zero';
     }
   }
 

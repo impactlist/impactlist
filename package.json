@@ -38,6 +38,7 @@
   "author": "Elliot Olds",
   "license": "ISC",
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.7.4",
     "katex": "^0.16.25",
     "prop-types": "^15.8.1",

@@ -42,13 +42,22 @@ const formatScientificNotation = (num, sigFigs = LARGE_NUMBER_SIG_FIGS) => {
   return `${mantissa} × 10${toSuperscript(normalizedExponent)}`;
 };
 
+// Suffix tiers are chosen from the value ROUNDED to display precision, not
+// the raw value: 999,950,000,000 displays as 1,000 at 3 significant figures,
+// and "1,000 B" must promote to "1.00 T".
+const roundToDisplayPrecision = (absValue) => Number(absValue.toPrecision(LARGE_NUMBER_SIG_FIGS));
+
 const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null } = {}) => {
   if (absValue > 0 && absValue < SMALL_NUMBER_THRESHOLD) {
     return formatScientificNotation(absValue);
   }
 
-  if (absValue >= TRILLION) {
-    const value = absValue / TRILLION;
+  // Below the first suffix tier values display at full precision, so only
+  // suffixed magnitudes need rounded-tier selection.
+  const displayValue = absValue >= BILLION ? roundToDisplayPrecision(absValue) : absValue;
+
+  if (displayValue >= TRILLION) {
+    const value = displayValue / TRILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
 
     if (scientificNotationDigitLimit !== null && countDigits(valueStr) > scientificNotationDigitLimit) {
@@ -56,8 +65,8 @@ const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null 
     }
 
     return `${valueStr} T`;
-  } else if (absValue >= BILLION) {
-    const value = absValue / BILLION;
+  } else if (displayValue >= BILLION) {
+    const value = displayValue / BILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     return `${valueStr} B`;
   } else if (absValue >= HUNDRED) {
@@ -355,8 +364,11 @@ export const formatLives = (lives) => {
       ? `-${rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
       : rounded.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   } else {
-    // For extremely small numbers, use 3 significant digits
-    return isNegative ? `-${absLives.toPrecision(3)}` : absLives.toPrecision(3);
+    // For extremely small numbers, use 3 significant digits — in the
+    // sitewide × 10ⁿ style once toPrecision would emit raw e-notation.
+    const formatted =
+      absLives > 0 && absLives < SMALL_NUMBER_THRESHOLD ? formatScientificNotation(absLives) : absLives.toPrecision(3);
+    return isNegative ? `-${formatted}` : formatted;
   }
 };
 
@@ -389,21 +401,25 @@ export const formatCurrency = (amount) => {
 
   const isNegative = amount < 0;
   const absAmount = Math.abs(amount);
+  // Tier from the display-rounded value so "$1,000 M" promotes to "$1.00 B"
+  // (and "$1,000 B" to "$1.00 T") instead of overflowing its suffix. Below
+  // $1M the display keeps full precision, so no rounded-tier selection.
+  const displayAmount = absAmount >= MILLION ? roundToDisplayPrecision(absAmount) : absAmount;
 
   let formattedValue;
-  if (absAmount >= TRILLION) {
+  if (displayAmount >= TRILLION) {
     // Trillions - use configured significant figures
-    const value = absAmount / TRILLION;
+    const value = displayAmount / TRILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = countDigits(valueStr) > 9 ? `$${formatScientificNotation(absAmount)}` : `$${valueStr} T`;
-  } else if (absAmount >= BILLION) {
+  } else if (displayAmount >= BILLION) {
     // Billions - use configured significant figures
-    const value = absAmount / BILLION;
+    const value = displayAmount / BILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = `$${valueStr} B`;
-  } else if (absAmount >= MILLION) {
+  } else if (displayAmount >= MILLION) {
     // Millions - use configured significant figures
-    const value = absAmount / MILLION;
+    const value = displayAmount / MILLION;
     const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
     formattedValue = `$${valueStr} M`;
   } else if (absAmount >= THOUSAND) {

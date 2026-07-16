@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import PageHeader from '../components/shared/PageHeader';
 import BackButton from '../components/shared/BackButton';
 import { CAUSES_PATH } from '../utils/causeRoutes';
+import { categoriesById } from '../data/generatedData';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const FAQCard = ({ question, isOpen, onToggle, children }) => (
@@ -150,8 +151,8 @@ const FAQ = () => {
             >
               <p className="mb-3">
                 Initially we've mostly focused on calculating the effectiveness of different causes, such as global
-                health, poverty, animal welfare, etc. We currently have 27 causes. You can see the effectiveness
-                estimates for each cause by going to the{' '}
+                health, poverty, animal welfare, etc. We currently have {Object.keys(categoriesById).length} causes. You
+                can see the effectiveness estimates for each cause by going to the{' '}
                 <Link to={CAUSES_PATH} className="impact-link">
                   Causes
                 </Link>{' '}
@@ -460,8 +461,7 @@ const FAQ = () => {
                 <a href="https://x.com/impactlist_" className="impact-link" target="_blank" rel="noopener noreferrer">
                   Twitter
                 </a>
-                . We haven't posted much yet because we haven't officially launched, but once we do this will be the
-                primary way we post updates.
+                . This is the primary place we post updates.
               </p>
             </FAQCard>
 

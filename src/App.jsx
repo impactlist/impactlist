@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { MotionConfig } from 'framer-motion';
 import {
   createBrowserRouter,
   Navigate,
@@ -260,6 +261,19 @@ const App = () => {
       if (!event.error) {
         return;
       }
+      // Errors attributed to another origin's script (browser extensions,
+      // injected third-party code) are not app bugs either — fail-hard stays
+      // reserved for our own code. App errors report our origin's chunk URL
+      // or no filename at all (inline handlers, some async stacks).
+      if (event.filename) {
+        try {
+          if (new globalThis.URL(event.filename, window.location.href).origin !== window.location.origin) {
+            return;
+          }
+        } catch {
+          // An unparseable filename gives no origin signal; treat as ours.
+        }
+      }
       console.error('Global error:', event.error);
       setError(toError(event.error, 'Unknown global error'));
       event.preventDefault();
@@ -291,11 +305,16 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <NotificationProvider>
-        <AssumptionsProvider>
-          <RouterProvider router={router} />
-        </AssumptionsProvider>
-      </NotificationProvider>
+      {/* reducedMotion="user" makes every motion.* component respect
+          prefers-reduced-motion: transforms are skipped while opacity fades
+          (safe for vestibular disorders) still run. */}
+      <MotionConfig reducedMotion="user">
+        <NotificationProvider>
+          <AssumptionsProvider>
+            <RouterProvider router={router} />
+          </AssumptionsProvider>
+        </NotificationProvider>
+      </MotionConfig>
     </ErrorBoundary>
   );
 };

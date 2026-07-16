@@ -141,7 +141,7 @@ describe('AssumptionsSelector', () => {
     await user.hover(screen.getByRole('button', { name: 'More information' }));
 
     expect(
-      await screen.findByText('Change the current assumptions to see how it affects the rankings.')
+      await screen.findByText('Change the current assumptions to see how they affect the rankings.')
     ).toBeInTheDocument();
     expect(
       screen.getByText(

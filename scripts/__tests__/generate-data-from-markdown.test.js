@@ -13,9 +13,14 @@ const fixturesRoot = path.resolve(__dirname, '../__fixtures__/generate-data');
 
 const tempWorkspaces = [];
 
-// Pure shared modules the generator imports from src/ — they must exist in
-// the temp workspace for the script's relative imports to resolve.
-const SHARED_MODULES = ['src/utils/dataValidation.js', 'src/utils/constants.js', 'src/utils/globalParameterRules.js'];
+// Pure shared modules the generator imports — they must exist in the temp
+// workspace for the script's relative imports to resolve.
+const SHARED_MODULES = [
+  'src/utils/dataValidation.js',
+  'src/utils/constants.js',
+  'src/utils/globalParameterRules.js',
+  'scripts/siteOrigin.js',
+];
 
 const setupWorkspaceFromFixture = (fixtureName) => {
   const fixtureContentDir = path.join(fixturesRoot, fixtureName, 'content');

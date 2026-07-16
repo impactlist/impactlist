@@ -40,4 +40,3 @@ Fail hard and loudly on unexpected states (project rule). The deliberate excepti
 - `src/data/generatedData.js` is gitignored and everything imports it; `npm run dev`/`npm test*`/`npm run build` regenerate it automatically via pre-scripts. Direct `npx vitest` runs do NOT — run `npm run generate-data` first on a fresh clone or after `content/` edits.
 - Vitest configuration lives under the `test` key in `vite.config.js` (there is no separate `vitest.config.js`), and there is intentionally no test-only path alias — import paths must work identically for tests and builds.
 - CI (`.github/workflows/ci.yml`): generate → lint → coverage-gated tests (50% floors) → build.
-- The prioritized improvement backlog lives in `docs/CodebaseReview-2026-06-10.md`; check it before starting refactors — several known issues are deliberately deferred to numbered items there.

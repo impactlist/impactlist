@@ -19,6 +19,7 @@ import {
   validateRecipientEffectAgainstBase,
 } from '../src/utils/dataValidation.js';
 import { CHALLENGE_ASSUMPTION_TITLE_PREFIX } from '../src/utils/constants.js';
+import { resolveSiteOrigin } from './siteOrigin.js';
 import {
   GLOBAL_PARAMETER_NAMES,
   assertValidGlobalParameters,
@@ -1652,20 +1653,10 @@ export const globalParameters = ${JSON.stringify(globalParameters, null, 2)};
   console.log(`Donations: ${donations.length}`);
 }
 
-// Absolute origin for sitemap/robots URLs. Vercel provides the production
-// URL automatically during builds; SITE_ORIGIN overrides it (e.g. for a
-// custom domain — see .env.example); local builds fall back to the preview
-// origin. Both files are gitignored build output, so no guessed domain is
+// The absolute origin for sitemap/robots URLs comes from the shared
+// resolver in ./siteOrigin.js (also used for index.html's social meta
+// tags). Both files are gitignored build output, so no guessed domain is
 // ever committed.
-function resolveSiteOrigin() {
-  if (process.env.SITE_ORIGIN) {
-    return process.env.SITE_ORIGIN.replace(/\/+$/, '');
-  }
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  }
-  return 'http://localhost:4173';
-}
 
 // Emit sitemap.xml and robots.txt into public/ so Vite copies them into the
 // deploy. URLs mirror the app's routes (and its encodeURIComponent hrefs).

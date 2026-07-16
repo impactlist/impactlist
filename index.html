@@ -15,13 +15,22 @@
       name="description"
       content="Impact List ranks the world's top donors by estimated lives saved through their donations — and lets you explore how the estimates change under your own assumptions."
     />
+    <!-- %SITE_ORIGIN% is stamped at build time (see injectSiteOrigin in
+         vite.config.js) — crawlers require absolute URLs here. -->
     <meta property="og:title" content="Impact List" />
     <meta
       property="og:description"
       content="Ranking the world's top donors by estimated lives saved through their donations."
     />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:site_name" content="Impact List" />
+    <meta property="og:url" content="%SITE_ORIGIN%/" />
+    <meta property="og:image" content="%SITE_ORIGIN%/images/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Impact List — ranking the world's top donors by lives saved" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="%SITE_ORIGIN%/images/og-image.png" />
   </head>
   <body>
     <div id="root"></div>

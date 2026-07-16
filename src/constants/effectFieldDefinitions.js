@@ -8,7 +8,7 @@ export const QALY_EFFECT_FIELDS = [
   },
   {
     name: 'startTime',
-    label: 'Start Time (years)',
+    label: 'Start time (years)',
     tooltip: EFFECT_TOOLTIPS.qaly.startTime,
   },
   {

@@ -35,6 +35,10 @@ const DonorPhoto = ({ donorId, donorName, size = 'small', className = '' }) => {
     <img
       src={imageSrc}
       alt={donorName}
+      // The home list renders all ~74 donor photos (~3.8 MB); lazy loading
+      // defers the below-the-fold ones instead of fetching them up front.
+      loading="lazy"
+      decoding="async"
       className={`shrink-0 object-cover ${sizeClass} ${className}`}
       onError={handleError}
     />

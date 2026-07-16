@@ -28,6 +28,8 @@ const ImageCredits = () => {
                   e.currentTarget.onerror = null;
                 }}
                 alt={credit.name}
+                loading="lazy"
+                decoding="async"
                 className="w-12 h-12 rounded object-cover shrink-0"
               />
               <div className="min-w-0">

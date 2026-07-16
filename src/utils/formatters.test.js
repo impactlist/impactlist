@@ -177,6 +177,15 @@ describe('formatLives', () => {
   });
 });
 
+describe('formatLives tiny values', () => {
+  it('uses the sitewide × 10ⁿ style instead of raw e-notation', () => {
+    expect(formatLives(1.07e-7)).toBe('1.07 × 10⁻⁷');
+    expect(formatLives(-1.07e-7)).toBe('-1.07 × 10⁻⁷');
+    // At or above the small-number threshold, plain decimals remain.
+    expect(formatLives(0.005)).toBe('0.00500');
+  });
+});
+
 describe('formatRoundedLives', () => {
   it('should preserve rounded whole-number lives formatting for normal values', () => {
     expect(formatRoundedLives(12.5)).toBe('13');
@@ -229,6 +238,17 @@ describe('formatCurrency', () => {
   it('should format billions with B suffix', () => {
     expect(formatCurrency(1000000000)).toBe('$1.00 B');
     expect(formatCurrency(1500000000)).toBe('$1.50 B');
+  });
+
+  it('promotes suffixed values that round up to the next tier', () => {
+    // 3-sig-fig display rounding used to overflow the suffix: "$1,000 B".
+    expect(formatCurrency(999950000000)).toBe('$1.00 T');
+    expect(formatCurrency(999950000)).toBe('$1.00 B');
+    // Values that round within their tier stay put.
+    expect(formatCurrency(999499000000)).toBe('$999 B');
+    expect(formatCurrency(999490000)).toBe('$999 M');
+    // Below $1M the display keeps full precision — no suffix to overflow.
+    expect(formatCurrency(999999.5)).toBe('$1,000,000');
   });
 
   it('should format trillions with T suffix', () => {

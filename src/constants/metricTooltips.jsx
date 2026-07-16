@@ -46,7 +46,8 @@ export const RECIPIENT_COST_PER_LIFE_TOOLTIP = (
 
 export const CATEGORY_LIVES_SAVED_TOOLTIP = (
   <div>
-    Expected lives saved from donations to this cause, computed for each donation year and recipient/cause assumptions.
+    Expected lives saved from donations to this cause, computed from each donation's year and the recipient and cause
+    assumptions.
   </div>
 );
 

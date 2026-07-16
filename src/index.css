@@ -614,6 +614,14 @@
     color: var(--text-muted);
   }
 
+  /* Wide display equations scroll inside the card on narrow screens instead
+     of being clipped by the surface's overflow-hidden rounded corners. */
+  .prose.impact-markdown .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.25rem;
+  }
+
   .prose.impact-markdown :where(strong):not(:where(.not-prose, .not-prose *)) {
     color: inherit;
     font-weight: 700;

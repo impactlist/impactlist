@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import BackButton from '../components/shared/BackButton';
 import AssumptionsDescriptionModal from '../components/AssumptionsDescriptionModal';
 import AssumptionsEditor from '../components/AssumptionsEditor';
@@ -37,7 +37,6 @@ const AssumptionsPage = () => {
     useAssumptions();
   const { showNotification } = useNotificationActions();
   const [showSelectorEveryPage, setShowSelectorEveryPage] = useAssumptionsSelectorPreference();
-  const shouldReduceMotion = useReducedMotion();
   const [searchParams, setSearchParams] = useSearchParams();
   const [pendingDeleteEntryId, setPendingDeleteEntryId] = useState(null);
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
@@ -295,10 +294,10 @@ const AssumptionsPage = () => {
   return (
     <motion.div
       className="assumptions-page min-h-screen pb-8"
-      initial={shouldReduceMotion ? false : { opacity: 0 }}
+      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={shouldReduceMotion ? undefined : { opacity: 0 }}
-      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.28 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.28 }}
     >
       <BackButton
         to="/"
@@ -308,14 +307,13 @@ const AssumptionsPage = () => {
         containerProps={{
           className: 'relative z-10 mx-auto mb-2 mt-4 flex max-w-7xl justify-start px-4 sm:px-6 lg:px-8',
         }}
-        motion={shouldReduceMotion ? { initial: false, animate: { opacity: 1 } } : undefined}
       />
 
       <motion.div
         className="relative z-10 mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8"
-        initial={shouldReduceMotion ? false : { y: 16, opacity: 0 }}
+        initial={{ y: 16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.36, delay: 0.02 }}
+        transition={{ duration: 0.36, delay: 0.02 }}
       >
         <div className="mb-8">
           <h1 className="impact-page__title">Assumptions</h1>

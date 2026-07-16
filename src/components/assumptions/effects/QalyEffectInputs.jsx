@@ -47,7 +47,7 @@ const QalyEffectInputs = ({
 
         <FormField
           id={`${fieldIdPrefix}effect-${effectIndex}-startTime`}
-          label="Start Time (years)"
+          label="Start time (years)"
           description={getEffectTooltip('qaly', 'startTime')}
           value={effect.startTime}
           defaultValue={defaultEffect?.startTime}

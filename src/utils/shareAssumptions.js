@@ -104,7 +104,18 @@ const requestJson = async (url, options = {}) => {
     if (didTimeOut && error?.code !== 'request_timeout') {
       throw createRequestTimeoutError();
     }
-    throw error;
+    // Caller-driven aborts keep their name (GlobalSharedAssumptionsImport
+    // swallows cleanup aborts by it), and API errors already carry friendly
+    // copy. Anything else is fetch's bare network failure ("Failed to
+    // fetch") — not a message to show a visitor.
+    if (error?.name === 'AbortError' || error instanceof ShareAssumptionsAPIError) {
+      throw error;
+    }
+    throw new ShareAssumptionsAPIError(
+      0,
+      'network_error',
+      'Could not reach the sharing service. Check your connection and try again.'
+    );
   } finally {
     globalThis.clearTimeout(timeoutId);
     callerSignal?.removeEventListener('abort', abortFromCaller);

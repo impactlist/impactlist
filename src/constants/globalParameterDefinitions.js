@@ -12,7 +12,7 @@ export const GLOBAL_PARAMETER_DEFINITIONS = [
     id: 'discountRate',
     label: 'Discount Rate (%)',
     description:
-      'Annual discount rate for future life-years. For instance if the discount rate is 2, then a year of life next year is worth 2% less than a year of life this year.',
+      'Annual discount rate for future life-years. Future value is divided by 1 plus the discount rate for each year into the future. For example, at 2%, a life-year next year is worth about 98% as much as one this year; at 100%, it is worth 50% as much.',
     format: 'percentage',
   },
   {

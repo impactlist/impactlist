@@ -231,6 +231,17 @@ describe('effectsCalculation', () => {
         expect(cost2).toBeLessThan(cost5);
       });
 
+      it('supports discount rates above 100% through the 1,000% limit', () => {
+        const effect = createQALYEffect(1000, 1, 10);
+        const costAt200Percent = effectToCostPerLife(effect, { ...baseGlobalParams, discountRate: 2 }, 2024);
+        const costAt1000Percent = effectToCostPerLife(effect, { ...baseGlobalParams, discountRate: 10 }, 2024);
+
+        expect(Number.isFinite(costAt200Percent)).toBe(true);
+        expect(Number.isFinite(costAt1000Percent)).toBe(true);
+        expect(costAt200Percent).toBeGreaterThan(0);
+        expect(costAt1000Percent).toBeGreaterThan(costAt200Percent);
+      });
+
       it('should have higher cost for later effects when discount > 0', () => {
         const earlyEffect = createQALYEffect(1000, 5, 10);
         const lateEffect = createQALYEffect(1000, 20, 10);
@@ -589,6 +600,17 @@ describe('effectsCalculation', () => {
     });
 
     describe('Combined Growth and Discount Effects', () => {
+      it('supports population effects above 100% through the 1,000% discount-rate limit', () => {
+        const effect = createPopEffect(100, 0.1, 1, 1, 10);
+        const costAt200Percent = effectToCostPerLife(effect, { ...baseGlobalParams, discountRate: 2 }, 2024);
+        const costAt1000Percent = effectToCostPerLife(effect, { ...baseGlobalParams, discountRate: 10 }, 2024);
+
+        expect(Number.isFinite(costAt200Percent)).toBe(true);
+        expect(Number.isFinite(costAt1000Percent)).toBe(true);
+        expect(costAt200Percent).toBeGreaterThan(0);
+        expect(costAt1000Percent).toBeGreaterThan(costAt200Percent);
+      });
+
       it('should have lower cost when growth > discount', () => {
         const effect = createPopEffect(100, 0.1, 1, 10, 20);
         const growthDominates = effectToCostPerLife(

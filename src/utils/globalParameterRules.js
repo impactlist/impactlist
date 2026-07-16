@@ -17,7 +17,7 @@ export const GLOBAL_PARAMETER_RULES = {
     // Values are decimal fractions (0.02 = 2%).
     validate: (value) => {
       if (value < 0) return 'Discount rate cannot be negative';
-      if (value > 1) return 'Discount rate must be no greater than 100%';
+      if (value > 10) return 'Discount rate must be no greater than 1,000%';
       return null;
     },
   },

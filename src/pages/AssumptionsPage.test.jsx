@@ -521,6 +521,10 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(discountRateInput, '-1');
     expect(await screen.findByText('Discount rate cannot be negative')).toBeInTheDocument();
 
+    await user.clear(discountRateInput);
+    await user.type(discountRateInput, '1000.1');
+    expect(await screen.findByText('Discount rate must be no greater than 1,000%')).toBeInTheDocument();
+
     const populationLimitInput = screen.getByLabelText('Population Limit Factor');
     await user.clear(populationLimitInput);
     await user.type(populationLimitInput, '-1');
@@ -905,10 +909,10 @@ describe('AssumptionsPage routing integration', () => {
 
     // A second dirty parameter bumps the count.
     const currentDiscountPct = Math.round(assumptionsData.globalParameters.discountRate * 100 * 1e10) / 1e10;
-    const draftDiscountPct = currentDiscountPct === 7 ? 8 : 7;
+    const highDiscountPct = currentDiscountPct === 150 ? 151 : 150;
     const discountInput = screen.getByLabelText('Discount Rate (%)');
     await user.clear(discountInput);
-    await user.type(discountInput, String(draftDiscountPct));
+    await user.type(discountInput, String(highDiscountPct));
 
     expect(screen.getByText('2 unapplied changes', { selector: '.assumptions-draft-chip' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Global' })).toHaveAccessibleDescription('2 unapplied changes');
@@ -918,6 +922,9 @@ describe('AssumptionsPage routing integration', () => {
     await waitFor(() => {
       expect(screen.queryByText(/unapplied change/)).not.toBeInTheDocument();
     });
+    expect(JSON.parse(sessionStorage.getItem('customEffectsData')).globalParameters.discountRate).toBe(
+      highDiscountPct / 100
+    );
     expect(screen.getByRole('tab', { name: 'Global' })).not.toHaveAccessibleDescription();
     expect(screen.queryByRole('button', { name: /^Discard \d+ change/ })).not.toBeInTheDocument();
   });
@@ -934,9 +941,9 @@ describe('AssumptionsPage routing integration', () => {
     const discountInput = screen.getByLabelText('Discount Rate (%)');
     const originalDiscount = discountInput.value;
     await user.clear(discountInput);
-    await user.type(discountInput, '150');
+    await user.type(discountInput, '-1');
 
-    expect(screen.getByText('Discount rate must be no greater than 100%')).toBeInTheDocument();
+    expect(screen.getByText('Discount rate cannot be negative')).toBeInTheDocument();
     expect(screen.getByText('Fix validation errors before applying.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
 
@@ -945,7 +952,7 @@ describe('AssumptionsPage routing integration', () => {
 
     expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(originalTimeLimit);
     expect(screen.getByLabelText('Discount Rate (%)')).toHaveValue(originalDiscount);
-    expect(screen.queryByText('Discount rate must be no greater than 100%')).not.toBeInTheDocument();
+    expect(screen.queryByText('Discount rate cannot be negative')).not.toBeInTheDocument();
     expect(screen.queryByText(/unapplied change/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
     expect(sessionStorage.getItem('customEffectsData')).toBeNull();
@@ -997,7 +1004,7 @@ describe('AssumptionsPage routing integration', () => {
     // NOT previewing it — dirty form, but no draft-preview label.
     const discountInput = screen.getByLabelText('Discount Rate (%)');
     await user.clear(discountInput);
-    await user.type(discountInput, '150');
+    await user.type(discountInput, '-1');
     expect(screen.getByText('Fix validation errors before applying.')).toBeInTheDocument();
     expect(screen.queryByText('Preview using unapplied values')).not.toBeInTheDocument();
 

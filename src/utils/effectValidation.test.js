@@ -115,7 +115,9 @@ describe('validateGlobalField', () => {
   });
 
   it('delegates bounds to the shared global-parameter rules table', () => {
-    expect(validateGlobalField('discountRate', '1.5')).toMatch(/no greater than 100%/);
+    expect(validateGlobalField('discountRate', '1.5')).toBeNull();
+    expect(validateGlobalField('discountRate', '10')).toBeNull();
+    expect(validateGlobalField('discountRate', '10.01')).toMatch(/no greater than 1,000%/);
     expect(validateGlobalField('populationGrowthRate', '-1')).toMatch(/cannot be -100% or less/);
     expect(validateGlobalField('populationGrowthRate', '-0.5')).toBeNull();
     expect(validateGlobalField('timeLimit', '0')).not.toBeNull();

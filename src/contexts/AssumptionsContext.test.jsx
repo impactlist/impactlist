@@ -103,12 +103,12 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
-  it('discards persisted assumptions whose finite values violate calculation invariants', async () => {
+  it('discards a persisted discount rate above the supported maximum instead of bricking the session', async () => {
     sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
-          timeLimit: -1,
+          discountRate: 2e16,
         },
       })
     );

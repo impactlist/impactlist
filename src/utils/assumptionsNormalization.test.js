@@ -225,8 +225,11 @@ describe('normalizeUserAssumptions semantic validation', () => {
     expect(() => normalizeUserAssumptions({ globalParameters: { discountRate: -0.01 } }, defaults)).toThrow(
       /discount rate cannot be negative/i
     );
-    expect(() => normalizeUserAssumptions({ globalParameters: { discountRate: 1.01 } }, defaults)).toThrow(
-      /discount rate must be no greater than 100%/i
+    expect(normalizeUserAssumptions({ globalParameters: { discountRate: 10 } }, defaults)).toEqual({
+      globalParameters: { discountRate: 10 },
+    });
+    expect(() => normalizeUserAssumptions({ globalParameters: { discountRate: 10.01 } }, defaults)).toThrow(
+      /discount rate must be no greater than 1,000%/i
     );
     expect(() => normalizeUserAssumptions({ globalParameters: { populationGrowthRate: -1 } }, defaults)).toThrow(
       /population growth rate cannot be -100% or less/i

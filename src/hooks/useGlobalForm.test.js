@@ -147,7 +147,7 @@ describe('useGlobalForm', () => {
     const { result } = renderHook(() => useGlobalForm(baseParams, baseParams, null));
 
     act(() => {
-      result.current.handleChange('discountRate', '150');
+      result.current.handleChange('discountRate', '-1');
     });
     await waitFor(() => {
       expect(result.current.errors.discountRate).toBeTruthy();

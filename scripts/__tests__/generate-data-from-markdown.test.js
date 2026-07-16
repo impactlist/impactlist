@@ -681,21 +681,21 @@ describe('pipeline strictness', () => {
     runGeneratorExpectingError(workspace, 'do not sum to 1');
   });
 
-  it('rejects domain-invalid global parameters while allowing tiny finite positive values', () => {
+  it('rejects unsupported discount rates while allowing rates above 100% and tiny finite positive values', () => {
     const workspace = setupWorkspaceFromFixture('donation-validation');
     writeContentFile(
       workspace,
       'globalParameters.md',
-      '---\ndiscountRate: 1.5\npopulationGrowthRate: 0.01\ntimeLimit: 100\npopulationLimit: 2\ncurrentPopulation: 8000000000\nyearsPerLife: 50\n---\n'
+      '---\ndiscountRate: 10.01\npopulationGrowthRate: 0.01\ntimeLimit: 100\npopulationLimit: 2\ncurrentPopulation: 8000000000\nyearsPerLife: 50\n---\n'
     );
 
-    runGeneratorExpectingError(workspace, 'Discount rate must be no greater than 100%');
+    runGeneratorExpectingError(workspace, 'Discount rate must be no greater than 1,000%');
 
     const underflowWorkspace = setupWorkspaceFromFixture('donation-validation');
     writeContentFile(
       underflowWorkspace,
       'globalParameters.md',
-      '---\ndiscountRate: 0.05\npopulationGrowthRate: 0.01\ntimeLimit: 100\npopulationLimit: 2\ncurrentPopulation: 8000000000\nyearsPerLife: 5e-324\n---\n'
+      '---\ndiscountRate: 1.5\npopulationGrowthRate: 0.01\ntimeLimit: 100\npopulationLimit: 2\ncurrentPopulation: 8000000000\nyearsPerLife: 5e-324\n---\n'
     );
     const underflowResult = runGenerator(underflowWorkspace);
     expect(underflowResult.status, `${underflowResult.stdout}\n${underflowResult.stderr}`).toBe(0);

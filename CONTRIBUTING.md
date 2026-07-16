@@ -12,5 +12,4 @@ If it looks reasonable it will be merged. Otherwise I'll discuss in the pull req
 To contribute research for the effectiveness of a specific donation recipient, see the files in /content/recipients. The process is similar to
 the one described above.
 
-If you don't want to go through the above process, and you have some information that you think would be useful to me for improving the site somehow,
-feel free to send me an email at elliotolds at \[Gmail's email service\].
+If you don't want to go through the above process, and you have some information that you think would be useful to me for improving the site somehow, you can send feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47).

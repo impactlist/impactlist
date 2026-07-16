@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import FormattedScientificValue from './shared/FormattedScientificValue';
@@ -7,102 +8,48 @@ import InfoTooltipIcon from './shared/InfoTooltipIcon';
 import { DONOR_DONATED_TOOLTIP } from '../constants/metricTooltips';
 
 const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife, neighboringDonors }) => {
-  // Create the three rows to display
-  const rows = [];
+  const currentUserRow = {
+    rank: donorRank,
+    name: 'You',
+    totalLivesSaved,
+    totalDonated,
+    costPerLife,
+    isCurrentUser: true,
+  };
+  const donorRow = (donor, rank) =>
+    donor
+      ? {
+          rank,
+          name: donor.name,
+          totalLivesSaved: donor.totalLivesSaved,
+          totalDonated: donor.totalDonated,
+          costPerLife: donor.costPerLife,
+          netWorth: donor.netWorth,
+          id: donor.id,
+        }
+      : null;
 
-  // If at the top of the list
+  let rows;
   if (!neighboringDonors.above) {
-    rows.push(
-      {
-        rank: 1,
-        name: 'You',
-        totalLivesSaved: totalLivesSaved,
-        totalDonated: totalDonated,
-        costPerLife: costPerLife,
-        isCurrentUser: true,
-      },
-      {
-        rank: 2,
-        name: neighboringDonors.below.name,
-        totalLivesSaved: neighboringDonors.below.totalLivesSaved,
-        totalDonated: neighboringDonors.below.totalDonated,
-        costPerLife: neighboringDonors.below.costPerLife,
-        netWorth: neighboringDonors.below.netWorth,
-        id: neighboringDonors.below.id,
-      },
-      {
-        rank: 3,
-        name: neighboringDonors.twoBelow.name,
-        totalLivesSaved: neighboringDonors.twoBelow.totalLivesSaved,
-        totalDonated: neighboringDonors.twoBelow.totalDonated,
-        costPerLife: neighboringDonors.twoBelow.costPerLife,
-        netWorth: neighboringDonors.twoBelow.netWorth,
-        id: neighboringDonors.twoBelow.id,
-      }
-    );
+    rows = [
+      currentUserRow,
+      donorRow(neighboringDonors.below, donorRank + 1),
+      donorRow(neighboringDonors.twoBelow, donorRank + 2),
+    ];
+  } else if (!neighboringDonors.below) {
+    rows = [
+      donorRow(neighboringDonors.twoAbove, donorRank - 2),
+      donorRow(neighboringDonors.above, donorRank - 1),
+      currentUserRow,
+    ];
+  } else {
+    rows = [
+      donorRow(neighboringDonors.above, donorRank - 1),
+      currentUserRow,
+      donorRow(neighboringDonors.below, donorRank + 1),
+    ];
   }
-  // If at the bottom of the list
-  else if (!neighboringDonors.below) {
-    rows.push(
-      {
-        rank: donorRank - 2,
-        name: neighboringDonors.twoAbove.name,
-        totalLivesSaved: neighboringDonors.twoAbove.totalLivesSaved,
-        totalDonated: neighboringDonors.twoAbove.totalDonated,
-        costPerLife: neighboringDonors.twoAbove.costPerLife,
-        netWorth: neighboringDonors.twoAbove.netWorth,
-        id: neighboringDonors.twoAbove.id,
-      },
-      {
-        rank: donorRank - 1,
-        name: neighboringDonors.above.name,
-        totalLivesSaved: neighboringDonors.above.totalLivesSaved,
-        totalDonated: neighboringDonors.above.totalDonated,
-        costPerLife: neighboringDonors.above.costPerLife,
-        netWorth: neighboringDonors.above.netWorth,
-        id: neighboringDonors.above.id,
-      },
-      {
-        rank: donorRank,
-        name: 'You',
-        totalLivesSaved: totalLivesSaved,
-        totalDonated: totalDonated,
-        costPerLife: costPerLife,
-        isCurrentUser: true,
-      }
-    );
-  }
-  // If in the middle of the list
-  else {
-    rows.push(
-      {
-        rank: donorRank - 1,
-        name: neighboringDonors.above.name,
-        totalLivesSaved: neighboringDonors.above.totalLivesSaved,
-        totalDonated: neighboringDonors.above.totalDonated,
-        costPerLife: neighboringDonors.above.costPerLife,
-        netWorth: neighboringDonors.above.netWorth,
-        id: neighboringDonors.above.id,
-      },
-      {
-        rank: donorRank,
-        name: 'You',
-        totalLivesSaved: totalLivesSaved,
-        totalDonated: totalDonated,
-        costPerLife: costPerLife,
-        isCurrentUser: true,
-      },
-      {
-        rank: donorRank + 1,
-        name: neighboringDonors.below.name,
-        totalLivesSaved: neighboringDonors.below.totalLivesSaved,
-        totalDonated: neighboringDonors.below.totalDonated,
-        costPerLife: neighboringDonors.below.costPerLife,
-        netWorth: neighboringDonors.below.netWorth,
-        id: neighboringDonors.below.id,
-      }
-    );
-  }
+  rows = rows.filter(Boolean);
 
   return (
     <div className="impact-surface p-4 shadow-sm">
@@ -126,7 +73,10 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.rank} className={row.isCurrentUser ? 'impact-mini-row--current' : ''}>
+              <tr
+                key={row.isCurrentUser ? 'current-user' : row.id || `${row.rank}-${row.name}`}
+                className={row.isCurrentUser ? 'impact-mini-row--current' : ''}
+              >
                 <td className="px-3 py-2 whitespace-nowrap text-sm text-strong">{row.rank}</td>
                 <td className="px-3 py-2 whitespace-nowrap text-sm">
                   {row.isCurrentUser ? (
@@ -162,6 +112,19 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
       </div>
     </div>
   );
+};
+
+MiniImpactList.propTypes = {
+  donorRank: PropTypes.number.isRequired,
+  totalLivesSaved: PropTypes.number.isRequired,
+  totalDonated: PropTypes.number.isRequired,
+  costPerLife: PropTypes.number.isRequired,
+  neighboringDonors: PropTypes.shape({
+    above: PropTypes.object,
+    below: PropTypes.object,
+    twoBelow: PropTypes.object,
+    twoAbove: PropTypes.object,
+  }).isRequired,
 };
 
 export default MiniImpactList;

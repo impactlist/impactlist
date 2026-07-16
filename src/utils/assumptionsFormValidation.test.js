@@ -29,4 +29,31 @@ describe('validateGlobalParameterValues', () => {
     expect(result.hasErrors).toBe(true);
     expect(result.errors.timeLimit).toBe('Invalid number');
   });
+
+  it.each(['0x64'])('does not let coercible unsupported default text bypass final validation: %s', (raw) => {
+    const result = validateGlobalParameterValues(
+      {
+        timeLimit: { raw },
+      },
+      {
+        timeLimit: 100,
+      }
+    );
+
+    expect(result.hasErrors).toBe(true);
+    expect(result.errors.timeLimit).toBe('Invalid number');
+  });
+
+  it.each(['+100', '1e2'])('accepts complete finite numeric notation: %s', (raw) => {
+    const result = validateGlobalParameterValues(
+      {
+        timeLimit: { raw },
+      },
+      {
+        timeLimit: 100,
+      }
+    );
+
+    expect(result.hasErrors).toBe(false);
+  });
 });

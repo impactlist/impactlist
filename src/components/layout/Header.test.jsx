@@ -57,4 +57,20 @@ describe('Header mobile menu', () => {
     });
     expect(toggle).not.toHaveFocus();
   });
+
+  it('handles rapid repeated toggles and closes from a primary navigation link', async () => {
+    renderHeader();
+
+    const toggle = getToggle();
+    fireEvent.click(toggle);
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(toggle);
+    fireEvent.click(screen.getAllByRole('link', { name: 'Calculator' })[0]);
+
+    await waitFor(() => {
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    });
+  });
 });

@@ -1,11 +1,13 @@
-import { devices, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 // The .impact-inline-action hit targets expand under pointer: coarse
 // (padding + compensating negative margins). jsdom tests can verify behavior
 // but not geometry — only a real layout can prove the expanded boxes still
 // don't overlap their interactive neighbors. Touch emulation makes
-// `pointer: coarse` match, so these boxes include the expanded padding.
-test.use({ ...devices['iPhone 13'] });
+// `pointer: coarse` match, so these boxes include the expanded padding. Keep
+// the emulation options browser-neutral: Playwright's full iPhone preset sets
+// `isMobile`, which Chromium/WebKit support but Firefox intentionally does not.
+test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
 const boxesIntersect = (a, b) =>
   a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;

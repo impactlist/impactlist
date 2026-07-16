@@ -36,7 +36,11 @@ const useChartViewTransition = (rawChartData) => {
   // Rebuild rows from the source data whenever idle (initial load, data
   // changes from assumption edits, and the settle step after a transition).
   useEffect(() => {
-    if (rawChartData.length === 0 || transitionStage !== 'none' || shouldAnimate) return;
+    if (transitionStage !== 'none' || shouldAnimate) return;
+    if (rawChartData.length === 0) {
+      setChartData((currentData) => (currentData.length === 0 ? currentData : []));
+      return;
+    }
     setChartData(buildViewRows(rawChartData, chartView));
   }, [rawChartData, chartView, transitionStage, shouldAnimate]);
 
@@ -73,6 +77,9 @@ const useChartViewTransition = (rawChartData) => {
   }, [chartData, shouldAnimate]);
 
   const handleChartViewChange = (view) => {
+    if (view === chartView || transitionStage !== 'none' || shouldAnimate) {
+      return;
+    }
     setShouldAnimate(true);
     setTransitionStage('shrinking');
     setChartView(view);
@@ -81,7 +88,7 @@ const useChartViewTransition = (rawChartData) => {
   return {
     chartData,
     chartView,
-    isTransitioning: transitionStage !== 'none',
+    isTransitioning: transitionStage !== 'none' || shouldAnimate,
     handleChartViewChange,
   };
 };

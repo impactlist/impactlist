@@ -65,7 +65,7 @@ export const mergeGlobalParameters = (defaultGlobalParams, userGlobalParams) => 
  * @returns {Object|null} Category object or null if not found
  */
 export const getCategoryFromDefaults = (defaultAssumptions, categoryId) => {
-  if (!defaultAssumptions?.categories?.[categoryId]) return null;
+  if (!defaultAssumptions?.categories || !Object.hasOwn(defaultAssumptions.categories, categoryId)) return null;
 
   const category = defaultAssumptions.categories[categoryId];
   return {

@@ -20,6 +20,9 @@ const NavButtons = () => {
       <button type="button" onClick={() => navigate('/cause/ai-risk#full-justification')}>
         Push Hash Page
       </button>
+      <button type="button" onClick={() => navigate('/cause/ai-risk#full%2Djustification')}>
+        Push Encoded Hash Page
+      </button>
       <button type="button" onClick={() => navigate(-1)}>
         Back
       </button>
@@ -128,8 +131,22 @@ describe('ScrollToTop', () => {
       expect(scrollIntoViewSpy).toHaveBeenCalled();
     });
     expect(scrollIntoViewSpy.mock.instances[0]).toBe(target);
-    // The to-the-top fallback never fired — the page stays on the target.
-    expect(scrollSpy).not.toHaveBeenCalled();
+    // The new page moves to a stable top position while waiting, then lands
+    // on the target as soon as lazy content supplies it.
+    expect(scrollSpy).toHaveBeenCalledWith(0, 0);
+  });
+
+  it('decodes percent-encoded fragment IDs before looking up the target', async () => {
+    const user = userEvent.setup();
+    renderAt('/assumptions');
+
+    const target = appendHashTarget();
+    await user.click(screen.getByRole('button', { name: 'Push Encoded Hash Page' }));
+
+    await waitFor(() => {
+      expect(scrollIntoViewSpy).toHaveBeenCalled();
+    });
+    expect(scrollIntoViewSpy.mock.instances[0]).toBe(target);
   });
 
   it('scrolls to the hash target on the initial load too', async () => {

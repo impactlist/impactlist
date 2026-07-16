@@ -82,6 +82,22 @@ describe('sharedAssumptionsHttp', () => {
     ).rejects.toMatchObject({ status: 400, code: 'invalid_json' });
   });
 
+  it('parses streamed UTF-8 when a multi-byte character is split across chunks', async () => {
+    const request = new EventEmitter();
+    request.headers = { 'content-type': 'application/json' };
+    request.destroy = vi.fn();
+    const encoded = globalThis.Buffer.from('{"description":"café ☕"}', 'utf8');
+    const splitInsideCoffeeEmoji = encoded.indexOf(globalThis.Buffer.from('☕')) + 1;
+
+    const parsePromise = parseJsonBody(request);
+    request.emit('data', encoded.subarray(0, splitInsideCoffeeEmoji));
+    request.emit('data', encoded.subarray(splitInsideCoffeeEmoji));
+    request.emit('end');
+
+    await expect(parsePromise).resolves.toEqual({ description: 'café ☕' });
+    expect(request.destroy).not.toHaveBeenCalled();
+  });
+
   it('returns known shared assumptions errors without logging as unexpected', () => {
     const response = createMockResponse();
     const loggerSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

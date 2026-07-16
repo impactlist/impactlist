@@ -166,12 +166,18 @@ const MultiCategoryRecipientEditor = forwardRef(
 
     // Scroll to active category on mount
     useEffect(() => {
-      if (activeCategory && sectionRefs.current[activeCategory] && scrollContainerRef.current) {
-        // Small delay to ensure refs are set
-        setTimeout(() => {
-          sectionRefs.current[activeCategory]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
+      if (!activeCategory || !sectionRefs.current[activeCategory] || !scrollContainerRef.current) {
+        return undefined;
       }
+
+      // Small delay to ensure refs are set. Cancel it when the target changes
+      // or the editor unmounts so a stale recipient/category cannot scroll a
+      // newly mounted editor after rapid URL navigation.
+      const timeoutId = setTimeout(() => {
+        sectionRefs.current[activeCategory]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
     }, [activeCategory]);
 
     // Handle a section's report (effects/errors/dirtiness/cost, tagged with

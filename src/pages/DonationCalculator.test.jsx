@@ -48,6 +48,7 @@ describe('DonationCalculator persistence', () => {
 
     await waitFor(() => {
       expect(screen.getByLabelText(firstCategory.name)).toHaveValue('5,000');
+      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$5,000');
     });
   });
 
@@ -61,6 +62,16 @@ describe('DonationCalculator persistence', () => {
       const stored = JSON.parse(localStorage.getItem('donationCalculatorValues'));
       expect(stored[firstCategory.id]).toMatch(/1,?000/);
     });
+  });
+
+  it('accepts its own persisted empty fields on the next visit', async () => {
+    const allEmptyValues = Object.fromEntries(sortedCategories.map(({ id }) => [id, '']));
+    localStorage.setItem('donationCalculatorValues', JSON.stringify(allEmptyValues));
+
+    renderCalculator();
+
+    expect(await screen.findByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
+    expect(screen.queryByText("Some saved calculator data couldn't be loaded and was discarded.")).toBeNull();
   });
 
   it('treats a zero category amount as cleared instead of crashing', async () => {
@@ -178,6 +189,32 @@ describe('DonationCalculator persistence', () => {
     expect(errorSpy).toHaveBeenCalled();
   });
 
+  it('stays usable if localStorage is revoked after its availability probe', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const originalGetItem = globalThis.Storage.prototype.getItem;
+    const originalSetItem = globalThis.Storage.prototype.setItem;
+    const calculatorKeys = new Set(['donationCalculatorValues', 'specificDonations', 'categoryYear']);
+
+    vi.spyOn(globalThis.Storage.prototype, 'getItem').mockImplementation(function (key) {
+      if (this === localStorage && calculatorKeys.has(key)) {
+        throw new globalThis.DOMException('Storage access was revoked', 'SecurityError');
+      }
+      return originalGetItem.call(this, key);
+    });
+    vi.spyOn(globalThis.Storage.prototype, 'setItem').mockImplementation(function (key, value) {
+      if (this === localStorage && calculatorKeys.has(key)) {
+        throw new globalThis.DOMException('Storage access was revoked', 'SecurityError');
+      }
+      return originalSetItem.call(this, key, value);
+    });
+
+    renderCalculator();
+
+    expect(await screen.findByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
+    expect(screen.getByText("Some saved calculator data couldn't be loaded and was discarded.")).toBeInTheDocument();
+    expect(errorSpy).toHaveBeenCalled();
+  });
+
   it('discards parseable-but-wrong-shape persisted state instead of crashing', async () => {
     // Valid JSON, wrong shape: a non-array specificDonations (would hit
     // `.forEach`) and a non-object donations map. Both must be discarded, not
@@ -198,7 +235,71 @@ describe('DonationCalculator persistence', () => {
     expect(Object.values(storedDonations).every((value) => value === '')).toBe(true);
   });
 
-  it('keeps a negative custom cost per life but drops zero cost and string amounts', async () => {
+  it('discards malformed per-category values that would crash number-input rendering', async () => {
+    localStorage.setItem(
+      'donationCalculatorValues',
+      JSON.stringify({
+        [firstCategory.id]: { toString: null },
+      })
+    );
+
+    renderCalculator();
+
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Donation Calculator' })).toBeInTheDocument();
+    expect(screen.getByLabelText(firstCategory.name)).toHaveValue('');
+  });
+
+  it('resets an invalid persisted category year instead of passing it into calculations', async () => {
+    localStorage.setItem('categoryYear', '9999oops');
+
+    renderCalculator();
+
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Assumed year:')).toHaveValue(new Date().getFullYear());
+    await waitFor(() => {
+      expect(localStorage.getItem('categoryYear')).toBe(String(new Date().getFullYear()));
+    });
+  });
+
+  it('drops malformed and duplicate specific donations while preserving a valid entry', async () => {
+    const validDonation = {
+      id: 'keep-once',
+      recipientName: 'My Custom Charity',
+      amount: 5000,
+      date: '2024',
+      isCustomRecipient: true,
+      categoryId: firstCategory.id,
+      customCostPerLife: 1000,
+    };
+    localStorage.setItem(
+      'specificDonations',
+      JSON.stringify([
+        validDonation,
+        { ...validDonation },
+        { ...validDonation, id: 'bad-year', date: '2024junk' },
+        { ...validDonation, id: 'bad-name', recipientName: { rendered: 'boom' } },
+        { ...validDonation, id: 'bad-flag', isCustomRecipient: 'true' },
+        { ...validDonation, id: 'bad-multiplier', customCostPerLife: null, multiplier: {} },
+      ])
+    );
+
+    renderCalculator();
+
+    expect(await screen.findByText('My Custom Charity')).toBeInTheDocument();
+    expect(
+      await screen.findByText("Some saved calculator data couldn't be loaded and was discarded.")
+    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(JSON.parse(localStorage.getItem('specificDonations'))).toEqual([validDonation]);
+    });
+  });
+
+  it('keeps every finite nonzero custom cost but drops zero costs and string amounts', async () => {
     // Cost per life can be negative (donations that cause deaths) — that entry
     // must survive. A zero cost (divides to infinite impact) and a string amount
     // (would concatenate into the running total) must be dropped.
@@ -232,6 +333,24 @@ describe('DonationCalculator persistence', () => {
           categoryId: firstCategory.id,
           customCostPerLife: 1000,
         },
+        {
+          id: 'keep-tiny-cost',
+          recipientName: 'Tiny Cost',
+          amount: 5000,
+          date: '2024',
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: 5e-324,
+        },
+        {
+          id: 'keep-huge-cost',
+          recipientName: 'Huge Cost',
+          amount: 5000,
+          date: '2024',
+          isCustomRecipient: true,
+          categoryId: firstCategory.id,
+          customCostPerLife: Number.MAX_VALUE,
+        },
       ])
     );
 
@@ -245,8 +364,7 @@ describe('DonationCalculator persistence', () => {
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('specificDonations'));
-      expect(stored).toHaveLength(1);
-      expect(stored[0].id).toBe('keep-negative');
+      expect(stored.map(({ id }) => id)).toEqual(['keep-negative', 'keep-tiny-cost', 'keep-huge-cost']);
     });
   });
 
@@ -367,7 +485,7 @@ describe('DonationCalculator amount input', () => {
     sessionStorage.clear();
   });
 
-  it('ignores input that would introduce a second decimal point instead of counting it as $0', async () => {
+  it('preserves an invalid decimal draft while keeping the last valid amount', async () => {
     renderCalculator();
 
     const input = await screen.findByLabelText(firstCategory.name);
@@ -375,7 +493,10 @@ describe('DonationCalculator amount input', () => {
     expect(input).toHaveValue('1.5');
 
     fireEvent.change(input, { target: { value: '1.5.5' } });
-    expect(input).toHaveValue('1.5');
+    expect(input).toHaveValue('1.5.5');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('alert')).toHaveTextContent('The previous amount is still included in the totals.');
+    expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$1.5');
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('donationCalculatorValues'));
@@ -383,30 +504,32 @@ describe('DonationCalculator amount input', () => {
     });
   });
 
-  it('never displays characters the calculation ignores (display and stored value share one sanitization)', async () => {
+  it('rejects unsupported monetary text instead of silently changing its value', async () => {
     renderCalculator();
 
     const input = await screen.findByLabelText(firstCategory.name);
 
-    // A minus sign is rejected from the DISPLAY too — the field previously
-    // kept showing '-100' while the calculator quietly used 100.
+    // Negative category donations are unsupported. Reject the whole edit;
+    // silently turning -100 into +100 reverses its meaning.
     fireEvent.change(input, { target: { value: '-100' } });
-    expect(input).toHaveValue('100');
-    await waitFor(() => {
-      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$100');
-    });
+    expect(input).toHaveValue('-100');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('alert')).not.toHaveTextContent('previous amount');
+    expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$0');
 
-    // Scientific notation is not supported: the 'e' is visibly rejected so
-    // the field can never show '1e3' while the total says $13.
-    fireEvent.change(input, { target: { value: '' } });
-    fireEvent.change(input, { target: { value: '1e3' } });
-    expect(input).toHaveValue('13');
-    await waitFor(() => {
-      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$13');
-    });
+    // Scientific notation previously became a different number (`1e309`
+    // became 1,309) after unsupported characters were stripped.
+    fireEvent.change(input, { target: { value: '1e309' } });
+    expect(input).toHaveValue('1e309');
+    expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$0');
 
-    // Pasted currency text keeps only the digits/separators it can use.
-    fireEvent.change(input, { target: { value: '' } });
+    // Misplaced grouping separators are equally ambiguous; do not guess that
+    // 12,34 meant 1,234 or 1234.
+    fireEvent.change(input, { target: { value: '12,34' } });
+    expect(input).toHaveValue('12,34');
+    expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$0');
+
+    // A conventional leading currency sign remains convenient to paste.
     fireEvent.change(input, { target: { value: '$1,234.56' } });
     expect(input).toHaveValue('1,234.56');
   });
@@ -428,6 +551,28 @@ describe('DonationCalculator amount input', () => {
     });
     await waitFor(() => {
       expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$1.20 M');
+    });
+  });
+
+  it('accepts a typed replacement of several selected formatted digits', async () => {
+    renderCalculator();
+
+    const input = await screen.findByLabelText(firstCategory.name);
+    fireEvent.change(input, { target: { value: '12345' } });
+    expect(input).toHaveValue('12,345');
+
+    // Selecting the final "345" and typing "6" produces the browser's
+    // transient value "12,6". It is a direct edit of our formatted value, not
+    // a malformed paste, and should therefore become 126.
+    fireEvent.input(input, {
+      target: { value: '12,6', selectionStart: 4 },
+      inputType: 'insertText',
+      data: '6',
+    });
+
+    expect(input).toHaveValue('126');
+    await waitFor(() => {
+      expect(screen.getByTestId('calculator-total-donated-value')).toHaveTextContent('$126');
     });
   });
 });

@@ -1,6 +1,6 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CAUSES_PATH } from '../../utils/causeRoutes';
 import useDismissibleMenu from '../../hooks/useDismissibleMenu';
@@ -34,12 +34,13 @@ const Header = ({
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuToggleRef = useRef(null);
+  const location = useLocation();
 
   const navLinkClass = ({ isActive = false, visibilityClass = '', layoutClass = '' } = {}) =>
     joinClasses(visibilityClass, layoutClass, NAV_LINK_BASE, NAV_LINK_TONE, isActive ? NAV_LINK_ACTIVE : '');
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((isOpen) => !isOpen);
   };
 
   const closeMobileMenu = () => {
@@ -57,8 +58,31 @@ const Header = ({
 
   const headerRef = useDismissibleMenu(isMobileMenuOpen, dismissMobileMenu);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // A menu opened on a narrow viewport should not unexpectedly reappear if
+  // the user resizes to desktop and later narrows the window again.
+  useEffect(() => {
+    const desktopMedia = globalThis.matchMedia?.('(min-width: 768px)');
+    if (!desktopMedia) {
+      return undefined;
+    }
+
+    const closeAtDesktop = (event) => {
+      if (event.matches) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    closeAtDesktop(desktopMedia);
+    desktopMedia.addEventListener?.('change', closeAtDesktop);
+    return () => desktopMedia.removeEventListener?.('change', closeAtDesktop);
+  }, []);
+
   return (
-    <motion.div
+    <motion.header
       ref={headerRef}
       className="w-full bg-slate-800 py-4 shadow-lg relative"
       initial={{ opacity: 1 }}
@@ -68,13 +92,19 @@ const Header = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center">
           <motion.nav
+            aria-label="Primary"
             className="flex items-center space-x-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             {/* Impact List - always visible */}
-            <Link to="/" className={navLinkClass({ isActive: isHome })} onClick={closeMobileMenu}>
+            <Link
+              to="/"
+              className={navLinkClass({ isActive: isHome })}
+              aria-current={isHome ? 'page' : undefined}
+              onClick={closeMobileMenu}
+            >
               Impact List
             </Link>
             {/* Assumptions - high priority, visible on sm+ */}
@@ -85,6 +115,8 @@ const Header = ({
                 visibilityClass: 'hidden sm:inline-flex',
                 layoutClass: 'items-center',
               })}
+              aria-current={isAssumptions ? 'page' : undefined}
+              onClick={closeMobileMenu}
             >
               <AssumptionsNavLabel />
             </Link>
@@ -92,6 +124,8 @@ const Header = ({
             <Link
               to="/calculator"
               className={navLinkClass({ isActive: isCalculator, visibilityClass: 'hidden sm:inline-block' })}
+              aria-current={isCalculator ? 'page' : undefined}
+              onClick={closeMobileMenu}
             >
               Calculator
             </Link>
@@ -99,20 +133,30 @@ const Header = ({
             <Link
               to={CAUSES_PATH}
               className={navLinkClass({ isActive: isCategories, visibilityClass: 'hidden md:inline-block' })}
+              aria-current={isCategories ? 'page' : undefined}
+              onClick={closeMobileMenu}
             >
               Causes
             </Link>
             <Link
               to="/recipients"
               className={navLinkClass({ isActive: isRecipients, visibilityClass: 'hidden md:inline-block' })}
+              aria-current={isRecipients ? 'page' : undefined}
+              onClick={closeMobileMenu}
             >
               Recipients
             </Link>
-            <Link to="/faq" className={navLinkClass({ isActive: isFAQ, visibilityClass: 'hidden md:inline-block' })}>
+            <Link
+              to="/faq"
+              className={navLinkClass({ isActive: isFAQ, visibilityClass: 'hidden md:inline-block' })}
+              aria-current={isFAQ ? 'page' : undefined}
+              onClick={closeMobileMenu}
+            >
               FAQ
             </Link>
             {/* Hamburger Menu Button - visible below md */}
             <button
+              type="button"
               ref={menuToggleRef}
               onClick={toggleMobileMenu}
               className="md:hidden text-slate-200 hover:text-white hover:bg-slate-700 p-2 rounded-md transition-colors"
@@ -152,7 +196,7 @@ const Header = ({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <nav aria-label="Mobile" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="flex flex-col space-y-2">
                 {/* Assumptions - shown only on mobile (hidden on sm+ where it's in main nav) */}
                 <Link
@@ -162,6 +206,7 @@ const Header = ({
                     visibilityClass: 'sm:hidden',
                     layoutClass: 'flex items-center',
                   })}
+                  aria-current={isAssumptions ? 'page' : undefined}
                   onClick={closeMobileMenu}
                 >
                   <AssumptionsNavLabel />
@@ -170,18 +215,34 @@ const Header = ({
                 <Link
                   to="/calculator"
                   className={navLinkClass({ isActive: isCalculator, visibilityClass: 'sm:hidden' })}
+                  aria-current={isCalculator ? 'page' : undefined}
                   onClick={closeMobileMenu}
                 >
                   Calculator
                 </Link>
                 {/* Causes, Recipients, FAQ - shown on mobile and tablet (hidden on md+ where they're in main nav) */}
-                <Link to={CAUSES_PATH} className={navLinkClass({ isActive: isCategories })} onClick={closeMobileMenu}>
+                <Link
+                  to={CAUSES_PATH}
+                  className={navLinkClass({ isActive: isCategories })}
+                  aria-current={isCategories ? 'page' : undefined}
+                  onClick={closeMobileMenu}
+                >
                   Causes
                 </Link>
-                <Link to="/recipients" className={navLinkClass({ isActive: isRecipients })} onClick={closeMobileMenu}>
+                <Link
+                  to="/recipients"
+                  className={navLinkClass({ isActive: isRecipients })}
+                  aria-current={isRecipients ? 'page' : undefined}
+                  onClick={closeMobileMenu}
+                >
                   Recipients
                 </Link>
-                <Link to="/faq" className={navLinkClass({ isActive: isFAQ })} onClick={closeMobileMenu}>
+                <Link
+                  to="/faq"
+                  className={navLinkClass({ isActive: isFAQ })}
+                  aria-current={isFAQ ? 'page' : undefined}
+                  onClick={closeMobileMenu}
+                >
                   FAQ
                 </Link>
               </div>
@@ -189,7 +250,7 @@ const Header = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </motion.header>
   );
 };
 

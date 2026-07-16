@@ -7,6 +7,7 @@ import { getCostPerLifeForRecipientFromCombined, getCostPerLifeFromCombined } fr
 import { formatCurrency, formatLives } from '../../utils/formatters';
 import { getCurrentYear, resolveCalcYear } from '../../utils/donationDataHelpers';
 import { calculateLivesSavedSegments } from '../../utils/effectsVisualization';
+import { parseFiniteDecimal } from '../../utils/numberParsing';
 import FormattedScientificValue from './FormattedScientificValue';
 
 const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions }) => {
@@ -16,15 +17,9 @@ const SampleDonationCalculator = ({ recipientId, categoryId, combinedAssumptions
   const [costPerLife, setCostPerLife] = useState(0);
   const [livesSaved, setLivesSaved] = useState(0);
 
-  // Helper to get numeric value from NumericInput's output
-  // NumericInput returns either a number or string (for partial inputs like "-" or ".")
+  // Parse NumericInput's lossless decimal text only at the calculation boundary.
   const getNumericValue = (value) => {
-    if (typeof value === 'number') return value;
-    if (typeof value === 'string') {
-      const parsed = parseFloat(value.replace(/,/g, ''));
-      return isNaN(parsed) ? 0 : parsed;
-    }
-    return 0;
+    return parseFiniteDecimal(value) ?? 0;
   };
 
   // Determine if we're working with a category or recipient

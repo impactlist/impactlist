@@ -30,8 +30,12 @@ const YearSelector = ({
   }
 
   const parseYear = (text) => {
-    const year = parseInt(text, 10);
-    return Number.isInteger(year) ? year : null;
+    if (String(text).trim() === '') {
+      return null;
+    }
+
+    const year = Number(text);
+    return Number.isFinite(year) && Number.isInteger(year) ? year : null;
   };
 
   const commit = (year) => {

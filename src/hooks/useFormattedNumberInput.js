@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatWithCursorHandling } from '../utils/formatters';
 
+const formatPropValue = (value) => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+
+  const text = value.toString();
+  return formatWithCursorHandling(text, text.length).value;
+};
+
 /**
  * The formatted-number input core shared by CurrencyInput and NumericInput
  * (previously ~80% duplicated): local display state with thousands
@@ -11,7 +20,10 @@ import { formatWithCursorHandling } from '../utils/formatters';
  * and the raw input text; each component owns its parsing/emit contract.
  */
 const useFormattedNumberInput = (value, emitChange) => {
-  const [localValue, setLocalValue] = useState('');
+  // Render the controlled prop immediately. Waiting for an effect here made
+  // every formatted field briefly appear blank on first paint and left a
+  // small window where fast input could be overwritten by hydration.
+  const [localValue, setLocalValue] = useState(() => formatPropValue(value));
   const [cursorPosition, setCursorPosition] = useState(null);
   const inputRef = useRef(null);
 
@@ -22,8 +34,7 @@ const useFormattedNumberInput = (value, emitChange) => {
       // the same formatter typing uses so programmatically-set values display
       // identically to typed ones (thousands separators included).
       if (!inputRef.current || document.activeElement !== inputRef.current) {
-        const text = value.toString();
-        setLocalValue(formatWithCursorHandling(text, text.length).value);
+        setLocalValue(formatPropValue(value));
       }
     } else {
       setLocalValue('');

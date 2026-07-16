@@ -45,12 +45,15 @@ describe('useChartViewTransition', () => {
     act(() => {
       vi.advanceTimersByTime(CHART_ANIMATION_DURATION);
     });
-    expect(result.current.isTransitioning).toBe(false);
+    // The short animation buffer also keeps the toggle locked so a rapid
+    // second click cannot interrupt the settle rebuild.
+    expect(result.current.isTransitioning).toBe(true);
 
     // After the animation buffer the settle rebuild aligns value with target.
     act(() => {
       vi.advanceTimersByTime(CHART_ANIMATION_DURATION + 50);
     });
+    expect(result.current.isTransitioning).toBe(false);
     expect(result.current.chartView).toBe('donations');
     expect(result.current.chartData[0].value).toBe(200);
     expect(result.current.chartData[0].valueTarget).toBe(200);
@@ -72,5 +75,26 @@ describe('useChartViewTransition', () => {
   it('keeps empty source data as an empty chart', () => {
     const { result } = renderHook(() => useChartViewTransition([]));
     expect(result.current.chartData).toEqual([]);
+  });
+
+  it('clears previously rendered rows when the source becomes empty', () => {
+    const { result, rerender } = renderHook(({ raw }) => useChartViewTransition(raw), {
+      initialProps: { raw: rawRows },
+    });
+
+    rerender({ raw: [] });
+
+    expect(result.current.chartData).toEqual([]);
+  });
+
+  it('ignores clicks on the already-selected view', () => {
+    const { result } = renderHook(() => useChartViewTransition(rawRows));
+
+    act(() => {
+      result.current.handleChartViewChange('livesSaved');
+    });
+
+    expect(result.current.chartView).toBe('livesSaved');
+    expect(result.current.isTransitioning).toBe(false);
   });
 });

@@ -4,6 +4,7 @@
 
 import { getEffectFieldNames } from '../constants/effectFieldDefinitions';
 import { getGlobalParameterError } from './globalParameterRules';
+import { parseFiniteDecimal } from './numberParsing';
 
 /**
  * Detect the type of an effect based on its fields
@@ -33,12 +34,27 @@ export const cleanAndParseValue = (value) => {
     return { cleanValue: value, numValue: value };
   }
 
-  // Clean the string (remove commas and dollar signs)
-  const cleanValue = value.replace(/[,$]/g, '');
+  if (typeof value !== 'string') {
+    return { cleanValue: value, numValue: NaN };
+  }
+
+  const groupingCandidate = value.startsWith('$') ? value.slice(1) : value;
+  if (groupingCandidate.includes('$')) {
+    return { cleanValue: value, numValue: NaN };
+  }
+  if (
+    groupingCandidate.includes(',') &&
+    !/^[+-]?\d{1,3}(?:,\d{3})+(?:\.\d*)?(?:[eE][+-]?\d+)?$/.test(groupingCandidate)
+  ) {
+    return { cleanValue: value, numValue: NaN };
+  }
+
+  // Clean the string (remove validated commas and dollar signs)
+  const cleanValue = groupingCandidate.replace(/,/g, '');
 
   // Check if the entire cleaned value is a valid number format
   // This regex allows: integers, decimals, negative numbers, and scientific notation
-  const validNumberPattern = /^-?(\d+\.?\d*|\d*\.?\d+)([eE][+-]?\d+)?$/;
+  const validNumberPattern = /^[+-]?(\d+\.?\d*|\d*\.?\d+)([eE][+-]?\d+)?$/;
 
   if (!validNumberPattern.test(cleanValue) && !isPartialInput(cleanValue)) {
     // Return NaN for invalid formats like "10550000dff"
@@ -234,16 +250,18 @@ export const validateEffects = (effects) => {
  * @returns {string|null} Error message if validation fails, null if valid
  */
 export const validateGlobalField = (fieldName, value) => {
-  // Use cleanAndParseValue to properly validate the entire string
-  const { cleanValue, numValue } = cleanAndParseValue(value);
+  const cleanValue = value;
 
   // Allow partial inputs during typing
   if (isPartialInput(cleanValue)) {
     return null; // Don't show error for partial inputs
   }
 
-  // Check if it's a valid number
-  if (!Number.isFinite(numValue)) {
+  // Global controls intentionally accept ordinary decimal notation only.
+  // Number()/parseFloat would reinterpret hex, exponent, or signed-plus text
+  // that the formatted input deliberately left as invalid text.
+  const numValue = parseFiniteDecimal(cleanValue);
+  if (numValue === null) {
     return 'Invalid number';
   }
 

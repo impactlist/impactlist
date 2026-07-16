@@ -25,11 +25,15 @@ describe('cleanAndParseValue / isPartialInput', () => {
   it('parses formatted currency strings and scientific notation', () => {
     expect(cleanAndParseValue('$1,000')).toEqual({ cleanValue: '1000', numValue: 1000 });
     expect(cleanAndParseValue('1e3').numValue).toBe(1000);
+    expect(cleanAndParseValue('+1,000e-2').numValue).toBe(10);
+    expect(cleanAndParseValue('12,34').numValue).toBeNaN();
     expect(cleanAndParseValue(-5)).toEqual({ cleanValue: -5, numValue: -5 });
   });
 
   it('returns NaN for trailing-garbage values instead of parseFloat-prefix parsing', () => {
     expect(cleanAndParseValue('10550000dff').numValue).toBeNaN();
+    expect(cleanAndParseValue('1$2').numValue).toBeNaN();
+    expect(cleanAndParseValue(null).numValue).toBeNaN();
   });
 
   it('treats mid-typing states as partial input', () => {
@@ -50,10 +54,12 @@ describe('validateEffectField', () => {
     expect(validateEffectField('windowLength', '10', 'qaly')).toBeNull();
   });
 
-  it('rejects zero and garbage costPerQALY but allows negatives (domain rule)', () => {
+  it('rejects zero and garbage costPerQALY but allows all finite nonzero magnitudes', () => {
     expect(validateEffectField('costPerQALY', '0', 'qaly')).toMatch(/cannot be zero/);
     expect(validateEffectField('costPerQALY', 'abc', 'qaly')).toMatch(/valid number/);
     expect(validateEffectField('costPerQALY', '-40,000', 'qaly')).toBeNull();
+    expect(validateEffectField('costPerQALY', '5e-324', 'qaly')).toBeNull();
+    expect(validateEffectField('costPerQALY', '1e100', 'qaly')).toBeNull();
   });
 
   it('bounds populationFractionAffected to (0, 1] and rejects zero qalyImprovementPerYear', () => {
@@ -63,6 +69,7 @@ describe('validateEffectField', () => {
     expect(validateEffectField('costPerMicroprobability', '-2', 'population')).toBeNull();
     expect(validateEffectField('qalyImprovementPerYear', '0', 'population')).toMatch(/cannot be zero/);
     expect(validateEffectField('qalyImprovementPerYear', '-0.1', 'population')).toBeNull();
+    expect(validateEffectField('populationFractionAffected', '1e-100', 'population')).toBeNull();
   });
 });
 
@@ -102,6 +109,9 @@ describe('validateGlobalField', () => {
   it('allows partial input mid-typing and rejects garbage', () => {
     expect(validateGlobalField('discountRate', '-')).toBeNull();
     expect(validateGlobalField('discountRate', 'abc')).toBe('Invalid number');
+    expect(validateGlobalField('timeLimit', '+100')).toBeNull();
+    expect(validateGlobalField('timeLimit', '0x64')).toBe('Invalid number');
+    expect(validateGlobalField('timeLimit', '1e2')).toBeNull();
   });
 
   it('delegates bounds to the shared global-parameter rules table', () => {
@@ -110,6 +120,9 @@ describe('validateGlobalField', () => {
     expect(validateGlobalField('populationGrowthRate', '-0.5')).toBeNull();
     expect(validateGlobalField('timeLimit', '0')).not.toBeNull();
     expect(validateGlobalField('timeLimit', '100')).toBeNull();
+    expect(validateGlobalField('timeLimit', 5e-324)).toBeNull();
+    expect(validateGlobalField('timeLimit', Number.MAX_VALUE)).toBeNull();
+    expect(validateGlobalField('populationGrowthRate', 3)).toBeNull();
   });
 });
 

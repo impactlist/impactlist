@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import useFormattedNumberInput from '../../hooks/useFormattedNumberInput';
+import { getSanitizedInputCaretPosition, normalizeFormattedNumberEdit } from '../../utils/numberParsing';
 
 /**
  * Reusable numeric input component that handles formatting, negative numbers, and decimals.
@@ -32,13 +33,41 @@ const NumericInput = ({
         return;
       }
 
-      const numValue = parseFloat(cleanValue);
-      onChange(isNaN(numValue) ? cleanValue : numValue);
+      // Keep the user's exact decimal spelling until the owning domain parser
+      // validates it. Coercing a long ordinary decimal to Number here can
+      // turn it into exponent notation (1e-51); a stricter parent then sees a
+      // different syntax than the user entered and reports the wrong error.
+      onChange(cleanValue);
     },
     [onChange]
   );
 
-  const { inputRef, localValue, handleChange } = useFormattedNumberInput(value, emitChange);
+  const { inputRef, localValue, setLocalValue, handleChange } = useFormattedNumberInput(value, emitChange);
+
+  const handleGuardedChange = (event) => {
+    const raw = event.target.value;
+    const normalizedValue = normalizeFormattedNumberEdit(localValue, raw, event.nativeEvent?.inputType, {
+      allowNegative: true,
+    });
+
+    if (!normalizedValue) {
+      // Preserve invalid text for inline validation. Running malformed comma
+      // placement through the formatter would silently reinterpret `12,34`
+      // as 1234; dropping an exponent marker would turn `1e3` into 13.
+      setLocalValue(raw);
+      onChange(raw);
+      return;
+    }
+
+    const { displayText } = normalizedValue;
+    if (displayText !== raw) {
+      const caret = event.target.selectionStart ?? displayText.length;
+      const keptBeforeCaret = getSanitizedInputCaretPosition(raw, displayText, caret);
+      event.target.value = displayText;
+      event.target.setSelectionRange(keptBeforeCaret, keptBeforeCaret);
+    }
+    handleChange(event);
+  };
 
   const state = error ? 'error' : isCustom ? 'custom' : 'default';
 
@@ -61,7 +90,7 @@ const NumericInput = ({
           type="text"
           inputMode={inputMode}
           value={localValue}
-          onChange={handleChange}
+          onChange={handleGuardedChange}
           placeholder={placeholder}
           disabled={disabled}
           aria-invalid={!!error}

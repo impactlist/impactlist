@@ -4,6 +4,7 @@ import { categoriesById, recipientsById, donorsById, donations, globalParameters
 import {
   validateCategory,
   validateRecipient,
+  assertValidEntityId,
   assertExists,
   assertPositiveNumber,
   assertNumber,
@@ -46,7 +47,7 @@ const validateAllRecipients = () => {
 
       // Additional check: ensure all referenced categories exist
       for (const categoryId of Object.keys(recipient.categories)) {
-        if (!categoriesById[categoryId]) {
+        if (!Object.hasOwn(categoriesById, categoryId)) {
           throw new Error(`Recipient "${recipientId}" references non-existent category "${categoryId}"`);
         }
       }
@@ -69,6 +70,7 @@ const validateAllDonors = () => {
 
   for (const [donorId, donor] of Object.entries(donorsById)) {
     try {
+      assertValidEntityId(donorId, 'donorId');
       assertExists(donor, 'donor', `with ID "${donorId}"`);
       assertExists(donor.name, 'donor.name', `for donor "${donorId}"`);
       // Net worth is display-only (it feeds no lives-saved / cost-per-life math) and can
@@ -105,6 +107,8 @@ const validateAllDonations = () => {
       assertExists(donation, 'donation', `at index ${index}`);
       assertExists(donation.donorId, 'donation.donorId', `for donation at index ${index}`);
       assertExists(donation.recipientId, 'donation.recipientId', `for donation at index ${index}`);
+      assertValidEntityId(donation.donorId, 'donation.donorId', `for donation at index ${index}`);
+      assertValidEntityId(donation.recipientId, 'donation.recipientId', `for donation at index ${index}`);
       assertExists(donation.date, 'donation.date', `for donation at index ${index}`);
       assertPositiveNumber(donation.amount, 'donation.amount', `for donation at index ${index}`);
 
@@ -113,12 +117,12 @@ const validateAllDonations = () => {
       assertPositiveNumber(donation.credit, 'donation.credit', `for donation at index ${index}`);
 
       // Ensure referenced donor exists
-      if (!donorsById[donation.donorId]) {
+      if (!Object.hasOwn(donorsById, donation.donorId)) {
         throw new Error(`Donation at index ${index} references non-existent donor "${donation.donorId}"`);
       }
 
       // Ensure referenced recipient exists
-      if (!recipientsById[donation.recipientId]) {
+      if (!Object.hasOwn(recipientsById, donation.recipientId)) {
         throw new Error(`Donation at index ${index} references non-existent recipient "${donation.recipientId}"`);
       }
     } catch (error) {

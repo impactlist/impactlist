@@ -6,7 +6,12 @@ vi.mock('./upstashRedisClient.js', () => ({
   runRedisPipeline: vi.fn(),
 }));
 
-import { createSharedSnapshot, extractClientIp, getSharedSnapshot } from './sharedAssumptionsService.js';
+import {
+  createSharedSnapshot,
+  enforceRateLimit,
+  extractClientIp,
+  getSharedSnapshot,
+} from './sharedAssumptionsService.js';
 import { SharedAssumptionsError } from './sharedAssumptionsErrors.js';
 import { runRedisCommand, runRedisPipeline } from './upstashRedisClient.js';
 
@@ -76,6 +81,15 @@ describe('sharedAssumptionsService', () => {
     ).rejects.toMatchObject({ status: 429, code: 'rate_limited' });
   });
 
+  it('fails closed when Redis returns an invalid rate-limit count', async () => {
+    vi.mocked(runRedisCommand).mockResolvedValueOnce('not-a-count');
+
+    await expect(enforceRateLimit('read', '1.2.3.4')).rejects.toMatchObject({
+      status: 500,
+      code: 'redis_invalid_response',
+    });
+  });
+
   it('returns 409 when slug already exists', async () => {
     vi.mocked(runRedisCommand)
       .mockResolvedValueOnce(1) // EVAL rate limit
@@ -130,6 +144,21 @@ describe('sharedAssumptionsService', () => {
   it('loads direct-id snapshot without alias follow-up lookup', async () => {
     vi.mocked(runRedisPipeline).mockResolvedValueOnce([
       null,
+      JSON.stringify({
+        createdAt: '2026-02-13T00:00:00.000Z',
+        assumptions: { globalParameters: { timeLimit: 1000 } },
+      }),
+    ]);
+
+    const snapshot = await getSharedSnapshot('abc123def456');
+
+    expect(snapshot.id).toBe('abc123def456');
+    expect(vi.mocked(runRedisCommand)).not.toHaveBeenCalled();
+  });
+
+  it('prefers an immutable direct-id snapshot over a conflicting legacy slug mapping', async () => {
+    vi.mocked(runRedisPipeline).mockResolvedValueOnce([
+      'attacker1234',
       JSON.stringify({
         createdAt: '2026-02-13T00:00:00.000Z',
         assumptions: { globalParameters: { timeLimit: 1000 } },

@@ -13,6 +13,7 @@
 // Explicit .js extension: the shared-assumptions serverless functions import
 // this module under native Node ESM, which requires fully-specified paths.
 import { isPlainObject } from './typeGuards.js';
+import { getGlobalParameterError } from './globalParameterRules.js';
 
 const ALLOWED_TOP_LEVEL_KEYS = ['globalParameters', 'categories', 'recipients'];
 
@@ -29,6 +30,50 @@ const describeKey = (key) => {
 };
 
 const defaultCreateError = (message) => new Error(message);
+
+const validateEffectFieldSemantics = (field, value, label, invalid) => {
+  if (field === 'startTime' && value < 0) {
+    throw invalid(`field "${field}" on ${label} must be non-negative.`);
+  }
+
+  if (field === 'windowLength' && value <= 0) {
+    throw invalid(`field "${field}" on ${label} must be positive.`);
+  }
+
+  if (
+    (field === 'costPerQALY' || field === 'costPerMicroprobability' || field === 'qalyImprovementPerYear') &&
+    value === 0
+  ) {
+    throw invalid(`field "${field}" on ${label} cannot be zero.`);
+  }
+
+  if (field === 'populationFractionAffected' && (value <= 0 || value > 1)) {
+    throw invalid(`field "${field}" on ${label} must be greater than 0 and no greater than 1.`);
+  }
+};
+
+const mergeRecipientWrapperForValidation = (defaultWrapper, userWrapper) => {
+  const merged = defaultWrapper ? JSON.parse(JSON.stringify(defaultWrapper)) : { effectId: userWrapper.effectId };
+  if (!userWrapper) return merged;
+
+  if (userWrapper.overrides) {
+    merged.overrides = { ...userWrapper.overrides };
+    Object.keys(userWrapper.overrides).forEach((field) => {
+      if (merged.multipliers) delete merged.multipliers[field];
+    });
+  }
+  if (userWrapper.multipliers) {
+    merged.multipliers = { ...(merged.multipliers || {}), ...userWrapper.multipliers };
+    Object.keys(userWrapper.multipliers).forEach((field) => {
+      if (merged.overrides) delete merged.overrides[field];
+    });
+  }
+  if (userWrapper.disabled !== undefined) {
+    merged.disabled = userWrapper.disabled;
+  }
+
+  return merged;
+};
 
 export const areValuesEqual = (valueA, valueB) => {
   if (Array.isArray(valueA) && Array.isArray(valueB)) {
@@ -94,6 +139,7 @@ export const normalizeEffects = (effects, getDefaultEffect, getRecipientDefaultW
     if (getRecipientDefaultWrapper) {
       const wrapper = getRecipientDefaultWrapper(effect.effectId);
       const wrapperOverrides = wrapper?.overrides;
+      const wrapperMultipliers = wrapper?.multipliers;
 
       if (effect.overrides && defaultEffect) {
         if (Object.keys(effect.overrides).length === 0) {
@@ -108,13 +154,29 @@ export const normalizeEffects = (effects, getDefaultEffect, getRecipientDefaultW
             delete effect.overrides;
           }
         } else {
-          pruneObject(effect, 'overrides', (field, value) => areValuesEqual(value, defaultEffect[field]));
+          pruneObject(
+            effect,
+            'overrides',
+            (field, value) =>
+              // Even an override equal to the category base is meaningful
+              // when it switches this field away from a recipient-default
+              // multiplier: mergeRecipientEffectWithUser deletes that
+              // multiplier only while applying the explicit override.
+              !Object.hasOwn(wrapperMultipliers || {}, field) && areValuesEqual(value, defaultEffect[field])
+          );
         }
       }
 
       // Multipliers merge per-field at combine time, so each field's no-op
-      // value is the recipient default's multiplier (1 when none).
-      pruneObject(effect, 'multipliers', (field, value) => areValuesEqual(value, wrapper?.multipliers?.[field] ?? 1));
+      // value is the recipient default's multiplier (1 when none). A 1x
+      // multiplier is nevertheless meaningful when it switches the field
+      // away from a recipient-default override.
+      pruneObject(
+        effect,
+        'multipliers',
+        (field, value) =>
+          !Object.hasOwn(wrapperOverrides || {}, field) && areValuesEqual(value, wrapperMultipliers?.[field] ?? 1)
+      );
 
       if (Object.hasOwn(effect, 'disabled')) {
         const defaultDisabled = Boolean(wrapper?.disabled ?? defaultEffect?.disabled);
@@ -196,13 +258,28 @@ export const validateAssumptionsShape = (assumptions, defaultAssumptions, create
         throw invalid(`'disabled' on ${effectLabel} must be a boolean.`);
       }
 
-      const validateFieldValue = (field, value, label) => {
+      const validateFieldValue = (field, value, label, { isMultiplier = false } = {}) => {
         if (!isFiniteNumber(baseEffect[field])) {
           throw invalid(`unknown field "${describeKey(field)}" on ${label}.`);
         }
         if (!isFiniteNumber(value)) {
           throw invalid(`field "${field}" on ${label} must be a finite number.`);
         }
+
+        if (isMultiplier) {
+          if (value === 0) {
+            throw invalid(`multiplier for field "${field}" on ${label} cannot be zero.`);
+          }
+
+          const effectiveValue = baseEffect[field] * value;
+          if (!Number.isFinite(effectiveValue)) {
+            throw invalid(`multiplier for field "${field}" on ${label} produces a non-finite value.`);
+          }
+          validateEffectFieldSemantics(field, effectiveValue, label, invalid);
+          return;
+        }
+
+        validateEffectFieldSemantics(field, value, label, invalid);
       };
 
       if (isRecipientEffect) {
@@ -220,7 +297,12 @@ export const validateAssumptionsShape = (assumptions, defaultAssumptions, create
           }
           rejectForbiddenKeys(effect[mapName], `'${mapName}' on ${effectLabel}`);
           for (const [field, value] of Object.entries(effect[mapName])) {
-            validateFieldValue(field, value, `'${mapName}' of ${effectLabel}`);
+            if (mapName === 'multipliers' && Object.hasOwn(effect.overrides || {}, field)) {
+              throw invalid(`field "${field}" on ${effectLabel} cannot have both an override and a multiplier.`);
+            }
+            validateFieldValue(field, value, `'${mapName}' of ${effectLabel}`, {
+              isMultiplier: mapName === 'multipliers',
+            });
           }
         }
       } else {
@@ -249,6 +331,10 @@ export const validateAssumptionsShape = (assumptions, defaultAssumptions, create
       }
       if (!isFiniteNumber(value)) {
         throw invalid(`global parameter "${param}" must be a finite number.`);
+      }
+      const semanticError = getGlobalParameterError(param, value);
+      if (semanticError) {
+        throw invalid(`${semanticError.charAt(0).toLowerCase()}${semanticError.slice(1)}.`);
       }
     }
   }
@@ -308,12 +394,73 @@ export const validateAssumptionsShape = (assumptions, defaultAssumptions, create
           }
         }
         if (category.effects !== undefined) {
+          // Recipient multipliers are applied to the category effect after any
+          // category-level user edits. Validate against that effective base so
+          // overflow checks neither miss a huge edited base nor reject a safe
+          // multiplier paired with a smaller edited base.
+          const userCategoryEffects = assumptions.categories?.[categoryId]?.effects || [];
+          const effectiveBaseEffects = baseCategory.effects?.map((baseEffect) => {
+            const userCategoryEffect = userCategoryEffects.find(
+              (candidate) => candidate.effectId === baseEffect.effectId
+            );
+            return userCategoryEffect ? { ...baseEffect, ...userCategoryEffect } : baseEffect;
+          });
           validateEffectEntries(
             category.effects,
-            baseCategory.effects,
+            effectiveBaseEffects,
             `recipient "${recipientId}" (category "${categoryId}")`,
             true
           );
+        }
+      }
+    }
+  }
+
+  // Category edits alter the base underneath every built-in recipient
+  // wrapper, including recipients absent from this user payload. Validate all
+  // fully merged combinations: two independently valid finite values can
+  // otherwise multiply into Infinity (or cross a calculation domain limit)
+  // only after normalization has accepted them.
+  for (const [recipientId, recipient] of Object.entries(defaultAssumptions.recipients || {})) {
+    for (const [categoryId, recipientCategory] of Object.entries(recipient.categories || {})) {
+      const baseCategory = defaultAssumptions.categories?.[categoryId];
+      if (!baseCategory) continue;
+
+      const categoryUserEffects = assumptions.categories?.[categoryId]?.effects || [];
+      const recipientUserEffects = assumptions.recipients?.[recipientId]?.categories?.[categoryId]?.effects || [];
+      const defaultWrappers = recipientCategory.effects || [];
+      const wrapperEffectIds = new Set([
+        ...defaultWrappers.map((effect) => effect.effectId),
+        ...recipientUserEffects.map((effect) => effect.effectId),
+      ]);
+
+      for (const effectId of wrapperEffectIds) {
+        const defaultBaseEffect = baseCategory.effects?.find((effect) => effect.effectId === effectId);
+        if (!defaultBaseEffect) continue;
+        const categoryUserEffect = categoryUserEffects.find((effect) => effect.effectId === effectId);
+        const effectiveBaseEffect = categoryUserEffect
+          ? { ...defaultBaseEffect, ...categoryUserEffect }
+          : defaultBaseEffect;
+        const defaultWrapper = defaultWrappers.find((effect) => effect.effectId === effectId) || null;
+        const userWrapper = recipientUserEffects.find((effect) => effect.effectId === effectId) || null;
+        const effectiveWrapper = mergeRecipientWrapperForValidation(defaultWrapper, userWrapper);
+        const resolvedEffect = { ...effectiveBaseEffect, ...(effectiveWrapper.overrides || {}) };
+        const label = `recipient "${recipientId}" (category "${categoryId}") effect "${effectId}"`;
+
+        for (const [field, multiplier] of Object.entries(effectiveWrapper.multipliers || {})) {
+          const effectiveValue = resolvedEffect[field] * multiplier;
+          if (!Number.isFinite(effectiveValue)) {
+            throw invalid(`multiplier for field "${field}" on ${label} produces a non-finite value.`);
+          }
+          resolvedEffect[field] = effectiveValue;
+        }
+
+        const modifiedFields = new Set([
+          ...Object.keys(effectiveWrapper.overrides || {}),
+          ...Object.keys(effectiveWrapper.multipliers || {}),
+        ]);
+        for (const field of modifiedFields) {
+          validateEffectFieldSemantics(field, resolvedEffect[field], label, invalid);
         }
       }
     }

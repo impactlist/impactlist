@@ -194,6 +194,9 @@ describe('useRecipientEffectsDraft', () => {
 
     expect(result.current.effects[0].overrides ?? {}).toEqual({});
 
+    act(() => result.current.updateEffectField(0, 'costPerQALY', 'invalid'));
+    expect(result.current.hasErrors).toBe(true);
+
     rerender({
       userAssumptions: {
         recipients: {
@@ -206,6 +209,8 @@ describe('useRecipientEffectsDraft', () => {
 
     expect(result.current.effects[0].overrides.costPerQALY).toBe(250);
     expect(result.current.hasUnsavedChanges).toBe(false);
+    expect(result.current.hasErrors).toBe(false);
+    expect(result.current.errors).toEqual({});
   });
 
   it('preserves in-progress draft edits when assumptions change without touching this baseline', () => {

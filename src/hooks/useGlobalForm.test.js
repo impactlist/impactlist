@@ -10,6 +10,13 @@ const baseParams = {
 };
 
 describe('useGlobalForm', () => {
+  it('populates fields on the first render instead of flashing an empty form', () => {
+    const { result } = renderHook(() => useGlobalForm(baseParams, baseParams, null));
+
+    expect(result.current.formValues.discountRate).toEqual({ raw: 0.02, formatted: '2' });
+    expect(result.current.formValues.timeLimit).toEqual({ raw: 100, formatted: '100' });
+  });
+
   it('keeps malformed numeric input as a string and surfaces an error', async () => {
     const { result } = renderHook(() => useGlobalForm(baseParams, baseParams, null));
 
@@ -20,6 +27,33 @@ describe('useGlobalForm', () => {
     await waitFor(() => {
       expect(result.current.formValues.timeLimit.raw).toBe('1.2.3');
       expect(result.current.errors.timeLimit).toBe('Invalid number');
+    });
+  });
+
+  it('accepts complete finite exponent notation', async () => {
+    const { result } = renderHook(() => useGlobalForm(baseParams, baseParams, null));
+
+    act(() => {
+      result.current.handleChange('timeLimit', '1e2');
+    });
+
+    await waitFor(() => {
+      expect(result.current.formValues.timeLimit.raw).toBe(100);
+      expect(result.current.errors.timeLimit).toBeUndefined();
+    });
+  });
+
+  it('keeps a long ordinary positive decimal intact without imposing a magnitude floor', async () => {
+    const { result } = renderHook(() => useGlobalForm(baseParams, baseParams, null));
+    const decimal = `0.${'0'.repeat(50)}1`;
+
+    act(() => {
+      result.current.handleChange('timeLimit', decimal);
+    });
+
+    await waitFor(() => {
+      expect(result.current.formValues.timeLimit.formatted).toBe(decimal);
+      expect(result.current.errors.timeLimit).toBeUndefined();
     });
   });
 

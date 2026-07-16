@@ -269,11 +269,11 @@ export const createCombinedAssumptions = (defaultAssumptions = null, userAssumpt
   };
 
   combined.getCategoryById = (categoryId) => {
-    return combined.categories[categoryId] || null;
+    return Object.hasOwn(combined.categories, categoryId) ? combined.categories[categoryId] : null;
   };
 
   combined.getRecipientById = (recipientId) => {
-    return combined.recipients[recipientId] || null;
+    return Object.hasOwn(combined.recipients, recipientId) ? combined.recipients[recipientId] : null;
   };
 
   // Get all recipients as an array with id included

@@ -9,9 +9,21 @@ import matter from 'gray-matter';
 import { glob } from 'glob';
 // Shared validation modules (pure ES6, also used by app startup validation).
 // The pipeline test harness copies these into its temp workspaces.
-import { validateCategory, validateRecipient } from '../src/utils/dataValidation.js';
+import {
+  assertSafeIdentifier,
+  assertValidEffectFieldValue,
+  assertValidEntityId,
+  assertValidTimeInterval,
+  validateCategory,
+  validateRecipient,
+  validateRecipientEffectAgainstBase,
+} from '../src/utils/dataValidation.js';
 import { CHALLENGE_ASSUMPTION_TITLE_PREFIX } from '../src/utils/constants.js';
-import { GLOBAL_PARAMETER_NAMES, assertValidGlobalParameters } from '../src/utils/globalParameterRules.js';
+import {
+  GLOBAL_PARAMETER_NAMES,
+  assertValidGlobalParameters,
+  getGlobalParameterError,
+} from '../src/utils/globalParameterRules.js';
 
 // Get current directory path in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -270,7 +282,12 @@ function normalizeStrictDateString(rawValue, errorPrefix) {
   const year = Number(match[1]);
   const month = Number(match[2]);
   const day = Number(match[3]);
-  const normalizedDate = new Date(Date.UTC(year, month - 1, day));
+  // Date.UTC treats years 0-99 as 1900-1999. Set the full year explicitly so
+  // the four-digit format is validated consistently without a hidden lower
+  // year bound.
+  const normalizedDate = new Date(0);
+  normalizedDate.setUTCHours(0, 0, 0, 0);
+  normalizedDate.setUTCFullYear(year, month - 1, day);
 
   if (
     normalizedDate.getUTCFullYear() !== year ||
@@ -375,7 +392,7 @@ const CATEGORY_EFFECT_FIELDS = new Set([
 // Load all categories
 function loadCategories() {
   const categoryFiles = sortedGlobSync(path.join(categoriesDir, '*.md'));
-  const categories = {};
+  const categories = Object.create(null);
   const seenIds = new Map();
 
   categoryFiles.forEach((file) => {
@@ -389,6 +406,7 @@ function loadCategories() {
     if (!data.id || typeof data.id !== 'string') {
       throw new Error(`Error: Category file ${fileName} is missing required 'id' field.`);
     }
+    assertValidEntityId(data.id, 'id', `in Category file ${fileName}`);
     if (!data.name || typeof data.name !== 'string') {
       throw new Error(`Error: Category file ${fileName} is missing required 'name' field.`);
     }
@@ -408,13 +426,22 @@ function loadCategories() {
     }
 
     // Validate each effect has required fields
+    const seenEffectIds = new Set();
     data.effects.forEach((effect, index) => {
+      if (!isPlainObject(effect)) {
+        throw new Error(`Error: Category file ${fileName}, effect #${index + 1} must be an object.`);
+      }
       assertOnlyKnownKeys(effect, CATEGORY_EFFECT_FIELDS, `Category file ${fileName}, effect #${index + 1}`);
       if (!effect.effectId || typeof effect.effectId !== 'string') {
         throw new Error(
           `Error: Category file ${path.basename(file)}, effect #${index + 1} is missing required 'effectId' field.`
         );
       }
+      assertValidEntityId(effect.effectId, 'effectId', `in Category file ${fileName}, effect #${index + 1}`);
+      if (seenEffectIds.has(effect.effectId)) {
+        throw new Error(`Error: Category file ${fileName} has duplicate effectId "${effect.effectId}".`);
+      }
+      seenEffectIds.add(effect.effectId);
       if (typeof effect.startTime !== 'number') {
         throw new Error(
           `Error: Category file ${path.basename(file)}, effect #${index + 1} is missing required 'startTime' number field.`
@@ -427,12 +454,12 @@ function loadCategories() {
       }
 
       // Validate that effect has either costPerQALY or costPerMicroprobability
-      const hasCostPerQALY = typeof effect.costPerQALY === 'number';
-      const hasCostPerMicroprobability = typeof effect.costPerMicroprobability === 'number';
+      const hasCostPerQALY = Object.hasOwn(effect, 'costPerQALY');
+      const hasCostPerMicroprobability = Object.hasOwn(effect, 'costPerMicroprobability');
 
-      if (!hasCostPerQALY && !hasCostPerMicroprobability) {
+      if (hasCostPerQALY === hasCostPerMicroprobability) {
         throw new Error(
-          `Error: Category file ${path.basename(file)}, effect #${index + 1} must have either 'costPerQALY' or 'costPerMicroprobability' field.`
+          `Error: Category file ${path.basename(file)}, effect #${index + 1} must have exactly one of 'costPerQALY' or 'costPerMicroprobability'.`
         );
       }
 
@@ -471,7 +498,7 @@ const DONOR_FIELDS = new Set(['id', 'name', 'birthDate', 'netWorth', 'about', 't
 // Load all donors
 function loadDonors() {
   const donorFiles = sortedGlobSync(path.join(donorsDir, '*.md'));
-  const donors = {};
+  const donors = Object.create(null);
   const seenIds = new Map();
 
   donorFiles.forEach((file) => {
@@ -485,16 +512,20 @@ function loadDonors() {
     if (!data.id || typeof data.id !== 'string') {
       throw new Error(`Error: Donor file ${fileName} is missing required 'id' field.`);
     }
+    assertValidEntityId(data.id, 'id', `in Donor file ${fileName}`);
     if (!data.name || typeof data.name !== 'string') {
       throw new Error(`Error: Donor file ${fileName} is missing required 'name' field.`);
     }
-    if (typeof data.netWorth !== 'number') {
+    if (typeof data.netWorth !== 'number' || !Number.isFinite(data.netWorth)) {
       throw new Error(`Error: Donor file ${fileName} is missing required 'netWorth' number field.`);
     }
     if (!data.about || typeof data.about !== 'string' || data.about.trim().length === 0) {
       throw new Error(`Error: Donor file ${fileName} is missing required 'about' string field.`);
     }
-    if (data.totalDonated !== undefined && (typeof data.totalDonated !== 'number' || data.totalDonated <= 0)) {
+    if (
+      data.totalDonated !== undefined &&
+      (typeof data.totalDonated !== 'number' || !Number.isFinite(data.totalDonated) || data.totalDonated <= 0)
+    ) {
       throw new Error(`Error: Donor file ${fileName} must use a positive number for 'totalDonated'.`);
     }
     assertOnlyKnownKeys(data, DONOR_FIELDS, `Donor file ${fileName}`);
@@ -533,7 +564,7 @@ const RECIPIENT_EFFECT_FIELDS = new Set(['effectId', 'overrides', 'multipliers']
 // Load all recipients
 function loadRecipients() {
   const recipientFiles = sortedGlobSync(path.join(recipientsDir, '*.md'));
-  const recipients = {};
+  const recipients = Object.create(null);
   const seenIds = new Map();
 
   recipientFiles.forEach((file) => {
@@ -547,6 +578,7 @@ function loadRecipients() {
     if (!data.id || typeof data.id !== 'string') {
       throw new Error(`Error: Recipient file ${fileName} is missing required 'id' field.`);
     }
+    assertValidEntityId(data.id, 'id', `in Recipient file ${fileName}`);
     if (!data.name || typeof data.name !== 'string') {
       throw new Error(`Error: Recipient file ${fileName} is missing required 'name' field.`);
     }
@@ -556,14 +588,28 @@ function loadRecipients() {
     assertOnlyKnownKeys(data, RECIPIENT_FIELDS, `Recipient file ${fileName}`);
     assertUniqueId(seenIds, data.id, fileName, 'recipient');
 
-    const categoriesObj = {};
+    const categoriesObj = Object.create(null);
+    const seenCategoryIds = new Set();
 
     data.categories.forEach((category, index) => {
       // Validate category structure
+      if (!isPlainObject(category)) {
+        throw new Error(`Error: Recipient file ${fileName}, category #${index + 1} must be an object.`);
+      }
       if (!category.id || typeof category.id !== 'string') {
         throw new Error(`Error: Recipient file ${fileName}, category #${index + 1} is missing required 'id' field.`);
       }
-      if (typeof category.fraction !== 'number' || category.fraction <= 0 || category.fraction > 1) {
+      assertValidEntityId(category.id, 'id', `in Recipient file ${fileName}, category #${index + 1}`);
+      if (seenCategoryIds.has(category.id)) {
+        throw new Error(`Error: Recipient file ${fileName} has duplicate category id "${category.id}".`);
+      }
+      seenCategoryIds.add(category.id);
+      if (
+        typeof category.fraction !== 'number' ||
+        !Number.isFinite(category.fraction) ||
+        category.fraction <= 0 ||
+        category.fraction > 1
+      ) {
         throw new Error(
           `Error: Recipient file ${fileName}, category ${category.id} must have 'fraction' field as a number between 0 and 1.`
         );
@@ -573,28 +619,58 @@ function loadRecipients() {
       const categoryData = { fraction: category.fraction };
 
       // Handle effects structure with overrides and multipliers (optional for recipients)
-      if (category.effects && Array.isArray(category.effects)) {
+      if (category.effects !== undefined) {
+        if (!Array.isArray(category.effects)) {
+          throw new Error(
+            `Error: Recipient file ${fileName}, category ${category.id} must use an array for 'effects'.`
+          );
+        }
+
         // Validate each effect override/multiplier has proper structure
-        category.effects.forEach((effect, index) => {
-          if (!effect.effectId || typeof effect.effectId !== 'string') {
+        const seenEffectIds = new Set();
+        category.effects.forEach((effect, effectIndex) => {
+          if (!isPlainObject(effect)) {
             throw new Error(
-              `Error: Recipient file ${fileName}, category ${category.id}, effect #${index + 1} is missing required 'effectId' field.`
+              `Error: Recipient file ${fileName}, category ${category.id}, effect #${effectIndex + 1} must be an object.`
             );
           }
+          if (!effect.effectId || typeof effect.effectId !== 'string') {
+            throw new Error(
+              `Error: Recipient file ${fileName}, category ${category.id}, effect #${effectIndex + 1} is missing required 'effectId' field.`
+            );
+          }
+          assertValidEntityId(
+            effect.effectId,
+            'effectId',
+            `in Recipient file ${fileName}, category ${category.id}, effect #${effectIndex + 1}`
+          );
+          if (seenEffectIds.has(effect.effectId)) {
+            throw new Error(
+              `Error: Recipient file ${fileName}, category ${category.id} has duplicate effectId "${effect.effectId}".`
+            );
+          }
+          seenEffectIds.add(effect.effectId);
           assertOnlyKnownKeys(
             effect,
             RECIPIENT_EFFECT_FIELDS,
-            `Recipient file ${fileName}, category ${category.id}, effect #${index + 1}`
+            `Recipient file ${fileName}, category ${category.id}, effect #${effectIndex + 1}`
           );
 
           // Must have either overrides or multipliers (or both)
-          const hasOverrides = effect.overrides && typeof effect.overrides === 'object';
-          const hasMultipliers = effect.multipliers && typeof effect.multipliers === 'object';
+          const hasOverrides = effect.overrides !== undefined;
+          const hasMultipliers = effect.multipliers !== undefined;
 
           if (!hasOverrides && !hasMultipliers) {
             throw new Error(
-              `Error: Recipient file ${fileName}, category ${category.id}, effect #${index + 1} must have either 'overrides' or 'multipliers' object.`
+              `Error: Recipient file ${fileName}, category ${category.id}, effect #${effectIndex + 1} must have either 'overrides' or 'multipliers' object.`
             );
+          }
+          for (const mapName of ['overrides', 'multipliers']) {
+            if (effect[mapName] !== undefined && !isPlainObject(effect[mapName])) {
+              throw new Error(
+                `Error: Recipient file ${fileName}, category ${category.id}, effect #${effectIndex + 1} must use an object for '${mapName}'.`
+              );
+            }
           }
         });
 
@@ -625,8 +701,6 @@ function loadRecipients() {
 
 const DONATION_FIELDS = new Set(['date', 'recipient', 'amount', 'credit', 'source', 'notes']);
 const CREDIT_SUM_TOLERANCE = 0.001;
-const DONATION_YEAR_MIN = 1900;
-const DONATION_YEAR_MAX = 2100;
 
 // Identities of a donation event, used to reject duplicates (the same event
 // recorded twice double-counts the donor and/or the recipient):
@@ -650,6 +724,9 @@ function buildDonationKeys(donation, date) {
 }
 
 function validateDonationFields(donation, context) {
+  if (!isPlainObject(donation)) {
+    throw new Error(`${context} must be an object.`);
+  }
   Object.keys(donation).forEach((key) => {
     if (!DONATION_FIELDS.has(key)) {
       throw new Error(`${context} has unknown field '${key}'. Allowed fields: ${[...DONATION_FIELDS].join(', ')}.`);
@@ -659,6 +736,7 @@ function validateDonationFields(donation, context) {
   if (typeof donation.recipient !== 'string' || donation.recipient.trim() === '') {
     throw new Error(`${context} is missing a valid 'recipient'. Got: ${JSON.stringify(donation.recipient)}`);
   }
+  assertValidEntityId(donation.recipient, 'recipient', context);
 }
 
 function validateDonationAmountAndCredit(donation, context) {
@@ -675,6 +753,7 @@ function validateDonationAmountAndCredit(donation, context) {
 
   let creditSum = 0;
   Object.entries(donation.credit).forEach(([donorId, creditAmount]) => {
+    assertValidEntityId(donorId, 'donor ID', context);
     if (typeof creditAmount !== 'number' || !Number.isFinite(creditAmount) || creditAmount <= 0 || creditAmount > 1) {
       throw new Error(
         `${context} has invalid credit for donor "${donorId}". ` +
@@ -741,14 +820,6 @@ function loadDonations() {
       );
       const context = `Error: Donation #${index + 1} in ${fileName} (recipient: ${donation.recipient}, date: ${date})`;
 
-      const year = Number(date.slice(0, 4));
-      if (year < DONATION_YEAR_MIN || year > DONATION_YEAR_MAX) {
-        throw new Error(
-          `${context} has a year outside the plausible range ${DONATION_YEAR_MIN}-${DONATION_YEAR_MAX}. ` +
-            `Fix the date or widen the bounds in this script.`
-        );
-      }
-
       validateDonationAmountAndCredit(donation, context);
 
       const { exactKey, eventKey } = buildDonationKeys(donation, date);
@@ -809,7 +880,7 @@ function loadAssumptions() {
   }
 
   const assumptionFiles = sortedGlobSync(path.join(assumptionsDir, '*.md'));
-  const assumptions = {};
+  const assumptions = Object.create(null);
   const seenIds = new Map();
 
   assumptionFiles.forEach((file) => {
@@ -823,6 +894,7 @@ function loadAssumptions() {
     if (!data.id || typeof data.id !== 'string') {
       throw new Error(`Error: Assumption file ${fileName} is missing required 'id' field.`);
     }
+    assertValidEntityId(data.id, 'id', `in Assumption file ${fileName}`);
     if (!data.name || typeof data.name !== 'string') {
       throw new Error(`Error: Assumption file ${fileName} is missing required 'name' field.`);
     }
@@ -891,6 +963,18 @@ function normalizeCategoryEffectField(normalizedEffect, defaultEffect, fieldName
     );
   }
 
+  const valueContext = `in curated assumptions profile ${fileName}, ${scopeLabel} effect "${normalizedEffect.effectId}"`;
+  if (fieldName === 'validTimeInterval') {
+    assertValidTimeInterval(value, fieldName, valueContext);
+  } else {
+    if (typeof defaultEffect[fieldName] !== 'number') {
+      throw new Error(
+        `Error: Curated assumptions profile ${fileName} ${scopeLabel} effect "${normalizedEffect.effectId}" field "${fieldName}" is not an editable numeric field.`
+      );
+    }
+    assertValidEffectFieldValue(value, fieldName, valueContext);
+  }
+
   if (!areComparableFieldValuesEqual(value, defaultEffect[fieldName])) {
     normalizedEffect[fieldName] = value;
   }
@@ -900,6 +984,7 @@ function normalizeCuratedEffects(effects, { fileName, scopeLabel, getDefaultEffe
   assertCuratedEffectArray(effects, fileName, scopeLabel);
 
   const normalizedEffects = [];
+  const seenEffectIds = new Set();
 
   effects.forEach((effect, effectIndex) => {
     if (!isPlainObject(effect)) {
@@ -913,6 +998,17 @@ function normalizeCuratedEffects(effects, { fileName, scopeLabel, getDefaultEffe
         `Error: Curated assumptions profile ${fileName} ${scopeLabel} effect #${effectIndex + 1} is missing required 'effectId'.`
       );
     }
+    assertValidEntityId(
+      effect.effectId,
+      'effectId',
+      `in Curated assumptions profile ${fileName}, ${scopeLabel}, effect #${effectIndex + 1}`
+    );
+    if (seenEffectIds.has(effect.effectId)) {
+      throw new Error(
+        `Error: Curated assumptions profile ${fileName} ${scopeLabel} has duplicate effectId "${effect.effectId}".`
+      );
+    }
+    seenEffectIds.add(effect.effectId);
 
     const defaultEffect = getDefaultEffect(effect.effectId);
     if (!defaultEffect) {
@@ -968,6 +1064,11 @@ function normalizeCuratedRecipientEffects(effects, defaultAssumptions, recipient
       scopeLabel,
     }) => {
       const recipientDefault = getRecipientDefaultWrapper(defaultAssumptions, recipientId, categoryId, effect.effectId);
+      validateRecipientEffectAgainstBase(
+        effect,
+        baseEffect,
+        `in curated assumptions profile ${effectFileName}, ${scopeLabel}, effect "${effect.effectId}"`
+      );
 
       Object.entries(effect).forEach(([fieldName, value]) => {
         if (fieldName === 'effectId' || fieldName.startsWith('_')) {
@@ -981,21 +1082,42 @@ function normalizeCuratedRecipientEffects(effects, defaultAssumptions, recipient
             );
           }
 
-          const normalizedOverrides = {};
+          const normalizedOverrides = Object.create(null);
           Object.entries(value).forEach(([overrideFieldName, overrideValue]) => {
+            assertSafeIdentifier(
+              overrideFieldName,
+              'override field',
+              `in Curated assumptions profile ${effectFileName}, ${scopeLabel}, effect "${effect.effectId}"`
+            );
             if (!Object.hasOwn(baseEffect, overrideFieldName)) {
               throw new Error(
                 `Error: Curated assumptions profile ${effectFileName} ${scopeLabel} effect "${effect.effectId}" override references unknown field "${overrideFieldName}".`
               );
             }
 
-            // The effective default for this field is the recipient's own
-            // override when one exists, otherwise the category base value.
-            const defaultValue = recipientDefault?.overrides?.[overrideFieldName] ?? baseEffect[overrideFieldName];
-            if (!areComparableFieldValuesEqual(overrideValue, defaultValue)) {
+            if (
+              !recipientDefault?.overrides &&
+              (Object.hasOwn(recipientDefault?.multipliers || {}, overrideFieldName) ||
+                !areComparableFieldValuesEqual(overrideValue, baseEffect[overrideFieldName]))
+            ) {
               normalizedOverrides[overrideFieldName] = overrideValue;
             }
           });
+
+          if (recipientDefault?.overrides) {
+            const overrideKeys = Object.keys(value);
+            const defaultOverrideKeys = Object.keys(recipientDefault.overrides);
+            const matchesRecipientDefault =
+              overrideKeys.length === defaultOverrideKeys.length &&
+              overrideKeys.every((key) => areComparableFieldValuesEqual(value[key], recipientDefault.overrides[key]));
+
+            // Recipient override objects replace the default override set as a
+            // whole at combine time. Unless the whole object is a no-op, keep
+            // every supplied field so normalization cannot change semantics.
+            if (!matchesRecipientDefault) {
+              Object.assign(normalizedOverrides, value);
+            }
+          }
 
           if (Object.keys(normalizedOverrides).length > 0) {
             normalizedEffect.overrides = normalizedOverrides;
@@ -1010,8 +1132,13 @@ function normalizeCuratedRecipientEffects(effects, defaultAssumptions, recipient
             );
           }
 
-          const normalizedMultipliers = {};
+          const normalizedMultipliers = Object.create(null);
           Object.entries(value).forEach(([multiplierFieldName, multiplierValue]) => {
+            assertSafeIdentifier(
+              multiplierFieldName,
+              'multiplier field',
+              `in Curated assumptions profile ${effectFileName}, ${scopeLabel}, effect "${effect.effectId}"`
+            );
             if (!Object.hasOwn(baseEffect, multiplierFieldName)) {
               throw new Error(
                 `Error: Curated assumptions profile ${effectFileName} ${scopeLabel} effect "${effect.effectId}" multiplier references unknown field "${multiplierFieldName}".`
@@ -1022,7 +1149,10 @@ function normalizeCuratedRecipientEffects(effects, defaultAssumptions, recipient
             // so a profile that resets a customized recipient back to the
             // category baseline is preserved instead of dropped as a no-op.
             const defaultMultiplier = recipientDefault?.multipliers?.[multiplierFieldName] ?? 1;
-            if (multiplierValue !== defaultMultiplier) {
+            if (
+              Object.hasOwn(recipientDefault?.overrides || {}, multiplierFieldName) ||
+              multiplierValue !== defaultMultiplier
+            ) {
               normalizedMultipliers[multiplierFieldName] = multiplierValue;
             }
           });
@@ -1049,6 +1179,69 @@ function normalizeCuratedRecipientEffects(effects, defaultAssumptions, recipient
   });
 }
 
+function mergeRecipientWrapperForValidation(defaultWrapper, profileWrapper) {
+  const merged = defaultWrapper ? JSON.parse(JSON.stringify(defaultWrapper)) : { effectId: profileWrapper.effectId };
+  if (!profileWrapper) return merged;
+
+  if (profileWrapper.overrides) {
+    merged.overrides = { ...profileWrapper.overrides };
+    Object.keys(profileWrapper.overrides).forEach((fieldName) => {
+      if (merged.multipliers) delete merged.multipliers[fieldName];
+    });
+  }
+  if (profileWrapper.multipliers) {
+    merged.multipliers = { ...(merged.multipliers || {}), ...profileWrapper.multipliers };
+    Object.keys(profileWrapper.multipliers).forEach((fieldName) => {
+      if (merged.overrides) delete merged.overrides[fieldName];
+    });
+  }
+  if (profileWrapper.disabled !== undefined) {
+    merged.disabled = profileWrapper.disabled;
+  }
+
+  if (merged.overrides && Object.keys(merged.overrides).length === 0) delete merged.overrides;
+  if (merged.multipliers && Object.keys(merged.multipliers).length === 0) delete merged.multipliers;
+  return merged;
+}
+
+// A category-level profile edit changes the base value used by every recipient
+// multiplier. Validate the fully merged profile/default combinations so two
+// individually finite inputs cannot overflow or violate a field domain only
+// after they meet at runtime.
+function validateCuratedRecipientCombinations(normalized, defaultAssumptions, fileName) {
+  Object.entries(defaultAssumptions.recipients).forEach(([recipientId, recipient]) => {
+    Object.entries(recipient.categories).forEach(([categoryId, recipientCategory]) => {
+      const baseCategory = defaultAssumptions.categories[categoryId];
+      if (!baseCategory) return;
+
+      const categoryProfileEffects = normalized.categories?.[categoryId]?.effects || [];
+      const recipientProfileEffects = normalized.recipients?.[recipientId]?.categories?.[categoryId]?.effects || [];
+      const defaultWrappers = recipientCategory.effects || [];
+      const wrapperEffectIds = new Set([
+        ...defaultWrappers.map((effect) => effect.effectId),
+        ...recipientProfileEffects.map((effect) => effect.effectId),
+      ]);
+
+      wrapperEffectIds.forEach((effectId) => {
+        const defaultBaseEffect = baseCategory.effects.find((effect) => effect.effectId === effectId);
+        const categoryProfileEffect = categoryProfileEffects.find((effect) => effect.effectId === effectId);
+        const effectiveBaseEffect = categoryProfileEffect
+          ? { ...defaultBaseEffect, ...categoryProfileEffect }
+          : defaultBaseEffect;
+        const defaultWrapper = defaultWrappers.find((effect) => effect.effectId === effectId) || null;
+        const profileWrapper = recipientProfileEffects.find((effect) => effect.effectId === effectId) || null;
+        const effectiveWrapper = mergeRecipientWrapperForValidation(defaultWrapper, profileWrapper);
+
+        validateRecipientEffectAgainstBase(
+          effectiveWrapper,
+          effectiveBaseEffect,
+          `in curated assumptions profile ${fileName}, recipient "${recipientId}" category "${categoryId}" effect "${effectId}"`
+        );
+      });
+    });
+  });
+}
+
 const PROFILE_FIELDS = new Set(['id', 'name', 'description', 'sortOrder', 'assumptions']);
 const PROFILE_CATEGORY_ENTRY_FIELDS = new Set(['effects']);
 const PROFILE_RECIPIENT_ENTRY_FIELDS = new Set(['categories']);
@@ -1058,7 +1251,7 @@ function normalizeCuratedAssumptions(assumptions, defaultAssumptions, fileName) 
     throw new Error(`Error: Curated assumptions profile ${fileName} must define 'assumptions' as an object.`);
   }
 
-  const normalized = {};
+  const normalized = Object.create(null);
   const allowedTopLevelKeys = new Set(['globalParameters', 'categories', 'recipients']);
 
   Object.keys(assumptions).forEach((key) => {
@@ -1072,12 +1265,18 @@ function normalizeCuratedAssumptions(assumptions, defaultAssumptions, fileName) 
       throw new Error(`Error: Curated assumptions profile ${fileName} must use an object for 'globalParameters'.`);
     }
 
-    const normalizedGlobalParameters = {};
+    const normalizedGlobalParameters = Object.create(null);
     Object.entries(assumptions.globalParameters).forEach(([parameterName, value]) => {
+      assertSafeIdentifier(parameterName, 'global parameter', `in Curated assumptions profile ${fileName}`);
       if (!Object.hasOwn(defaultAssumptions.globalParameters, parameterName)) {
         throw new Error(
           `Error: Curated assumptions profile ${fileName} references unknown global parameter "${parameterName}".`
         );
+      }
+
+      const semanticError = getGlobalParameterError(parameterName, value);
+      if (semanticError) {
+        throw new Error(`Error: Curated assumptions profile ${fileName}: ${semanticError}.`);
       }
 
       if (!areComparableFieldValuesEqual(value, defaultAssumptions.globalParameters[parameterName])) {
@@ -1095,9 +1294,10 @@ function normalizeCuratedAssumptions(assumptions, defaultAssumptions, fileName) 
       throw new Error(`Error: Curated assumptions profile ${fileName} must use an object for 'categories'.`);
     }
 
-    const normalizedCategories = {};
+    const normalizedCategories = Object.create(null);
     Object.entries(assumptions.categories).forEach(([categoryId, categoryData]) => {
-      if (!defaultAssumptions.categories[categoryId]) {
+      assertValidEntityId(categoryId, 'category id', `in Curated assumptions profile ${fileName}`);
+      if (!Object.hasOwn(defaultAssumptions.categories, categoryId)) {
         throw new Error(`Error: Curated assumptions profile ${fileName} references unknown category "${categoryId}".`);
       }
 
@@ -1132,9 +1332,10 @@ function normalizeCuratedAssumptions(assumptions, defaultAssumptions, fileName) 
       throw new Error(`Error: Curated assumptions profile ${fileName} must use an object for 'recipients'.`);
     }
 
-    const normalizedRecipients = {};
+    const normalizedRecipients = Object.create(null);
     Object.entries(assumptions.recipients).forEach(([recipientId, recipientData]) => {
-      if (!defaultAssumptions.recipients[recipientId]) {
+      assertValidEntityId(recipientId, 'recipient id', `in Curated assumptions profile ${fileName}`);
+      if (!Object.hasOwn(defaultAssumptions.recipients, recipientId)) {
         throw new Error(
           `Error: Curated assumptions profile ${fileName} references unknown recipient "${recipientId}".`
         );
@@ -1151,9 +1352,14 @@ function normalizeCuratedAssumptions(assumptions, defaultAssumptions, fileName) 
         `Curated assumptions profile ${fileName} recipient "${recipientId}"`
       );
 
-      const normalizedRecipientCategories = {};
+      const normalizedRecipientCategories = Object.create(null);
       Object.entries(recipientData.categories).forEach(([categoryId, categoryData]) => {
-        if (!defaultAssumptions.recipients[recipientId].categories?.[categoryId]) {
+        assertValidEntityId(
+          categoryId,
+          'category id',
+          `in Curated assumptions profile ${fileName}, recipient "${recipientId}"`
+        );
+        if (!Object.hasOwn(defaultAssumptions.recipients[recipientId].categories || {}, categoryId)) {
           throw new Error(
             `Error: Curated assumptions profile ${fileName} recipient "${recipientId}" references unknown category "${categoryId}".`
           );
@@ -1193,6 +1399,8 @@ function normalizeCuratedAssumptions(assumptions, defaultAssumptions, fileName) 
     }
   }
 
+  validateCuratedRecipientCombinations(normalized, defaultAssumptions, fileName);
+
   if (Object.keys(normalized).length === 0) {
     throw new Error(`Error: Curated assumptions profile ${fileName} has no effect after normalization.`);
   }
@@ -1206,7 +1414,7 @@ function loadCuratedAssumptionProfiles(defaultAssumptions) {
   }
 
   const profileFiles = sortedGlobSync(path.join(assumptionProfilesDir, '*.md'));
-  const profiles = {};
+  const profiles = Object.create(null);
 
   profileFiles.forEach((file) => {
     if (path.basename(file) === '_index.md') return;
@@ -1218,6 +1426,7 @@ function loadCuratedAssumptionProfiles(defaultAssumptions) {
     if (!data.id || typeof data.id !== 'string') {
       throw new Error(`Error: Curated assumptions profile ${fileName} is missing required 'id' field.`);
     }
+    assertValidEntityId(data.id, 'id', `in Curated assumptions profile ${fileName}`);
     if (!data.name || typeof data.name !== 'string') {
       throw new Error(`Error: Curated assumptions profile ${fileName} is missing required 'name' field.`);
     }
@@ -1227,11 +1436,11 @@ function loadCuratedAssumptionProfiles(defaultAssumptions) {
     if (data.description !== undefined && typeof data.description !== 'string') {
       throw new Error(`Error: Curated assumptions profile ${fileName} must use a string for 'description'.`);
     }
-    if (data.sortOrder !== undefined && typeof data.sortOrder !== 'number') {
-      throw new Error(`Error: Curated assumptions profile ${fileName} must use a number for 'sortOrder'.`);
+    if (data.sortOrder !== undefined && (typeof data.sortOrder !== 'number' || !Number.isFinite(data.sortOrder))) {
+      throw new Error(`Error: Curated assumptions profile ${fileName} must use a finite number for 'sortOrder'.`);
     }
     assertOnlyKnownKeys(data, PROFILE_FIELDS, `Curated assumptions profile ${fileName}`);
-    if (profiles[data.id]) {
+    if (Object.hasOwn(profiles, data.id)) {
       throw new Error(`Error: Duplicate curated assumptions profile id "${data.id}".`);
     }
 
@@ -1304,12 +1513,12 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
     const label = `Error: Donation in ${donation.sourceFile} (recipient "${donation.recipientId}", date ${donation.date}, amount ${donation.amount})`;
 
     // Check donor exists
-    if (!donors[donation.donorId]) {
+    if (!Object.hasOwn(donors, donation.donorId)) {
       errors.push(`${label} references non-existent donor ID "${donation.donorId}"`);
     }
 
     // Check recipient exists
-    if (!recipients[donation.recipientId]) {
+    if (!Object.hasOwn(recipients, donation.recipientId)) {
       errors.push(`${label} references non-existent recipient ID "${donation.recipientId}"`);
     }
   });
@@ -1318,7 +1527,7 @@ function validateDataIntegrity(categories, donors, recipients, donations) {
   Object.entries(recipients).forEach(([recipientId, recipient]) => {
     Object.entries(recipient.categories).forEach(([categoryId, categoryData]) => {
       // Check category exists
-      if (!categories[categoryId]) {
+      if (!Object.hasOwn(categories, categoryId)) {
         errors.push(`Error: Recipient "${recipientId}" references non-existent category ID "${categoryId}"`);
         return; // Skip effect validation if category doesn't exist
       }
@@ -1375,7 +1584,9 @@ function generateJavaScriptFile() {
   // content fails the BUILD instead of crashing the deployed site.
   console.log('Validating categories and recipients against shared rules...');
   Object.entries(categories).forEach(([categoryId, category]) => validateCategory(category, categoryId));
-  Object.entries(recipients).forEach(([recipientId, recipient]) => validateRecipient(recipient, recipientId));
+  Object.entries(recipients).forEach(([recipientId, recipient]) =>
+    validateRecipient(recipient, recipientId, categories)
+  );
 
   console.log('Validating data integrity...');
   validateDataIntegrity(categories, donors, recipients, rawDonations);
@@ -1469,6 +1680,7 @@ function writeSeoFiles(filteredDonors, filteredRecipients, filteredCategories, a
     '/calculator',
     '/faq',
     '/assumptions',
+    '/image-credits',
     ...Object.keys(filteredDonors).map((id) => `/donor/${encodeURIComponent(id)}`),
     ...Object.keys(filteredRecipients).map((id) => `/recipient/${encodeURIComponent(id)}`),
     ...Object.keys(filteredCategories).map((id) => `/cause/${encodeURIComponent(id)}`),

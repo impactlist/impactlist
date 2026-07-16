@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { getEffectEditingTargetFromSearch } from './assumptionsEditorHelpers';
+import { getCategoryFromDefaults, getEffectEditingTargetFromSearch } from './assumptionsEditorHelpers';
+
+describe('getCategoryFromDefaults', () => {
+  it('does not treat inherited object keys as editable categories', () => {
+    const defaults = { categories: { health: { name: 'Health', effects: [] } } };
+
+    expect(getCategoryFromDefaults(defaults, 'health')).toMatchObject({ id: 'health', name: 'Health' });
+    expect(getCategoryFromDefaults(defaults, '__proto__')).toBeNull();
+    expect(getCategoryFromDefaults(defaults, 'constructor')).toBeNull();
+  });
+});
 
 // The navigation guard compares these identities across a blocked navigation
 // to decide whether it would close or retarget the open drill-in editor.

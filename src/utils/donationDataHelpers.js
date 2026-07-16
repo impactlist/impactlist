@@ -1,10 +1,11 @@
 // Helper functions for donation and impact calculations
 import { donorsById, recipientsById, donations } from '../data/generatedData';
+import { normalizeFormattedDecimalInput } from './numberParsing';
 
 // Helper to get donor by ID
 export const getDonorById = (donorId) => {
-  if (!donorId) return null;
-  return donorsById[donorId] || null;
+  if (!donorId || !Object.hasOwn(donorsById, donorId)) return null;
+  return donorsById[donorId];
 };
 
 // Helper to get all donors as an array
@@ -114,7 +115,7 @@ export const getCategoryBreakdown = (combinedAssumptions, recipientId) => {
 
 // Helper to get donations for a specific donor
 export const getDonationsForDonor = (donorId) => {
-  if (!donorsById[donorId]) {
+  if (!Object.hasOwn(donorsById, donorId)) {
     throw new Error(`Invalid donor ID: ${donorId}. This donor does not exist.`);
   }
   return donations.filter((donation) => donation.donorId === donorId);
@@ -122,7 +123,7 @@ export const getDonationsForDonor = (donorId) => {
 
 // Helper to get donations for a specific recipient
 export const getDonationsForRecipient = (recipientId) => {
-  if (!recipientsById[recipientId]) {
+  if (!Object.hasOwn(recipientsById, recipientId)) {
     throw new Error(`Invalid recipient ID: ${recipientId}. This recipient does not exist.`);
   }
   return donations.filter((donation) => donation.recipientId === recipientId);
@@ -179,6 +180,41 @@ export const getCurrentYear = () => {
   return new Date().getFullYear();
 };
 
+export const MIN_CALCULATOR_DONATION_YEAR = 1900;
+
+/**
+ * Normalize a category-donation amount without guessing what malformed money
+ * text meant. Plain digits/decimals and conventionally grouped commas are
+ * accepted; unsupported text or misplaced commas return null instead of being
+ * stripped into a different amount.
+ */
+export const normalizeCalculatorDonationAmount = (value, { allowLeadingCurrencySign = false } = {}) => {
+  return normalizeFormattedDecimalInput(value, {
+    allowNegative: false,
+    allowLeadingCurrencySign,
+  });
+};
+
+/**
+ * Parse a calculator-entered donation year without parseInt's permissive
+ * prefix behavior (for example, "2024oops" must not silently become 2024).
+ * Calculator donations are intentionally limited to the same range the UI
+ * exposes.
+ */
+export const parseCalculatorDonationYear = (value) => {
+  let year;
+  if (typeof value === 'number') {
+    year = value;
+  } else if (typeof value === 'string' && /^\d{4}$/.test(value)) {
+    year = Number(value);
+  } else {
+    return null;
+  }
+
+  const currentYear = getCurrentYear();
+  return Number.isInteger(year) && year >= MIN_CALCULATOR_DONATION_YEAR && year <= currentYear ? year : null;
+};
+
 /**
  * Resolve a year value coming from a YearSelector-bound input into a concrete
  * integer year for calculations. YearSelector deliberately emits '' (and other
@@ -190,6 +226,12 @@ export const getCurrentYear = () => {
  * @returns {number} A valid integer year
  */
 export const resolveCalcYear = (value) => {
-  const parsed = parseInt(value, 10);
-  return Number.isInteger(parsed) ? parsed : getCurrentYear();
+  if (value === null || value === undefined || (typeof value === 'string' && value.trim() === '')) {
+    return getCurrentYear();
+  }
+
+  // Interpret the complete value. parseInt would silently turn `2024junk`
+  // into 2024, `2e3` into 2, and 2024.9 into 2024.
+  const parsed = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(parsed) && Number.isInteger(parsed) ? parsed : getCurrentYear();
 };

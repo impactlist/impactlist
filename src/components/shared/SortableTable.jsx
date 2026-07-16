@@ -340,6 +340,7 @@ const SortableTable = ({
         {columns.map((column) => {
           const isSortable = column.sortable !== false;
           const isColumnInteractive = isInteractive && isSortable;
+          const isStickyClone = instanceKey === 'sticky';
 
           return (
             <th
@@ -358,6 +359,7 @@ const SortableTable = ({
                   type="button"
                   className="impact-table__sort-button"
                   disabled={!isColumnInteractive}
+                  tabIndex={isStickyClone ? -1 : undefined}
                   aria-label={`Sort by ${column.label || column.key}`}
                   onClick={() => handleSort(column.key)}
                 >
@@ -365,7 +367,7 @@ const SortableTable = ({
                   {renderSortIndicator(column.key, isSortable)}
                 </button>
                 {column.tooltip &&
-                  (isColumnInteractive ? (
+                  (isColumnInteractive && !isStickyClone ? (
                     <Tooltip content={column.tooltip}>{renderTooltipIcon()}</Tooltip>
                   ) : (
                     <span className="impact-table__tooltip-icon" aria-hidden="true">

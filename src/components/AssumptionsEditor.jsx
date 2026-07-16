@@ -589,6 +589,7 @@ const AssumptionsEditor = forwardRef(
 
             {editingCategoryId ? (
               <CategoryEffectEditor
+                key={`category:${editingCategoryId}`}
                 ref={effectEditorRef}
                 category={getCategoryFromDefaults(defaultAssumptions, editingCategoryId)}
                 categoryId={editingCategoryId}
@@ -601,6 +602,7 @@ const AssumptionsEditor = forwardRef(
               />
             ) : editingRecipient?.isMultiCategory ? (
               <MultiCategoryRecipientEditor
+                key={`recipient:${editingRecipient.recipientId}:multi`}
                 ref={effectEditorRef}
                 recipient={editingRecipient.recipient}
                 recipientId={editingRecipient.recipientId}
@@ -615,6 +617,7 @@ const AssumptionsEditor = forwardRef(
               />
             ) : editingRecipient ? (
               <RecipientEffectEditor
+                key={`recipient:${editingRecipient.recipientId}:${editingRecipient.categoryId}`}
                 ref={effectEditorRef}
                 recipient={editingRecipient.recipient}
                 recipientId={editingRecipient.recipientId}

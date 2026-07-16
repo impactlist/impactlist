@@ -380,7 +380,7 @@ describe('assumptionsAPIHelpers', () => {
               effects: [
                 {
                   effectId: 'e1',
-                  overrides: { costPerQALY: 100, startTime: 5 },
+                  overrides: { startTime: 5 },
                   multipliers: { windowLength: 1, costPerQALY: 1.4 },
                 },
               ],

@@ -68,7 +68,11 @@ const ShareAssumptionsModal = ({
 
     const normalizedSlug = slugify(slug);
     if (normalizedSlug && !isValidSlug(normalizedSlug)) {
-      setError('Custom link text must use lowercase letters, numbers, and dashes (3-40 chars).');
+      setError(
+        normalizedSlug.length === 12
+          ? 'Custom link text cannot be exactly 12 letters or numbers; that format is reserved for generated links.'
+          : 'Custom link text must use lowercase letters, numbers, and dashes (3-40 chars).'
+      );
       return;
     }
 

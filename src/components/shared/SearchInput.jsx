@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 /**
  * Reusable search input component with icon
  */
-const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '', size = 'default' }) => {
+const SearchInput = ({
+  value,
+  onChange,
+  placeholder = 'Search...',
+  ariaLabel = placeholder,
+  className = '',
+  size = 'default',
+}) => {
+  const inputRef = useRef(null);
   const sizeClasses = {
     sm: 'py-1.5 text-xs',
     default: 'py-2 text-sm',
@@ -17,24 +25,34 @@ const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '
     lg: 'h-5 w-5',
   };
 
+  const handleClear = () => {
+    onChange('');
+    // The clear button disappears once the value is empty. Move focus first
+    // so keyboard users are not left focused on a removed DOM node.
+    inputRef.current?.focus();
+  };
+
   return (
     <div className={`impact-search ${className}`.trim()}>
       <input
+        ref={inputRef}
         type="text"
         placeholder={placeholder}
+        aria-label={ariaLabel}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`${sizeClasses[size]} ${value ? 'pr-16' : 'pr-10'}`}
       />
       <div className="impact-search__actions">
         {value && (
-          <button type="button" onClick={() => onChange('')} className="impact-search__clear" aria-label="Clear search">
+          <button type="button" onClick={handleClear} className="impact-search__clear" aria-label="Clear search">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`${iconSizeClasses[size]}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden={true}
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -46,6 +64,7 @@ const SearchInput = ({ value, onChange, placeholder = 'Search...', className = '
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden={true}
         >
           <path
             strokeLinecap="round"
@@ -63,6 +82,7 @@ SearchInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  ariaLabel: PropTypes.string,
   className: PropTypes.string,
   size: PropTypes.oneOf(['sm', 'default', 'lg']),
 };

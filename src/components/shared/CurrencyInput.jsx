@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { formatNumberWithCommas } from '../../utils/formatters';
 import useFormattedNumberInput from '../../hooks/useFormattedNumberInput';
+import { getSanitizedInputCaretPosition, normalizeFormattedNumberEdit } from '../../utils/numberParsing';
 
 /**
  * Specialized input component for handling currency values with formatting.
@@ -38,6 +39,32 @@ const CurrencyInput = ({
   );
 
   const { inputRef, localValue, setLocalValue, handleChange } = useFormattedNumberInput(value, emitChange);
+
+  const handleGuardedChange = (event) => {
+    const raw = event.target.value;
+    const normalizedValue = normalizeFormattedNumberEdit(localValue, raw, event.nativeEvent?.inputType, {
+      allowNegative: true,
+      allowLeadingCurrencySign: true,
+    });
+
+    if (!normalizedValue) {
+      // Keep unsupported text visible so the parent can report it as invalid;
+      // dropping one character from a typed exponent would turn `1e999` into
+      // the very different valid amount `1999`.
+      setLocalValue(raw);
+      onChange(raw);
+      return;
+    }
+
+    const { displayText } = normalizedValue;
+    if (displayText !== raw) {
+      const caret = event.target.selectionStart ?? displayText.length;
+      const keptBeforeCaret = getSanitizedInputCaretPosition(raw, displayText, caret);
+      event.target.value = displayText;
+      event.target.setSelectionRange(keptBeforeCaret, keptBeforeCaret);
+    }
+    handleChange(event);
+  };
 
   // Handle blur for validation
   const handleBlur = useCallback(() => {
@@ -93,7 +120,7 @@ const CurrencyInput = ({
           type="text"
           inputMode={inputMode}
           value={localValue}
-          onChange={handleChange}
+          onChange={handleGuardedChange}
           onBlur={handleBlur}
           placeholder={placeholder}
           disabled={disabled}

@@ -107,14 +107,7 @@ const GlobalValuesSection = ({ globalParameters, defaultGlobalParameters, formVa
                   <NumericInput
                     id={param.id}
                     value={value}
-                    onChange={(newValue) => {
-                      // NumericInput returns a number or string
-                      // For percentages, newValue is already in percentage form (e.g., 2 for 2%)
-                      // For numbers, it's the actual value
-                      const formatted =
-                        typeof newValue === 'number' ? formatNumberWithCommas(newValue.toString()) : newValue;
-                      onChange(param.id, formatted);
-                    }}
+                    onChange={(newValue) => onChange(param.id, newValue)}
                     placeholder={formatDisplayValue(defaultValue, param.format)}
                     error={hasError ? errors[param.id] : undefined}
                     isCustom={isCustom}

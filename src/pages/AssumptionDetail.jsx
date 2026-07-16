@@ -8,7 +8,7 @@ import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const AssumptionDetail = () => {
   const { assumptionId } = useParams();
-  const assumption = assumptionsById[assumptionId];
+  const assumption = Object.hasOwn(assumptionsById, assumptionId) ? assumptionsById[assumptionId] : null;
   useDocumentTitle(assumption?.name);
 
   if (!assumption) {
@@ -23,7 +23,7 @@ const AssumptionDetail = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <BackButton />
+      <BackButton fallbackTo="/assumptions" />
 
       <motion.div
         className="impact-page__container"

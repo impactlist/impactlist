@@ -1,7 +1,15 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { createBrowserRouter, Navigate, Route, RouterProvider, Routes, useLocation, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import {
+  createBrowserRouter,
+  Navigate,
+  Route,
+  RouterProvider,
+  Routes,
+  useLocation,
+  useParams,
+  useRouteError,
+} from 'react-router-dom';
 import NotFound from './pages/NotFound';
 
 // Pages are lazy-loaded so visitors don't download the assumptions editor,
@@ -27,6 +35,64 @@ import ScrollToTop from './components/shared/ScrollToTop';
 import { CAUSES_PATH, buildCausePath } from './utils/causeRoutes';
 import { validateDataOnStartup } from './utils/startupValidation';
 
+const toError = (value, fallbackMessage) => {
+  if (value instanceof Error) {
+    return value;
+  }
+  return new Error(typeof value === 'string' && value ? value : fallbackMessage);
+};
+
+const ErrorScreen = ({ title = 'Something went wrong' }) => {
+  const headingRef = useRef(null);
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
+
+  return (
+    <main className="impact-page flex min-h-screen items-center justify-center p-4" role="alert">
+      <div className="impact-surface w-full max-w-2xl p-6 text-center">
+        <h1 ref={headingRef} tabIndex={-1} className="impact-page__title mb-4 text-danger">
+          {title}
+        </h1>
+        <p className="mb-6 text-muted">
+          Impact List hit an unexpected problem. Your saved browser data has not been deleted.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="impact-btn impact-btn--custom-accent"
+          >
+            Try again
+          </button>
+          <a href="/" className="impact-btn impact-btn--secondary">
+            Back to Impact List
+          </a>
+        </div>
+      </div>
+    </main>
+  );
+};
+
+ErrorScreen.propTypes = {
+  title: PropTypes.string,
+};
+
+// Data routers catch descendant render/lazy-load errors before an outer
+// React error boundary can see them. Supplying a route error element keeps a
+// failed chunk or page render on the site's friendly recovery screen instead
+// of React Router's development-oriented default page and stack trace.
+export const RouteErrorFallback = () => {
+  const error = useRouteError();
+
+  useEffect(() => {
+    console.error('Route error:', error);
+  }, [error]);
+
+  return <ErrorScreen />;
+};
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -44,29 +110,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-          <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
-            <h1 className="text-danger text-2xl font-bold mb-4">Something went wrong</h1>
-            <div className="bg-gray-100 p-3 rounded-md overflow-auto mb-4">
-              <pre className="text-sm">{this.state.error && this.state.error.toString()}</pre>
-            </div>
-            <details className="mb-4">
-              <summary className="cursor-pointer text-blue-600">View component stack trace</summary>
-              <div className="bg-gray-100 p-3 rounded-md mt-2 overflow-auto">
-                <pre className="text-xs">{this.state.errorInfo && this.state.errorInfo.componentStack}</pre>
-              </div>
-            </details>
-            <p>Try refreshing the page or check your browser console for more details.</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Refresh Page
-            </button>
-          </div>
-        </div>
-      );
+      return <ErrorScreen />;
     }
 
     return this.props.children;
@@ -91,15 +135,60 @@ const LegacyCauseDetailRedirect = () => {
   return <Navigate to={`${nextPath}${location.search}${location.hash}`} replace={true} />;
 };
 
+const RouteContent = ({ mainRef }) => {
+  const location = useLocation();
+  const previousPathnameRef = useRef(location.pathname);
+
+  useEffect(() => {
+    if (previousPathnameRef.current === location.pathname) {
+      return undefined;
+    }
+    previousPathnameRef.current = location.pathname;
+
+    // This component sits inside the Suspense boundary, so the effect commits
+    // only after a lazy destination is ready instead of focusing a landmark
+    // whose contents are still the loading placeholder.
+    const frameId = window.requestAnimationFrame(() => {
+      mainRef.current?.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [location.pathname, mainRef]);
+
+  return (
+    <Routes>
+      <Route path="/" element={<DonorList />} />
+      <Route path="/donor/:donorId" element={<DonorDetail />} />
+      <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
+      <Route path="/cause/:categoryId" element={<CategoryDetail />} />
+      <Route path="/category/:categoryId" element={<LegacyCauseDetailRedirect />} />
+      <Route path="/assumption/:assumptionId" element={<AssumptionDetail />} />
+      <Route path={CAUSES_PATH} element={<CategoryList />} />
+      <Route path="/categories" element={<LegacyCausesListRedirect />} />
+      <Route path="/recipients" element={<RecipientList />} />
+      <Route path="/calculator" element={<DonationCalculator />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/assumptions" element={<AssumptionsPage />} />
+      <Route path="/image-credits" element={<ImageCredits />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
+RouteContent.propTypes = {
+  mainRef: PropTypes.shape({ current: PropTypes.object }).isRequired,
+};
+
 // Content wrapper with router
 const AppContent = () => {
   const location = useLocation();
-  const isHome = location.pathname === '/';
-  const isRecipients = location.pathname === '/recipients';
-  const isCategories = location.pathname === CAUSES_PATH || location.pathname.startsWith('/cause/');
-  const isCalculator = location.pathname === '/calculator';
-  const isFAQ = location.pathname === '/faq';
-  const isAssumptions = location.pathname === '/assumptions';
+  const mainRef = useRef(null);
+  const normalizedPathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '').toLowerCase();
+  const isHome = normalizedPathname === '/' || normalizedPathname.startsWith('/donor/');
+  const isRecipients = normalizedPathname === '/recipients' || normalizedPathname.startsWith('/recipient/');
+  const isCategories = normalizedPathname === CAUSES_PATH || normalizedPathname.startsWith('/cause/');
+  const isCalculator = normalizedPathname === '/calculator';
+  const isFAQ = normalizedPathname === '/faq';
+  const isAssumptions = normalizedPathname === '/assumptions' || normalizedPathname.startsWith('/assumption/');
 
   return (
     <>
@@ -109,6 +198,12 @@ const AppContent = () => {
         <GlobalSharedAssumptionsImport />
       </div>
       <div className="flex flex-col min-h-screen">
+        <a
+          href="#main-content"
+          className="impact-btn impact-btn--custom-accent sr-only fixed left-4 top-4 z-[100] focus:not-sr-only"
+        >
+          Skip to main content
+        </a>
         <Header
           isHome={isHome}
           isRecipients={isRecipients}
@@ -117,26 +212,22 @@ const AppContent = () => {
           isFAQ={isFAQ}
           isAssumptions={isAssumptions}
         />
-        <div className={`flex-grow ${isAssumptions ? 'relative' : 'bg-[var(--bg-canvas-strong)]'}`}>
-          <Suspense fallback={<div className="impact-loading">Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<DonorList />} />
-              <Route path="/donor/:donorId" element={<DonorDetail />} />
-              <Route path="/recipient/:recipientId" element={<RecipientDetail />} />
-              <Route path="/cause/:categoryId" element={<CategoryDetail />} />
-              <Route path="/category/:categoryId" element={<LegacyCauseDetailRedirect />} />
-              <Route path="/assumption/:assumptionId" element={<AssumptionDetail />} />
-              <Route path={CAUSES_PATH} element={<CategoryList />} />
-              <Route path="/categories" element={<LegacyCausesListRedirect />} />
-              <Route path="/recipients" element={<RecipientList />} />
-              <Route path="/calculator" element={<DonationCalculator />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/assumptions" element={<AssumptionsPage />} />
-              <Route path="/image-credits" element={<ImageCredits />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+        <main
+          ref={mainRef}
+          id="main-content"
+          tabIndex={-1}
+          className={`flex-grow ${isAssumptions ? 'relative' : 'bg-[var(--bg-canvas-strong)]'}`}
+        >
+          <Suspense
+            fallback={
+              <div className="impact-loading" role="status" aria-live="polite">
+                Loading...
+              </div>
+            }
+          >
+            <RouteContent mainRef={mainRef} />
           </Suspense>
-        </div>
+        </main>
         <Footer />
       </div>
     </>
@@ -147,7 +238,7 @@ const AppContent = () => {
 // <Routes>. The data-router layer exists so `useBlocker` works (the
 // assumptions editor's unapplied-edits navigation guard); route definitions
 // stay in AppContent.
-const router = createBrowserRouter([{ path: '*', element: <AppContent /> }]);
+const router = createBrowserRouter([{ path: '*', element: <AppContent />, errorElement: <RouteErrorFallback /> }]);
 
 const App = () => {
   const [error, setError] = useState(null);
@@ -163,39 +254,39 @@ const App = () => {
     }
 
     const handleGlobalError = (event) => {
+      // Browsers also emit message-only error events for benign platform
+      // warnings and opaque failures in cross-origin scripts. There is no app
+      // exception to recover from in those cases, so leave the UI running.
+      if (!event.error) {
+        return;
+      }
       console.error('Global error:', event.error);
-      setError(event.error);
+      setError(toError(event.error, 'Unknown global error'));
+      event.preventDefault();
+    };
+
+    const handleUnhandledRejection = (event) => {
+      // AbortError is the normal result of canceling stale navigations and
+      // requests. Every other unhandled rejection is an unexpected async
+      // failure that React error boundaries cannot catch.
+      if (event.reason?.name === 'AbortError') {
+        return;
+      }
+      console.error('Unhandled promise rejection:', event.reason);
+      setError(toError(event.reason, 'Unhandled promise rejection'));
       event.preventDefault();
     };
 
     window.addEventListener('error', handleGlobalError);
-    return () => window.removeEventListener('error', handleGlobalError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    return () => {
+      window.removeEventListener('error', handleGlobalError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
   }, []);
 
   if (error) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
-          <h1 className="text-danger text-2xl font-bold mb-4">Global Error</h1>
-          <div className="bg-gray-100 p-3 rounded-md overflow-auto mb-4">
-            <pre className="text-sm">{error.toString()}</pre>
-            {error.stack && (
-              <details className="mt-2">
-                <summary className="cursor-pointer text-blue-600">Stack trace</summary>
-                <pre className="text-xs mt-2">{error.stack}</pre>
-              </details>
-            )}
-          </div>
-          <p>Try refreshing the page or check your browser console for more details.</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Refresh Page
-          </button>
-        </div>
-      </div>
-    );
+    return <ErrorScreen />;
   }
 
   return (

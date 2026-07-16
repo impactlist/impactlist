@@ -7,6 +7,11 @@
 // script imports it under Node, and the test harness copies it into temp
 // workspaces.
 
+const validatePositiveCalculationValue = (value, label) => {
+  if (value <= 0) return `${label} must be positive`;
+  return null;
+};
+
 export const GLOBAL_PARAMETER_RULES = {
   discountRate: {
     // Values are decimal fractions (0.02 = 2%).
@@ -25,16 +30,16 @@ export const GLOBAL_PARAMETER_RULES = {
     },
   },
   timeLimit: {
-    validate: (value) => (value <= 0 ? 'Time limit must be positive' : null),
+    validate: (value) => validatePositiveCalculationValue(value, 'Time limit'),
   },
   populationLimit: {
-    validate: (value) => (value <= 0 ? 'Population limit must be positive' : null),
+    validate: (value) => validatePositiveCalculationValue(value, 'Population limit'),
   },
   currentPopulation: {
-    validate: (value) => (value <= 0 ? 'Current population must be positive' : null),
+    validate: (value) => validatePositiveCalculationValue(value, 'Current population'),
   },
   yearsPerLife: {
-    validate: (value) => (value <= 0 ? 'Years per life must be positive' : null),
+    validate: (value) => validatePositiveCalculationValue(value, 'Years per life'),
   },
 };
 

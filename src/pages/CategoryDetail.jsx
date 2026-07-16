@@ -17,6 +17,7 @@ import { donations } from '../data/generatedData';
 import MarkdownContent from '../components/shared/MarkdownContent';
 import NotFound from './NotFound';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import { CAUSES_PATH } from '../utils/causeRoutes';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();
@@ -74,7 +75,7 @@ const CategoryDetail = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <BackButton />
+      <BackButton fallbackTo={CAUSES_PATH} />
 
       <motion.div
         className="impact-page__container"

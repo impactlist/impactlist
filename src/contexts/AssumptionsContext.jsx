@@ -32,15 +32,28 @@ export const useAssumptions = () => {
 export const AssumptionsProvider = ({ children }) => {
   const [userAssumptions, setUserAssumptions] = useState(() => {
     const localStorage = getLocalStorage();
-    localStorage.removeItem('customCostPerLifeValues');
+    try {
+      localStorage.removeItem('customCostPerLifeValues');
 
-    if (localStorage.getItem(SESSION_STORAGE_CLEANUP_KEY) !== '1') {
-      localStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
-      localStorage.removeItem(LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
-      localStorage.setItem(SESSION_STORAGE_CLEANUP_KEY, '1');
+      if (localStorage.getItem(SESSION_STORAGE_CLEANUP_KEY) !== '1') {
+        localStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
+        localStorage.removeItem(LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+        localStorage.setItem(SESSION_STORAGE_CLEANUP_KEY, '1');
+      }
+    } catch (error) {
+      // Storage can be revoked after the availability probe (privacy-setting
+      // changes, sandboxed iframes, WebViews). Legacy cleanup is best-effort;
+      // it must never stop the assumptions provider from mounting.
+      console.error('Could not clean up legacy assumptions storage', error);
     }
 
-    const savedData = getSessionStorage().getItem(CUSTOM_EFFECTS_DATA_KEY);
+    let savedData;
+    try {
+      savedData = getSessionStorage().getItem(CUSTOM_EFFECTS_DATA_KEY);
+    } catch (error) {
+      console.error('Could not read stored assumptions; using defaults', error);
+      return null;
+    }
     if (!savedData) return null;
 
     try {
@@ -50,7 +63,11 @@ export const AssumptionsProvider = ({ children }) => {
       // the whole app on every load of this tab (refreshing can't fix
       // persisted storage). Discard it loudly and fall back to defaults.
       console.error('Discarding corrupted stored assumptions', error);
-      getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      try {
+        getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      } catch (removeError) {
+        console.error('Could not remove corrupted stored assumptions', removeError);
+      }
       return null;
     }
   });
@@ -61,10 +78,18 @@ export const AssumptionsProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    if (userAssumptions) {
-      getSessionStorage().setItem(CUSTOM_EFFECTS_DATA_KEY, JSON.stringify(userAssumptions));
-    } else {
-      getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
+    try {
+      if (userAssumptions) {
+        getSessionStorage().setItem(CUSTOM_EFFECTS_DATA_KEY, JSON.stringify(userAssumptions));
+      } else {
+        getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
+      }
+    } catch (error) {
+      // Working assumptions remain valid in React state even when session
+      // persistence fails (quota exhaustion or storage revoked mid-session).
+      // Throwing from this effect would replace the usable app with its error
+      // boundary merely because persistence — an enhancement — is unavailable.
+      console.error('Could not persist working assumptions for this tab', error);
     }
   }, [userAssumptions]);
 

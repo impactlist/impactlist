@@ -1,15 +1,27 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import ModalShell, { ModalHeader } from './shared/ModalShell';
 import CurrencyInput from './shared/CurrencyInput';
-import { getRecipientId, getCurrentYear } from '../utils/donationDataHelpers';
+import {
+  getRecipientId,
+  getCurrentYear,
+  MIN_CALCULATOR_DONATION_YEAR,
+  parseCalculatorDonationYear,
+} from '../utils/donationDataHelpers';
 import { getCostPerLifeFromCombined, getCostPerLifeForRecipientFromCombined } from '../utils/assumptionsDataHelpers';
 import { formatLives, formatCurrency } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import FormattedScientificValue from './shared/FormattedScientificValue';
+import { normalizeFormattedDecimalInput } from '../utils/numberParsing';
 
-// Clean a number input value (user-typed strings may carry commas)
-const cleanNumberInput = (value) => {
-  return value.toString().replace(/,/g, '');
+const parseFiniteNumberInput = (raw) => {
+  if (raw === null || raw === undefined || raw === '') return null;
+  const normalized = normalizeFormattedDecimalInput(raw, {
+    allowNegative: true,
+    allowLeadingCurrencySign: true,
+  });
+  if (!normalized || ['', '.', '-', '-.'].includes(normalized.rawText)) return null;
+  const parsed = Number(normalized.rawText);
+  return Number.isFinite(parsed) ? parsed : null;
 };
 
 // A custom cost per life applies only when it parses to a finite nonzero
@@ -17,10 +29,19 @@ const cleanNumberInput = (value) => {
 // Infinity are invalid). ONE predicate feeds submit validation, the lives
 // preview, and the cost readout so the surfaces can never disagree.
 const parseCustomCostPerLife = (raw) => {
-  if (!raw) return null;
-  const parsed = Number(cleanNumberInput(raw));
-  return Number.isFinite(parsed) && parsed !== 0 ? parsed : null;
+  const parsed = parseFiniteNumberInput(raw);
+  return parsed !== null && parsed !== 0 ? parsed : null;
 };
+
+const parseSpecificDonationAmount = (raw) => {
+  const parsed = parseFiniteNumberInput(raw);
+  return parsed !== null && parsed > 0 ? parsed : null;
+};
+
+const createSpecificDonationId = () =>
+  typeof globalThis.crypto?.randomUUID === 'function'
+    ? globalThis.crypto.randomUUID()
+    : `donation-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
 const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null }) => {
   const { combinedAssumptions } = useAssumptions();
@@ -36,10 +57,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
   // Helper function to get a valid year for calculations
   const getValidYearForCalculation = useCallback(() => {
-    const yearNum = parseInt(donationYear, 10);
-    const currentYear = getCurrentYear();
-    // Use current year as fallback if year is invalid or in the future
-    return !donationYear || isNaN(yearNum) || yearNum < 1900 || yearNum > currentYear ? currentYear : yearNum;
+    // Use current year as fallback while the draft is invalid or incomplete.
+    return parseCalculatorDonationYear(donationYear) ?? getCurrentYear();
   }, [donationYear]);
 
   // References for search input and dropdown
@@ -106,7 +125,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         setIsExistingRecipient(false);
         setCustomRecipientName(editingDonation.recipientName);
         setSelectedCategory(editingDonation.categoryId);
-        const editingYear = editingDonation.date ? parseInt(editingDonation.date, 10) : getCurrentYear();
+        const editingYear = parseCalculatorDonationYear(editingDonation.date) ?? getCurrentYear();
         if (editingDonation.customCostPerLife !== undefined && editingDonation.customCostPerLife !== null) {
           setCustomCostPerLife(editingDonation.customCostPerLife.toString());
           setHasEditedCustomCostPerLife(true);
@@ -248,19 +267,18 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
     // Validate amount — finite only, matching parseDonationAmount ('1e999'
     // parses to Infinity and is not a valid donation).
-    const cleanedAmount = cleanNumberInput(amount);
-    const amountNum = Number(cleanedAmount);
-    if (!cleanedAmount || !Number.isFinite(amountNum) || amountNum <= 0) {
+    const amountNum = parseSpecificDonationAmount(amount);
+    if (amountNum === null) {
       newErrors.amount = 'Please enter a valid amount';
     }
 
     // Validate year
-    const yearNum = parseInt(donationYear, 10);
+    const yearNum = parseCalculatorDonationYear(donationYear);
     const currentYear = getCurrentYear();
-    if (!donationYear || isNaN(yearNum)) {
-      newErrors.year = 'Please enter a valid year';
-    } else if (yearNum < 1900 || yearNum > currentYear) {
-      newErrors.year = `Year must be between 1900 and ${currentYear}`;
+    if (yearNum === null) {
+      newErrors.year = /^\d{4}$/.test(donationYear)
+        ? `Year must be between ${MIN_CALCULATOR_DONATION_YEAR} and ${currentYear}`
+        : 'Please enter a valid four-digit year';
     }
 
     // For custom recipients, validate category
@@ -269,14 +287,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         newErrors.category = 'Please select a cause';
       }
 
-      const cleanedCustomCostPerLife = cleanNumberInput(customCostPerLife);
-      if (!cleanedCustomCostPerLife) {
+      const parsedCustomCostPerLife = parseFiniteNumberInput(customCostPerLife);
+      if (parsedCustomCostPerLife === null) {
         newErrors.customCostPerLife = 'Please enter a valid cost per life';
       } else if (parseCustomCostPerLife(customCostPerLife) === null) {
-        newErrors.customCostPerLife =
-          Number(cleanedCustomCostPerLife) === 0
-            ? 'Cost per life cannot be zero'
-            : 'Please enter a valid cost per life';
+        newErrors.customCostPerLife = 'Cost per life cannot be zero';
       }
     }
 
@@ -287,17 +302,17 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
     if (!hasErrors) {
       const donationData = {
-        id: editingDonation?.id || new Date().getTime().toString(),
-        recipientName: isExistingRecipient ? selectedRecipient.name : customRecipientName,
-        amount: Number(cleanNumberInput(amount)),
-        date: donationYear, // Store as string year (e.g., "2020")
+        id: editingDonation?.id || createSpecificDonationId(),
+        recipientName: isExistingRecipient ? selectedRecipient.name : customRecipientName.trim(),
+        amount: amountNum,
+        date: String(yearNum), // Store as canonical string year (e.g., "2020")
         isCustomRecipient: !isExistingRecipient,
       };
 
       // Add category and effectiveness data for custom recipients
       if (!isExistingRecipient) {
         donationData.categoryId = selectedCategory;
-        donationData.customCostPerLife = Number(cleanNumberInput(customCostPerLife));
+        donationData.customCostPerLife = parseCustomCostPerLife(customCostPerLife);
       }
 
       onSave(donationData);
@@ -310,8 +325,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   // meaningful to preview (invalid amount, invalid custom cost, no selection)
   // — a suppressed preview beats a confidently wrong one.
   const calculateLivesSaved = () => {
-    const amountNum = Number(cleanNumberInput(amount));
-    if (!amount || !Number.isFinite(amountNum) || amountNum <= 0) {
+    const amountNum = parseSpecificDonationAmount(amount);
+    if (amountNum === null) {
       return null;
     }
 
@@ -319,7 +334,6 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       throw new Error('combinedAssumptions is required but does not exist.');
     }
 
-    const cleanedAmount = Number(cleanNumberInput(amount));
     const yearToUse = getValidYearForCalculation();
 
     if (isExistingRecipient && selectedRecipient) {
@@ -331,7 +345,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
 
       // Get actual cost per life for this recipient using combined assumptions
       const recipientCostPerLife = getCostPerLifeForRecipientFromCombined(combinedAssumptions, recipientId, yearToUse);
-      return cleanedAmount / recipientCostPerLife;
+      const result = amountNum / recipientCostPerLife;
+      return Number.isFinite(result) ? result : null;
     } else if (!isExistingRecipient && selectedCategory) {
       // Submit requires a finite nonzero cost (the field arrives prefilled
       // with the cause default), so an empty OR invalid draft has nothing
@@ -342,7 +357,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
         return null;
       }
 
-      return cleanedAmount / customCost;
+      const result = amountNum / customCost;
+      return Number.isFinite(result) ? result : null;
     }
 
     return null;
@@ -604,6 +620,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
               value={donationYear}
               onChange={(e) => setDonationYear(e.target.value)}
               placeholder={getCurrentYear().toString()}
+              maxLength={4}
+              title={`Year from ${MIN_CALCULATOR_DONATION_YEAR} to ${getCurrentYear()}`}
               className="impact-field__input"
             />
           </div>

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { categoriesById, globalParameters, recipientsById } from '../data/generatedData.js';
 import { normalizeUserAssumptions } from './assumptionsNormalization.js';
 
 // Wrapper-aware pruning: for a recipient that ships default overrides /
@@ -65,6 +66,24 @@ describe('normalizeUserAssumptions recipient-default awareness', () => {
     expect(normalizedEffect(result, 'customized').multipliers).toEqual({ windowLength: 1 });
   });
 
+  it('keeps a base-equal override that replaces a recipient default multiplier', () => {
+    const result = normalizeUserAssumptions(
+      recipientEffectAssumptions('customized', { overrides: { windowLength: 10 } }),
+      buildDefaults()
+    );
+
+    expect(normalizedEffect(result, 'customized').overrides).toEqual({ windowLength: 10 });
+  });
+
+  it('keeps a 1x multiplier that replaces a recipient default override', () => {
+    const result = normalizeUserAssumptions(
+      recipientEffectAssumptions('customized', { multipliers: { costPerQALY: 1 } }),
+      buildDefaults()
+    );
+
+    expect(normalizedEffect(result, 'customized').multipliers).toEqual({ costPerQALY: 1 });
+  });
+
   it('still prunes a multiplier of 1 when the recipient has no default multiplier', () => {
     const result = normalizeUserAssumptions(
       recipientEffectAssumptions('plain', { multipliers: { windowLength: 1 } }),
@@ -121,5 +140,193 @@ describe('normalizeUserAssumptions recipient-default awareness', () => {
         'plain'
       ).disabled
     ).toBe(true);
+  });
+});
+
+describe('normalizeUserAssumptions production recipient resets', () => {
+  const productionDefaults = {
+    globalParameters,
+    categories: categoriesById,
+    recipients: recipientsById,
+  };
+
+  it('keeps Future of Life Institute switching its default 2x multiplier to a base-value override', () => {
+    const categoryId = 'ai-risk';
+    const recipientId = 'future-of-life-institute';
+    const effectId = 'population';
+    const field = 'costPerMicroprobability';
+    const baseValue = categoriesById[categoryId].effects.find((effect) => effect.effectId === effectId)[field];
+
+    expect(
+      recipientsById[recipientId].categories[categoryId].effects.find((effect) => effect.effectId === effectId)
+        .multipliers[field]
+    ).toBe(2);
+
+    const result = normalizeUserAssumptions(
+      {
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [categoryId]: { effects: [{ effectId, overrides: { [field]: baseValue } }] },
+            },
+          },
+        },
+      },
+      productionDefaults
+    );
+
+    expect(result.recipients[recipientId].categories[categoryId].effects[0].overrides).toEqual({
+      [field]: baseValue,
+    });
+  });
+
+  it('keeps Internet Archive switching its default override to a 1x category multiplier', () => {
+    const categoryId = 'science-tech';
+    const recipientId = 'internet-archive';
+    const effectId = 'standard';
+    const field = 'costPerQALY';
+
+    expect(
+      recipientsById[recipientId].categories[categoryId].effects.find((effect) => effect.effectId === effectId)
+        .overrides[field]
+    ).toBe(6000);
+
+    const result = normalizeUserAssumptions(
+      {
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [categoryId]: { effects: [{ effectId, multipliers: { [field]: 1 } }] },
+            },
+          },
+        },
+      },
+      productionDefaults
+    );
+
+    expect(result.recipients[recipientId].categories[categoryId].effects[0].multipliers).toEqual({ [field]: 1 });
+  });
+});
+
+describe('normalizeUserAssumptions semantic validation', () => {
+  it('rejects global parameter values that would violate calculation invariants', () => {
+    const defaults = {
+      ...buildDefaults(),
+      globalParameters: {
+        discountRate: 0.05,
+        populationGrowthRate: 0.01,
+        timeLimit: 100,
+        populationLimit: 2,
+        currentPopulation: 8_000_000_000,
+        yearsPerLife: 80,
+      },
+    };
+
+    expect(() => normalizeUserAssumptions({ globalParameters: { discountRate: -0.01 } }, defaults)).toThrow(
+      /discount rate cannot be negative/i
+    );
+    expect(() => normalizeUserAssumptions({ globalParameters: { discountRate: 1.01 } }, defaults)).toThrow(
+      /discount rate must be no greater than 100%/i
+    );
+    expect(() => normalizeUserAssumptions({ globalParameters: { populationGrowthRate: -1 } }, defaults)).toThrow(
+      /population growth rate cannot be -100% or less/i
+    );
+    expect(() => normalizeUserAssumptions({ globalParameters: { timeLimit: 0 } }, defaults)).toThrow(
+      /time limit must be positive/i
+    );
+    expect(() => normalizeUserAssumptions({ globalParameters: { populationLimit: -2 } }, defaults)).toThrow(
+      /population limit must be positive/i
+    );
+    expect(normalizeUserAssumptions({ globalParameters: { yearsPerLife: 5e-324 } }, defaults)).toEqual({
+      globalParameters: { yearsPerLife: 5e-324 },
+    });
+    expect(normalizeUserAssumptions({ globalParameters: { currentPopulation: Number.MAX_VALUE } }, defaults)).toEqual({
+      globalParameters: { currentPopulation: Number.MAX_VALUE },
+    });
+  });
+
+  it('rejects category effect values that would crash the calculation layer', () => {
+    const buildCategoryEdit = (field, value) => ({
+      categories: {
+        health: { effects: [{ effectId: 'health-effect', [field]: value }] },
+      },
+    });
+    const defaults = buildDefaults();
+
+    expect(() => normalizeUserAssumptions(buildCategoryEdit('costPerQALY', 0), defaults)).toThrow(
+      /costPerQALY.*cannot be zero/
+    );
+    expect(() => normalizeUserAssumptions(buildCategoryEdit('startTime', -1), defaults)).toThrow(
+      /startTime.*must be non-negative/
+    );
+    expect(() => normalizeUserAssumptions(buildCategoryEdit('windowLength', 0), defaults)).toThrow(
+      /windowLength.*must be positive/
+    );
+    expect(normalizeUserAssumptions(buildCategoryEdit('costPerQALY', 5e-324), defaults)).toEqual(
+      buildCategoryEdit('costPerQALY', 5e-324)
+    );
+
+    expect(normalizeUserAssumptions(buildCategoryEdit('costPerQALY', -25), defaults)).toEqual(
+      buildCategoryEdit('costPerQALY', -25)
+    );
+  });
+
+  it('rejects invalid recipient overrides, multipliers, and conflicting modes', () => {
+    const defaults = buildDefaults();
+
+    expect(() =>
+      normalizeUserAssumptions(recipientEffectAssumptions('plain', { overrides: { windowLength: 0 } }), defaults)
+    ).toThrow(/windowLength.*must be positive/);
+
+    expect(() =>
+      normalizeUserAssumptions(recipientEffectAssumptions('plain', { multipliers: { costPerQALY: 0 } }), defaults)
+    ).toThrow(/multiplier.*costPerQALY.*cannot be zero/);
+
+    expect(() =>
+      normalizeUserAssumptions(recipientEffectAssumptions('plain', { multipliers: { windowLength: -1 } }), defaults)
+    ).toThrow(/windowLength.*must be positive/);
+
+    expect(() =>
+      normalizeUserAssumptions(recipientEffectAssumptions('plain', { multipliers: { windowLength: 1e308 } }), defaults)
+    ).toThrow(/windowLength.*non-finite value/);
+
+    expect(() =>
+      normalizeUserAssumptions(
+        recipientEffectAssumptions('plain', {
+          overrides: { costPerQALY: 50 },
+          multipliers: { costPerQALY: 2 },
+        }),
+        defaults
+      )
+    ).toThrow(/cannot have both an override and a multiplier/);
+  });
+
+  it('allows large finite category edits through built-in recipient wrappers', () => {
+    const defaults = buildDefaults();
+    defaults.recipients.plain.categories.health.effects = [
+      { effectId: 'health-effect', multipliers: { costPerQALY: 2 } },
+    ];
+    const categoryCost = 7e15;
+    const assumptions = {
+      categories: {
+        health: { effects: [{ effectId: 'health-effect', costPerQALY: categoryCost }] },
+      },
+      recipients: {
+        plain: {
+          categories: {
+            health: { effects: [{ effectId: 'health-effect', overrides: { windowLength: 20 } }] },
+          },
+        },
+      },
+    };
+
+    expect(normalizeUserAssumptions(assumptions, defaults)).toEqual(assumptions);
+
+    const overflowingAssumptions = {
+      categories: {
+        health: { effects: [{ effectId: 'health-effect', costPerQALY: 1e308 }] },
+      },
+    };
+    expect(() => normalizeUserAssumptions(overflowingAssumptions, defaults)).toThrow(/produces a non-finite value/);
   });
 });

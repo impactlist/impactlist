@@ -210,6 +210,14 @@ describe('assumptionsDataHelpers', () => {
     expect(combined.getAllCategories().some((category) => category.id === 'health')).toBe(true);
   });
 
+  it('does not expose inherited object keys as categories or recipients', () => {
+    const combined = createCombinedAssumptions(buildDefaults(), null);
+
+    expect(combined.getCategoryById('__proto__')).toBeNull();
+    expect(combined.getCategoryById('constructor')).toBeNull();
+    expect(combined.getRecipientById('toString')).toBeNull();
+  });
+
   it('returns Infinity and zero lives for recipients whose effects are all outside timeLimit', () => {
     const combined = createCombinedAssumptions(buildDefaults(), null);
 
@@ -223,6 +231,31 @@ describe('assumptionsDataHelpers', () => {
 
     expect(costPerLife).toBe(Infinity);
     expect(livesSaved).toBe(0);
+  });
+
+  it('accepts a disabled-only recipient edit after it is merged into a resolved effect', () => {
+    const combined = createCombinedAssumptions(buildDefaults(), {
+      recipients: {
+        recipientA: {
+          categories: {
+            health: {
+              effects: [{ effectId: 'health-effect', disabled: true }],
+            },
+          },
+        },
+      },
+    });
+
+    expect(() => getCostPerLifeForRecipientFromCombined(combined, 'recipientA', 2020)).not.toThrow();
+    expect(getCostPerLifeForRecipientFromCombined(combined, 'recipientA', 2020)).toBe(Infinity);
+    expect(
+      calculateLivesSavedForDonationFromCombined(combined, {
+        recipientId: 'recipientA',
+        amount: 100000,
+        credit: 1,
+        date: '2020-01-01',
+      })
+    ).toBe(0);
   });
 
   it('throws when recipient category weights do not sum to 1', () => {

@@ -75,6 +75,11 @@ const useRecipientEffectsDraft = ({
     }
     lastBaselineSignatureRef.current = baselineSignature;
     setEffects(baselineEffects);
+    // The replacement baseline comes from normalized applied assumptions and
+    // is known-valid. Errors belong to the superseded stringly draft; keeping
+    // them would leave valid rehydrated fields marked invalid and Apply
+    // disabled after a review-row revert or external assumptions load.
+    setErrors({});
   }, [baselineSignature, baselineEffects]);
 
   const toggleEffectDisabled = (effectIndex) => {

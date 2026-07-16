@@ -11,12 +11,15 @@ import {
 describe('shareAssumptions utils', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('slugify normalizes text for URL usage', () => {
     expect(slugify('  My Optimistic Scenario!  ')).toBe('my-optimistic-scenario');
     expect(isValidSlug('my-optimistic-scenario')).toBe(true);
     expect(isValidSlug('bad slug')).toBe(false);
+    expect(isValidSlug('abc123def456')).toBe(false);
+    expect(isValidSlug('abc123-def456')).toBe(true);
   });
 
   it('normalizeSlugInput converts non-alphanumeric input to dashes', () => {
@@ -106,5 +109,46 @@ describe('shareAssumptions utils', () => {
     await expect(fetchSharedAssumptions('bad-shape')).rejects.toMatchObject({
       code: 'invalid_response',
     });
+  });
+
+  it('aborts a hung request and returns a useful timeout error', async () => {
+    vi.useFakeTimers();
+    vi.spyOn(globalThis, 'fetch').mockImplementation((_url, { signal }) => {
+      return new Promise((_resolve, reject) => {
+        signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+      });
+    });
+
+    const pendingRequest = fetchSharedAssumptions('hung-request');
+    const rejection = expect(pendingRequest).rejects.toMatchObject({
+      status: 408,
+      code: 'request_timeout',
+      message: 'The request timed out. Check your connection and try again.',
+    });
+
+    await vi.advanceTimersByTimeAsync(15_000);
+    await rejection;
+  });
+
+  it('preserves a caller cancellation as AbortError instead of reporting a timeout', async () => {
+    const callerController = new globalThis.AbortController();
+    vi.spyOn(globalThis, 'fetch').mockImplementation((_url, { signal }) => {
+      return new Promise((_resolve, reject) => {
+        signal.addEventListener(
+          'abort',
+          () => {
+            const error = new Error('canceled');
+            error.name = 'AbortError';
+            reject(error);
+          },
+          { once: true }
+        );
+      });
+    });
+
+    const pendingRequest = fetchSharedAssumptions('canceled-request', { signal: callerController.signal });
+    callerController.abort();
+
+    await expect(pendingRequest).rejects.toMatchObject({ name: 'AbortError' });
   });
 });

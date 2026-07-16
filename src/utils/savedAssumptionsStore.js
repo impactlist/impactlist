@@ -103,24 +103,36 @@ const createId = () => {
 };
 
 const readJson = (key) => {
-  const raw = getLocalStorage().getItem(key);
-  if (!raw) {
-    return null;
-  }
-
   try {
+    const raw = getLocalStorage().getItem(key);
+    if (!raw) {
+      return null;
+    }
     return JSON.parse(raw);
-  } catch {
+  } catch (error) {
+    // Corrupt JSON and storage access revoked after the initial probe are both
+    // persisted-input failures. Treat the library as unavailable/empty for
+    // this read instead of crashing every component that renders a selector.
+    console.error(`Could not read saved assumptions storage key "${key}"`, error);
     return null;
   }
 };
 
 const readMigrationStatus = () => {
-  return getLocalStorage().getItem(SAVED_ASSUMPTIONS_MIGRATION_KEY) === '1';
+  try {
+    return getLocalStorage().getItem(SAVED_ASSUMPTIONS_MIGRATION_KEY) === '1';
+  } catch (error) {
+    console.error('Could not read saved assumptions migration status', error);
+    return false;
+  }
 };
 
 const writeMigrationStatus = () => {
-  getLocalStorage().setItem(SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
+  try {
+    getLocalStorage().setItem(SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
+  } catch (error) {
+    console.error('Could not persist saved assumptions migration status', error);
+  }
 };
 
 const pruneToSerializableAssumptions = (assumptions) => {
@@ -532,27 +544,39 @@ export const getSavedAssumptions = () => {
 };
 
 export const getActiveSavedAssumptionsId = () => {
-  const raw = getActiveEntryStorage().getItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
-  return raw && raw.trim().length > 0 ? raw.trim() : null;
+  try {
+    const raw = getActiveEntryStorage().getItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+    return raw && raw.trim().length > 0 ? raw.trim() : null;
+  } catch (error) {
+    console.error('Could not read active saved assumptions id', error);
+    return null;
+  }
 };
 
 export const setActiveSavedAssumptionsId = (id, { emitChange = true } = {}) => {
-  if (!id) {
-    getActiveEntryStorage().removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
-    if (emitChange) {
-      emitSavedAssumptionsChanged();
+  try {
+    if (!id) {
+      getActiveEntryStorage().removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+    } else {
+      getActiveEntryStorage().setItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY, String(id));
     }
-    return;
+  } catch (error) {
+    // The selected entry is UI metadata; the assumptions themselves remain
+    // applied in React state even if session storage is revoked or full.
+    console.error('Could not persist active saved assumptions id', error);
   }
 
-  getActiveEntryStorage().setItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY, String(id));
   if (emitChange) {
     emitSavedAssumptionsChanged();
   }
 };
 
 export const clearActiveSavedAssumptionsId = ({ emitChange = true } = {}) => {
-  getActiveEntryStorage().removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+  try {
+    getActiveEntryStorage().removeItem(ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
+  } catch (error) {
+    console.error('Could not clear active saved assumptions id', error);
+  }
   if (emitChange) {
     emitSavedAssumptionsChanged();
   }

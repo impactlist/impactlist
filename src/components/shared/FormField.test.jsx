@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import FormField from './FormField';
 
@@ -41,5 +41,15 @@ describe('FormField', () => {
     const input = screen.getByRole('textbox', { name: 'Cost per QALY' });
     expect(input).toHaveAttribute('aria-invalid', 'false');
     expect(input).not.toHaveAttribute('aria-errormessage');
+  });
+
+  it('preserves malformed comma placement for validation instead of reinterpreting it', () => {
+    const onChange = vi.fn();
+    renderField({ value: '', onChange });
+
+    const input = screen.getByRole('textbox', { name: 'Cost per QALY' });
+    fireEvent.input(input, { target: { value: '12,34' }, inputType: 'insertFromPaste' });
+
+    expect(onChange).toHaveBeenLastCalledWith('12,34');
   });
 });

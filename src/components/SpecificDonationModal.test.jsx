@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SpecificDonationModal from './SpecificDonationModal';
 
@@ -31,6 +31,12 @@ vi.mock('../contexts/AssumptionsContext', () => ({
 vi.mock('../utils/donationDataHelpers', () => ({
   getRecipientId: (recipient) => recipient.id,
   getCurrentYear: () => 2026,
+  MIN_CALCULATOR_DONATION_YEAR: 1900,
+  parseCalculatorDonationYear: (value) => {
+    if (typeof value !== 'string' || !/^\d{4}$/.test(value)) return null;
+    const year = Number(value);
+    return year >= 1900 && year <= 2026 ? year : null;
+  },
 }));
 
 vi.mock('../utils/assumptionsDataHelpers', () => ({
@@ -129,6 +135,32 @@ describe('SpecificDonationModal', () => {
     expect(screen.getByText('Please enter a valid amount')).toBeInTheDocument();
   });
 
+  it('rejects malformed grouping without imposing a finite amount ceiling', async () => {
+    const user = userEvent.setup();
+    const onSave = vi.fn();
+
+    render(<SpecificDonationModal isOpen={true} onClose={vi.fn()} onSave={onSave} />);
+
+    const search = screen.getByLabelText('Search for a recipient');
+    await user.type(search, 'Against');
+    await user.click(await screen.findByRole('option', { name: 'Against Malaria Foundation' }));
+
+    const amountInput = screen.getByLabelText('Donation Amount');
+    amountInput.focus();
+    fireEvent.input(amountInput, { target: { value: '12,34' }, inputType: 'insertFromPaste' });
+    expect(amountInput).toHaveValue('12,34');
+    await user.click(screen.getByRole('button', { name: 'Add Donation' }));
+    expect(onSave).not.toHaveBeenCalled();
+    expect(screen.getByText('Please enter a valid amount')).toBeInTheDocument();
+
+    await user.clear(amountInput);
+    fireEvent.input(amountInput, { target: { value: '1e20' }, inputType: 'insertFromPaste' });
+    expect(amountInput).toHaveValue('1e20');
+    await user.click(screen.getByRole('button', { name: 'Add Donation' }));
+
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ amount: 1e20 }));
+  });
+
   it('prefills a rounded cost per life instead of raw float dust, and leaves ∞ empty', async () => {
     mockGetCostPerLifeFromCombined.mockImplementation((_combinedAssumptions, categoryId) => {
       if (categoryId === 'health') return 1935.5625942879883;
@@ -190,6 +222,26 @@ describe('SpecificDonationModal', () => {
     await user.type(costInput, '-2500');
     expect(await screen.findByText(/Estimated lives saved/)).toBeInTheDocument();
     expect(screen.getByText(/Recipient cost per life/)).toBeInTheDocument();
+  });
+
+  it('accepts a finite nonzero custom cost without imposing a magnitude floor', async () => {
+    const user = userEvent.setup();
+    const onSave = vi.fn();
+
+    render(<SpecificDonationModal isOpen={true} onClose={vi.fn()} onSave={onSave} />);
+
+    await user.click(screen.getByRole('button', { name: 'New Recipient' }));
+    await user.type(screen.getByLabelText('Recipient Name'), 'Extreme Charity');
+    await user.selectOptions(screen.getByLabelText('Cause'), 'health');
+    await user.type(screen.getByLabelText('Donation Amount'), '1000');
+
+    const costInput = screen.getByLabelText('Cost per life');
+    fireEvent.input(costInput, {
+      target: { value: `0.${'0'.repeat(50)}1` },
+      inputType: 'insertFromPaste',
+    });
+    await user.click(screen.getByRole('button', { name: 'Add Donation' }));
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ customCostPerLife: Number(`0.${'0'.repeat(50)}1`) }));
   });
 
   it('converts legacy multiplier donations into an editable cost per life', async () => {

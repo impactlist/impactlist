@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { formatLives, formatCurrency } from '../../utils/formatters';
+import { formatLives, formatCurrency, formatNumberWithCommas } from '../../utils/formatters';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
 import useFormattedNumberInput from '../../hooks/useFormattedNumberInput';
+import { getSanitizedInputCaretPosition, normalizeFormattedNumberEdit } from '../../utils/numberParsing';
 
 /**
  * One cause's amount input. Owns its display state via useFormattedNumberInput
@@ -18,43 +19,74 @@ const DonationAmountInput = ({ categoryId, amount, onDonationChange }) => {
     (formattedValue, rawValue) => onDonationChange(categoryId, rawValue.replace(/,/g, '')),
     [categoryId, onDonationChange]
   );
-  const { inputRef, localValue, handleChange } = useFormattedNumberInput(amount, emitChange);
+  const { inputRef, localValue, setLocalValue, handleChange } = useFormattedNumberInput(amount, emitChange);
+  const [inputError, setInputError] = useState(false);
 
   const handleGuardedChange = (event) => {
     const raw = event.target.value;
-    // One sanitization path feeds BOTH the visible text and the stored value:
-    // the field must never display characters (minus signs, 'e', '$') that
-    // the calculation would silently ignore.
-    const sanitized = raw.replace(/[^0-9.,]/g, '');
+    // Accept an optional currency symbol when pasting, but reject any other
+    // unsupported character as a whole. Removing arbitrary characters is
+    // dangerous for money: for example, `1e309` must not become `$1,309`.
+    const normalizedAmount = normalizeFormattedNumberEdit(localValue, raw, event.nativeEvent?.inputType, {
+      allowNegative: false,
+      allowLeadingCurrencySign: true,
+    });
 
-    // Ignore edits that would introduce a second decimal point — the value
-    // would be unparseable and silently count as $0.
-    if ((sanitized.replace(/,/g, '').match(/\./g) || []).length > 1) {
+    if (!normalizedAmount) {
+      // Preserve the invalid draft so it cannot lose a character and become a
+      // different valid amount. The parent rejects it, leaving totals based on
+      // the last valid value. The error copy makes that visible when the prior
+      // value was a positive amount that is still included in the totals.
+      setLocalValue(raw);
+      onDonationChange(categoryId, raw);
+      setInputError(true);
       return;
     }
+    setInputError(false);
+    const { displayText: sanitized } = normalizedAmount;
 
     if (sanitized !== raw) {
-      // Rewrite the DOM value before the shared formatter reads it, keeping
-      // the caret at the same logical spot (minus the characters dropped).
       const caret = event.target.selectionStart ?? sanitized.length;
-      const keptBeforeCaret = raw.slice(0, caret).replace(/[^0-9.,]/g, '').length;
+      const keptBeforeCaret = getSanitizedInputCaretPosition(raw, sanitized, caret);
       event.target.value = sanitized;
       event.target.setSelectionRange(keptBeforeCaret, keptBeforeCaret);
     }
     handleChange(event);
   };
 
+  const handleBlur = () => {
+    if (inputError) {
+      setLocalValue(formatNumberWithCommas(amount));
+      setInputError(false);
+    }
+  };
+
+  const errorId = `donation-${categoryId}-error`;
+  const previousAmount = Number(amount.replace(/,/g, ''));
+  const hasCountedPreviousAmount = Number.isFinite(previousAmount) && previousAmount > 0;
+
   return (
-    <input
-      ref={inputRef}
-      id={`donation-${categoryId}`}
-      type="text"
-      inputMode="decimal"
-      value={localValue}
-      onChange={handleGuardedChange}
-      className="calculator-cause-card__input w-full rounded px-2 py-0.5 text-sm leading-tight"
-      placeholder="0"
-    />
+    <div className="w-full">
+      <input
+        ref={inputRef}
+        id={`donation-${categoryId}`}
+        type="text"
+        inputMode="decimal"
+        value={localValue}
+        onChange={handleGuardedChange}
+        onBlur={handleBlur}
+        aria-invalid={inputError}
+        aria-errormessage={inputError ? errorId : undefined}
+        className="calculator-cause-card__input w-full rounded px-2 py-0.5 text-sm leading-tight"
+        placeholder="0"
+      />
+      {inputError && (
+        <p id={errorId} className="impact-field__error mt-1 text-xs" role="alert">
+          Enter a positive finite amount using decimal or scientific notation.
+          {hasCountedPreviousAmount && ' The previous amount is still included in the totals.'}
+        </p>
+      )}
+    </div>
   );
 };
 

@@ -93,6 +93,27 @@ describe('/api/health', () => {
     expect(errorSpy).toHaveBeenCalledTimes(1);
   });
 
+  it('returns 503 when Redis responds but fails the health assertions', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.mocked(runRedisCommand)
+      .mockResolvedValueOnce(1) // rate-limit EVAL
+      .mockResolvedValueOnce('NOT-PONG')
+      .mockResolvedValueOnce('ok');
+
+    const req = { method: 'GET', query: { check: 'redis' }, headers: {} };
+    const res = createResponse();
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(503);
+    expect(JSON.parse(res.payload)).toMatchObject({
+      ok: false,
+      error: 'redis_health_check_failed',
+      checks: { redis: 'failed' },
+    });
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+  });
+
   it('rejects non-GET methods', async () => {
     const req = { method: 'POST', query: {} };
     const res = createResponse();

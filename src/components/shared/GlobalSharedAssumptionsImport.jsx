@@ -30,6 +30,7 @@ const GlobalSharedAssumptionsImport = () => {
   const [pendingImport, setPendingImport] = useState(null);
   const [isLoadingSharedSnapshot, setIsLoadingSharedSnapshot] = useState(false);
   const activeRequestIdRef = useRef(0);
+  const handledSharedReferenceRef = useRef(null);
   const handledCuratedReferenceRef = useRef(null);
   const curatedEntries = useMemo(() => getCuratedAssumptionsEntries(), []);
   const currentAssumptions = getNormalizedUserAssumptionsForSharing();
@@ -45,7 +46,11 @@ const GlobalSharedAssumptionsImport = () => {
   });
 
   const sharedReference = searchParams.get('shared');
-  const curatedReference = sharedReference ? null : searchParams.get(CURATED_ASSUMPTIONS_QUERY_PARAM);
+  const requestedCuratedReference = searchParams.get(CURATED_ASSUMPTIONS_QUERY_PARAM);
+  const hasConflictingImportParams = Boolean(sharedReference && requestedCuratedReference);
+  // A URL must never apply two profiles in sequence. Shared snapshots are
+  // the more specific/user-created intent, so they win deterministically.
+  const curatedReference = sharedReference ? null : requestedCuratedReference;
 
   const removeImportParam = useCallback(
     (paramName, referenceToRemove = null) => {
@@ -185,13 +190,37 @@ const GlobalSharedAssumptionsImport = () => {
   );
 
   useEffect(() => {
+    if (!sharedReference) {
+      handledSharedReferenceRef.current = null;
+    }
+  }, [sharedReference]);
+
+  useEffect(() => {
     if (!curatedReference) {
       handledCuratedReferenceRef.current = null;
     }
   }, [curatedReference]);
 
   useEffect(() => {
-    if (!sharedReference || pendingImport?.kind === 'shared' || pendingImport?.reference === sharedReference) {
+    if (!hasConflictingImportParams) {
+      return;
+    }
+
+    showNotification(
+      'info',
+      'This link requested both shared and curated assumptions. The shared assumptions link was used.'
+    );
+    removeImportParam(CURATED_ASSUMPTIONS_QUERY_PARAM, requestedCuratedReference);
+  }, [hasConflictingImportParams, removeImportParam, requestedCuratedReference, showNotification]);
+
+  useEffect(() => {
+    if (
+      !sharedReference ||
+      hasConflictingImportParams ||
+      handledSharedReferenceRef.current === sharedReference ||
+      pendingImport?.kind === 'shared' ||
+      pendingImport?.reference === sharedReference
+    ) {
       return;
     }
 
@@ -210,6 +239,11 @@ const GlobalSharedAssumptionsImport = () => {
           return;
         }
 
+        // Applying changes assumptions and the saved library before React
+        // Router necessarily commits removal of the query parameter. Mark the
+        // snapshot first so intermediate renders cannot request it twice.
+        handledSharedReferenceRef.current = requestReference;
+
         if (hasUnsavedAssumptions) {
           setPendingImport({ kind: 'shared', reference: requestReference, snapshot });
         } else {
@@ -223,6 +257,7 @@ const GlobalSharedAssumptionsImport = () => {
         if (error?.name === 'AbortError') {
           return;
         }
+        handledSharedReferenceRef.current = requestReference;
         showNotification('error', error.message || 'Could not load shared assumptions.');
         setPendingImport(null);
         removeImportParam('shared', requestReference);
@@ -238,6 +273,7 @@ const GlobalSharedAssumptionsImport = () => {
     };
   }, [
     applySharedSnapshot,
+    hasConflictingImportParams,
     hasUnsavedAssumptions,
     pendingImport?.kind,
     pendingImport?.reference,

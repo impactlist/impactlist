@@ -116,7 +116,7 @@ const RecipientDetail = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <BackButton />
+      <BackButton fallbackTo="/recipients" />
 
       <motion.div
         className="impact-page__container"

@@ -2,8 +2,34 @@ import { describe, expect, it } from 'vitest';
 import {
   buildRecipientEditableEffects,
   calculateEffectCostPerLife,
+  checkWindowExceedsTimeLimit,
   getRecipientEffectsChangeState,
+  parseFormattedNumber,
 } from './effectEditorUtils';
+
+describe('formatted effect input parsing', () => {
+  it('rejects numeric prefixes and non-finite values instead of partially parsing them', () => {
+    expect(parseFormattedNumber('12oops')).toBeNaN();
+    expect(parseFormattedNumber('1e999')).toBeNaN();
+    expect(checkWindowExceedsTimeLimit('12oops', '5', 10)).toBe(false);
+  });
+
+  it('accepts complete comma-formatted and scientific values', () => {
+    expect(parseFormattedNumber('1,250.5')).toBe(1250.5);
+    expect(parseFormattedNumber('1e3')).toBe(1000);
+  });
+
+  it('previews a tiny finite nonzero cost without imposing a magnitude floor', () => {
+    const result = calculateEffectCostPerLife(
+      { effectId: 'tiny', costPerQALY: 5e-324, startTime: 0, windowLength: 10 },
+      { yearsPerLife: 50, discountRate: 0, timeLimit: 100 },
+      2026
+    );
+
+    expect(Number.isFinite(result)).toBe(true);
+    expect(result).toBeGreaterThan(0);
+  });
+});
 
 describe('buildRecipientEditableEffects', () => {
   it('uses user category values as the recipient base effect for downstream calculations', () => {
@@ -178,5 +204,11 @@ describe('getRecipientEffectsChangeState', () => {
 
     const lenient = getRecipientEffectsChangeState(drafts, { throwOnInvalid: false });
     expect(lenient.effectsToSave).toEqual([]);
+  });
+
+  it('rejects finite-overflow override text instead of returning Infinity to the save boundary', () => {
+    const drafts = [buildDraft({ overrides: { costPerQALY: '1e999' } })];
+
+    expect(() => getRecipientEffectsChangeState(drafts)).toThrow(/Failed to convert/);
   });
 });

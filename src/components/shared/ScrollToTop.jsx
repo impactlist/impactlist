@@ -59,7 +59,21 @@ const ScrollToTop = () => {
       return undefined;
     }
 
-    const targetId = hash.slice(1);
+    let targetId = hash.slice(1);
+    try {
+      targetId = decodeURIComponent(targetId);
+    } catch {
+      // A malformed percent escape is user-controlled URL input. Keep the
+      // literal fragment and let the normal not-found timeout handle it.
+    }
+
+    // Do not leave a newly-rendered page sitting at the previous route's
+    // scroll position while a lazy hash target is still mounting. If it
+    // appears, pinTarget below will move to it; if it never does, the visitor
+    // is already at the sensible fallback position.
+    if (!isInitialLoad) {
+      window.scrollTo(0, 0);
+    }
     const deadline = Date.now() + HASH_TARGET_TOTAL_MS;
     // pointerdown included so grabbing the scrollbar (or any click) also
     // cancels — wheel/touch/keys alone would miss it.
@@ -121,21 +135,23 @@ const ScrollToTop = () => {
 
       pinTarget(target);
 
-      resizeObserver = new window.ResizeObserver(() => {
-        if (done) {
-          return;
-        }
-        const current = document.getElementById(targetId);
-        if (!current) {
-          return;
-        }
-        // Only growth ABOVE the anchor moves it; growth below (donation
-        // tables, further content) leaves it pinned — don't re-scroll.
-        if (Math.abs(current.getBoundingClientRect().top - pinnedTop) > 1) {
-          pinTarget(current);
-        }
-      });
-      resizeObserver.observe(document.body);
+      if (typeof window.ResizeObserver !== 'undefined') {
+        resizeObserver = new window.ResizeObserver(() => {
+          if (done) {
+            return;
+          }
+          const current = document.getElementById(targetId);
+          if (!current) {
+            return;
+          }
+          // Only growth ABOVE the anchor moves it; growth below (donation
+          // tables, further content) leaves it pinned — don't re-scroll.
+          if (Math.abs(current.getBoundingClientRect().top - pinnedTop) > 1) {
+            pinTarget(current);
+          }
+        });
+        resizeObserver.observe(document.body);
+      }
       deadlineId = setTimeout(stop, Math.max(HASH_SETTLE_MIN_MS, deadline - Date.now()));
     };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { formatWithCursorHandling, formatNumberWithCommas } from '../../utils/formatters';
+import { getSanitizedInputCaretPosition, normalizeFormattedNumberEdit } from '../../utils/numberParsing';
 import InfoTooltipIcon from './InfoTooltipIcon';
 import IconActionButton from './IconActionButton';
 
@@ -64,8 +65,27 @@ const FormField = ({
     const newValue = e.target.value;
     const currentPosition = e.target.selectionStart;
 
+    const normalizedValue = normalizeFormattedNumberEdit(displayValue, newValue, e.nativeEvent?.inputType, {
+      allowNegative: true,
+    });
+
+    // Effect fields intentionally support scientific notation, so unsupported
+    // text remains visible for the parent validator. This also prevents a
+    // malformed comma paste from being reformatted into a different number.
+    if (!normalizedValue) {
+      onChange(newValue);
+      return;
+    }
+
+    const { displayText } = normalizedValue;
+    if (displayText !== newValue) {
+      const keptBeforeCaret = getSanitizedInputCaretPosition(newValue, displayText, currentPosition);
+      inputElement.value = displayText;
+      inputElement.setSelectionRange(keptBeforeCaret, keptBeforeCaret);
+    }
+
     // Format with commas while preserving cursor position
-    const result = formatWithCursorHandling(newValue, currentPosition, inputElement);
+    const result = formatWithCursorHandling(inputElement.value, inputElement.selectionStart, inputElement);
 
     // Pass the formatted value directly to the parent
     // Let the parent component handle any numeric conversion when needed

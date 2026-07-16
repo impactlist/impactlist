@@ -98,4 +98,16 @@ describe('SortableTable', () => {
 
     expect(screen.getAllByRole('row')).toHaveLength(1); // header only
   });
+
+  it('keeps the aria-hidden sticky header clone out of the keyboard tab order', () => {
+    const { container } = render(
+      <SortableTable columns={columns} data={data} defaultSortColumn="costPerLife" defaultSortDirection="asc" />
+    );
+
+    const stickyClone = container.querySelector('table[aria-hidden="true"]');
+    expect(stickyClone).not.toBeNull();
+    stickyClone.querySelectorAll('button').forEach((button) => {
+      expect(button).toHaveAttribute('tabindex', '-1');
+    });
+  });
 });

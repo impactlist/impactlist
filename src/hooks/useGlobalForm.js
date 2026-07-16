@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { formatNumberWithCommas } from '../utils/formatters';
-import { cleanAndParseValue, isPartialInput, validateGlobalField } from '../utils/effectValidation';
+import { isPartialInput, validateGlobalField } from '../utils/effectValidation';
+import { parseFiniteDecimal } from '../utils/numberParsing';
 
 const valuesMatch = (valueA, valueB) => {
   if (valueA === valueB) {
@@ -50,6 +51,29 @@ const buildFormEntry = (paramKey, value) => ({
   formatted: formatValue(value, getParameterFormat(paramKey)),
 });
 
+const buildHydratedValues = (globalParameters, userGlobalParameters) => {
+  if (!globalParameters) {
+    return null;
+  }
+
+  return Object.keys(globalParameters).reduce((next, paramKey) => {
+    const customValue = userGlobalParameters?.[paramKey];
+    next[paramKey] = customValue !== undefined ? customValue : globalParameters[paramKey];
+    return next;
+  }, {});
+};
+
+const buildFormValues = (hydratedValues) => {
+  if (!hydratedValues) {
+    return {};
+  }
+
+  return Object.keys(hydratedValues).reduce((next, paramKey) => {
+    next[paramKey] = buildFormEntry(paramKey, hydratedValues[paramKey]);
+    return next;
+  }, {});
+};
+
 /**
  * Custom hook for managing global parameter form state
  * @param {Object} globalParameters - Global parameters from combinedAssumptions
@@ -58,13 +82,23 @@ const buildFormEntry = (paramKey, value) => ({
  * @returns {Object} Form state and handlers
  */
 export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlobalParameters) => {
-  const [formValues, setFormValues] = useState({});
+  // Props are already available on the first render. Initialize from them
+  // synchronously so assumption fields never flash as blank (and a very fast
+  // visitor cannot type into an empty pre-hydration form).
+  const initialHydratedValues = useMemo(
+    () => buildHydratedValues(globalParameters, userGlobalParameters),
+    // This value is consumed only by the useState/useRef initializers below.
+    // Subsequent prop changes are handled by the hydration effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  const [formValues, setFormValues] = useState(() => buildFormValues(initialHydratedValues));
   const [errors, setErrors] = useState({});
   // Per-parameter values as of the last hydration. The inputs to this hook
   // get fresh object identities on EVERY assumptions change (normalization
   // deep-copies), so identity alone can't tell "this parameter's value
   // changed" from "something unrelated changed elsewhere in userAssumptions".
-  const hydratedValuesRef = useRef(null);
+  const hydratedValuesRef = useRef(initialHydratedValues);
 
   // Rehydrate form values whenever the underlying assumptions VALUES change
   // (applying edits, loading a saved set, importing a shared link, reverting
@@ -76,11 +110,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
       return;
     }
 
-    const nextHydrated = {};
-    Object.keys(globalParameters).forEach((paramKey) => {
-      const customValue = userGlobalParameters?.[paramKey];
-      nextHydrated[paramKey] = customValue !== undefined ? customValue : globalParameters[paramKey];
-    });
+    const nextHydrated = buildHydratedValues(globalParameters, userGlobalParameters);
 
     const previousHydrated = hydratedValuesRef.current;
     hydratedValuesRef.current = nextHydrated;
@@ -117,8 +147,7 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
 
   // Parse value from user input
   const parseValue = (inputValue, format) => {
-    // Remove commas and trim whitespace
-    const cleanValue = inputValue.replace(/,/g, '').trim();
+    const cleanValue = inputValue.trim();
 
     if (cleanValue === '') {
       return '';
@@ -129,13 +158,12 @@ export const useGlobalForm = (globalParameters, defaultGlobalParameters, userGlo
       return '';
     }
 
-    const { cleanValue: parsedCleanValue, numValue } = cleanAndParseValue(normalizedValue);
-
-    if (typeof parsedCleanValue === 'string' && isPartialInput(parsedCleanValue)) {
-      return parsedCleanValue;
+    if (isPartialInput(normalizedValue)) {
+      return normalizedValue;
     }
 
-    if (!isNaN(numValue)) {
+    const numValue = parseFiniteDecimal(normalizedValue);
+    if (numValue !== null) {
       return format === 'percentage' ? numValue / 100 : numValue;
     }
 

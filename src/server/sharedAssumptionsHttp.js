@@ -20,7 +20,7 @@ const removeListener = (emitter, eventName, handler) => {
 
 const parseBodyFromStream = (req) =>
   new Promise((resolve, reject) => {
-    let raw = '';
+    const chunks = [];
     let bytesReceived = 0;
     let isSettled = false;
 
@@ -48,15 +48,15 @@ const parseBodyFromStream = (req) =>
         return;
       }
 
-      const textChunk = typeof chunk === 'string' ? chunk : chunk.toString('utf8');
-      bytesReceived += textEncoder.encode(textChunk).length;
+      const bufferChunk = globalThis.Buffer.isBuffer(chunk) ? chunk : globalThis.Buffer.from(String(chunk), 'utf8');
+      bytesReceived += bufferChunk.length;
 
       if (bytesReceived > MAX_BODY_BYTES) {
         rejectOnce(createSharedAssumptionsError(413, 'payload_too_large', 'Request body is too large.'));
         return;
       }
 
-      raw += textChunk;
+      chunks.push(bufferChunk);
     };
 
     const onEnd = () => {
@@ -66,7 +66,10 @@ const parseBodyFromStream = (req) =>
 
       isSettled = true;
       cleanup();
-      resolve(raw);
+      // Decode only after concatenating. Decoding each Buffer independently
+      // corrupts valid JSON when a multi-byte UTF-8 character straddles two
+      // incoming chunks.
+      resolve(globalThis.Buffer.concat(chunks, bytesReceived).toString('utf8'));
     };
 
     const onError = (error) => {

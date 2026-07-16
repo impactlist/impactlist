@@ -280,6 +280,51 @@ describe('savedAssumptionsStore', () => {
     expect(saveResult.errorCode).toBe('storage_write_failed');
   });
 
+  it('treats malformed or newly-unreadable localStorage as an empty library instead of throwing', () => {
+    localStorage.setItem(__internal.SAVED_ASSUMPTIONS_KEY, 'not-json{{');
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    expect(getSavedAssumptions()).toEqual([]);
+
+    const originalGetItem = Storage.prototype.getItem;
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(function (key) {
+      if (this === localStorage && key === __internal.SAVED_ASSUMPTIONS_KEY) {
+        throw new Error('SecurityError: storage access was revoked');
+      }
+      return originalGetItem.call(this, key);
+    });
+
+    expect(getSavedAssumptions()).toEqual([]);
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it('does not crash when active-entry sessionStorage becomes unavailable', () => {
+    const originalGetItem = Storage.prototype.getItem;
+    const originalSetItem = Storage.prototype.setItem;
+    const originalRemoveItem = Storage.prototype.removeItem;
+    const isActiveKey = (storage, key) =>
+      storage === sessionStorage && key === __internal.ACTIVE_SAVED_ASSUMPTIONS_ID_KEY;
+
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(function (key) {
+      if (isActiveKey(this, key)) throw new Error('SecurityError');
+      return originalGetItem.call(this, key);
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (key, value) {
+      if (isActiveKey(this, key)) throw new Error('QuotaExceededError');
+      return originalSetItem.call(this, key, value);
+    });
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(function (key) {
+      if (isActiveKey(this, key)) throw new Error('SecurityError');
+      return originalRemoveItem.call(this, key);
+    });
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    expect(() => setActiveSavedAssumptionsId('entry-id')).not.toThrow();
+    expect(getActiveSavedAssumptionsId()).toBeNull();
+    expect(() => setActiveSavedAssumptionsId(null)).not.toThrow();
+    expect(console.error).toHaveBeenCalled();
+  });
+
   it('creates stable fingerprints regardless of object key order', () => {
     const fp1 = createAssumptionsFingerprint({
       globalParameters: {

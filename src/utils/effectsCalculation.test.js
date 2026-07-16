@@ -557,6 +557,18 @@ describe('effectsCalculation', () => {
         expect(medGrowth).toBeLessThan(lowGrowth);
       });
 
+      it('supports deliberately extreme population growth above 100% per year', () => {
+        const effect = createPopEffect(100, 0.1, 1, 0, 20);
+        const cost = effectToCostPerLife(
+          effect,
+          { ...baseGlobalParams, populationGrowthRate: 3, populationLimit: 10 },
+          2024
+        );
+
+        expect(Number.isFinite(cost)).toBe(true);
+        expect(cost).toBeGreaterThan(0);
+      });
+
       it('should have lower cost with higher population limit when growth > 0', () => {
         const effect = createPopEffect(100, 0.1, 1, 0, 50);
         const params = { ...baseGlobalParams, populationGrowthRate: 0.02 };
@@ -733,6 +745,19 @@ describe('effectsCalculation', () => {
         const double = calculateCombinedCostPerLife([single, single]);
 
         expect(double).toBeCloseTo(single / 2, 5);
+      });
+
+      it('contains invalid costs while preserving subnormal finite costs', () => {
+        expect(calculateCombinedCostPerLife([NaN, -Infinity, Infinity, 0])).toBe(Infinity);
+        expect(calculateCombinedCostPerLife([5e-324])).toBe(5e-324);
+        expect(calculateCombinedCostPerLife([100, -100])).toBe(Infinity);
+      });
+
+      it('saturates arithmetic underflow with the correct sign', () => {
+        const params = { ...baseGlobalParams, yearsPerLife: Number.MIN_VALUE, discountRate: 0 };
+
+        expect(effectToCostPerLife(createQALYEffect(Number.MIN_VALUE, 0, 10), params, 2024)).toBe(Number.MIN_VALUE);
+        expect(effectToCostPerLife(createQALYEffect(-Number.MIN_VALUE, 0, 10), params, 2024)).toBe(-Number.MIN_VALUE);
       });
 
       it('should scale proportionally with monetary values', () => {

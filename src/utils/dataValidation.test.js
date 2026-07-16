@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   assertExists,
+  assertFiniteNumber,
   assertNumber,
   assertPositiveNumber,
   assertNonZeroNumber,
@@ -8,9 +9,36 @@ import {
   assertArray,
   assertNonEmptyArray,
   assertObject,
+  assertSafeIdentifier,
+  assertValidEntityId,
+  validateCategory,
+  validateRecipient,
 } from './dataValidation';
 
 describe('dataValidation', () => {
+  describe('assertValidEntityId', () => {
+    it('accepts URL-safe hyphenated and legacy underscored IDs', () => {
+      expect(assertValidEntityId('global-health', 'id')).toBe('global-health');
+      expect(assertValidEntityId('recipient_one', 'id')).toBe('recipient_one');
+    });
+
+    it('rejects prototype keys and URL-ambiguous IDs', () => {
+      expect(() => assertValidEntityId('__proto__', 'id')).toThrow(/must use lowercase/);
+      expect(() => assertValidEntityId('constructor', 'id')).toThrow(/reserved object key/);
+      expect(() => assertValidEntityId('prototype', 'id')).toThrow(/reserved object key/);
+      expect(() => assertValidEntityId('bad&id', 'id')).toThrow(/must use lowercase/);
+      expect(() => assertValidEntityId('MixedCase', 'id')).toThrow(/must use lowercase/);
+    });
+  });
+
+  describe('assertSafeIdentifier', () => {
+    it('allows runtime fixture IDs but rejects object-prototype keys', () => {
+      expect(assertSafeIdentifier('recipientA', 'id')).toBe('recipientA');
+      expect(() => assertSafeIdentifier('constructor', 'id')).toThrow(/reserved object key/);
+      expect(() => assertSafeIdentifier('__proto__', 'id')).toThrow(/reserved object key/);
+    });
+  });
+
   describe('assertExists', () => {
     it('should pass for defined values', () => {
       expect(assertExists(0, 'field')).toBe(0);
@@ -53,10 +81,23 @@ describe('dataValidation', () => {
       expect(() => assertNumber(NaN, 'field')).toThrow('Field field must be a valid number');
     });
 
+    it('preserves Infinity as a runtime calculation sentinel', () => {
+      expect(assertNumber(Infinity, 'field')).toBe(Infinity);
+      expect(assertNumber(-Infinity, 'field')).toBe(-Infinity);
+    });
+
     it('should include context in error message', () => {
       expect(() => assertNumber('not a number', 'field', 'in calculation')).toThrow(
         'Field field must be a valid number in calculation'
       );
+    });
+  });
+
+  describe('assertFiniteNumber', () => {
+    it('rejects non-finite source/schema values', () => {
+      expect(assertFiniteNumber(42, 'field')).toBe(42);
+      expect(() => assertFiniteNumber(Infinity, 'field')).toThrow('must be a finite number');
+      expect(() => assertFiniteNumber(-Infinity, 'field')).toThrow('must be a finite number');
     });
   });
 
@@ -155,6 +196,108 @@ describe('dataValidation', () => {
       expect(() => assertObject('{}', 'field')).toThrow('Field field must be an object');
       expect(() => assertObject(null, 'field')).toThrow('Missing required field: field');
       expect(() => assertObject(undefined, 'field')).toThrow('Missing required field: field');
+    });
+  });
+
+  describe('category and recipient schemas', () => {
+    const qalyEffect = {
+      effectId: 'standard',
+      startTime: 0,
+      windowLength: 10,
+      costPerQALY: 100,
+    };
+    const categories = {
+      health: {
+        name: 'Health',
+        effects: [qalyEffect],
+      },
+    };
+
+    it('allows finite negative costs while rejecting ambiguous or duplicate effects', () => {
+      expect(() =>
+        validateCategory({ name: 'Health', effects: [{ ...qalyEffect, costPerQALY: -100 }] }, 'health')
+      ).not.toThrow();
+      expect(() =>
+        validateCategory(
+          {
+            name: 'Health',
+            effects: [
+              { ...qalyEffect, costPerMicroprobability: 10, populationFractionAffected: 1, qalyImprovementPerYear: 1 },
+            ],
+          },
+          'health'
+        )
+      ).toThrow(/exactly one/);
+      expect(() => validateCategory({ name: 'Health', effects: [qalyEffect, { ...qalyEffect }] }, 'health')).toThrow(
+        /duplicate effectId/
+      );
+    });
+
+    it('rejects non-finite and out-of-domain fields while allowing all finite magnitudes', () => {
+      expect(() =>
+        validateCategory({ name: 'Health', effects: [{ ...qalyEffect, startTime: Infinity }] }, 'health')
+      ).toThrow(/finite number/);
+      expect(() => validateCategory({ name: 'Health', effects: [{ ...qalyEffect, startTime: -1 }] }, 'health')).toThrow(
+        /cannot be negative/
+      );
+      expect(() =>
+        validateCategory({ name: 'Health', effects: [{ ...qalyEffect, validTimeInterval: [2030, 2020] }] }, 'health')
+      ).toThrow(/cannot precede/);
+      expect(() =>
+        validateCategory({ name: 'Health', effects: [{ ...qalyEffect, costPerQALY: 5e-324 }] }, 'health')
+      ).not.toThrow();
+      expect(() =>
+        validateCategory({ name: 'Health', effects: [{ ...qalyEffect, costPerQALY: Number.MAX_VALUE }] }, 'health')
+      ).not.toThrow();
+      expect(() =>
+        validateCategory({ name: 'Health', effects: [{ ...qalyEffect, windowLength: 1e-100 }] }, 'health')
+      ).not.toThrow();
+      expect(() =>
+        validateCategory({ name: 'Health', effects: [{ ...qalyEffect, validTimeInterval: [1e100, null] }] }, 'health')
+      ).toThrow(/safe integer/);
+    });
+
+    it('validates recipient maps against their base effects', () => {
+      const recipient = (effect) => ({
+        name: 'Recipient',
+        categories: { health: { fraction: 1, effects: [effect] } },
+      });
+
+      expect(() =>
+        validateRecipient(
+          recipient({ effectId: 'standard', overrides: { costPerQALY: -50 } }),
+          'recipientA',
+          categories
+        )
+      ).not.toThrow();
+      expect(() =>
+        validateRecipient(recipient({ effectId: 'standard', overrides: { madeUpField: 2 } }), 'recipientA', categories)
+      ).toThrow(/unknown numeric field/);
+      expect(() =>
+        validateRecipient(
+          recipient({
+            effectId: 'standard',
+            overrides: { costPerQALY: 50 },
+            multipliers: { costPerQALY: 2 },
+          }),
+          'recipientA',
+          categories
+        )
+      ).toThrow(/both an override and a multiplier/);
+      expect(() =>
+        validateRecipient(
+          recipient({ effectId: 'standard', multipliers: { windowLength: 1e308 } }),
+          'recipientA',
+          categories
+        )
+      ).toThrow(/non-finite value/);
+      expect(() =>
+        validateRecipient(
+          recipient({ effectId: 'standard', multipliers: { costPerQALY: 1e14 } }),
+          'recipientA',
+          categories
+        )
+      ).not.toThrow();
     });
   });
 });

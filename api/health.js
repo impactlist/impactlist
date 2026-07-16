@@ -1,6 +1,6 @@
 import { runRedisCommand } from '../src/server/upstashRedisClient.js';
 import { sendJson } from '../src/server/sharedAssumptionsHttp.js';
-import { isSharedAssumptionsError } from '../src/server/sharedAssumptionsErrors.js';
+import { createSharedAssumptionsError, isSharedAssumptionsError } from '../src/server/sharedAssumptionsErrors.js';
 import { enforceRateLimit, extractClientIp } from '../src/server/sharedAssumptionsService.js';
 
 const HEALTH_EVAL_SCRIPT = "return 'ok'";
@@ -9,9 +9,13 @@ const runRedisChecks = async () => {
   const pingResult = await runRedisCommand('PING');
   const evalResult = await runRedisCommand('EVAL', HEALTH_EVAL_SCRIPT, '0');
 
+  if (pingResult !== 'PONG' || evalResult !== 'ok') {
+    throw createSharedAssumptionsError(503, 'redis_health_check_failed', 'Redis returned an unexpected health result.');
+  }
+
   return {
-    redisPing: pingResult === 'PONG' ? 'ok' : `unexpected:${String(pingResult)}`,
-    redisEval: evalResult === 'ok' ? 'ok' : `unexpected:${String(evalResult)}`,
+    redisPing: 'ok',
+    redisEval: 'ok',
   };
 };
 

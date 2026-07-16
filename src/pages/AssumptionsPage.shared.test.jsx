@@ -129,6 +129,7 @@ describe('Global shared assumptions import flow', () => {
       reference: 'abc123',
     });
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(savedAssumptions[0].id);
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
     const section = screen.getByText('Current Assumptions').closest('section');
     expect(within(section).getByText('abc123')).toBeInTheDocument();
     const menu = await openAssumptionsLibraryMenu(user);
@@ -140,6 +141,35 @@ describe('Global shared assumptions import flow', () => {
     await waitFor(() => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue(String(incomingTimeLimit));
     });
+  });
+
+  it('uses only the shared snapshot when a malformed link requests shared and curated imports together', async () => {
+    const incomingTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 26;
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'abc123',
+        assumptions: {
+          globalParameters: {
+            timeLimit: incomingTimeLimit,
+          },
+        },
+      }),
+    });
+
+    renderAppRoutes('/assumptions?tab=global&shared=abc123&curated=longtermist');
+
+    expect(await screen.findByText('Shared assumptions loaded.')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('/assumptions?tab=global');
+    });
+    expect(getPersistedCustomEffectsData()).toEqual({
+      globalParameters: {
+        timeLimit: incomingTimeLimit,
+      },
+    });
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    expect(globalThis.fetch).toHaveBeenCalledWith('/api/shared-assumptions/abc123', expect.any(Object));
   });
 
   it('auto-imports shared assumptions from home route in React StrictMode', async () => {

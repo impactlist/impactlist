@@ -6,6 +6,7 @@ import {
   MIN_SLUG_LENGTH,
   MAX_SLUG_LENGTH,
   RESERVED_SLUGS,
+  SNAPSHOT_ID_REGEX,
   SLUG_REGEX,
 } from './sharedAssumptionsConfig.js';
 import { createSharedAssumptionsError } from './sharedAssumptionsErrors.js';
@@ -39,7 +40,11 @@ export const normalizeSlug = (value) => {
     return null;
   }
 
-  const normalized = String(value).trim().toLowerCase();
+  if (typeof value !== 'string') {
+    throw createSharedAssumptionsError(400, 'invalid_slug', 'Slug must be a string.');
+  }
+
+  const normalized = value.trim().toLowerCase();
   return normalized.length > 0 ? normalized : null;
 };
 
@@ -57,6 +62,17 @@ const validateSlug = (slug) => {
   if (RESERVED_SLUGS.has(slug)) {
     throw createSharedAssumptionsError(400, 'reserved_slug', 'That slug is reserved.');
   }
+
+  // Canonical snapshot ids and custom slugs share one URL namespace. Letting
+  // a user claim an id-shaped slug would make an existing immutable id link
+  // resolve to the attacker's slug mapping instead.
+  if (SNAPSHOT_ID_REGEX.test(slug)) {
+    throw createSharedAssumptionsError(
+      400,
+      'invalid_slug',
+      'Custom link text cannot use the 12-character auto-generated link format.'
+    );
+  }
 };
 
 const validateName = (name) => {
@@ -64,7 +80,11 @@ const validateName = (name) => {
     return null;
   }
 
-  const normalizedName = String(name).trim();
+  if (typeof name !== 'string') {
+    throw createSharedAssumptionsError(400, 'invalid_name', 'Name must be a string.');
+  }
+
+  const normalizedName = name.trim();
   if (normalizedName.length === 0) {
     return null;
   }
@@ -81,7 +101,11 @@ const validateDescription = (description) => {
     return null;
   }
 
-  const normalizedDescription = String(description).trim();
+  if (typeof description !== 'string') {
+    throw createSharedAssumptionsError(400, 'invalid_description', 'Description must be a string.');
+  }
+
+  const normalizedDescription = description.trim();
   if (normalizedDescription.length === 0) {
     return null;
   }
@@ -120,6 +144,10 @@ export const validateReference = (reference) => {
 
   if (trimmed.length > MAX_REFERENCE_LENGTH) {
     throw createSharedAssumptionsError(400, 'invalid_reference', 'Reference is too long.');
+  }
+
+  if (!SNAPSHOT_ID_REGEX.test(trimmed) && !SLUG_REGEX.test(trimmed)) {
+    throw createSharedAssumptionsError(400, 'invalid_reference', 'Reference has an invalid format.');
   }
 
   return trimmed;

@@ -1,4 +1,4 @@
-import { cleanAndParseValue, getEffectType, isPartialInput } from './effectValidation';
+import { cleanAndParseValue, getEffectType, isPartialInput, validateEffect } from './effectValidation';
 import { effectToCostPerLife } from './effectsCalculation';
 import { getEffectFieldNames } from '../constants/effectFieldDefinitions';
 import { getOverridePlaceholderValue } from './effectFieldHelpers';
@@ -12,7 +12,8 @@ export const parseFormattedNumber = (value) => {
   if (value === null || value === undefined || value === '') {
     return NaN;
   }
-  return parseFloat(String(value).replace(/,/g, ''));
+  const { numValue } = cleanAndParseValue(value);
+  return Number.isFinite(numValue) ? numValue : NaN;
 };
 
 /**
@@ -99,6 +100,14 @@ export const calculateEffectCostPerLife = (effect, globalParameters, previewYear
     (field) => typeof cleanedEffect[field] !== 'number' || !Number.isFinite(cleanedEffect[field])
   );
   if (hasNonNumericField || cleanedEffect.startTime < 0 || cleanedEffect.windowLength <= 0) {
+    return Infinity;
+  }
+
+  // Reuse the same domain and numeric-range validation that gates Apply. In
+  // particular, a tiny-but-finite draft such as 5e-324 must render as N/A
+  // while the inline error is shown, rather than underflowing inside preview
+  // arithmetic and taking down the whole editor.
+  if (!validateEffect(cleanedEffect).isValid) {
     return Infinity;
   }
 
@@ -397,14 +406,15 @@ export const getRecipientEffectsChangeState = (effects, options = {}) => {
 
       const currentIsPresent = hasValue(currentValue);
       const parsedCurrent = currentIsPresent ? cleanAndParseValue(currentValue).numValue : NaN;
+      const currentIsFinite = Number.isFinite(parsedCurrent);
 
-      if (currentIsPresent && isNaN(parsedCurrent) && throwOnInvalid) {
+      if (currentIsPresent && !currentIsFinite && throwOnInvalid) {
         throw new Error(
           `Failed to convert override ${fieldName} to number in effect ${effect.effectId}. Value: "${currentValue}"`
         );
       }
 
-      if (currentIsPresent && !isNaN(parsedCurrent)) {
+      if (currentIsPresent && currentIsFinite) {
         overridesToSave[fieldName] = parsedCurrent;
       } else if (!currentIsPresent && hasValue(defaultValue)) {
         // A cleared field falls back to the recipient default (the editor
@@ -415,7 +425,7 @@ export const getRecipientEffectsChangeState = (effects, options = {}) => {
 
       if (isMeaningfullyDifferent(currentValue, defaultValue)) {
         effectHasChanges = true;
-        if (currentIsPresent && !isNaN(parsedCurrent)) {
+        if (currentIsPresent && currentIsFinite) {
           hasChangedFieldValue = true;
         } else if (!currentIsPresent) {
           needsClearing = true;

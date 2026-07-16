@@ -6,7 +6,7 @@
 
 Bad content must fail the BUILD, loudly, with the file named in the error. Donations are the strictest part (they're the site's core metric):
 
-- Dates: strict `YYYY-MM-DD`, validated from the RAW frontmatter text via `extractRawDonationDates` + `normalizeStrictDateString` — never trust parsed YAML dates (YAML silently rolls `2021-02-30` → `2021-03-02` and parses non-ISO formats in machine-local time). Year sanity range 1900–2100.
+- Dates: strict `YYYY-MM-DD`, validated from the RAW frontmatter text via `extractRawDonationDates` + `normalizeStrictDateString` — never trust parsed YAML dates (YAML silently rolls `2021-02-30` → `2021-03-02` and parses non-ISO formats in machine-local time).
 - `amount`: positive finite number. `credit`: required non-empty map, each value in (0,1], summing to 1 (±0.001). Allowed row fields only: date, recipient, amount, credit, source, notes.
 - Duplicate detection, two levels (`buildDonationKeys`): exact key (recipient/date/amount/credit/notes) catches re-records; event key (same minus credit) catches the same gift independently attributed to different donors. `source` is in neither key (same event, two citations = still duplicate); distinct `notes` are the escape hatch for genuinely identical separate donations.
 - Missing `donations:` array is a hard error; `donations: []` is the explicit placeholder (see `content/donations/multiple_donors.md`).

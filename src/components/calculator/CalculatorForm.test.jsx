@@ -68,6 +68,23 @@ describe('CalculatorForm', () => {
     expect(defaultProps.onDonationChange).toHaveBeenCalled();
   });
 
+  it('rejects unsupported characters without converting them into a different amount', () => {
+    const onDonationChange = vi.fn();
+    renderWithRouter(<CalculatorForm {...defaultProps} onDonationChange={onDonationChange} />);
+
+    const input = screen.getByRole('textbox', { name: 'Global Health' });
+    fireEvent.change(input, { target: { value: '1e309' } });
+
+    expect(input).toHaveValue('1e309');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(onDonationChange).toHaveBeenLastCalledWith('health', '1e309');
+
+    fireEvent.change(input, { target: { value: '12,34' } });
+    expect(input).toHaveValue('12,34');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(onDonationChange).toHaveBeenLastCalledWith('health', '12,34');
+  });
+
   it('should display formatted donation amounts', () => {
     const propsWithDonations = {
       ...defaultProps,

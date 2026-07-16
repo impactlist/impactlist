@@ -62,6 +62,16 @@ test.describe('Critical path smoke tests', () => {
     const initialCostPerLifeText = (await costPerLifeValue.innerText()).trim();
 
     const firstDonationInput = page.locator('input[id^="donation-"]').first();
+
+    // Unsupported notation must be rejected as a whole. It previously lost
+    // the `e` and silently turned `1e309` into the very different `$1,309`.
+    await firstDonationInput.fill('1e309');
+    await expect(firstDonationInput).toHaveValue('1e309');
+    await expect(firstDonationInput).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByText('Enter a positive finite amount using decimal or scientific notation.')).toBeVisible();
+    await expect(totalDonatedValue).toContainText('$0');
+
+    await firstDonationInput.fill('');
     await firstDonationInput.fill('1000');
 
     await expect(firstDonationInput).toHaveValue(/1,?000/);

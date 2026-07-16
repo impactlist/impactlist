@@ -66,7 +66,13 @@ export const enforceRateLimit = async (scope, clientIp) => {
 
   const key = buildRateLimitKey(scope, clientIp);
   const countResult = await runRedisCommand('EVAL', RATE_LIMIT_LUA, '1', key, String(limit.windowSeconds));
-  const count = Number(countResult || 0);
+  const count = Number(countResult);
+
+  // A malformed upstream result must fail closed. Treating NaN/null as zero
+  // silently disables the public API's rate limit during Redis faults.
+  if (!Number.isSafeInteger(count) || count < 1) {
+    throw createSharedAssumptionsError(500, 'redis_invalid_response', 'Redis returned an invalid rate-limit count.');
+  }
 
   if (count > limit.max) {
     throw createSharedAssumptionsError(429, 'rate_limited', limit.message);
@@ -154,9 +160,11 @@ export const getSharedSnapshot = async (reference) => {
     ['GET', buildSnapshotKey(reference)],
   ]);
 
-  const snapshotId = mappedId || reference;
-  const rawSnapshot =
-    mappedId && mappedId !== reference ? await runRedisCommand('GET', buildSnapshotKey(mappedId)) : directSnapshot;
+  // Canonical ids are immutable and win over any legacy slug mapping with
+  // the same text. New id-shaped slugs are rejected, but this ordering also
+  // protects links if a conflicting mapping already exists in Redis.
+  const snapshotId = directSnapshot ? reference : mappedId || reference;
+  const rawSnapshot = directSnapshot || (mappedId ? await runRedisCommand('GET', buildSnapshotKey(mappedId)) : null);
 
   if (!rawSnapshot) {
     throw createSharedAssumptionsError(404, 'not_found', 'Shared assumptions were not found.');

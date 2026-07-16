@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 /**
@@ -16,12 +17,15 @@ import { motion } from 'framer-motion';
  */
 const BackButton = ({
   to,
+  fallbackTo = '/',
   label = 'Back',
   className = '',
   variant = 'default',
   motion: motionProps = {},
   containerProps = {},
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const defaultAnimation = {
     initial: { y: 10, opacity: 0 },
     animate: { y: 0, opacity: 1 },
@@ -45,6 +49,21 @@ const BackButton = ({
 
   const mergedContainerProps = { ...defaultContainerProps, ...containerProps };
 
+  const handleHistoryBack = () => {
+    const historyIndex = globalThis.history.state?.idx;
+    // BrowserRouter's numeric index is authoritative when present. A replace
+    // navigation changes location.key even at index 0, so using the key there
+    // would make a direct-entry Back button silently do nothing. MemoryRouter
+    // has no browser index, hence the key fallback for tests/embedded usage.
+    const hasRouterHistory = Number.isInteger(historyIndex) ? historyIndex > 0 : location.key !== 'default';
+
+    if (hasRouterHistory) {
+      navigate(-1);
+    } else {
+      navigate(fallbackTo, { replace: true });
+    }
+  };
+
   // Back arrow SVG
   const backArrow = (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -64,13 +83,23 @@ const BackButton = ({
           {label}
         </Link>
       ) : (
-        <button onClick={() => window.history.back()} className={buttonClassName}>
+        <button type="button" onClick={handleHistoryBack} className={buttonClassName}>
           {backArrow}
           {label}
         </button>
       )}
     </motion.div>
   );
+};
+
+BackButton.propTypes = {
+  to: PropTypes.string,
+  fallbackTo: PropTypes.string,
+  label: PropTypes.string,
+  className: PropTypes.string,
+  variant: PropTypes.oneOf(['default', 'accent']),
+  motion: PropTypes.object,
+  containerProps: PropTypes.object,
 };
 
 export default BackButton;

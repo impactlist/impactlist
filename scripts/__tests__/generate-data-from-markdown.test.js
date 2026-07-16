@@ -284,11 +284,12 @@ donations:
     runGeneratorExpectingError(workspace, 'Expected YYYY-MM-DD.');
   });
 
-  it('fails on a date outside the plausible year range', () => {
+  it('accepts real four-digit dates without an arbitrary year range', () => {
     const workspace = setupWorkspaceFromFixture('donation-validation');
-    writeDonationsFile(workspace, 'donor_a.md', validDonation.replace('date: 2022-01-01', 'date: 2205-01-01'));
+    writeDonationsFile(workspace, 'donor_a.md', validDonation.replace('date: 2022-01-01', 'date: 0099-01-01'));
 
-    runGeneratorExpectingError(workspace, 'outside the plausible range 1900-2100');
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
   });
 
   it('fails on a non-numeric amount', () => {
@@ -362,6 +363,140 @@ describe('pipeline strictness', () => {
     const output = runGeneratorExpectingError(workspace, 'Duplicate category id "health"');
     expect(output).toContain('health.md');
     expect(output).toContain('health_copy.md');
+  });
+
+  it('fails before assignment when an entity uses a prototype-key id', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/unsafe.md',
+      '---\nid: constructor\nname: Unsafe\neffects:\n  - effectId: unsafe_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'uses reserved object key "constructor"');
+  });
+
+  it('fails on duplicate category effect IDs instead of leaving lookup order ambiguous', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: standard\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n  - effectId: standard\n    startTime: 1\n    windowLength: 5\n    costPerQALY: 200\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'duplicate effectId "standard"');
+  });
+
+  it('fails on duplicate recipient category IDs before object conversion can overwrite one', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 0.5\n  - id: health\n    fraction: 0.5\n---\n'
+    );
+
+    runGeneratorExpectingError(workspace, 'duplicate category id "health"');
+  });
+
+  it('fails with file context when an effects entry or map has the wrong shape', () => {
+    const categoryWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      categoryWorkspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - not-an-object\n---\n'
+    );
+    runGeneratorExpectingError(categoryWorkspace, 'Category file health.md, effect #1 must be an object');
+
+    const recipientWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      recipientWorkspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        overrides: []\n---\n'
+    );
+    runGeneratorExpectingError(recipientWorkspace, "must use an object for 'overrides'");
+  });
+
+  it('rejects non-finite and ambiguous effects while allowing tiny finite values', () => {
+    const nonFiniteWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      nonFiniteWorkspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: standard\n    startTime: .inf\n    windowLength: 10\n    costPerQALY: 100\n---\n'
+    );
+    runGeneratorExpectingError(nonFiniteWorkspace, 'must be a finite number');
+
+    const underflowWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      underflowWorkspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: standard\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 5e-324\n---\n'
+    );
+    const underflowResult = runGenerator(underflowWorkspace);
+    expect(underflowResult.status, `${underflowResult.stdout}\n${underflowResult.stderr}`).toBe(0);
+
+    const ambiguousWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      ambiguousWorkspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: standard\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n    costPerMicroprobability: 100\n    populationFractionAffected: 1\n    qalyImprovementPerYear: 1\n---\n'
+    );
+    runGeneratorExpectingError(ambiguousWorkspace, "must have exactly one of 'costPerQALY'");
+  });
+
+  it('fails on unknown recipient fields and override/multiplier conflicts', () => {
+    const unknownFieldWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      unknownFieldWorkspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        overrides:\n          madeUpField: 2\n---\n'
+    );
+    runGeneratorExpectingError(unknownFieldWorkspace, 'overrides references unknown numeric field "madeUpField"');
+
+    const conflictWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      conflictWorkspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        overrides:\n          costPerQALY: 50\n        multipliers:\n          costPerQALY: 2\n---\n'
+    );
+    runGeneratorExpectingError(conflictWorkspace, 'cannot have both an override and a multiplier');
+  });
+
+  it('allows finite negative costs in authored category content', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: -100\n---\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+    const generated = await loadGeneratedModule(workspace);
+    expect(generated.categoriesById.health.effects[0].costPerQALY).toBe(-100);
+  });
+
+  it('allows large finite curated inputs when their recipient combination remains finite', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        multipliers:\n          windowLength: 2\n---\n'
+    );
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/overflow.md',
+      '---\nid: overflow\nname: Overflow\nassumptions:\n  categories:\n    health:\n      effects:\n        - effectId: health_effect\n          windowLength: 6755399441055743\n---\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/overflow.md',
+      '---\nid: overflow\nname: Overflow\nassumptions:\n  categories:\n    health:\n      effects:\n        - effectId: health_effect\n          windowLength: 1e308\n---\n'
+    );
+    runGeneratorExpectingError(workspace, 'produces a non-finite value');
   });
 
   it('fails on unknown frontmatter keys instead of silently ignoring them', () => {
@@ -541,7 +676,7 @@ describe('pipeline strictness', () => {
     runGeneratorExpectingError(workspace, 'do not sum to 1');
   });
 
-  it('fails the build on out-of-bounds global parameters', () => {
+  it('rejects domain-invalid global parameters while allowing tiny finite positive values', () => {
     const workspace = setupWorkspaceFromFixture('donation-validation');
     writeContentFile(
       workspace,
@@ -550,6 +685,15 @@ describe('pipeline strictness', () => {
     );
 
     runGeneratorExpectingError(workspace, 'Discount rate must be no greater than 100%');
+
+    const underflowWorkspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      underflowWorkspace,
+      'globalParameters.md',
+      '---\ndiscountRate: 0.05\npopulationGrowthRate: 0.01\ntimeLimit: 100\npopulationLimit: 2\ncurrentPopulation: 8000000000\nyearsPerLife: 5e-324\n---\n'
+    );
+    const underflowResult = runGenerator(underflowWorkspace);
+    expect(underflowResult.status, `${underflowResult.stdout}\n${underflowResult.stderr}`).toBe(0);
   });
 
   it('fails when a curated profile references a recipient that is filtered out for having no donations', () => {
@@ -591,6 +735,75 @@ describe('pipeline strictness', () => {
     const generated = await loadGeneratedModule(workspace);
     const profile = generated.curatedAssumptionProfilesById['test-profile'];
     expect(profile.assumptions.recipients.recipient_one.categories.health.effects[0].multipliers.costPerQALY).toBe(2);
+  });
+
+  it('keeps a curated base-value override that replaces a recipient default multiplier', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        multipliers:\n          costPerQALY: 4\n---\n'
+    );
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\nassumptions:\n  recipients:\n    recipient_one:\n      categories:\n        health:\n          effects:\n            - effectId: health_effect\n              overrides:\n                costPerQALY: 100\n---\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    expect(
+      generated.curatedAssumptionProfilesById['test-profile'].assumptions.recipients.recipient_one.categories.health
+        .effects[0].overrides
+    ).toEqual({ costPerQALY: 100 });
+  });
+
+  it('keeps a curated 1x multiplier that replaces a recipient default override', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        overrides:\n          costPerQALY: 50\n---\n'
+    );
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\nassumptions:\n  recipients:\n    recipient_one:\n      categories:\n        health:\n          effects:\n            - effectId: health_effect\n              multipliers:\n                costPerQALY: 1\n---\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    expect(
+      generated.curatedAssumptionProfilesById['test-profile'].assumptions.recipients.recipient_one.categories.health
+        .effects[0].multipliers
+    ).toEqual({ costPerQALY: 1 });
+  });
+
+  it('keeps complete curated override maps when recipient defaults also have overrides', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n    effects:\n      - effectId: health_effect\n        overrides:\n          startTime: 3\n          costPerQALY: 120\n---\n'
+    );
+    writeContentFile(
+      workspace,
+      'assumptions/profiles/test_profile.md',
+      '---\nid: test-profile\nname: Test Profile\nassumptions:\n  recipients:\n    recipient_one:\n      categories:\n        health:\n          effects:\n            - effectId: health_effect\n              overrides:\n                startTime: 3\n                costPerQALY: 999\n---\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    expect(
+      generated.curatedAssumptionProfilesById['test-profile'].assumptions.recipients.recipient_one.categories.health
+        .effects[0].overrides
+    ).toEqual({ startTime: 3, costPerQALY: 999 });
   });
 
   it('fails on unknown curated-profile frontmatter keys', () => {
@@ -638,6 +851,7 @@ describe('pipeline strictness', () => {
     expect(sitemap).toContain('<loc>https://example.org/donor/donor_a</loc>');
     expect(sitemap).toContain('<loc>https://example.org/recipient/recipient_one</loc>');
     expect(sitemap).toContain('<loc>https://example.org/cause/health</loc>');
+    expect(sitemap).toContain('<loc>https://example.org/image-credits</loc>');
 
     const robots = fs.readFileSync(path.join(workspace, 'public', 'robots.txt'), 'utf8');
     expect(robots).toContain('Sitemap: https://example.org/sitemap.xml');

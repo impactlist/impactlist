@@ -60,9 +60,33 @@ describe('sharedAssumptionsValidation', () => {
     ).toThrowError(SharedAssumptionsError);
   });
 
+  it('rejects custom slugs that collide with the generated snapshot-id namespace', () => {
+    expect(() =>
+      validateCreatePayload({
+        ...buildValidPayload(),
+        slug: 'abc123def456',
+      })
+    ).toThrowError(expect.objectContaining({ code: 'invalid_slug' }));
+  });
+
+  it('rejects non-string metadata instead of saving coercion artifacts', () => {
+    expect(() => validateCreatePayload({ ...buildValidPayload(), name: { value: 'Scenario' } })).toThrowError(
+      expect.objectContaining({ code: 'invalid_name' })
+    );
+    expect(() => validateCreatePayload({ ...buildValidPayload(), description: ['notes'] })).toThrowError(
+      expect.objectContaining({ code: 'invalid_description' })
+    );
+    expect(() => validateCreatePayload({ ...buildValidPayload(), slug: 12345 })).toThrowError(
+      expect.objectContaining({ code: 'invalid_slug' })
+    );
+  });
+
   it('validates shared reference', () => {
     expect(validateReference('  abc-123  ')).toBe('abc-123');
+    expect(validateReference('abc123def456')).toBe('abc123def456');
     expect(() => validateReference('')).toThrowError(SharedAssumptionsError);
+    expect(() => validateReference('../admin')).toThrowError(SharedAssumptionsError);
+    expect(() => validateReference('UPPERCASE')).toThrowError(SharedAssumptionsError);
   });
 
   it('rejects assumptions payload that exceeds max size', () => {
@@ -98,6 +122,9 @@ describe('assumptions shape validation', () => {
   const [firstCategoryId, firstCategory] = Object.entries(defaults.categories)[0];
   const firstEffect = firstCategory.effects[0];
   const numericEffectField = Object.keys(firstEffect).find((field) => typeof firstEffect[field] === 'number');
+  const signedEffectField = ['costPerQALY', 'costPerMicroprobability', 'qalyImprovementPerYear'].find(
+    (field) => typeof firstEffect[field] === 'number'
+  );
 
   const [recipientId, defaultRecipient] = Object.entries(defaults.recipients).find(
     ([, recipient]) => recipient.categories && Object.keys(recipient.categories).length > 0
@@ -106,6 +133,12 @@ describe('assumptions shape validation', () => {
   const recipientBaseEffect = defaults.categories[recipientCategoryId].effects[0];
   const recipientNumericField = Object.keys(recipientBaseEffect).find(
     (field) => typeof recipientBaseEffect[field] === 'number'
+  );
+  const recipientSignedField = ['costPerQALY', 'costPerMicroprobability', 'qalyImprovementPerYear'].find(
+    (field) => typeof recipientBaseEffect[field] === 'number'
+  );
+  const recipientMultiplierField = Object.keys(recipientBaseEffect).find(
+    (field) => typeof recipientBaseEffect[field] === 'number' && field !== recipientSignedField
   );
   const unrelatedCategoryId = Object.keys(defaults.categories).find(
     (categoryId) => !Object.hasOwn(defaultRecipient.categories, categoryId)
@@ -129,7 +162,7 @@ describe('assumptions shape validation', () => {
         globalParameters: { [firstGlobalParamName]: Number(firstGlobalParamValue) + 1 },
         categories: {
           [firstCategoryId]: {
-            effects: [{ effectId: firstEffect.effectId, [numericEffectField]: -123.45, disabled: false }],
+            effects: [{ effectId: firstEffect.effectId, [signedEffectField]: -123.45, disabled: false }],
           },
         },
         recipients: {
@@ -139,8 +172,8 @@ describe('assumptions shape validation', () => {
                 effects: [
                   {
                     effectId: recipientBaseEffect.effectId,
-                    overrides: { [recipientNumericField]: -5 },
-                    multipliers: { [recipientNumericField]: 2 },
+                    overrides: { [recipientSignedField]: -5 },
+                    multipliers: { [recipientMultiplierField]: 2 },
                     disabled: true,
                   },
                 ],
@@ -152,9 +185,9 @@ describe('assumptions shape validation', () => {
     });
 
     expect(result.assumptions.globalParameters[firstGlobalParamName]).toBe(Number(firstGlobalParamValue) + 1);
-    expect(result.assumptions.categories[firstCategoryId].effects[0][numericEffectField]).toBe(-123.45);
+    expect(result.assumptions.categories[firstCategoryId].effects[0][signedEffectField]).toBe(-123.45);
     expect(result.assumptions.recipients[recipientId].categories[recipientCategoryId].effects[0].overrides).toEqual({
-      [recipientNumericField]: -5,
+      [recipientSignedField]: -5,
     });
   });
 

@@ -33,6 +33,7 @@ export const RATE_LIMITS = {
 };
 
 export const SLUG_REGEX = /^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/;
+export const SNAPSHOT_ID_REGEX = /^[0-9a-z]{12}$/;
 
 export const RESERVED_SLUGS = new Set([
   'about',

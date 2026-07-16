@@ -25,6 +25,17 @@ const calculateDiscountToTime = (rate, time) => {
   return Math.pow(1 + rate, -time);
 };
 
+// Infinity is the application's established sentinel for no representable
+// effect. Preserve every finite nonzero cost, including subnormal values. If
+// arithmetic underflows to signed zero, saturate at JavaScript's smallest
+// value in the same direction instead of inverting a near-infinite effect into
+// the "no effect" sentinel.
+const normalizeCalculatedCostPerLife = (value) => {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return Infinity;
+  if (value === 0) return Object.is(value, -0) ? -Number.MIN_VALUE : Number.MIN_VALUE;
+  return value;
+};
+
 /**
  * Calculate the continuous discount integral for a time window
  * Returns ∫_0^windowLength (1 + discountRate)^(-t) dt
@@ -158,7 +169,7 @@ const qalyEffectToCostPerLife = (effect, globalParams) => {
   const qalysDeliveredFraction = actualWindowLength / originalWindowLength;
   const truncationAdjustedCost = costPerLife / qalysDeliveredFraction;
 
-  return truncationAdjustedCost / averageDiscountFactor;
+  return normalizeCalculatedCostPerLife(truncationAdjustedCost / averageDiscountFactor);
 };
 
 /**
@@ -314,7 +325,7 @@ const populationEffectToCostPerLife = (effect, globalParams, donationYear) => {
   const avgLifeQALYs = globalParams.yearsPerLife;
   const livesSavedPerMicroprobability = (probability * totalQALYs) / avgLifeQALYs;
 
-  return effect.costPerMicroprobability / livesSavedPerMicroprobability;
+  return normalizeCalculatedCostPerLife(effect.costPerMicroprobability / livesSavedPerMicroprobability);
 };
 
 /**
@@ -359,18 +370,21 @@ export const effectToCostPerLife = (effect, globalParams, donationYear) => {
  * @returns {number} Combined cost per life or Infinity if no valid costs
  */
 export const calculateCombinedCostPerLife = (effectCosts) => {
-  // Filter out Infinity but keep both positive and negative costs
-  const validCosts = effectCosts.filter((cost) => cost !== Infinity && cost !== 0);
+  // Filter out non-effects and invalid arithmetic artifacts, but keep both
+  // positive and negative finite costs.
+  const validCosts = effectCosts.filter((cost) => typeof cost === 'number' && Number.isFinite(cost) && cost !== 0);
   if (validCosts.length === 0) return Infinity;
 
-  // Calculate total lives saved per dollar across all effects
-  const harmonicSum = validCosts.reduce((sum, cost) => sum + 1 / cost, 0);
+  // Scale before summing reciprocals. Directly evaluating 1 / a very small
+  // finite cost can overflow even when the final harmonic result is valid.
+  const scale = validCosts.reduce((minimum, cost) => Math.min(minimum, Math.abs(cost)), Infinity);
+  const scaledHarmonicSum = validCosts.reduce((sum, cost) => sum + scale / cost, 0);
 
   // If effects perfectly cancel out, return Infinity
-  if (harmonicSum === 0) return Infinity;
+  if (!Number.isFinite(scaledHarmonicSum) || scaledHarmonicSum === 0) return Infinity;
 
   // Return cost per life (reciprocal of lives per dollar)
-  return 1 / harmonicSum;
+  return normalizeCalculatedCostPerLife(scale / scaledHarmonicSum);
 };
 
 /**

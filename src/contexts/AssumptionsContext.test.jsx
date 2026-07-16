@@ -103,6 +103,61 @@ describe('AssumptionsContext integration', () => {
     });
   });
 
+  it('discards persisted assumptions whose finite values violate calculation invariants', async () => {
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: -1,
+        },
+      })
+    );
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { getContext } = await renderWithProvider();
+
+    expect(getContext().userAssumptions).toBeNull();
+    expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+    expect(console.error).toHaveBeenCalledWith('Discarding corrupted stored assumptions', expect.any(Error));
+  });
+
+  it('mounts with defaults when sessionStorage becomes unreadable after its availability probe', async () => {
+    const originalGetItem = Storage.prototype.getItem;
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(function (key) {
+      if (this === sessionStorage && key === 'customEffectsData') {
+        throw new Error('SecurityError: storage access was revoked');
+      }
+      return originalGetItem.call(this, key);
+    });
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { getContext } = await renderWithProvider();
+
+    expect(getContext().userAssumptions).toBeNull();
+    expect(console.error).toHaveBeenCalledWith('Could not read stored assumptions; using defaults', expect.any(Error));
+  });
+
+  it('keeps applied assumptions usable when a later sessionStorage write exceeds quota', async () => {
+    const { getContext } = await renderWithProvider();
+    const originalSetItem = Storage.prototype.setItem;
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (key, value) {
+      if (this === sessionStorage && key === 'customEffectsData') {
+        throw new Error('QuotaExceededError');
+      }
+      return originalSetItem.call(this, key, value);
+    });
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    act(() => {
+      getContext().updateGlobalParameterValue('timeLimit', globalParameters.timeLimit + 7);
+    });
+
+    await waitFor(() => {
+      expect(getContext().userAssumptions?.globalParameters?.timeLimit).toBe(globalParameters.timeLimit + 7);
+    });
+    expect(console.error).toHaveBeenCalledWith('Could not persist working assumptions for this tab', expect.any(Error));
+  });
+
   it('does not bootstrap working assumptions from localStorage anymore', async () => {
     localStorage.setItem(
       'customEffectsData',

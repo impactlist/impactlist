@@ -7,7 +7,12 @@ import {
   calculateLivesSavedForCategoryFromCombined,
   calculateDonorStatsFromCombined,
 } from '../utils/assumptionsDataHelpers';
-import { getCurrentYear, resolveCalcYear } from '../utils/donationDataHelpers';
+import {
+  getCurrentYear,
+  normalizeCalculatorDonationAmount,
+  parseCalculatorDonationYear,
+  resolveCalcYear,
+} from '../utils/donationDataHelpers';
 import { isPlainObject } from '../utils/typeGuards';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import { useNotificationActions } from '../contexts/NotificationContext';
@@ -28,14 +33,33 @@ import { getLocalStorage } from '../utils/safeStorage';
 // fresh instead. The caller notifies the user (notifying can't happen here —
 // this runs during the first render).
 const readStoredJson = (key) => {
-  const raw = getLocalStorage().getItem(key);
+  let raw;
+  try {
+    raw = getLocalStorage().getItem(key);
+  } catch (error) {
+    console.error(`Could not read calculator storage value for "${key}"`, error);
+    return { value: null, corrupted: true };
+  }
   if (!raw) return { value: null, corrupted: false };
   try {
     return { value: JSON.parse(raw), corrupted: false };
   } catch (error) {
     console.error(`Discarding corrupted localStorage value for "${key}"`, error);
-    getLocalStorage().removeItem(key);
+    try {
+      getLocalStorage().removeItem(key);
+    } catch (removeError) {
+      console.error(`Could not remove corrupted calculator storage value for "${key}"`, removeError);
+    }
     return { value: null, corrupted: true };
+  }
+};
+
+const readStoredCalculatorYear = () => {
+  try {
+    return getLocalStorage().getItem('categoryYear');
+  } catch (error) {
+    console.error('Could not read the saved calculator year', error);
+    return null;
   }
 };
 
@@ -43,8 +67,45 @@ const readStoredJson = (key) => {
 // values (e.g. '', '0', '0.', '.') mean "no donation for this category" —
 // typing 0 is a valid way to clear a field, never an error.
 const parseDonationAmount = (value) => {
-  const amount = Number(value);
+  const normalized = normalizeCalculatorDonationAmount(value);
+  if (!normalized || normalized.rawText === '' || normalized.rawText === '.') return null;
+  const amount = Number(normalized.rawText);
   return Number.isFinite(amount) && amount > 0 ? amount : null;
+};
+
+const normalizeStoredCategoryDonations = (storedValue, categories) => {
+  if (storedValue === null) {
+    return { value: {}, valid: true };
+  }
+  if (!isPlainObject(storedValue)) {
+    return { value: {}, valid: false };
+  }
+
+  const categoryIds = new Set(categories.map((category) => category.id));
+  const normalized = {};
+  let valid = true;
+
+  Object.entries(storedValue).forEach(([categoryId, rawAmount]) => {
+    if (!categoryIds.has(categoryId)) {
+      valid = false;
+      return;
+    }
+
+    if (typeof rawAmount !== 'string' && typeof rawAmount !== 'number') {
+      valid = false;
+      return;
+    }
+
+    const normalizedAmount = normalizeCalculatorDonationAmount(rawAmount);
+    if (!normalizedAmount) {
+      valid = false;
+      return;
+    }
+
+    normalized[categoryId] = normalizedAmount.rawText;
+  });
+
+  return { value: normalized, valid };
 };
 
 // A persisted specific donation is only usable if its lives-saved can be
@@ -55,7 +116,12 @@ const parseDonationAmount = (value) => {
 // throw on every visit and brick the calculator, so we drop those on load.
 const isUsableSpecificDonation = (donation, combinedAssumptions) => {
   if (!isPlainObject(donation)) return false;
-  if (!donation.date || isNaN(parseInt(donation.date, 10))) return false;
+  if (typeof donation.id !== 'string' || donation.id.trim().length === 0) return false;
+  if (typeof donation.recipientName !== 'string' || donation.recipientName.trim().length === 0) {
+    return false;
+  }
+  if (donation.isCustomRecipient !== undefined && typeof donation.isCustomRecipient !== 'boolean') return false;
+  if (parseCalculatorDonationYear(donation.date) === null) return false;
   // amount is summed into the running total (totalAmount += donation.amount), so a
   // numeric string would concatenate rather than add. Require an actual positive
   // number, matching the modal and parseDonationAmount.
@@ -63,16 +129,26 @@ const isUsableSpecificDonation = (donation, combinedAssumptions) => {
     return false;
   }
 
-  if (donation.isCustomRecipient) {
-    if (!donation.categoryId) return false;
-    // An explicit custom cost is used directly; otherwise the category must still exist.
+  if (donation.isCustomRecipient === true) {
+    if (typeof donation.categoryId !== 'string' || !combinedAssumptions.getCategoryById(donation.categoryId)) {
+      return false;
+    }
+    // An explicit custom cost is used directly; otherwise use the category.
     if (donation.customCostPerLife !== undefined && donation.customCostPerLife !== null) {
       // Cost per life may be negative (donations that cause deaths), but never zero:
       // the modal rejects zero and it would divide to infinite impact.
-      const cost = Number(donation.customCostPerLife);
-      return Number.isFinite(cost) && cost !== 0;
+      return (
+        typeof donation.customCostPerLife === 'number' &&
+        Number.isFinite(donation.customCostPerLife) &&
+        donation.customCostPerLife !== 0
+      );
     }
-    return !!combinedAssumptions.getCategoryById(donation.categoryId);
+    if (donation.multiplier !== undefined && donation.multiplier !== null) {
+      return (
+        typeof donation.multiplier === 'number' && Number.isFinite(donation.multiplier) && donation.multiplier !== 0
+      );
+    }
+    return true;
   }
 
   return !!combinedAssumptions.findRecipientId(donation.recipientName);
@@ -84,8 +160,8 @@ const getDonationYear = (donation) => {
   if (!donation.date) {
     throw new Error(`Donation missing required date field: ${JSON.stringify(donation)}`);
   }
-  const year = parseInt(donation.date, 10);
-  if (isNaN(year)) {
+  const year = parseCalculatorDonationYear(donation.date);
+  if (year === null) {
     throw new Error(`Invalid year format in donation date field: "${donation.date}"`);
   }
   return year;
@@ -179,44 +255,56 @@ const DonationCalculator = () => {
     // readStoredJson only catches unparseable JSON; a parseable-but-wrong-shape
     // value (e.g. from a prior app version or tampering) would still crash the
     // calculator. Validate the shape too, discarding what we can't safely use.
-    const donationsValid = donationsRead.value === null || isPlainObject(donationsRead.value);
+    const normalizedDonations = normalizeStoredCategoryDonations(donationsRead.value, categories);
 
     const storedSpecific = specificDonationsRead.value;
     const specificArray = Array.isArray(storedSpecific) ? storedSpecific : [];
-    const specificDonations = specificArray.filter((donation) =>
-      isUsableSpecificDonation(donation, combinedAssumptions)
-    );
+    const seenDonationIds = new Set();
+    const specificDonations = specificArray.filter((donation) => {
+      if (!isUsableSpecificDonation(donation, combinedAssumptions) || seenDonationIds.has(donation.id)) {
+        return false;
+      }
+      try {
+        livesSavedForSpecificDonation(combinedAssumptions, donation);
+      } catch (error) {
+        console.error(`Discarding unusable saved specific donation "${donation.id}"`, error);
+        return false;
+      }
+      seenDonationIds.add(donation.id);
+      return true;
+    });
     const specificShapeValid =
       storedSpecific === null || (Array.isArray(storedSpecific) && specificDonations.length === storedSpecific.length);
 
+    const storedCategoryYear = readStoredCalculatorYear();
+    const parsedCategoryYear =
+      storedCategoryYear === null ? getCurrentYear() : parseCalculatorDonationYear(storedCategoryYear);
+    const categoryYearValid = parsedCategoryYear !== null;
+
     return {
-      donations: donationsValid && donationsRead.value ? donationsRead.value : {},
+      donations: normalizedDonations.value,
       specificDonations,
-      corrupted: donationsRead.corrupted || specificDonationsRead.corrupted || !donationsValid || !specificShapeValid,
+      categoryYear: categoryYearValid ? parsedCategoryYear : getCurrentYear(),
+      corrupted:
+        donationsRead.corrupted ||
+        specificDonationsRead.corrupted ||
+        !normalizedDonations.valid ||
+        !specificShapeValid ||
+        !categoryYearValid,
     };
   });
 
   const [donations, setDonations] = useState(() => {
     const initialDonations = {};
     categories.forEach((category) => {
-      initialDonations[category.id] = storedCalculatorState.donations[category.id] || '';
+      initialDonations[category.id] = storedCalculatorState.donations[category.id] ?? '';
     });
     return initialDonations;
   });
 
   const [specificDonations, setSpecificDonations] = useState(storedCalculatorState.specificDonations);
 
-  const [categoryYear, setCategoryYear] = useState(() => {
-    // Initialize with saved value or current year
-    const savedCategoryYear = getLocalStorage().getItem('categoryYear');
-    if (savedCategoryYear) {
-      const year = parseInt(savedCategoryYear, 10);
-      if (!isNaN(year)) {
-        return year;
-      }
-    }
-    return getCurrentYear();
-  });
+  const [categoryYear, setCategoryYear] = useState(storedCalculatorState.categoryYear);
 
   // For specific donation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -281,31 +369,42 @@ const DonationCalculator = () => {
 
   // Save calculator state to localStorage when it changes
   useEffect(() => {
-    getLocalStorage().setItem('donationCalculatorValues', JSON.stringify(donations));
+    try {
+      getLocalStorage().setItem('donationCalculatorValues', JSON.stringify(donations));
+    } catch (error) {
+      console.error('Could not persist calculator cause-area donations', error);
+    }
   }, [donations]);
 
   useEffect(() => {
-    getLocalStorage().setItem('specificDonations', JSON.stringify(specificDonations));
+    try {
+      getLocalStorage().setItem('specificDonations', JSON.stringify(specificDonations));
+    } catch (error) {
+      console.error('Could not persist specific donations', error);
+    }
   }, [specificDonations]);
 
   useEffect(() => {
-    getLocalStorage().setItem('categoryYear', categoryYear.toString());
+    try {
+      getLocalStorage().setItem('categoryYear', categoryYear.toString());
+    } catch (error) {
+      console.error('Could not persist the calculator year', error);
+    }
   }, [categoryYear]);
 
   // Handle donation input change
   const handleDonationChange = (categoryId, value) => {
-    // Remove any non-numeric characters except decimal point
-    const sanitizedValue = value.replace(/[^0-9.]/g, '');
-
-    // A second decimal point would make the value unparseable (silently
-    // counting as $0), so ignore changes that introduce one.
-    if ((sanitizedValue.match(/\./g) || []).length > 1) {
+    // CalculatorForm already guards the visible input. Keep a strict boundary
+    // here too so a future caller cannot turn unsupported text into a different
+    // monetary value by deleting characters from it.
+    const normalizedAmount = normalizeCalculatorDonationAmount(value);
+    if (!normalizedAmount) {
       return;
     }
 
     setDonations((prev) => ({
       ...prev,
-      [categoryId]: sanitizedValue,
+      [categoryId]: normalizedAmount.rawText,
     }));
   };
 

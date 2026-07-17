@@ -5,9 +5,43 @@ import {
   formatLives,
   formatRoundedLives,
   formatCurrency,
+  formatCompactAxisNumber,
   formatPercentage,
   calculateCursorPosition,
 } from './formatters';
+
+describe('formatCompactAxisNumber', () => {
+  it('passes small values through untouched', () => {
+    expect(formatCompactAxisNumber(0)).toBe('0');
+    expect(formatCompactAxisNumber(34)).toBe('34');
+    expect(formatCompactAxisNumber(450)).toBe('450');
+  });
+
+  it('applies K/M/B/T suffixes from one thousand up, trimming trailing zeros', () => {
+    expect(formatCompactAxisNumber(2119)).toBe('2.12 K');
+    expect(formatCompactAxisNumber(450000)).toBe('450 K');
+    expect(formatCompactAxisNumber(1500000)).toBe('1.5 M');
+    expect(formatCompactAxisNumber(450000000)).toBe('450 M');
+    expect(formatCompactAxisNumber(450000000000)).toBe('450 B');
+    expect(formatCompactAxisNumber(45000000000000)).toBe('45 T');
+  });
+
+  it('keeps the sign on negative values', () => {
+    expect(formatCompactAxisNumber(-1003)).toBe('-1 K');
+    expect(formatCompactAxisNumber(-450000000)).toBe('-450 M');
+  });
+
+  it('promotes values that round into the next tier', () => {
+    expect(formatCompactAxisNumber(999950)).toBe('1 M');
+    expect(formatCompactAxisNumber(999950000000)).toBe('1 T');
+  });
+
+  it('falls back to scientific notation beyond 999 T and below the tiny threshold', () => {
+    expect(formatCompactAxisNumber(2.4e22)).toBe('2.40 × 10²²');
+    expect(formatCompactAxisNumber(1e15)).toBe('1.00 × 10¹⁵');
+    expect(formatCompactAxisNumber(0.00005)).toBe('5.00 × 10⁻⁵');
+  });
+});
 
 describe('formatNumber', () => {
   it('should format small numbers without commas', () => {

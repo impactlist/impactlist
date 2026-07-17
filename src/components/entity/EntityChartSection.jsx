@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ImpactBarChart from '../charts/ImpactBarChart';
 import ChartContainer from '../charts/ChartContainer';
-import { formatRoundedLives, formatCurrency } from '../../utils/formatters';
+import { formatRoundedLives, formatCurrency, formatCompactAxisNumber } from '../../utils/formatters';
 import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsDataHelpers';
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
@@ -163,10 +163,27 @@ const EntityChartSection = ({
     return null;
   }
 
-  const renderLivesSavedXAxisTick = ({ x, y, payload, textAnchor = 'middle' }) => (
+  // One formatting brain for the value axis, used twice: recharts receives it
+  // as tickFormatter so its overlap-based tick dropping measures the exact
+  // strings we render, and renderValueAxisTick draws those same strings
+  // through FormattedScientificSvgText (styled superscripts once values
+  // reach scientific notation). Ticks use the compact K/M/B/T style — a
+  // "450,000" tick crowds the axis on phones; full precision lives in the
+  // tooltip and bar labels.
+  const formatXAxisValue = (value) => {
+    // Hold blank space while the toggle animation retargets values so ticks
+    // don't repaint mid-flight — in both toggle directions.
+    if (isTransitioning) {
+      return '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
+    }
+    if (value === 0) return '0';
+    return chartView === 'donations' ? `$${formatCompactAxisNumber(value)}` : formatCompactAxisNumber(value);
+  };
+
+  const renderValueAxisTick = ({ x, y, payload, textAnchor = 'middle' }) => (
     <g transform={`translate(${x},${y})`}>
       <FormattedScientificSvgText
-        value={formatRoundedLives(payload.value)}
+        value={formatXAxisValue(payload.value)}
         x={0}
         y={0}
         fill="var(--text-strong)"
@@ -191,10 +208,14 @@ const EntityChartSection = ({
     const isLivesView = chartView === 'livesSaved';
     const percentage = isLivesView ? entry.livesSavedPercentage : entry.donationPercentage;
     const label = isLivesView ? formatRoundedLives(entry.livesSavedValue) : formatCurrency(entry.donationValue);
-    // Recharts gives a negative bar's x at its far-left edge and width back
-    // to zero. Put its label just beyond that zero edge instead of farther
-    // left, where it can collide with a long category-axis label.
-    const labelX = x + width + 8;
+    // Recharts hands a negative bar its rect with x at the ZERO edge and a
+    // negative width extending left (positive bars: x at zero, width to the
+    // right), so `x + width` is a negative bar's far-left edge — anchoring
+    // there drew the label on top of the bar. Anchor at the rect's rightmost
+    // edge instead: the zero line for negative bars, the bar end for
+    // positive ones. Pinned against real recharts geometry in
+    // ImpactBarChart.test.jsx.
+    const labelX = Math.max(x, x + width) + 8;
 
     return (
       <FormattedScientificSvgText
@@ -233,23 +254,8 @@ const EntityChartSection = ({
             return getCategoryColor(entry.categoryId || entry.id || entry.name);
           })}
           tooltipContent={<CustomTooltip />}
-          formatXAxisTick={(value) => {
-            // Create placeholder space during transition
-            if (isTransitioning) {
-              return chartView === 'donations'
-                ? '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'
-                : '\u00A0\u00A0\u00A0\u00A0\u00A0';
-            }
-
-            if (value === 0) return '0';
-
-            if (chartView === 'donations') {
-              return formatCurrency(value);
-            } else {
-              return formatRoundedLives(value);
-            }
-          }}
-          renderXAxisTick={chartView === 'livesSaved' ? renderLivesSavedXAxisTick : null}
+          formatXAxisTick={formatXAxisValue}
+          renderXAxisTick={renderValueAxisTick}
           xAxisDomain={(() => {
             // If we're in lives saved view or transitioning to it, and there are negative values
             const hasNegativeValues = chartData.some((item) => item.valueTarget < 0);

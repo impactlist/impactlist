@@ -47,6 +47,21 @@ const formatScientificNotation = (num, sigFigs = LARGE_NUMBER_SIG_FIGS) => {
 // and "1,000 B" must promote to "1.00 T".
 const roundToDisplayPrecision = (absValue) => Number(absValue.toPrecision(LARGE_NUMBER_SIG_FIGS));
 
+// Single source of the suffix-tier boundaries so the magnitude formatters
+// (formatCompactMagnitude, formatCurrency, formatCompactAxisNumber) can never
+// drift apart. Each caller picks its own lowest tier: sitewide numbers and
+// lives suffix from a billion, currency from a million (full dollars below —
+// no K tier in tables/tooltips), chart axis ticks from a thousand.
+const MAGNITUDE_TIERS = [
+  { threshold: TRILLION, suffix: 'T' },
+  { threshold: BILLION, suffix: 'B' },
+  { threshold: MILLION, suffix: 'M' },
+  { threshold: THOUSAND, suffix: 'K' },
+];
+
+const selectMagnitudeTier = (displayValue, lowestThreshold) =>
+  MAGNITUDE_TIERS.find((tier) => tier.threshold >= lowestThreshold && displayValue >= tier.threshold) ?? null;
+
 const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null } = {}) => {
   if (absValue > 0 && absValue < SMALL_NUMBER_THRESHOLD) {
     return formatScientificNotation(absValue);
@@ -55,21 +70,23 @@ const formatCompactMagnitude = (absValue, { scientificNotationDigitLimit = null 
   // Below the first suffix tier values display at full precision, so only
   // suffixed magnitudes need rounded-tier selection.
   const displayValue = absValue >= BILLION ? roundToDisplayPrecision(absValue) : absValue;
+  const tier = selectMagnitudeTier(displayValue, BILLION);
 
-  if (displayValue >= TRILLION) {
-    const value = displayValue / TRILLION;
-    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
+  if (tier) {
+    const valueStr = formatWithSignificantFigures(displayValue / tier.threshold, LARGE_NUMBER_SIG_FIGS);
 
-    if (scientificNotationDigitLimit !== null && countDigits(valueStr) > scientificNotationDigitLimit) {
+    if (
+      tier.threshold === TRILLION &&
+      scientificNotationDigitLimit !== null &&
+      countDigits(valueStr) > scientificNotationDigitLimit
+    ) {
       return formatScientificNotation(absValue);
     }
 
-    return `${valueStr} T`;
-  } else if (displayValue >= BILLION) {
-    const value = displayValue / BILLION;
-    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    return `${valueStr} B`;
-  } else if (absValue >= HUNDRED) {
+    return `${valueStr} ${tier.suffix}`;
+  }
+
+  if (absValue >= HUNDRED) {
     return Math.round(absValue).toLocaleString('en-US');
   }
 
@@ -139,6 +156,39 @@ export const formatNumber = (num) => {
   const formattedValue = formatCompactMagnitude(absNum, { scientificNotationDigitLimit: 9 });
 
   return isNegative ? `-${formattedValue}` : formattedValue;
+};
+
+/**
+ * Compact number for chart axis ticks: K/M/B/T suffixes from one thousand up
+ * (three significant digits, trailing zeros trimmed), falling back to the
+ * sitewide × 10ⁿ style beyond 999 T and below the small-number threshold.
+ * Axis ticks optimize for width — tables, tooltips, and stats keep the
+ * full-precision formatters (formatNumber/formatLives/formatCurrency).
+ * @param {number} value - The value to format
+ * @returns {string} - Compact formatted value
+ */
+export const formatCompactAxisNumber = (value) => {
+  if (value === 0) return '0';
+
+  const isNegative = value < 0;
+  const absValue = Math.abs(value);
+  const sign = isNegative ? '-' : '';
+
+  if (absValue < SMALL_NUMBER_THRESHOLD) {
+    return `${sign}${formatScientificNotation(absValue)}`;
+  }
+
+  // Tier from the display-rounded value so 999,950 promotes to "1 M" instead
+  // of overflowing its suffix (same rule as formatCompactMagnitude).
+  const displayValue = roundToDisplayPrecision(absValue);
+
+  if (displayValue >= THOUSAND * TRILLION) {
+    return `${sign}${formatScientificNotation(absValue)}`;
+  }
+
+  const tier = selectMagnitudeTier(displayValue, THOUSAND);
+  const scaled = Number((displayValue / (tier?.threshold ?? 1)).toPrecision(LARGE_NUMBER_SIG_FIGS));
+  return tier ? `${sign}${scaled} ${tier.suffix}` : `${sign}${scaled}`;
 };
 
 /**
@@ -406,27 +456,18 @@ export const formatCurrency = (amount) => {
   // $1M the display keeps full precision, so no rounded-tier selection.
   const displayAmount = absAmount >= MILLION ? roundToDisplayPrecision(absAmount) : absAmount;
 
+  const tier = selectMagnitudeTier(displayAmount, MILLION);
+
   let formattedValue;
-  if (displayAmount >= TRILLION) {
-    // Trillions - use configured significant figures
-    const value = displayAmount / TRILLION;
-    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = countDigits(valueStr) > 9 ? `$${formatScientificNotation(absAmount)}` : `$${valueStr} T`;
-  } else if (displayAmount >= BILLION) {
-    // Billions - use configured significant figures
-    const value = displayAmount / BILLION;
-    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `$${valueStr} B`;
-  } else if (displayAmount >= MILLION) {
-    // Millions - use configured significant figures
-    const value = displayAmount / MILLION;
-    const valueStr = formatWithSignificantFigures(value, LARGE_NUMBER_SIG_FIGS);
-    formattedValue = `$${valueStr} M`;
-  } else if (absAmount >= THOUSAND) {
-    // For values ≥ 1,000, show with commas but without 'K' abbreviation
-    formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;
+  if (tier) {
+    const valueStr = formatWithSignificantFigures(displayAmount / tier.threshold, LARGE_NUMBER_SIG_FIGS);
+    formattedValue =
+      tier.threshold === TRILLION && countDigits(valueStr) > 9
+        ? `$${formatScientificNotation(absAmount)}`
+        : `$${valueStr} ${tier.suffix}`;
   } else if (absAmount >= TEN) {
-    // For values ≥ 10, show only integer dollars
+    // Integer dollars with commas; deliberately no 'K' abbreviation for
+    // currency outside chart axes.
     formattedValue = `$${Math.round(absAmount).toLocaleString('en-US')}`;
   } else if (absAmount < SMALL_NUMBER_THRESHOLD) {
     // For extremely small values, use scientific notation to avoid showing $0

@@ -45,7 +45,7 @@ const ImpactBarChart = ({
   data,
   layout = 'vertical',
   colors = CHART_COLORS,
-  formatXAxisTick = (value) => `${value}%`,
+  formatXAxisTick,
   dataKey = 'percentage',
   nameKey = 'name',
   tooltipContent,
@@ -156,7 +156,10 @@ const ImpactBarChart = ({
           >
             <XAxis
               type="number"
-              tickFormatter={renderXAxisTick ? undefined : formatXAxisTick}
+              // Always given to recharts, even alongside a custom tick
+              // renderer: its overlap-based tick dropping measures the
+              // formatted strings, which must match what gets drawn.
+              tickFormatter={formatXAxisTick}
               domain={domain}
               axisLine={true}
               tick={

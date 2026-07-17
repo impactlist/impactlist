@@ -2,7 +2,7 @@
 id: 'reed-hastings'
 name: 'Reed Hastings'
 birthDate: 1960-10-08
-netWorth: 5_800_000_000
+netWorth: 4_100_000_000
 about: 'Reed Hastings made his fortune by co-founding Pure Software and then Netflix, which he led from DVD rentals into global streaming. His philanthropy with Patty Quillin is unusually concentrated on education: charter-school advocacy, scholarships and HBCUs, the Hastings Fund, and later gifts for AI and humanity research at Bowdoin. They have also funded global health, including a large Gavi/COVAX gift. A Giving Pledge signer, Hastings tends to back institutions and policy changes he believes can expand opportunity for students. Born in 1960 in Boston, Massachusetts. [Wikipedia](https://en.wikipedia.org/wiki/Reed_Hastings)'
 ---
 

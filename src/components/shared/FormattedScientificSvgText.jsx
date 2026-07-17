@@ -2,6 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { parseScientificNotationDisplay } from '../../utils/scientificNotation';
 
+// All glyphs here render inside <tspan>s, and WebKit does not apply the
+// parent <text>'s dominant-baseline to tspan content — so on iOS Safari
+// "hanging"/"middle" were silently ignored and chart axis ticks and bar
+// labels drew a line too high. Emulate the requested baseline with a dy
+// shift instead (the technique recharts' own <Text> uses), which renders
+// identically in every engine.
+const BASELINE_DY = {
+  hanging: '0.71em',
+  middle: '0.355em',
+  alphabetic: undefined,
+};
+
 const FormattedScientificSvgText = ({
   value,
   suffix = '',
@@ -15,17 +27,18 @@ const FormattedScientificSvgText = ({
   className = '',
 }) => {
   const scientificParts = parseScientificNotationDisplay(value);
+  const baselineDy = BASELINE_DY[dominantBaseline];
 
   if (!scientificParts) {
     return (
       <text
         x={x}
         y={y}
+        dy={baselineDy}
         fill={fill}
         fontSize={fontSize}
         fontWeight={fontWeight}
         textAnchor={textAnchor}
-        dominantBaseline={dominantBaseline}
         className={className}
       >
         <tspan>{value}</tspan>
@@ -40,11 +53,11 @@ const FormattedScientificSvgText = ({
     <text
       x={x}
       y={y}
+      dy={baselineDy}
       fill={fill}
       fontSize={fontSize}
       fontWeight={fontWeight}
       textAnchor={textAnchor}
-      dominantBaseline={dominantBaseline}
       className={className}
       aria-label={textValue}
     >
@@ -69,7 +82,7 @@ FormattedScientificSvgText.propTypes = {
   fontSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   fontWeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   textAnchor: PropTypes.string,
-  dominantBaseline: PropTypes.string,
+  dominantBaseline: PropTypes.oneOf(Object.keys(BASELINE_DY)),
   className: PropTypes.string,
 };
 

@@ -150,17 +150,18 @@ describe('normalizeUserAssumptions production recipient resets', () => {
     recipients: recipientsById,
   };
 
-  it('keeps Future of Life Institute switching its default 2x multiplier to a base-value override', () => {
+  it('keeps Future of Life Institute resetting its default override to the category base value', () => {
     const categoryId = 'ai-risk';
     const recipientId = 'future-of-life-institute';
     const effectId = 'population';
     const field = 'costPerMicroprobability';
     const baseValue = categoriesById[categoryId].effects.find((effect) => effect.effectId === effectId)[field];
+    const defaultOverride = recipientsById[recipientId].categories[categoryId].effects.find(
+      (effect) => effect.effectId === effectId
+    ).overrides[field];
 
-    expect(
-      recipientsById[recipientId].categories[categoryId].effects.find((effect) => effect.effectId === effectId)
-        .multipliers[field]
-    ).toBe(2);
+    expect(defaultOverride).toBe(2_400_000);
+    expect(baseValue).not.toBe(defaultOverride);
 
     const result = normalizeUserAssumptions(
       {
@@ -178,6 +179,22 @@ describe('normalizeUserAssumptions production recipient resets', () => {
     expect(result.recipients[recipientId].categories[categoryId].effects[0].overrides).toEqual({
       [field]: baseValue,
     });
+
+    // Matching the recipient's own default override exactly is the no-op.
+    expect(
+      normalizeUserAssumptions(
+        {
+          recipients: {
+            [recipientId]: {
+              categories: {
+                [categoryId]: { effects: [{ effectId, overrides: { [field]: defaultOverride } }] },
+              },
+            },
+          },
+        },
+        productionDefaults
+      )
+    ).toBeNull();
   });
 
   it('keeps Internet Archive switching its default override to a 1x category multiplier', () => {

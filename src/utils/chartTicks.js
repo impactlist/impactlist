@@ -8,6 +8,8 @@
 // the axis.
 
 const NICE_STEP_MANTISSAS = [1, 2, 5];
+const MAX_DOMAIN_OVERSHOOT = 2;
+const COMPACT_DOMAIN_PADDING_FRACTION = 0.02;
 
 /**
  * Compute round tick values covering [minValue, maxValue] on a clean step
@@ -45,4 +47,47 @@ export const computeNiceTicks = (minValue, maxValue, targetTickCount = 7) => {
   }
 
   return { domain: [ticks[0], ticks[ticks.length - 1]], ticks };
+};
+
+/**
+ * Compute ticks for a mixed-sign range without letting a small value on either
+ * side of zero reserve a full dominant-side tick interval. The regular nice
+ * scale remains preferable when both sides are substantial. When snapping an
+ * edge outward would make it more than twice that side's data magnitude, use
+ * the actual data endpoint as its outer tick and place the domain edge a small
+ * distance beyond it.
+ *
+ * The outer interval on the compacted side may therefore be shorter than the
+ * others. That tradeoff keeps the zero baseline visually proportional while
+ * retaining round ticks across the dominant side. Recharts can still omit the
+ * compact endpoint tick responsively if its formatted label would overlap 0.
+ *
+ * @param {number} minValue - Negative lower data bound.
+ * @param {number} maxValue - Positive upper data bound.
+ * @param {number} [targetTickCount] - Approximate number of ticks to aim for.
+ * @returns {{domain: [number, number], ticks: number[]}} A scale enclosing the data.
+ */
+export const computeMixedSignTicks = (minValue, maxValue, targetTickCount = 7) => {
+  if (!Number.isFinite(minValue) || !Number.isFinite(maxValue) || minValue >= 0 || maxValue <= 0) {
+    throw new Error(`computeMixedSignTicks requires finite bounds spanning zero, got [${minValue}, ${maxValue}]`);
+  }
+
+  const regularScale = computeNiceTicks(minValue, maxValue, targetTickCount);
+  const compactNegativeSide = Math.abs(regularScale.domain[0]) > Math.abs(minValue) * MAX_DOMAIN_OVERSHOOT;
+  const compactPositiveSide = regularScale.domain[1] > maxValue * MAX_DOMAIN_OVERSHOOT;
+  if (!compactNegativeSide && !compactPositiveSide) {
+    return regularScale;
+  }
+
+  const padding = (maxValue - minValue) * COMPACT_DOMAIN_PADDING_FRACTION;
+  const negativeTicks = compactNegativeSide ? [minValue] : regularScale.ticks.filter((tick) => tick < 0);
+  const positiveTicks = compactPositiveSide ? [maxValue] : regularScale.ticks.filter((tick) => tick > 0);
+
+  return {
+    domain: [
+      compactNegativeSide ? minValue - padding : regularScale.domain[0],
+      compactPositiveSide ? maxValue + padding : regularScale.domain[1],
+    ],
+    ticks: [...negativeTicks, 0, ...positiveTicks],
+  };
 };

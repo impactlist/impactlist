@@ -8,7 +8,7 @@ import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsData
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import { getCategoryColor } from '../../utils/chartColors';
-import { computeNiceTicks } from '../../utils/chartTicks';
+import { computeMixedSignTicks, computeNiceTicks } from '../../utils/chartTicks';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
 import FormattedScientificSvgText from '../shared/FormattedScientificSvgText';
 
@@ -234,15 +234,20 @@ const EntityChartSection = ({
   };
 
   // Negative values (lives lost) need an explicitly pinned domain so the axis
-  // keeps a zero baseline with bars extending both ways — but recharts only
-  // rounds ticks for 'auto' domains; a pinned one gets sliced into equal
-  // steps from the raw minimum (ticks like 5,497). So compute round ticks
-  // and the matching domain ourselves. Positive-only data stays on
+  // keeps a zero baseline with bars extending both ways. Lopsided mixed-sign
+  // ranges get a compact minority side instead of snapping a small-magnitude
+  // edge out to one full dominant-side interval; balanced and all-negative
+  // ranges keep the regular round scale. Positive-only data stays on
   // [0, 'auto'], where recharts rounds ticks itself.
   const targetValues = chartData.map((item) => item.valueTarget);
-  const niceScale = targetValues.some((value) => value < 0)
-    ? computeNiceTicks(Math.min(0, ...targetValues), Math.max(0, ...targetValues))
-    : null;
+  const minTargetValue = Math.min(0, ...targetValues);
+  const maxTargetValue = Math.max(0, ...targetValues);
+  const niceScale =
+    minTargetValue < 0
+      ? maxTargetValue > 0
+        ? computeMixedSignTicks(minTargetValue, maxTargetValue)
+        : computeNiceTicks(minTargetValue, 0)
+      : null;
 
   return (
     <ChartContainer

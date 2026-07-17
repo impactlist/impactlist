@@ -52,11 +52,10 @@ const renderAxisTick = (value) => {
 };
 
 describe('EntityChartSection', () => {
-  // Recharts slices an explicit numeric domain into equal steps from the raw
-  // minimum, so pinning the exact data range produced ticks like 5,497. With
-  // negatives present the chart must instead pass round ticks and the
-  // matching domain (see utils/chartTicks.js).
-  it('pins a round-tick domain and explicit ticks when displayed values are negative', () => {
+  // A small negative value should not reserve a full positive-sized tick
+  // interval. Keep the dominant positive ticks round while pinning the first
+  // negative tick to the data and leaving a small gutter beyond it.
+  it('compacts a lopsided negative domain while keeping positive ticks round', () => {
     renderSection({
       chartData: [
         {
@@ -84,8 +83,63 @@ describe('EntityChartSection', () => {
       ],
     });
 
-    expect(captured.props.xAxisDomain).toEqual([-5000, 20000]);
-    expect(captured.props.xAxisTicks).toEqual([-5000, 0, 5000, 10000, 15000, 20000]);
+    expect(captured.props.xAxisDomain[0]).toBeCloseTo(-1903);
+    expect(captured.props.xAxisDomain[1]).toBe(20000);
+    expect(captured.props.xAxisTicks).toEqual([-1503, 0, 5000, 10000, 15000, 20000]);
+  });
+
+  it('compacts a lopsided positive domain while keeping negative ticks round', () => {
+    renderSection({
+      chartData: [
+        {
+          id: 'ai-capabilities',
+          categoryId: 'ai-capabilities',
+          name: 'AI Capabilities / AGI Development',
+          value: -18497,
+          valueTarget: -18497,
+          livesSavedValue: -18497,
+          livesSavedPercentage: 92.5,
+          donationValue: 4000000,
+          donationPercentage: 80,
+        },
+        {
+          id: 'global-health',
+          categoryId: 'global-health',
+          name: 'Global Health',
+          value: 1503,
+          valueTarget: 1503,
+          livesSavedValue: 1503,
+          livesSavedPercentage: 7.5,
+          donationValue: 1000000,
+          donationPercentage: 20,
+        },
+      ],
+    });
+
+    expect(captured.props.xAxisDomain[0]).toBe(-20000);
+    expect(captured.props.xAxisDomain[1]).toBeCloseTo(1903);
+    expect(captured.props.xAxisTicks).toEqual([-20000, -15000, -10000, -5000, 0, 1503]);
+  });
+
+  it('keeps the regular round scale for an all-negative range', () => {
+    renderSection({
+      chartData: [
+        {
+          id: 'ai-capabilities',
+          categoryId: 'ai-capabilities',
+          name: 'AI Capabilities / AGI Development',
+          value: -1200,
+          valueTarget: -1200,
+          livesSavedValue: -1200,
+          livesSavedPercentage: 100,
+          donationValue: 1000000,
+          donationPercentage: 100,
+        },
+      ],
+    });
+
+    expect(captured.props.xAxisDomain).toEqual([-1200, 0]);
+    expect(captured.props.xAxisTicks).toEqual([-1200, -1000, -800, -600, -400, -200, 0]);
   });
 
   it('keeps the auto domain, where recharts rounds ticks itself, when no displayed value is negative', () => {

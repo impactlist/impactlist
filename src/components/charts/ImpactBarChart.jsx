@@ -50,6 +50,7 @@ const ImpactBarChart = ({
   nameKey = 'name',
   tooltipContent,
   xAxisDomain,
+  xAxisTicks,
   barGap = 0,
   barCategoryGap = 8,
   labelFormatter = (value) => `${value}%`,
@@ -161,6 +162,10 @@ const ImpactBarChart = ({
               // formatted strings, which must match what gets drawn.
               tickFormatter={formatXAxisTick}
               domain={domain}
+              // Explicit tick values override recharts' own tick generation,
+              // which callers pinning a numeric domain need for round ticks
+              // (see utils/chartTicks.js). Undefined falls back to recharts.
+              ticks={xAxisTicks}
               axisLine={true}
               tick={
                 renderXAxisTick || {

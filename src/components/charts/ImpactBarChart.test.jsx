@@ -49,6 +49,27 @@ describe('ImpactBarChart', () => {
     expect(formatTick).toHaveBeenCalled();
   });
 
+  it('renders explicitly provided x-axis ticks verbatim instead of slicing the domain', () => {
+    // The round-tick fix for negative-value charts relies on recharts letting
+    // an explicit `ticks` array win over its own generation (which slices a
+    // pinned numeric domain into equal steps from the raw minimum).
+    const { container } = render(
+      <ImpactBarChart
+        data={data}
+        dataKey="amount"
+        nameKey="name"
+        xAxisDomain={[-600, 600]}
+        xAxisTicks={[-600, -300, 0, 300, 600]}
+        formatXAxisTick={(value) => `T${value}`}
+      />
+    );
+
+    const renderedTicks = [...container.querySelectorAll('.recharts-xAxis .recharts-cartesian-axis-tick-value')].map(
+      (node) => node.textContent
+    );
+    expect(renderedTicks).toEqual(['T-600', 'T-300', 'T0', 'T300', 'T600']);
+  });
+
   it('hands bar labels rects whose rightmost edge is the zero line for negative bars', () => {
     const labelCalls = new Map();
     render(

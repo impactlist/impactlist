@@ -8,6 +8,7 @@ import { getEffectiveCostPerLifeFromCombined } from '../../utils/assumptionsData
 import { getCurrentYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import { getCategoryColor } from '../../utils/chartColors';
+import { computeNiceTicks } from '../../utils/chartTicks';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
 import FormattedScientificSvgText from '../shared/FormattedScientificSvgText';
 
@@ -232,6 +233,17 @@ const EntityChartSection = ({
     );
   };
 
+  // Negative values (lives lost) need an explicitly pinned domain so the axis
+  // keeps a zero baseline with bars extending both ways — but recharts only
+  // rounds ticks for 'auto' domains; a pinned one gets sliced into equal
+  // steps from the raw minimum (ticks like 5,497). So compute round ticks
+  // and the matching domain ourselves. Positive-only data stays on
+  // [0, 'auto'], where recharts rounds ticks itself.
+  const targetValues = chartData.map((item) => item.valueTarget);
+  const niceScale = targetValues.some((value) => value < 0)
+    ? computeNiceTicks(Math.min(0, ...targetValues), Math.max(0, ...targetValues))
+    : null;
+
   return (
     <ChartContainer
       title={chartTitle}
@@ -256,27 +268,8 @@ const EntityChartSection = ({
           tooltipContent={<CustomTooltip />}
           formatXAxisTick={formatXAxisValue}
           renderXAxisTick={renderValueAxisTick}
-          xAxisDomain={(() => {
-            // If we're in lives saved view or transitioning to it, and there are negative values
-            const hasNegativeValues = chartData.some((item) => item.valueTarget < 0);
-
-            if (hasNegativeValues) {
-              const minValue = Math.min(0, ...chartData.map((d) => d.valueTarget));
-              const maxValue = Math.max(0, ...chartData.map((d) => d.valueTarget));
-              return [minValue, maxValue];
-            } else if (
-              chartView === 'donations' ||
-              (chartView === 'livesSaved' && !chartData.some((item) => item.livesSavedValue < 0))
-            ) {
-              return [0, 'auto'];
-            } else {
-              // During transition from negative lives saved to donations
-              return [
-                Math.min(0, ...chartData.map((d) => d.valueTarget)),
-                Math.max(...chartData.map((d) => d.valueTarget)),
-              ];
-            }
-          })()}
+          xAxisDomain={niceScale ? niceScale.domain : [0, 'auto']}
+          xAxisTicks={niceScale ? niceScale.ticks : undefined}
           renderBarLabel={renderBarLabel}
           barCategoryGap={chartData.length > 10 ? 4 : chartData.length > 6 ? 8 : 16}
           heightCalculator={(dataLength) => Math.max(containerHeight, dataLength * 55)}

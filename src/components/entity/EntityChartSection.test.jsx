@@ -52,6 +52,64 @@ const renderAxisTick = (value) => {
 };
 
 describe('EntityChartSection', () => {
+  // Recharts slices an explicit numeric domain into equal steps from the raw
+  // minimum, so pinning the exact data range produced ticks like 5,497. With
+  // negatives present the chart must instead pass round ticks and the
+  // matching domain (see utils/chartTicks.js).
+  it('pins a round-tick domain and explicit ticks when displayed values are negative', () => {
+    renderSection({
+      chartData: [
+        {
+          id: 'ai-capabilities',
+          categoryId: 'ai-capabilities',
+          name: 'AI Capabilities / AGI Development',
+          value: -1503,
+          valueTarget: -1503,
+          livesSavedValue: -1503,
+          livesSavedPercentage: 7.5,
+          donationValue: 1000000,
+          donationPercentage: 20,
+        },
+        {
+          id: 'global-health',
+          categoryId: 'global-health',
+          name: 'Global Health',
+          value: 18497,
+          valueTarget: 18497,
+          livesSavedValue: 18497,
+          livesSavedPercentage: 92.5,
+          donationValue: 4000000,
+          donationPercentage: 80,
+        },
+      ],
+    });
+
+    expect(captured.props.xAxisDomain).toEqual([-5000, 20000]);
+    expect(captured.props.xAxisTicks).toEqual([-5000, 0, 5000, 10000, 15000, 20000]);
+  });
+
+  it('keeps the auto domain, where recharts rounds ticks itself, when no displayed value is negative', () => {
+    renderSection({
+      chartView: 'donations',
+      chartData: [
+        {
+          id: 'ai-capabilities',
+          categoryId: 'ai-capabilities',
+          name: 'AI Capabilities / AGI Development',
+          value: 1000000,
+          valueTarget: 1000000,
+          livesSavedValue: -1003,
+          livesSavedPercentage: 2.6,
+          donationValue: 1000000,
+          donationPercentage: 100,
+        },
+      ],
+    });
+
+    expect(captured.props.xAxisDomain).toEqual([0, 'auto']);
+    expect(captured.props.xAxisTicks).toBeUndefined();
+  });
+
   it('places a negative bar label beyond the zero edge instead of over the bar', () => {
     const { container } = renderSection();
 

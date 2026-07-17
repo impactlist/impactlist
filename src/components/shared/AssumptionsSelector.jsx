@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import useAssumptionsLibrary from '../../hooks/useAssumptionsLibrary';
 import useAssumptionsSelectorPreference from '../../hooks/useAssumptionsSelectorPreference';
+import useCopySavedAssumptionsLink from '../../hooks/useCopySavedAssumptionsLink';
+import { useNotificationActions } from '../../contexts/NotificationContext';
 import { OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL } from '../../utils/assumptionsLoadHelpers';
 import { DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../../constants/assumptionsLibraryEntries';
 import AssumptionsDescriptionModal from '../AssumptionsDescriptionModal';
@@ -16,6 +18,8 @@ const DEFAULT_ASSUMPTIONS_SELECTOR_NOTE =
 const AssumptionsSelector = ({ className = '', interactive }) => {
   const [pendingDescriptionEntry, setPendingDescriptionEntry] = useState(null);
   const [showSelectorEveryPage] = useAssumptionsSelectorPreference();
+  const { showNotification } = useNotificationActions();
+  const handleCopySavedLink = useCopySavedAssumptionsLink(showNotification);
 
   const {
     libraryEntries,
@@ -116,12 +120,13 @@ const AssumptionsSelector = ({ className = '', interactive }) => {
         hasUnsavedChanges={hasUnsavedChanges}
         menuAriaLabel="Assumptions options"
         allowEntryManagementActions={false}
-        allowCopyLinkAction={false}
+        allowCopyLinkAction={true}
         allowAddDescriptionAction={false}
         showCurrentSaveAction={false}
         showCurrentShareAction={false}
         showShareForLocal={false}
         onLoad={handleLoadEntry}
+        onCopyLink={handleCopySavedLink}
         onDescription={handleDescriptionModalOpen}
       />
 

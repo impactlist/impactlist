@@ -416,20 +416,20 @@ const AssumptionsDropdown = ({
               className="saved-assumption-row__inline-icon"
             />
           )}
+          {canCopyLinkEntry && entry.shareUrl && (
+            <IconActionButton
+              icon="copy-link"
+              label="Copy Link"
+              onClick={(event) => stopActionEvent(event, () => onCopyLink(entry))}
+              className="saved-assumption-row__inline-icon"
+            />
+          )}
           {canManageEntry && (
             <IconActionButton
               icon="delete"
               label="Delete"
               tone="danger"
               onClick={(event) => stopActionEvent(event, () => onDelete(entry.id))}
-              className="saved-assumption-row__inline-icon"
-            />
-          )}
-          {canCopyLinkEntry && entry.shareUrl && (
-            <IconActionButton
-              icon="copy-link"
-              label="Copy Link"
-              onClick={(event) => stopActionEvent(event, () => onCopyLink(entry))}
               className="saved-assumption-row__inline-icon"
             />
           )}

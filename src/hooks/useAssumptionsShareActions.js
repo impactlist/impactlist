@@ -1,13 +1,11 @@
 import { useCallback, useState } from 'react';
 import { attachSavedAssumptionsShareReference, saveNewAssumptions } from '../utils/savedAssumptionsStore';
 import { isValidSlug, slugify } from '../utils/shareAssumptions';
+import useCopySavedAssumptionsLink from './useCopySavedAssumptionsLink';
 
 const SHARE_LIBRARY_SAVE_ERROR =
   'Share link created, but could not save it with your assumptions sets in this browser.';
 const SHARE_LIBRARY_SYNC_ERROR = 'Share link created, but could not attach it to your saved assumptions set.';
-const NO_SHARE_LINK_ERROR = 'No share link available for this entry.';
-const COPY_LINK_ERROR = 'Could not copy link automatically. Please copy it manually.';
-const COPY_LINK_SUCCESS = 'Copied share link.';
 
 export const useAssumptionsShareActions = ({
   activeLibraryEntry,
@@ -129,22 +127,7 @@ export const useAssumptionsShareActions = ({
     ]
   );
 
-  const handleCopySavedLink = useCallback(
-    async (entry) => {
-      if (!entry?.shareUrl) {
-        showNotification('error', NO_SHARE_LINK_ERROR);
-        return;
-      }
-
-      try {
-        await globalThis.navigator.clipboard.writeText(entry.shareUrl);
-        showNotification('success', COPY_LINK_SUCCESS);
-      } catch {
-        showNotification('error', COPY_LINK_ERROR);
-      }
-    },
-    [showNotification]
-  );
+  const handleCopySavedLink = useCopySavedAssumptionsLink(showNotification);
 
   return {
     shareModalOpen,

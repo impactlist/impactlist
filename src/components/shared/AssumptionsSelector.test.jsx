@@ -23,6 +23,9 @@ const curatedEntry = {
   source: 'curated',
   description: 'Looks far into the future.',
   assumptions: { globalParameters: { timeLimit: 1000000 } },
+  // Production curated profiles always carry a share link
+  // (curatedAssumptionsProfiles builds one per profile id).
+  shareUrl: 'http://localhost:3000/?a=longtermist',
 };
 
 const savedEntry = {
@@ -341,17 +344,41 @@ describe('AssumptionsSelector', () => {
     expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(curatedEntry.id);
   });
 
-  it('keeps copy link hidden in the simplified selector summary', () => {
+  it('shows copy link for shared entries in the selector summary while management actions stay hidden', async () => {
+    const user = userEvent.setup();
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
     savedEntry.reference = 'saved-link';
     savedEntry.shareUrl = 'http://localhost:3000/?shared=saved-link';
+    const writeText = vi.fn().mockResolvedValue();
+    Object.defineProperty(globalThis.navigator, 'clipboard', { value: { writeText }, configurable: true });
 
     renderSelector();
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
-    expect(within(summaryRow).queryByRole('button', { name: 'Copy Link' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
+
+    await user.click(within(summaryRow).getByRole('button', { name: 'Copy Link' }));
+    expect(writeText).toHaveBeenCalledWith(savedEntry.shareUrl);
+    expect(mockShowNotification).toHaveBeenCalledWith('success', 'Copied share link.');
+  });
+
+  it('shows copy link for entries with share links in the menu, including curated profiles', async () => {
+    const user = userEvent.setup();
+
+    renderSelector();
+
+    const menu = await openMenu(user);
+    // Curated profiles ship with share links, so the icon shows for them —
+    // same as on the Assumptions page.
+    const curatedRow = getMenuRow(menu, 'Longtermist (10 billion years)');
+    expect(within(curatedRow).getByRole('button', { name: 'Copy Link' })).toBeInTheDocument();
+
+    // A local entry that was never shared has no link to copy.
+    const localRow = getMenuRow(menu, 'My Saved Assumptions');
+    expect(within(localRow).queryByRole('button', { name: 'Copy Link' })).not.toBeInTheDocument();
   });
 
   it('shows a storage error instead of a silent no-op when activating a matching entry cannot persist', async () => {

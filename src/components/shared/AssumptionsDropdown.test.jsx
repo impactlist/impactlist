@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import AssumptionsDropdown from './AssumptionsDropdown';
 
@@ -14,6 +14,34 @@ const getTrigger = () => screen.getByRole('button', { name: /select assumptions 
 // With no active entry the panel lists the defaults entry plus both saved
 // entries' load buttons.
 const getLoadButton = (name) => screen.getByRole('button', { name });
+
+describe('AssumptionsDropdown entry actions', () => {
+  it('orders row actions with Copy Link directly after the description icon', async () => {
+    const sharedEntry = {
+      id: 'entry-shared',
+      label: 'Shared scenario',
+      source: 'local',
+      description: 'Has a description.',
+      shareUrl: 'http://localhost:3000/?shared=abc',
+    };
+    render(
+      <AssumptionsDropdown
+        entries={[sharedEntry]}
+        onLoad={vi.fn()}
+        onDescription={vi.fn()}
+        allowEntryManagementActions={true}
+      />
+    );
+
+    fireEvent.click(getTrigger(), { detail: 1 });
+    const menu = await screen.findByRole('group', { name: 'Assumptions options' });
+    const row = within(menu).getByText('Shared scenario').closest('.assumptions-entry');
+    const actionLabels = [...row.querySelectorAll('.saved-assumption-row__actions button')].map((button) =>
+      button.getAttribute('aria-label')
+    );
+    expect(actionLabels).toEqual(['Rename', 'View description', 'Copy Link', 'Delete']);
+  });
+});
 
 describe('AssumptionsDropdown disclosure keyboard semantics', () => {
   it('ArrowDown on the trigger opens the panel and focuses the first load target', async () => {

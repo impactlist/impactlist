@@ -95,6 +95,25 @@ describe('useAssumptionsShareActions', () => {
     expect(result.current.shareModalInitialResult).toBeNull();
   });
 
+  it.each([
+    ['curated', { source: 'curated' }],
+    ['local', { source: 'local' }],
+    ['remote', { source: 'imported', reference: 'existing-reference' }],
+  ])('does not inherit the %s baseline label when sharing edited assumptions', (_entryKind, entryOverrides) => {
+    const { result } = buildHook({
+      activeLibraryEntry: { ...activeLibraryEntry, ...entryOverrides },
+      hasUnsavedChanges: true,
+    });
+
+    expect(result.current.shareAssumptionName).toBeNull();
+  });
+
+  it('retains the saved entry name when sharing its unchanged values', () => {
+    const { result } = buildHook();
+
+    expect(result.current.shareAssumptionName).toBe('Saved Assumptions');
+  });
+
   it('prefills the description and slug when reopening an unchanged local saved assumptions entry', () => {
     const { result } = buildHook();
 

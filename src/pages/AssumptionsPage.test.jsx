@@ -2192,6 +2192,73 @@ describe('AssumptionsPage routing integration', () => {
     });
   });
 
+  it('uses the new link slug instead of a stale curated name when sharing edited curated assumptions', async () => {
+    const user = userEvent.setup();
+    const longtermistTimeLimit = 10_000_000_000;
+    const slightlyLongerTimeLimit = longtermistTimeLimit + 1;
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        globalParameters: {
+          timeLimit: longtermistTimeLimit,
+        },
+      })
+    );
+    setActiveSavedAssumptionsId('curated:longtermist');
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: 'slightly-longer-id',
+        slug: 'slightly-longer-longerterm',
+        reference: 'slightly-longer-longerterm',
+      }),
+    });
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, String(slightlyLongerTimeLimit));
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    await user.click(getActiveAssumptionsActionButton('Share'));
+    await user.type(screen.getByLabelText('Custom link text (optional)'), 'slightly-longer-longerterm');
+    await user.click(screen.getByRole('button', { name: 'Create Link' }));
+
+    expect(await screen.findByText('Share link created.')).toBeInTheDocument();
+    const requestBody = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(requestBody).toMatchObject({
+      assumptions: {
+        globalParameters: {
+          timeLimit: slightlyLongerTimeLimit,
+        },
+      },
+      name: null,
+      slug: 'slightly-longer-longerterm',
+    });
+
+    await waitFor(() => {
+      const entries = JSON.parse(localStorage.getItem('savedAssumptions:v1'));
+      expect(entries).toHaveLength(1);
+      expect(entries[0]).toMatchObject({
+        label: 'slightly-longer-longerterm',
+        source: 'local',
+        reference: 'slightly-longer-longerterm',
+        assumptions: {
+          globalParameters: {
+            timeLimit: slightlyLongerTimeLimit,
+          },
+        },
+      });
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(entries[0].id);
+    });
+
+    const summaryRow = getAssumptionsLibrarySummary();
+    expect(within(summaryRow).getByText('slightly-longer-longerterm')).toBeInTheDocument();
+    expect(within(summaryRow).getByText('Remote')).toBeInTheDocument();
+  });
+
   it('shares edited imported assumptions as a new local fork without reusing the imported name', async () => {
     const user = userEvent.setup();
     sessionStorage.setItem(

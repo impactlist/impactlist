@@ -18,9 +18,10 @@ export const useAssumptionsShareActions = ({
   const [shareModalInitialResult, setShareModalInitialResult] = useState(null);
   const [shareModalInitialDescription, setShareModalInitialDescription] = useState('');
   const [shareModalInitialSlug, setShareModalInitialSlug] = useState('');
-  const isActiveSavedAssumptionsRemote = Boolean(activeLibraryEntry?.reference);
-  const shouldForkEditedRemoteAssumptions = Boolean(isActiveSavedAssumptionsRemote && hasUnsavedChanges);
-  const shareAssumptionName = shouldForkEditedRemoteAssumptions ? null : activeLibraryEntry?.label || null;
+  // Snapshot metadata must describe the values being shared. Once values
+  // diverge from the active entry, its label describes only the baseline and
+  // must not override the new snapshot's slug/reference for importers.
+  const shareAssumptionName = hasUnsavedChanges ? null : activeLibraryEntry?.label || null;
 
   const handleOpenShareModal = useCallback(() => {
     const shouldPrefillDescription = !hasUnsavedChanges;
@@ -92,11 +93,6 @@ export const useAssumptionsShareActions = ({
         return;
       }
 
-      if (shouldForkEditedRemoteAssumptions) {
-        createAndActivateSharedEntry(sharedReference, sharedDescription);
-        return;
-      }
-
       const attachResult = attachSavedAssumptionsShareReference({
         reference: sharedReference,
         description: sharedDescription,
@@ -122,7 +118,6 @@ export const useAssumptionsShareActions = ({
       assumptionsForSharing,
       createAndActivateSharedEntry,
       persistAsActive,
-      shouldForkEditedRemoteAssumptions,
       showNotification,
     ]
   );

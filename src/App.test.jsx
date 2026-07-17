@@ -12,7 +12,7 @@ describe('RouteErrorFallback', () => {
     vi.restoreAllMocks();
   });
 
-  it('replaces data-router render failures with a focused recovery screen', async () => {
+  it('replaces data-router failures with a focused recovery screen and reveals details on request', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const router = createMemoryRouter([
       {
@@ -29,9 +29,13 @@ describe('RouteErrorFallback', () => {
     expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Back to Impact List' })).toHaveAttribute('href', '/');
     expect(screen.queryByText('private implementation detail')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show error details' }));
+    expect(screen.getByRole('region', { name: 'Error details' })).toHaveTextContent('private implementation detail');
+    expect(screen.getByRole('button', { name: 'Hide error details' })).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('surfaces unexpected unhandled promise rejections without exposing their details', async () => {
+  it('surfaces unexpected unhandled promise rejections while initially hiding their details', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     render(<App />);
 
@@ -44,6 +48,9 @@ describe('RouteErrorFallback', () => {
     expect(await screen.findByRole('heading', { name: 'Something went wrong' })).toBeInTheDocument();
     expect(screen.queryByText('private async failure detail')).not.toBeInTheDocument();
     expect(rejectionEvent.defaultPrevented).toBe(true);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show error details' }));
+    expect(screen.getByRole('region', { name: 'Error details' })).toHaveTextContent('private async failure detail');
   });
 
   it('ignores message-only browser and cross-origin script errors', () => {

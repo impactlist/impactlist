@@ -171,8 +171,8 @@ Recipients can also apply multipliers to category effects:
 
 ```yaml
 ---
-id: khan-academy
-name: 'Khan Academy'
+id: example-recipient
+name: 'Example Recipient'
 categories:
   - id: education
     fraction: 1

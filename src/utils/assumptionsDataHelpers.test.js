@@ -175,6 +175,20 @@ describe('assumptionsDataHelpers', () => {
     expect(defaultEffects).toEqual(originalDefaults);
   });
 
+  it('removes maps emptied when a recipient switches between multiplier and override modes', () => {
+    const overrideResult = mergeRecipientEffects(
+      [{ effectId: 'e1', multipliers: { costPerQALY: 2 } }],
+      [{ effectId: 'e1', overrides: { costPerQALY: 300 } }]
+    );
+    const multiplierResult = mergeRecipientEffects(
+      [{ effectId: 'e1', overrides: { costPerQALY: 120 } }],
+      [{ effectId: 'e1', multipliers: { costPerQALY: 3 } }]
+    );
+
+    expect(overrideResult).toEqual([{ effectId: 'e1', overrides: { costPerQALY: 300 } }]);
+    expect(multiplierResult).toEqual([{ effectId: 'e1', multipliers: { costPerQALY: 3 } }]);
+  });
+
   it('createCombinedAssumptions merges global/category/recipient overrides and exposes helper methods', () => {
     const defaults = buildDefaults();
     const userAssumptions = {

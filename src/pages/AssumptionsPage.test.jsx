@@ -1311,6 +1311,88 @@ describe('AssumptionsPage routing integration', () => {
     expect(JSON.parse(sessionStorage.getItem('customEffectsData')).recipients?.[recipientId]).toBeDefined();
   });
 
+  it('applies a recipient cost override that replaces a persisted multiplier without crashing', async () => {
+    // Multipliers no longer ship in default data and cannot be entered
+    // through the editor (override-only UI), but persisted assumptions from
+    // saved library entries or shared links can still carry them. Combining
+    // one with a built-in override empties the superseded override map, so
+    // this pins the whole flow: render, edit, and apply over a seeded
+    // multiplier.
+    const recipientWithOverride = Object.entries(assumptionsData.recipients).find(([, recipient]) =>
+      Object.values(recipient.categories || {}).some((category) =>
+        (category.effects || []).some((effect) =>
+          Object.keys(effect.overrides || {}).some(
+            (field) => field === 'costPerQALY' || field === 'costPerMicroprobability'
+          )
+        )
+      )
+    );
+    if (!recipientWithOverride) {
+      throw new Error('Expected a recipient with a built-in cost override in default assumptions data');
+    }
+
+    const [recipientId, recipient] = recipientWithOverride;
+    const [categoryId, recipientCategory] = Object.entries(recipient.categories).find(([, category]) =>
+      (category.effects || []).some((effect) =>
+        Object.keys(effect.overrides || {}).some(
+          (field) => field === 'costPerQALY' || field === 'costPerMicroprobability'
+        )
+      )
+    );
+    const recipientEffect = recipientCategory.effects.find((effect) =>
+      Object.keys(effect.overrides || {}).some(
+        (field) => field === 'costPerQALY' || field === 'costPerMicroprobability'
+      )
+    );
+    const field = Object.keys(recipientEffect.overrides).find(
+      (name) => name === 'costPerQALY' || name === 'costPerMicroprobability'
+    );
+    const label = field === 'costPerQALY' ? 'Cost per life-year' : 'Cost per microprobability';
+
+    // Seeded custom assumptions would otherwise trigger the one-time
+    // migration prompt, which opens a competing dialog.
+    localStorage.setItem(__internal.SAVED_ASSUMPTIONS_MIGRATION_KEY, '1');
+    sessionStorage.setItem(
+      'customEffectsData',
+      JSON.stringify({
+        recipients: {
+          [recipientId]: {
+            categories: {
+              [categoryId]: {
+                effects: [{ effectId: recipientEffect.effectId, multipliers: { [field]: 2 } }],
+              },
+            },
+          },
+        },
+      })
+    );
+
+    const user = userEvent.setup();
+    // Land on the recipients list first: its cost readouts run the combined
+    // recipient through validateRecipient, which is exactly where an emptied
+    // override map used to throw. The drill-in editor alone never hits it.
+    renderAssumptionsRoute('/assumptions?tab=recipients');
+    await user.click(await screen.findByRole('button', { name: `Edit ${recipient.name}` }));
+    const editor = (await screen.findByText(/Edit effects for recipient/i)).closest('.assumptions-shell');
+    const input = within(editor).getByRole('textbox', { name: label });
+    fireEvent.change(input, { target: { value: '1,234,567' } });
+
+    const applyButtons = within(editor).getAllByRole('button', { name: 'Apply' });
+    await user.click(applyButtons[applyButtons.length - 1]);
+
+    expect(await screen.findByRole('status')).toHaveTextContent(applyConfirmationText);
+    await waitFor(() => {
+      expect(screen.queryByText(/Edit effects for recipient/i)).not.toBeInTheDocument();
+    });
+
+    const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+    const savedEffect = persisted.recipients[recipientId].categories[categoryId].effects.find(
+      (effect) => effect.effectId === recipientEffect.effectId
+    );
+    expect(savedEffect.overrides[field]).toBe(1234567);
+    expect(savedEffect.multipliers).toBeUndefined();
+  });
+
   it('guards a dirty multi-category recipient editor the same way', async () => {
     const multiCategoryRecipient = Object.entries(assumptionsData.recipients).find(
       ([, recipient]) => Object.keys(recipient.categories || {}).length > 1

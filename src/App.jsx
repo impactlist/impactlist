@@ -40,25 +40,79 @@ const toError = (value, fallbackMessage) => {
   if (value instanceof Error) {
     return value;
   }
-  return new Error(typeof value === 'string' && value ? value : fallbackMessage);
+  const error = new Error(typeof value === 'string' && value ? value : fallbackMessage);
+  if (value !== undefined && typeof value !== 'string') {
+    error.cause = value;
+  }
+  return error;
 };
 
-const ErrorScreen = ({ title = 'Something went wrong' }) => {
+const formatUnknownErrorValue = (value) => {
+  if (value === undefined) return '';
+  if (value === null) return 'null';
+  if (typeof value === 'string') return value;
+
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch {
+    try {
+      return String(value);
+    } catch {
+      return 'Unserializable error value';
+    }
+  }
+};
+
+const getErrorDetails = (error, errorInfo) => {
+  const sections = [];
+
+  if (error instanceof Error) {
+    sections.push(error.stack || `${error.name}: ${error.message}`);
+    if (error.cause !== undefined) {
+      const causeDetails =
+        error.cause instanceof Error
+          ? error.cause.stack || `${error.cause.name}: ${error.cause.message}`
+          : formatUnknownErrorValue(error.cause);
+      if (causeDetails) {
+        sections.push(`Cause:\n${causeDetails}`);
+      }
+    }
+  } else if (error?.data instanceof Error) {
+    sections.push(error.data.stack || `${error.data.name}: ${error.data.message}`);
+  } else {
+    const rawDetails = formatUnknownErrorValue(error);
+    if (rawDetails) {
+      sections.push(rawDetails);
+    }
+  }
+
+  if (errorInfo?.componentStack) {
+    sections.push(`React component stack:${errorInfo.componentStack}`);
+  }
+
+  return sections.join('\n\n');
+};
+
+const ErrorScreen = ({ title = 'Something went wrong', error = null, errorInfo = null }) => {
   const headingRef = useRef(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const errorDetails = getErrorDetails(error, errorInfo);
 
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
 
   return (
-    <main className="impact-page flex min-h-screen items-center justify-center p-4" role="alert">
+    <main className="impact-page flex min-h-screen items-center justify-center p-4">
       <div className="impact-surface w-full max-w-2xl p-6 text-center">
-        <h1 ref={headingRef} tabIndex={-1} className="impact-page__title mb-4 text-danger">
-          {title}
-        </h1>
-        <p className="mb-6 text-muted">
-          Impact List hit an unexpected problem. Your saved browser data has not been deleted.
-        </p>
+        <div role="alert">
+          <h1 ref={headingRef} tabIndex={-1} className="impact-page__title mb-4 text-danger">
+            {title}
+          </h1>
+          <p className="mb-6 text-muted">
+            Impact List hit an unexpected problem. Your saved browser data has not been deleted.
+          </p>
+        </div>
         <div className="flex flex-wrap justify-center gap-3">
           <button
             type="button"
@@ -71,6 +125,35 @@ const ErrorScreen = ({ title = 'Something went wrong' }) => {
             Back to Impact List
           </a>
         </div>
+        {errorDetails && (
+          <div className="error-screen__details">
+            <button
+              type="button"
+              className="error-screen__details-toggle"
+              aria-expanded={showDetails}
+              aria-controls="error-screen-details-panel"
+              onClick={() => setShowDetails((isOpen) => !isOpen)}
+            >
+              <span aria-hidden="true" className="error-screen__details-chevron">
+                {showDetails ? '−' : '+'}
+              </span>
+              {showDetails ? 'Hide error details' : 'Show error details'}
+            </button>
+            {showDetails && (
+              <section
+                id="error-screen-details-panel"
+                className="error-screen__details-panel"
+                aria-label="Error details"
+              >
+                <div className="error-screen__details-intro">
+                  <h2>Technical details</h2>
+                  <p>Share this information with a developer when reporting the problem.</p>
+                </div>
+                <pre className="error-screen__details-code">{errorDetails}</pre>
+              </section>
+            )}
+          </div>
+        )}
       </div>
     </main>
   );
@@ -78,6 +161,10 @@ const ErrorScreen = ({ title = 'Something went wrong' }) => {
 
 ErrorScreen.propTypes = {
   title: PropTypes.string,
+  error: PropTypes.any,
+  errorInfo: PropTypes.shape({
+    componentStack: PropTypes.string,
+  }),
 };
 
 // Data routers catch descendant render/lazy-load errors before an outer
@@ -91,7 +178,7 @@ export const RouteErrorFallback = () => {
     console.error('Route error:', error);
   }, [error]);
 
-  return <ErrorScreen />;
+  return <ErrorScreen error={error} />;
 };
 
 class ErrorBoundary extends React.Component {
@@ -111,7 +198,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <ErrorScreen />;
+      return <ErrorScreen error={this.state.error} errorInfo={this.state.errorInfo} />;
     }
 
     return this.props.children;
@@ -300,7 +387,7 @@ const App = () => {
   }, []);
 
   if (error) {
-    return <ErrorScreen />;
+    return <ErrorScreen error={error} />;
   }
 
   return (

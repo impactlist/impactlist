@@ -92,6 +92,17 @@ const mergeRecipientEffectWithUser = (defaultEffect, userEffect) => {
     merged.disabled = userEffect.disabled;
   }
 
+  // Switching a field from a built-in multiplier to a user override (or the
+  // reverse) can delete the last entry in the superseded map. Empty maps are
+  // not valid recipient-effect data and make the runtime recipient validator
+  // fail after Apply, so remove the container along with its last field.
+  if (merged.overrides && Object.keys(merged.overrides).length === 0) {
+    delete merged.overrides;
+  }
+  if (merged.multipliers && Object.keys(merged.multipliers).length === 0) {
+    delete merged.multipliers;
+  }
+
   return merged;
 };
 

@@ -5,16 +5,14 @@ import { DEFAULT_ASSUMPTIONS_ENTRY_ID } from '../constants/assumptionsLibraryEnt
 import { getCuratedAssumptionsEntries, isCuratedAssumptionsEntryId } from '../utils/curatedAssumptionsProfiles';
 import {
   createComparableAssumptionsFingerprint,
+  findMatchingAssumptionsLibraryEntry,
   getActiveSavedAssumptionsId,
   getSavedAssumptions,
   markSavedAssumptionsLoaded,
   SAVED_ASSUMPTIONS_CHANGED_EVENT,
   setActiveSavedAssumptionsId,
 } from '../utils/savedAssumptionsStore';
-import {
-  getAssumptionsLoadRequest,
-  isCurrentAssumptionsStateRepresentedByLibrary,
-} from '../utils/assumptionsLoadHelpers';
+import { getAssumptionsLoadRequest } from '../utils/assumptionsLoadHelpers';
 import { getActiveAssumptionsLabel } from '../utils/assumptionsSelectorDisplayPreference';
 
 export const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
@@ -35,8 +33,11 @@ const useAssumptionsLibrary = ({ notifyOnEntrySwitch = false } = {}) => {
   const { getNormalizedUserAssumptionsForSharing, isUsingCustomValues, setAllUserAssumptions } = useAssumptions();
   const { showNotification } = useNotificationActions();
 
-  const [savedAssumptions, setSavedAssumptions] = useState([]);
-  const [activeSavedAssumptionsId, setActiveSavedAssumptionsIdState] = useState(null);
+  // Read the store for the first render so the selector never flashes the
+  // default/custom identity before the mount refresh catches up. Both readers
+  // are storage-safe and return fallbacks when browser storage is unavailable.
+  const [savedAssumptions, setSavedAssumptions] = useState(getSavedAssumptions);
+  const [persistedActiveSavedAssumptionsId, setActiveSavedAssumptionsIdState] = useState(getActiveSavedAssumptionsId);
   const [pendingLoadEntry, setPendingLoadEntry] = useState(null);
 
   const assumptionsForSharing = useMemo(
@@ -52,6 +53,25 @@ const useAssumptionsLibrary = ({ notifyOnEntrySwitch = false } = {}) => {
     () => createComparableAssumptionsFingerprint(assumptionsForSharing),
     [assumptionsForSharing]
   );
+  const matchingLibraryEntry = useMemo(
+    () =>
+      isUsingCustomValues
+        ? findMatchingAssumptionsLibraryEntry({
+            currentFingerprint,
+            libraryEntries,
+            preferredEntryId: persistedActiveSavedAssumptionsId,
+          })
+        : null,
+    [currentFingerprint, isUsingCustomValues, libraryEntries, persistedActiveSavedAssumptionsId]
+  );
+  // The active identity follows the normalized values, not merely the last
+  // entry the user clicked. Default assumptions use null by convention; a
+  // matching saved/curated entry becomes active immediately. Unmatched edits
+  // retain the previous entry as their save/update baseline while displaying
+  // the custom pseudo-entry through hasUnsavedChanges.
+  const activeSavedAssumptionsId = isUsingCustomValues
+    ? matchingLibraryEntry?.id || persistedActiveSavedAssumptionsId
+    : null;
   const activeLibraryEntry = useMemo(
     () => libraryEntries.find((entry) => entry.id === activeSavedAssumptionsId) || null,
     [activeSavedAssumptionsId, libraryEntries]
@@ -63,15 +83,7 @@ const useAssumptionsLibrary = ({ notifyOnEntrySwitch = false } = {}) => {
   const hasUnsavedChanges = activeLibraryEntry
     ? activeLibraryEntryFingerprint !== currentFingerprint
     : isUsingCustomValues;
-  const isCurrentStateRepresentedBySavedAssumptions = useMemo(
-    () =>
-      isCurrentAssumptionsStateRepresentedByLibrary({
-        isUsingCustomValues,
-        currentFingerprint,
-        libraryEntries,
-      }),
-    [currentFingerprint, isUsingCustomValues, libraryEntries]
-  );
+  const isCurrentStateRepresentedBySavedAssumptions = !isUsingCustomValues || Boolean(matchingLibraryEntry);
   const activeAssumptionsLabel = useMemo(
     () =>
       getActiveAssumptionsLabel({
@@ -114,6 +126,18 @@ const useAssumptionsLibrary = ({ notifyOnEntrySwitch = false } = {}) => {
       globalThis.removeEventListener(SAVED_ASSUMPTIONS_CHANGED_EVENT, handleSavedAssumptionsChanged);
     };
   }, [refreshSavedAssumptions]);
+
+  useEffect(() => {
+    if (activeSavedAssumptionsId === persistedActiveSavedAssumptionsId) {
+      return;
+    }
+
+    // This is identity reconciliation, not a library mutation. Every mounted
+    // consumer derives the same identity from AssumptionsContext, so emitting
+    // the library-change event here would only create redundant refreshes.
+    setActiveSavedAssumptionsId(activeSavedAssumptionsId, { emitChange: false });
+    setActiveSavedAssumptionsIdState(activeSavedAssumptionsId);
+  }, [activeSavedAssumptionsId, persistedActiveSavedAssumptionsId]);
 
   const persistAsActive = useCallback(
     (entryId) => {
@@ -253,8 +277,6 @@ const useAssumptionsLibrary = ({ notifyOnEntrySwitch = false } = {}) => {
     savedAssumptions,
     activeSavedAssumptionsId,
     activeLibraryEntry,
-    activeLibraryEntryFingerprint,
-    currentFingerprint,
     hasUnsavedChanges,
     isCurrentStateRepresentedBySavedAssumptions,
     activeAssumptionsLabel,

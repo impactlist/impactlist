@@ -34,7 +34,6 @@ const SaveAssumptionsModal = ({
   defaultDescription = '',
   updateExistingLabel = '',
   canUpdateExisting = false,
-  duplicateOfLabel = null,
 }) => {
   const [label, setLabel] = useState(defaultLabel);
   const [description, setDescription] = useState(defaultDescription);
@@ -90,12 +89,6 @@ const SaveAssumptionsModal = ({
         <p className="impact-modal__copy mb-4">
           “Update Saved Assumptions” overwrites <strong className="font-semibold">{updateExistingLabel}</strong>; “Save
           as New” keeps it unchanged.
-        </p>
-      )}
-
-      {duplicateOfLabel && (
-        <p className="impact-modal__warning mb-4">
-          You are about to save a duplicate copy of <strong className="font-semibold">{duplicateOfLabel}</strong>.
         </p>
       )}
 
@@ -166,7 +159,6 @@ SaveAssumptionsModal.propTypes = {
   defaultDescription: PropTypes.string,
   updateExistingLabel: PropTypes.string,
   canUpdateExisting: PropTypes.bool,
-  duplicateOfLabel: PropTypes.string,
 };
 
 export default SaveAssumptionsModal;

@@ -3,7 +3,9 @@ import {
   attachSavedAssumptionsShareReference,
   completeSavedAssumptionsMigration,
   createAssumptionsFingerprint,
+  createComparableAssumptionsFingerprint,
   deleteSavedAssumptions,
+  findMatchingAssumptionsLibraryEntry,
   getActiveSavedAssumptionsId,
   getSavedAssumptions,
   markSavedAssumptionsLoaded,
@@ -30,6 +32,41 @@ describe('savedAssumptionsStore', () => {
     vi.restoreAllMocks();
     localStorage.clear();
     sessionStorage.clear();
+  });
+
+  describe('findMatchingAssumptionsLibraryEntry', () => {
+    const matchingAssumptions = { globalParameters: { timeLimit: 500 } };
+    const currentFingerprint = createComparableAssumptionsFingerprint(matchingAssumptions);
+    const libraryEntries = [
+      { id: 'first-match', assumptions: matchingAssumptions },
+      { id: 'second-match', assumptions: matchingAssumptions },
+      { id: 'different', assumptions: { globalParameters: { timeLimit: 100 } } },
+    ];
+
+    it('returns the preferred entry when duplicate library entries match', () => {
+      expect(
+        findMatchingAssumptionsLibraryEntry({
+          currentFingerprint,
+          libraryEntries,
+          preferredEntryId: 'second-match',
+        })
+      ).toBe(libraryEntries[1]);
+    });
+
+    it('uses deterministic library order when the preferred entry does not match', () => {
+      expect(
+        findMatchingAssumptionsLibraryEntry({
+          currentFingerprint,
+          libraryEntries,
+          preferredEntryId: 'different',
+        })
+      ).toBe(libraryEntries[0]);
+    });
+
+    it('returns null when there is no comparable current state', () => {
+      expect(findMatchingAssumptionsLibraryEntry({ currentFingerprint: '', libraryEntries })).toBeNull();
+      expect(findMatchingAssumptionsLibraryEntry({ currentFingerprint, libraryEntries: null })).toBeNull();
+    });
   });
 
   it('saves and returns local assumptions entries', () => {

@@ -592,6 +592,35 @@ export const createComparableAssumptionsFingerprint = (assumptions) => {
   return comparableAssumptions ? createFingerprint(comparableAssumptions) : '';
 };
 
+/**
+ * Find the library entry represented by the given comparable fingerprint.
+ * Keep the preferred entry when multiple saved/curated entries have identical
+ * values; otherwise library order provides a deterministic fallback.
+ */
+export const findMatchingAssumptionsLibraryEntry = ({
+  currentFingerprint,
+  libraryEntries,
+  preferredEntryId = null,
+}) => {
+  if (!currentFingerprint || !Array.isArray(libraryEntries)) {
+    return null;
+  }
+
+  const hasMatchingFingerprint = (entry) =>
+    createComparableAssumptionsFingerprint(entry?.assumptions) === currentFingerprint;
+
+  if (preferredEntryId) {
+    const preferredEntry = libraryEntries.find(
+      (entry) => entry.id === preferredEntryId && hasMatchingFingerprint(entry)
+    );
+    if (preferredEntry) {
+      return preferredEntry;
+    }
+  }
+
+  return libraryEntries.find(hasMatchingFingerprint) || null;
+};
+
 export const saveNewAssumptions = ({
   label,
   description = null,
@@ -718,14 +747,11 @@ export const attachSavedAssumptionsShareReference = ({ reference, description, a
     return { ok: false, errorCode: 'invalid_assumptions' };
   }
 
-  const preferredEntry = preferredId ? current.find((entry) => entry.id === preferredId) : null;
-  const preferredMatchesFingerprint =
-    Boolean(preferredEntry) &&
-    createComparableAssumptionsFingerprint(preferredEntry.assumptions) === incomingFingerprint;
-
-  const targetEntry =
-    (preferredMatchesFingerprint && preferredEntry) ||
-    current.find((entry) => createComparableAssumptionsFingerprint(entry.assumptions) === incomingFingerprint);
+  const targetEntry = findMatchingAssumptionsLibraryEntry({
+    currentFingerprint: incomingFingerprint,
+    libraryEntries: current,
+    preferredEntryId: preferredId,
+  });
 
   if (!targetEntry) {
     return { ok: false, errorCode: 'not_found' };

@@ -2489,7 +2489,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(within(activeDefaultRow).getByText('Default (100 years)')).toBeInTheDocument();
   });
 
-  it('lets users load default assumptions when a non-default entry is active but edits match the default state', async () => {
+  it('automatically recognizes default assumptions after all custom changes are reverted', async () => {
     const user = userEvent.setup();
     sessionStorage.setItem(
       'customEffectsData',
@@ -2523,27 +2523,54 @@ describe('AssumptionsPage routing integration', () => {
     await user.type(timeLimitInput, String(assumptionsData.globalParameters.timeLimit));
     await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    const customRow = getAssumptionsLibrarySummary();
-    expect(customRow).toHaveAttribute('data-active', 'true');
-    expect(customRow).toHaveAttribute('data-dirty', 'false');
-    expect(within(customRow).getByText('Custom (not saved to browser)')).toBeInTheDocument();
-    expect(within(customRow).getByRole('button', { name: 'Save to browser' })).toBeInTheDocument();
-    expect(within(customRow).getByRole('button', { name: 'Share' })).toBeInTheDocument();
-    expect(within(customRow).getByRole('button', { name: 'View description' })).toBeInTheDocument();
-
-    const { menu } = await openAssumptionsLibraryMenu(user);
-    const defaultRow = getAssumptionsLibraryRow(menu, 'Default (100 years)');
-    await user.click(defaultRow.querySelector('[data-menu-item]'));
-
     await waitFor(() => {
       expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBeNull();
     });
 
     expect(sessionStorage.getItem('customEffectsData')).toBeNull();
-    expect(screen.queryByText('Default assumptions are already loaded.')).not.toBeInTheDocument();
     const summaryRow = getAssumptionsLibrarySummary();
     expect(summaryRow).toHaveAttribute('data-active', 'true');
     expect(within(summaryRow).getByText('Default (100 years)')).toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Save to browser' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
+  });
+
+  it('automatically activates a saved entry when edits come to match it', async () => {
+    const user = userEvent.setup();
+    sessionStorage.setItem('customEffectsData', JSON.stringify({ globalParameters: { timeLimit: 140 } }));
+
+    const previousEntry = saveNewAssumptions({
+      label: 'Previous Saved',
+      assumptions: { globalParameters: { timeLimit: 140 } },
+    });
+    const matchingEntry = saveNewAssumptions({
+      label: 'Matching Saved',
+      assumptions: { globalParameters: { timeLimit: 155 } },
+    });
+    if (!previousEntry.ok || !matchingEntry.ok) {
+      throw new Error('Expected saved entries to seed successfully');
+    }
+    setActiveSavedAssumptionsId(previousEntry.entry.id);
+
+    renderAssumptionsRoute('/assumptions');
+
+    const timeLimitInput = await screen.findByLabelText('Time Limit (years)');
+    await user.clear(timeLimitInput);
+    await user.type(timeLimitInput, '155');
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+
+    await waitFor(() => {
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(matchingEntry.entry.id);
+    });
+
+    const summaryRow = getAssumptionsLibrarySummary();
+    expect(summaryRow).toHaveAttribute('data-active', 'true');
+    expect(within(summaryRow).getByText('Matching Saved')).toBeInTheDocument();
+    expect(within(summaryRow).queryByText('Custom (not saved to browser)')).not.toBeInTheDocument();
+
+    const { menu } = await openAssumptionsLibraryMenu(user);
+    expect(within(menu).queryByText('Matching Saved')).not.toBeInTheDocument();
+    expect(within(menu).getByText('Previous Saved')).toBeInTheDocument();
   });
 
   it('loads a saved assumptions entry after replace confirmation when local custom assumptions exist', async () => {
@@ -3007,8 +3034,7 @@ describe('AssumptionsPage routing integration', () => {
     expect(localStorage.getItem('savedAssumptions:v1')).toBeNull();
   });
 
-  it('warns when saving unchanged assumptions would duplicate an existing saved entry', async () => {
-    const user = userEvent.setup();
+  it('recognizes an existing saved entry instead of offering to save a duplicate', async () => {
     sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
@@ -3032,10 +3058,13 @@ describe('AssumptionsPage routing integration', () => {
     }
 
     renderAssumptionsRoute('/assumptions');
-    await user.click(getActiveAssumptionsActionButton('Save to browser'));
 
-    expect(screen.getByText(/You are about to save a duplicate copy of/i)).toHaveTextContent(
-      'You are about to save a duplicate copy of Baseline Model.'
-    );
+    await waitFor(() => {
+      expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe(seeded.entry.id);
+    });
+
+    const summaryRow = getAssumptionsLibrarySummary();
+    expect(within(summaryRow).getByText('Baseline Model')).toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Save to browser' })).not.toBeInTheDocument();
   });
 });

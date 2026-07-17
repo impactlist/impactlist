@@ -1,4 +1,4 @@
-import { createComparableAssumptionsFingerprint } from './savedAssumptionsStore';
+import { createComparableAssumptionsFingerprint, findMatchingAssumptionsLibraryEntry } from './savedAssumptionsStore';
 
 export const OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL = Object.freeze({
   title: 'Overwrite your current assumptions?',
@@ -21,9 +21,7 @@ export const isCurrentAssumptionsStateRepresentedByLibrary = ({
     return false;
   }
 
-  return libraryEntries.some(
-    (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentFingerprint
-  );
+  return Boolean(findMatchingAssumptionsLibraryEntry({ currentFingerprint, libraryEntries }));
 };
 
 export const getAssumptionsLoadRequest = ({

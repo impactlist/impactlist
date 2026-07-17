@@ -2740,14 +2740,6 @@
     font-weight: 600;
   }
 
-  .impact-modal__warning {
-    border-radius: 9px;
-    border: 1px solid color-mix(in srgb, var(--warning) 30%, var(--border-subtle) 70%);
-    background: color-mix(in srgb, var(--warning-soft) 72%, white 28%);
-    padding: 0.45rem 0.65rem;
-    color: var(--warning-strong);
-    font-size: 0.84rem;
-  }
 }
 
 @media (max-width: 640px) {

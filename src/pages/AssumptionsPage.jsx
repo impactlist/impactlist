@@ -69,8 +69,6 @@ const AssumptionsPage = () => {
     libraryEntries,
     activeSavedAssumptionsId,
     activeLibraryEntry,
-    activeLibraryEntryFingerprint,
-    currentFingerprint,
     hasUnsavedChanges,
     activeAssumptionsLabel,
     pendingLoadEntry,
@@ -82,10 +80,10 @@ const AssumptionsPage = () => {
   } = useAssumptionsLibrary({ notifyOnEntrySwitch: true });
 
   const activePanelEntryId = activeSavedAssumptionsId || DEFAULT_ASSUMPTIONS_ENTRY_ID;
-  // `isUsingCustomValues` becomes false when the current state matches the built-in default assumptions,
-  // but users can still have unsaved edits relative to a previously loaded saved set. Keep summary-row
-  // Save/Share actions visible in that case so they can preserve or share the diverged state.
-  const shouldShowCurrentAssumptionsActions = isUsingCustomValues || hasUnsavedChanges;
+  // At default values there is nothing to save or share: the library hook
+  // reconciles the active identity from the current values, so non-custom
+  // state always means the Default entry with no unsaved changes.
+  const shouldShowCurrentAssumptionsActions = isUsingCustomValues;
 
   useEffect(() => {
     if (migrationCheckDone) {
@@ -178,9 +176,6 @@ const AssumptionsPage = () => {
   }, [commitPendingEdits, handleOpenShareModal, showNotification]);
   const { handleSaveAssumptionsClick, saveModalProps } = useSaveAssumptionsModal({
     activeLibraryEntry,
-    activeLibraryEntryFingerprint,
-    currentAssumptionsFingerprint: currentFingerprint,
-    libraryEntries,
     hasUnsavedChanges,
     getCurrentAssumptions: getNormalizedUserAssumptionsForSharing,
     persistAsActive,

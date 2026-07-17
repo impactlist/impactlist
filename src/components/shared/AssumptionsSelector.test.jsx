@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import AssumptionsSelector from './AssumptionsSelector';
@@ -64,12 +64,13 @@ vi.mock('../../utils/curatedAssumptionsProfiles', () => ({
   isCuratedAssumptionsEntryId: (id) => id === curatedEntry.id,
 }));
 
-vi.mock('../../utils/savedAssumptionsStore', () => ({
-  createComparableAssumptionsFingerprint: (assumptions) => JSON.stringify(assumptions || null),
+// Keep the pure functions (fingerprinting, entry matching) real and stub only
+// the storage I/O, so the tests exercise the same matching semantics as prod.
+vi.mock('../../utils/savedAssumptionsStore', async (importOriginal) => ({
+  ...(await importOriginal()),
   getActiveSavedAssumptionsId: () => mockSavedAssumptionsState.activeId,
   getSavedAssumptions: () => [savedEntry],
   markSavedAssumptionsLoaded: (...args) => mockMarkSavedAssumptionsLoaded(...args),
-  SAVED_ASSUMPTIONS_CHANGED_EVENT: 'saved-assumptions:changed',
   setActiveSavedAssumptionsId: (...args) => mockSetActiveSavedAssumptionsId(...args),
 }));
 
@@ -98,6 +99,7 @@ describe('AssumptionsSelector', () => {
     mockAssumptionsState.normalizedAssumptions = null;
     mockAssumptionsState.isUsingCustomValues = false;
     mockSavedAssumptionsState.activeId = null;
+    savedEntry.assumptions = { globalParameters: { timeLimit: 500 } };
     delete savedEntry.reference;
     delete savedEntry.shareUrl;
   });
@@ -126,6 +128,7 @@ describe('AssumptionsSelector', () => {
 
   it('renders a display label without the dropdown when interactive is false', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
 
     renderSelector({ interactive: false });
@@ -135,6 +138,30 @@ describe('AssumptionsSelector', () => {
     );
     expect(screen.getByRole('link', { name: 'view / edit' })).toHaveAttribute('href', '/assumptions');
     expect(screen.queryByRole('button', { name: /Current assumptions/ })).not.toBeInTheDocument();
+  });
+
+  it('recognizes a matching saved entry when the persisted active id is stale', async () => {
+    mockSavedAssumptionsState.activeId = curatedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
+    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+
+    renderSelector();
+
+    expect(screen.getByRole('button', { name: /Current assumptions/ })).toHaveTextContent('My Saved Assumptions');
+    await waitFor(() => {
+      expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(savedEntry.id, { emitChange: false });
+    });
+  });
+
+  it('recognizes default assumptions when a saved entry was previously active', async () => {
+    mockSavedAssumptionsState.activeId = savedEntry.id;
+
+    renderSelector();
+
+    expect(screen.getByRole('button', { name: /Current assumptions/ })).toHaveTextContent('Default (100 years)');
+    await waitFor(() => {
+      expect(mockSetActiveSavedAssumptionsId).toHaveBeenCalledWith(null, { emitChange: false });
+    });
   });
 
   it('shows an explanatory tooltip next to the current assumptions label', async () => {
@@ -233,6 +260,7 @@ describe('AssumptionsSelector', () => {
   it('shows only the description action for the default row inside the menu', async () => {
     const user = userEvent.setup();
     mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
 
     renderSelector();
@@ -286,6 +314,7 @@ describe('AssumptionsSelector', () => {
 
   it('keeps save/share/rename/delete hidden in the simplified selector summary', () => {
     mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
 
     renderSelector();
@@ -347,6 +376,7 @@ describe('AssumptionsSelector', () => {
   it('shows copy link for shared entries in the selector summary while management actions stay hidden', async () => {
     const user = userEvent.setup();
     mockSavedAssumptionsState.activeId = savedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
     mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
     savedEntry.reference = 'saved-link';
     savedEntry.shareUrl = 'http://localhost:3000/?shared=saved-link';
@@ -382,9 +412,13 @@ describe('AssumptionsSelector', () => {
   });
 
   it('shows a storage error instead of a silent no-op when activating a matching entry cannot persist', async () => {
-    // Current state already matches the saved entry → the load resolves to
-    // "activate-matching-entry", whose store write we make fail.
-    mockAssumptionsState.normalizedAssumptions = savedEntry.assumptions;
+    // Prefer the already-active curated entry when two entries match. The
+    // duplicate saved entry remains in the menu, where explicitly selecting
+    // it exercises the activate-matching-entry persistence path.
+    mockSavedAssumptionsState.activeId = curatedEntry.id;
+    mockAssumptionsState.isUsingCustomValues = true;
+    savedEntry.assumptions = curatedEntry.assumptions;
+    mockAssumptionsState.normalizedAssumptions = curatedEntry.assumptions;
     mockMarkSavedAssumptionsLoaded.mockReturnValueOnce({ ok: false });
 
     const user = userEvent.setup();

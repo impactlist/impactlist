@@ -1,19 +1,12 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { hasCuratedAssumptionsLabel } from '../utils/curatedAssumptionsProfiles';
 import { buildEvictionNotificationMessage } from '../utils/savedAssumptionsMessages';
-import {
-  createComparableAssumptionsFingerprint,
-  saveNewAssumptions,
-  updateSavedAssumptions,
-} from '../utils/savedAssumptionsStore';
+import { saveNewAssumptions, updateSavedAssumptions } from '../utils/savedAssumptionsStore';
 
 const STORAGE_ERROR_MESSAGE = 'Could not save assumptions locally. Delete some saved assumptions and try again.';
 
 const useSaveAssumptionsModal = ({
   activeLibraryEntry,
-  activeLibraryEntryFingerprint,
-  currentAssumptionsFingerprint,
-  libraryEntries,
   hasUnsavedChanges,
   getCurrentAssumptions,
   persistAsActive,
@@ -30,21 +23,6 @@ const useSaveAssumptionsModal = ({
   const canUpdateExisting = Boolean(
     activeLibraryEntry && hasUnsavedChanges && !isActiveSavedAssumptionsRemote && !isActiveCuratedEntry
   );
-
-  const duplicateSavedAssumptionsLabel = useMemo(() => {
-    if (!currentAssumptionsFingerprint) {
-      return null;
-    }
-
-    if (activeLibraryEntryFingerprint && activeLibraryEntryFingerprint === currentAssumptionsFingerprint) {
-      return activeLibraryEntry?.label || null;
-    }
-
-    const matchingEntry = libraryEntries.find(
-      (entry) => createComparableAssumptionsFingerprint(entry.assumptions) === currentAssumptionsFingerprint
-    );
-    return matchingEntry?.label || null;
-  }, [activeLibraryEntry?.label, activeLibraryEntryFingerprint, currentAssumptionsFingerprint, libraryEntries]);
 
   const handleSaveAssumptionsClick = useCallback(() => {
     const prepareResult = beforeSave?.();
@@ -150,7 +128,6 @@ const useSaveAssumptionsModal = ({
       defaultDescription: saveModalDefaultDescription,
       updateExistingLabel: canUpdateExisting ? activeLibraryEntry?.label || '' : '',
       canUpdateExisting,
-      duplicateOfLabel: duplicateSavedAssumptionsLabel,
     },
   };
 };

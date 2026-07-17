@@ -14,6 +14,11 @@ import GlobalNotificationBanner from '../components/shared/GlobalNotificationBan
 /* global localStorage, sessionStorage */
 
 const assumptionsData = createDefaultAssumptions();
+const longtermistGlobalParameters = {
+  populationGrowthRate: 2e-8,
+  populationLimit: 1_000_000,
+  timeLimit: 10_000_000_000,
+};
 
 const LocationProbe = () => {
   const location = useLocation();
@@ -215,9 +220,7 @@ describe('Global shared assumptions import flow', () => {
 
     await waitFor(() => {
       expect(getPersistedCustomEffectsData()).toEqual({
-        globalParameters: {
-          timeLimit: 10000000000,
-        },
+        globalParameters: longtermistGlobalParameters,
       });
     });
 
@@ -246,9 +249,7 @@ describe('Global shared assumptions import flow', () => {
 
     await waitFor(() => {
       expect(getPersistedCustomEffectsData()).toEqual({
-        globalParameters: {
-          timeLimit: 10000000000,
-        },
+        globalParameters: longtermistGlobalParameters,
       });
     });
 
@@ -292,9 +293,7 @@ describe('Global shared assumptions import flow', () => {
 
     await waitFor(() => {
       expect(getPersistedCustomEffectsData()).toEqual({
-        globalParameters: {
-          timeLimit: 10000000000,
-        },
+        globalParameters: longtermistGlobalParameters,
       });
     });
 

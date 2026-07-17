@@ -18,6 +18,11 @@ import { __internal, saveNewAssumptions, setActiveSavedAssumptionsId } from '../
 /* global localStorage, sessionStorage, Event */
 
 const assumptionsData = createDefaultAssumptions();
+const longtermistGlobalParameters = {
+  populationGrowthRate: 2e-8,
+  populationLimit: 1_000_000,
+  timeLimit: 10_000_000_000,
+};
 const firstValidCategoryId = Object.keys(assumptionsData.categories)[0];
 const firstValidRecipientId = Object.entries(assumptionsData.recipients).find(
   ([, recipient]) => Object.keys(recipient.categories || {}).length > 0
@@ -1720,12 +1725,11 @@ describe('AssumptionsPage routing integration', () => {
 
     await waitFor(() => {
       expect(screen.getByLabelText('Time Limit (years)')).toHaveValue('10,000,000,000');
+      expect(screen.getByLabelText('Population Growth Rate (%)')).toHaveValue('0.000002');
     });
 
     expect(JSON.parse(sessionStorage.getItem('customEffectsData'))).toEqual({
-      globalParameters: {
-        timeLimit: 10000000000,
-      },
+      globalParameters: longtermistGlobalParameters,
     });
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
 
@@ -2194,13 +2198,13 @@ describe('AssumptionsPage routing integration', () => {
 
   it('uses the new link slug instead of a stale curated name when sharing edited curated assumptions', async () => {
     const user = userEvent.setup();
-    const longtermistTimeLimit = 10_000_000_000;
+    const longtermistTimeLimit = longtermistGlobalParameters.timeLimit;
     const slightlyLongerTimeLimit = longtermistTimeLimit + 1;
     sessionStorage.setItem(
       'customEffectsData',
       JSON.stringify({
         globalParameters: {
-          timeLimit: longtermistTimeLimit,
+          ...longtermistGlobalParameters,
         },
       })
     );
@@ -2231,6 +2235,8 @@ describe('AssumptionsPage routing integration', () => {
     expect(requestBody).toMatchObject({
       assumptions: {
         globalParameters: {
+          populationGrowthRate: longtermistGlobalParameters.populationGrowthRate,
+          populationLimit: longtermistGlobalParameters.populationLimit,
           timeLimit: slightlyLongerTimeLimit,
         },
       },
@@ -2247,6 +2253,8 @@ describe('AssumptionsPage routing integration', () => {
         reference: 'slightly-longer-longerterm',
         assumptions: {
           globalParameters: {
+            populationGrowthRate: longtermistGlobalParameters.populationGrowthRate,
+            populationLimit: longtermistGlobalParameters.populationLimit,
             timeLimit: slightlyLongerTimeLimit,
           },
         },

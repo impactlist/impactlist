@@ -6,28 +6,11 @@ import PropTypes from 'prop-types';
 // NOTE: the class names must stay static strings — Tailwind tree-shakes @layer
 // components rules whose class names never appear literally in the source.
 
-const ArrowUpRightIcon = () => (
-  <svg
-    className="impact-challenge__icon"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.4"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M7 17 17 7" />
-    <path d="M8 7h9v9" />
-  </svg>
-);
-
 // `label` is the accessible name (e.g. "Challenge assumption 3 (under 'Effect 2: …')"),
 // distinguishing the page's many identically-worded buttons for screen-reader navigation.
 const ChallengeAssumptionLink = ({ href, label, children }) => (
   <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="impact-challenge">
-    <span>{children}</span>
-    <ArrowUpRightIcon />
+    {children}
   </a>
 );
 

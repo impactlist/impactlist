@@ -654,6 +654,80 @@ describe('pipeline strictness', () => {
     );
   });
 
+  it('injects the page feedback note on authored justifications and builds page-specific feedback buttons', async () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    // No blank line between heading and prose: the injected note still must
+    // not merge into the prose paragraph.
+    writeContentFile(
+      workspace,
+      'categories/health.md',
+      '---\nid: health\nname: Health\neffects:\n  - effectId: health_effect\n    startTime: 0\n    windowLength: 10\n    costPerQALY: 100\n---\n\n# Justification of cost per life\nAuthored analysis text.\n\n{{CONTRIBUTION_NOTE}}\n'
+    );
+    // Headingless body: the note goes above the prose, again as its own
+    // paragraph.
+    writeContentFile(
+      workspace,
+      'assumptions/test_assumption.md',
+      '---\nid: test_assumption\nname: Test Assumption\n---\n\nAuthored assumption text.\n'
+    );
+    // Any full-line shared token counts as boilerplate, not just the classic
+    // default-justification pair — a page of stock notes has nothing
+    // page-specific to challenge.
+    writeContentFile(
+      workspace,
+      'recipients/recipient_one.md',
+      '---\nid: recipient_one\nname: Recipient One\ncategories:\n  - id: health\n    fraction: 1\n---\n\n# Justification of cost per life\n\n{{RECIPIENT_DEFAULT_JUSTIFICATION}}\n\n{{GLOBAL_ASSUMPTIONS_NOTE}}\n\n{{STANDARD_QALY_METHOD_NOTE}}\n\n{{CONTRIBUTION_NOTE}}\n'
+    );
+
+    const result = runGenerator(workspace);
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+
+    const generated = await loadGeneratedModule(workspace);
+    const healthFeedbackUrl =
+      'https://docs.google.com/forms/d/e/1FAIpQLSeyolsqiakbi83k8GKUj91_sWbuxu1rW-RKTnSOZ-8IU7veNQ/viewform?usp=pp_url&entry.899420459=Feedback%20about%20the%20%27Health%27%20cause%20page%3A%0A';
+
+    // The note lands directly below the leading heading, chip-styled via the
+    // challenge-assumption title marker — and stays its own paragraph, with
+    // a blank line separating it from the prose that followed the heading.
+    expect(generated.categoriesById.health.content).toContain(
+      `# Justification of cost per life\n\n_If you think anything on this page is wrong, please [submit feedback](${healthFeedbackUrl} "challenge-assumption:Submit feedback about this page")._\n\nAuthored analysis text.`
+    );
+
+    // Headingless assumption body: note first, prose second, separate
+    // paragraphs.
+    expect(generated.assumptionsById.test_assumption.content).toContain(
+      'entry.899420459=Feedback%20about%20the%20%27Test%20Assumption%27%20assumption%20page%3A%0A'
+    );
+    expect(generated.assumptionsById.test_assumption.content).toContain(
+      '"challenge-assumption:Submit feedback about this page")._\n\nAuthored assumption text.'
+    );
+    // CONTRIBUTION_NOTE now carries the same page-prefilled button.
+    expect(generated.categoriesById.health.content).toContain(
+      `You can [submit feedback](${healthFeedbackUrl} "challenge-assumption:Submit feedback about this page") or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`
+    );
+
+    // Boilerplate-only bodies get no top note, but their contribution note
+    // still points at their own page.
+    expect(generated.recipientsById.recipient_one.content).not.toContain('If you think anything on this page is wrong');
+    expect(generated.recipientsById.recipient_one.content).toContain(
+      'entry.899420459=Feedback%20about%20the%20%27Recipient%20One%27%20recipient%20page%3A%0A'
+    );
+  });
+
+  it('fails on {{CONTRIBUTION_NOTE}} in content types without page context', () => {
+    const workspace = setupWorkspaceFromFixture('donation-validation');
+    writeContentFile(
+      workspace,
+      'donors/donor_a.md',
+      '---\nid: donor_a\nname: Donor A\nbirthDate: 1980-02-03\nnetWorth: 1000000\nabout: Donor A bio.\n---\n\nBio text. {{CONTRIBUTION_NOTE}}\n'
+    );
+
+    runGeneratorExpectingError(
+      workspace,
+      'contains {{CONTRIBUTION_NOTE}}, which is only supported in category, recipient, and assumption files'
+    );
+  });
+
   it('fails on a malformed {{CHALLENGE_ASSUMPTION}} argument instead of shipping it as text', () => {
     const workspace = setupWorkspaceFromFixture('donation-validation');
     writeContentFile(

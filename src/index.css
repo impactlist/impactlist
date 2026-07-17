@@ -635,6 +635,9 @@
     font-family: var(--font-ui);
     font-size: 0.75rem;
     font-weight: 400;
+    /* The boilerplate feedback notes set the button inside italic prose —
+       the chip keeps its upright UI face regardless. */
+    font-style: normal;
     min-height: 1.5rem; /* keeps the control at or above the 24px WCAG 2.5.8 target size */
     line-height: 1;
     white-space: nowrap;

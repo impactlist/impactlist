@@ -50,22 +50,36 @@ const CHALLENGE_FORM_PREFILL_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSeyolsqiakbi83k8GKUj91_sWbuxu1rW-RKTnSOZ-8IU7veNQ/viewform?usp=pp_url&entry.899420459=';
 
 // The pre-filled text ends with a newline so the respondent's cursor starts on the line
-// below the reference when the field gains focus. `sectionLabel` (the optional second
-// token argument) disambiguates pages with several Assumptions sections whose numbering
-// each restarts at 1 (e.g. ai_capabilities' per-effect sections).
-function challengeAssumptionLink(pageKind, pageName, assumptionNumber, sectionLabel) {
-  const section = sectionLabel ? ` (under '${sectionLabel}')` : '';
-  const prefill = `Challenging assumption ${assumptionNumber}${section} on the '${pageName}' ${pageKind} page:\n`;
+// below the reference when the field gains focus. The markdown link title carries the
+// accessible label behind CHALLENGE_ASSUMPTION_TITLE_PREFIX, which also tells
+// MarkdownContent to render the link as the chip-styled button.
+function prefilledFormLink(linkText, prefillText, ariaLabel) {
   // encodeURIComponent leaves ' ( ) unescaped; encode them too so the URL survives
   // markdown link syntax regardless of the page name.
-  const encoded = encodeURIComponent(prefill).replace(
+  const encoded = encodeURIComponent(prefillText).replace(
     /[()']/g,
     (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`
   );
-  // The title carries the accessible label so screen readers can tell a page's many
-  // identically-worded challenge buttons apart.
+  return `[${linkText}](${CHALLENGE_FORM_PREFILL_URL}${encoded} "${CHALLENGE_ASSUMPTION_TITLE_PREFIX}${ariaLabel}")`;
+}
+
+// `sectionLabel` (the optional second token argument) disambiguates pages with several
+// Assumptions sections whose numbering each restarts at 1 (e.g. ai_capabilities'
+// per-effect sections). The accessible label repeats the number and section so screen
+// readers can tell a page's many identically-worded challenge buttons apart.
+function challengeAssumptionLink(pageKind, pageName, assumptionNumber, sectionLabel) {
+  const section = sectionLabel ? ` (under '${sectionLabel}')` : '';
+  const prefill = `Challenging assumption ${assumptionNumber}${section} on the '${pageName}' ${pageKind} page:\n`;
   const ariaLabel = `Challenge assumption ${assumptionNumber}${section}`;
-  return `[Challenge assumption](${CHALLENGE_FORM_PREFILL_URL}${encoded} "${CHALLENGE_ASSUMPTION_TITLE_PREFIX}${ariaLabel}")`;
+  return prefilledFormLink('Challenge assumption', prefill, ariaLabel);
+}
+
+// Page-level "submit feedback" button used by the boilerplate notes (CONTRIBUTION_NOTE
+// and the injected PAGE_FEEDBACK_NOTE): same form and chip styling as the challenge
+// links, pre-filled with the page instead of a numbered assumption.
+function submitFeedbackLink(pageKind, pageName) {
+  const prefill = `Feedback about the '${pageName}' ${pageKind} page:\n`;
+  return prefilledFormLink('submit feedback', prefill, 'Submit feedback about this page');
 }
 
 // Enforce the challenge-token contract documented in content/CLAUDE.md: inside every
@@ -170,7 +184,6 @@ function validateChallengeAssumptionTokens(content, context) {
 
 // Shared text variables for markdown substitution
 const MARKDOWN_VARIABLES = {
-  CONTRIBUTION_NOTE: `_These estimates are approximate and we welcome contributions to improve them. You can submit feedback with [this form](https://forms.gle/NEC6LNics3n6WVo47) or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
   GLOBAL_ASSUMPTIONS_NOTE: `_All estimates rely on global assumptions, such as years per life, discounting, population growth, and how far into the future we care about. You can view or edit these on the [Assumptions page](/assumptions). Additional assumptions specific to this estimate follow._`,
   QALY: QALY_LINK_WITH_TOOLTIP,
   QALYS: QALYS_LINK_WITH_TOOLTIP,
@@ -187,6 +200,50 @@ You can see how these cost per life values were calculated by going to the pages
   PLAUSIBLE_RANGE_CAP: `[Plausible range](#tooltip:plausible-range)`,
   PLAUSIBLE_RANGES: `[plausible ranges](#tooltip:plausible-range)`,
 };
+
+// Variables that embed the page's pre-filled "submit feedback" button, so they can only
+// be substituted on content types that carry page context (category, recipient, and
+// assumption files). PAGE_FEEDBACK_NOTE is injected automatically at the top of every
+// authored justification (see injectPageFeedbackNote); writing it manually also works.
+const PAGE_MARKDOWN_VARIABLES = {
+  CONTRIBUTION_NOTE: (page) =>
+    `_These estimates are approximate and we welcome contributions to improve them. You can ${submitFeedbackLink(page.kind, page.name)} or get more involved [here](https://github.com/impactlist/impactlist/blob/master/CONTRIBUTING.md)._`,
+  PAGE_FEEDBACK_NOTE: (page) =>
+    `_If you think anything on this page is wrong, please ${submitFeedbackLink(page.kind, page.name)}._`,
+};
+
+// The top-of-justification feedback note goes only on pages with an authored write-up.
+// A line that is exactly a {{TOKEN}} is shared boilerplate by definition (default
+// justification, contribution note, global-assumptions note, ...), so a body whose
+// every line is a heading or a full-line token has nothing page-specific to be wrong
+// about. Matching the token SHAPE rather than a name list keeps this from drifting
+// when new shared variables are added.
+const FULL_LINE_TOKEN_PATTERN = /^\{\{[A-Z0-9_]+(?::[^}]*)?\}\}$/;
+
+function hasAuthoredJustification(content) {
+  if (!content) return false;
+  return content.split('\n').some((line) => {
+    const trimmed = line.trim();
+    return trimmed !== '' && !/^#{1,6}\s/.test(trimmed) && !FULL_LINE_TOKEN_PATTERN.test(trimmed);
+  });
+}
+
+// Prepend the {{PAGE_FEEDBACK_NOTE}} token to authored justifications — after the
+// leading heading when the body starts with one, so the note reads as part of the
+// section rather than a banner floating above its title.
+function injectPageFeedbackNote(content) {
+  // A hand-placed token overrides the automatic position.
+  if (!hasAuthoredJustification(content) || content.includes('{{PAGE_FEEDBACK_NOTE}}')) return content;
+  const lines = content.split('\n');
+  const firstContentIndex = lines.findIndex((line) => line.trim() !== '');
+  const insertAt = /^#{1,6}\s/.test(lines[firstContentIndex].trim()) ? firstContentIndex + 1 : firstContentIndex;
+  // Blank lines on BOTH sides: without the trailing one, a body whose next
+  // line is immediate prose (e.g. a heading with no blank line under it, or
+  // a headingless body) would merge the note and the prose into one
+  // markdown paragraph.
+  lines.splice(insertAt, 0, '', '{{PAGE_FEEDBACK_NOTE}}', '');
+  return lines.join('\n');
+}
 
 // glob does not guarantee result ordering (it's filesystem-dependent), and
 // loader insertion order leaks into the generated output. Sort for
@@ -227,6 +284,17 @@ function replaceVariables(content, context = 'content', page = null) {
     result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
   }
 
+  for (const [key, buildValue] of Object.entries(PAGE_MARKDOWN_VARIABLES)) {
+    const token = `{{${key}}}`;
+    if (!result.includes(token)) continue;
+    if (!page) {
+      throw new Error(
+        `Error: ${context} contains ${token}, which is only supported in category, recipient, and assumption files.`
+      );
+    }
+    result = result.replaceAll(token, buildValue(page));
+  }
+
   if (page) {
     validateChallengeAssumptionTokens(result, context);
   }
@@ -248,7 +316,7 @@ function replaceVariables(content, context = 'content', page = null) {
   const leftover = result.match(/\{\{[A-Z0-9_]+(?::[^}]*)?\}\}/);
   if (leftover) {
     throw new Error(
-      `Error: ${context} contains unreplaced placeholder ${leftover[0]}. Known variables: ${Object.keys(MARKDOWN_VARIABLES).join(', ')}.`
+      `Error: ${context} contains unreplaced placeholder ${leftover[0]}. Known variables: ${[...Object.keys(MARKDOWN_VARIABLES), ...Object.keys(PAGE_MARKDOWN_VARIABLES)].join(', ')}.`
     );
   }
 
@@ -484,10 +552,14 @@ function loadCategories() {
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content, `Category file ${fileName}`);
     if (extractedContent) {
-      categories[data.id].content = replaceVariables(extractedContent, `Category file ${fileName}`, {
-        kind: 'cause',
-        name: data.name,
-      });
+      categories[data.id].content = replaceVariables(
+        injectPageFeedbackNote(extractedContent),
+        `Category file ${fileName}`,
+        {
+          kind: 'cause',
+          name: data.name,
+        }
+      );
     }
   });
 
@@ -690,10 +762,14 @@ function loadRecipients() {
     // Extract content excluding "Internal Notes" section
     const extractedContent = extractContentExcludingInternalNotes(content, `Recipient file ${fileName}`);
     if (extractedContent) {
-      recipients[data.id].content = replaceVariables(extractedContent, `Recipient file ${fileName}`, {
-        kind: 'recipient',
-        name: data.name,
-      });
+      recipients[data.id].content = replaceVariables(
+        injectPageFeedbackNote(extractedContent),
+        `Recipient file ${fileName}`,
+        {
+          kind: 'recipient',
+          name: data.name,
+        }
+      );
     }
   });
 
@@ -909,7 +985,7 @@ function loadAssumptions() {
       id: data.id,
       name: data.name,
       content:
-        replaceVariables(extractedContent, `Assumption file ${fileName}`, {
+        replaceVariables(injectPageFeedbackNote(extractedContent), `Assumption file ${fileName}`, {
           kind: 'assumption',
           name: data.name,
         }) || '',

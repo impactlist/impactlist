@@ -255,6 +255,12 @@ Put a YAML `#` comment at the top of the excluded donor file listing the restore
 (see `sam_bankman_fried.md.excluded` for the pattern). `src/data/excludedContent.test.js`
 asserts that excluded donors stay out of the generated data.
 
+## Markdown Content
+
+The markdown body below each file's frontmatter is the page's published write-up. A level-1 `# Internal Notes` heading and everything under it is stripped from published content. `{{VARIABLE}}` placeholders are substituted at build time (see `MARKDOWN_VARIABLES` in `scripts/generate-data-from-markdown.js`); an unknown or unreplaced token fails the build.
+
+Two variables embed a page-specific pre-filled "submit feedback" button and therefore only work in category, recipient, and assumption files: `{{CONTRIBUTION_NOTE}}` (the standard closing note) and `{{PAGE_FEEDBACK_NOTE}}` (an italic "If you think anything on this page is wrong…" note). The generator automatically inserts `{{PAGE_FEEDBACK_NOTE}}` at the top of every justification with authored content, below its leading heading; bodies made only of headings and full-line boilerplate tokens are skipped. Hand-placing the token moves the note instead of doubling it.
+
 ## Data Generation
 
 After updating these files, run the data generation script to create the JavaScript data file:

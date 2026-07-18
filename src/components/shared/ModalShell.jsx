@@ -13,10 +13,15 @@ const FOCUSABLE_SELECTOR = [
 
 let bodyScrollLockCount = 0;
 let previousBodyOverflow = '';
+let scrollPositionBeforeLock = null;
 
 const lockBodyScroll = () => {
   if (bodyScrollLockCount === 0) {
     previousBodyOverflow = document.body.style.overflow;
+    scrollPositionBeforeLock = {
+      x: window.scrollX || 0,
+      y: window.scrollY || 0,
+    };
     document.body.style.overflow = 'hidden';
   }
   bodyScrollLockCount += 1;
@@ -25,6 +30,13 @@ const lockBodyScroll = () => {
     bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
     if (bodyScrollLockCount === 0) {
       document.body.style.overflow = previousBodyOverflow;
+      if (scrollPositionBeforeLock) {
+        const { x, y } = scrollPositionBeforeLock;
+        scrollPositionBeforeLock = null;
+        if (window.scrollX !== x || window.scrollY !== y) {
+          window.scrollTo(x, y);
+        }
+      }
     }
   };
 };
@@ -34,20 +46,20 @@ const ModalShellContent = ({ onClose, dismissible, labelledBy, panelClassName, c
 
   // Move focus into the dialog on open and restore it on close, so keyboard
   // users aren't left tabbing through the obscured page behind the scrim.
+  // Lock first and restore the viewport after focus: mobile browsers can reset
+  // the page when body overflow changes, while focus restoration can scroll a
+  // trigger whose position moved because the modal action changed page content.
   useEffect(() => {
     const previouslyFocused = document.activeElement;
-    panelRef.current?.focus();
+    const unlockBodyScroll = lockBodyScroll();
+    panelRef.current?.focus({ preventScroll: true });
 
     return () => {
       if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
-        previouslyFocused.focus();
+        previouslyFocused.focus({ preventScroll: true });
       }
+      unlockBodyScroll();
     };
-  }, []);
-
-  useEffect(() => {
-    const unlockBodyScroll = lockBodyScroll();
-    return unlockBodyScroll;
   }, []);
 
   const handleKeyDown = (event) => {

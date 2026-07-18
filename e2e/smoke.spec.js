@@ -47,6 +47,26 @@ const hasCategoryCustomizations = async (page) => {
   });
 };
 
+const addSpecificDonation = async (page, { amount = '1234', year = '2020' } = {}) => {
+  await page.getByRole('button', { name: 'Add Specific Donation' }).click();
+  const modal = page.getByTestId('specific-donation-modal');
+  await expect(modal).toBeVisible();
+
+  const recipientSearch = modal.getByLabel('Search for a recipient');
+  await recipientSearch.fill(RECIPIENT_SEARCH_TOKEN);
+  const firstRecipientOption = modal.getByRole('option').first();
+  await expect(firstRecipientOption).toBeVisible();
+  const selectedRecipientName = (await firstRecipientOption.innerText()).trim();
+  await firstRecipientOption.click();
+
+  await modal.getByLabel('Donation Amount').fill(amount);
+  await modal.getByLabel('Year').fill(year);
+  await modal.getByRole('button', { name: 'Add Donation' }).click();
+  await expect(modal).not.toBeVisible();
+
+  return selectedRecipientName;
+};
+
 test.describe('Critical path smoke tests', () => {
   test('donation calculator input + reset flow @smoke', async ({ page }) => {
     await clearAppLocalStorage(page);
@@ -252,20 +272,7 @@ test.describe('Critical path smoke tests', () => {
     const totalDonatedValue = page.getByTestId('calculator-total-donated-value');
     await expect(totalDonatedValue).toContainText('$0');
 
-    await page.getByRole('button', { name: 'Add Specific Donation' }).click();
-    const modal = page.getByTestId('specific-donation-modal');
-    await expect(modal).toBeVisible();
-
-    const recipientSearch = modal.getByLabel('Search for a recipient');
-    await recipientSearch.fill(RECIPIENT_SEARCH_TOKEN);
-    const firstRecipientOption = modal.getByRole('option').first();
-    await expect(firstRecipientOption).toBeVisible();
-    const selectedRecipientName = (await firstRecipientOption.innerText()).trim();
-    await firstRecipientOption.click();
-
-    await modal.getByLabel('Donation Amount').fill('1234');
-    await modal.getByLabel('Year').fill('2020');
-    await modal.getByRole('button', { name: 'Add Donation' }).click();
+    const selectedRecipientName = await addSpecificDonation(page);
 
     await expect(page.getByRole('heading', { name: 'Your Specific Donations' })).toBeVisible();
     await expect(totalDonatedValue).toContainText('$1,234');
@@ -310,5 +317,25 @@ test.describe('Critical path smoke tests', () => {
         return page.evaluate(() => JSON.parse(window.localStorage.getItem('specificDonations') || '[]').length);
       })
       .toBe(0);
+  });
+});
+
+test.describe('Mobile calculator viewport stability', () => {
+  // Keep this emulation browser-neutral so the test also runs in the optional
+  // Firefox/WebKit release pass; the routine e2e command still uses Chromium.
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+
+  test('adding a specific donation preserves the page scroll position @smoke', async ({ page }) => {
+    await clearAppLocalStorage(page);
+    await page.goto('/calculator');
+
+    const addButton = page.getByRole('button', { name: 'Add Specific Donation' });
+    await addButton.scrollIntoViewIfNeeded();
+    const scrollYBeforeOpen = await page.evaluate(() => window.scrollY);
+    expect(scrollYBeforeOpen).toBeGreaterThan(0);
+
+    await addSpecificDonation(page);
+    await expect(page.getByRole('heading', { name: 'Your Specific Donations' })).toBeVisible();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrollYBeforeOpen);
   });
 });

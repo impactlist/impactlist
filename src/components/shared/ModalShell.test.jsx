@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import ModalShell from './ModalShell';
 
 const renderShell = (props = {}) =>
@@ -10,6 +10,17 @@ const renderShell = (props = {}) =>
       <button type="button">Second</button>
     </ModalShell>
   );
+
+const mockViewportPosition = (x, y) => {
+  const position = { x, y };
+  vi.spyOn(window, 'scrollX', 'get').mockImplementation(() => position.x);
+  vi.spyOn(window, 'scrollY', 'get').mockImplementation(() => position.y);
+  return position;
+};
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('ModalShell', () => {
   it('renders dialog semantics and moves focus into the panel', () => {
@@ -41,6 +52,65 @@ describe('ModalShell', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     await waitFor(() => expect(document.body.style.overflow).toBe('visible'));
     document.body.style.removeProperty('overflow');
+  });
+
+  it('restores the exact viewport position when the modal closes', async () => {
+    const viewportPosition = mockViewportPosition(18, 720);
+    const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+    const { rerender } = render(
+      <ModalShell isOpen onClose={() => {}} labelledBy="test-modal-title">
+        <h2 id="test-modal-title">Test Modal</h2>
+      </ModalShell>
+    );
+
+    // Simulate the mobile browser losing the page position while the body is
+    // scroll-locked. Closing the modal must recover the position it opened at.
+    viewportPosition.x = 0;
+    viewportPosition.y = 0;
+
+    rerender(
+      <ModalShell isOpen={false} onClose={() => {}} labelledBy="test-modal-title">
+        <h2 id="test-modal-title">Test Modal</h2>
+      </ModalShell>
+    );
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(scrollToSpy).toHaveBeenLastCalledWith(18, 720);
+  });
+
+  it('keeps the first scroll lock until the last stacked modal closes', async () => {
+    const viewportPosition = mockViewportPosition(24, 860);
+    const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+    const stackedModals = (outerOpen, innerOpen) => (
+      <>
+        <ModalShell isOpen={outerOpen} onClose={() => {}} labelledBy="outer-modal-title">
+          <h2 id="outer-modal-title">Outer Modal</h2>
+        </ModalShell>
+        <ModalShell isOpen={innerOpen} onClose={() => {}} labelledBy="inner-modal-title">
+          <h2 id="inner-modal-title">Inner Modal</h2>
+        </ModalShell>
+      </>
+    );
+
+    const { rerender } = render(stackedModals(true, true));
+    expect(document.body.style.overflow).toBe('hidden');
+
+    viewportPosition.x = 0;
+    viewportPosition.y = 0;
+    rerender(stackedModals(true, false));
+
+    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Inner Modal' })).not.toBeInTheDocument());
+    expect(document.body.style.overflow).toBe('hidden');
+    expect(scrollToSpy).not.toHaveBeenCalled();
+
+    rerender(stackedModals(false, false));
+
+    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Outer Modal' })).not.toBeInTheDocument());
+    expect(document.body.style.overflow).not.toBe('hidden');
+    expect(scrollToSpy).toHaveBeenCalledOnce();
+    expect(scrollToSpy).toHaveBeenCalledWith(24, 860);
   });
 
   it('closes on Escape and restores focus to the previously focused element', async () => {

@@ -5,7 +5,11 @@ import { formatRoundedLives, formatCurrency } from '../utils/formatters';
 import FormattedScientificValue from './shared/FormattedScientificValue';
 import DonatedValueCell from './shared/DonatedValueCell';
 import InfoTooltipIcon from './shared/InfoTooltipIcon';
-import { DONOR_DONATED_TOOLTIP } from '../constants/metricTooltips';
+import {
+  DONOR_LIVES_SAVED_TOOLTIP,
+  DONOR_DONATED_TOOLTIP,
+  DONOR_COST_PER_LIFE_TOOLTIP,
+} from '../constants/metricTooltips';
 
 const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife, neighboringDonors }) => {
   const currentUserRow = {
@@ -60,14 +64,36 @@ const MiniImpactList = ({ donorRank, totalLivesSaved, totalDonated, costPerLife,
             <tr>
               <th className="px-3 py-2 text-left">Rank</th>
               <th className="px-3 py-2 text-left">Name</th>
-              <th className="px-3 py-2 text-left">Lives Saved</th>
+              <th className="px-3 py-2 text-left">
+                <span className="impact-table__header-inner">
+                  Lives Saved
+                  <InfoTooltipIcon
+                    content={DONOR_LIVES_SAVED_TOOLTIP}
+                    iconClassName="h-3.5 w-3.5 text-muted"
+                    ariaLabel="About Lives Saved"
+                  />
+                </span>
+              </th>
               <th className="px-3 py-2 text-left">
                 <span className="impact-table__header-inner">
                   Donated
-                  <InfoTooltipIcon content={DONOR_DONATED_TOOLTIP} iconClassName="h-3.5 w-3.5 text-muted" />
+                  <InfoTooltipIcon
+                    content={DONOR_DONATED_TOOLTIP}
+                    iconClassName="h-3.5 w-3.5 text-muted"
+                    ariaLabel="About Donated"
+                  />
                 </span>
               </th>
-              <th className="px-3 py-2 text-left">Cost/Life</th>
+              <th className="px-3 py-2 text-left">
+                <span className="impact-table__header-inner">
+                  Cost/Life
+                  <InfoTooltipIcon
+                    content={DONOR_COST_PER_LIFE_TOOLTIP}
+                    iconClassName="h-3.5 w-3.5 text-muted"
+                    ariaLabel="About Cost/Life"
+                  />
+                </span>
+              </th>
               <th className="px-3 py-2 text-left">Net Worth</th>
             </tr>
           </thead>

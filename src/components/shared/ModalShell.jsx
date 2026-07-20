@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { AnimatePresence, motion } from 'framer-motion';
+import { lockBodyScroll } from '../../utils/bodyScrollLock';
 
 const FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -10,36 +11,6 @@ const FOCUSABLE_SELECTOR = [
   'textarea:not([disabled])',
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
-
-let bodyScrollLockCount = 0;
-let previousBodyOverflow = '';
-let scrollPositionBeforeLock = null;
-
-const lockBodyScroll = () => {
-  if (bodyScrollLockCount === 0) {
-    previousBodyOverflow = document.body.style.overflow;
-    scrollPositionBeforeLock = {
-      x: window.scrollX || 0,
-      y: window.scrollY || 0,
-    };
-    document.body.style.overflow = 'hidden';
-  }
-  bodyScrollLockCount += 1;
-
-  return () => {
-    bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
-    if (bodyScrollLockCount === 0) {
-      document.body.style.overflow = previousBodyOverflow;
-      if (scrollPositionBeforeLock) {
-        const { x, y } = scrollPositionBeforeLock;
-        scrollPositionBeforeLock = null;
-        if (window.scrollX !== x || window.scrollY !== y) {
-          window.scrollTo(x, y);
-        }
-      }
-    }
-  };
-};
 
 const ModalShellContent = ({ onClose, dismissible, labelledBy, panelClassName, children }) => {
   const panelRef = useRef(null);

@@ -6,6 +6,7 @@
 
 import { cleanAndParseValue, isPartialInput, validateGlobalField } from './effectValidation';
 import { parseFiniteDecimal } from './numberParsing';
+import { getMotionSafeScrollBehavior } from './scrollHelpers';
 
 /**
  * Validates global parameter form values
@@ -60,7 +61,7 @@ export const scrollToFirstError = () => {
   setTimeout(() => {
     const errorElement = document.querySelector('[aria-invalid="true"]');
     if (errorElement) {
-      errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      errorElement.scrollIntoView({ behavior: getMotionSafeScrollBehavior(), block: 'center' });
     }
   }, 100);
 };

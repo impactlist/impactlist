@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { afterEach, describe, it, expect, beforeEach, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SpecificDonationModal from './SpecificDonationModal';
@@ -56,6 +56,10 @@ describe('SpecificDonationModal', () => {
       return 1000;
     });
     mockGetCostPerLifeForRecipientFromCombined.mockReturnValue(4000);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('reports when recipient autocomplete results are capped', async () => {
@@ -136,6 +140,23 @@ describe('SpecificDonationModal', () => {
 
     expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please select a recipient')).toBeInTheDocument();
+  });
+
+  it('focuses and reveals the first invalid field after submission', async () => {
+    const user = userEvent.setup();
+    const scrollIntoViewSpy = vi.spyOn(window.Element.prototype, 'scrollIntoView');
+
+    render(<SpecificDonationModal isOpen={true} onClose={vi.fn()} onSave={vi.fn()} />);
+
+    await user.click(screen.getByRole('button', { name: 'New Recipient' }));
+    await user.click(screen.getByRole('button', { name: 'Add Donation' }));
+
+    const recipientName = screen.getByLabelText('Recipient Name');
+    await waitFor(() => expect(recipientName).toHaveFocus());
+    expect(recipientName).toHaveAttribute('aria-invalid', 'true');
+    expect(recipientName).toHaveAttribute('aria-errormessage', 'custom-recipient-name-error');
+    expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' });
+    expect(scrollIntoViewSpy.mock.instances.at(-1)).toBe(recipientName);
   });
 
   it('rejects amounts that parse to Infinity instead of saving them', async () => {

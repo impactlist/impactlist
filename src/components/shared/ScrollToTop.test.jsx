@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getSessionStorage } from '../../utils/safeStorage';
+import { lockBodyScroll } from '../../utils/bodyScrollLock';
 import ScrollToTop from './ScrollToTop';
 
 const NavButtons = () => {
@@ -25,8 +26,14 @@ const NavButtons = () => {
       <button type="button" onClick={() => navigate('/cause/ai-risk#full%2Djustification')}>
         Push Encoded Hash Page
       </button>
+      <button type="button" onClick={() => navigate('/assumptions#full-justification')}>
+        Push Same-Page Hash
+      </button>
       <button type="button" onClick={() => navigate(-1)}>
         Back
+      </button>
+      <button type="button" onClick={() => navigate(1)}>
+        Forward
       </button>
     </>
   );
@@ -74,6 +81,10 @@ describe('ScrollToTop', () => {
       window.dispatchEvent(new window.Event('scroll'));
     });
     scrollIntoViewSpy = vi.spyOn(window.Element.prototype, 'scrollIntoView');
+    Object.defineProperty(window.performance, 'getEntriesByType', {
+      configurable: true,
+      value: vi.fn(() => [{ type: 'navigate' }]),
+    });
     // Capture the body observer so tests can play "the page grew".
     resizeCallback = null;
     vi.stubGlobal(
@@ -93,6 +104,8 @@ describe('ScrollToTop', () => {
     vi.restoreAllMocks();
     vi.useRealTimers();
     vi.unstubAllGlobals();
+    delete window.performance.getEntriesByType;
+    window.history.replaceState(null, '', '/');
     document.getElementById('full-justification')?.remove();
     for (let index = window.sessionStorage.length - 1; index >= 0; index -= 1) {
       const key = window.sessionStorage.key(index);
@@ -121,6 +134,28 @@ describe('ScrollToTop', () => {
     await user.click(screen.getByRole('button', { name: 'Replace Params' }));
 
     expect(scrollSpy).not.toHaveBeenCalled();
+  });
+
+  it('restores Back and Forward positions for same-page hash history entries', async () => {
+    const user = userEvent.setup();
+    renderAt('/assumptions');
+
+    currentScrollY = 420;
+    fireEvent.scroll(window);
+    await user.click(screen.getByRole('button', { name: 'Push Same-Page Hash' }));
+
+    // MemoryRouter does not perform a native anchor jump, so model the
+    // browser landing on and saving the hash entry.
+    currentScrollY = 910;
+    fireEvent.scroll(window);
+
+    scrollSpy.mockClear();
+    await user.click(screen.getByRole('button', { name: 'Back' }));
+    await waitFor(() => expect(scrollSpy).toHaveBeenCalledWith(0, 420));
+
+    scrollSpy.mockClear();
+    await user.click(screen.getByRole('button', { name: 'Forward' }));
+    await waitFor(() => expect(scrollSpy).toHaveBeenCalledWith(0, 910));
   });
 
   it('scrolls forward navigations to the top and restores a POP entry after lazy routing', async () => {
@@ -166,13 +201,27 @@ describe('ScrollToTop', () => {
     });
   });
 
-  it('restores the current page on initial load when a reload cleared the in-memory cache', async () => {
+  it('restores the current page on a reload when the in-memory cache was cleared', async () => {
+    window.performance.getEntriesByType.mockReturnValue([{ type: 'reload' }]);
     window.sessionStorage.setItem(scrollPositionStorageKey('reload-entry'), JSON.stringify({ x: 0, y: 930 }));
 
     renderWithHistory([{ pathname: '/assumptions', key: 'reload-entry' }], undefined, { strictMode: true });
 
     await waitFor(() => {
       expect(scrollSpy).toHaveBeenCalledWith(0, 930);
+    });
+  });
+
+  it('starts a fresh document navigation at the top instead of reusing an old persisted position', () => {
+    window.sessionStorage.setItem(scrollPositionStorageKey('fresh-entry'), JSON.stringify({ x: 0, y: 930 }));
+
+    renderWithHistory([{ pathname: '/assumptions', key: 'fresh-entry' }]);
+
+    expect(scrollSpy).not.toHaveBeenCalled();
+    window.dispatchEvent(new window.Event('pagehide'));
+    expect(JSON.parse(window.sessionStorage.getItem(scrollPositionStorageKey('fresh-entry')))).toEqual({
+      x: 0,
+      y: 0,
     });
   });
 
@@ -218,6 +267,50 @@ describe('ScrollToTop', () => {
       x: 0,
       y: 725,
     });
+  });
+
+  it('does not attribute a shorter destination clamp to the history entry being left', () => {
+    window.history.replaceState({ idx: 0, key: 'source-entry' }, '', '/assumptions');
+    renderWithHistory([{ pathname: '/assumptions', key: 'source-entry' }]);
+
+    currentScrollY = 8099;
+    fireEvent.scroll(window);
+
+    // Browser history and the address bar advance before React's passive
+    // cleanup removes the source listener. A shorter destination can clamp
+    // scrollY during that gap; the event belongs to the new entry.
+    window.history.replaceState({ idx: 1, key: 'destination-entry' }, '', '/calculator');
+    currentScrollY = 3201;
+    fireEvent.scroll(window);
+    window.dispatchEvent(new window.Event('pagehide'));
+
+    expect(JSON.parse(window.sessionStorage.getItem(scrollPositionStorageKey('source-entry')))).toEqual({
+      x: 0,
+      y: 8099,
+    });
+  });
+
+  it('does not persist a mobile browser scroll collapse while a modal has locked the body', () => {
+    renderWithHistory([{ pathname: '/assumptions', key: 'modal-entry' }]);
+
+    currentScrollY = 680;
+    fireEvent.scroll(window);
+    const releaseBodyScroll = lockBodyScroll();
+
+    try {
+      // Model the affected mobile engines: changing body overflow collapses
+      // the window viewport to zero and emits a scroll event before close.
+      currentScrollY = 0;
+      fireEvent.scroll(window);
+      window.dispatchEvent(new window.Event('pagehide'));
+
+      expect(JSON.parse(window.sessionStorage.getItem(scrollPositionStorageKey('modal-entry')))).toEqual({
+        x: 0,
+        y: 680,
+      });
+    } finally {
+      releaseBodyScroll();
+    }
   });
 
   it('does not throw when persistent scroll storage fails', () => {

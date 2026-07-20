@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
 import { getSessionStorage } from '../../utils/safeStorage';
+import { isBodyScrollLocked } from '../../utils/bodyScrollLock';
+import { beginHistoryEntryScrollRestoration, getHistoryEntryScrollId } from '../../utils/scrollRestorationCoordinator';
 
 // One navigation gets ONE hash-targeting budget: waiting for the lazy route
 // chunk to render the target AND pinning it through layout settling share
@@ -15,9 +17,23 @@ const HASH_SETTLE_MIN_MS = 500;
 // page, clamp the position to zero, and never try again once the ranking
 // mounts. Keep a short retry/resize window so the saved position wins once
 // the destination is tall enough.
-const POP_RESTORE_TOTAL_MS = 2000;
+const POP_RESTORE_TOTAL_MS = 5000;
 const SCROLL_POSITION_WRITE_DELAY_MS = 250;
 const SCROLL_POSITION_STORAGE_PREFIX = 'impactlist:scroll-position:';
+const RESTORABLE_DOCUMENT_NAVIGATION_TYPES = new Set(['reload', 'back_forward']);
+
+const getDocumentNavigationType = () => {
+  const navigationEntry = globalThis.performance?.getEntriesByType?.('navigation')?.[0];
+  if (navigationEntry?.type) {
+    return navigationEntry.type;
+  }
+
+  // Older Safari versions expose only the deprecated numeric API. Keep the
+  // fallback isolated here; modern browsers take the Navigation Timing path.
+  if (globalThis.performance?.navigation?.type === 1) return 'reload';
+  if (globalThis.performance?.navigation?.type === 2) return 'back_forward';
+  return 'navigate';
+};
 
 const getScrollPositionStorageKey = (entryId) => `${SCROLL_POSITION_STORAGE_PREFIX}${entryId}`;
 
@@ -45,16 +61,33 @@ const writePersistedScrollPosition = (entryId, position) => {
   }
 };
 
+const getActiveBrowserHistoryEntryId = () => {
+  const historyState = window.history.state;
+  // MemoryRouter does not own window.history. Browser/data routers record an
+  // integer index there, which lets us reject late scroll events from the
+  // entry React is in the process of unmounting.
+  if (!Number.isInteger(historyState?.idx)) {
+    return null;
+  }
+
+  return getHistoryEntryScrollId({
+    key: historyState.key || 'default',
+    pathname: window.location.pathname,
+    search: window.location.search,
+    hash: window.location.hash,
+  });
+};
+
 /**
  * Scroll management for navigations.
  *
  * - POP navigations (back/forward buttons) restore the position saved for
  *   that history entry. This is managed here rather than left to the browser
  *   because lazy route fallbacks can be too short for native restoration.
- * - Same-pathname navigations (search-param changes like the assumptions
- *   editor's tab/entity state) must not touch the scroll position — only a
- *   pathname change counts as arriving on a new page. Same-page anchor
- *   clicks scroll natively without our help.
+ * - Same-pathname search-param navigations (the assumptions editor's
+ *   tab/entity state) must not touch the scroll position. Same-page anchor
+ *   clicks scroll natively, while Back/Forward between hash history entries
+ *   restores the position saved for each entry.
  * - Navigations WITH a hash land on the hash's target instead of the top
  *   (e.g. the editor's "Why these values?" links target a detail page's
  *   `#full-justification`). There is no single "page finished rendering"
@@ -71,21 +104,25 @@ const writePersistedScrollPosition = (entryId, position) => {
  *   router reports it as POP.
  */
 const ScrollToTop = () => {
-  const { pathname, search, hash, key: locationKey } = useLocation();
+  const location = useLocation();
+  const { pathname, hash } = location;
   // Browser-router direct entries use the shared key "default". Include the
   // URL so two separately loaded routes in one tab cannot reuse each other's
   // persisted position; random router keys still distinguish duplicate URLs.
-  const historyEntryId = `${locationKey}:${pathname}${search}${hash}`;
+  const historyEntryId = getHistoryEntryScrollId(location);
   const navigationType = useNavigationType();
   // Initialize these to the first render so React StrictMode's mount-effect
   // replay still counts as the initial entry. Only rendering a different
   // history entry flips hasNavigatedRef permanently.
   const previousPathnameRef = useRef(pathname);
+  const previousHashRef = useRef(hash);
   const previousHistoryEntryRef = useRef(historyEntryId);
   const hasNavigatedRef = useRef(false);
+  const documentNavigationTypeRef = useRef(getDocumentNavigationType());
   const scrollPositionsRef = useRef(new Map());
   const persistedHistoryEntriesRef = useRef(new Set());
   const restoringHistoryEntryRef = useRef(null);
+  const newHistoryEntryRef = useRef(null);
 
   useEffect(() => {
     if (!('scrollRestoration' in window.history)) {
@@ -122,6 +159,18 @@ const ScrollToTop = () => {
     };
 
     const savePosition = () => {
+      const activeBrowserHistoryEntryId = getActiveBrowserHistoryEntryId();
+      if (activeBrowserHistoryEntryId && activeBrowserHistoryEntryId !== historyEntryId) {
+        return;
+      }
+
+      // Some mobile browsers temporarily collapse window.scrollY when body
+      // overflow is locked for a modal. That is not a user position and must
+      // not replace the history entry's last real viewport coordinates.
+      if (isBodyScrollLocked()) {
+        return;
+      }
+
       // Programmatic POP restoration can fire scroll events for intermediate,
       // clamped positions while a lazy destination is still growing. Do not
       // let those transient values replace the destination's saved position.
@@ -140,11 +189,18 @@ const ScrollToTop = () => {
     // After a reload the in-memory map is empty, but session storage still
     // carries positions keyed by the browser-history entry's router key.
     if (!scrollPositionsRef.current.has(historyEntryId)) {
-      const persistedPosition = readPersistedScrollPosition(historyEntryId);
+      const isInitialHistoryEntry = !hasNavigatedRef.current && previousHistoryEntryRef.current === historyEntryId;
+      // Persisted positions survive a whole-document navigation. Reuse them
+      // for reloads and browser history traversal, but not for a genuinely
+      // fresh visit to the same URL in this tab.
+      const canRestorePersistedPosition =
+        !isInitialHistoryEntry || RESTORABLE_DOCUMENT_NAVIGATION_TYPES.has(documentNavigationTypeRef.current);
+      const persistedPosition = canRestorePersistedPosition ? readPersistedScrollPosition(historyEntryId) : null;
       if (persistedPosition) {
         scrollPositionsRef.current.set(historyEntryId, persistedPosition);
         persistedHistoryEntriesRef.current.add(historyEntryId);
       } else {
+        newHistoryEntryRef.current = historyEntryId;
         savePosition();
       }
     }
@@ -162,16 +218,22 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     const pathnameChanged = previousPathnameRef.current !== pathname;
+    const hashChanged = previousHashRef.current !== hash;
     const historyEntryChanged = previousHistoryEntryRef.current !== historyEntryId;
+    const isNewHistoryEntry = newHistoryEntryRef.current === historyEntryId;
+    if (isNewHistoryEntry) {
+      newHistoryEntryRef.current = null;
+    }
     if (historyEntryChanged) {
       hasNavigatedRef.current = true;
       previousHistoryEntryRef.current = historyEntryId;
     }
     previousPathnameRef.current = pathname;
+    previousHashRef.current = hash;
     const isInitialLoad = !hasNavigatedRef.current;
 
     const shouldRestoreSavedPosition =
-      (navigationType === 'POP' && !isInitialLoad && pathnameChanged) ||
+      (navigationType === 'POP' && !isInitialLoad && (pathnameChanged || (hashChanged && !isNewHistoryEntry))) ||
       (isInitialLoad && !hash && persistedHistoryEntriesRef.current.has(historyEntryId));
 
     if (shouldRestoreSavedPosition) {
@@ -179,6 +241,7 @@ const ScrollToTop = () => {
       if (!savedPosition) {
         if (!isInitialLoad) return undefined;
       } else {
+        const finishCoordinatedRestoration = beginHistoryEntryScrollRestoration(historyEntryId);
         restoringHistoryEntryRef.current = historyEntryId;
 
         const deadline = Date.now() + POP_RESTORE_TOTAL_MS;
@@ -194,6 +257,7 @@ const ScrollToTop = () => {
           if (restoringHistoryEntryRef.current === historyEntryId) {
             restoringHistoryEntryRef.current = null;
           }
+          finishCoordinatedRestoration();
           userInputEvents.forEach((eventName) => {
             window.removeEventListener(eventName, stop, { capture: true });
           });

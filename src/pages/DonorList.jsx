@@ -122,7 +122,7 @@ const DonorList = () => {
           transition={{ delay: 0.2, duration: 0.4 }}
         >
           <div className="flex justify-center items-center">
-            <Link to="/calculator" className="impact-link text-base" onClick={() => window.scrollTo(0, 0)}>
+            <Link to="/calculator" className="impact-link text-base">
               Calculate the lives you could save with your donations →
             </Link>
           </div>

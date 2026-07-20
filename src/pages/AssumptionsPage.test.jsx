@@ -14,6 +14,7 @@ import {
 import { formatCurrency, formatNumberWithCommas } from '../utils/formatters';
 import { getCurrentYear } from '../utils/donationDataHelpers';
 import { __internal, saveNewAssumptions, setActiveSavedAssumptionsId } from '../utils/savedAssumptionsStore';
+import { beginHistoryEntryScrollRestoration, getHistoryEntryScrollId } from '../utils/scrollRestorationCoordinator';
 
 /* global localStorage, sessionStorage, Event */
 
@@ -1175,6 +1176,48 @@ describe('AssumptionsPage routing integration', () => {
     // label anywhere is left naming the previous year.
     expect((await screen.findAllByText('Combined cost per life in 2012:')).length).toBeGreaterThan(0);
     expect(screen.queryAllByText(`Combined cost per life in ${getCurrentYear()}:`)).toHaveLength(0);
+  });
+
+  it('cancels the delayed active-category scroll when the user takes control', async () => {
+    const multiCategoryRecipientId = Object.entries(assumptionsData.recipients).find(
+      ([, recipient]) => Object.keys(recipient.categories || {}).length > 1
+    )?.[0];
+    if (!multiCategoryRecipientId) {
+      throw new Error('Expected a multi-category recipient in the generated data');
+    }
+    const scrollIntoViewSpy = vi.spyOn(window.Element.prototype, 'scrollIntoView');
+
+    renderAssumptionsRoute(`/assumptions?tab=recipients&recipientId=${multiCategoryRecipientId}`);
+    fireEvent.pointerDown(window);
+    await screen.findByLabelText('Preview calculations for year:');
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
+    expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+  });
+
+  it('lets history restoration outrank the delayed active-category landing', async () => {
+    const multiCategoryRecipientId = Object.entries(assumptionsData.recipients).find(
+      ([, recipient]) => Object.keys(recipient.categories || {}).length > 1
+    )?.[0];
+    if (!multiCategoryRecipientId) {
+      throw new Error('Expected a multi-category recipient in the generated data');
+    }
+    const search = `?tab=recipients&recipientId=${multiCategoryRecipientId}`;
+    const initialEntry = `/assumptions${search}`;
+    const finishRestoration = beginHistoryEntryScrollRestoration(
+      getHistoryEntryScrollId({ key: 'default', pathname: '/assumptions', search })
+    );
+    const scrollIntoViewSpy = vi.spyOn(window.Element.prototype, 'scrollIntoView');
+
+    try {
+      renderAssumptionsRoute(initialEntry);
+      await screen.findByLabelText('Preview calculations for year:');
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
+      expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+    } finally {
+      finishRestoration();
+    }
   });
 
   it('aggregates the recipient header cost harmonically, matching the sitewide recipient readout', async () => {

@@ -12,6 +12,7 @@ import { formatLives, formatCurrency } from '../utils/formatters';
 import { useAssumptions } from '../contexts/AssumptionsContext';
 import FormattedScientificValue from './shared/FormattedScientificValue';
 import { normalizeFormattedDecimalInput } from '../utils/numberParsing';
+import { getMotionSafeScrollBehavior } from '../utils/scrollHelpers';
 
 const parseFiniteNumberInput = (raw) => {
   if (raw === null || raw === undefined || raw === '') return null;
@@ -66,6 +67,17 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
   // References for search input and dropdown
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
+  const modalContentRef = useRef(null);
+  const validationFrameRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (validationFrameRef.current !== null) {
+        window.cancelAnimationFrame(validationFrameRef.current);
+      }
+    },
+    []
+  );
 
   const allRecipients = useMemo(() => combinedAssumptions.getAllRecipients(), [combinedAssumptions]);
   const allCategories = useMemo(() => combinedAssumptions.getAllCategories(), [combinedAssumptions]);
@@ -253,10 +265,33 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       if (highlightedElement) {
         highlightedElement.scrollIntoView({
           block: 'nearest',
-          behavior: 'smooth',
+          behavior: getMotionSafeScrollBehavior(),
         });
       }
     }
+  };
+
+  const revealFirstInvalidField = () => {
+    if (validationFrameRef.current !== null) {
+      window.cancelAnimationFrame(validationFrameRef.current);
+    }
+
+    // Wait until React has committed the new aria-invalid attributes and
+    // messages. Focus without scrolling first, then deliberately reveal the
+    // field inside the modal's own scroll container.
+    validationFrameRef.current = window.requestAnimationFrame(() => {
+      validationFrameRef.current = null;
+      const firstInvalidField = modalContentRef.current?.querySelector('[aria-invalid="true"]');
+      if (!firstInvalidField) {
+        return;
+      }
+
+      firstInvalidField.focus({ preventScroll: true });
+      firstInvalidField.scrollIntoView({
+        behavior: getMotionSafeScrollBehavior(),
+        block: 'center',
+      });
+    });
   };
 
   const handleSubmit = () => {
@@ -307,25 +342,28 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
     // Check if there are any errors
     const hasErrors = Object.keys(newErrors).length > 0;
 
-    if (!hasErrors) {
-      const donationData = {
-        id: editingDonation?.id || createSpecificDonationId(),
-        recipientName: isExistingRecipient ? selectedRecipient.name : customRecipientName.trim(),
-        amount: amountNum,
-        date: String(yearNum), // Store as canonical string year (e.g., "2020")
-        isCustomRecipient: !isExistingRecipient,
-      };
-
-      // Add category and effectiveness data for custom recipients
-      if (!isExistingRecipient) {
-        donationData.categoryId = selectedCategory;
-        donationData.customCostPerLife = parseCustomCostPerLife(customCostPerLife);
-      }
-
-      onSave(donationData);
-      resetForm();
-      onClose();
+    if (hasErrors) {
+      revealFirstInvalidField();
+      return;
     }
+
+    const donationData = {
+      id: editingDonation?.id || createSpecificDonationId(),
+      recipientName: isExistingRecipient ? selectedRecipient.name : customRecipientName.trim(),
+      amount: amountNum,
+      date: String(yearNum), // Store as canonical string year (e.g., "2020")
+      isCustomRecipient: !isExistingRecipient,
+    };
+
+    // Add category and effectiveness data for custom recipients
+    if (!isExistingRecipient) {
+      donationData.categoryId = selectedCategory;
+      donationData.customCostPerLife = parseCustomCostPerLife(customCostPerLife);
+    }
+
+    onSave(donationData);
+    resetForm();
+    onClose();
   };
 
   // Lives saved for the current draft, or null when there is nothing
@@ -400,7 +438,7 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
       labelledBy="specific-donation-modal-title"
       panelClassName="max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto"
     >
-      <div data-testid="specific-donation-modal">
+      <div ref={modalContentRef} data-testid="specific-donation-modal">
         <ModalHeader
           title={editingDonation ? 'Edit Donation' : 'Add Specific Donation'}
           titleId="specific-donation-modal-title"
@@ -450,6 +488,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     onKeyDown={handleKeyDown}
                     placeholder="Type to search..."
                     className="impact-field__input"
+                    aria-invalid={!!errors.recipient}
+                    aria-errormessage={errors.recipient ? 'recipient-search-error' : undefined}
                     aria-describedby={hasMoreRecipientMatches ? 'recipient-search-summary' : undefined}
                     onBlur={(e) => {
                       if (!e.relatedTarget || !e.relatedTarget.classList.contains('recipient-item')) {
@@ -502,7 +542,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                   </div>
                 )}
               </div>
-              {errors.recipient && <p className="impact-field__error">{errors.recipient}</p>}
+              {errors.recipient && (
+                <p id="recipient-search-error" className="impact-field__error">
+                  {errors.recipient}
+                </p>
+              )}
               {searchTerm && filteredRecipients.length === 0 && showDropdown && !selectedRecipient && (
                 <p className="mt-1 text-sm text-muted">No recipients found. Try another search term.</p>
               )}
@@ -527,9 +571,15 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     onChange={(e) => setCustomRecipientName(e.target.value)}
                     placeholder="Enter recipient name"
                     className="impact-field__input"
+                    aria-invalid={!!errors.customRecipientName}
+                    aria-errormessage={errors.customRecipientName ? 'custom-recipient-name-error' : undefined}
                   />
                 </div>
-                {errors.customRecipientName && <p className="impact-field__error">{errors.customRecipientName}</p>}
+                {errors.customRecipientName && (
+                  <p id="custom-recipient-name-error" className="impact-field__error">
+                    {errors.customRecipientName}
+                  </p>
+                )}
               </div>
 
               <div className="impact-field mb-4" data-state={errors.category ? 'error' : 'default'}>
@@ -549,6 +599,8 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                       );
                     }}
                     className="impact-field__input"
+                    aria-invalid={!!errors.category}
+                    aria-errormessage={errors.category ? 'custom-recipient-cause-error' : undefined}
                   >
                     <option value="">Select a cause</option>
                     {sortedCategories.map((category) => (
@@ -558,7 +610,11 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
                     ))}
                   </select>
                 </div>
-                {errors.category && <p className="impact-field__error">{errors.category}</p>}
+                {errors.category && (
+                  <p id="custom-recipient-cause-error" className="impact-field__error">
+                    {errors.category}
+                  </p>
+                )}
                 {selectedCategory && (
                   <p className="mt-1 text-xs text-muted">
                     Default cost per life:{' '}
@@ -643,9 +699,15 @@ const SpecificDonationModal = ({ isOpen, onClose, onSave, editingDonation = null
               maxLength={4}
               title={`Year from ${MIN_CALCULATOR_DONATION_YEAR} to ${getCurrentYear()}`}
               className="impact-field__input"
+              aria-invalid={!!errors.year}
+              aria-errormessage={errors.year ? 'specific-donation-year-error' : undefined}
             />
           </div>
-          {errors.year && <p className="impact-field__error">{errors.year}</p>}
+          {errors.year && (
+            <p id="specific-donation-year-error" className="impact-field__error">
+              {errors.year}
+            </p>
+          )}
         </div>
 
         {/* Lives saved preview — hidden entirely while the draft is invalid */}

@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useEffect, useImperativeHandle, useMemo, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import EffectEditorHeader from '../shared/EffectEditorHeader';
 import EffectEditorFooter from '../shared/EffectEditorFooter';
@@ -15,6 +15,11 @@ import { resolveCalcYear } from '../../utils/donationDataHelpers';
 import { buildCausePath } from '../../utils/causeRoutes';
 import YearSelector from '../shared/YearSelector';
 import FormattedScientificValue from '../shared/FormattedScientificValue';
+import { getMotionSafeScrollBehavior } from '../../utils/scrollHelpers';
+import {
+  getHistoryEntryScrollId,
+  isHistoryEntryScrollRestorationActive,
+} from '../../utils/scrollRestorationCoordinator';
 
 /**
  * A single category's effect section within the multi-category editor.
@@ -160,6 +165,8 @@ const MultiCategoryRecipientEditor = forwardRef(
     // views (see CategoryEffectEditor). Sections and labels get the resolved
     // year, so what's shown is always what was computed.
     const calculationYear = resolveCalcYear(previewYear);
+    const location = useLocation();
+    const historyEntryId = getHistoryEntryScrollId(location);
     const [categoryData, setCategoryData] = useState({});
     const sectionRefs = useRef({});
     const scrollContainerRef = useRef(null);
@@ -173,12 +180,40 @@ const MultiCategoryRecipientEditor = forwardRef(
       // Small delay to ensure refs are set. Cancel it when the target changes
       // or the editor unmounts so a stale recipient/category cannot scroll a
       // newly mounted editor after rapid URL navigation.
-      const timeoutId = setTimeout(() => {
-        sectionRefs.current[activeCategory]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      let timeoutId = setTimeout(() => {
+        timeoutId = null;
+        // Browser Back/Forward owns the viewport when the global scroll
+        // manager is restoring this exact entry. Fresh deep links and normal
+        // editor opens still land on the requested category.
+        if (isHistoryEntryScrollRestorationActive(historyEntryId)) {
+          return;
+        }
+        sectionRefs.current[activeCategory]?.scrollIntoView({
+          behavior: getMotionSafeScrollBehavior(),
+          block: 'start',
+        });
       }, 100);
 
-      return () => clearTimeout(timeoutId);
-    }, [activeCategory]);
+      // The delayed landing is useful only until the visitor takes control.
+      // Do not tug the page back after a quick wheel, touch, click, or key.
+      const userInputEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+      const cancelScheduledScroll = () => {
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+      };
+      userInputEvents.forEach((eventName) => {
+        window.addEventListener(eventName, cancelScheduledScroll, { capture: true });
+      });
+
+      return () => {
+        cancelScheduledScroll();
+        userInputEvents.forEach((eventName) => {
+          window.removeEventListener(eventName, cancelScheduledScroll, { capture: true });
+        });
+      };
+    }, [activeCategory, historyEntryId]);
 
     // Handle a section's report (effects/errors/dirtiness/cost, tagged with
     // the year the cost was computed for).

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
@@ -82,12 +82,26 @@ const renderPage = () => {
   );
 };
 
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe('DonorList assumptions selector', () => {
   it('renders the shared assumptions selector above the donor table', () => {
     renderPage();
 
     expect(screen.getByTestId('assumptions-selector')).toBeInTheDocument();
     expect(screen.getByTestId('sortable-table')).toBeInTheDocument();
+  });
+
+  it('does not change the source-page scroll position before opening the calculator', async () => {
+    const user = userEvent.setup();
+    const scrollSpy = vi.spyOn(window, 'scrollTo');
+    renderPage();
+
+    await user.click(screen.getByRole('link', { name: /Calculate the lives you could save/i }));
+
+    expect(scrollSpy).not.toHaveBeenCalled();
   });
 });
 

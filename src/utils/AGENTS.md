@@ -15,6 +15,7 @@ The math that produces every number on the site lives here. Treat `effectsCalcul
 - `effectValidation.js`, `effectEditorUtils.js`, `effectFieldHelpers.js`, `assumptionsFormValidation.js` — editor-side parsing/validation of in-progress (stringly) input. `calculateEffectCostPerLife` pre-screens expected mid-typing states and returns Infinity for them; anything that throws past the pre-screen is a real bug and must surface.
 - `formatters.js` — display formatting. `formatLives`/`formatCurrency` handle negatives and ∞; scientific notation above ~1e21.
 - `shareAssumptions.js` — client for the share API (`/api/shared-assumptions`).
+- `bodyScrollLock.js` / `scrollHelpers.js` / `scrollRestorationCoordinator.js` — shared scroll behavior. Modal body locks must go through `lockBodyScroll()` so `ScrollToTop` can ignore mobile browsers' temporary locked-body scroll collapse; explicit smooth scrolls must use `getMotionSafeScrollBehavior()`; history-entry restoration and component-owned landing scrolls coordinate through the restoration coordinator.
 
 ## Gotchas
 
@@ -22,4 +23,5 @@ The math that produces every number on the site lives here. Treat `effectsCalcul
 - `effectToCostPerLife` branches on `costPerQALY !== undefined` — a stray field flips the model. That's why unknown-field rejection exists at every external boundary.
 - `selectEffectsForYear` filters by `validTimeInterval` (`[start|null, end|null]`); effects also re-filter inside `calculateCostPerLife` — harmless double filter, don't "fix" one without the other.
 - `effectsVisualization.js` returns a points ARRAY with `seriesMetadata` attached as an expando property — `.map`/`.filter` upstream silently strips it.
+- Scroll-restoration coordination is timing-sensitive: descendant mount effects can run before `ScrollToTop` begins restoration. Any component-owned landing scroll that could compete with Back/Forward restoration must defer its scroll (timer or animation frame) and call `isHistoryEntryScrollRestorationActive(getHistoryEntryScrollId(location))` immediately before scrolling. A synchronous mount scroll, or checking only during render/mount, silently bypasses suppression.
 - Test conventions: `effectsCalculation.test.js` is property-style (monotonicity, boundary continuity, integration-matches-total) — extend in that spirit. The validation/editor utilities have direct suites (`effectValidation.test.js`, `effectEditorUtils.test.js`); extend those rather than testing through components.

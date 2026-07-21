@@ -76,7 +76,10 @@ describe('ModalShell', () => {
     );
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-    expect(scrollToSpy).toHaveBeenLastCalledWith(18, 720);
+    await waitFor(() => {
+      expect(scrollToSpy).toHaveBeenCalledOnce();
+      expect(scrollToSpy).toHaveBeenCalledWith(18, 720);
+    });
   });
 
   it('keeps the first scroll lock until the last stacked modal closes', async () => {
@@ -95,22 +98,29 @@ describe('ModalShell', () => {
     );
 
     const { rerender } = render(stackedModals(true, true));
+    const outerDialog = screen.getByRole('dialog', { name: 'Outer Modal' });
     expect(document.body.style.overflow).toBe('hidden');
+    expect(screen.getByRole('dialog', { name: 'Inner Modal' })).toHaveFocus();
 
     viewportPosition.x = 0;
     viewportPosition.y = 0;
     rerender(stackedModals(true, false));
 
-    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Inner Modal' })).not.toBeInTheDocument());
-    expect(document.body.style.overflow).toBe('hidden');
-    expect(scrollToSpy).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'Inner Modal' })).not.toBeInTheDocument();
+      expect(outerDialog).toHaveFocus();
+      expect(document.body.style.overflow).toBe('hidden');
+      expect(scrollToSpy).not.toHaveBeenCalled();
+    });
 
     rerender(stackedModals(false, false));
 
     await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Outer Modal' })).not.toBeInTheDocument());
-    expect(document.body.style.overflow).not.toBe('hidden');
-    expect(scrollToSpy).toHaveBeenCalledOnce();
-    expect(scrollToSpy).toHaveBeenCalledWith(24, 860);
+    await waitFor(() => {
+      expect(document.body.style.overflow).not.toBe('hidden');
+      expect(scrollToSpy).toHaveBeenCalledOnce();
+      expect(scrollToSpy).toHaveBeenCalledWith(24, 860);
+    });
   });
 
   it('closes on Escape and restores focus to the previously focused element', async () => {

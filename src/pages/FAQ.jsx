@@ -410,15 +410,19 @@ const FAQ = () => {
                 <section className="faq-effect-group">
                   <p className="faq-effect-group__title">Population Effects</p>
                   <p className="mb-3">
-                    Effects with a small probability of occurring, but that affect a large fraction of the population if
-                    they do. For example, a pandemic that kills 10% of the population has a small probability of
-                    happening, but would affect billions of people.
+                    Population effects model cases where money donated changes the probability of an event, rather than
+                    modeling the impact directly as QALYs produced per dollar. Expected impact depends on how much the
+                    donation changes the event&apos;s probability and what happens if the event occurs: how many people
+                    are affected, how their wellbeing changes, and for how long. For example, donations might make a
+                    beneficial medical breakthrough more likely or make a harmful pandemic less likely. The name
+                    &quot;population&quot; refers to scaling the event&apos;s consequences across the affected
+                    population; it does not mean that most people must be affected.
                   </p>
                   <p className="faq-effect-group__subheading">Parameters</p>
                   <ul className="faq-effect-group__list list-disc list-inside ml-2">
                     <li>
-                      <strong>Cost per microprobability:</strong> How much donations change the likelihood of an event
-                      (a microprobability = 1 in 1,000,000 chance)
+                      <strong>Cost per microprobability:</strong> The amount donated that changes the event&apos;s
+                      absolute probability by one in a million (one microprobability)
                     </li>
                     <li>
                       <strong>Population fraction affected:</strong> What fraction of the population is impacted if the

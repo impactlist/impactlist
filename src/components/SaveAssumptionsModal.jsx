@@ -76,7 +76,7 @@ const SaveAssumptionsModal = ({
 
   return (
     <ModalShell isOpen={isOpen} onClose={onClose} labelledBy="save-assumptions-modal-title">
-      <ModalHeader title="Save to Browser" titleId="save-assumptions-modal-title" onClose={onClose} />
+      <ModalHeader title="Save assumptions as" titleId="save-assumptions-modal-title" onClose={onClose} />
 
       <p className="impact-modal__copy mb-4">
         Save a named copy of the current assumptions in this browser, so you can load it again later.
@@ -141,9 +141,8 @@ const SaveAssumptionsModal = ({
         )}
 
         <button type="button" onClick={() => handleSubmit('new')} className="impact-btn impact-btn--custom-accent">
-          {/* Plain "Save" here: the modal title already names the destination,
-              and this keeps the name distinct from the "Save to browser"
-              trigger still in the page behind the modal. */}
+          {/* Plain "Save" here: the modal title and Label field already make
+              clear that this creates a named set. */}
           {canUpdateExisting ? 'Save as New' : 'Save'}
         </button>
       </div>

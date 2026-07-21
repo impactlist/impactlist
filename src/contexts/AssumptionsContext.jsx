@@ -2,11 +2,15 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { createCombinedAssumptions, createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
 import * as apiHelpers from '../utils/assumptionsAPIHelpers';
 import { normalizeUserAssumptions } from '../utils/assumptionsAPIHelpers';
-import { getLocalStorage, getSessionStorage } from '../utils/safeStorage';
+import {
+  SESSION_APPLIED_ASSUMPTIONS_KEY,
+  loadActiveAppliedAssumptions,
+  persistActiveAppliedAssumptions,
+} from '../utils/activeAppliedAssumptionsStore';
+import { getLocalStorage } from '../utils/safeStorage';
 
 const AssumptionsContext = createContext();
 const defaultAssumptions = createDefaultAssumptions();
-const CUSTOM_EFFECTS_DATA_KEY = 'customEffectsData';
 const LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY = 'activeSavedAssumptionsId:v1';
 const SESSION_STORAGE_CLEANUP_KEY = 'assumptionsSessionStorageCleanup:v1';
 
@@ -36,7 +40,9 @@ export const AssumptionsProvider = ({ children }) => {
       localStorage.removeItem('customCostPerLifeValues');
 
       if (localStorage.getItem(SESSION_STORAGE_CLEANUP_KEY) !== '1') {
-        localStorage.removeItem(CUSTOM_EFFECTS_DATA_KEY);
+        // The former browser-wide value used the same unversioned key that is
+        // now retained only as the session fallback.
+        localStorage.removeItem(SESSION_APPLIED_ASSUMPTIONS_KEY);
         localStorage.removeItem(LEGACY_ACTIVE_SAVED_ASSUMPTIONS_ID_KEY);
         localStorage.setItem(SESSION_STORAGE_CLEANUP_KEY, '1');
       }
@@ -47,29 +53,9 @@ export const AssumptionsProvider = ({ children }) => {
       console.error('Could not clean up legacy assumptions storage', error);
     }
 
-    let savedData;
-    try {
-      savedData = getSessionStorage().getItem(CUSTOM_EFFECTS_DATA_KEY);
-    } catch (error) {
-      console.error('Could not read stored assumptions; using defaults', error);
-      return null;
-    }
-    if (!savedData) return null;
-
-    try {
-      return normalizeUserAssumptions(JSON.parse(savedData), defaultAssumptions);
-    } catch (error) {
-      // A corrupted or schema-incompatible stored value would otherwise crash
-      // the whole app on every load of this tab (refreshing can't fix
-      // persisted storage). Discard it loudly and fall back to defaults.
-      console.error('Discarding corrupted stored assumptions', error);
-      try {
-        getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
-      } catch (removeError) {
-        console.error('Could not remove corrupted stored assumptions', removeError);
-      }
-      return null;
-    }
+    return loadActiveAppliedAssumptions((storedAssumptions) =>
+      normalizeUserAssumptions(storedAssumptions, defaultAssumptions)
+    );
   });
 
   const combinedAssumptions = useMemo(
@@ -78,19 +64,7 @@ export const AssumptionsProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    try {
-      if (userAssumptions) {
-        getSessionStorage().setItem(CUSTOM_EFFECTS_DATA_KEY, JSON.stringify(userAssumptions));
-      } else {
-        getSessionStorage().removeItem(CUSTOM_EFFECTS_DATA_KEY);
-      }
-    } catch (error) {
-      // Working assumptions remain valid in React state even when session
-      // persistence fails (quota exhaustion or storage revoked mid-session).
-      // Throwing from this effect would replace the usable app with its error
-      // boundary merely because persistence — an enhancement — is unavailable.
-      console.error('Could not persist working assumptions for this tab', error);
-    }
+    persistActiveAppliedAssumptions(userAssumptions);
   }, [userAssumptions]);
 
   // The mutators close over nothing but the stable setter and module-scope

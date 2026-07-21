@@ -3,6 +3,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import React, { useEffect } from 'react';
 import { AssumptionsProvider, useAssumptions } from './AssumptionsContext';
 import { globalParameters } from '../data/generatedData';
+import {
+  ACTIVE_APPLIED_ASSUMPTIONS_KEY,
+  SESSION_APPLIED_ASSUMPTIONS_KEY,
+} from '../utils/activeAppliedAssumptionsStore';
 
 /* global localStorage, sessionStorage, Storage */
 
@@ -19,7 +23,7 @@ const ContextProbe = ({ onContextChange }) => {
 const renderWithProvider = async () => {
   let latestContext = null;
 
-  render(
+  const view = render(
     <AssumptionsProvider>
       <ContextProbe onContextChange={(ctx) => (latestContext = ctx)} />
     </AssumptionsProvider>
@@ -31,6 +35,7 @@ const renderWithProvider = async () => {
 
   return {
     getContext: () => latestContext,
+    unmount: view.unmount,
   };
 };
 
@@ -69,7 +74,7 @@ describe('AssumptionsContext integration', () => {
     vi.restoreAllMocks();
   });
 
-  it('bootstraps from sessionStorage and normalizes default-equivalent values', async () => {
+  it('migrates session assumptions into durable storage and normalizes default-equivalent values', async () => {
     const savedState = {
       globalParameters: {
         discountRate: globalParameters.discountRate,
@@ -94,11 +99,60 @@ describe('AssumptionsContext integration', () => {
     });
 
     await waitFor(() => {
-      const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+      const persisted = JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY));
       expect(persisted).toEqual({
         globalParameters: {
           timeLimit: globalParameters.timeLimit + 5,
         },
+      });
+      expect(JSON.parse(sessionStorage.getItem(SESSION_APPLIED_ASSUMPTIONS_KEY))).toEqual(persisted);
+    });
+  });
+
+  it('restores applied assumptions after the tab session is gone', async () => {
+    const firstVisit = await renderWithProvider();
+    const restoredTimeLimit = globalParameters.timeLimit + 9;
+
+    act(() => {
+      firstVisit.getContext().updateGlobalParameterValue('timeLimit', restoredTimeLimit);
+    });
+
+    await waitFor(() => {
+      expect(JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY))).toEqual({
+        globalParameters: { timeLimit: restoredTimeLimit },
+      });
+    });
+
+    firstVisit.unmount();
+    sessionStorage.clear();
+
+    const returningVisit = await renderWithProvider();
+
+    expect(returningVisit.getContext().userAssumptions).toEqual({
+      globalParameters: { timeLimit: restoredTimeLimit },
+    });
+    expect(returningVisit.getContext().combinedAssumptions.globalParameters.timeLimit).toBe(restoredTimeLimit);
+  });
+
+  it('uses durable applied assumptions instead of a stale session mirror', async () => {
+    const durableTimeLimit = globalParameters.timeLimit + 14;
+    localStorage.setItem(
+      ACTIVE_APPLIED_ASSUMPTIONS_KEY,
+      JSON.stringify({ globalParameters: { timeLimit: durableTimeLimit } })
+    );
+    sessionStorage.setItem(
+      SESSION_APPLIED_ASSUMPTIONS_KEY,
+      JSON.stringify({ globalParameters: { timeLimit: globalParameters.timeLimit + 3 } })
+    );
+
+    const { getContext } = await renderWithProvider();
+
+    expect(getContext().userAssumptions).toEqual({
+      globalParameters: { timeLimit: durableTimeLimit },
+    });
+    await waitFor(() => {
+      expect(JSON.parse(sessionStorage.getItem(SESSION_APPLIED_ASSUMPTIONS_KEY))).toEqual({
+        globalParameters: { timeLimit: durableTimeLimit },
       });
     });
   });
@@ -118,10 +172,13 @@ describe('AssumptionsContext integration', () => {
 
     expect(getContext().userAssumptions).toBeNull();
     expect(sessionStorage.getItem('customEffectsData')).toBeNull();
-    expect(console.error).toHaveBeenCalledWith('Discarding corrupted stored assumptions', expect.any(Error));
+    expect(console.error).toHaveBeenCalledWith(
+      'Discarding corrupted applied assumptions from sessionStorage',
+      expect.any(Error)
+    );
   });
 
-  it('mounts with defaults when sessionStorage becomes unreadable after its availability probe', async () => {
+  it('mounts with defaults when the session fallback becomes unreadable after its availability probe', async () => {
     const originalGetItem = Storage.prototype.getItem;
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(function (key) {
       if (this === sessionStorage && key === 'customEffectsData') {
@@ -134,10 +191,13 @@ describe('AssumptionsContext integration', () => {
     const { getContext } = await renderWithProvider();
 
     expect(getContext().userAssumptions).toBeNull();
-    expect(console.error).toHaveBeenCalledWith('Could not read stored assumptions; using defaults', expect.any(Error));
+    expect(console.error).toHaveBeenCalledWith(
+      'Could not read applied assumptions from sessionStorage; trying fallback',
+      expect.any(Error)
+    );
   });
 
-  it('keeps applied assumptions usable when a later sessionStorage write exceeds quota', async () => {
+  it('keeps applied assumptions usable when a later session mirror write exceeds quota', async () => {
     const { getContext } = await renderWithProvider();
     const originalSetItem = Storage.prototype.setItem;
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (key, value) {
@@ -155,10 +215,16 @@ describe('AssumptionsContext integration', () => {
     await waitFor(() => {
       expect(getContext().userAssumptions?.globalParameters?.timeLimit).toBe(globalParameters.timeLimit + 7);
     });
-    expect(console.error).toHaveBeenCalledWith('Could not persist working assumptions for this tab', expect.any(Error));
+    expect(JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY))).toEqual({
+      globalParameters: { timeLimit: globalParameters.timeLimit + 7 },
+    });
+    expect(console.error).toHaveBeenCalledWith(
+      'Could not persist applied assumptions to sessionStorage',
+      expect.any(Error)
+    );
   });
 
-  it('does not bootstrap working assumptions from localStorage anymore', async () => {
+  it('does not revive the obsolete unversioned localStorage value', async () => {
     localStorage.setItem(
       'customEffectsData',
       JSON.stringify({
@@ -203,7 +269,7 @@ describe('AssumptionsContext integration', () => {
     expect(localStorage.getItem('activeSavedAssumptionsId:v1')).toBe('legacy-entry');
   });
 
-  it('persists category updates to sessionStorage', async () => {
+  it('persists category updates durably and to the session fallback', async () => {
     const { getContext } = await renderWithProvider();
     const context = getContext();
     const firstCategoryId = Object.keys(context.defaultAssumptions.categories)[0];
@@ -219,11 +285,12 @@ describe('AssumptionsContext integration', () => {
     });
 
     await waitFor(() => {
-      const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+      const persisted = JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY));
       expect(persisted.categories[firstCategoryId].effects[0]).toMatchObject({
         effectId: firstEffect.effectId,
         startTime: firstEffect.startTime + 1,
       });
+      expect(JSON.parse(sessionStorage.getItem(SESSION_APPLIED_ASSUMPTIONS_KEY))).toEqual(persisted);
     });
   });
 
@@ -353,6 +420,7 @@ describe('AssumptionsContext integration', () => {
     await waitFor(() => {
       expect(getContext().userAssumptions).toBeNull();
       expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+      expect(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY)).toBe('null');
     });
   });
 
@@ -377,6 +445,7 @@ describe('AssumptionsContext integration', () => {
     await waitFor(() => {
       expect(getContext().userAssumptions).toBeNull();
       expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+      expect(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY)).toBe('null');
     });
   });
 
@@ -398,6 +467,7 @@ describe('AssumptionsContext integration', () => {
     await waitFor(() => {
       expect(getContext().userAssumptions).toBeNull();
       expect(sessionStorage.getItem('customEffectsData')).toBeNull();
+      expect(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY)).toBe('null');
     });
   });
 
@@ -422,12 +492,13 @@ describe('AssumptionsContext integration', () => {
     });
 
     await waitFor(() => {
-      const persisted = JSON.parse(sessionStorage.getItem('customEffectsData'));
+      const persisted = JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY));
       expect(persisted).toEqual({
         globalParameters: {
           timeLimit: globalParameters.timeLimit + 25,
         },
       });
+      expect(JSON.parse(sessionStorage.getItem(SESSION_APPLIED_ASSUMPTIONS_KEY))).toEqual(persisted);
     });
   });
 

@@ -12,7 +12,7 @@ describe('assumptionsLoadHelpers', () => {
     expect(OVERWRITE_UNSAVED_ASSUMPTIONS_MODAL).toEqual({
       title: 'Overwrite your current assumptions?',
       description:
-        'Your current custom assumptions are not saved to this browser. Continuing will replace them with this saved entry.',
+        'Your current custom assumptions are not saved as a named set. Continuing will replace them with this saved entry.',
       continueLabel: 'Continue (overwrite yours)',
       cancelLabel: 'Cancel',
     });

@@ -1,14 +1,16 @@
 import { expect, test } from '@playwright/test';
 
-// While edited assumptions don't match any saved set, the assumptions
-// selector shows a "Custom (not saved to browser)" entry — the current
-// signal that custom values are active. (The old [title="Using custom
-// values"] icon is gone.)
-const customStateLabel = (page) => page.getByText('Custom (not saved to browser)');
+// While edited assumptions don't match any named set, the assumptions
+// selector shows a custom entry — the current signal that custom values are
+// active. (The old [title="Using custom values"] icon is gone.)
+const customStateLabel = (page) => page.getByText('Custom (unnamed)');
+const discountRateField = (page) => page.getByRole('textbox', { name: 'Discount Rate (%)' });
+const ACTIVE_APPLIED_ASSUMPTIONS_KEY = 'activeAppliedAssumptions:v1';
 const RECIPIENT_SEARCH_TOKEN = 'a';
 
-// Custom assumptions persist in sessionStorage (see AssumptionsContext);
-// calculator state persists in localStorage. Clear both for isolation.
+// Applied custom assumptions and calculator state persist in localStorage;
+// the former sessionStorage value remains only as a migration/fallback mirror.
+// Clear both storage areas for isolation.
 const clearAppLocalStorage = async (page) => {
   await page.goto('/');
   await page.evaluate(() => {
@@ -17,34 +19,30 @@ const clearAppLocalStorage = async (page) => {
   });
 };
 
+const getDurableAppliedAssumptionsRaw = (page) =>
+  page.evaluate((key) => window.localStorage.getItem(key), ACTIVE_APPLIED_ASSUMPTIONS_KEY);
+
+const getDurableAppliedAssumptions = async (page) => {
+  const raw = await getDurableAppliedAssumptionsRaw(page);
+  return raw ? JSON.parse(raw) : null;
+};
+
 const saveCustomDiscountRate = async (page, nextValue) => {
-  const discountRateInput = page.getByLabel('Discount Rate (%)');
+  const discountRateInput = discountRateField(page);
   await discountRateInput.fill(nextValue);
   await page.getByRole('button', { name: 'Apply' }).click();
 
-  await expect
-    .poll(async () => {
-      return page.evaluate(() => window.sessionStorage.getItem('customEffectsData'));
-    })
-    .not.toBeNull();
+  await expect.poll(() => getDurableAppliedAssumptions(page)).not.toBeNull();
 };
 
 const hasRecipientCustomizations = async (page) => {
-  return page.evaluate(() => {
-    const raw = window.sessionStorage.getItem('customEffectsData');
-    if (!raw) return false;
-    const parsed = JSON.parse(raw);
-    return !!parsed.recipients && Object.keys(parsed.recipients).length > 0;
-  });
+  const persisted = await getDurableAppliedAssumptions(page);
+  return !!persisted?.recipients && Object.keys(persisted.recipients).length > 0;
 };
 
 const hasCategoryCustomizations = async (page) => {
-  return page.evaluate(() => {
-    const raw = window.sessionStorage.getItem('customEffectsData');
-    if (!raw) return false;
-    const parsed = JSON.parse(raw);
-    return !!parsed.categories && Object.keys(parsed.categories).length > 0;
-  });
+  const persisted = await getDurableAppliedAssumptions(page);
+  return !!persisted?.categories && Object.keys(persisted.categories).length > 0;
 };
 
 const addSpecificDonation = async (page, { amount = '1234', year = '2020' } = {}) => {
@@ -121,24 +119,71 @@ test.describe('Critical path smoke tests', () => {
     await expect(page.getByRole('heading', { name: 'Assumptions', exact: true })).toBeVisible();
     await expect(customStateLabel(page)).toHaveCount(0);
 
-    const discountRateInput = page.getByLabel('Discount Rate (%)');
+    const discountRateInput = discountRateField(page);
     const initialValue = await discountRateInput.inputValue();
     const newValue = initialValue === '3' ? '4' : '3';
 
     await saveCustomDiscountRate(page, newValue);
 
-    const storedAssumptions = await page.evaluate(() => JSON.parse(window.sessionStorage.getItem('customEffectsData')));
+    const storedAssumptions = await getDurableAppliedAssumptions(page);
     expect(storedAssumptions).toBeTruthy();
     expect(storedAssumptions.globalParameters.discountRate).toBe(Number(newValue) / 100);
 
     await expect(customStateLabel(page).first()).toBeVisible();
   });
 
+  test('applied assumptions survive losing the tab session and reloading @smoke', async ({ page }) => {
+    await clearAppLocalStorage(page);
+    await page.goto('/assumptions');
+
+    const discountRateInput = discountRateField(page);
+    const defaultValue = await discountRateInput.inputValue();
+    const newValue = defaultValue === '3' ? '4' : '3';
+
+    await saveCustomDiscountRate(page, newValue);
+    await page.evaluate(() => window.sessionStorage.clear());
+    await page.reload();
+
+    await expect(discountRateField(page)).toHaveValue(newValue);
+    await expect(customStateLabel(page).first()).toBeVisible();
+    expect((await getDurableAppliedAssumptions(page)).globalParameters.discountRate).toBe(Number(newValue) / 100);
+  });
+
+  test('a reset in one tab cannot be undone by another tab session @smoke', async ({ page, context }) => {
+    await clearAppLocalStorage(page);
+    await page.goto('/assumptions');
+
+    const discountRateInput = discountRateField(page);
+    const defaultValue = await discountRateInput.inputValue();
+    const newValue = defaultValue === '3' ? '4' : '3';
+    await saveCustomDiscountRate(page, newValue);
+
+    const resetPage = await context.newPage();
+    await resetPage.goto('/assumptions');
+    await expect(discountRateField(resetPage)).toHaveValue(newValue);
+
+    await discountRateField(resetPage).fill(defaultValue);
+    await resetPage.getByRole('button', { name: 'Apply' }).click();
+    await expect.poll(() => getDurableAppliedAssumptionsRaw(resetPage)).toBe('null');
+
+    // The first tab still has the pre-reset compatibility mirror. Refreshing
+    // it must honor the shared durable tombstone and clear that stale copy.
+    await expect.poll(() => page.evaluate(() => window.sessionStorage.getItem('customEffectsData'))).not.toBeNull();
+    await page.reload();
+
+    await expect(discountRateField(page)).toHaveValue(defaultValue);
+    await expect(customStateLabel(page)).toHaveCount(0);
+    await expect.poll(() => getDurableAppliedAssumptionsRaw(page)).toBe('null');
+    await expect.poll(() => page.evaluate(() => window.sessionStorage.getItem('customEffectsData'))).toBeNull();
+
+    await resetPage.close();
+  });
+
   test('assumptions reset flow clears custom global parameter @smoke', async ({ page }) => {
     await clearAppLocalStorage(page);
     await page.goto('/assumptions');
 
-    const discountRateInput = page.getByLabel('Discount Rate (%)');
+    const discountRateInput = discountRateField(page);
     const defaultValue = await discountRateInput.inputValue();
     const newValue = defaultValue === '3' ? '4' : '3';
 
@@ -150,11 +195,7 @@ test.describe('Critical path smoke tests', () => {
     await page.getByRole('button', { name: 'Revert Discount Rate (%)' }).click();
 
     await expect(discountRateInput).toHaveValue(defaultValue);
-    await expect
-      .poll(async () => {
-        return page.evaluate(() => window.sessionStorage.getItem('customEffectsData'));
-      })
-      .toBeNull();
+    await expect.poll(() => getDurableAppliedAssumptionsRaw(page)).toBe('null');
     await expect(customStateLabel(page)).toHaveCount(0);
   });
 
@@ -192,11 +233,7 @@ test.describe('Critical path smoke tests', () => {
 
     // The customized recipient's card grows a per-card reset action.
     await page.getByRole('button', { name: `Reset ${entityName}`, exact: true }).click();
-    await expect
-      .poll(async () => {
-        return page.evaluate(() => window.sessionStorage.getItem('customEffectsData'));
-      })
-      .toBeNull();
+    await expect.poll(() => getDurableAppliedAssumptionsRaw(page)).toBe('null');
     await expect(customStateLabel(page)).toHaveCount(0);
   });
 
@@ -227,11 +264,7 @@ test.describe('Critical path smoke tests', () => {
 
     // The customized cause's card grows a per-card reset action.
     await page.getByRole('button', { name: `Reset ${entityName}`, exact: true }).click();
-    await expect
-      .poll(async () => {
-        return page.evaluate(() => window.sessionStorage.getItem('customEffectsData'));
-      })
-      .toBeNull();
+    await expect.poll(() => getDurableAppliedAssumptionsRaw(page)).toBe('null');
     await expect(customStateLabel(page)).toHaveCount(0);
   });
 

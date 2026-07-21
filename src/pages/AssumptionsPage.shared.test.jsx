@@ -8,6 +8,7 @@ import { AssumptionsProvider } from '../contexts/AssumptionsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import { createDefaultAssumptions } from '../utils/assumptionsDataHelpers';
 import { saveNewAssumptions } from '../utils/savedAssumptionsStore';
+import { ACTIVE_APPLIED_ASSUMPTIONS_KEY } from '../utils/activeAppliedAssumptionsStore';
 import GlobalSharedAssumptionsImport from '../components/shared/GlobalSharedAssumptionsImport';
 import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
 
@@ -222,6 +223,9 @@ describe('Global shared assumptions import flow', () => {
       expect(getPersistedCustomEffectsData()).toEqual({
         globalParameters: longtermistGlobalParameters,
       });
+      expect(JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY))).toEqual({
+        globalParameters: longtermistGlobalParameters,
+      });
     });
 
     expect(sessionStorage.getItem('activeSavedAssumptionsId:v1')).toBe('curated:longtermist');
@@ -233,8 +237,8 @@ describe('Global shared assumptions import flow', () => {
     const currentTimeLimit = Number(assumptionsData.globalParameters.timeLimit) + 10;
     const user = userEvent.setup();
 
-    sessionStorage.setItem(
-      'customEffectsData',
+    localStorage.setItem(
+      ACTIVE_APPLIED_ASSUMPTIONS_KEY,
       JSON.stringify({
         globalParameters: {
           timeLimit: currentTimeLimit,
@@ -249,6 +253,9 @@ describe('Global shared assumptions import flow', () => {
 
     await waitFor(() => {
       expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: longtermistGlobalParameters,
+      });
+      expect(JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY))).toEqual({
         globalParameters: longtermistGlobalParameters,
       });
     });
@@ -341,6 +348,11 @@ describe('Global shared assumptions import flow', () => {
 
     await waitFor(() => {
       expect(getPersistedCustomEffectsData()).toEqual({
+        globalParameters: {
+          timeLimit: currentTimeLimit,
+        },
+      });
+      expect(JSON.parse(localStorage.getItem(ACTIVE_APPLIED_ASSUMPTIONS_KEY))).toEqual({
         globalParameters: {
           timeLimit: currentTimeLimit,
         },

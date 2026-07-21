@@ -9,7 +9,7 @@ content/*.md  --npm run generate-data-->  src/data/generatedData.js (gitignored)
                                               |
                                               v
         createDefaultAssumptions()  ->  defaultAssumptions      (the site's published numbers)
-        + userAssumptions (minimal diff, sessionStorage)        (the user's edits)
+        + userAssumptions (minimal diff, versioned localStorage) (the user's applied edits)
         = createCombinedAssumptions()  ->  combinedAssumptions  (what every page calculates from)
 ```
 
@@ -25,7 +25,7 @@ content/*.md  --npm run generate-data-->  src/data/generatedData.js (gitignored)
 
 ## Error-handling philosophy
 
-Fail hard and loudly on unexpected states (project rule). The deliberate exceptions — catch-clear, plus a user notification where a UI notification context is available — exist so persisted bad data can't brick the app: storage `JSON.parse` (calculator localStorage notifies; the AssumptionsContext sessionStorage guard runs in the state initializer before any UI exists, so it logs and clears only), and the three external-assumption load paths (library load ×2, shared-link import — all notify). Unknown URLs/entity IDs render `pages/NotFound.jsx` — they're expected input, not invariant violations.
+Fail hard and loudly on unexpected states (project rule). The deliberate exceptions — catch-clear, plus a user notification where a UI notification context is available — exist so persisted bad data can't brick the app: storage `JSON.parse` (calculator localStorage notifies; the AssumptionsContext persisted-storage guard runs in the state initializer before any UI exists, so it logs and clears only), and the three external-assumption load paths (library load ×2, shared-link import — all notify). Unknown URLs/entity IDs render `pages/NotFound.jsx` — they're expected input, not invariant violations.
 
 ## Cross-cutting conventions
 

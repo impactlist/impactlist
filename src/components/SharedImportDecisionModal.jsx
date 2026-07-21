@@ -7,7 +7,7 @@ const SharedImportDecisionModal = ({
   onCancel,
   isBusy = false,
   title = 'Import Shared Assumptions?',
-  description = 'You have custom assumptions that are not saved to this browser. Continuing will replace them. If you want to keep yours first, click Cancel, go to the Assumptions page, and click Save to browser.',
+  description = 'You have custom assumptions that are not saved as a named set. Continuing will replace them. If you want to keep a reusable copy first, click “Cancel”, go to the Assumptions page, and click “Save as…”',
   continueLabel = 'Continue (overwrite yours)',
   cancelLabel = 'Cancel',
 }) => {

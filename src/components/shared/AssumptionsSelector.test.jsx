@@ -287,7 +287,7 @@ describe('AssumptionsSelector', () => {
     expect(within(savedRow).queryByRole('button', { name: 'View description' })).not.toBeInTheDocument();
   });
 
-  it('shows the custom not-saved-to-browser entry when edits no longer match the active saved assumptions and exposes its description', async () => {
+  it('shows the custom not-saved-as-a-set entry when edits no longer match the active saved assumptions', async () => {
     const user = userEvent.setup();
     mockSavedAssumptionsState.activeId = savedEntry.id;
     mockAssumptionsState.isUsingCustomValues = true;
@@ -297,18 +297,16 @@ describe('AssumptionsSelector', () => {
 
     renderSelector();
 
-    expect(screen.getByRole('button', { name: /Current assumptions/ })).toHaveTextContent(
-      'Custom (not saved to browser)'
-    );
+    expect(screen.getByRole('button', { name: /Current assumptions/ })).toHaveTextContent('Custom (unnamed)');
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     await user.click(within(summaryRow).getByRole('button', { name: 'View description' }));
 
-    expect(screen.getByRole('heading', { name: 'Custom (not saved to browser)' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Custom (unnamed)' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
       'The current assumptions have been edited and no longer match a saved set of assumptions. They are applied — every ranking and calculation on the site uses them'
     );
     expect(screen.getByRole('region', { name: 'Description:' })).toHaveTextContent(
-      'If you want to reuse these exact assumptions later, click Save to browser to keep a copy in this browser, or click Share to create a link to these assumptions that you can share with others.'
+      'They are not saved as a named set. If you want a reusable named copy, click “Save as…”'
     );
   });
 
@@ -321,7 +319,7 @@ describe('AssumptionsSelector', () => {
 
     const summaryRow = document.querySelector('.saved-assumptions-panel__summary');
     expect(within(summaryRow).queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
-    expect(within(summaryRow).queryByRole('button', { name: 'Save to browser' })).not.toBeInTheDocument();
+    expect(within(summaryRow).queryByRole('button', { name: 'Save as…' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Rename' })).not.toBeInTheDocument();
     expect(within(summaryRow).queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
   });

@@ -168,12 +168,12 @@ const FAQ = () => {
                 </a>{' '}
                 and{' '}
                 <a
-                  href="https://www.openphilanthropy.org/"
+                  href="https://coefficientgiving.org/"
                   className="impact-link"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Open Philanthropy
+                  Coefficient Giving (formerly Open Philanthropy)
                 </a>
                 , who have already done a lot of the hard work of estimating charity effectiveness. We plan to improve
                 our estimates over time with human experts.
@@ -286,10 +286,10 @@ const FAQ = () => {
               isOpen={isOpen(13)}
               onToggle={() => toggleItem(13)}
             >
+              <p className="mb-3">Impact List currently ranks living people, so deceased donors are not included.</p>
               <p className="mb-3">
-                We exclude people whose donations were funded by the proceeds of crime. For example, a donation made
-                with money that was later found to have been stolen or misappropriated does not earn the donor a place
-                on the list.
+                We exclude donations that were funded by the proceeds of crime. For example, a donation made with money
+                that was later found to have been stolen or misappropriated does not count towards the donor's total.
               </p>
               <p className="mb-3">
                 We also may simply have missed someone who belongs here. The list is built from a donation database that
@@ -395,8 +395,8 @@ const FAQ = () => {
                   <p className="faq-effect-group__subheading">Parameters</p>
                   <ul className="faq-effect-group__list list-disc list-inside ml-2">
                     <li>
-                      <strong>Cost per QALY:</strong> The wellbeing produced per dollar donated (see QALY explanation
-                      above)
+                      <strong>Cost per QALY:</strong> The cost to produce one life-year-equivalent of value (see QALY
+                      explanation above)
                     </li>
                     <li>
                       <strong>Start time:</strong> Years after donation before the effect begins

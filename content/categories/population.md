@@ -18,6 +18,8 @@ We estimate \$600/QALY, driven overwhelmingly by the added life. We divide a cen
 
 This effect captures welfare gains from charities that increase the number of wanted births in rich countries through noncoercive means, such as family-policy research and advocacy, fertility-care access, and related policy work. Most of the value comes from the added person's own lifetime wellbeing. Smaller but still real benefits likely also accrue to parents who achieve their desired family size, and there are probably some positive broader spillovers from additional people in aging rich societies.
 
+The rich-country scope reflects the interventions and evidence currently represented in this category, not a judgment that births elsewhere matter less. The same moral weight applies to wellbeing regardless of birthplace; analogous work in lower-income countries would use context-specific estimates of costs, lifetime wellbeing, and spillovers.
+
 ## What kinds of charities are we modeling?
 
 This category is meant for charities that plausibly increase wanted births through autonomy-respecting means — family-policy research and advocacy, fertility-care access and IVF affordability work, population-wellbeing research, and targeted work on barriers like housing or work-family balance when there is a clear causal path to more wanted births. It is **not** for coercive pronatalism, work that reduces reproductive autonomy, generic demography with no path to changing births, or ordinary child-welfare charities better modeled elsewhere.

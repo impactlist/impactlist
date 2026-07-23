@@ -20,6 +20,10 @@
     --accent: #0b5d66;
     --accent-strong: #094850;
     --accent-soft: #d9edf0;
+    --cause-scope-accent: #8a4f5b;
+    --cause-scope-accent-strong: #65343e;
+    --cause-scope-accent-soft: #f1e2e4;
+    --cause-scope-shadow-focus: 0 0 0 3px rgba(138, 79, 91, 0.26);
     /* Keep edited-state and custom-accent tokens semantically separate, even if they currently share a hue. */
     --edited-accent: #4460b2;
     --edited-accent-strong: #354c91;
@@ -2084,6 +2088,15 @@
   .list-search-controls__assumptions {
     justify-self: end;
     width: 100%;
+  }
+
+  .cause-filter,
+  .cause-filter-modal__panel,
+  .cause-scope-summary {
+    --accent: var(--cause-scope-accent);
+    --accent-strong: var(--cause-scope-accent-strong);
+    --accent-soft: var(--cause-scope-accent-soft);
+    --shadow-focus: var(--cause-scope-shadow-focus);
   }
 
   .cause-filter {

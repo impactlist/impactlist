@@ -1,11 +1,37 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import DonorList from './DonorList';
+import { NotificationProvider } from '../contexts/NotificationContext';
+import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
 
 const mockCombinedAssumptions = {
   getAllRecipients: () => [],
+  getAllCategories: () => [
+    { id: 'climate-change', name: 'Climate Change' },
+    { id: 'global-health', name: 'Global Health' },
+  ],
+};
+
+const donorOne = {
+  id: 'donor-1',
+  rank: 1,
+  name: 'Donor One',
+  totalLivesSaved: 10,
+  totalDonated: 1000,
+  costPerLife: 100,
+  netWorth: 1000000,
+};
+
+const donorTwo = {
+  id: 'donor-2',
+  rank: 2,
+  name: 'Donor Two',
+  totalLivesSaved: 5,
+  totalDonated: 500,
+  costPerLife: 100,
+  netWorth: 500000,
 };
 
 vi.mock('framer-motion', () => ({
@@ -39,26 +65,8 @@ vi.mock('../contexts/AssumptionsContext', () => ({
 }));
 
 vi.mock('../utils/assumptionsDataHelpers', () => ({
-  calculateDonorStatsFromCombined: () => [
-    {
-      id: 'donor-1',
-      rank: 1,
-      name: 'Donor One',
-      totalLivesSaved: 10,
-      totalDonated: 1000,
-      costPerLife: 100,
-      netWorth: 1000000,
-    },
-    {
-      id: 'donor-2',
-      rank: 2,
-      name: 'Donor Two',
-      totalLivesSaved: 5,
-      totalDonated: 500,
-      costPerLife: 100,
-      netWorth: 500000,
-    },
-  ],
+  calculateDonorStatsFromCombined: (_combinedAssumptions, { categoryIds } = {}) =>
+    categoryIds?.includes('global-health') ? [{ ...donorTwo, rank: 1 }] : [donorOne, donorTwo],
   getCostPerLifeForRecipientFromCombined: () => 100,
   calculateLivesSavedForDonationFromCombined: () => 1,
 }));
@@ -74,10 +82,19 @@ vi.mock('../components/shared/AssumptionsSelector', () => ({
   default: () => <div data-testid="assumptions-selector" />,
 }));
 
-const renderPage = () => {
+const LocationProbe = () => {
+  const location = useLocation();
+  return <output data-testid="location">{`${location.pathname}${location.search}`}</output>;
+};
+
+const renderPage = (initialEntry = '/') => {
   return render(
-    <MemoryRouter>
-      <DonorList />
+    <MemoryRouter initialEntries={[initialEntry]}>
+      <NotificationProvider>
+        <GlobalNotificationBanner />
+        <DonorList />
+        <LocationProbe />
+      </NotificationProvider>
     </MemoryRouter>
   );
 };
@@ -151,5 +168,53 @@ describe('DonorList search', () => {
 
     expect(screen.getByText('Donor One')).toBeInTheDocument();
     expect(screen.getByText('Donor Two')).toBeInTheDocument();
+  });
+});
+
+describe('DonorList cause scope', () => {
+  it('loads a scoped ranking from the URL and explains the data boundary', () => {
+    renderPage('/?causes=global-health');
+
+    expect(screen.queryByText('Donor One')).not.toBeInTheDocument();
+    expect(screen.getByText('Donor Two')).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Active cause scope' })).toHaveTextContent('Global Health');
+  });
+
+  it('applies a cause selection to the URL and restores all causes from the scope summary', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole('button', { name: 'Cause scope. Current selection: All causes' }));
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+    await user.click(screen.getByRole('checkbox', { name: 'Global Health' }));
+    await user.click(screen.getByRole('button', { name: 'Apply scope' }));
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/?causes=global-health');
+    expect(screen.queryByText('Donor One')).not.toBeInTheDocument();
+    expect(screen.getByText('Donor Two')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Switch to all causes' }));
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/');
+    expect(screen.getByText('Donor One')).toBeInTheDocument();
+  });
+
+  it('explains and removes an invalid-only cause scope from a stale link', async () => {
+    const user = userEvent.setup();
+    renderPage('/?shared=example&causes=stale-id');
+
+    const noticeText = await screen.findByText(
+      'That link does not match any current cause areas, so the all-cause ranking is shown instead.'
+    );
+    const notice = noticeText.closest('[role="status"]');
+    expect(notice).toBeInTheDocument();
+    expect(screen.getByText('Donor One')).toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Active cause scope' })).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent('/?shared=example');
+    });
+
+    await user.click(within(notice).getByRole('button', { name: 'Dismiss notification' }));
+    expect(notice).not.toBeInTheDocument();
   });
 });

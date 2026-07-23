@@ -12,6 +12,10 @@ export const DONOR_LIVES_SAVED_TOOLTIP = (
     expected lives saved.
     <br />
     <br />
+    On a cause-scoped ranking, only the portions of categorized donations attributed to the selected causes are
+    included.
+    <br />
+    <br />
     See the FAQ for more details.
   </div>
 );
@@ -20,6 +24,9 @@ export const DONOR_DONATED_TOOLTIP = (
   <div>
     The percentage in parentheses is the portion of the person's net worth that they have donated: the total amount
     donated divided by their current net worth.
+    <br />
+    <br />
+    On a cause-scoped ranking, both values use only categorized donations attributed to the selected causes.
   </div>
 );
 
@@ -27,6 +34,9 @@ export const DONOR_COST_PER_LIFE_TOOLTIP = (
   <div>
     Cost/Life is the amount donated divided by the lives saved. For every multiple of the dollar amount shown here, the
     equivalent of one life is expected to be saved.
+    <br />
+    <br />
+    On a cause-scoped ranking, both the donated amount and lives saved are limited to the selected causes.
   </div>
 );
 

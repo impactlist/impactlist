@@ -576,12 +576,33 @@ export const calculateLivesSavedForCategoryFromCombined = (combinedAssumptions, 
 };
 
 /**
- * Calculate donor statistics using combined assumptions
+ * Calculate donor statistics using combined assumptions.
+ *
+ * When `categoryIds` is provided, every donation is split using the
+ * recipient's category fractions and only the selected portions contribute to
+ * the row. Donor-level totals that cannot be attributed to a category are
+ * deliberately excluded from scoped rankings rather than silently assigned to
+ * the donor's known cause mix.
+ *
  * @param {Object} combinedAssumptions - Combined assumptions object
+ * @param {Object} options - Optional ranking scope
+ * @param {Array<string>|null} options.categoryIds - Included category ids; null means all causes
  * @returns {Array} Array of donor statistics
  */
-export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
+export const calculateDonorStatsFromCombined = (combinedAssumptions, { categoryIds = null } = {}) => {
   assertExists(combinedAssumptions, 'combinedAssumptions');
+
+  if (categoryIds !== null && !Array.isArray(categoryIds)) {
+    throw new Error('categoryIds must be an array or null');
+  }
+
+  const selectedCategoryIds = categoryIds === null ? null : new Set(categoryIds);
+
+  selectedCategoryIds?.forEach((categoryId) => {
+    if (!Object.hasOwn(combinedAssumptions.categories, categoryId)) {
+      throw new Error(`Category ${categoryId} not found in combined assumptions`);
+    }
+  });
 
   const donorStats = getAllDonors().map((donor) => {
     const donorId = getDonorId(donor);
@@ -595,21 +616,34 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions) => {
     let totalLivesSaved = 0;
     let knownDonations = 0;
 
-    // Calculate totals based on actual donations using combined assumptions
+    // Calculate totals based on actual donations using combined assumptions.
+    // A scoped ranking uses the category breakdown so multi-cause recipients
+    // contribute only the fraction attributed to a selected cause.
     for (const donation of donorData) {
-      const creditedAmount = getCreditedAmount(donation);
-      totalDonated += creditedAmount;
-      knownDonations += creditedAmount;
+      if (selectedCategoryIds === null) {
+        const creditedAmount = getCreditedAmount(donation);
+        totalDonated += creditedAmount;
+        knownDonations += creditedAmount;
+        totalLivesSaved += calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
+        continue;
+      }
 
-      const livesSaved = calculateLivesSavedForDonationFromCombined(combinedAssumptions, donation);
-      totalLivesSaved += livesSaved;
+      const selectedBreakdown = calculateCategoryBreakdownForDonationFromCombined(combinedAssumptions, donation).filter(
+        ({ categoryId }) => selectedCategoryIds.has(categoryId)
+      );
+
+      for (const categoryPortion of selectedBreakdown) {
+        totalDonated += categoryPortion.amount;
+        knownDonations += categoryPortion.amount;
+        totalLivesSaved += categoryPortion.livesSaved;
+      }
     }
 
     // Handle known totalDonated field if available
     let totalDonatedField = null;
     let unknownLivesSaved = 0;
 
-    if (donor.totalDonated && donor.totalDonated > knownDonations) {
+    if (selectedCategoryIds === null && donor.totalDonated && donor.totalDonated > knownDonations) {
       totalDonatedField = donor.totalDonated;
 
       // Calculate unknown amount

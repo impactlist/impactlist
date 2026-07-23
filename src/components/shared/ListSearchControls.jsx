@@ -4,15 +4,17 @@ import SearchInput from './SearchInput';
 import AssumptionsSelector from './AssumptionsSelector';
 
 /**
- * The toolbar row above list-page tables: search box on the left, assumptions
- * selector on the right. On small screens they stack, selector first.
+ * The toolbar above list-page tables. Search and the assumptions selector are
+ * always present; pages can add one ranking-level filter between them without
+ * duplicating the responsive list-toolbar layout.
  */
-const ListSearchControls = ({ searchTerm, onSearchChange, placeholder }) => (
-  <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-    <div className="order-2 w-full sm:order-1 sm:max-w-md">
+const ListSearchControls = ({ searchTerm, onSearchChange, placeholder, filterControl = null }) => (
+  <div className="list-search-controls" data-has-filter={Boolean(filterControl)}>
+    <div className="list-search-controls__search">
       <SearchInput value={searchTerm} onChange={onSearchChange} placeholder={placeholder} />
     </div>
-    <div className="order-1 w-full min-w-0 sm:order-2">
+    {filterControl && <div className="list-search-controls__filter">{filterControl}</div>}
+    <div className="list-search-controls__assumptions">
       <AssumptionsSelector className="mb-0" />
     </div>
   </div>
@@ -22,6 +24,7 @@ ListSearchControls.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   onSearchChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
+  filterControl: PropTypes.node,
 };
 
 export default ListSearchControls;

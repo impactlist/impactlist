@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 /**
@@ -11,8 +11,9 @@ const SearchInput = ({
   ariaLabel = placeholder,
   className = '',
   size = 'default',
+  inputRef = null,
 }) => {
-  const inputRef = useRef(null);
+  const localInputRef = useRef(null);
   const sizeClasses = {
     sm: 'py-1.5 text-xs',
     default: 'py-2 text-sm',
@@ -29,13 +30,25 @@ const SearchInput = ({
     onChange('');
     // The clear button disappears once the value is empty. Move focus first
     // so keyboard users are not left focused on a removed DOM node.
-    inputRef.current?.focus();
+    localInputRef.current?.focus();
   };
+
+  const assignInputRef = useCallback(
+    (node) => {
+      localInputRef.current = node;
+      if (typeof inputRef === 'function') {
+        inputRef(node);
+      } else if (inputRef) {
+        inputRef.current = node;
+      }
+    },
+    [inputRef]
+  );
 
   return (
     <div className={`impact-search ${className}`.trim()}>
       <input
-        ref={inputRef}
+        ref={assignInputRef}
         type="text"
         placeholder={placeholder}
         aria-label={ariaLabel}
@@ -85,6 +98,7 @@ SearchInput.propTypes = {
   ariaLabel: PropTypes.string,
   className: PropTypes.string,
   size: PropTypes.oneOf(['sm', 'default', 'lg']),
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.object })]),
 };
 
 export default SearchInput;

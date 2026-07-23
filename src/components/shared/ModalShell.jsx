@@ -12,7 +12,7 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
-const ModalShellContent = ({ onClose, dismissible, labelledBy, panelClassName, children }) => {
+const ModalShellContent = ({ onClose, dismissible, labelledBy, describedBy, panelClassName, children }) => {
   const panelRef = useRef(null);
 
   // Move focus into the dialog on open and restore it on close, so keyboard
@@ -79,6 +79,7 @@ const ModalShellContent = ({ onClose, dismissible, labelledBy, panelClassName, c
           role="dialog"
           aria-modal="true"
           aria-labelledby={labelledBy}
+          aria-describedby={describedBy}
           tabIndex={-1}
           onKeyDown={handleKeyDown}
           className={`impact-modal__panel ${panelClassName}`.trim()}
@@ -97,6 +98,7 @@ ModalShellContent.propTypes = {
   onClose: PropTypes.func.isRequired,
   dismissible: PropTypes.bool.isRequired,
   labelledBy: PropTypes.string,
+  describedBy: PropTypes.string,
   panelClassName: PropTypes.string,
   children: PropTypes.node,
 };
@@ -106,16 +108,26 @@ ModalShellContent.propTypes = {
  * trapping/restoration, Escape-to-close, and click-on-scrim-to-close.
  *
  * `labelledBy` should reference the id of the modal's heading element.
+ * `describedBy` can reference supporting copy that explains the dialog.
  * Set `dismissible={false}` to disable scrim/Escape dismissal (e.g. while a
  * confirm action is busy) — explicit buttons keep working.
  */
-const ModalShell = ({ isOpen, onClose, dismissible = true, labelledBy, panelClassName = '', children }) => (
+const ModalShell = ({
+  isOpen,
+  onClose,
+  dismissible = true,
+  labelledBy,
+  describedBy,
+  panelClassName = '',
+  children,
+}) => (
   <AnimatePresence>
     {isOpen && (
       <ModalShellContent
         onClose={onClose}
         dismissible={dismissible}
         labelledBy={labelledBy}
+        describedBy={describedBy}
         panelClassName={panelClassName}
       >
         {children}
@@ -129,6 +141,7 @@ ModalShell.propTypes = {
   onClose: PropTypes.func.isRequired,
   dismissible: PropTypes.bool,
   labelledBy: PropTypes.string,
+  describedBy: PropTypes.string,
   panelClassName: PropTypes.string,
   children: PropTypes.node,
 };

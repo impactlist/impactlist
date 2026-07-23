@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { calculateDonorStatsFromCombined } from '../utils/assumptionsDataHelpers';
@@ -10,6 +10,7 @@ import DonorPhoto from '../components/shared/DonorPhoto';
 import ListSearchControls from '../components/shared/ListSearchControls';
 import ImpactValueCell from '../components/shared/ImpactValueCell';
 import DonatedValueCell from '../components/shared/DonatedValueCell';
+import CauseFilter, { CauseScopeSummary } from '../components/shared/CauseFilter';
 import {
   DONOR_LIVES_SAVED_TOOLTIP,
   DONOR_DONATED_TOOLTIP,
@@ -17,6 +18,11 @@ import {
 } from '../constants/metricTooltips';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import useNameSearch from '../hooks/useNameSearch';
+import useCauseFilter from '../hooks/useCauseFilter';
+import { useNotificationActions } from '../contexts/NotificationContext';
+
+const INVALID_CAUSE_LINK_NOTICE =
+  'That link does not match any current cause areas, so the all-cause ranking is shown instead.';
 
 // Donor table columns configuration (static — no component state involved)
 const donorColumns = [
@@ -72,9 +78,46 @@ const donorColumns = [
 const DonorList = () => {
   useDocumentTitle('Top Donors by Lives Saved');
   const { combinedAssumptions } = useAssumptions();
+  const { showNotification } = useNotificationActions();
 
-  const donorStats = useMemo(() => calculateDonorStatsFromCombined(combinedAssumptions), [combinedAssumptions]);
+  const categories = useMemo(
+    () => [...combinedAssumptions.getAllCategories()].sort((a, b) => a.name.localeCompare(b.name)),
+    [combinedAssumptions]
+  );
+  const {
+    selectedCategoryIds,
+    selectedCategories,
+    isCauseFiltered,
+    hasInvalidCauseSelection,
+    rawCauseSelection,
+    applyCauseFilter,
+    clearInvalidCauseSelection,
+  } = useCauseFilter(categories);
+  const handledInvalidCauseSelectionRef = useRef(null);
+
+  useEffect(() => {
+    if (!hasInvalidCauseSelection) {
+      handledInvalidCauseSelectionRef.current = null;
+      return;
+    }
+
+    if (handledInvalidCauseSelectionRef.current === rawCauseSelection) {
+      return;
+    }
+
+    handledInvalidCauseSelectionRef.current = rawCauseSelection;
+    showNotification('info', INVALID_CAUSE_LINK_NOTICE);
+    clearInvalidCauseSelection();
+  }, [clearInvalidCauseSelection, hasInvalidCauseSelection, rawCauseSelection, showNotification]);
+
+  const donorStats = useMemo(
+    () => calculateDonorStatsFromCombined(combinedAssumptions, { categoryIds: selectedCategoryIds }),
+    [combinedAssumptions, selectedCategoryIds]
+  );
   const { searchTerm, setSearchTerm, filteredItems: filteredDonors } = useNameSearch(donorStats);
+  const emptyMessage = searchTerm.trim()
+    ? 'No donors match your search within the selected causes.'
+    : 'No donors have categorized donations in the selected causes.';
 
   return (
     <>
@@ -99,7 +142,26 @@ const DonorList = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <ListSearchControls searchTerm={searchTerm} onSearchChange={setSearchTerm} placeholder="Search donors..." />
+          <ListSearchControls
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            placeholder="Search donors..."
+            filterControl={
+              <CauseFilter
+                categories={categories}
+                selectedCategoryIds={selectedCategoryIds}
+                onApply={applyCauseFilter}
+              />
+            }
+          />
+
+          {isCauseFiltered && (
+            <CauseScopeSummary
+              selectedCategories={selectedCategories}
+              donorCount={donorStats.length}
+              onReset={() => applyCauseFilter(null)}
+            />
+          )}
 
           <div className="impact-surface impact-surface--table">
             <SortableTable
@@ -109,7 +171,7 @@ const DonorList = () => {
               defaultSortDirection="desc"
               tiebreakColumn="rank"
               tiebreakDirection="asc"
-              emptyMessage="No donors match your search."
+              emptyMessage={isCauseFiltered ? emptyMessage : 'No donors match your search.'}
             />
           </div>
         </motion.div>

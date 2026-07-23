@@ -6,6 +6,7 @@ const renderShell = (props = {}) =>
   render(
     <ModalShell isOpen onClose={() => {}} labelledBy="test-modal-title" {...props}>
       <h2 id="test-modal-title">Test Modal</h2>
+      <p id="test-modal-description">Supporting description</p>
       <button type="button">First</button>
       <button type="button">Second</button>
     </ModalShell>
@@ -24,11 +25,12 @@ afterEach(() => {
 
 describe('ModalShell', () => {
   it('renders dialog semantics and moves focus into the panel', () => {
-    renderShell();
+    renderShell({ describedBy: 'test-modal-description' });
 
     const dialog = screen.getByRole('dialog');
     expect(dialog).toHaveAttribute('aria-modal', 'true');
     expect(dialog).toHaveAccessibleName('Test Modal');
+    expect(dialog).toHaveAccessibleDescription('Supporting description');
     expect(dialog).toHaveFocus();
   });
 

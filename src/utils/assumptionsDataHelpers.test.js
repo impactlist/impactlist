@@ -432,6 +432,94 @@ describe('assumptionsDataHelpers', () => {
     expect(stats[0].costPerLife).toBeCloseTo(recipientCost, 10);
   });
 
+  it('calculateDonorStatsFromCombined scopes donations by category fraction and excludes unattributed totals', () => {
+    const defaults = buildDefaults();
+    defaults.recipients.recipientSplit = {
+      name: 'Recipient Split',
+      categories: {
+        health: { fraction: 0.25 },
+        aid: { fraction: 0.75 },
+      },
+    };
+    const combined = createCombinedAssumptions(defaults, null);
+    const splitDonation = {
+      recipientId: 'recipientSplit',
+      amount: 1000,
+      credit: 1,
+      date: '2020-01-01',
+    };
+    const expectedHealthPortion = calculateCategoryBreakdownForDonationFromCombined(combined, splitDonation).find(
+      ({ categoryId }) => categoryId === 'health'
+    );
+
+    vi.spyOn(donationDataHelpers, 'getAllDonors').mockReturnValue([
+      {
+        id: 'donor-split',
+        name: 'Donor Split',
+        netWorth: 1000000,
+        totalDonated: 5000,
+      },
+    ]);
+    vi.spyOn(donationDataHelpers, 'getDonorId').mockImplementation((donor) => donor.id);
+    vi.spyOn(donationDataHelpers, 'getDonationsForDonor').mockReturnValue([splitDonation]);
+
+    const stats = calculateDonorStatsFromCombined(combined, { categoryIds: ['health'] });
+
+    expect(stats).toHaveLength(1);
+    expect(stats[0]).toMatchObject({
+      id: 'donor-split',
+      totalDonated: expectedHealthPortion.amount,
+      knownDonations: expectedHealthPortion.amount,
+      totalDonatedField: null,
+      unknownLivesSaved: 0,
+      rank: 1,
+    });
+    expect(stats[0].totalLivesSaved).toBeCloseTo(expectedHealthPortion.livesSaved, 10);
+    expect(stats[0].costPerLife).toBeCloseTo(expectedHealthPortion.amount / expectedHealthPortion.livesSaved, 10);
+  });
+
+  it('calculateDonorStatsFromCombined excludes out-of-scope donors and recalculates rank', () => {
+    const defaults = buildDefaults();
+    defaults.recipients.recipientAid = {
+      name: 'Recipient Aid',
+      categories: {
+        aid: { fraction: 1 },
+      },
+    };
+    const combined = createCombinedAssumptions(defaults, null);
+
+    vi.spyOn(donationDataHelpers, 'getAllDonors').mockReturnValue([
+      { id: 'health-donor', name: 'Health Donor', netWorth: 1000000 },
+      { id: 'aid-donor', name: 'Aid Donor', netWorth: 1000000 },
+    ]);
+    vi.spyOn(donationDataHelpers, 'getDonorId').mockImplementation((donor) => donor.id);
+    vi.spyOn(donationDataHelpers, 'getDonationsForDonor').mockImplementation((donorId) => [
+      {
+        recipientId: donorId === 'health-donor' ? 'recipientA' : 'recipientAid',
+        amount: donorId === 'health-donor' ? 1000 : 2000,
+        credit: 1,
+        date: '2020-01-01',
+      },
+    ]);
+
+    const aidStats = calculateDonorStatsFromCombined(combined, { categoryIds: ['aid'] });
+
+    expect(aidStats).toHaveLength(1);
+    expect(aidStats[0]).toMatchObject({
+      id: 'aid-donor',
+      rank: 1,
+      totalDonated: 2000,
+    });
+  });
+
+  it('calculateDonorStatsFromCombined rejects an unknown scoped category', () => {
+    const combined = createCombinedAssumptions(buildDefaults(), null);
+
+    expect(() => calculateDonorStatsFromCombined(combined, { categoryIds: ['not-a-cause'] })).toThrow(
+      'Category not-a-cause not found in combined assumptions'
+    );
+  });
+
   it('breaks an exact lives-saved tie by prominence so the more well-known donor ranks first', () => {
     const combined = createCombinedAssumptions(buildDefaults(), null);
 

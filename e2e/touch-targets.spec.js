@@ -1,12 +1,11 @@
 import { expect, test } from '@playwright/test';
 
-// The .impact-inline-action hit targets expand under pointer: coarse
-// (padding + compensating negative margins). jsdom tests can verify behavior
-// but not geometry — only a real layout can prove the expanded boxes still
-// don't overlap their interactive neighbors. Touch emulation makes
-// `pointer: coarse` match, so these boxes include the expanded padding. Keep
-// the emulation options browser-neutral: Playwright's full iPhone preset sets
-// `isMobile`, which Chromium/WebKit support but Firefox intentionally does not.
+// Compact controls expand under pointer: coarse. jsdom tests can verify
+// behavior but not geometry — only a real layout can prove their touch targets
+// reach the intended size without overlapping interactive neighbors. Touch
+// emulation makes `pointer: coarse` match. Keep the emulation options
+// browser-neutral: Playwright's full iPhone preset sets `isMobile`, which
+// Chromium/WebKit support but Firefox intentionally does not.
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
 const boxesIntersect = (a, b) =>
@@ -37,5 +36,18 @@ test.describe('Coarse-pointer hit targets', () => {
     // …and the vertical expansion must not reach the interactive row above.
     expect(boxesIntersect(editBox, titleBox)).toBe(false);
     expect(boxesIntersect(justificationBox, titleBox)).toBe(false);
+  });
+
+  test('cause selector close button has a full-size touch target', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Cause scope. Current selection: All causes' }).click();
+
+    const closeButton = page.getByRole('button', { name: 'Close cause selector' });
+    await expect(closeButton).toBeVisible();
+    const closeBox = await closeButton.boundingBox();
+
+    expect(closeBox).not.toBeNull();
+    expect(closeBox.width).toBeGreaterThanOrEqual(44);
+    expect(closeBox.height).toBeGreaterThanOrEqual(44);
   });
 });

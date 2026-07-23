@@ -37,6 +37,46 @@ test.describe('Donor list and detail flow', () => {
     await expect(page.getByRole('heading', { name: topDonorName, level: 1 })).toBeVisible();
   });
 
+  test('shared cause scope recalculates the ranking and can be reset', async ({ page }) => {
+    await page.goto('/?causes=global-health');
+
+    const table = page.getByRole('table');
+    const donorLinks = table.locator('tbody a[href^="/donor/"]');
+    const billGatesRow = table.getByRole('row', { name: /Bill Gates/ });
+    const scopeSummary = page.getByRole('region', { name: 'Active cause scope' });
+
+    await expect(scopeSummary).toContainText('Global Health');
+    await expect(donorLinks.first()).toBeVisible();
+    await expect(billGatesRow).toBeVisible();
+    const scopedDonorCount = await donorLinks.count();
+    const scopedBillGatesText = await billGatesRow.innerText();
+
+    await scopeSummary.getByRole('button', { name: 'Switch to all causes' }).click();
+
+    await expect(page).toHaveURL('/');
+    await expect(scopeSummary).toHaveCount(0);
+    await expect.poll(() => donorLinks.count()).toBeGreaterThan(scopedDonorCount);
+    await expect(page.getByRole('button', { name: 'Cause scope. Current selection: All causes' })).toBeVisible();
+    expect(await billGatesRow.innerText()).not.toBe(scopedBillGatesText);
+  });
+
+  test('cause selector stays within the viewport when it opens from the left toolbar column', async ({ page }) => {
+    await page.setViewportSize({ width: 768, height: 900 });
+    await page.goto('/');
+
+    await page.getByRole('button', { name: 'Cause scope. Current selection: All causes' }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'Choose causes' });
+    await expect(dialog).toBeVisible();
+
+    const dialogBox = await dialog.boundingBox();
+    const viewportWidth = await page.evaluate(() => window.innerWidth);
+
+    expect(dialogBox).not.toBeNull();
+    expect(dialogBox.x).toBeGreaterThanOrEqual(0);
+    expect(dialogBox.x + dialogBox.width).toBeLessThanOrEqual(viewportWidth);
+  });
+
   test('donor category chart renders bar value labels in both views', async ({ page }) => {
     // Regression: both previous label mechanisms silently rendered nothing
     // (recharts passes label formatters only the value, and label content

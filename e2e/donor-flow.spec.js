@@ -125,3 +125,79 @@ test.describe('Donation dates render on the recorded day', () => {
     await expect(page.getByText('Dec 31, 2023')).toHaveCount(0);
   });
 });
+
+test.describe('Landscape touch cause selector', () => {
+  test.use({
+    hasTouch: true,
+    isMobile: true,
+    viewport: { width: 844, height: 390 },
+  });
+  test.skip(({ browserName }) => browserName === 'firefox', 'Firefox does not support Playwright mobile emulation.');
+
+  test('uses the modal presentation and keeps it open while changing a cause', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByRole('button', { name: 'Cause scope. Current selection: All causes' }).tap();
+
+    const dialog = page.getByRole('dialog', { name: 'Choose causes' });
+    const animalWelfareCheckbox = dialog.getByRole('checkbox', { name: 'Animal Welfare' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+    await expect(dialog).toBeFocused();
+    await expect(dialog.getByRole('textbox', { name: 'Search causes' })).not.toBeFocused();
+    await expect(animalWelfareCheckbox).toBeChecked();
+
+    const viewportHeight = await page.evaluate(() => window.innerHeight);
+    await expect
+      .poll(async () => {
+        const dialogBox = await dialog.boundingBox();
+        return (
+          dialogBox && {
+            topInsideViewport: dialogBox.y >= 0,
+            bottomInsideViewport: dialogBox.y + dialogBox.height <= viewportHeight,
+          }
+        );
+      })
+      .toEqual({ topInsideViewport: true, bottomInsideViewport: true });
+
+    await dialog.getByText('Animal Welfare', { exact: true }).tap();
+
+    await expect(dialog).toBeVisible();
+    await expect(animalWelfareCheckbox).not.toBeChecked();
+    await expect(dialog).toContainText('27 of 28 selected');
+  });
+
+  test('keeps the apply action fully reachable on very short landscape screens', async ({ page }) => {
+    await page.setViewportSize({ width: 568, height: 320 });
+    await page.goto('/');
+
+    await page.getByRole('button', { name: 'Cause scope. Current selection: All causes' }).tap();
+
+    const dialog = page.getByRole('dialog', { name: 'Choose causes' });
+    const applyButton = dialog.getByRole('button', { name: 'Apply scope' });
+    await expect(dialog).toBeVisible();
+
+    const viewportHeight = await page.evaluate(() => window.innerHeight);
+    await expect
+      .poll(async () => {
+        const [dialogBox, applyButtonBox] = await Promise.all([dialog.boundingBox(), applyButton.boundingBox()]);
+        return (
+          dialogBox &&
+          applyButtonBox && {
+            insideDialog:
+              applyButtonBox.y >= dialogBox.y &&
+              applyButtonBox.y + applyButtonBox.height <= dialogBox.y + dialogBox.height,
+            insideViewport: applyButtonBox.y >= 0 && applyButtonBox.y + applyButtonBox.height <= viewportHeight,
+          }
+        );
+      })
+      .toEqual({ insideDialog: true, insideViewport: true });
+
+    await dialog.getByText('Animal Welfare', { exact: true }).tap();
+    await expect(applyButton).toBeEnabled();
+    await applyButton.tap();
+
+    await expect(dialog).not.toBeVisible();
+    await expect(page.getByRole('button', { name: 'Cause scope. Current selection: 27 causes' })).toBeVisible();
+  });
+});

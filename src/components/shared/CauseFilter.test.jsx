@@ -112,9 +112,56 @@ describe('CauseFilter', () => {
     expect(trigger).not.toHaveFocus();
   });
 
-  it('uses the shared modal shell on mobile', async () => {
+  it('stays open when a touch tap moves focus to a non-tabbable page container', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <main tabIndex={-1}>Page content</main>
+        <Harness />
+      </>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Cause scope. Current selection: All causes' }));
+
+    const dialog = screen.getByRole('dialog', { name: 'Choose causes' });
+    const searchInput = screen.getByRole('textbox', { name: 'Search causes' });
+    const animalWelfareLabel = screen.getByText('Animal Welfare');
+    const pageContainer = screen.getByRole('main');
+    await waitFor(() => expect(searchInput).toHaveFocus());
+
+    fireEvent.pointerDown(animalWelfareLabel, { pointerType: 'touch' });
+    fireEvent.blur(searchInput, { relatedTarget: pageContainer });
+
+    expect(dialog).toBeInTheDocument();
+    await user.click(screen.getByRole('checkbox', { name: 'Animal Welfare' }));
+    expect(dialog).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Animal Welfare' })).not.toBeChecked();
+    expect(screen.getByText('2 of 3 selected')).toBeInTheDocument();
+  });
+
+  it('closes when keyboard focus moves to a tabbable control outside the popover', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button type="button">Outside target</button>
+        <Harness />
+      </>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Cause scope. Current selection: All causes' }));
+
+    const searchInput = screen.getByRole('textbox', { name: 'Search causes' });
+    await waitFor(() => expect(searchInput).toHaveFocus());
+    fireEvent.blur(searchInput, { relatedTarget: screen.getByRole('button', { name: 'Outside target' }) });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'Choose causes' })).not.toBeInTheDocument();
+    });
+  });
+
+  it('uses the shared modal presentation on a narrow viewport', async () => {
     vi.spyOn(window, 'matchMedia').mockImplementation((query) => ({
-      matches: query === '(max-width: 639px)',
+      matches: query.includes('(max-width: 639px)'),
       media: query,
       onchange: null,
       addListener: vi.fn(),

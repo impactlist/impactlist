@@ -6,7 +6,9 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import ModalShell from './ModalShell';
 import SearchInput from './SearchInput';
 
-const MOBILE_CAUSE_FILTER_QUERY = '(max-width: 639px)';
+// Width alone misclassifies landscape phones as desktop. Short viewports
+// whose primary input is touch need the contained modal presentation too.
+const MODAL_CAUSE_FILTER_QUERY = '(max-width: 639px), (max-height: 500px) and (hover: none) and (pointer: coarse)';
 const MAX_VISIBLE_SCOPE_CHIPS = 4;
 const categoryShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -148,7 +150,7 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [draftCategoryIds, setDraftCategoryIds] = useState(() => new Set());
   const [searchTerm, setSearchTerm] = useState('');
-  const isMobile = useMediaQuery(MOBILE_CAUSE_FILTER_QUERY);
+  const isModalPresentation = useMediaQuery(MODAL_CAUSE_FILTER_QUERY);
   const componentId = useId();
   const popoverTitleId = `${componentId}-popover-title`;
   const popoverDescriptionId = `${componentId}-popover-description`;
@@ -166,10 +168,10 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
       triggerRef.current?.focus();
     }
   }, []);
-  const popoverRef = useDismissibleMenu(isOpen && !isMobile, closePopover);
+  const popoverRef = useDismissibleMenu(isOpen && !isModalPresentation, closePopover);
 
   useEffect(() => {
-    if (!isOpen || isMobile) {
+    if (!isOpen || isModalPresentation) {
       return undefined;
     }
 
@@ -177,7 +179,7 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
       searchInputRef.current?.focus();
     });
     return () => window.cancelAnimationFrame(frameId);
-  }, [isMobile, isOpen]);
+  }, [isModalPresentation, isOpen]);
 
   const filteredCategories = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -209,9 +211,22 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
   };
 
   const handleFocusLeave = (event) => {
-    if (!isMobile && isOpen && event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) {
-      setIsOpen(false);
+    const nextFocusedElement = event.relatedTarget;
+    if (
+      isModalPresentation ||
+      !isOpen ||
+      !nextFocusedElement ||
+      event.currentTarget.contains(nextFocusedElement) ||
+      !(nextFocusedElement instanceof globalThis.HTMLElement) ||
+      nextFocusedElement.tabIndex < 0
+    ) {
+      return;
     }
+
+    // Pointer dismissal belongs to useDismissibleMenu. Limit blur dismissal
+    // to keyboard focus moving to another tabbable control: WebKit can
+    // temporarily focus a non-tabbable <main> when a touch taps a label.
+    setIsOpen(false);
   };
 
   const handleToggleCategory = (categoryId) => {
@@ -228,7 +243,7 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
 
   const handlePanelClose = () => {
     setIsOpen(false);
-    if (!isMobile) {
+    if (!isModalPresentation) {
       triggerRef.current?.focus();
     }
   };
@@ -269,7 +284,7 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
         data-filtered={isFiltered}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
-        aria-controls={isOpen ? (isMobile ? `${componentId}-modal` : `${componentId}-popover`) : undefined}
+        aria-controls={isOpen ? (isModalPresentation ? `${componentId}-modal` : `${componentId}-popover`) : undefined}
         aria-label={`Cause scope. Current selection: ${triggerLabel}`}
       >
         <span className="cause-filter__trigger-icon" aria-hidden={true}>
@@ -297,7 +312,7 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
         </span>
       </button>
 
-      {!isMobile && (
+      {!isModalPresentation && (
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -317,7 +332,7 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
         </AnimatePresence>
       )}
 
-      {isMobile && (
+      {isModalPresentation && (
         <ModalShell
           isOpen={isOpen}
           onClose={handlePanelClose}
@@ -325,7 +340,7 @@ const CauseFilter = ({ categories, selectedCategoryIds, onApply }) => {
           describedBy={modalDescriptionId}
           panelClassName="cause-filter-modal__panel"
         >
-          <div id={`${componentId}-modal`}>
+          <div id={`${componentId}-modal`} className="cause-filter-modal__content">
             <CauseFilterContents {...contentsProps} titleId={modalTitleId} descriptionId={modalDescriptionId} />
           </div>
         </ModalShell>

@@ -9,8 +9,9 @@
   history-replacing write so the page can explain that it fell back to all
   causes without leaving a misleading URL behind.
 - `useMediaQuery(query)` — `useSyncExternalStore` wrapper used where component
-  behavior, not merely CSS, changes at a breakpoint (currently CauseFilter's
-  desktop popover vs mobile ModalShell).
+  behavior, not merely CSS, changes with viewport/input capabilities
+  (currently CauseFilter's anchored popover vs narrow-or-short-touch
+  `ModalShell` presentation).
 - `useCategoryChartData(combinedAssumptions, donations, {maxCategories})` — memoized per-category aggregation (donation amount + lives saved per category) behind the donor/recipient detail charts; collapses the tail into an "Other Causes" row past `maxCategories`. Pass real donations only (no synthesized "unknown" rows).
 - `useChartViewTransition(rawChartData)` — the detail charts' donations⇄lives-saved toggle state machine. The chart renders `valueTarget` with recharts animation; a toggle animates by holding the FROM value and retargeting, then rows rebuild once idle. Returns `{chartData, chartView, isTransitioning, handleChartViewChange}`.
 - `useFormattedNumberInput(value, emitChange)` — the formatted-number input core (local display state, comma formatting, cursor preservation, prop→display sync) behind CurrencyInput/NumericInput; `emitChange(formatted, raw)` leaves parsing to the component.

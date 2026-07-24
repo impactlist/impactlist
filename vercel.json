@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "impactlist.vercel.app" }],
+      "destination": "https://impactlist.xyz/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/((?!api/|assets/|images/|favicon\\.svg|robots\\.txt|sitemap\\.xml|@vite/|@react-refresh|src/|node_modules/).*)",

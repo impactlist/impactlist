@@ -33,6 +33,9 @@ import Footer from './components/layout/Footer';
 import GlobalSharedAssumptionsImport from './components/shared/GlobalSharedAssumptionsImport';
 import GlobalNotificationBanner from './components/shared/GlobalNotificationBanner';
 import ScrollToTop from './components/shared/ScrollToTop';
+import useDocumentTitle from './hooks/useDocumentTitle';
+import useNoIndex from './hooks/useNoIndex';
+import useRouteMetadata from './hooks/useRouteMetadata';
 import { CAUSES_PATH, buildCausePath } from './utils/causeRoutes';
 import { validateDataOnStartup } from './utils/startupValidation';
 
@@ -97,6 +100,8 @@ const ErrorScreen = ({ title = 'Something went wrong', error = null, errorInfo =
   const headingRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
   const errorDetails = getErrorDetails(error, errorInfo);
+  useDocumentTitle(title);
+  useNoIndex();
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -270,6 +275,7 @@ RouteContent.propTypes = {
 const AppContent = () => {
   const location = useLocation();
   const mainRef = useRef(null);
+  useRouteMetadata(location.pathname);
   const normalizedPathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '').toLowerCase();
   const isHome = normalizedPathname === '/' || normalizedPathname.startsWith('/donor/');
   const isRecipients = normalizedPathname === '/recipients' || normalizedPathname.startsWith('/recipient/');

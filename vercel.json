@@ -1,12 +1,29 @@
 {
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "impactlist.vercel.app" }],
+      "destination": "https://impactlist.xyz/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "impactlist.vercel.app" }],
       "destination": "https://impactlist.xyz/:path*",
       "permanent": true
+    },
+    {
+      "source": "/categories",
+      "destination": "/causes",
+      "permanent": true
+    },
+    {
+      "source": "/category/:categoryId",
+      "destination": "/cause/:categoryId",
+      "permanent": true
     }
   ],
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/((?!api/|assets/|images/|favicon\\.svg|robots\\.txt|sitemap\\.xml|@vite/|@react-refresh|src/|node_modules/).*)",

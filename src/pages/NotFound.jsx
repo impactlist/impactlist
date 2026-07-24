@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import useNoIndex from '../hooks/useNoIndex';
 
 /**
  * Shown for unknown URLs and for detail pages whose entity ID doesn't exist.
@@ -10,6 +11,7 @@ import useDocumentTitle from '../hooks/useDocumentTitle';
  */
 const NotFound = ({ message = "The page you're looking for doesn't exist." }) => {
   useDocumentTitle('Page not found');
+  useNoIndex();
 
   return (
     <motion.div

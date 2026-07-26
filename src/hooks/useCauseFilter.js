@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-
-export const CAUSES_QUERY_PARAM = 'causes';
+import { CAUSES_QUERY_PARAM } from '../utils/causeRoutes';
+import { setRememberedCauseScope } from '../utils/causeScopeSession';
 
 const getRequestedCategoryIds = (rawValue) =>
   rawValue
@@ -39,8 +39,9 @@ export const parseCauseSelection = (rawValue, categories) => {
 };
 
 /**
- * URL-backed cause scope for the donor ranking. A null selection means the
- * default all-cause view, so ordinary homepage URLs remain clean.
+ * URL-backed cause scope for the donor ranking. The active URL is mirrored to
+ * sessionStorage so the header can return to the same scope after navigating
+ * away, but a parameterless homepage always means the default all-cause view.
  */
 const useCauseFilter = (categories) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -89,6 +90,14 @@ const useCauseFilter = (categories) => {
     },
     [setSearchParams]
   );
+
+  useEffect(() => {
+    if (hasInvalidCauseSelection) {
+      return;
+    }
+
+    setRememberedCauseScope(selectedCategoryIds);
+  }, [hasInvalidCauseSelection, selectedCategoryIds]);
 
   const applyCauseFilter = useCallback(
     (categoryIds) => {

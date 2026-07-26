@@ -1,10 +1,12 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import DonorList from './DonorList';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import GlobalNotificationBanner from '../components/shared/GlobalNotificationBanner';
+
+/* global sessionStorage */
 
 const mockCombinedAssumptions = {
   getAllRecipients: () => [],
@@ -98,6 +100,10 @@ const renderPage = (initialEntry = '/') => {
     </MemoryRouter>
   );
 };
+
+beforeEach(() => {
+  sessionStorage.clear();
+});
 
 afterEach(() => {
   vi.restoreAllMocks();

@@ -4,12 +4,14 @@
 - `useRouteMetadata(pathname)` — keeps the route's canonical and `og:url` on the build-stamped site origin, strips trailing slashes, maps legacy category paths, and deliberately excludes query-string UI/filter/share state.
 - `useNoIndex()` — temporarily applies `robots=noindex, follow` to React-rendered not-found and fatal-error screens, restoring the prior directive on unmount.
 - `useNameSearch(items)` — list-page search state: returns `{searchTerm, setSearchTerm, filteredItems}` filtering by `name` (case-insensitive, query trimmed). `filteredItems` is memoized per term — safe to pass straight to SortableTable. Used by DonorList and RecipientList.
-- `useCauseFilter(categories)` — URL-backed donor-ranking cause scope. The
-  `causes` query parameter stores canonical comma-separated ids; null means the
-  ordinary all-cause ranking, and writes preserve unrelated query parameters.
-  Invalid-only stale links are surfaced to callers and removed with a
-  history-replacing write so the page can explain that it fell back to all
-  causes without leaving a misleading URL behind.
+- `useCauseFilter(categories)` — URL-authoritative donor-ranking cause scope.
+  The `causes` query parameter stores canonical comma-separated ids; null means
+  the ordinary all-cause ranking, and writes preserve unrelated query
+  parameters. The current valid URL scope is mirrored to the tab-scoped
+  `causeScopeSession` store so Header can link back to it after navigating away;
+  a parameterless homepage clears that context, so Back/Forward reproduce their
+  URLs exactly. Invalid-only stale links are surfaced to callers and removed
+  with a history-replacing write.
 - `useMediaQuery(query)` — `useSyncExternalStore` wrapper used where component
   behavior, not merely CSS, changes with viewport/input capabilities
   (currently CauseFilter's anchored popover vs narrow-or-short-touch

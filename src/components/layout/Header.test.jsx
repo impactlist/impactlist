@@ -1,17 +1,49 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { setRememberedCauseScope } from '../../utils/causeScopeSession';
 import Header from './Header';
 
-const renderHeader = () =>
+/* global sessionStorage */
+
+const renderHeader = (initialEntry = '/') =>
   render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <Header />
       <button type="button">outside target</button>
     </MemoryRouter>
   );
 
 const getToggle = () => screen.getByRole('button', { name: 'Toggle mobile menu' });
+
+beforeEach(() => {
+  sessionStorage.clear();
+});
+
+describe('Header cause scope navigation', () => {
+  it('returns to the tab-scoped ranking from another page', () => {
+    setRememberedCauseScope(['climate-change', 'global-health']);
+    renderHeader('/faq');
+
+    expect(screen.getByRole('link', { name: 'Impact List' })).toHaveAttribute(
+      'href',
+      '/?causes=climate-change%2Cglobal-health'
+    );
+  });
+
+  it('treats the current homepage URL as authoritative over stale session state', () => {
+    setRememberedCauseScope(['global-health']);
+    renderHeader('/');
+
+    expect(screen.getByRole('link', { name: 'Impact List' })).toHaveAttribute('href', '/');
+  });
+
+  it('keeps the current scoped homepage URL in the Impact List link', () => {
+    renderHeader('/?causes=global-health');
+
+    expect(screen.getByRole('link', { name: 'Impact List' })).toHaveAttribute('href', '/?causes=global-health');
+  });
+});
 
 describe('Header mobile menu', () => {
   it('exposes the disclosure state via aria-expanded', async () => {

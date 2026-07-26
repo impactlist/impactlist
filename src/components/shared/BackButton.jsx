@@ -2,6 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { buildCauseScopedHomePath } from '../../utils/causeRoutes';
+import { getRememberedCauseScope } from '../../utils/causeScopeSession';
+
+const resolveBackDestination = (destination) =>
+  destination === '/' ? buildCauseScopedHomePath(getRememberedCauseScope()) : destination;
 
 /**
  * A reusable back button component that can either navigate to a specific path
@@ -26,6 +31,8 @@ const BackButton = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const resolvedTo = resolveBackDestination(to);
+  const resolvedFallbackTo = resolveBackDestination(fallbackTo);
   const defaultAnimation = {
     initial: { y: 10, opacity: 0 },
     animate: { y: 0, opacity: 1 },
@@ -60,7 +67,7 @@ const BackButton = ({
     if (hasRouterHistory) {
       navigate(-1);
     } else {
-      navigate(fallbackTo, { replace: true });
+      navigate(resolvedFallbackTo, { replace: true });
     }
   };
 
@@ -78,7 +85,7 @@ const BackButton = ({
   return (
     <motion.div {...mergedContainerProps} {...animation}>
       {to ? (
-        <Link to={to} className={buttonClassName}>
+        <Link to={resolvedTo} className={buttonClassName}>
           {backArrow}
           {label}
         </Link>

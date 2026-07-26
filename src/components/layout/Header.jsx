@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CAUSES_PATH } from '../../utils/causeRoutes';
+import { CAUSES_PATH, CAUSES_QUERY_PARAM, buildCauseScopedHomePath } from '../../utils/causeRoutes';
+import { getRememberedCauseScope } from '../../utils/causeScopeSession';
 import useDismissibleMenu from '../../hooks/useDismissibleMenu';
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
@@ -35,6 +36,11 @@ const Header = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuToggleRef = useRef(null);
   const location = useLocation();
+  const causeScopeForHomeLink =
+    location.pathname === '/'
+      ? new globalThis.URLSearchParams(location.search).get(CAUSES_QUERY_PARAM)
+      : getRememberedCauseScope();
+  const impactListPath = buildCauseScopedHomePath(causeScopeForHomeLink);
 
   const navLinkClass = ({ isActive = false, visibilityClass = '', layoutClass = '' } = {}) =>
     joinClasses(visibilityClass, layoutClass, NAV_LINK_BASE, NAV_LINK_TONE, isActive ? NAV_LINK_ACTIVE : '');
@@ -100,7 +106,7 @@ const Header = ({
           >
             {/* Impact List - always visible */}
             <Link
-              to="/"
+              to={impactListPath}
               className={navLinkClass({ isActive: isHome })}
               aria-current={isHome ? 'page' : undefined}
               onClick={closeMobileMenu}

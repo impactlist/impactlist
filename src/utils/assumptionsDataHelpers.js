@@ -17,6 +17,7 @@ import {
   getDonationsForDonor,
   getDonorId,
   extractYearFromDonation,
+  percentOfNetWorthDonated,
 } from './donationDataHelpers.js';
 
 /**
@@ -669,6 +670,9 @@ export const calculateDonorStatsFromCombined = (combinedAssumptions, { categoryI
       birthDate: donor.birthDate,
       netWorth: donor.netWorth,
       totalDonated,
+      // Null (not 0) when net worth is unknown/non-positive: the ranking
+      // treats "no percentage" as unsortable-last, never as "donated 0%".
+      percentDonated: percentOfNetWorthDonated(totalDonated, donor.netWorth),
       knownDonations,
       totalDonatedField,
       totalLivesSaved,

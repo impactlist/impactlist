@@ -22,4 +22,24 @@ describe('DonatedValueCell', () => {
     expect(screen.getByText(/\$500 M/)).toBeInTheDocument();
     expect(screen.queryByText(/%/)).not.toBeInTheDocument();
   });
+
+  it('gives the amount the strong weight by default', () => {
+    render(<DonatedValueCell totalDonated={500000000} netWorth={4000000000} />);
+
+    expect(screen.getByText(/\$500 M/)).toHaveClass('text-strong');
+    expect(screen.getByText('(13%)')).toHaveClass('text-muted');
+  });
+
+  it('swaps the strong weight onto the percentage when emphasizePercent is set', () => {
+    render(<DonatedValueCell totalDonated={500000000} netWorth={4000000000} emphasizePercent />);
+
+    expect(screen.getByText('(13%)')).toHaveClass('text-strong');
+    expect(screen.getByText(/\$500 M/)).toHaveClass('text-muted');
+  });
+
+  it('keeps the amount strong under emphasizePercent when there is no percentage to emphasize', () => {
+    render(<DonatedValueCell totalDonated={500000000} emphasizePercent />);
+
+    expect(screen.getByText(/\$500 M/)).toHaveClass('text-strong');
+  });
 });

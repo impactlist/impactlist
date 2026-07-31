@@ -22,8 +22,12 @@ export const DONOR_LIVES_SAVED_TOOLTIP = (
 
 export const DONOR_DONATED_TOOLTIP = (
   <div>
-    The percentage in parentheses is the portion of the person's net worth that they have donated: the total amount
-    donated divided by their current net worth.
+    The percentage in parentheses is the portion of the person's current net worth that they have donated: the total
+    amount donated divided by their current net worth. It can exceed 100% for people who have given away more than they
+    now hold.
+    <br />
+    <br />
+    Use the $ / % toggle in this header to rank by either the amount donated or the percentage of net worth donated.
     <br />
     <br />
     On a cause-scoped ranking, both values use only categorized donations attributed to the selected causes.

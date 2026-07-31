@@ -6,6 +6,7 @@ import {
   getDonorById,
   normalizeCalculatorDonationAmount,
   parseCalculatorDonationYear,
+  percentOfNetWorthDonated,
   resolveCalcYear,
 } from './donationDataHelpers';
 
@@ -15,6 +16,21 @@ describe('entity ID lookups', () => {
     expect(getDonorById('constructor')).toBeNull();
     expect(() => getDonationsForDonor('toString')).toThrow(/Invalid donor ID/);
     expect(() => getDonationsForRecipient('__proto__')).toThrow(/Invalid recipient ID/);
+  });
+});
+
+describe('percentOfNetWorthDonated', () => {
+  it('returns the donated share of a positive net worth, above 1 when giving exceeds it', () => {
+    expect(percentOfNetWorthDonated(500, 2000)).toBe(0.25);
+    expect(percentOfNetWorthDonated(3000, 2000)).toBe(1.5);
+  });
+
+  it('returns null for zero, negative, or non-finite net worth', () => {
+    expect(percentOfNetWorthDonated(500, 0)).toBeNull();
+    expect(percentOfNetWorthDonated(500, -100)).toBeNull();
+    expect(percentOfNetWorthDonated(500, NaN)).toBeNull();
+    expect(percentOfNetWorthDonated(500, Infinity)).toBeNull();
+    expect(percentOfNetWorthDonated(500, undefined)).toBeNull();
   });
 });
 

@@ -13,7 +13,10 @@ One component per route; all lazy-loaded in `src/App.jsx` behind a Suspense fall
 
 - `DonorList` — the homepage ranking table. Its cause scope lives in the
   `causes` query parameter (absent means all causes); scoped rows are fully
-  recalculated and use categorized donation portions only.
+  recalculated and use categorized donation portions only. The Donated column
+  sorts by either metric it displays via SortableTable's `metrics` toggle
+  (`totalDonated` / `percentDonated` — the latter is null for unknown net
+  worth and such rows sort last).
 - `DonorDetail` / `RecipientDetail` — stats + category chart; the chart logic is shared via `hooks/useCategoryChartData` + `hooks/useChartViewTransition` (see the hooks context file) — page-level code is just data assembly in one `useMemo`.
 - `AssumptionsPage` — the editor shell. Tab/entity state lives in the URL (`?tab=...&categoryId=...`) with deliberate push/replace semantics and back/forward support; it's the best-tested page (60+ integration tests) — run them after any change to save/share/library flows. Two dirtiness indicators coexist BY DESIGN: the library panel reports only the APPLIED state vs the active entry (what the whole site renders), while un-applied drafts show only in the editor (surfaced by its amber draft indicators — Global tab badge, unapplied-count chip + Discard, cross-tab Review reminder, graph draft-preview labeling — preserved across entry switches by `useGlobalForm`'s value-aware rehydration, loss-guarded by the navigation blocker — which for dirty drill-in editors also fires on tab/entity switches and the back button, since those unmount the editor). Don't make the panel draft-aware — it would misreport the applied state; the two-indicator contract is pinned by the "preserves unapplied global drafts" tests.
 - `DonationCalculator` — persists per-category amounts and specific donations to localStorage. Persisted state loads in the **state initializers** (not effects) so the unconditional save effects can never write before the load; the corruption notification is deferred to a mount effect because notifying mid-render is illegal. Donor stats for the rank readout are memoized per `combinedAssumptions`.

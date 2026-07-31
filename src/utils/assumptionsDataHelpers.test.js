@@ -425,11 +425,30 @@ describe('assumptionsDataHelpers', () => {
       knownDonations: 1000,
       totalDonated: 3000,
       totalDonatedField: 3000,
+      percentDonated: 3000 / 1000000,
       rank: 1,
     });
     expect(stats[0].unknownLivesSaved).toBeGreaterThan(0);
     expect(stats[0].totalLivesSaved).toBeCloseTo(3000 / recipientCost, 10);
     expect(stats[0].costPerLife).toBeCloseTo(recipientCost, 10);
+  });
+
+  it('calculateDonorStatsFromCombined reports a null percent donated when net worth is unknown', () => {
+    const combined = createCombinedAssumptions(buildDefaults(), null);
+
+    vi.spyOn(donationDataHelpers, 'getAllDonors').mockReturnValue([
+      { id: 'donor-known', name: 'Donor Known', netWorth: 1000000 },
+      { id: 'donor-unknown', name: 'Donor Unknown' },
+    ]);
+    vi.spyOn(donationDataHelpers, 'getDonorId').mockImplementation((donor) => donor.id);
+    vi.spyOn(donationDataHelpers, 'getDonationsForDonor').mockReturnValue([
+      { recipientId: 'recipientA', amount: 1000, credit: 1, date: '2020-01-01' },
+    ]);
+
+    const stats = calculateDonorStatsFromCombined(combined);
+
+    expect(stats.find((donor) => donor.id === 'donor-known').percentDonated).toBeCloseTo(1000 / 1000000, 12);
+    expect(stats.find((donor) => donor.id === 'donor-unknown').percentDonated).toBeNull();
   });
 
   it('calculateDonorStatsFromCombined scopes donations by category fraction and excludes unattributed totals', () => {

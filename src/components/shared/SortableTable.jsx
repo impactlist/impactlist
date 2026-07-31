@@ -3,6 +3,13 @@ import Tooltip from './Tooltip';
 
 const normalizeLayoutMeasurement = (value) => Math.round(value * 100) / 100;
 
+// A column normally sorts by its own key. A column may instead declare
+// `metrics: [{ key, label, ariaLabel }, ...]` — one sort key per metric,
+// rendered as a compact segmented toggle in the header (the donor list's
+// Donated column offers $ amount and % of net worth). The first metric is the
+// default that clicking the column label uses.
+const getColumnSortKeys = (column) => (column.metrics ? column.metrics.map((metric) => metric.key) : [column.key]);
+
 // Helper function to apply tiebreaker comparison
 const applyTiebreaker = (a, b, tiebreakColumn, tiebreakDirection) => {
   const tiebreakMultiplier = tiebreakDirection === 'asc' ? 1 : -1;
@@ -203,6 +210,20 @@ const SortableTable = ({
       const aValue = a[sortColumn];
       const bValue = b[sortColumn];
 
+      // Null/undefined = the row has no value for this metric (e.g. percent
+      // donated with an unknown net worth). Rows without a value sort after
+      // every valued row in BOTH directions — "no percentage" must never
+      // outrank a real one — with the tiebreaker ordering them among
+      // themselves.
+      const aMissing = aValue === undefined || aValue === null;
+      const bMissing = bValue === undefined || bValue === null;
+      if (aMissing || bMissing) {
+        if (aMissing && bMissing) {
+          return tiebreakColumn ? applyTiebreaker(a, b, tiebreakColumn, tiebreakDirection) : 0;
+        }
+        return aMissing ? 1 : -1;
+      }
+
       // Determine sort order
       const sortMultiplier = sortDirection === 'asc' ? 1 : -1;
 
@@ -305,17 +326,30 @@ const SortableTable = ({
     }
   };
 
-  const getAriaSort = (columnKey, isSortable) => {
+  const getAriaSort = (column, isSortable) => {
     if (!isSortable) {
       return undefined;
     }
 
-    if (sortColumn !== columnKey) {
+    if (!getColumnSortKeys(column).includes(sortColumn)) {
       return 'none';
     }
 
     return sortDirection === 'asc' ? 'ascending' : 'descending';
   };
+
+  // Direction arrow inside the ACTIVE segment of a metric toggle — smaller
+  // than the header arrow so the pill stays compact.
+  const renderMetricArrow = () => (
+    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.4"
+        d={sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'}
+      />
+    </svg>
+  );
 
   const renderTooltipIcon = () => (
     <svg
@@ -341,12 +375,13 @@ const SortableTable = ({
           const isSortable = column.sortable !== false;
           const isColumnInteractive = isInteractive && isSortable;
           const isStickyClone = instanceKey === 'sticky';
+          const sortKeys = getColumnSortKeys(column);
 
           return (
             <th
               key={`${instanceKey}-${column.key}`}
               scope="col"
-              aria-sort={getAriaSort(column.key, isSortable)}
+              aria-sort={getAriaSort(column, isSortable)}
               data-sortable={isSortable ? 'true' : 'false'}
               className={`${getColumnPadding(column.key)} group py-4 text-left ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
             >
@@ -361,11 +396,37 @@ const SortableTable = ({
                   disabled={!isColumnInteractive}
                   tabIndex={isStickyClone ? -1 : undefined}
                   aria-label={`Sort by ${column.label || column.key}`}
-                  onClick={() => handleSort(column.key)}
+                  onClick={() => handleSort(sortKeys[0])}
                 >
                   <span>{column.label}</span>
-                  {renderSortIndicator(column.key, isSortable)}
+                  {/* Metric columns show direction inside the active segment
+                      instead — a second arrow here would be ambiguous. */}
+                  {!column.metrics && renderSortIndicator(column.key, isSortable)}
                 </button>
+                {column.metrics && (
+                  <span className="impact-table__metric-toggle" role="group" aria-label={`Sort ${column.label} by`}>
+                    {column.metrics.map((metric) => {
+                      const isActiveMetric = sortColumn === metric.key;
+
+                      return (
+                        <button
+                          key={`${instanceKey}-${column.key}-${metric.key}`}
+                          type="button"
+                          className="impact-table__metric-button"
+                          data-active={isActiveMetric ? 'true' : 'false'}
+                          disabled={!isColumnInteractive}
+                          tabIndex={isStickyClone ? -1 : undefined}
+                          aria-label={metric.ariaLabel}
+                          aria-pressed={isActiveMetric}
+                          onClick={() => handleSort(metric.key)}
+                        >
+                          <span aria-hidden="true">{metric.label}</span>
+                          {isActiveMetric && renderMetricArrow()}
+                        </button>
+                      );
+                    })}
+                  </span>
+                )}
                 {column.tooltip &&
                   (isColumnInteractive && !isStickyClone ? (
                     <Tooltip content={column.tooltip}>{renderTooltipIcon()}</Tooltip>
@@ -460,7 +521,7 @@ const SortableTable = ({
                     key={`cell-${column.key}-${index}`}
                     className={`${getColumnPadding(column.key)} py-4 ${column.key === 'name' ? '' : 'whitespace-nowrap'} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
                   >
-                    {column.render ? column.render(item) : item[column.key]}
+                    {column.render ? column.render(item, { sortColumn, sortDirection }) : item[column.key]}
                   </td>
                 ))}
               </tr>

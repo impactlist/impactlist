@@ -60,7 +60,19 @@ const donorColumns = [
     key: 'totalDonated',
     label: 'Donated',
     tooltip: DONOR_DONATED_TOOLTIP,
-    render: (donor) => <DonatedValueCell totalDonated={donor.totalDonated} netWorth={donor.netWorth} />,
+    // The cell holds two values ($ amount and % of net worth), so the header
+    // offers both as sort metrics via SortableTable's segmented toggle.
+    metrics: [
+      { key: 'totalDonated', label: '$', ariaLabel: 'Sort by amount donated' },
+      { key: 'percentDonated', label: '%', ariaLabel: 'Sort by percent of net worth donated' },
+    ],
+    render: (donor, { sortColumn }) => (
+      <DonatedValueCell
+        totalDonated={donor.totalDonated}
+        netWorth={donor.netWorth}
+        emphasizePercent={sortColumn === 'percentDonated'}
+      />
+    ),
   },
   {
     key: 'costPerLife',

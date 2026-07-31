@@ -111,3 +111,88 @@ describe('SortableTable', () => {
     });
   });
 });
+
+// A metric column offers several sort keys behind one header (the donor
+// list's Donated column: $ amount and % of net worth). Rows may legitimately
+// have no value for a metric (percent of an unknown net worth is null) — those
+// rows pin after every valued row regardless of direction.
+describe('SortableTable metric toggle columns', () => {
+  const metricColumns = [
+    { key: 'name', label: 'Name' },
+    {
+      key: 'totalDonated',
+      label: 'Donated',
+      metrics: [
+        { key: 'totalDonated', label: '$', ariaLabel: 'Sort by amount donated' },
+        { key: 'percentDonated', label: '%', ariaLabel: 'Sort by percent of net worth donated' },
+      ],
+    },
+  ];
+
+  const metricData = [
+    { name: 'Alpha', totalDonated: 100, percentDonated: 0.5 },
+    { name: 'Bravo', totalDonated: 400, percentDonated: 0.1 },
+    { name: 'Charlie', totalDonated: 200, percentDonated: null },
+    { name: 'Delta', totalDonated: 300, percentDonated: 0.9 },
+  ];
+
+  const renderMetricTable = (extraColumns = metricColumns) =>
+    render(
+      <SortableTable columns={extraColumns} data={metricData} defaultSortColumn="name" defaultSortDirection="asc" />
+    );
+
+  it('sorts by the % metric with no-value rows pinned last in both directions', () => {
+    renderMetricTable();
+    const table = screen.getByRole('table');
+    const percentButton = within(table).getByRole('button', { name: 'Sort by percent of net worth donated' });
+
+    fireEvent.click(percentButton);
+    expect(getDataRowNames()).toEqual(['Delta', 'Alpha', 'Bravo', 'Charlie']);
+
+    fireEvent.click(percentButton);
+    expect(getDataRowNames()).toEqual(['Bravo', 'Alpha', 'Delta', 'Charlie']);
+  });
+
+  it('sorts by the first metric when the column label itself is clicked', () => {
+    renderMetricTable();
+    const table = screen.getByRole('table');
+
+    fireEvent.click(within(table).getByRole('button', { name: 'Sort by Donated' }));
+
+    expect(getDataRowNames()).toEqual(['Bravo', 'Delta', 'Charlie', 'Alpha']);
+  });
+
+  it('reports the metric sort through aria-sort and the pressed segment', () => {
+    renderMetricTable();
+    const table = screen.getByRole('table');
+
+    fireEvent.click(within(table).getByRole('button', { name: 'Sort by percent of net worth donated' }));
+
+    expect(within(table).getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'descending');
+    expect(within(table).getByRole('button', { name: 'Sort by percent of net worth donated' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+    expect(within(table).getByRole('button', { name: 'Sort by amount donated' })).toHaveAttribute(
+      'aria-pressed',
+      'false'
+    );
+  });
+
+  it('passes the active sort to cell render functions so cells can react to it', () => {
+    renderMetricTable([
+      { ...metricColumns[0], render: (item, { sortColumn }) => `${item.name}:${sortColumn}` },
+      metricColumns[1],
+    ]);
+    const table = screen.getByRole('table');
+
+    fireEvent.click(within(table).getByRole('button', { name: 'Sort by percent of net worth donated' }));
+
+    expect(getDataRowNames()).toEqual([
+      'Delta:percentDonated',
+      'Alpha:percentDonated',
+      'Bravo:percentDonated',
+      'Charlie:percentDonated',
+    ]);
+  });
+});

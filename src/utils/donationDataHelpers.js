@@ -145,6 +145,21 @@ export const getCreditedAmount = (donation) => {
   return donation.amount;
 };
 
+/**
+ * The share of a donor's current net worth they have donated (e.g. 0.25 for
+ * 25%). Returns null when net worth is not a positive finite number — the
+ * ratio is meaningless for an unknown, zero, or negative net worth. Values
+ * above 1 are legitimate: some donors have given away more than they now hold.
+ * The single definition shared by donor stats (sorting) and the Donated table
+ * cell (display) so the ranked value and the rendered value can never diverge.
+ */
+export const percentOfNetWorthDonated = (totalDonated, netWorth) => {
+  if (!Number.isFinite(netWorth) || netWorth <= 0) {
+    return null;
+  }
+  return totalDonated / netWorth;
+};
+
 // Helper to get total amount received by a recipient
 export const getTotalAmountForRecipient = (recipientId) => {
   const recipientDonations = getDonationsForRecipient(recipientId);

@@ -37,6 +37,35 @@ test.describe('Donor list and detail flow', () => {
     await expect(page.getByRole('heading', { name: topDonorName, level: 1 })).toBeVisible();
   });
 
+  test('the Donated header $/% toggle re-ranks by percent of net worth donated', async ({ page }) => {
+    await page.goto('/');
+
+    // The sticky header clone is aria-hidden, so role queries resolve to the
+    // primary table's controls only — but when the header is STUCK the clone
+    // overlays it and the primary buttons are disabled. Park the header row in
+    // the middle of the viewport so clicks hit the primary header un-stuck
+    // (Playwright's own scroll-into-view pins the row to the top edge, which
+    // is exactly the stuck state).
+    const table = page.getByRole('table');
+    const donatedHeader = table.getByRole('columnheader', { name: /Donated/ });
+    const percentButton = table.getByRole('button', { name: 'Sort by percent of net worth donated' });
+    await donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+    await percentButton.click();
+
+    await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'descending');
+
+    // The top rows really are ordered by the parenthetical percentage.
+    const donatedCells = table.locator('tbody tr td:nth-child(5)');
+    const percentOf = (text) => Number(text.match(/\(([\d.,]+)%\)/)[1].replace(/,/g, ''));
+    const first = percentOf(await donatedCells.nth(0).innerText());
+    const second = percentOf(await donatedCells.nth(1).innerText());
+    expect(first).toBeGreaterThanOrEqual(second);
+
+    // Re-clicking the active segment flips the direction.
+    await percentButton.click();
+    await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'ascending');
+  });
+
   test('shared cause scope recalculates the ranking and can be reset', async ({ page }) => {
     await page.goto('/?causes=global-health');
 

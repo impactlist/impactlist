@@ -897,6 +897,78 @@
     justify-content: center;
   }
 
+  /* Segmented metric toggle ($ | %) inside a sortable column header. The pill
+     deliberately has no overflow clipping so segment focus rings stay whole;
+     the outer corners come from per-segment radii instead. */
+  .impact-table__metric-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: stretch;
+    border: 1px solid color-mix(in srgb, var(--border-strong) 30%, var(--border-subtle) 70%);
+    border-radius: 999px;
+    background: color-mix(in srgb, white 45%, transparent 55%);
+  }
+
+  .impact-table__metric-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.14rem;
+    border: 0;
+    background: transparent;
+    padding: 0.14rem 0.44rem;
+    font: inherit;
+    font-size: 0.66rem;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition:
+      background 140ms var(--ease-standard),
+      color 140ms var(--ease-standard);
+  }
+
+  .impact-table__metric-button:first-child {
+    border-radius: 999px 0 0 999px;
+    padding-left: 0.5rem;
+  }
+
+  .impact-table__metric-button:last-child {
+    border-radius: 0 999px 999px 0;
+    padding-right: 0.5rem;
+  }
+
+  .impact-table__metric-button + .impact-table__metric-button {
+    border-left: 1px solid color-mix(in srgb, var(--border-subtle) 80%, white 20%);
+  }
+
+  .impact-table__metric-button:hover:not(:disabled) {
+    color: var(--accent-strong);
+    background: color-mix(in srgb, var(--interactive-accent-soft) 40%, white 60%);
+  }
+
+  .impact-table__metric-button:disabled {
+    cursor: default;
+  }
+
+  .impact-table__metric-button[data-active='true'] {
+    color: var(--accent-strong);
+    background: color-mix(in srgb, var(--interactive-accent-soft) 68%, white 32%);
+  }
+
+  .impact-table__metric-button:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (pointer: coarse) {
+    .impact-table__metric-button {
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+    }
+  }
+
   .impact-table thead th[data-sortable='true']:hover {
     background:
       linear-gradient(

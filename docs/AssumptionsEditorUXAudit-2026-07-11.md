@@ -29,7 +29,7 @@ The three highest-leverage improvements are:
 
 The repository already contains a source-only review with mockups:
 
-- [The Assumptions Editor, Reconsidered](./AssumptionsEditorUXReview-2026-07-08.html)
+- [The Assumptions Editor, Reconsidered](./archive/AssumptionsEditorUXReview-2026-07-08.html)
 
 That review was based on static source inspection and was not tested in the running application. This audit verifies most of its findings in the live UI and adds several issues that were especially clear during interaction testing:
 

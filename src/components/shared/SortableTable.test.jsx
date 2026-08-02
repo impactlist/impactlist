@@ -24,11 +24,14 @@ const getDataRowNames = () => {
   return rows.slice(1).map((row) => within(row).getAllByRole('cell')[0].textContent);
 };
 
-describe('SortableTable', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
+// File scope on purpose: several suites below spy on browser APIs (layout
+// geometry, rAF, scrollBy). A describe-scoped hook would let one suite's
+// fabricated geometry leak into the next.
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
+describe('SortableTable', () => {
   it('orders negative cost-per-life values after positives, closest-to-zero last (ascending)', () => {
     render(<SortableTable columns={columns} data={data} defaultSortColumn="costPerLife" defaultSortDirection="asc" />);
 
@@ -109,6 +112,85 @@ describe('SortableTable', () => {
     stickyClone.querySelectorAll('button').forEach((button) => {
       expect(button).toHaveAttribute('tabindex', '-1');
     });
+  });
+});
+
+// The stuck state must never cost keyboard users the ability to sort: the
+// primary header stays enabled (the aria-hidden sticky clone intercepts only
+// pointer input), and focusing a header control while stuck scrolls the real
+// header back into view instead of leaving focus under the overlay.
+describe('SortableTable stuck-header keyboard access', () => {
+  // Geometry that makes the component consider its header stuck: table top
+  // above the viewport top, plenty of table still below the header.
+  const mockStuckLayout = () => {
+    vi.spyOn(window.Element.prototype, 'getBoundingClientRect').mockReturnValue({
+      top: -50,
+      bottom: 500,
+      height: 50,
+      width: 600,
+      left: 0,
+      right: 600,
+      x: 0,
+      y: -50,
+      toJSON: () => ({}),
+    });
+  };
+
+  it('keeps the primary sort buttons enabled and working while the header is stuck', () => {
+    mockStuckLayout();
+    const { container } = render(
+      <SortableTable columns={columns} data={data} defaultSortColumn="costPerLife" defaultSortDirection="asc" />
+    );
+
+    expect(container.querySelector('.impact-table-shell')).toHaveAttribute('data-header-stuck', 'true');
+
+    const table = screen.getByRole('table');
+    const sortButton = within(table).getByRole('button', { name: 'Sort by Cost Per Life' });
+    expect(sortButton).toBeEnabled();
+
+    fireEvent.click(sortButton);
+    expect(getDataRowNames()).toEqual(['Bravo', 'Delta', 'Alpha', 'Charlie']);
+  });
+
+  it('scrolls a stuck header back into view when a header control receives focus', () => {
+    mockStuckLayout();
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      callback();
+      return 0;
+    });
+    const scrollBy = vi.spyOn(window, 'scrollBy').mockImplementation(() => {});
+    render(<SortableTable columns={columns} data={data} defaultSortColumn="costPerLife" defaultSortDirection="asc" />);
+
+    fireEvent.focusIn(within(screen.getByRole('table')).getByRole('button', { name: 'Sort by Cost Per Life' }));
+
+    // Scrolls up by the table's overshoot plus the reveal offset, so the
+    // header lands just below the un-stick threshold.
+    expect(scrollBy).toHaveBeenCalledWith({ top: -58 });
+  });
+
+  it('does not scroll on header focus when the header is not stuck', () => {
+    // Same geometry, but with the table top comfortably inside the viewport.
+    vi.spyOn(window.Element.prototype, 'getBoundingClientRect').mockReturnValue({
+      top: 120,
+      bottom: 670,
+      height: 50,
+      width: 600,
+      left: 0,
+      right: 600,
+      x: 0,
+      y: 120,
+      toJSON: () => ({}),
+    });
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      callback();
+      return 0;
+    });
+    const scrollBy = vi.spyOn(window, 'scrollBy').mockImplementation(() => {});
+    render(<SortableTable columns={columns} data={data} defaultSortColumn="costPerLife" defaultSortDirection="asc" />);
+
+    fireEvent.focusIn(within(screen.getByRole('table')).getByRole('button', { name: 'Sort by Cost Per Life' }));
+
+    expect(scrollBy).not.toHaveBeenCalled();
   });
 });
 

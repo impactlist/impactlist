@@ -42,10 +42,10 @@ test.describe('Donor list and detail flow', () => {
 
     // The sticky header clone is aria-hidden, so role queries resolve to the
     // primary table's controls only — but when the header is STUCK the clone
-    // overlays it and the primary buttons are disabled. Park the header row in
-    // the middle of the viewport so clicks hit the primary header un-stuck
-    // (Playwright's own scroll-into-view pins the row to the top edge, which
-    // is exactly the stuck state).
+    // intercepts pointer input. Park the header row in the middle of the
+    // viewport so POINTER clicks hit the primary header un-stuck (Playwright's
+    // own scroll-into-view pins the row to the top edge, which is exactly the
+    // stuck state). Keyboard access while stuck has its own test below.
     const table = page.getByRole('table');
     const donatedHeader = table.getByRole('columnheader', { name: /Donated/ });
     const percentButton = table.getByRole('button', { name: 'Sort by percent of net worth donated' });
@@ -64,6 +64,25 @@ test.describe('Donor list and detail flow', () => {
     // Re-clicking the active segment flips the direction.
     await percentButton.click();
     await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'ascending');
+  });
+
+  test('keyboard focus reveals a stuck header so sorting stays keyboard-accessible', async ({ page }) => {
+    await page.goto('/');
+
+    // Scroll deep into the table so the sticky clone overlays the header.
+    await page.evaluate(() => window.scrollTo(0, 2000));
+    const shell = page.locator('.impact-table-shell');
+    await expect(shell).toHaveAttribute('data-header-stuck', 'true');
+
+    // Focusing a header control must reveal the real header (un-stick it)
+    // rather than leaving focus under the aria-hidden clone…
+    const donatedSort = page.getByRole('button', { name: 'Sort by Donated' });
+    await donatedSort.focus();
+    await expect(shell).toHaveAttribute('data-header-stuck', 'false');
+
+    // …and the focused control is genuinely operable from the keyboard.
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'descending');
   });
 
   test('shared cause scope recalculates the ranking and can be reset', async ({ page }) => {

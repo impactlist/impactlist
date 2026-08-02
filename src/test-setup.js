@@ -73,3 +73,10 @@ globalThis.ResizeObserver = MockResizeObserver;
 // jsdom doesn't implement scrollIntoView (MultiCategoryRecipientEditor
 // scrolls its active category section into view on mount).
 Element.prototype.scrollIntoView = vi.fn();
+
+// jsdom doesn't implement window.scrollBy either: SortableTable's
+// stuck-header focus reveal calls it whenever a header control gains focus,
+// because jsdom's all-zero layout geometry always measures as "stuck".
+// Without this stub every focused header click prints a jsdom
+// "Not implemented" error stack. Tests asserting on the reveal spy over it.
+window.scrollBy = vi.fn();

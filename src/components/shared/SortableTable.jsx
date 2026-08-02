@@ -3,6 +3,11 @@ import Tooltip from './Tooltip';
 
 const normalizeLayoutMeasurement = (value) => Math.round(value * 100) / 100;
 
+// Where the table top lands, in px below the viewport top, when keyboard focus
+// forces a stuck header back into view — just enough that the un-stick
+// threshold (table top <= 0) cannot immediately re-fire.
+const STICKY_FOCUS_REVEAL_PX = 8;
+
 // A column normally sorts by its own key. A column may instead declare
 // `metrics: [{ key, label, ariaLabel }, ...]` — one sort key per metric,
 // rendered as a compact segmented toggle in the header (the donor list's
@@ -368,8 +373,32 @@ const SortableTable = ({
     </svg>
   );
 
+  // Keyboard access must survive the stuck state: the primary header stays
+  // enabled and focusable at all times (the sticky clone intercepts only
+  // POINTER input while stuck). scroll-margin-top on the header buttons
+  // biases the browser's own focus scroll to land below the sticky rail;
+  // this handler is the backstop for scroll positions where the header is
+  // technically inside the viewport (so the browser won't scroll on focus)
+  // yet still hidden under the clone. The rAF lets the browser's focus
+  // scroll settle before measuring.
+  const handleHeaderFocus = () => {
+    window.requestAnimationFrame(() => {
+      if (!tableRef.current) {
+        return;
+      }
+
+      const tableTop = tableRef.current.getBoundingClientRect().top;
+      if (tableTop <= 0) {
+        window.scrollBy({ top: tableTop - STICKY_FOCUS_REVEAL_PX });
+      }
+    });
+  };
+
   const renderTableHeader = (instanceKey, isInteractive) => (
-    <thead ref={instanceKey === 'primary' ? tableHeadRef : undefined}>
+    <thead
+      ref={instanceKey === 'primary' ? tableHeadRef : undefined}
+      onFocus={instanceKey === 'primary' ? handleHeaderFocus : undefined}
+    >
       <tr>
         {columns.map((column) => {
           const isSortable = column.sortable !== false;
@@ -386,10 +415,11 @@ const SortableTable = ({
               className={`${getColumnPadding(column.key)} group py-4 text-left ${column.key === 'name' ? 'w-[220px]' : ''} ${column.key === 'rank' ? 'w-14' : ''} ${column.key === 'photo' ? 'min-w-24' : ''}`}
             >
               <div className="impact-table__header-inner">
-                {/* Disabled (not aria-hidden) when the sticky clone overlays
-                    this header: the column must KEEP its accessible name for
-                    screen-reader table navigation; only the obscured tab stop
-                    goes away. */}
+                {/* The primary header is ALWAYS enabled and focusable — it is
+                    the semantic and keyboard surface even while the sticky
+                    clone visually overlays it (focus then reveals it via
+                    handleHeaderFocus). Only sortable: false columns and the
+                    clone's pointer-only copies disable. */}
                 <button
                   type="button"
                   className="impact-table__sort-button"
@@ -503,7 +533,7 @@ const SortableTable = ({
       >
         <table ref={tableRef} className="impact-table">
           {renderColGroup()}
-          {renderTableHeader('primary', !showStickyHeader)}
+          {renderTableHeader('primary', true)}
           <tbody>
             {sortedData.length === 0 && emptyMessage && (
               <tr>

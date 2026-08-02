@@ -891,6 +891,16 @@
     box-shadow: var(--shadow-focus);
   }
 
+  /* Keyboard focus on a scrolled-away header must land BELOW the sticky
+     clone, not underneath it: bias the browser's scroll-into-view so the
+     focused control settles past the un-stick threshold (the th padding puts
+     these buttons ~1rem below the table top). SortableTable's focus handler
+     backstops the positions where the browser doesn't scroll at all. */
+  .impact-table__sort-button,
+  .impact-table__metric-button {
+    scroll-margin-top: 1.75rem;
+  }
+
   .impact-table__tooltip-icon {
     display: inline-flex;
     align-items: center;

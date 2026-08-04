@@ -49,8 +49,18 @@ test.describe('Donor list and detail flow', () => {
     const table = page.getByRole('table');
     const donatedHeader = table.getByRole('columnheader', { name: /Donated/ });
     const percentButton = table.getByRole('button', { name: 'Sort by percent of net worth donated' });
-    await donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' }));
-    await percentButton.click();
+
+    // Re-park before EVERY click: a re-sort reorders the rows, and any scroll
+    // drift afterwards (e.g. browser scroll anchoring following a displaced
+    // row) would otherwise leave the next click stranded on a stuck header —
+    // the exact failure mode of the 2026-08-02 nightly e2e run.
+    const parkAndClick = async (button) => {
+      await donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+      await expect(page.locator('.impact-table-shell')).toHaveAttribute('data-header-stuck', 'false');
+      await button.click();
+    };
+
+    await parkAndClick(percentButton);
 
     await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'descending');
 
@@ -62,15 +72,73 @@ test.describe('Donor list and detail flow', () => {
     expect(first).toBeGreaterThanOrEqual(second);
 
     // Re-clicking the active segment flips the direction.
-    await percentButton.click();
+    await parkAndClick(percentButton);
     await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'ascending');
+  });
+
+  // Guards the overflow-anchor rule on .impact-table tbody: the toggle test
+  // above deliberately re-parks before every click (so IT stays robust), which
+  // means it would keep passing if the rule regressed. This test is the
+  // tripwire — one park, one sort click, and the page must not move. (Scroll
+  // anchoring is timing-sensitive, so a regression fails this reliably on
+  // slow runners like CI nightly rather than everywhere — see the 2026-08-02
+  // run for the un-guarded failure mode.)
+  test('re-sorting keeps the page scroll position', async ({ page }) => {
+    await page.goto('/');
+
+    const table = page.getByRole('table');
+    const donatedHeader = table.getByRole('columnheader', { name: /Donated/ });
+
+    // Park, then wait until the position SURVIVES two frames before taking
+    // the baseline: initial layout settling (fonts/images/entry animation)
+    // can shift scroll shortly after load, and a baseline captured during
+    // that settle fails this test for reasons unrelated to sorting
+    // (instrumented locally: the drift always completed before the click).
+    await expect
+      .poll(async () => {
+        await donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+        return page.evaluate(
+          () =>
+            new Promise((resolve) => {
+              const parkedY = window.scrollY;
+              window.requestAnimationFrame(() =>
+                window.requestAnimationFrame(() => resolve(Math.abs(window.scrollY - parkedY) <= 1))
+              );
+            })
+        );
+      })
+      .toBe(true);
+    await expect(page.locator('.impact-table-shell')).toHaveAttribute('data-header-stuck', 'false');
+
+    const before = await page.evaluate(() => window.scrollY);
+    // Deliberately no re-park after this click: the sort itself must not
+    // move the page. One click only, so a regression fails the assertion
+    // below instead of stranding a second click on a stuck header.
+    await table.getByRole('button', { name: 'Sort by percent of net worth donated' }).click();
+    await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'descending');
+
+    const after = await page.evaluate(() => window.scrollY);
+    // Tolerance separates two regimes: ambient late-layout settle drifts a
+    // few px even after the baseline poll (observed ≤8px under CPU
+    // contention), while a real scroll-anchor jump follows a displaced row —
+    // at least one row height (~113px) and typically several hundred px.
+    expect(Math.abs(after - before)).toBeLessThanOrEqual(24);
   });
 
   test('keyboard focus reveals a stuck header so sorting stays keyboard-accessible', async ({ page }) => {
     await page.goto('/');
 
     // Scroll deep into the table so the sticky clone overlays the header.
-    await page.evaluate(() => window.scrollTo(0, 2000));
+    // Anchor the scroll to a real row rather than a fixed offset: the route
+    // is lazy-loaded, and a raw scrollTo right after goto can run against
+    // the short Suspense fallback and clamp to ~0, so the header never
+    // sticks (the 2026-08-03 nightly failure). The row locator auto-waits
+    // for the table to actually be there.
+    const table = page.getByRole('table');
+    await table
+      .getByRole('row')
+      .nth(15)
+      .evaluate((element) => element.scrollIntoView({ block: 'start' }));
     const shell = page.locator('.impact-table-shell');
     await expect(shell).toHaveAttribute('data-header-stuck', 'true');
 

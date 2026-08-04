@@ -1028,6 +1028,18 @@
     box-shadow: inset 0 -1px 0 var(--table-header-divider-stuck);
   }
 
+  /* Every impact-table is a ranking surface whose rows can reorder under the
+     viewer — header sorts on the list pages, live re-ranking in the
+     calculator's mini list as amounts change. If the browser picks a row as
+     its scroll anchor, the viewport jumps to wherever that row lands in the
+     new order (observed as a CI-only e2e failure, and equally disorienting
+     for real users). Deliberately unscoped: exclude ALL of these tables'
+     rows from scroll-anchor candidacy. Guarded by donor-flow's
+     "re-sorting keeps the page scroll position" e2e test. */
+  .impact-table tbody {
+    overflow-anchor: none;
+  }
+
   .impact-table tbody tr:first-child td {
     border-top-color: transparent;
   }

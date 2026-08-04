@@ -3,6 +3,7 @@ import os from 'os';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import matter from 'gray-matter';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -10,6 +11,8 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '../..');
 const scriptSource = path.resolve(__dirname, '../sync-skills.js');
 const hookSource = path.resolve(repoRoot, '.husky/pre-commit');
+const addDonorSkillSource = path.resolve(repoRoot, '.claude/skills/add-donor/SKILL.md');
+const categoriesSource = path.resolve(repoRoot, 'content/categories');
 
 const tempWorkspaces = [];
 
@@ -165,5 +168,37 @@ describe('skill mirror pre-commit guard', () => {
     expect(output).toContain('pre-commit: skill files have unstaged changes while skill edits are staged.');
     expect(output).toContain('Untracked skill files:');
     expect(output).toContain('.claude/skills/new-skill/SKILL.md');
+  });
+});
+
+describe('add-donor category registry', () => {
+  it('matches every category id and display name in content/categories', () => {
+    const skillContent = fs.readFileSync(addDonorSkillSource, 'utf8');
+    const registryMatch = skillContent.match(
+      /Valid category ids \(the `name` shown is how it renders\)\.[^\n]*:\n\n```\n([\s\S]*?)\n```/
+    );
+
+    expect(registryMatch, 'Could not find the add-donor valid-category block').not.toBeNull();
+
+    const documentedCategories = registryMatch[1]
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => {
+        const entryMatch = line.match(/^([a-z0-9]+(?:-[a-z0-9]+)*) — (.+)$/);
+        expect(entryMatch, `Malformed add-donor category entry: ${line}`).not.toBeNull();
+        return { id: entryMatch[1], name: entryMatch[2] };
+      })
+      .sort((a, b) => a.id.localeCompare(b.id));
+
+    const contentCategories = fs
+      .readdirSync(categoriesSource)
+      .filter((fileName) => fileName.endsWith('.md') && fileName !== '_index.md')
+      .map((fileName) => {
+        const { data } = matter(fs.readFileSync(path.join(categoriesSource, fileName), 'utf8'));
+        return { id: data.id, name: data.name };
+      })
+      .sort((a, b) => a.id.localeCompare(b.id));
+
+    expect(documentedCategories).toEqual(contentCategories);
   });
 });

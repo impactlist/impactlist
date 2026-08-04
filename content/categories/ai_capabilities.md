@@ -1,6 +1,6 @@
 ---
 id: ai-capabilities
-name: 'AI Capabilities / AGI Development'
+name: 'AGI Development'
 effects:
   - effectId: standard-mundane
     startTime: 3
@@ -20,7 +20,7 @@ effects:
 
 # Justification of cost per life
 
-We model the AI Capabilities cause as having three independent effects on the world, which we calculate separately and then combine into a single overall cost per life.
+We model the AGI Development cause as having three independent effects on the world, which we calculate separately and then combine into a single overall cost per life.
 
 For the first two effects, which we call "standard effects", we arrive at the cost per life by estimating the cost per {{QALY}} and multiplying this by the global years-per-life parameter, which is shown with the other global parameters on the [Assumptions page](/assumptions).
 

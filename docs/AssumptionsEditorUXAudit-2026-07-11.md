@@ -185,7 +185,7 @@ The drill-in year selector is only rendered for a multi-effect cause whose effec
 
 This produced a concrete live mismatch:
 
-- Cause list set to **2010**: AI Capabilities / AGI Development showed **−$15,231**.
+- Cause list set to **2010**: AGI Development showed **−$15,231**.
 - Cause drill-in: combined cost showed **−$14,619**, calculated for **2026**.
 - No visible year explained the difference.
 
@@ -412,7 +412,7 @@ The narrow-screen layouts did not overflow horizontally, but long forms separate
 - The mobile Global page was about 2,219px tall.
 - Apply was near vertical position 495px.
 - The fourth editable Global field began near 975px.
-- The multi-effect AI Capabilities page was about 2,537px tall.
+- The multi-effect AGI Development page was about 2,537px tall.
 
 Multi-effect editors already duplicate Apply/Cancel at the beginning and end, which is helpful. Global has only the top action.
 

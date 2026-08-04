@@ -7,7 +7,7 @@ name: 'Frontier-equivalent share of AI capabilities philanthropy'
 
 This document asks:
 
-> After accounting for crowd-out, public-interest work, and spillovers, how much of a marginal dollar in the **AGI Development / AI capabilities** cause should be modeled as if it were extra frontier-capabilities spending?
+> After accounting for crowd-out, public-interest work, and spillovers, how much of a marginal dollar in the **AGI Development** cause should be modeled as if it were extra frontier-capabilities spending?
 
 You can't observe this quantity directly. It is an **inference**. We combine evidence about where frontier progress happens, how much capital is already in the field, and what kinds of projects philanthropy in this area actually funds. The funding examples below are a **2025-early 2026 snapshot**; the frontier-lab and public-interest AI funding landscape changes quickly.
 

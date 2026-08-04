@@ -197,25 +197,38 @@ categories:
 - Look at similar existing recipients and match their precedent before inventing your own mapping.
 - Put your fraction reasoning (with sources) under a `# Internal Notes` heading at the bottom of the file when it isn't obvious — future researchers will need to know whether 0.55 came from a 990 analysis or a shrug.
 
-Valid category ids (the `name` shown is how it renders):
+Valid category ids (the `name` shown is how it renders). This block is test-checked against `content/categories/`:
 
 ```
-ai-capabilities — AGI Development        human-rights — Human Rights and Justice
-ai-risk — AI Existential Risk            institutions — Improving Institutions
-animal-welfare — Animal Welfare          local-community — Local Community
-arts-culture — Arts, Culture, Heritage   longevity — Longevity
-climate-change — Climate Change          meta-theory — Meta and Theory
-conflict-mitigation — Conflict Mitigation nuclear — Nuclear
-decision-making — Improving Decision Making  other — Other
-disaster-relief — Disaster Relief        pandemics — Pandemics
-education — Education                    political — Political
-environmental — General Environmental    population — Population
+ai-capabilities — AGI Development
+ai-risk — AI Existential Risk
+animal-welfare — Animal Welfare
+arts-culture — Arts, Culture, Heritage
+civic-policy-advocacy — Civic and Policy Advocacy
+climate-change — Climate Change
+conflict-mitigation — Conflict Mitigation
+decision-making — Improving Decision Making
+disaster-relief — Disaster Relief
+education — Education
+environmental — General Environmental
 global-catastrophe-resilience — Global Catastrophe Resilience
-global-development — Global Development / Poverty  religious — Religious
-global-health — Global Health            science-tech — Science and Tech
-global-priorities — Global Priorities Research     social-justice — Social Justice
+global-development — Global Development / Poverty
+global-health — Global Health
+global-priorities — Global Priorities Research
 health-medicine — Health / Medicine
 housing — Homelessness and Housing
+human-rights — Human Rights and Justice
+institutions — Improving Institutions
+local-community — Local Community
+longevity — Longevity
+meta-theory — Meta and Theory
+nuclear — Nuclear
+other — Other
+pandemics — Pandemics
+population — Population
+religious — Religious
+science-tech — Science and Tech
+social-justice — Social Justice
 ```
 
 Distinctions that trip people up: `global-health` is developing-world health interventions while `health-medicine` is rich-country medical research/hospitals; `global-development` is poverty/economic development; `ai-capabilities` (AGI Development) is a *negative-cost-per-life* category by design — labs like OpenAI legitimately carry it, donations there are modeled as increasing existential risk. Never "fix" a negative cost per life; it's the framework working as intended.

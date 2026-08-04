@@ -28,7 +28,7 @@ const renderSection = (props = {}) =>
         {
           id: 'ai-capabilities',
           categoryId: 'ai-capabilities',
-          name: 'AI Capabilities / AGI Development',
+          name: 'AGI Development',
           value: -1003,
           valueTarget: -1003,
           livesSavedValue: -1003,
@@ -61,7 +61,7 @@ describe('EntityChartSection', () => {
         {
           id: 'ai-capabilities',
           categoryId: 'ai-capabilities',
-          name: 'AI Capabilities / AGI Development',
+          name: 'AGI Development',
           value: -1503,
           valueTarget: -1503,
           livesSavedValue: -1503,
@@ -94,7 +94,7 @@ describe('EntityChartSection', () => {
         {
           id: 'ai-capabilities',
           categoryId: 'ai-capabilities',
-          name: 'AI Capabilities / AGI Development',
+          name: 'AGI Development',
           value: -18497,
           valueTarget: -18497,
           livesSavedValue: -18497,
@@ -127,7 +127,7 @@ describe('EntityChartSection', () => {
         {
           id: 'ai-capabilities',
           categoryId: 'ai-capabilities',
-          name: 'AI Capabilities / AGI Development',
+          name: 'AGI Development',
           value: -1200,
           valueTarget: -1200,
           livesSavedValue: -1200,
@@ -149,7 +149,7 @@ describe('EntityChartSection', () => {
         {
           id: 'ai-capabilities',
           categoryId: 'ai-capabilities',
-          name: 'AI Capabilities / AGI Development',
+          name: 'AGI Development',
           value: 1000000,
           valueTarget: 1000000,
           livesSavedValue: -1003,

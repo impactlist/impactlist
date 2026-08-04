@@ -19,4 +19,4 @@ Use this assumptions set if you assign little or no weight to AI existential ris
 
 It turns off [AI Existential Risk](/cause/ai-risk) entirely and also disables
 the AI-catastrophe downside inside [AGI Development](/cause/ai-capabilities).
-That leaves AGI development judged only on its direct upside.
+That leaves the AGI Development cause judged only on its direct upside.

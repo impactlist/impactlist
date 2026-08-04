@@ -210,6 +210,7 @@ decision-making — Improving Decision Making  other — Other
 disaster-relief — Disaster Relief        pandemics — Pandemics
 education — Education                    political — Political
 environmental — General Environmental    population — Population
+global-catastrophe-resilience — Global Catastrophe Resilience
 global-development — Global Development / Poverty  religious — Religious
 global-health — Global Health            science-tech — Science and Tech
 global-priorities — Global Priorities Research     social-justice — Social Justice

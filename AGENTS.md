@@ -18,6 +18,7 @@
 - `npm run preview`: Serve the built app locally.
 - `npm test` / `npm run test:run`: Vitest (watch / single run). `npm run test:coverage` enforces 50% coverage floors.
 - `npm run test:e2e`: Playwright, chromium only (builds production first). `npm run test:e2e:release` adds firefox + webkit — release-prep only, never routine verification.
+- E2e reuses an already-running server on port 4173 outside CI (`reuseExistingServer`). A preview server left running across content/data changes makes local e2e silently validate a stale build while CI (always fresh) fails — if local e2e disagrees with CI, check for a listener with `lsof -iTCP:4173` first.
 - `npm run lint` / `npm run lint:fix`: Lint (and auto-fix) JS/JSX.
 
 ## Coding Style & Naming Conventions

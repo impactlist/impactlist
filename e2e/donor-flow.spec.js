@@ -276,11 +276,15 @@ test.describe('Landscape touch cause selector', () => {
       })
       .toEqual({ topInsideViewport: true, bottomInsideViewport: true });
 
+    // Derive the total from the dialog instead of hardcoding it: the cause
+    // list grows with content changes, and a literal count goes stale (the
+    // 2026-08-05 nightly broke when a 29th category landed).
+    const causeCount = await dialog.getByRole('checkbox').count();
     await dialog.getByText('Animal Welfare', { exact: true }).tap();
 
     await expect(dialog).toBeVisible();
     await expect(animalWelfareCheckbox).not.toBeChecked();
-    await expect(dialog).toContainText('27 of 28 selected');
+    await expect(dialog).toContainText(`${causeCount - 1} of ${causeCount} selected`);
   });
 
   test('keeps the apply action fully reachable on very short landscape screens', async ({ page }) => {
@@ -309,11 +313,16 @@ test.describe('Landscape touch cause selector', () => {
       })
       .toEqual({ insideDialog: true, insideViewport: true });
 
+    // Count before applying — the dialog closes on apply. Derived, not
+    // hardcoded, for the same reason as the modal-presentation test above.
+    const causeCount = await dialog.getByRole('checkbox').count();
     await dialog.getByText('Animal Welfare', { exact: true }).tap();
     await expect(applyButton).toBeEnabled();
     await applyButton.tap();
 
     await expect(dialog).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Cause scope. Current selection: 27 causes' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: `Cause scope. Current selection: ${causeCount - 1} causes` })
+    ).toBeVisible();
   });
 });

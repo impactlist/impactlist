@@ -13,7 +13,7 @@ const ImageCredits = () => {
   return (
     <ListPageShell
       title="Image Credits"
-      subtitle="Most donor images come from freely licensed or public-domain sources. When no suitable freely licensed photo was available, we used an AI-generated synthetic image instead; each one is identified in its entry below."
+      subtitle="Donor images are freely licensed, public domain, or provided directly with permission. When no suitable photo is available, we use an AI-generated synthetic image; each entry identifies its source and usage basis."
     >
       <ul className="space-y-4">
         {sortedCredits.map((credit) => {

@@ -1,8 +1,9 @@
 // Image credits for donor photos in public/images/people/small/.
 // Every photo shipped with the site must have an entry here documenting a free
-// license (public domain / CC0 / CC BY / CC BY-SA) and its source, so usage is
-// attribution-compliant and provenance is auditable. Donors without an
-// acceptably-licensed photo get no entry and render the unknown.jpeg fallback.
+// license (public domain / CC0 / CC BY / CC BY-SA), direct permission, or a
+// disclosed AI generation and its source, so usage and provenance are auditable.
+// Donors without an acceptably licensed or permitted photo get no entry and
+// render the unknown.jpeg fallback.
 // Maintained by hand; the add-donor skill requires a new entry for every photo
 // it adds. Rendered at /image-credits.
 
@@ -518,6 +519,15 @@ export const imageCredits = [
     license: 'CC BY 2.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
     notes: 'Square-cropped from the Commons crop; original file preserved under media/people/original.',
+  },
+  {
+    donorId: 'misha-gurevich',
+    name: 'Misha Gurevich',
+    sourceName: 'Provided to Impact List by Misha Gurevich',
+    sourceUrl: 'https://drethelin.com/',
+    license: 'Used with permission',
+    licenseUrl: 'https://drethelin.com/',
+    notes: 'Cropped and resized from the supplied original.',
   },
   {
     donorId: 'oprah-winfrey',

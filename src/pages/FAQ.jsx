@@ -492,8 +492,9 @@ const FAQ = () => {
               onToggle={() => toggleItem(12)}
             >
               <p>
-                Donor photos are either freely licensed/public-domain images or AI-generated synthetic placeholders
-                where no suitable freely licensed photo was available. Which images are synthetic is disclosed on the{' '}
+                Donor images are freely licensed, public domain, or provided directly with permission. When no suitable
+                photo is available, we use an AI-generated synthetic placeholder. Each image's source and usage basis
+                are disclosed on the{' '}
                 <Link to="/image-credits" className="impact-link">
                   image credits
                 </Link>{' '}

@@ -28,7 +28,7 @@ describe('ImageCredits', () => {
 
   it('explains that some donor images are AI-generated synthetic images', () => {
     renderPage();
-    expect(screen.getByText(/we used an AI-generated synthetic image instead/i)).toBeInTheDocument();
+    expect(screen.getByText(/we use an AI-generated synthetic image/i)).toBeInTheDocument();
   });
 
   it('describes synthetic entries as images and photographs as photos', () => {
@@ -74,10 +74,11 @@ describe('ImageCredits', () => {
     }
   });
 
-  it('every credit entry documents a free license or a disclosed AI generation', () => {
-    const freeLicense = /^(CC BY(-SA)?( \d\.\d)?|CC0( \d\.\d)?|Public domain|AI-generated)/i;
+  it('every credit entry documents a free license, direct permission, or a disclosed AI generation', () => {
+    const acceptedUsageBasis =
+      /^(CC BY(-SA)?( \d\.\d)?|CC0( \d\.\d)?|Public domain|Used with permission|AI-generated)/i;
     for (const credit of imageCredits) {
-      expect(credit.license, `${credit.donorId} license`).toMatch(freeLicense);
+      expect(credit.license, `${credit.donorId} license`).toMatch(acceptedUsageBasis);
       expect(credit.sourceUrl, `${credit.donorId} sourceUrl`).toMatch(/^https?:\/\//);
     }
   });

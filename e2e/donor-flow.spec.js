@@ -1,5 +1,22 @@
 import { expect, test } from '@playwright/test';
 
+const settleAndReadScrollY = (page) =>
+  page.evaluate(
+    () =>
+      new Promise((resolve) => {
+        window.requestAnimationFrame(() => window.requestAnimationFrame(() => resolve(window.scrollY)));
+      })
+  );
+
+const expectPageScrollUnchanged = ({ context, before, after, timeline = [] }) => {
+  const delta = Math.abs(after - before);
+  const timelineDetails = timeline.length > 0 ? `\nScroll timeline:\n${JSON.stringify(timeline, null, 2)}` : '';
+  expect(
+    delta,
+    `${context} moved the page: before=${before}, after=${after}, delta=${delta}.${timelineDetails}`
+  ).toBeLessThanOrEqual(24);
+};
+
 // The core product flow: home ranking table -> donor detail -> back, plus a
 // recipient detail hop and 404 handling for stale links.
 test.describe('Donor list and detail flow', () => {
@@ -50,14 +67,19 @@ test.describe('Donor list and detail flow', () => {
     const donatedHeader = table.getByRole('columnheader', { name: /Donated/ });
     const percentButton = table.getByRole('button', { name: 'Sort by percent of net worth donated' });
 
-    // Re-park before EVERY click: a re-sort reorders the rows, and any scroll
-    // drift afterwards (e.g. browser scroll anchoring following a displaced
-    // row) would otherwise leave the next click stranded on a stuck header —
-    // the exact failure mode of the 2026-08-02 nightly e2e run.
+    // Playwright waits for the page-entry transform to finish before clicking.
+    // Let that actionability check settle first, then re-park the real header:
+    // otherwise Playwright can move it to the top edge during the wait and
+    // leave the sticky clone covering the intended pointer target.
     const parkAndClick = async (button) => {
+      await button.click({ trial: true });
       await donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' }));
       await expect(page.locator('.impact-table-shell')).toHaveAttribute('data-header-stuck', 'false');
+
+      const before = await page.evaluate(() => window.scrollY);
       await button.click();
+      const after = await settleAndReadScrollY(page);
+      expectPageScrollUnchanged({ context: 'Primary Donated % toggle', before, after });
     };
 
     await parkAndClick(percentButton);
@@ -76,53 +98,89 @@ test.describe('Donor list and detail flow', () => {
     await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'ascending');
   });
 
-  // Guards the overflow-anchor rule on .impact-table tbody: the toggle test
-  // above deliberately re-parks before every click (so IT stays robust), which
-  // means it would keep passing if the rule regressed. This test is the
-  // tripwire — one park, one sort click, and the page must not move. (Scroll
-  // anchoring is timing-sensitive, so a regression fails this reliably on
-  // slow runners like CI nightly rather than everywhere — see the 2026-08-02
-  // run for the un-guarded failure mode.)
   test('re-sorting keeps the page scroll position', async ({ page }) => {
     await page.goto('/');
 
     const table = page.getByRole('table');
-    const donatedHeader = table.getByRole('columnheader', { name: /Donated/ });
+    const shell = page.locator('.impact-table-shell');
+    const tableContainer = page.locator('.impact-page__container').filter({ has: shell });
 
-    // Park, then wait until the position SURVIVES two frames before taking
-    // the baseline: initial layout settling (fonts/images/entry animation)
-    // can shift scroll shortly after load, and a baseline captured during
-    // that settle fails this test for reasons unrelated to sorting
-    // (instrumented locally: the drift always completed before the click).
-    await expect
-      .poll(async () => {
-        await donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' }));
-        return page.evaluate(
-          () =>
-            new Promise((resolve) => {
-              const parkedY = window.scrollY;
-              window.requestAnimationFrame(() =>
-                window.requestAnimationFrame(() => resolve(Math.abs(window.scrollY - parkedY) <= 1))
-              );
-            })
-        );
-      })
-      .toBe(true);
-    await expect(page.locator('.impact-table-shell')).toHaveAttribute('data-header-stuck', 'false');
+    // Finish the entry transform before positioning the table. A locator
+    // click performs its own actionability scroll while an element is moving,
+    // which is the automation behavior this regression test must exclude.
+    await expect(tableContainer).toHaveCSS('transform', 'none');
+    await expect(tableContainer).toHaveCSS('opacity', '1');
 
+    // Keep the implementation guard deterministic even on browsers that do
+    // not happen to choose a reordered row as their anchor during this run.
+    await expect(table.locator('tbody')).toHaveCSS('overflow-anchor', 'none');
+
+    // Exercise the control a user actually sees while scrolled into the table.
+    await table
+      .getByRole('row')
+      .nth(15)
+      .evaluate((element) => element.scrollIntoView({ block: 'center' }));
+    await expect(shell).toHaveAttribute('data-header-stuck', 'true');
+
+    const stickyPercentButton = shell.locator(
+      '.impact-table--sticky [aria-label="Sort by percent of net worth donated"]'
+    );
+    await expect(stickyPercentButton).toBeVisible();
+    const buttonBox = await stickyPercentButton.boundingBox();
+    expect(buttonBox).not.toBeNull();
+
+    // Keep compact event diagnostics in the assertion message. If this fails
+    // remotely, the report will show which scroll target moved, the active
+    // control, the table position, and the ordering around focus/click.
+    await page.evaluate(() => {
+      const describeTarget = (target) => {
+        if (target === window) return 'window';
+        if (target === document) return 'document';
+        if (!(target instanceof window.Element)) return String(target);
+
+        const id = target.id ? `#${target.id}` : '';
+        const className =
+          typeof target.className === 'string' && target.className.trim()
+            ? `.${target.className.trim().split(/\s+/).join('.')}`
+            : '';
+        const label = target.getAttribute('aria-label');
+        return `${target.tagName.toLowerCase()}${id}${className}${label ? `[aria-label="${label}"]` : ''}`;
+      };
+
+      window.__sortScrollTimeline = [];
+      window.__recordSortScrollEvent = (type, target) => {
+        const tableElement = document.querySelector('.impact-table');
+        const shellElement = document.querySelector('.impact-table-shell');
+        window.__sortScrollTimeline.push({
+          type,
+          target: describeTarget(target),
+          scrollY: window.scrollY,
+          tableTop: tableElement ? Math.round(tableElement.getBoundingClientRect().top) : null,
+          headerStuck: shellElement?.dataset.headerStuck ?? null,
+          activeElement: describeTarget(document.activeElement),
+        });
+      };
+
+      const recordEvent = (event) => window.__recordSortScrollEvent(event.type, event.target);
+      window.addEventListener('scroll', recordEvent, { capture: true });
+      for (const type of ['pointerdown', 'focusin', 'click']) {
+        document.addEventListener(type, recordEvent, { capture: true });
+      }
+      window.__recordSortScrollEvent('baseline', window);
+    });
+
+    // Raw mouse coordinates generate real pointer/focus events without
+    // locator.click() scrolling the target between the baseline and input.
     const before = await page.evaluate(() => window.scrollY);
-    // Deliberately no re-park after this click: the sort itself must not
-    // move the page. One click only, so a regression fails the assertion
-    // below instead of stranding a second click on a stuck header.
-    await table.getByRole('button', { name: 'Sort by percent of net worth donated' }).click();
+    await page.mouse.click(buttonBox.x + buttonBox.width / 2, buttonBox.y + buttonBox.height / 2);
     await expect(table.getByRole('columnheader', { name: /Donated/ })).toHaveAttribute('aria-sort', 'descending');
 
-    const after = await page.evaluate(() => window.scrollY);
-    // Tolerance separates two regimes: ambient late-layout settle drifts a
-    // few px even after the baseline poll (observed ≤8px under CPU
-    // contention), while a real scroll-anchor jump follows a displaced row —
-    // at least one row height (~113px) and typically several hundred px.
-    expect(Math.abs(after - before)).toBeLessThanOrEqual(24);
+    const after = await settleAndReadScrollY(page);
+    const timeline = await page.evaluate(() => {
+      window.__recordSortScrollEvent('settled', window);
+      return window.__sortScrollTimeline;
+    });
+    expectPageScrollUnchanged({ context: 'Sticky Donated % toggle', before, after, timeline });
   });
 
   test('keyboard focus reveals a stuck header so sorting stays keyboard-accessible', async ({ page }) => {

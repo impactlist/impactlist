@@ -262,6 +262,17 @@ export const imageCredits = [
     notes: 'Cropped and resized from the original.',
   },
   {
+    donorId: 'haseeb-qureshi',
+    name: 'Haseeb Qureshi',
+    author: 'Katelyn Tucker / Slava Blazer Photography',
+    sourceName: 'Wikimedia Commons',
+    sourceUrl:
+      'https://commons.wikimedia.org/wiki/File:TechCrunch_Disrupt_2024_D1_BaaS_in_a_Post-Synapse_Meltdown_World-6_(54101776625).jpg',
+    license: 'CC BY 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/2.0',
+    notes: 'Square-cropped and resized from the Commons original; original file preserved under media/people/original.',
+  },
+  {
     donorId: 'hasso-plattner',
     name: 'Hasso Plattner',
     author: 'Epic-chair',

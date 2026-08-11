@@ -35,6 +35,14 @@ donations:
       vitalik-buterin: 1.0
     source: 'https://sens.org/vitaliks-350000-donation/'
 
+  - date: 2020-12-22
+    recipient: sens-research-foundation
+    amount: 50_000
+    credit:
+      vitalik-buterin: 1.0
+    source: 'https://ftx.medium.com/effective-altruism-giving-in-crypto-12faee9df91f'
+    notes: 'Separate personal share of a $150,000 pooled giving event: Buterin, Haseeb Qureshi, and Sam Bankman-Fried each committed $50,000 to the charity selected by a public poll, which SENS won. This is distinct from Qureshi''s equal-sized gift recorded in his own file.'
+
   - date: 2021-05-12
     recipient: india-covid-crypto-relief-fund
     amount: 463_000_000

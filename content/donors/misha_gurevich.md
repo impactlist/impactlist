@@ -1,13 +1,14 @@
 ---
 id: 'misha-gurevich'
 name: 'Misha Gurevich'
+birthDate: 1988-07-01
 netWorth: 5_000_000
-about: 'Misha Gurevich is an angel investor, photographer, philanthropist, and longtime LessWrong community member. With a background in biotechnology and investing, he co-founded and leads Aerolamp, which develops open-source far-UVC lamps intended to reduce airborne disease transmission. His net worth is not publicly reported; Impact List uses a rough $5 million estimate based on his professional background and documented giving. [Aerolamp](https://aerolamp.net/pages/about-aerolamp) [LessWrong](https://www.lesswrong.com/users/drethelin) [Website](https://drethelin.com/)'
+about: 'Misha Gurevich is an angel investor, photographer, philanthropist, and longtime LessWrong community member. With a background in biotechnology and investing, he co-founded and leads Aerolamp, which develops open-source far-UVC lamps intended to reduce airborne disease transmission. His net worth is not publicly reported; Impact List uses a rough $5 million estimate based on his professional background and documented giving. Born in 1988. [Aerolamp](https://aerolamp.net/pages/about-aerolamp) [LessWrong](https://www.lesswrong.com/users/drethelin) [Website](https://drethelin.com/)'
 ---
 
 # Internal Notes
 
-Living status: Gurevich is listed as Aerolamp's current CEO and remains active on LessWrong. No reliable public birth date or birthplace was found, so `birthDate` is omitted. LessWrong identifies the user Drethelin as Misha Gurevich: https://www.lesswrong.com/posts/sookiqxkzzLmPYB3r/axrp-episode-39-evan-hubinger-on-model-organisms-of-1
+Living status: Gurevich is listed as Aerolamp's current CEO and remains active on LessWrong. Misha Gurevich told Impact List that he was born in 1988. He did not provide a month or day, so `birthDate` uses July 1 as a neutral mid-year guess; `1988-07-01` should not be interpreted as his actual birthday. No reliable birthplace was found. LessWrong identifies the user Drethelin as Misha Gurevich: https://www.lesswrong.com/posts/sookiqxkzzLmPYB3r/axrp-episode-39-evan-hubinger-on-model-organisms-of-1
 
 Net worth: no Forbes, Bloomberg, financial disclosure, or other reliable published estimate was found. The $5 million figure is a conservative placeholder based only on his professional background as an angel investor and his capacity to make at least $360,370 in publicly documented gifts, including a single $150,000 gift. It is not a reported statement of his assets and should be replaced if a sourced estimate becomes available.
 

@@ -192,7 +192,7 @@ const DonorDetail = () => {
         <MarkdownContent content={donorContent} className="mt-8 mb-8" />
 
         {/* Donations list */}
-        <EntityDonationTable donations={donorDonations} entityType="donor" />
+        <EntityDonationTable donations={donorDonations} entityType="donor" className="mt-8" />
 
         {/* Feedback note */}
         <p className="mb-8 mt-4 text-center italic text-muted">

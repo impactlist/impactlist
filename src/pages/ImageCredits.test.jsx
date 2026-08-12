@@ -108,11 +108,12 @@ describe('image inventory', () => {
     }
   });
 
-  it('every credit entry has an uncropped original (local checkouts only)', () => {
-    // media/ is deliberately untracked (originals don't ship or get committed),
-    // so this check can only run where the directory exists; CI skips it.
+  it('every credit entry has an uncropped original', () => {
+    // Originals are committed under media/people/original/ but deliberately
+    // kept outside public/ so they never ship in the build. The directory is
+    // tracked in git, so it exists in every checkout (including CI) and a
+    // missing directory should fail loudly, not skip.
     const originalsDir = path.resolve(process.cwd(), 'media/people/original');
-    if (!fs.existsSync(originalsDir)) return;
     const originals = new Set(fs.readdirSync(originalsDir).map((f) => f.replace(/\.[^.]+$/, '')));
     for (const credit of imageCredits) {
       expect(originals.has(credit.donorId), `original in media/people/original for ${credit.donorId}`).toBe(true);

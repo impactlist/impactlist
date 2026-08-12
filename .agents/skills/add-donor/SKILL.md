@@ -239,7 +239,12 @@ Recipients can also override or multiply category effect parameters (`effects:` 
 
 The site shows `public/images/people/small/<donor-id>.jpeg` (`.jpg` also works), square-cropped, ~460×460 (any reasonable square size works), falling back to `unknown.jpeg` when absent.
 
-**Only freely licensed images may ship**: public domain, CC0, CC BY, or CC BY-SA. Never use an image whose license you can't document — no search-result grabs, no press photos without an explicit license, no CC BY-NC/ND. Wikimedia Commons covers most public figures; the World Economic Forum's Flickr (CC BY-SA) and US-government photos (public domain) are good fallbacks. Download, square-crop (`sips -c <side> <side> in.jpg --out out.jpeg` on macOS), drop it in.
+**Only images with a documented right to use may ship.** Two categories are available to you:
+
+- **Freely licensed**: public domain, CC0, CC BY, or CC BY-SA. Never use an image whose license you can't document — no search-result grabs, no press photos without an explicit license, no CC BY-NC/ND. Wikimedia Commons covers most public figures; the World Economic Forum's Flickr (CC BY-SA) and US-government photos (public domain) are good fallbacks.
+- **Provided by the donor**: a photo the donor supplied directly with explicit permission to use it, credited with `license: 'Used with permission'` (precedent: the `misha-gurevich` entry in `src/data/imageCredits.js` — the donor's own site serves as `sourceUrl`/`licenseUrl`, and `author` is omitted when no photographer is credited).
+
+Download, square-crop (`sips -c <side> <side> in.jpg --out out.jpeg` on macOS), drop it in.
 
 **Every photo you add requires a credit entry** in `src/data/imageCredits.js` (rendered at /image-credits — this is what keeps the site attribution-compliant for CC images): `{donorId, name, author, sourceName, sourceUrl (the file's source page, not the raw image), license, licenseUrl}`. A photo without a credit entry is a bug; `ImageCredits.test.jsx` enforces the license whitelist.
 

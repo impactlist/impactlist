@@ -64,6 +64,15 @@ export const imageCredits = [
     notes: 'Synthetic likeness, not a photograph — no freely licensed photo of Barbara Picower exists.',
   },
   {
+    donorId: 'ben-hoskin',
+    name: 'Ben Hoskin',
+    sourceName: 'LinkedIn profile',
+    sourceUrl: 'https://www.linkedin.com/in/ben-hoskin-cfa-024b9021/',
+    license: 'Used with permission',
+    licenseUrl: 'https://www.linkedin.com/in/ben-hoskin-cfa-024b9021/',
+    notes: 'LinkedIn profile photo used with Ben Hoskin’s permission; resized from the square source.',
+  },
+  {
     donorId: 'bernard-arnault',
     name: 'Bernard Arnault',
     author: 'Jeremy Barande / Ecole polytechnique Universite Paris-Saclay',

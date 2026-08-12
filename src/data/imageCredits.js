@@ -550,6 +550,15 @@ export const imageCredits = [
     notes: 'Cropped and resized from the supplied original.',
   },
   {
+    donorId: 'oliver-habryka',
+    name: 'Oliver Habryka',
+    sourceName: 'Twitter/X profile',
+    sourceUrl: 'https://x.com/ohabryka',
+    license: 'Used with permission',
+    licenseUrl: 'https://x.com/ohabryka',
+    notes: 'Twitter/X profile photo used with Oliver Habryka\u2019s permission; resized from the square source.',
+  },
+  {
     donorId: 'oprah-winfrey',
     name: 'Oprah Winfrey',
     author: 'US Embassy South Africa',

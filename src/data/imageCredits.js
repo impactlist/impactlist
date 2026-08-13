@@ -111,6 +111,15 @@ export const imageCredits = [
     licenseUrl: 'https://creativecommons.org/licenses/by/4.0',
   },
   {
+    donorId: 'blake-borgeson',
+    name: 'Blake Borgeson',
+    sourceName: 'FLUX.2 [dev]',
+    sourceUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    license: 'AI-generated (FLUX.2 [dev]) — no copyright claimed',
+    licenseUrl: 'https://huggingface.co/black-forest-labs/FLUX.2-dev',
+    notes: 'Synthetic likeness, not a photograph; supplied by Impact List after no reusable photo was found.',
+  },
+  {
     donorId: 'cari-tuna',
     name: 'Cari Tuna',
     author: 'Joi Ito',

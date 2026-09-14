@@ -1,4 +1,9 @@
 import { expect, test } from '@playwright/test';
+import {
+  expectPageScrollUnchanged,
+  prepareLocatorForScrollMeasurement,
+  settleAndReadScrollY,
+} from './scroll-test-helpers.js';
 
 // While edited assumptions don't match any named set, the assumptions
 // selector shows a custom entry — the current signal that custom values are
@@ -60,7 +65,9 @@ const addSpecificDonation = async (page, { amount = '1234', year = '2020' } = {}
   await modal.getByLabel('Donation Amount').fill(amount);
   await modal.getByLabel('Year').fill(year);
   await modal.getByRole('button', { name: 'Add Donation' }).click();
-  await expect(modal).not.toBeVisible();
+  // Wait for AnimatePresence to unmount the dialog, which also runs the body
+  // scroll-lock cleanup and restores the viewport captured before it opened.
+  await expect(modal).toHaveCount(0);
 
   return selectedRecipientName;
 };
@@ -363,12 +370,24 @@ test.describe('Mobile calculator viewport stability', () => {
     await page.goto('/calculator');
 
     const addButton = page.getByRole('button', { name: 'Add Specific Donation' });
-    await addButton.scrollIntoViewIfNeeded();
+    const calculatorContainer = page.locator('.calculator-page .impact-page__container').filter({ has: addButton });
+    await prepareLocatorForScrollMeasurement({
+      page,
+      locator: addButton,
+      motionLocator: calculatorContainer,
+      reposition: () => addButton.evaluate((element) => element.scrollIntoView({ block: 'center' })),
+    });
     const scrollYBeforeOpen = await page.evaluate(() => window.scrollY);
     expect(scrollYBeforeOpen).toBeGreaterThan(0);
 
     await addSpecificDonation(page);
     await expect(page.getByRole('heading', { name: 'Your Specific Donations' })).toBeVisible();
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrollYBeforeOpen);
+    const scrollYAfterClose = await settleAndReadScrollY(page);
+    expectPageScrollUnchanged({
+      context: 'Adding a specific donation on mobile',
+      before: scrollYBeforeOpen,
+      after: scrollYAfterClose,
+      tolerance: 0,
+    });
   });
 });

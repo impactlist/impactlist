@@ -1,21 +1,9 @@
 import { expect, test } from '@playwright/test';
-
-const settleAndReadScrollY = (page) =>
-  page.evaluate(
-    () =>
-      new Promise((resolve) => {
-        window.requestAnimationFrame(() => window.requestAnimationFrame(() => resolve(window.scrollY)));
-      })
-  );
-
-const expectPageScrollUnchanged = ({ context, before, after, timeline = [] }) => {
-  const delta = Math.abs(after - before);
-  const timelineDetails = timeline.length > 0 ? `\nScroll timeline:\n${JSON.stringify(timeline, null, 2)}` : '';
-  expect(
-    delta,
-    `${context} moved the page: before=${before}, after=${after}, delta=${delta}.${timelineDetails}`
-  ).toBeLessThanOrEqual(24);
-};
+import {
+  expectPageScrollUnchanged,
+  prepareLocatorForScrollMeasurement,
+  settleAndReadScrollY,
+} from './scroll-test-helpers.js';
 
 // The core product flow: home ranking table -> donor detail -> back, plus a
 // recipient detail hop and 404 handling for stale links.
@@ -66,14 +54,18 @@ test.describe('Donor list and detail flow', () => {
     const table = page.getByRole('table');
     const donatedHeader = table.getByRole('columnheader', { name: /Donated/ });
     const percentButton = table.getByRole('button', { name: 'Sort by percent of net worth donated' });
+    const tableContainer = page.locator('.impact-page__container').filter({ has: table });
 
-    // Playwright waits for the page-entry transform to finish before clicking.
-    // Let that actionability check settle first, then re-park the real header:
-    // otherwise Playwright can move it to the top edge during the wait and
-    // leave the sticky clone covering the intended pointer target.
+    // Settle the delayed page-entry transform and Playwright's actionability
+    // check, then re-park the real header. Otherwise setup can move it to the
+    // top edge and leave the sticky clone covering the intended pointer target.
     const parkAndClick = async (button) => {
-      await button.click({ trial: true });
-      await donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+      await prepareLocatorForScrollMeasurement({
+        page,
+        locator: button,
+        motionLocator: tableContainer,
+        reposition: () => donatedHeader.evaluate((element) => element.scrollIntoView({ block: 'center' })),
+      });
       await expect(page.locator('.impact-table-shell')).toHaveAttribute('data-header-stuck', 'false');
 
       const before = await page.evaluate(() => window.scrollY);

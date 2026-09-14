@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { recipientsById } from '../src/data/generatedData.js';
+import { prepareLocatorForScrollMeasurement } from './scroll-test-helpers.js';
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
@@ -8,7 +9,12 @@ test.describe('Scroll behavior', () => {
     await page.goto('/');
 
     const calculatorLink = page.getByRole('link', { name: /Calculate the lives you could save/i });
-    await calculatorLink.scrollIntoViewIfNeeded();
+    const calculatorLinkContainer = page.locator('.impact-page__container').filter({ has: calculatorLink });
+    await prepareLocatorForScrollMeasurement({
+      page,
+      locator: calculatorLink,
+      motionLocator: calculatorLinkContainer,
+    });
     const scrollYBeforeNavigation = await page.evaluate(() => window.scrollY);
     expect(scrollYBeforeNavigation).toBeGreaterThan(0);
 
@@ -30,8 +36,15 @@ test.describe('Scroll behavior', () => {
     expect(recipientHref).toBeTruthy();
 
     await page.goto(recipientHref);
+    const justificationLink = page.getByRole('link', { name: 'Cost per life justification' });
+    const recipientDetailContainer = page.locator('.impact-page__container').filter({ has: justificationLink });
+    await prepareLocatorForScrollMeasurement({
+      page,
+      locator: justificationLink,
+      motionLocator: recipientDetailContainer,
+    });
     const scrollYBeforeAnchor = await page.evaluate(() => window.scrollY);
-    await page.getByRole('link', { name: 'Cost per life justification' }).click();
+    await justificationLink.click();
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(scrollYBeforeAnchor);
 
     await page.goBack();

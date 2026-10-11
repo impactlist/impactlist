@@ -1,55 +1,40 @@
 ---
 donations:
-  - date: 2024-05-28
-    recipient: various-organizations-advancing-womens-rights
-    amount: 440_000_000
+  - date: 2021-12-31
+    recipient: gates-foundation
+    amount: 1_991_978_238
     credit:
       melinda-gates: 1.0
-    source: 'https://www.nytimes.com/2024/05/28/business/melinda-french-gates-charity-women.html'
-    notes: "Part of a $1 billion commitment announced by Melinda French Gates to advance women's causes. This $200 million tranche is for various organizations, including the National Women's Law Center, the National Domestic Workers Alliance, and the Center for Reproductive Rights."
+    source: 'https://projects.propublica.org/nonprofits/organizations/911663695/202243159349100204/IRS990ScheduleB'
+    notes: 'Gates Foundation Trust 2021 Schedule B Part II: marketable securities from Melinda French Gates received December 31, 2021, after the divorce.'
 
-  - date: 2024-12-03
-    recipient: vote-mama-foundation
-    amount: 500_000 # Assuming the $1M match is split between the two organizations
-    credit:
-      melinda-gates: 1.0 # Through her organization Pivotal Ventures
-    source: 'https://people.com/melinda-french-gates-teases-new-philanthropy-project-8752266'
-    notes: "Announced as part of a $1 million match by Melinda French Gates's organization Pivotal Ventures for Giving Tuesday, supporting two organizations. This portion is for Vote Mama Foundation."
-
-  - date: 2024-12-03
-    recipient: rosalynn-carter-institute-for-caregivers
-    amount: 500_000 # Assuming the $1M match is split between the two organizations
-    credit:
-      melinda-gates: 1.0 # Through her organization Pivotal Ventures
-    source: 'https://people.com/melinda-french-gates-teases-new-philanthropy-project-8752266'
-    notes: "Announced as part of a $1 million match by Melinda French Gates's organization Pivotal Ventures for Giving Tuesday, supporting two organizations. This portion is for the Rosalynn Carter Institute for Caregivers."
-
-  - date: 2025-11-12
-    recipient: various-organizations-advancing-womens-health
-    amount: 250_000_000
+  - date: 2023-05-08
+    recipient: gates-foundation
+    amount: 249_946_250
     credit:
       melinda-gates: 1.0
-    source: 'https://apnews.com/article/melinda-french-gates-action-for-womens-health-250-million-0faee852342d671ff584e842f6a3d84d'
-    notes: "Action for Women's Health grants to more than 80 organizations working on women's health. The AP report described this as a $250 million award pool launched by Melinda French Gates."
+    source: 'https://projects.propublica.org/nonprofits/organizations/911663695/202413199349103216/IRS990ScheduleB'
+    notes: 'Gates Foundation Trust 2023 Schedule B Part II: marketable securities from Melinda French Gates received May 8, 2023.'
 
-  - date: 2025-09-10
-    recipient: wellcome-leap
-    amount: 50_000_000
+  - date: 2024-01-30
+    recipient: gates-foundation
+    amount: 501_943_811
     credit:
       melinda-gates: 1.0
-    source: 'https://wellcomeleap.org/pivotal_partnership_news/'
-    notes: 'Pivotal''s $50M half of a $100M Wellcome Leap women''s-health research partnership (each side contributed $50M). Pivotal-channeled gift, credited to Melinda per the file convention. The separate $215M (2026) and $150M (2024) women''s commitments are pledges and are not recorded.'
+    source: 'https://projects.propublica.org/nonprofits/organizations/911663695/202503189349104100/IRS990ScheduleB'
+    notes: 'Gates Foundation Trust 2024 Schedule B Part II: marketable securities from Melinda French Gates received January 30, 2024.'
 ---
 
 Bill Gates and Melinda Gates were married between January 1, 1994, and August 2, 2021, so Melinda gets half credit for donations made by the couple during that time.
 
-# Note on other philanthropic activities (from GPT o3 on May 6th 2025):
+# Internal Notes
 
-Melinda French Gates announced in May 2024 that she would direct $1 billion towards advancing women's power and influence globally.
-The $200 million and $240 million donations listed above are significant initial distributions from this commitment.
-She also announced a $250 million grant competition, "Action for Women's Health," as part of this $1 billion, run via Lever for Change,
-which will award grants to organizations working on women's health. Specific recipients and dates for all these grants are not yet fully detailed.
-Additionally, upon her departure from the Gates Foundation in June 2024, she would receive $12.5 billion for her own philanthropic work,
-which will fund these and future initiatives focusing on women and families.
-Wikipedia also mentions over $10 million donated to Democratic causes by Melinda French Gates in the lead-up to the 2024 US presidential election,
-however, specific individual donations (recipient, date, amount per donation) that fit the requested format are not readily available from the provided search snippets.
+Her half of the couple's pre-divorce Gates Foundation contributions is recorded in `bill_gates.md` via the credit map. The rows above are her own post-divorce gifts to the Trust, named on its Schedule B.
+
+Earlier Pivotal-related announcements were removed in September 2026 (from JP Addison's fork, `jpaddison3/charity-adjusted-billionaires`) because none is a documented personal transfer:
+- May 2024 $1B women's-power commitment (the old row recorded $440M while its notes described a $200M tranche): grantmaking by Pivotal Philanthropies Foundation, not a new donor-level transfer.
+- December 2024 Giving Tuesday matches to Vote Mama Foundation and the Rosalynn Carter Institute: conditional up-to-$500K matches; the amount actually paid and the legal payer are not established.
+- November 2025 $250M Action for Women's Health: Pivotal Philanthropies funded a National Philanthropic Trust donor-advised fund that paid the winners, so these are downstream grants.
+- September 2025 $50M Wellcome Leap partnership: the legal payer and a completed transfer are not established; programs begin in 2026.
+
+Bill Gates's October 2024 transfers into the four Pivotal Philanthropies foundations are recorded once, in `bill_gates.md`, following the contributor named on their filings. Pivotal Ventures is an LLC whose inflows are not public; if a documented inflow from her own assets appears, record it here (see the LLC guidance in the add-donor skill). Excluding the announcements above does not establish that Bill's October 2024 transfers funded them.
